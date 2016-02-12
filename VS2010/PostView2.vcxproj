@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F8EDA3F6-3D2D-4C97-AA1E-3B0682674CF8}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>PostView2</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(QTDIR)include\QtWidgets;$(QTDIR)include\;$(QTDIR)include\QtGui;$(SolutionDir)..\PostView2;$(GLEWDIR)\include\GL;$(ZLibDir);$(SolutionDir)..;$(IncludePath)</IncludePath>
+    <LibraryPath>$(QTDir)lib;$(ZLibDir)\lib;$(GLEWDIR)\lib\Release\Win32;$(SolutionDir)\Debug;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(QTDIR)include\QtWidgets;$(QTDIR)include\;$(QTDIR)include\QtGui;$(SolutionDir)..;$(GLEWDIR)\include\GL;$(ZLibDir);$(IncludePath)</IncludePath>
+    <LibraryPath>$(QTDir)lib;$(ZLibDir)\lib;$(GLEWDIR)\lib\Release\Win32;$(SolutionDir)Release;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Qt5Cored.lib;Qt5Widgetsd.lib;Qt5Guid.lib;opengl32.lib;glu32.lib;glew32.lib;postviewlib.lib;zlibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>Qt5Core.lib;Qt5Widgets.lib;Qt5Gui.lib;opengl32.lib;glu32.lib;glew32.lib;postviewlib.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\PostView2\DataPanel.cpp" />
+    <ClCompile Include="..\PostView2\Document.cpp" />
+    <ClCompile Include="..\PostView2\FileViewer.cpp" />
+    <ClCompile Include="..\PostView2\GLContext.cpp" />
+    <ClCompile Include="..\PostView2\GLDataMap.cpp" />
+    <ClCompile Include="..\PostView2\GLIsoSurfacePlot.cpp" />
+    <ClCompile Include="..\PostView2\GLLinePlot.cpp" />
+    <ClCompile Include="..\PostView2\GLMesh.cpp" />
+    <ClCompile Include="..\PostView2\GLModel.cpp" />
+    <ClCompile Include="..\PostView2\GLPlane.cpp" />
+    <ClCompile Include="..\PostView2\GLPlaneCutPlot.cpp" />
+    <ClCompile Include="..\PostView2\GLPlot.cpp" />
+    <ClCompile Include="..\PostView2\GLSlicePLot.cpp" />
+    <ClCompile Include="..\PostView2\GLVectorPlot.cpp" />
+    <ClCompile Include="..\PostView2\GLView.cpp" />
+    <ClCompile Include="..\PostView2\GLWidget.cpp" />
+    <ClCompile Include="..\PostView2\GLWidgetManager.cpp" />
+    <ClCompile Include="..\PostView2\MainWindow.cpp" />
+    <ClCompile Include="..\PostView2\MaterialPanel.cpp" />
+    <ClCompile Include="..\PostView2\moc_FileViewer.cpp" />
+    <ClCompile Include="..\PostView2\moc_MainWindow.cpp" />
+    <ClCompile Include="..\PostView2\ModelViewer.cpp" />
+    <ClCompile Include="..\PostView2\PostView2.cpp" />
+    <ClCompile Include="..\PostView2\render.cpp" />
+    <ClCompile Include="..\PostView2\StatePanel.cpp" />
+    <ClCompile Include="..\PostView2\stdafx.cpp" />
+    <ClCompile Include="..\PostView2\ToolsPanel.cpp" />
+    <ClCompile Include="..\PostViewLib\lut.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\PostView2\DataPanel.h" />
+    <ClInclude Include="..\PostView2\Document.h" />
+    <CustomBuild Include="..\PostView2\FileViewer.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)bin/moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename).%(Extension) using MOC</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </CustomBuild>
+    <ClInclude Include="..\PostView2\GLContext.h" />
+    <ClInclude Include="..\PostView2\GLDataMap.h" />
+    <ClInclude Include="..\PostView2\GLIsoSurfacePlot.h" />
+    <ClInclude Include="..\PostView2\GLLinePlot.h" />
+    <ClInclude Include="..\PostView2\GLMesh.h" />
+    <ClInclude Include="..\PostView2\GLModel.h" />
+    <ClInclude Include="..\PostView2\GLPlane.h" />
+    <ClInclude Include="..\PostView2\GLPlaneCutPlot.h" />
+    <ClInclude Include="..\PostView2\GLPlot.h" />
+    <ClInclude Include="..\PostView2\GLSlicePLot.h" />
+    <ClInclude Include="..\PostView2\GLVectorPlot.h" />
+    <ClInclude Include="..\PostView2\GLView.h" />
+    <ClInclude Include="..\PostView2\GLWidget.h" />
+    <ClInclude Include="..\PostView2\GLWidgetManager.h" />
+    <ClInclude Include="..\PostView2\MaterialPanel.h" />
+    <ClInclude Include="..\PostView2\ModelViewer.h" />
+    <ClInclude Include="..\PostView2\StatePanel.h" />
+    <ClInclude Include="..\PostView2\ToolsPanel.h" />
+    <CustomBuild Include="..\PostView2\MainWindow.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)bin/moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename).%(Extension) using MOC</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)bin/moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compiling %(Filename).%(Extension) using MOC</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </CustomBuild>
+    <ClInclude Include="..\PostView2\stdafx.h" />
+    <ClInclude Include="..\PostView2\targetver.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

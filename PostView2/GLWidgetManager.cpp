@@ -1,0 +1,236 @@
+#include "stdafx.h"
+#include "GLWidgetManager.h"
+#include "GLView.h"
+#include "PostViewLib/GLObject.h"
+#include <assert.h>
+
+CGLWidgetManager* CGLWidgetManager::m_pmgr = 0;
+
+CGLWidgetManager* CGLWidgetManager::GetInstance()
+{
+	if (m_pmgr == 0) m_pmgr = new CGLWidgetManager;
+	return m_pmgr;
+}
+
+void CGLWidgetManager::AttachToView(CGLView *pview)
+{
+	assert(pview);
+	m_pview = pview;
+	GLWidget::m_pview = pview;
+}
+
+CGLWidgetManager::~CGLWidgetManager()
+{
+
+}
+
+void CGLWidgetManager::AddWidget(GLWidget* pw)
+{
+	m_Widget.push_back(pw);
+}
+
+void CGLWidgetManager::RemoveWidget(GLWidget* pw)
+{
+	std::vector<GLWidget*>::iterator it = m_Widget.begin();
+	for (int i=0; i<(int) m_Widget.size(); ++i, ++it)
+	{
+		if (m_Widget[i] == pw) 
+		{
+			m_Widget.erase(it);
+			break;
+		}
+	}
+}
+/*
+int CGLWidgetManager::handle(int nevent)
+{
+	static int xp, yp;
+	static int hp, fsp;
+	int x = Fl::event_x();
+	int y = Fl::event_y();
+	static bool bresize = false;
+
+	// see if there is a widget that wishes to handle this event
+	// first we see if the user is trying to select a widget
+	if (nevent == FL_PUSH)
+	{
+		bool bsel = false;
+		for (int i=0; i<(int) m_Widget.size(); ++i)
+		{
+			if (m_Widget[i]->visible() && m_Widget[i]->is_inside(x,y))
+			{
+				m_Widget[i]->set_focus();
+				bsel = true;
+
+				if (Fl::event_clicks()) 
+				{
+					m_Widget[i]->EditProperties();
+					m_pview->Redraw();
+				}
+				break;
+			}
+		}
+		if (!bsel) GLWidget::set_focus(0);
+	}
+
+	GLWidget* pw = GLWidget::get_focus();
+	if (pw) 
+	{
+		switch (nevent)
+		{
+		case FL_PUSH:
+			{
+				xp = x;
+				yp = y;
+				double r = (pw->m_x+pw->m_w-x)/10.0;
+				double s = (pw->m_y+pw->m_h-y)/10.0;
+				if ((r >= 0) && (s >= 0) && (r+s <= 1.0))
+				{
+					bresize = true; 
+					hp = pw->m_h;
+					fsp = pw->m_font_size;
+				}
+				else bresize = false;
+
+				GLWidget::GetView()->Redraw();
+			}
+			return 1;
+		case FL_DRAG:
+			if (pw->has_focus())
+			{
+				int x0 = pw->x();
+				int y0 = pw->y();
+				int w0 = pw->w();
+				int h0 = pw->h();
+				pw->align(0);
+
+				if (bresize)
+				{
+					if (x0+w0+(x-xp) >= m_pview->w()) { pw->align(GLW_ALIGN_RIGHT); x = xp; }
+
+					unsigned int n = pw->GetSnap();
+					if (y0+h0+(y-yp) >= m_pview->h()) { pw->align(n | GLW_ALIGN_BOTTOM); y = yp; }
+
+					pw->resize(x0, y0, w0 + (x-xp), h0 + (y - yp));
+
+					int hn = pw->h();
+
+					float ar = (float) hn / (float) hp;
+
+					pw->m_font_size = (int) (ar*fsp);
+				}
+				else
+				{
+					pw->resize(x0 + (x-xp), y0 + (y-yp), w0, h0);
+
+					if (pw->x() <= 0) { pw->align(GLW_ALIGN_LEFT); x = xp; }
+					else if (pw->x()+pw->w() >= m_pview->w()) { pw->align(GLW_ALIGN_RIGHT); x = xp; }
+
+					unsigned int n = pw->GetSnap();
+					if (pw->y() <= 0) { pw->align(n | GLW_ALIGN_TOP); y = yp; }
+					else if (pw->y() + pw->h() >= m_pview->h()) { pw->align(n | GLW_ALIGN_BOTTOM); y = yp; }
+				}
+
+				SnapWidget(pw);
+
+				xp = x;
+				yp = y;
+
+				GLWidget::GetView()->Redraw();
+
+				CWnd* pwnd = flxGetMainWnd();
+				x0 = pw->x();
+				y0 = pw->y();
+				w0 = pw->w();
+				h0 = pw->h();
+				pwnd->SetStatusBar("%d,%d,%d,%d", x0, y0, w0, h0);
+			}
+			return 1;
+		case FL_RELEASE:
+			{
+				CWnd* pwnd = flxGetMainWnd();
+				pwnd->SetStatusBar(0);
+				bresize = false;
+			}
+			break;
+		}
+	}
+
+	return 0;
+}
+*/
+
+void CGLWidgetManager::SnapWidget(GLWidget* pw)
+{
+	assert(m_pview);
+
+	int W = m_pview->width();
+	int H = m_pview->height();
+
+	int w = pw->w();
+	int h = pw->h();
+
+	unsigned int nflag = pw->GetSnap();
+	if      (nflag & GLW_ALIGN_LEFT   ) pw->m_x = 0;
+	else if (nflag & GLW_ALIGN_RIGHT  ) pw->m_x = W-w-1;
+	else if (nflag & GLW_ALIGN_HCENTER) pw->m_x = W/2 - w/2;
+
+	if      (nflag & GLW_ALIGN_TOP    ) pw->m_y = 0;
+	else if (nflag & GLW_ALIGN_BOTTOM ) pw->m_y = H-h-1;
+	else if (nflag & GLW_ALIGN_VCENTER) pw->m_y = H/2 - h/2;
+}
+
+void CGLWidgetManager::DrawWidgets()
+{
+	glPushAttrib(GL_ALL_ATTRIB_BITS);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_LIGHTING);
+
+	int vp[4];
+	glGetIntegerv(GL_VIEWPORT, vp);
+
+	for (int i=0; i<(int) m_Widget.size(); ++i) 
+	{
+		GLWidget* pw = m_Widget[i];
+		if (pw->visible())
+		{
+			// snap the widget if any of its align flags are set
+			if (pw->GetSnap()) SnapWidget(pw);
+
+			int x0 = pw->m_x;
+			int y0 = vp[3] - pw->m_y;
+			int x1 = pw->m_x + pw->m_w;
+			int y1 = vp[3]-(pw->m_y+pw->m_h);
+
+			if (pw->has_focus())
+			{
+				glColor4ub(200, 200, 200, 128);
+				glRecti(x0,  y0, x1, y1);
+				glColor4ub(0, 0, 128, 255);
+				glLineWidth(1.f);
+				glBegin(GL_LINES);
+				{
+					glVertex2i(x1-10, y1+1);
+					glVertex2i(x1-1 , y1+10);
+
+					glVertex2i(x1-5, y1+1);
+					glVertex2i(x1-1 , y1+5);
+				}
+				glEnd();
+
+				glBegin(GL_LINE_LOOP);
+				{
+					glVertex2i(x0, y0);
+					glVertex2i(x1, y0);
+					glVertex2i(x1, y1);
+					glVertex2i(x0, y1);
+				}
+				glEnd();
+			}
+
+			pw->draw();
+		}
+	}
+
+	glPopAttrib();
+}
