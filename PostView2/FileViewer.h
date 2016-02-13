@@ -1,10 +1,16 @@
 #pragma once
-#include <QListView>
+#include <QWidget>
+#include <vector>
+using namespace std;
 
-class QFileSystemModel;
+namespace Ui {
+	class CFileViewer;
+}
+
 class CMainWindow;
+class QFileSystemModel;
 
-class CFileViewer : public QListView
+class CFileViewer : public QWidget
 {
 	Q_OBJECT
 
@@ -12,9 +18,14 @@ public:
 	CFileViewer(CMainWindow* pwnd, QWidget* parent = 0);
 
 private slots:
-	void on_fileViewer_doubleClicked(const QModelIndex& index);
+	void on_fileList_doubleClicked(const QModelIndex& index);
+	void on_fileFilter_currentIndexChanged(int index);
+	void on_toolUp_clicked();
 
 private:
-	QFileSystemModel*	m_fileSystem;
 	CMainWindow*		m_wnd;
+	QFileSystemModel*	m_fileSystem;
+	vector<pair<QString, QString> > m_filters;
+
+	Ui::CFileViewer*	ui;
 };

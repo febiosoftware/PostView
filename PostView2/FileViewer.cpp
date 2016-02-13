@@ -1,33 +1,98 @@
 #include <QFileSystemModel>
-#include <QMessageBox>
+#include <QListView>
+#include <QBoxLayout>
+#include <QComboBox>
 #include "FileViewer.h"
 #include "MainWindow.h"
+#include <QToolButton>
 
-CFileViewer::CFileViewer(CMainWindow* pwnd, QWidget* parent) : QListView(parent), m_wnd(pwnd)
+class Ui::CFileViewer
 {
-	this->setObjectName(QStringLiteral("fileViewer"));
+public:
+	QComboBox*	m_fileFilter;
+	QListView*	m_fileList;
+
+public:
+	void setupUi(QWidget* parent)
+	{
+		QVBoxLayout* pg = new QVBoxLayout(parent);
+		QHBoxLayout* pg2 = new QHBoxLayout;
+
+		QToolButton* pb = new QToolButton(parent);
+		pb->setObjectName(QStringLiteral("toolUp"));
+		pb->setText("Up");
+		pb->setAutoRaise(true);
+
+		m_fileFilter = new QComboBox(parent);
+		m_fileFilter->setObjectName(QStringLiteral("fileFilter"));
+
+		m_fileList = new QListView(parent);
+		m_fileList->setObjectName(QStringLiteral("fileList"));
+
+		pg2->addWidget(pb);
+		pg2->addWidget(m_fileFilter);
+		pg->addLayout(pg2);
+		pg->addWidget(m_fileList);
+	}
+};
+
+CFileViewer::CFileViewer(CMainWindow* pwnd, QWidget* parent) : QWidget(parent), m_wnd(pwnd), ui(new Ui::CFileViewer)
+{
+	// build Ui
+	ui->setupUi(this);
+
+	// build the filter list
+	m_filters.push_back(pair<QString, QString>("XPLT files (*.xplt)", "*.xplt"));
+	m_filters.push_back(pair<QString, QString>("FEBio files (*.feb)", "*.feb"));
+	m_filters.push_back(pair<QString, QString>("All files (*)", "*"));
+
+	// add filters to drop down
+	int nflts = m_filters.size();
+	for (int i=0; i<nflts; ++i)
+	{
+		pair<QString, QString>& flt = m_filters[i];
+		ui->m_fileFilter->addItem(flt.first);
+	}
 
 	// create a model for the file system
     m_fileSystem = new QFileSystemModel;
     m_fileSystem->setRootPath("C:\\");
     QStringList flt;
-	flt << "*.xplt";
+	flt << m_filters[0].second;
     m_fileSystem->setNameFilters(flt);
     m_fileSystem->setNameFilterDisables(false);
     
 	// set the file system model
-	setModel(m_fileSystem);
-    setRootIndex(m_fileSystem->index("C:\\Users\\steve\\Documents"));
+	ui->m_fileList->setModel(m_fileSystem);
+    ui->m_fileList->setRootIndex(m_fileSystem->index("C:\\Users\\steve\\Documents"));
 
 	QMetaObject::connectSlotsByName(this);
 }
 
-void CFileViewer::on_fileViewer_doubleClicked(const QModelIndex& index)
+void CFileViewer::on_fileList_doubleClicked(const QModelIndex& index)
 {
 	if (m_fileSystem->isDir(index))
-		setRootIndex(index);
+		ui->m_fileList->setRootIndex(index);
 	else
 	{
 		m_wnd->OpenFile(m_fileSystem->filePath(index));
 	}
+}
+
+void CFileViewer::on_fileFilter_currentIndexChanged(int index)
+{
+	if ((index >= 0)&&(index < m_filters.size()))
+	{
+		QStringList filters;
+		pair<QString, QString>& flt = m_filters[index];
+		filters << flt.second;
+		m_fileSystem->setNameFilters(filters);
+	}
+}
+
+void CFileViewer::on_toolUp_clicked()
+{
+    QModelIndex n = ui->m_fileList->rootIndex();
+    n = m_fileSystem->parent(n);
+    ui->m_fileList->setRootIndex(n);
 }
