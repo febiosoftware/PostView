@@ -4,6 +4,7 @@
 #include <QTextEdit>
 #include <QStatusBar>
 #include <QDockWidget>
+#include <QToolBar>
 #include "FileViewer.h"
 #include "ModelViewer.h"
 #include "MaterialPanel.h"
@@ -131,6 +132,17 @@ public:
 		QAction* actionOpenSession = new QAction("Open session ..." , MainWindow); actionOpenSession->setObjectName(QStringLiteral("actionOpenSession"));
 		QAction* actionSaveSession = new QAction("Save session ..." , MainWindow); actionSaveSession->setObjectName(QStringLiteral("actionSaveSession"));
 		QAction* actionQuit        = new QAction("Exit"             , MainWindow); actionQuit       ->setObjectName(QStringLiteral("actionQuit"       ));
+
+		// apply icons
+        QIcon icon;
+        icon.addFile(QStringLiteral(":/icons/document-open-8.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionOpen->setIcon(icon);
+        icon.addFile(QStringLiteral(":/icons/document-save-5.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionSave->setIcon(icon);
+        icon.addFile(QStringLiteral(":/icons/view-refresh-3.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionUpdate->setIcon(icon);
+        icon.addFile(QStringLiteral(":/icons/App-snapshot-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionSnapShot->setIcon(icon);
 
 		// --- Edit menu ---
 		QAction* actionHideSelected    = new QAction("Hide selected"   , MainWindow); actionHideSelected   ->setObjectName(QStringLiteral("actionHideSelected"   ));
@@ -267,6 +279,15 @@ public:
 		menuBar->addAction(menuHelp->menuAction());
 		menuHelp->addAction(actionHelp);
 		menuHelp->addAction(actionAbout);
+
+		// Create the toolbar
+		QToolBar* mainToolBar = new QToolBar(MainWindow);
+        mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
+        MainWindow->addToolBar(Qt::TopToolBarArea, mainToolBar);
+
+		mainToolBar->addAction(actionOpen);
+		mainToolBar->addAction(actionSave);
+		mainToolBar->addAction(actionUpdate);
 	}
 };
 

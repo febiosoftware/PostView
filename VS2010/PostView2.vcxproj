@@ -107,6 +107,7 @@
     <ClCompile Include="..\PostView2\moc_MainWindow.cpp" />
     <ClCompile Include="..\PostView2\ModelViewer.cpp" />
     <ClCompile Include="..\PostView2\PostView2.cpp" />
+    <ClCompile Include="..\PostView2\qrc_postview.cpp" />
     <ClCompile Include="..\PostView2\render.cpp" />
     <ClCompile Include="..\PostView2\StatePanel.cpp" />
     <ClCompile Include="..\PostView2\stdafx.cpp" />
@@ -151,6 +152,5 @@
     <ClInclude Include="..\PostView2\targetver.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" />
 </Project>
