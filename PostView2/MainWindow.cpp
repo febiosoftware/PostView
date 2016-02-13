@@ -32,6 +32,10 @@ bool CMainWindow::OpenFile(const QString& fileName)
 		b.exec();
 	}
 
+	// update the command panels
+	ui->m_modelViewer->Update();
+
+	// update the gl view
 	ui->m_view->GetCamera().Update(true);
 	ui->m_view->repaint();
 	return true;

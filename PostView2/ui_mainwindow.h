@@ -80,7 +80,7 @@ public:
 
 		QDockWidget* dock2 = new QDockWidget("Model Viewer", MainWindow);
         dock1->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
-		m_modelViewer = new CModelViewer(dock2);
+		m_modelViewer = new CModelViewer(MainWindow, dock2);
 		dock2->setWidget(m_modelViewer);
 		menuView->addAction(dock2->toggleViewAction());
 		MainWindow->tabifyDockWidget(dock1, dock2);

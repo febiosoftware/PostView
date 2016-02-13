@@ -84,6 +84,7 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\PostView2\CommandPanel.cpp" />
     <ClCompile Include="..\PostView2\DataPanel.cpp" />
     <ClCompile Include="..\PostView2\Document.cpp" />
     <ClCompile Include="..\PostView2\FileViewer.cpp" />
@@ -105,6 +106,7 @@
     <ClCompile Include="..\PostView2\MaterialPanel.cpp" />
     <ClCompile Include="..\PostView2\moc_FileViewer.cpp" />
     <ClCompile Include="..\PostView2\moc_MainWindow.cpp" />
+    <ClCompile Include="..\PostView2\moc_ModelViewer.cpp" />
     <ClCompile Include="..\PostView2\ModelViewer.cpp" />
     <ClCompile Include="..\PostView2\PostView2.cpp" />
     <ClCompile Include="..\PostView2\qrc_postview.cpp" />
@@ -115,6 +117,7 @@
     <ClCompile Include="..\PostViewLib\lut.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\PostView2\CommandPanel.h" />
     <ClInclude Include="..\PostView2\DataPanel.h" />
     <ClInclude Include="..\PostView2\Document.h" />
     <CustomBuild Include="..\PostView2\FileViewer.h">
@@ -137,7 +140,11 @@
     <ClInclude Include="..\PostView2\GLWidget.h" />
     <ClInclude Include="..\PostView2\GLWidgetManager.h" />
     <ClInclude Include="..\PostView2\MaterialPanel.h" />
-    <ClInclude Include="..\PostView2\ModelViewer.h" />
+    <CustomBuild Include="..\PostView2\ModelViewer.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)bin/moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename).%(Extension) using MOC</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </CustomBuild>
     <ClInclude Include="..\PostView2\StatePanel.h" />
     <ClInclude Include="..\PostView2\ToolsPanel.h" />
     <CustomBuild Include="..\PostView2\MainWindow.h">

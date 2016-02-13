@@ -15,6 +15,10 @@ CGLView::CGLView(CMainWindow* pwnd, QWidget* parent) : QOpenGLWidget(parent), m_
 	m_nanim = ANIM_STOPPED;
 	m_video_fmt = GL_RGB;
 
+	QSurfaceFormat fmt = format();
+	fmt.setSamples(4);
+	setFormat(fmt);
+
 	m_bdrag = false;
 
 	m_bZoomRect = false;
@@ -208,13 +212,11 @@ void CGLView::paintGL()
 	// render the model
 	if (pdoc->IsValid()) RenderModel();
 
-	return;
-
 	// render the tracking
 //	if (m_btrack) RenderTrack();
 
 	// render the tags
-	if (view.m_bTags && pdoc->IsValid()) RenderTags();
+//	if (view.m_bTags && pdoc->IsValid()) RenderTags();
 
 	// give the command window a chance to render stuff
 	CGLContext cgl(this);
@@ -231,7 +233,7 @@ void CGLView::paintGL()
 	RenderWidgets();
 
 	// render the selection rectangle
-	if (m_bdrag) RenderRubberBand();
+//	if (m_bdrag) RenderRubberBand();
 
 	if (m_nanim != ANIM_STOPPED)
 	{

@@ -105,15 +105,18 @@
     <ClCompile Include="..\PostView2\qrc_postview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\PostView2\CommandPanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PostView2\moc_ModelViewer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\PostView2\stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\PostView2\targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\PostView2\ModelViewer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\PostView2\MaterialPanel.h">
@@ -173,12 +176,18 @@
     <ClInclude Include="..\PostView2\GLContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\PostView2\CommandPanel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\PostView2\MainWindow.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\PostView2\FileViewer.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PostView2\ModelViewer.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
