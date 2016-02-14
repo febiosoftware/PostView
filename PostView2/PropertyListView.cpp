@@ -26,6 +26,7 @@ CPropertyListView::CPropertyListView(QWidget* parent) : QWidget(parent)
 
 	m_list = 0;
 	m_sel = 0;
+	m_selRow = -1;
 
 	QMetaObject::connectSlotsByName(this);
 }
@@ -40,6 +41,7 @@ void CPropertyListView::Update(CPropertyList* plist)
 	if (n > 0)
 	{
 		m_prop->setRowCount(n);
+		m_prop->horizontalHeader()->setDefaultSectionSize(width()/2);
 		for (int i=0; i<n; ++i)
 		{
 			const CPropertyList::CProperty& p = plist->Property(i);
@@ -53,9 +55,13 @@ void CPropertyListView::Update(CPropertyList* plist)
 			m_prop->setItem(i, 0, pitem);
 
 			pitem = new QTableWidgetItem;
-			pitem->setText(p.m_val);
+			QVariant v = plist->GetPropertyValue(i);
+			if (p.m_type == QVariant::Color) pitem->setBackgroundColor(v.value<QColor>());
+			else
+			{
+				pitem->setText(v.toString());
+			}
 			m_prop->setItem(i, 1, pitem);
-
 		}
 	}
 }
@@ -67,8 +73,8 @@ void CPropertyListView::Clear()
 
 	if (m_sel)
 	{
-		m_prop->setCellWidget(m_selRow, m_selCol, 0);
-		m_sel = 0;
+		m_prop->setCellWidget(m_selRow, 1, 0);
+		m_sel = 0; m_selRow = -1;
 	}
 
 	m_prop->clear();
@@ -91,8 +97,10 @@ void CPropertyListView::on_modelProps_currentCellChanged(int currentRow, int cur
 {
 	if (m_sel)
 	{
-		m_prop->setCellWidget(m_selRow, m_selCol, 0);
-		m_sel = 0;
+		if (currentRow == m_selRow) return;
+
+		m_prop->setCellWidget(m_selRow, 1, 0);
+		m_sel = 0; m_selRow = -1;
 	}
 
 	if (m_list)
@@ -110,26 +118,24 @@ void CPropertyListView::on_modelProps_currentCellChanged(int currentRow, int cur
 //-----------------------------------------------------------------------------
 void CPropertyListView::on_modelProps_cellClicked(int row, int column)
 {
-	if (column == 1)
+	if (row == m_selRow) return;
+
+	QVariant v = m_list->GetPropertyValue(row);
+
+	switch (v.type())
 	{
-		QVariant v = m_list->GetPropertyValue(row);
-
-		switch (v.type())
+	case QVariant::Bool:
 		{
-		case QVariant::Bool:
-			{
-				QComboBox* pc = new QComboBox(m_prop);
-				pc->addItem("No");
-				pc->addItem("Yes");
-				pc->setCurrentIndex(v.value<bool>() ? 1 : 0);
-				connect(pc, SIGNAL(currentIndexChanged(int)), this, SLOT(comboChanged(int)));
+			QComboBox* pc = new QComboBox(m_prop);
+			pc->addItem("false");
+			pc->addItem("true");
+			pc->setCurrentIndex(v.value<bool>() ? 1 : 0);
+			connect(pc, SIGNAL(currentIndexChanged(int)), this, SLOT(comboChanged(int)));
 
-				m_sel = pc;
-				m_selRow = row;
-				m_selCol = column;
+			m_sel = pc;
+			m_selRow = row;
 
-				m_prop->setCellWidget(row, column, pc);
-			}
+			m_prop->setCellWidget(row, 1, pc);
 		}
 	}
 }
@@ -144,7 +150,7 @@ void CPropertyListView::comboChanged(int val)
 
 		m_list->SetPropertyValue(m_selRow, v);
 
-		m_prop->item(m_selRow, 1)->setText(b ? "Yes" : "No");
+		m_prop->item(m_selRow, 1)->setText(b ? "true" : "false");
 
 		QApplication::activeWindow()->repaint();
 	}

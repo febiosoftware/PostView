@@ -1,9 +1,26 @@
 #pragma once
+#include "CommandPanel.h"
 
-#include <QWidget>
+namespace Ui {
+	class CMaterialPanel;
+}
 
-class CMaterialPanel : public QWidget
+class MaterialProps;
+class QListWidgetItem;
+
+class CMaterialPanel : public CCommandPanel
 {
+	Q_OBJECT
+
 public:
-	CMaterialPanel(QWidget* parent);
+	CMaterialPanel(CMainWindow* wnd, QWidget* parent = 0);
+
+	void Update();
+
+private slots:
+	void on_materialList_currentRowChanged(int nrow);
+
+private:
+	Ui::CMaterialPanel*	ui;
+	MaterialProps*	m_pmat;
 };

@@ -106,6 +106,7 @@
     <ClCompile Include="..\PostView2\MaterialPanel.cpp" />
     <ClCompile Include="..\PostView2\moc_FileViewer.cpp" />
     <ClCompile Include="..\PostView2\moc_MainWindow.cpp" />
+    <ClCompile Include="..\PostView2\moc_MaterialPanel.cpp" />
     <ClCompile Include="..\PostView2\moc_ModelViewer.cpp" />
     <ClCompile Include="..\PostView2\moc_PropertyListView.cpp" />
     <ClCompile Include="..\PostView2\ModelViewer.cpp" />
@@ -141,7 +142,11 @@
     <ClInclude Include="..\PostView2\GLView.h" />
     <ClInclude Include="..\PostView2\GLWidget.h" />
     <ClInclude Include="..\PostView2\GLWidgetManager.h" />
-    <ClInclude Include="..\PostView2\MaterialPanel.h" />
+    <CustomBuild Include="..\PostView2\MaterialPanel.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)bin/moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename).%(Extension) using MOC</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </CustomBuild>
     <CustomBuild Include="..\PostView2\ModelViewer.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)bin/moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename).%(Extension) using MOC</Message>

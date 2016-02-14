@@ -1,6 +1,7 @@
 #pragma once
 #include <QWidget>
 #include <vector>
+#include <QtCore/QVariant>
 
 //-----------------------------------------------------------------------------
 class QTableWidget;
@@ -13,13 +14,13 @@ public:
 	class CProperty
 	{
 	public:
-		QString		m_name;
-		QString		m_val;
-		QString		m_info;
+		QString			m_name;
+		QString			m_info;
+		QVariant::Type	m_type;
 
 	public:
-		CProperty(const QString& name, const QString& val) : m_name(name), m_val(val), m_info(name) {}
-		CProperty(const QString& name, const QString& val, const QString& info) : m_name(name), m_val(val), m_info(info) {}
+		CProperty(const QString& name, QVariant::Type type) : m_name(name), m_type(type), m_info(name) {}
+		CProperty(const QString& name, QVariant::Type type, const QString& info) : m_name(name), m_type(type), m_info(info) {}
 	};
 
 public:
@@ -29,6 +30,8 @@ public:
 	int Properties() const { return (int) m_list.size(); }
 
 	void AddProperty(const CProperty& p) { m_list.push_back(p); }
+	void AddProperty(const QString& name, QVariant::Type type) { AddProperty(CProperty(name, type)); }
+	void AddProperty(const QString& name, QVariant::Type type, const QString& m_info) { AddProperty(CProperty(name, type, m_info)); }
 
 	const CProperty& Property(int i) { return m_list[i]; }
 
@@ -62,5 +65,5 @@ private:
 	QLabel*			m_info;
 
 	QWidget*	m_sel;
-	int			m_selRow, m_selCol;
+	int			m_selRow;
 };

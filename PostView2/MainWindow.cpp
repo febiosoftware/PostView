@@ -33,6 +33,7 @@ bool CMainWindow::OpenFile(const QString& fileName)
 
 	// update the command panels
 	ui->m_modelViewer->Update();
+	ui->m_matPanel->Update();
 
 	// update the gl view
 	ui->m_view->GetCamera().Update(true);

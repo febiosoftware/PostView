@@ -87,7 +87,7 @@ public:
 
 		QDockWidget* dock3 = new QDockWidget("Materials", MainWindow);
         dock3->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
-		m_matPanel = new CMaterialPanel(dock3);
+		m_matPanel = new CMaterialPanel(MainWindow, dock3);
 		dock3->setWidget(m_matPanel);
 		menuView->addAction(dock3->toggleViewAction());
 		MainWindow->tabifyDockWidget(dock2, dock3);

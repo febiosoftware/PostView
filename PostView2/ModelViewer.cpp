@@ -18,10 +18,10 @@ class CModelProps : public CPropertyList
 public:
 	CModelProps(CGLModel* fem) : m_fem(fem) 
 	{
-		AddProperty(CProperty("Element subdivions", "2"));
-		AddProperty(CProperty("Render mode", "Solid"));
-		AddProperty(CProperty("Render outline", "No"));
-		AddProperty(CProperty("Render undeformed outline", "No"));
+		AddProperty("Element subdivions"       , QVariant::Int);
+		AddProperty("Render mode"              , QVariant::Int);
+		AddProperty("Render outline"           , QVariant::Bool);
+		AddProperty("Render undeformed outline", QVariant::Bool);
 	}
 
 	QVariant GetPropertyValue(int i)
@@ -41,10 +41,10 @@ public:
 	{
 		switch (i)
 		{
-		case 0: m_fem->m_nDivs = v.value<int>(); break;
-		case 1: m_fem->m_nrender = v.value<int>(); break;
+		case 0: m_fem->m_nDivs    = v.value<int>(); break;
+		case 1: m_fem->m_nrender  = v.value<int>(); break;
 		case 2: m_fem->m_boutline = v.value<bool>(); break;
-		case 3: m_fem->m_bghost = v.value<bool>(); break;
+		case 3: m_fem->m_bghost   = v.value<bool>(); break;
 		}
 	}
 	
@@ -59,15 +59,26 @@ public:
 	CMeshProps(FEModel* fem) : m_fem(fem) 
 	{
 		FEMesh& mesh = *fem->GetMesh();
-		AddProperty(CProperty("Nodes", QString("%1").arg(mesh.Nodes()), "Number of nodes"));
-		AddProperty(CProperty("Faces", QString("%1").arg(mesh.Faces()), "Number of faces"));
-		AddProperty(CProperty("Solid Elements", QString("%1").arg(mesh.SolidElements()), "Number of solid elements"));
-		AddProperty(CProperty("Shell Elements", QString("%1").arg(mesh.ShellElements()), "Number of shell elemetns"));
+		AddProperty("Nodes", QVariant::Int, "Number of nodes");
+		AddProperty("Faces", QVariant::Int, "Number of faces");
+		AddProperty("Solid Elements", QVariant::Int, "Number of solid elements");
+		AddProperty("Shell Elements", QVariant::Int, "Number of shell elemetns");
 	}
 
 	QVariant GetPropertyValue(int i)
 	{
 		QVariant v;
+		if (m_fem)
+		{
+			FEMesh& mesh = *m_fem->GetMesh();
+			switch (i)
+			{
+			case 0: v = mesh.Nodes(); break;
+			case 1: v = mesh.Faces(); break;
+			case 2: v = mesh.SolidElements(); break;
+			case 3: v = mesh.ShellElements(); break;
+			}
+		}
 		return v;
 	}
 
