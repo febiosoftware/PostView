@@ -122,6 +122,7 @@ void CPropertyListView::on_modelProps_cellClicked(int row, int column)
 
 	QVariant v = m_list->GetPropertyValue(row);
 
+	QWidget* pw = 0;
 	switch (v.type())
 	{
 	case QVariant::Bool:
@@ -131,12 +132,24 @@ void CPropertyListView::on_modelProps_cellClicked(int row, int column)
 			pc->addItem("true");
 			pc->setCurrentIndex(v.value<bool>() ? 1 : 0);
 			connect(pc, SIGNAL(currentIndexChanged(int)), this, SLOT(comboChanged(int)));
-
-			m_sel = pc;
-			m_selRow = row;
-
-			m_prop->setCellWidget(row, 1, pc);
+			pw = pc;
 		}
+		break;
+	case QVariant::Color:
+		{
+			CColorButton* pc = new CColorButton(m_prop);
+			pc->setColor(v.value<QColor>());
+			connect(pc, SIGNAL(colorChanged(QColor)), this, SLOT(colorChanged(QColor)));
+			pw = pc;
+		}
+		break;
+	}
+
+	if (pw)
+	{
+		m_sel = pw;
+		m_selRow = row;
+		m_prop->setCellWidget(row, 1, pw);
 	}
 }
 
@@ -152,6 +165,18 @@ void CPropertyListView::comboChanged(int val)
 
 		m_prop->item(m_selRow, 1)->setText(b ? "true" : "false");
 
+		QApplication::activeWindow()->repaint();
+	}
+}
+
+//-----------------------------------------------------------------------------
+void CPropertyListView::colorChanged(QColor c)
+{
+	if (m_sel)
+	{
+		QVariant v = c;
+		m_list->SetPropertyValue(m_selRow, v);
+		m_prop->item(m_selRow, 1)->setBackgroundColor(c);
 		QApplication::activeWindow()->repaint();
 	}
 }

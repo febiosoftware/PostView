@@ -2,10 +2,52 @@
 #include <QWidget>
 #include <vector>
 #include <QtCore/QVariant>
+#include <QPushButton>
 
 //-----------------------------------------------------------------------------
 class QTableWidget;
 class QLabel;
+
+#include <QPainter>
+#include <QColorDialog>
+
+//-----------------------------------------------------------------------------
+class CColorButton : public QWidget
+{
+	Q_OBJECT
+
+public:
+	CColorButton(QWidget* parent) : QWidget(parent)
+	{
+		m_col = QColor(Qt::black);
+	}
+
+	void paintEvent(QPaintEvent* ev)
+	{
+		QPainter p(this);
+		p.fillRect(rect(), m_col);
+	}
+
+	void mouseReleaseEvent(QMouseEvent* ev)
+	{
+		QColorDialog dlg;
+		QColor col = dlg.getColor(m_col);
+		if (col.isValid())
+		{
+			m_col = col;
+			repaint();
+			emit colorChanged(m_col);
+		}
+	}
+
+	void setColor(const QColor& c) { m_col = c; }
+
+signals:
+	void colorChanged(QColor col);
+
+private:
+	QColor	m_col;
+};
 
 //-----------------------------------------------------------------------------
 class CPropertyList
@@ -58,6 +100,7 @@ private slots:
 	void on_modelProps_currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn);
 	void on_modelProps_cellClicked(int row, int column);
 	void comboChanged(int);
+	void colorChanged(QColor c);
 
 private:
 	CPropertyList*	m_list;

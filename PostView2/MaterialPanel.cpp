@@ -57,7 +57,17 @@ public:
 
 	void SetPropertyValue(int i, const QVariant& v)
 	{
-
+		if (m_mat)
+		{
+			switch (i)
+			{
+			case 1: { QColor c = v.value<QColor>(); GLCOLOR rgb(c.red(), c.green(), c.blue()); m_mat->diffuse = rgb; } break;
+			case 2: { QColor c = v.value<QColor>(); GLCOLOR rgb(c.red(), c.green(), c.blue()); m_mat->ambient = rgb; } break;
+			case 3: { QColor c = v.value<QColor>(); GLCOLOR rgb(c.red(), c.green(), c.blue()); m_mat->specular = rgb; } break;
+			case 4: { QColor c = v.value<QColor>(); GLCOLOR rgb(c.red(), c.green(), c.blue()); m_mat->emission = rgb; } break;
+			case 5: { QColor c = v.value<QColor>(); GLCOLOR rgb(c.red(), c.green(), c.blue()); m_mat->meshcol = rgb; } break;
+			}
+		}
 	}
 
 private:
