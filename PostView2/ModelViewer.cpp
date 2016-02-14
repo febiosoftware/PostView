@@ -4,8 +4,11 @@
 #include <QTableWidget>
 #include <QMessageBox>
 #include <QHeaderView>
+#include <QSplitter>
+#include <QLabel>
 #include "MainWindow.h"
 #include "Document.h"
+#include "PropertyListView.h"
 #include "GLModel.h"
 #include <PostViewLib/FEModel.h>
 
@@ -13,12 +16,63 @@
 class CModelProps : public CPropertyList
 {
 public:
-	CModelProps(FEModel* fem) : m_fem(fem) 
+	CModelProps(CGLModel* fem) : m_fem(fem) 
 	{
 		AddProperty(CProperty("Element subdivions", "2"));
 		AddProperty(CProperty("Render mode", "Solid"));
 		AddProperty(CProperty("Render outline", "No"));
 		AddProperty(CProperty("Render undeformed outline", "No"));
+	}
+
+	QVariant GetPropertyValue(int i)
+	{
+		QVariant v;
+		switch (i)
+		{
+		case 0: v = m_fem->m_nDivs; break;
+		case 1: v = m_fem->m_nrender; break;
+		case 2: v = m_fem->m_boutline; break;
+		case 3: v = m_fem->m_bghost; break;
+		}
+		return v;
+	}
+
+	void SetPropertyValue(int i, const QVariant& v)
+	{
+		switch (i)
+		{
+		case 0: m_fem->m_nDivs = v.value<int>(); break;
+		case 1: m_fem->m_nrender = v.value<int>(); break;
+		case 2: m_fem->m_boutline = v.value<bool>(); break;
+		case 3: m_fem->m_bghost = v.value<bool>(); break;
+		}
+	}
+	
+private:
+	CGLModel*	m_fem;
+};
+
+//-----------------------------------------------------------------------------
+class CMeshProps : public CPropertyList
+{
+public:
+	CMeshProps(FEModel* fem) : m_fem(fem) 
+	{
+		FEMesh& mesh = *fem->GetMesh();
+		AddProperty(CProperty("Nodes", QString("%1").arg(mesh.Nodes()), "Number of nodes"));
+		AddProperty(CProperty("Faces", QString("%1").arg(mesh.Faces()), "Number of faces"));
+		AddProperty(CProperty("Solid Elements", QString("%1").arg(mesh.SolidElements()), "Number of solid elements"));
+		AddProperty(CProperty("Shell Elements", QString("%1").arg(mesh.ShellElements()), "Number of shell elemetns"));
+	}
+
+	QVariant GetPropertyValue(int i)
+	{
+		QVariant v;
+		return v;
+	}
+
+	void SetPropertyValue(int i, const QVariant& v)
+	{
 	}
 
 private:
@@ -29,24 +83,27 @@ private:
 class Ui::CModelViewer
 {
 public:
-	QTreeWidget*	m_tree;
-	QTableWidget*	m_props;
+	QTreeWidget*		m_tree;
+	CPropertyListView*	m_props;
 
 public:
 	void setupUi(::CModelViewer* parent)
 	{
 		QVBoxLayout* pg = new QVBoxLayout(parent);
 		
-		m_tree = new QTreeWidget(parent);
+		QSplitter* psplitter = new QSplitter;
+		psplitter->setOrientation(Qt::Vertical);
+		pg->addWidget(psplitter);
+
+		m_tree = new QTreeWidget;
 		m_tree->setObjectName(QStringLiteral("modelTree"));
 		m_tree->setColumnCount(1);
 		m_tree->setHeaderHidden(true);
 
-		m_props = new QTableWidget(parent);
-		m_props->setObjectName(QStringLiteral("modelProps"));
+		m_props = new CPropertyListView;
 
-		pg->addWidget(m_tree);
-		pg->addWidget(m_props, 2);
+		psplitter->addWidget(m_tree);
+		psplitter->addWidget(m_props);
 
 		QMetaObject::connectSlotsByName(parent);
 	}
@@ -68,12 +125,12 @@ void CModelViewer::Update()
 		ui->m_tree->clear();
 		QTreeWidgetItem* pi1 = new QTreeWidgetItem(ui->m_tree);
 		pi1->setText(0, "Model");
-		pi1->setData(0, Qt::UserRole, qVariantFromValue((void*) new CModelProps(fem)));
+		pi1->setData(0, Qt::UserRole, qVariantFromValue((void*) new CModelProps(mdl)));
 
 		// add the mesh
 		QTreeWidgetItem* pi2 = new QTreeWidgetItem(pi1);
 		pi2->setText(0, "Mesh");
-		pi2->setData(0, Qt::UserRole, qVariantFromValue((void*) new CModelProps(fem)));
+		pi2->setData(0, Qt::UserRole, qVariantFromValue((void*) new CMeshProps(fem)));
 
 		pi2 = new QTreeWidgetItem(pi1);
 		pi2->setText(0, "Displacement map");
@@ -91,30 +148,7 @@ void CModelViewer::on_modelTree_currentItemChanged(QTreeWidgetItem* current, QTr
 	CPropertyList* pdata = (CPropertyList*) v.value<void*>();
 
 	// clear the property list
-	ui->m_props->clear();
-	ui->m_props->setColumnCount(1);
-	ui->m_props->horizontalHeader()->setStretchLastSection(true);
-	ui->m_props->horizontalHeader()->hide();
-	ui->m_props->verticalHeader()->setMinimumWidth(width()/2);
+	ui->m_props->Clear();
 
-	if (pdata)
-	{
-		int n = pdata->Properties();
-		if (n > 0)
-		{
-			ui->m_props->setRowCount(n);
-			for (int i=0; i<n; ++i)
-			{
-				const CPropertyList::CProperty& p = pdata->Property(i);
-
-				QTableWidgetItem* pitem = new QTableWidgetItem;
-				pitem->setText(p.m_name);
-				ui->m_props->setVerticalHeaderItem(i, pitem);
-
-				pitem = new QTableWidgetItem;
-				pitem->setText(p.m_val);
-				ui->m_props->setItem(i, 0, pitem);
-			}
-		}
-	}
+	if (pdata) ui->m_props->Update(pdata);
 }

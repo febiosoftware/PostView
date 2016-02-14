@@ -11,7 +11,6 @@
 CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMainWindow)
 {
 	m_doc = new CDocument(this);
-
 	ui->setupUi(this);
 }
 
