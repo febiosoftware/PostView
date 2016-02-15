@@ -20,7 +20,7 @@ public:
 
 		QToolButton* pb = new QToolButton(parent);
 		pb->setObjectName(QStringLiteral("toolUp"));
-		pb->setText("Up");
+		pb->setIcon(QIcon(":/icons/up.png"));
 		pb->setAutoRaise(true);
 
 		m_fileFilter = new QComboBox(parent);

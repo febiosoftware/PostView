@@ -10,6 +10,9 @@
 #include "MaterialPanel.h"
 #include "DataPanel.h"
 #include "StatePanel.h"
+#include <QComboBox>
+#include <QTreeWidget>
+#include <QHeaderView>
 #include "ToolsPanel.h"
 #include "GLView.h"
 
@@ -23,6 +26,9 @@ class Ui_MainWindow
 		wndHeight  = 600,		// height of main window
 		menuHeight = 21			// height of menu bar
 	};
+
+private:
+	CMainWindow*	pwnd;
 
 public:
 	QMenu* menuFile;
@@ -44,6 +50,8 @@ public:
 	// build the UI
 	void setupUi(CMainWindow* MainWindow)
 	{
+		pwnd = MainWindow;
+
 		// set the initial window size
         MainWindow->resize(wndWidth, wndHeight);
 
@@ -118,78 +126,76 @@ public:
 		dock1->raise();
 	}
 
+	QAction* addAction(const QString& title, const QString& name, const QString& iconFile = QString())
+	{
+		QAction* pa = new QAction(title, pwnd);
+		pa->setObjectName(name);
+		if (iconFile.isEmpty() == false) pa->setIcon(QIcon(iconFile));
+		return pa;
+	}
+
 	// create actions and menu
 	void buildMenu(CMainWindow* MainWindow)
 	{
 		// create actions
 		// --- File menu ---
-		QAction* actionOpen        = new QAction("Open ..."         , MainWindow); actionOpen       ->setObjectName(QStringLiteral("actionOpen"       ));
-		QAction* actionSave        = new QAction("Save ..."         , MainWindow); actionSave       ->setObjectName(QStringLiteral("actionSave"       ));
-		QAction* actionUpdate      = new QAction("Update"           , MainWindow); actionUpdate     ->setObjectName(QStringLiteral("actionUpdate"     ));
-		QAction* actionExport      = new QAction("Export ..."       , MainWindow); actionExport     ->setObjectName(QStringLiteral("actionExport"     ));
-		QAction* actionModelInfo   = new QAction("Model Info ..."   , MainWindow); actionModelInfo  ->setObjectName(QStringLiteral("actionModelInfo"  ));
-		QAction* actionSnapShot    = new QAction("Snapshot ..."     , MainWindow); actionSnapShot   ->setObjectName(QStringLiteral("actionSnapShot"   ));
-		QAction* actionOpenSession = new QAction("Open session ..." , MainWindow); actionOpenSession->setObjectName(QStringLiteral("actionOpenSession"));
-		QAction* actionSaveSession = new QAction("Save session ..." , MainWindow); actionSaveSession->setObjectName(QStringLiteral("actionSaveSession"));
-		QAction* actionQuit        = new QAction("Exit"             , MainWindow); actionQuit       ->setObjectName(QStringLiteral("actionQuit"       ));
-
-		// apply icons
-        QIcon icon;
-        icon.addFile(QStringLiteral(":/icons/document-open-8.png"), QSize(), QIcon::Normal, QIcon::Off);
-        actionOpen->setIcon(icon);
-        icon.addFile(QStringLiteral(":/icons/document-save-5.png"), QSize(), QIcon::Normal, QIcon::Off);
-        actionSave->setIcon(icon);
-        icon.addFile(QStringLiteral(":/icons/view-refresh-3.png"), QSize(), QIcon::Normal, QIcon::Off);
-        actionUpdate->setIcon(icon);
-        icon.addFile(QStringLiteral(":/icons/App-snapshot-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
-        actionSnapShot->setIcon(icon);
+		QAction* actionOpen        = addAction("Open ..."         , "actionOpen"  , ":/icons/open.png");
+		QAction* actionSave        = addAction("save. .."         , "actionSave"  , ":/icons/save.png");
+		QAction* actionUpdate      = addAction("Update"           , "actionUpdate", ":/icons/refresh.png");
+		QAction* actionExport      = addAction("Export ..."       , "actionExport");
+		QAction* actionModelInfo   = addAction("Model Info ..."   , "actionModelInfo"  );
+		QAction* actionSnapShot    = addAction("Snapshot ..."     , "actionSnapShot"   );
+		QAction* actionOpenSession = addAction("Open session ..." , "actionOpenSession");
+		QAction* actionSaveSession = addAction("Save session ..." , "actionSaveSession");
+		QAction* actionQuit        = addAction("Exit"             , "actionQuit"       );
 
 		// --- Edit menu ---
-		QAction* actionHideSelected    = new QAction("Hide selected"   , MainWindow); actionHideSelected   ->setObjectName(QStringLiteral("actionHideSelected"   ));
-		QAction* actionHideUnselected  = new QAction("Hide unselected" , MainWindow); actionHideUnselected ->setObjectName(QStringLiteral("actionHideUnselected" ));
-		QAction* actionInvertSelection = new QAction("Invert selection", MainWindow); actionInvertSelection->setObjectName(QStringLiteral("actionInvertSelection"));
-		QAction* actionUnhideAll       = new QAction("Unhide all      ", MainWindow); actionUnhideAll      ->setObjectName(QStringLiteral("actionUnhideAll"      ));
-		QAction* actionSelectAll       = new QAction("Select all      ", MainWindow); actionSelectAll      ->setObjectName(QStringLiteral("actionSelectAll"      ));
-		QAction* actionSelectRange     = new QAction("Select range ...", MainWindow); actionSelectRange    ->setObjectName(QStringLiteral("actionSelectRange"    ));
-		QAction* actionClearSelection  = new QAction("Clear selection" , MainWindow); actionClearSelection ->setObjectName(QStringLiteral("actionClearSelection" ));
-		QAction* actionFind            = new QAction("Find ..."        , MainWindow); actionFind           ->setObjectName(QStringLiteral("actionFind"           ));
-		QAction* actionDelete          = new QAction("Delete ..."      , MainWindow); actionDelete         ->setObjectName(QStringLiteral("actionDelete"         ));
-		QAction* actionProperties      = new QAction("Properties ..."  , MainWindow); actionProperties     ->setObjectName(QStringLiteral("actionProperties"     ));
+		QAction* actionHideSelected    = addAction("Hide selected"   , "actionHideSelected"   );
+		QAction* actionHideUnselected  = addAction("Hide unselected" , "actionHideUnselected" );
+		QAction* actionInvertSelection = addAction("Invert selection", "actionInvertSelection");
+		QAction* actionUnhideAll       = addAction("Unhide all      ", "actionUnhideAll"      );
+		QAction* actionSelectAll       = addAction("Select all      ", "actionSelectAll"      );
+		QAction* actionSelectRange     = addAction("Select range ...", "actionSelectRange"    );
+		QAction* actionClearSelection  = addAction("Clear selection" , "actionClearSelection" );
+		QAction* actionFind            = addAction("Find ..."        , "actionFind"           );
+		QAction* actionDelete          = addAction("Delete ..."      , "actionDelete"         );
+		QAction* actionProperties      = addAction("Properties ..."  , "actionProperties"     );
 
 		// --- Post menu ---
-		QAction* actionPlaneCut        = new QAction("Plane cut"       , MainWindow); actionPlaneCut       ->setObjectName(QStringLiteral("actionPlaneCut"       ));
-		QAction* actionVectorPlot      = new QAction("Vector plot"     , MainWindow); actionVectorPlot     ->setObjectName(QStringLiteral("actionVectorPlot"     ));
-		QAction* actionIsosurfacePlot  = new QAction("Isosurface plot" , MainWindow); actionIsosurfacePlot ->setObjectName(QStringLiteral("actionIsosurfacePlot" ));
-		QAction* actionSlicePlot       = new QAction("Slice plot"      , MainWindow); actionSlicePlot      ->setObjectName(QStringLiteral("actionSlicePlot"      ));
-		QAction* actionDisplacementMap = new QAction("Displacement map", MainWindow); actionDisplacementMap->setObjectName(QStringLiteral("actionDisplacementMap"));
-		QAction* actionSummary         = new QAction("Summary ..."     , MainWindow); actionSummary        ->setObjectName(QStringLiteral("actionSummary"        ));
-		QAction* actionStats           = new QAction("Statistics  ..." , MainWindow); actionStats          ->setObjectName(QStringLiteral("actionStats"          ));
-		QAction* actionGraph           = new QAction("Graph ..."       , MainWindow); actionGraph          ->setObjectName(QStringLiteral("actionGraph"          ));
-		QAction* actionIntegrate       = new QAction("Integrate ..."   , MainWindow); actionIntegrate      ->setObjectName(QStringLiteral("actionIntegrate"      ));
+		QAction* actionColorMap        = addAction("Toggle colormap" , "actionColorMap"       , ":/icons/colormap.png");
+		QAction* actionPlaneCut        = addAction("Plane cut"       , "actionPlaneCut"       );
+		QAction* actionVectorPlot      = addAction("Vector plot"     , "actionVectorPlot"     );
+		QAction* actionIsosurfacePlot  = addAction("Isosurface plot" , "actionIsosurfacePlot" );
+		QAction* actionSlicePlot       = addAction("Slice plot"      , "actionSlicePlot"      );
+		QAction* actionDisplacementMap = addAction("Displacement map", "actionDisplacementMap");
+		QAction* actionSummary         = addAction("Summary ..."     , "actionSummary"        );
+		QAction* actionStats           = addAction("Statistics  ..." , "actionStats"          );
+		QAction* actionGraph           = addAction("Graph ..."       , "actionGraph"          );
+		QAction* actionIntegrate       = addAction("Integrate ..."   , "actionIntegrate"      );
 
 		// --- Record menu ---
-		QAction* actionRecordNew   = new QAction("New ...", MainWindow); actionRecordNew  ->setObjectName(QStringLiteral("actionRecordNew"  ));
-		QAction* actionRecordStart = new QAction("Start"  , MainWindow); actionRecordStart->setObjectName(QStringLiteral("actionRecordStart"));
-		QAction* actionRecordPause = new QAction("Pause"  , MainWindow); actionRecordPause->setObjectName(QStringLiteral("actionRecordPause"));
-		QAction* actionRecordStop  = new QAction("Stop"   , MainWindow); actionRecordStop ->setObjectName(QStringLiteral("actionRecordStop" ));
+		QAction* actionRecordNew   = addAction("New ...", "actionRecordNew"  );
+		QAction* actionRecordStart = addAction("Start"  , "actionRecordStart");
+		QAction* actionRecordPause = addAction("Pause"  , "actionRecordPause");
+		QAction* actionRecordStop  = addAction("Stop"   , "actionRecordStop" );
 
 		// --- View Menu ---
-		QAction* actionViewSettings   = new QAction("Settings ..."          , MainWindow); actionViewSettings  ->setObjectName(QStringLiteral("actionViewSettings"  ));
-		QAction* actionViewCapture    = new QAction("Toggle capture Frame"  , MainWindow); actionViewCapture   ->setObjectName(QStringLiteral("actionViewCapture"   ));
-		QAction* actionViewProjection = new QAction("Toggle projection mode", MainWindow); actionViewProjection->setObjectName(QStringLiteral("actionViewProjection"));
-		QAction* actionViewMesh       = new QAction("Toggle mesh lines",      MainWindow); actionViewMesh      ->setObjectName(QStringLiteral("actionViewMesh"      ));
-		QAction* actionViewOutline    = new QAction("Toggle outline",         MainWindow); actionViewOutline   ->setObjectName(QStringLiteral("actionViewOutline"   ));
-		QAction* actionViewSmooth     = new QAction("Toggle color smoothing", MainWindow); actionViewSmooth    ->setObjectName(QStringLiteral("actionViewSmooth"    ));
-		QAction* actionViewFront      = new QAction("Front",                  MainWindow); actionViewFront     ->setObjectName(QStringLiteral("actionViewFront"     ));
-		QAction* actionViewBack       = new QAction("Back" ,                  MainWindow); actionViewBack      ->setObjectName(QStringLiteral("actionViewBack"      ));
-		QAction* actionViewLeft       = new QAction("Left" ,                  MainWindow); actionViewLeft      ->setObjectName(QStringLiteral("actionViewLeft"      ));
-		QAction* actionViewRight      = new QAction("Right",                  MainWindow); actionViewRight     ->setObjectName(QStringLiteral("actionViewRight"     ));
-		QAction* actionViewTop        = new QAction("Top" ,                   MainWindow); actionViewTop       ->setObjectName(QStringLiteral("actionViewTop"       ));
-		QAction* actionViewBottom     = new QAction("Bottom" ,                MainWindow); actionViewBottom    ->setObjectName(QStringLiteral("actionViewBottom"    ));
-		QAction* actionViewTrack      = new QAction("Track selection",        MainWindow); actionViewTrack     ->setObjectName(QStringLiteral("actionViewTrack"     ));
-		QAction* actionViewVPSave     = new QAction("Save viewpoint",         MainWindow); actionViewVPSave    ->setObjectName(QStringLiteral("actionViewVPSave"    ));
-		QAction* actionViewVPPrev     = new QAction("Prev viewpoint",         MainWindow); actionViewVPPrev    ->setObjectName(QStringLiteral("actionViewVPPrev"    ));
-		QAction* actionViewVPNext     = new QAction("Next viewpoint",         MainWindow); actionViewVPNext    ->setObjectName(QStringLiteral("actionViewVPNext"    ));
+		QAction* actionViewSettings   = addAction("Settings ..."          , "actionViewSettings"  );
+		QAction* actionViewCapture    = addAction("Toggle capture Frame"  , "actionViewCapture"   );
+		QAction* actionViewProjection = addAction("Toggle projection mode", "actionViewProjection");
+		QAction* actionViewMesh       = addAction("Toggle mesh lines",      "actionViewMesh"      );
+		QAction* actionViewOutline    = addAction("Toggle outline",         "actionViewOutline"   );
+		QAction* actionViewSmooth     = addAction("Toggle color smoothing", "actionViewSmooth"    );
+		QAction* actionViewFront      = addAction("Front",                  "actionViewFront"     );
+		QAction* actionViewBack       = addAction("Back" ,                  "actionViewBack"      );
+		QAction* actionViewLeft       = addAction("Left" ,                  "actionViewLeft"      );
+		QAction* actionViewRight      = addAction("Right",                  "actionViewRight"     );
+		QAction* actionViewTop        = addAction("Top" ,                   "actionViewTop"       );
+		QAction* actionViewBottom     = addAction("Bottom" ,                "actionViewBottom"    );
+		QAction* actionViewTrack      = addAction("Track selection",        "actionViewTrack"     );
+		QAction* actionViewVPSave     = addAction("Save viewpoint",         "actionViewVPSave"    );
+		QAction* actionViewVPPrev     = addAction("Prev viewpoint",         "actionViewVPPrev"    );
+		QAction* actionViewVPNext     = addAction("Next viewpoint",         "actionViewVPNext"    );
 
 		// --- Help Menu ---
 		QAction* actionHelp  = new QAction("Help ... " , MainWindow); actionHelp ->setObjectName(QStringLiteral("actionHelp" ));
@@ -288,6 +294,24 @@ public:
 		mainToolBar->addAction(actionOpen);
 		mainToolBar->addAction(actionSave);
 		mainToolBar->addAction(actionUpdate);
+		mainToolBar->addSeparator();
+
+		QTreeWidget* pw = new QTreeWidget;
+		QTreeWidgetItem* pi1 = new QTreeWidgetItem(pw), *pi;
+		pw->header()->hide();
+		pi1->setText(0, "displacement");
+		pi1->setExpanded(true);
+		pi = new QTreeWidgetItem(pi1); pi->setText(0, "X-displacement");
+		pi = new QTreeWidgetItem(pi1); pi->setText(0, "Y-displacement");
+		pi = new QTreeWidgetItem(pi1); pi->setText(0, "Z-displacement");
+		
+		QComboBox* pc = new QComboBox;
+		pc->setModel(pw->model());
+		pc->setView(pw);
+		pc->view()->setMinimumWidth(200);
+		mainToolBar->addWidget(pc);
+
+		mainToolBar->addAction(actionColorMap);
 	}
 };
 
