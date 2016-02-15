@@ -1,8 +1,24 @@
 #pragma once
-#include <QWidget>
+#include "CommandPanel.h"
 
-class CStatePanel : public QWidget
+namespace Ui{
+	class CStatePanel;
+}
+
+class CMainWindow;
+
+class CStatePanel : public CCommandPanel
 {
+	Q_OBJECT
+
 public:
-	CStatePanel(QWidget* parent);
+	CStatePanel(CMainWindow* pwnd, QWidget* parent = 0);
+
+	void Update();
+
+private slots:
+	void on_stateList_cellDoubleClicked(int row, int column);
+
+private:
+	Ui::CStatePanel* ui;
 };

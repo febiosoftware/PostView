@@ -56,13 +56,15 @@ public:
 	class CProperty
 	{
 	public:
-		QString			m_name;
-		QString			m_info;
-		QVariant::Type	m_type;
+		QString			m_name;		// the name of the property
+		QString			m_info;		// description of the property
+		QVariant::Type	m_type;		// type of property
+		QStringList		m_values;	// set possible values for int properties. (separate by semicolon)
 
 	public:
 		CProperty(const QString& name, QVariant::Type type) : m_name(name), m_type(type), m_info(name) {}
 		CProperty(const QString& name, QVariant::Type type, const QString& info) : m_name(name), m_type(type), m_info(info) {}
+		CProperty(const QString& name, QVariant::Type type, const QString& info, const QStringList& val) : m_name(name), m_type(type), m_info(info), m_values(val) {}
 	};
 
 public:
@@ -73,7 +75,8 @@ public:
 
 	void AddProperty(const CProperty& p) { m_list.push_back(p); }
 	void AddProperty(const QString& name, QVariant::Type type) { AddProperty(CProperty(name, type)); }
-	void AddProperty(const QString& name, QVariant::Type type, const QString& m_info) { AddProperty(CProperty(name, type, m_info)); }
+	void AddProperty(const QString& name, QVariant::Type type, const QString& info) { AddProperty(CProperty(name, type, info)); }
+	void AddProperty(const QString& name, QVariant::Type type, const QString& info, const QStringList& vals) { AddProperty(CProperty(name, type, info, vals)); }
 
 	const CProperty& Property(int i) { return m_list[i]; }
 
@@ -101,6 +104,8 @@ private slots:
 	void on_modelProps_cellClicked(int row, int column);
 	void comboChanged(int);
 	void colorChanged(QColor c);
+	void intChanged(const QString& s);
+	void floatChanged(const QString& s);
 
 private:
 	CPropertyList*	m_list;

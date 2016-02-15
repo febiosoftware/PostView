@@ -32,13 +32,13 @@ public:
 	QMenu* menuView;
 	QMenu* menuHelp; 
 
-	CFileViewer*	m_fileViewer;
-	CModelViewer*	m_modelViewer;
-	CMaterialPanel*	m_matPanel;
-	CDataPanel*		m_dataPanel;
-	CStatePanel*	m_statePanel;
-	CToolsPanel*	m_toolsPanel;
-	CGLView*		m_view;
+	CFileViewer*	fileViewer;
+	CModelViewer*	modelViewer;
+	CMaterialPanel*	matPanel;
+	CDataPanel*		dataPanel;
+	CStatePanel*	statePanel;
+	CToolsPanel*	toolsPanel;
+	CGLView*		glview;
 
 public:
 	// build the UI
@@ -48,8 +48,8 @@ public:
         MainWindow->resize(wndWidth, wndHeight);
 
 		// create the central widget
-		m_view = new CGLView(MainWindow);
-		MainWindow->setCentralWidget(m_view);
+		glview = new CGLView(MainWindow);
+		MainWindow->setCentralWidget(glview);
 
 		// build the menu
 		buildMenu(MainWindow);
@@ -72,44 +72,44 @@ public:
 	{
         QDockWidget* dock1 = new QDockWidget("File Viewer", MainWindow);
         dock1->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
-        m_fileViewer = new CFileViewer(MainWindow, dock1);
-        m_fileViewer->setObjectName(QStringLiteral("fileViewer"));
-        dock1->setWidget(m_fileViewer);
+        fileViewer = new CFileViewer(MainWindow, dock1);
+        fileViewer->setObjectName(QStringLiteral("fileViewer"));
+        dock1->setWidget(fileViewer);
 		MainWindow->addDockWidget(Qt::LeftDockWidgetArea, dock1);
 		menuView->addAction(dock1->toggleViewAction());
 
 		QDockWidget* dock2 = new QDockWidget("Model Viewer", MainWindow);
         dock1->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
-		m_modelViewer = new CModelViewer(MainWindow, dock2);
-		dock2->setWidget(m_modelViewer);
+		modelViewer = new CModelViewer(MainWindow, dock2);
+		dock2->setWidget(modelViewer);
 		menuView->addAction(dock2->toggleViewAction());
 		MainWindow->tabifyDockWidget(dock1, dock2);
 
 		QDockWidget* dock3 = new QDockWidget("Materials", MainWindow);
         dock3->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
-		m_matPanel = new CMaterialPanel(MainWindow, dock3);
-		dock3->setWidget(m_matPanel);
+		matPanel = new CMaterialPanel(MainWindow, dock3);
+		dock3->setWidget(matPanel);
 		menuView->addAction(dock3->toggleViewAction());
 		MainWindow->tabifyDockWidget(dock2, dock3);
 
 		QDockWidget* dock4 = new QDockWidget("Data", MainWindow);
         dock4->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
-		m_dataPanel = new CDataPanel(dock4);
-		dock4->setWidget(m_dataPanel);
+		dataPanel = new CDataPanel(MainWindow, dock4);
+		dock4->setWidget(dataPanel);
 		menuView->addAction(dock4->toggleViewAction());
 		MainWindow->tabifyDockWidget(dock3, dock4);
 
 		QDockWidget* dock5 = new QDockWidget("State", MainWindow);
         dock5->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
-		m_statePanel = new CStatePanel(dock5);
-		dock5->setWidget(m_statePanel);
+		statePanel = new CStatePanel(MainWindow, dock5);
+		dock5->setWidget(statePanel);
 		menuView->addAction(dock5->toggleViewAction());
 		MainWindow->tabifyDockWidget(dock4, dock5);
 
 		QDockWidget* dock6 = new QDockWidget("Tools", MainWindow);
         dock6->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
-		m_toolsPanel = new CToolsPanel(dock6);
-		dock6->setWidget(m_toolsPanel);
+		toolsPanel = new CToolsPanel(dock6);
+		dock6->setWidget(toolsPanel);
 		menuView->addAction(dock6->toggleViewAction());
 		MainWindow->addDockWidget(Qt::RightDockWidgetArea, dock6);
 		dock6->hide();

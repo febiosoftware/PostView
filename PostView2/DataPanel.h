@@ -1,8 +1,21 @@
 #pragma once
-#include <QWidget>
+#include "CommandPanel.h"
 
-class CDataPanel : public QWidget
+class CMainWindow;
+
+namespace Ui {
+	class CDataPanel;
+}
+
+class CDataPanel : public CCommandPanel
 {
+	Q_OBJECT
+
 public:
-	CDataPanel(QWidget* parent);
+	CDataPanel(CMainWindow* pwnd, QWidget* parent = 0);
+
+	void Update();
+
+private:
+	Ui::CDataPanel* ui;
 };

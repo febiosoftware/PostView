@@ -12,6 +12,8 @@
 #include "GLModel.h"
 #include <PostViewLib/FEModel.h>
 
+inline QColor toQColor(GLCOLOR c) { return QColor(c.r, c.g, c.b); }
+
 //-----------------------------------------------------------------------------
 class CModelProps : public CPropertyList
 {
@@ -19,9 +21,16 @@ public:
 	CModelProps(CGLModel* fem) : m_fem(fem) 
 	{
 		AddProperty("Element subdivions"       , QVariant::Int);
-		AddProperty("Render mode"              , QVariant::Int);
+		AddProperty("Render mode"              , QVariant::Int, "Render mode", QStringList() << "default" << "wireframe" << "solid");
 		AddProperty("Render outline"           , QVariant::Bool);
 		AddProperty("Render undeformed outline", QVariant::Bool);
+		AddProperty("Outline color"            , QVariant::Color);
+		AddProperty("Node color"               , QVariant::Color);
+		AddProperty("Selection color"          , QVariant::Color);
+		AddProperty("Render smooth"            , QVariant::Bool);
+		AddProperty("Shells as hexes"          , QVariant::Bool);
+		AddProperty("Shell reference surface"  , QVariant::Int, "set the shell reference surface", QStringList() << "Mid surface" << "bottom surface" << "top surface");
+		AddProperty("Smoothing angle"          , QVariant::Double);
 	}
 
 	QVariant GetPropertyValue(int i)
@@ -33,6 +42,13 @@ public:
 		case 1: v = m_fem->m_nrender; break;
 		case 2: v = m_fem->m_boutline; break;
 		case 3: v = m_fem->m_bghost; break;
+		case 4: v = toQColor(m_fem->m_line_col); break;
+		case 5: v = toQColor(m_fem->m_node_col); break;
+		case 6: v = toQColor(m_fem->m_sel_col); break;
+		case 7: v = m_fem->m_bsmooth; break;
+		case 8: v = m_fem->m_bShell2Hex; break;
+		case 9: v = m_fem->m_nshellref; break;
+//		case 10: v = m_fem->m_
 		}
 		return v;
 	}

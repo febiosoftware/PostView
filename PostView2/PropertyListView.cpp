@@ -6,6 +6,37 @@
 #include <QLabel>
 #include <QComboBox>
 #include <QApplication>
+#include <QLineEdit>
+#include <QIntValidator>
+#include <QDoubleValidator>
+
+//-----------------------------------------------------------------------------
+class CIntInput : public QLineEdit
+{
+public:
+	CIntInput(QWidget* parent = 0) : QLineEdit(parent)
+	{
+		setValidator(new QIntValidator);
+	}
+
+	void setValue(int m) { setText(QString("%1").arg(m)); }
+	int value() const { return text().toInt(); }
+};
+
+//-----------------------------------------------------------------------------
+class CFloatInput : public QLineEdit
+{
+public:
+	CFloatInput(QWidget* parent = 0) : QLineEdit(parent)
+	{
+		QDoubleValidator* pv = new QDoubleValidator;
+		pv->setRange(-1e99, 1e99, 3);
+		setValidator(pv);
+	}
+
+	void setValue(double v) { setText(QString("%1").arg(v)); }
+	double value() const { return text().toDouble(); }
+};
 
 //-----------------------------------------------------------------------------
 CPropertyListView::CPropertyListView(QWidget* parent) : QWidget(parent)
@@ -55,10 +86,17 @@ void CPropertyListView::Update(CPropertyList* plist)
 			m_prop->setItem(i, 0, pitem);
 
 			pitem = new QTableWidgetItem;
+			pitem->setFlags(pitem->flags() & ~Qt::ItemIsEditable);
 			QVariant v = plist->GetPropertyValue(i);
-			if (p.m_type == QVariant::Color) pitem->setBackgroundColor(v.value<QColor>());
-			else
+			switch (p.m_type)
 			{
+			case QVariant::Color: pitem->setBackgroundColor(v.value<QColor>()); break;
+			case QVariant::Bool:  pitem->setText(v.value<bool>() ? "Yes" : "No"); break;
+			case QVariant::Int:
+				if (p.m_values.isEmpty()) pitem->setText(v.toString());
+				else pitem->setText(p.m_values.at(v.value<int>()));
+				break;
+			default:
 				pitem->setText(v.toString());
 			}
 			m_prop->setItem(i, 1, pitem);
@@ -128,8 +166,8 @@ void CPropertyListView::on_modelProps_cellClicked(int row, int column)
 	case QVariant::Bool:
 		{
 			QComboBox* pc = new QComboBox(m_prop);
-			pc->addItem("false");
-			pc->addItem("true");
+			pc->addItem("No");
+			pc->addItem("Yes");
 			pc->setCurrentIndex(v.value<bool>() ? 1 : 0);
 			connect(pc, SIGNAL(currentIndexChanged(int)), this, SLOT(comboChanged(int)));
 			pw = pc;
@@ -141,6 +179,34 @@ void CPropertyListView::on_modelProps_cellClicked(int row, int column)
 			pc->setColor(v.value<QColor>());
 			connect(pc, SIGNAL(colorChanged(QColor)), this, SLOT(colorChanged(QColor)));
 			pw = pc;
+		}
+		break;
+	case QVariant::Int:
+		{
+			const CPropertyList::CProperty& p = m_list->Property(row);
+			if (p.m_values.isEmpty())
+			{
+				CIntInput* pi = new CIntInput(m_prop);
+				pi->setValue(v.value<int>());
+				connect(pi, SIGNAL(textEdited(const QString&)), this, SLOT(intChanged(const QString&)));
+				pw = pi;
+			}
+			else
+			{
+				QComboBox* pc = new QComboBox(m_prop);
+				for (int i=0; i<p.m_values.size(); ++i) pc->addItem(p.m_values.at(i));
+				pc->setCurrentIndex(v.value<int>());
+				connect(pc, SIGNAL(currentIndexChanged(int)), this, SLOT(comboChanged(int)));
+				pw = pc;
+			}
+		}
+		break;
+	case QVariant::Double:
+		{
+			CFloatInput* pf = new CFloatInput(m_prop);
+			pf->setValue(v.value<double>());
+			connect(pf, SIGNAL(textEdited(const QString&)), this, SLOT(floatChanged(const QString&)));
+			pw = pf;
 		}
 		break;
 	}
@@ -162,8 +228,16 @@ void CPropertyListView::comboChanged(int val)
 		QVariant v = b;
 
 		m_list->SetPropertyValue(m_selRow, v);
+		const CPropertyList::CProperty& p = m_list->Property(m_selRow);
 
-		m_prop->item(m_selRow, 1)->setText(b ? "true" : "false");
+		if (p.m_type == QVariant::Bool)
+		{
+			m_prop->item(m_selRow, 1)->setText(b ? "Yes" : "No");
+		}
+		else
+		{
+			m_prop->item(m_selRow, 1)->setText(p.m_values.at(val));
+		}
 
 		QApplication::activeWindow()->repaint();
 	}
@@ -177,6 +251,30 @@ void CPropertyListView::colorChanged(QColor c)
 		QVariant v = c;
 		m_list->SetPropertyValue(m_selRow, v);
 		m_prop->item(m_selRow, 1)->setBackgroundColor(c);
+		QApplication::activeWindow()->repaint();
+	}
+}
+
+//-----------------------------------------------------------------------------
+void CPropertyListView::intChanged(const QString& s)
+{
+	if (m_sel)
+	{
+		QVariant v = s.toInt();
+		m_list->SetPropertyValue(m_selRow, v);
+		m_prop->item(m_selRow, 1)->setText(s);
+		QApplication::activeWindow()->repaint();
+	}
+}
+
+//-----------------------------------------------------------------------------
+void CPropertyListView::floatChanged(const QString& s)
+{
+	if (m_sel)
+	{
+		QVariant v = s.toDouble();
+		m_list->SetPropertyValue(m_selRow, v);
+		m_prop->item(m_selRow, 1)->setText(s);
 		QApplication::activeWindow()->repaint();
 	}
 }
