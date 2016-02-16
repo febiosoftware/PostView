@@ -17,7 +17,7 @@ public:
 	void Update();
 
 private slots:
-	void on_stateList_cellDoubleClicked(int row, int column);
+	void on_stateList_doubleClicked(const QModelIndex& index);
 
 private:
 	Ui::CStatePanel* ui;

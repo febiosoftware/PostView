@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_CStatePanel_t {
-    QByteArrayData data[5];
-    char stringdata0[55];
+    QByteArrayData data[4];
+    char stringdata0[46];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -30,14 +30,13 @@ struct qt_meta_stringdata_CStatePanel_t {
 static const qt_meta_stringdata_CStatePanel_t qt_meta_stringdata_CStatePanel = {
     {
 QT_MOC_LITERAL(0, 0, 11), // "CStatePanel"
-QT_MOC_LITERAL(1, 12, 30), // "on_stateList_cellDoubleClicked"
-QT_MOC_LITERAL(2, 43, 0), // ""
-QT_MOC_LITERAL(3, 44, 3), // "row"
-QT_MOC_LITERAL(4, 48, 6) // "column"
+QT_MOC_LITERAL(1, 12, 26), // "on_stateList_doubleClicked"
+QT_MOC_LITERAL(2, 39, 0), // ""
+QT_MOC_LITERAL(3, 40, 5) // "index"
 
     },
-    "CStatePanel\0on_stateList_cellDoubleClicked\0"
-    "\0row\0column"
+    "CStatePanel\0on_stateList_doubleClicked\0"
+    "\0index"
 };
 #undef QT_MOC_LITERAL
 
@@ -55,10 +54,10 @@ static const uint qt_meta_data_CStatePanel[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    2,   19,    2, 0x08 /* Private */,
+       1,    1,   19,    2, 0x08 /* Private */,
 
  // slots: parameters
-    QMetaType::Void, QMetaType::Int, QMetaType::Int,    3,    4,
+    QMetaType::Void, QMetaType::QModelIndex,    3,
 
        0        // eod
 };
@@ -69,7 +68,7 @@ void CStatePanel::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         CStatePanel *_t = static_cast<CStatePanel *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->on_stateList_cellDoubleClicked((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 0: _t->on_stateList_doubleClicked((*reinterpret_cast< const QModelIndex(*)>(_a[1]))); break;
         default: ;
         }
     }

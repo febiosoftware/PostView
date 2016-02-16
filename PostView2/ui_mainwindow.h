@@ -18,6 +18,14 @@
 
 QT_BEGIN_NAMESPACE
 
+class CMyComboBox : public QComboBox
+{
+public:
+	CMyComboBox(QWidget* parent = 0) : QComboBox(parent){}
+
+//	void hidePopup(){}
+};
+
 class Ui_MainWindow
 {
 	enum 
@@ -300,15 +308,26 @@ public:
 		QTreeWidgetItem* pi1 = new QTreeWidgetItem(pw), *pi;
 		pw->header()->hide();
 		pi1->setText(0, "displacement");
+		pi1->setFlags(pi1->flags() & ~Qt::ItemIsSelectable); 
 		pi1->setExpanded(true);
 		pi = new QTreeWidgetItem(pi1); pi->setText(0, "X-displacement");
 		pi = new QTreeWidgetItem(pi1); pi->setText(0, "Y-displacement");
 		pi = new QTreeWidgetItem(pi1); pi->setText(0, "Z-displacement");
+		pi1 = new QTreeWidgetItem(pw);
+		pi1->setText(0, "stress");
+		pi1->setFlags(pi1->flags() & ~Qt::ItemIsSelectable); 
+//		pi1->setExpanded(true);
+		pi = new QTreeWidgetItem(pi1); pi->setText(0, "X-stress");
+		pi = new QTreeWidgetItem(pi1); pi->setText(0, "Y-stress");
+		pi = new QTreeWidgetItem(pi1); pi->setText(0, "Z-stress");
 		
-		QComboBox* pc = new QComboBox;
+		QComboBox* pc = new CMyComboBox;
 		pc->setModel(pw->model());
 		pc->setView(pw);
+		pc->setMinimumWidth(200);
 		pc->view()->setMinimumWidth(200);
+		pc->view()->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+		pc->setCurrentIndex(-1);
 		mainToolBar->addWidget(pc);
 
 		mainToolBar->addAction(actionColorMap);

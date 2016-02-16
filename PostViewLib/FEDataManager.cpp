@@ -15,7 +15,7 @@ FEDataManager::~FEDataManager(void)
 
 void FEDataManager::Clear()
 {
-	list<FEDataField*>::iterator pi;
+	vector<FEDataField*>::iterator pi;
 	for (pi = m_Node.begin(); pi != m_Node.end(); ++pi) delete (*pi);
 	for (pi = m_Elem.begin(); pi != m_Elem.end(); ++pi) delete (*pi);
 	for (pi = m_Face.begin(); pi != m_Face.end(); ++pi) delete (*pi);
@@ -84,7 +84,7 @@ void FEDataManager::DeleteElemData(FEDataField* pd)
 
 int FEDataManager::FindElem(const char* szname)
 {
-	list<FEDataField*>::iterator pe = m_Elem.begin();
+	vector<FEDataField*>::iterator pe = m_Elem.begin();
 	for (int i=0; i<(int) m_Elem.size(); ++i, ++pe)
 	{
 		if (strcmp((*pe)->GetName(), szname) == 0) return i;
@@ -93,9 +93,17 @@ int FEDataManager::FindElem(const char* szname)
 	return -1;
 }
 
+FEDataFieldPtr FEDataManager::NodeData(int i)
+{
+	return m_Node.begin() + i;
+}
+
+FEDataFieldPtr FEDataManager::FaceData(int i)
+{
+	return m_Face.begin() + i;
+}
+
 FEDataFieldPtr FEDataManager::ElementData(int i)
 {
-	FEDataFieldPtr p = FirstElement();
-	for (int n=0; n<i; ++n) ++p;
-	return p;
+	return m_Elem.begin() + i;
 }

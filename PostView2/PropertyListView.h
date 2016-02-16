@@ -21,6 +21,10 @@ public:
 	{
 		m_col = QColor(Qt::black);
 	}
+	~CColorButton()
+	{
+		int a = 0;
+	}
 
 	void paintEvent(QPaintEvent* ev)
 	{
@@ -30,7 +34,7 @@ public:
 
 	void mouseReleaseEvent(QMouseEvent* ev)
 	{
-		QColorDialog dlg;
+		QColorDialog dlg(this);
 		QColor col = dlg.getColor(m_col);
 		if (col.isValid())
 		{
@@ -41,6 +45,8 @@ public:
 	}
 
 	void setColor(const QColor& c) { m_col = c; }
+
+	QColor color() { return m_col; }
 
 signals:
 	void colorChanged(QColor col);
@@ -88,6 +94,11 @@ private:
 };
 
 //-----------------------------------------------------------------------------
+
+namespace Ui {
+	class CPropertyListView;
+};
+
 class CPropertyListView : public QWidget
 {
 	Q_OBJECT
@@ -97,21 +108,9 @@ public:
 
 	void Update(CPropertyList* plist);
 
-	void Clear();
-
 private slots:
-	void on_modelProps_currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn);
-	void on_modelProps_cellClicked(int row, int column);
-	void comboChanged(int);
-	void colorChanged(QColor c);
-	void intChanged(const QString& s);
-	void floatChanged(const QString& s);
+	void on_modelProps_clicked(const QModelIndex& index);
 
 private:
-	CPropertyList*	m_list;
-	QTableWidget*	m_prop;
-	QLabel*			m_info;
-
-	QWidget*	m_sel;
-	int			m_selRow;
+	Ui::CPropertyListView*	ui;
 };

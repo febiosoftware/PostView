@@ -6,24 +6,96 @@
 #include <QTableWidget>
 #include <QLabel>
 #include <QHeaderView>
+#include <QtCore/QAbstractTableModel>
+
+class CStateModel : public QAbstractTableModel
+{
+public:
+	CStateModel(QWidget* parent) : QAbstractTableModel(parent), m_fem(0)
+	{
+	}
+
+	int rowCount(const QModelIndex& parent) const
+	{
+		if (m_fem) return m_fem->GetStates();
+		return 0;
+	}
+
+	int columnCount(const QModelIndex& parent) const
+	{
+		return 2;
+	}
+
+	void SetFEModel(FEModel* pfem)
+	{
+		beginResetModel();
+		m_fem = pfem;
+		endResetModel();
+	}
+
+	QVariant headerData(int section, Qt::Orientation orient, int role) const
+	{
+		if ((orient == Qt::Horizontal)&&(role == Qt::DisplayRole))
+		{
+			switch (section)
+			{
+			case 0: return QVariant(QString("State")); break;
+			case 1: return QVariant(QString("Time")); break;
+			}
+		}
+		return QAbstractTableModel::headerData(section, orient, role);
+	}
+
+	QVariant data(const QModelIndex& index, int role) const
+	{
+		if (m_fem == 0) return QVariant();
+
+		if (!index.isValid()) return QVariant();
+		if (role == Qt::DisplayRole)
+		{
+			if (index.column() == 0) return index.row()+1;
+			else 
+			{
+				FEState* s = m_fem->GetState(index.row());
+				if (s) return s->m_time;
+			}
+		}
+		return QVariant();
+	}
+
+private:
+	FEModel*	m_fem;
+};
 
 class Ui::CStatePanel
 {
 public:
-	QTableWidget* list;
+	CStateModel*	data;
+	QTableView*		list;
 
 public:
 	void setupUi(::CStatePanel* parent)
 	{
 		QVBoxLayout* pg = new QVBoxLayout(parent);
-		list = new QTableWidget;
+		list = new QTableView;
 		list->setObjectName(QStringLiteral("stateList"));
+		list->setSelectionBehavior(QAbstractItemView::SelectRows);
+		list->setSelectionMode(QAbstractItemView::SingleSelection);
+		list->horizontalHeader()->show();
+		list->horizontalHeader()->setStretchLastSection(true);
+		list->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+		list->verticalHeader()->setDefaultSectionSize(24);
+		list->verticalHeader()->hide();
+
+		data = new CStateModel(list);
+		list->setModel(data);
+
 		pg->addWidget(list);
+
 
 		QMetaObject::connectSlotsByName(parent);
 	}
 };
-
 
 CStatePanel::CStatePanel(CMainWindow* pwnd, QWidget* parent) : CCommandPanel(pwnd, parent), ui(new Ui::CStatePanel)
 {
@@ -33,38 +105,14 @@ CStatePanel::CStatePanel(CMainWindow* pwnd, QWidget* parent) : CCommandPanel(pwn
 void CStatePanel::Update()
 {
 	CDocument* pdoc = m_wnd->GetDocument();
-	FEModel& fem = *pdoc->GetFEModel();
+	FEModel* fem = pdoc->GetFEModel();
 
-	ui->list->clear();
-	ui->list->setColumnCount(2);
-	int nstates = fem.GetStates();
-	ui->list->setRowCount(nstates);
-	ui->list->setHorizontalHeaderLabels(QStringList() << "State" << "Time");
-	ui->list->setSelectionBehavior(QAbstractItemView::SelectRows);
-	ui->list->setSelectionMode(QAbstractItemView::SingleSelection);
-	ui->list->horizontalHeader()->setStretchLastSection(true);
-	ui->list->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
-	ui->list->verticalHeader()->setDefaultSectionSize(24);
-	ui->list->verticalHeader()->hide();
-	for (int i=0; i<nstates; ++i)
-	{
-		FEState& state = *fem.GetState(i);
-
-		QTableWidgetItem* pi = new QTableWidgetItem;
-		pi->setText(QString("%1").arg(i+1));
-		pi->setFlags(pi->flags() & ~Qt::ItemIsEditable);
-		ui->list->setItem(i, 0, pi);
-
-		pi = new QTableWidgetItem;
-		pi->setFlags(pi->flags() & ~Qt::ItemIsEditable);
-		pi->setText(QString("%1").arg(state.m_time));
-		ui->list->setItem(i, 1, pi);
-	}	
+	ui->data->SetFEModel(fem);
 }
 
-void CStatePanel::on_stateList_cellDoubleClicked(int row, int column)
+void CStatePanel::on_stateList_doubleClicked(const QModelIndex& index)
 {
 	CDocument* pdoc = m_wnd->GetDocument();
-	pdoc->SetCurrentTime(row);
+	pdoc->SetCurrentTime(index.row());
 	m_wnd->repaint();
 }

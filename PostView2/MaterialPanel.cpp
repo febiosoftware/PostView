@@ -85,7 +85,7 @@ class Ui::CMaterialPanel
 {
 public:
 	QListWidget*		m_list;
-	CPropertyListView*	m_prop;
+	::CPropertyListView*	m_prop;
 
 public:
 	void setupUi(::CMaterialPanel* parent)
@@ -99,7 +99,7 @@ public:
 		m_list = new QListWidget;
 		m_list->setObjectName(QStringLiteral("materialList"));
 
-		m_prop = new CPropertyListView;
+		m_prop = new ::CPropertyListView;
 
 		psplitter->addWidget(m_list);
 		psplitter->addWidget(m_prop);
@@ -118,7 +118,7 @@ CMaterialPanel::CMaterialPanel(CMainWindow* pwnd, QWidget* parent) : CCommandPan
 void CMaterialPanel::Update()
 {
 	ui->m_list->clear();
-	ui->m_prop->Clear();
+	ui->m_prop->Update(0);
 	m_pmat->SetMaterial(0);
 
 	CDocument* pdoc = m_wnd->GetDocument();

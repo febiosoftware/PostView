@@ -111,7 +111,7 @@ class Ui::CModelViewer
 {
 public:
 	QTreeWidget*		m_tree;
-	CPropertyListView*	m_props;
+	::CPropertyListView*	m_props;
 
 public:
 	void setupUi(::CModelViewer* parent)
@@ -127,7 +127,7 @@ public:
 		m_tree->setColumnCount(1);
 		m_tree->setHeaderHidden(true);
 
-		m_props = new CPropertyListView;
+		m_props = new ::CPropertyListView;
 
 		psplitter->addWidget(m_tree);
 		psplitter->addWidget(m_props);
@@ -144,6 +144,7 @@ CModelViewer::CModelViewer(CMainWindow* pwnd, QWidget* parent) : CCommandPanel(p
 void CModelViewer::Update()
 {
 	CDocument* pdoc = m_wnd->GetDocument();
+	ui->m_props->Update(0);
 	if (pdoc->IsValid())
 	{
 		FEModel* fem = pdoc->GetFEModel();
@@ -173,9 +174,5 @@ void CModelViewer::on_modelTree_currentItemChanged(QTreeWidgetItem* current, QTr
 {
 	QVariant v = current->data(0, Qt::UserRole);
 	CPropertyList* pdata = (CPropertyList*) v.value<void*>();
-
-	// clear the property list
-	ui->m_props->Clear();
-
-	if (pdata) ui->m_props->Update(pdata);
+	ui->m_props->Update(pdata);
 }

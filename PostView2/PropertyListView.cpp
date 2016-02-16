@@ -1,6 +1,6 @@
 #include "PropertyListView.h"
 #include <QBoxLayout>
-#include <QTableWidget>
+#include <QTableView>
 #include <QPushButton>
 #include <QHeaderView>
 #include <QLabel>
@@ -9,6 +9,8 @@
 #include <QLineEdit>
 #include <QIntValidator>
 #include <QDoubleValidator>
+#include <QtCore/QAbstractTableModel>
+#include <QStyledItemDelegate>
 
 //-----------------------------------------------------------------------------
 class CIntInput : public QLineEdit
@@ -39,242 +41,259 @@ public:
 };
 
 //-----------------------------------------------------------------------------
-CPropertyListView::CPropertyListView(QWidget* parent) : QWidget(parent)
+class CPropertyListModel : public QAbstractTableModel
 {
-	QVBoxLayout* playout = new QVBoxLayout(this);
-	setLayout(playout);
-	playout->setMargin(0);
+public:
+	CPropertyListModel(QWidget* parent) : QAbstractTableModel(parent) { m_list = 0; }
 
-	m_prop = new QTableWidget;
-	m_prop->setObjectName(QStringLiteral("modelProps"));
+	void setPropertyList(CPropertyList* plist)
+	{
+		beginResetModel();
+		m_list = plist;
+		endResetModel();
+	}
 
-	m_info = new QLabel;
-	m_info->setFrameStyle(QFrame::Panel);
-	m_info->setMinimumHeight(50);
+	int rowCount(const QModelIndex& parent) const 
+	{
+		if (m_list) return m_list->Properties();
+		return 0;
+	}
+
+	int columnCount(const QModelIndex& parent) const { return 2; }
+
+	QVariant headerData(int section, Qt::Orientation orient, int role) const
+	{
+		if ((orient == Qt::Horizontal)&&(role == Qt::DisplayRole))
+		{
+			switch (section)
+			{
+			case 0: return QString("Property"); break;
+			case 1: return QString("Value"); break;
+			}
+		}
+		return QAbstractTableModel::headerData(section, orient, role);
+	}
+
+	QVariant data(const QModelIndex& index, int role) const
+	{
+		if ((m_list==0)||(!index.isValid())) return QVariant();
+
+		const CPropertyList::CProperty& prop = m_list->Property(index.row());
+
+		if (role == Qt::ToolTipRole)
+		{
+			QString tip = (tr("<p><b>%1</b></p><p>%2</p>").arg(prop.m_name).arg(prop.m_info));
+			return tip;
+		}
+		if (index.column() == 0)
+		{
+			if ((role == Qt::DisplayRole)||(role==Qt::EditRole)) return prop.m_name;
+		}
+		else if (index.column() == 1)
+		{
+			QVariant v = m_list->GetPropertyValue(index.row());
+			if (role == Qt::EditRole) return v;
+			if (v.type() == QVariant::Color)
+			{
+				if (role == Qt::BackgroundRole) return v;
+			}
+			else if (role == Qt::DisplayRole)
+			{
+				if (v.type() == QVariant::Bool)
+				{
+					bool b = v.value<bool>();
+					v = (b ? "Yes" : "No");
+					return v;
+				}
+				else if ((v.type() == QVariant::Int)&&(prop.m_values.isEmpty()==false))
+				{
+					int n = v.toInt();
+					return prop.m_values.at(n);
+				}
+				return v;
+			}
+		}
+
+		return QVariant();
+	}
+
+	Qt::ItemFlags flags(const QModelIndex& index) const
+	{
+		if (!index.isValid()) return 0;
+		if (index.column() == 1)
+			return QAbstractTableModel::flags(index) | Qt::ItemIsEditable;
+		else return QAbstractTableModel::flags(index);
+	}
+
+	bool setData(const QModelIndex& index, const QVariant& value, int role)
+	{
+		if (index.isValid() && (role == Qt::EditRole))
+		{
+			const CPropertyList::CProperty& prop = m_list->Property(index.row());
+			if (prop.m_type == QVariant::Bool)
+			{
+				int n = value.toInt();
+				bool b = (n==0? false : true);
+				m_list->SetPropertyValue(index.row(), b);
+			}
+			else m_list->SetPropertyValue(index.row(), value);
+			return true;
+		}
+		return false;
+	}
+	
+private:
+	CPropertyList*	m_list;
+};
+
+class CPropertyListDelegate : public QStyledItemDelegate
+{
+private:
+	CPropertyListView*	m_view;
+
+public:
+	explicit CPropertyListDelegate(CPropertyListView* view) : QStyledItemDelegate(view), m_view(view) {}
+
+	void paint(QPainter *painter, const QStyleOptionViewItem &option,
+               const QModelIndex &index) const
+	{
+		if (index.column() == 0)
+		{
+			QStyleOptionViewItem opt = option;
+			initStyleOption(&opt, index);
+
+			opt.font.setBold(true);
+	        QStyledItemDelegate::paint(painter, opt, index);
+		}
+
+		if (index.column() == 1)
+		{
+	        QStyledItemDelegate::paint(painter, option, index);
+
+			// Fill the background before calling the base class paint
+			// otherwise selected cells would have a white background
+			QVariant background = index.data(Qt::BackgroundRole);
+			if (background.canConvert<QBrush>())
+				painter->fillRect(option.rect, background.value<QBrush>());
+
+		    // To draw a border on selected cells
+	        if(option.state & QStyle::State_Selected)
+			{
+				painter->save();
+				QPen pen(Qt::black, 2, Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin);
+				int w = pen.width()/2;
+				painter->setPen(pen);
+				painter->drawRect(option.rect.adjusted(w,w,-w,-w));
+				painter->restore();
+			}
+		}
+    }
+
+	QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const
+	{
+		const QAbstractItemModel* model = index.model();
+		if ((model == 0)||(index.column()==0)) return QStyledItemDelegate::createEditor(parent, option, index);
+
+		QVariant data = index.data(Qt::EditRole);
+		if (data.type() == QVariant::Bool)
+		{
+			QComboBox* box = new QComboBox(parent);
+			box->addItem("No");
+			box->addItem("Yes");
+			bool b = data.value<bool>();
+			box->setCurrentIndex(b ? 1 : 0);
+			return box;
+		}
+		if (data.type() == QVariant::Color)
+		{
+			CColorButton* pc = new CColorButton(parent);
+			pc->setColor(data.value<QColor>());
+			return pc;
+		}
+
+		return QStyledItemDelegate::createEditor(parent, option, index);
+	}
+
+	void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
+	{
+		if (!index.isValid()) return;
+
+		QComboBox* box = qobject_cast<QComboBox*>(editor);
+		if (box) { model->setData(index, box->currentIndex(), Qt::EditRole); return; }
+
+		CColorButton* col = qobject_cast<CColorButton*>(editor);
+		if (col) { model->setData(index, col->color(), Qt::EditRole); return; }
+
+		QStyledItemDelegate::setModelData(editor, model, index);
+	}
+};
+
+class Ui::CPropertyListView
+{
+public:
+	CPropertyList*			m_list;
+	QTableView*				m_prop;
+	CPropertyListDelegate*	m_delegate;
+	CPropertyListModel*		m_data;
+	QLabel*					m_info;
+
+public:
+	void setupUi(::CPropertyListView* parent)
+	{
+		QVBoxLayout* playout = new QVBoxLayout(parent);
+		playout->setMargin(0);
+
+		m_prop = new QTableView;
+		m_prop->setObjectName(QStringLiteral("modelProps"));
+		m_prop->setSelectionBehavior(QAbstractItemView::SelectRows);
+		m_prop->setSelectionMode(QAbstractItemView::SingleSelection);
+		m_prop->horizontalHeader()->setStretchLastSection(true);
+//		m_prop->horizontalHeader()->hide();
+		m_prop->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+		m_prop->verticalHeader()->setDefaultSectionSize(24);
+		m_prop->verticalHeader()->hide();
+
+		m_delegate = new CPropertyListDelegate(parent);
+		m_prop->setItemDelegate(m_delegate);
+
+		m_data = new CPropertyListModel(m_prop);
+		m_prop->setModel(m_data);
+
+		m_info = new QLabel;
+		m_info->setFrameStyle(QFrame::Panel);
+		m_info->setMinimumHeight(50);
 		
-	playout->addWidget(m_prop);
-	playout->addWidget(m_info);
+		playout->addWidget(m_prop);
+		playout->addWidget(m_info);
 
-	m_list = 0;
-	m_sel = 0;
-	m_selRow = -1;
+		QMetaObject::connectSlotsByName(parent);
+	}
+};
 
-	QMetaObject::connectSlotsByName(this);
+//-----------------------------------------------------------------------------
+CPropertyListView::CPropertyListView(QWidget* parent) : QWidget(parent), ui(new Ui::CPropertyListView)
+{
+	ui->setupUi(this);
 }
 
 //-----------------------------------------------------------------------------
 void CPropertyListView::Update(CPropertyList* plist)
 {
-	if (m_list) Clear();
-	m_list = plist;
-
-	int n = plist->Properties();
-	if (n > 0)
-	{
-		m_prop->setRowCount(n);
-		m_prop->horizontalHeader()->setDefaultSectionSize(width()/2);
-		for (int i=0; i<n; ++i)
-		{
-			const CPropertyList::CProperty& p = plist->Property(i);
-
-			QTableWidgetItem* pitem = new QTableWidgetItem;
-			pitem->setFlags(pitem->flags() & ~Qt::ItemIsEditable);
-			pitem->setText(p.m_name);
-
-			QFont f = pitem->font(); f.setBold(true);
-			pitem->setFont(f);
-			m_prop->setItem(i, 0, pitem);
-
-			pitem = new QTableWidgetItem;
-			pitem->setFlags(pitem->flags() & ~Qt::ItemIsEditable);
-			QVariant v = plist->GetPropertyValue(i);
-			switch (p.m_type)
-			{
-			case QVariant::Color: pitem->setBackgroundColor(v.value<QColor>()); break;
-			case QVariant::Bool:  pitem->setText(v.value<bool>() ? "Yes" : "No"); break;
-			case QVariant::Int:
-				if (p.m_values.isEmpty()) pitem->setText(v.toString());
-				else pitem->setText(p.m_values.at(v.value<int>()));
-				break;
-			default:
-				pitem->setText(v.toString());
-			}
-			m_prop->setItem(i, 1, pitem);
-		}
-	}
+	ui->m_list = plist;
+	ui->m_data->setPropertyList(plist);
 }
 
 //-----------------------------------------------------------------------------
-void CPropertyListView::Clear()
+void CPropertyListView::on_modelProps_clicked(const QModelIndex& index)
 {
-	m_list = 0;
-
-	if (m_sel)
+	if (ui->m_list)
 	{
-		m_prop->setCellWidget(m_selRow, 1, 0);
-		m_sel = 0; m_selRow = -1;
-	}
-
-	m_prop->clear();
-	m_prop->setColumnCount(2);
-	m_prop->setRowCount(0);
-	m_prop->horizontalHeader()->setStretchLastSection(true);
-	m_prop->horizontalHeader()->hide();
-	m_prop->horizontalHeader()->setDefaultSectionSize(width()/2);
-	m_prop->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
-	m_prop->verticalHeader()->setDefaultSectionSize(24);
-	m_prop->verticalHeader()->hide();
-	m_prop->setSelectionBehavior(QAbstractItemView::SelectRows);
-	m_prop->setSelectionMode(QAbstractItemView::SingleSelection);
-
-	m_info->clear();
-}
-
-//-----------------------------------------------------------------------------
-void CPropertyListView::on_modelProps_currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn)
-{
-	if (m_sel)
-	{
-		if (currentRow == m_selRow) return;
-
-		m_prop->setCellWidget(m_selRow, 1, 0);
-		m_sel = 0; m_selRow = -1;
-	}
-
-	if (m_list)
-	{
-		if ((currentRow >= 0)&&(currentRow < m_list->Properties()))
+		if (index.isValid())
 		{
-			const CPropertyList::CProperty& pi = m_list->Property(currentRow);
-			m_info->setText(tr("<p><b>%1</b></p><p>%2</p>").arg(pi.m_name).arg(pi.m_info));
+			const CPropertyList::CProperty& pi = ui->m_list->Property(index.row());
+			ui->m_info->setText(tr("<p><b>%1</b></p><p>%2</p>").arg(pi.m_name).arg(pi.m_info));
 			return;
 		}
 	}
-	m_info->clear();
-}
-
-//-----------------------------------------------------------------------------
-void CPropertyListView::on_modelProps_cellClicked(int row, int column)
-{
-	if (row == m_selRow) return;
-
-	QVariant v = m_list->GetPropertyValue(row);
-
-	QWidget* pw = 0;
-	switch (v.type())
-	{
-	case QVariant::Bool:
-		{
-			QComboBox* pc = new QComboBox(m_prop);
-			pc->addItem("No");
-			pc->addItem("Yes");
-			pc->setCurrentIndex(v.value<bool>() ? 1 : 0);
-			connect(pc, SIGNAL(currentIndexChanged(int)), this, SLOT(comboChanged(int)));
-			pw = pc;
-		}
-		break;
-	case QVariant::Color:
-		{
-			CColorButton* pc = new CColorButton(m_prop);
-			pc->setColor(v.value<QColor>());
-			connect(pc, SIGNAL(colorChanged(QColor)), this, SLOT(colorChanged(QColor)));
-			pw = pc;
-		}
-		break;
-	case QVariant::Int:
-		{
-			const CPropertyList::CProperty& p = m_list->Property(row);
-			if (p.m_values.isEmpty())
-			{
-				CIntInput* pi = new CIntInput(m_prop);
-				pi->setValue(v.value<int>());
-				connect(pi, SIGNAL(textEdited(const QString&)), this, SLOT(intChanged(const QString&)));
-				pw = pi;
-			}
-			else
-			{
-				QComboBox* pc = new QComboBox(m_prop);
-				for (int i=0; i<p.m_values.size(); ++i) pc->addItem(p.m_values.at(i));
-				pc->setCurrentIndex(v.value<int>());
-				connect(pc, SIGNAL(currentIndexChanged(int)), this, SLOT(comboChanged(int)));
-				pw = pc;
-			}
-		}
-		break;
-	case QVariant::Double:
-		{
-			CFloatInput* pf = new CFloatInput(m_prop);
-			pf->setValue(v.value<double>());
-			connect(pf, SIGNAL(textEdited(const QString&)), this, SLOT(floatChanged(const QString&)));
-			pw = pf;
-		}
-		break;
-	}
-
-	if (pw)
-	{
-		m_sel = pw;
-		m_selRow = row;
-		m_prop->setCellWidget(row, 1, pw);
-	}
-}
-
-//-----------------------------------------------------------------------------
-void CPropertyListView::comboChanged(int val)
-{
-	if (m_sel)
-	{
-		bool b = (val==0 ? false : true);
-		QVariant v = b;
-
-		m_list->SetPropertyValue(m_selRow, v);
-		const CPropertyList::CProperty& p = m_list->Property(m_selRow);
-
-		if (p.m_type == QVariant::Bool)
-		{
-			m_prop->item(m_selRow, 1)->setText(b ? "Yes" : "No");
-		}
-		else
-		{
-			m_prop->item(m_selRow, 1)->setText(p.m_values.at(val));
-		}
-
-		QApplication::activeWindow()->repaint();
-	}
-}
-
-//-----------------------------------------------------------------------------
-void CPropertyListView::colorChanged(QColor c)
-{
-	if (m_sel)
-	{
-		QVariant v = c;
-		m_list->SetPropertyValue(m_selRow, v);
-		m_prop->item(m_selRow, 1)->setBackgroundColor(c);
-		QApplication::activeWindow()->repaint();
-	}
-}
-
-//-----------------------------------------------------------------------------
-void CPropertyListView::intChanged(const QString& s)
-{
-	if (m_sel)
-	{
-		QVariant v = s.toInt();
-		m_list->SetPropertyValue(m_selRow, v);
-		m_prop->item(m_selRow, 1)->setText(s);
-		QApplication::activeWindow()->repaint();
-	}
-}
-
-//-----------------------------------------------------------------------------
-void CPropertyListView::floatChanged(const QString& s)
-{
-	if (m_sel)
-	{
-		QVariant v = s.toDouble();
-		m_list->SetPropertyValue(m_selRow, v);
-		m_prop->item(m_selRow, 1)->setText(s);
-		QApplication::activeWindow()->repaint();
-	}
+	ui->m_info->clear();
 }

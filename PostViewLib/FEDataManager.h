@@ -1,7 +1,7 @@
 #pragma once
 
 #include "FEMeshData.h"
-#include <list>
+#include <vector>
 #include <typeinfo>
 #include <string.h>
 
@@ -93,7 +93,7 @@ public:
 };
 
 //-----------------------------------------------------------------------------
-typedef list<FEDataField*>::iterator FEDataFieldPtr;
+typedef vector<FEDataField*>::iterator FEDataFieldPtr;
 
 //-----------------------------------------------------------------------------
 // The data manager stores the attributes (name and type) of the different
@@ -141,12 +141,14 @@ public:
 	int FindElem(const char* sz);
 
 	//! find the data field given an index
+	FEDataFieldPtr NodeData(int i);
+	FEDataFieldPtr FaceData(int i);
 	FEDataFieldPtr ElementData(int i);
 
 protected:
-	list<FEDataField*>	m_Node;		// nodal data
-	list<FEDataField*>	m_Elem;		// element data
-	list<FEDataField*>	m_Face;		// face data
+	vector<FEDataField*>	m_Node;		// nodal data
+	vector<FEDataField*>	m_Elem;		// element data
+	vector<FEDataField*>	m_Face;		// face data
 
 	FEModel*	m_pm;
 };
