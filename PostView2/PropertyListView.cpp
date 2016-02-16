@@ -13,6 +13,7 @@
 #include <QStyledItemDelegate>
 #include <QtCore/QStringListModel>
 #include <QDoubleSpinBox>
+#include <QSpinBox>
 
 //-----------------------------------------------------------------------------
 class CIntInput : public QLineEdit
@@ -80,25 +81,25 @@ public:
 	{
 		if ((m_list==0)||(!index.isValid())) return QVariant();
 
-		const CPropertyList::CProperty& prop = m_list->Property(index.row());
+		const CProperty& prop = m_list->Property(index.row());
 
 		if (role == Qt::ToolTipRole)
 		{
-			QString tip = (tr("<p><b>%1</b></p><p>%2</p>").arg(prop.m_name).arg(prop.m_info));
+			QString tip = (tr("<p><b>%1</b></p><p>%2</p>").arg(prop.name).arg(prop.info));
 			return tip;
 		}
 		if (index.column() == 0)
 		{
-			if ((role == Qt::DisplayRole)||(role==Qt::EditRole)) return prop.m_name;
+			if ((role == Qt::DisplayRole)||(role==Qt::EditRole)) return prop.name;
 		}
 		else if (index.column() == 1)
 		{
 			QVariant v = m_list->GetPropertyValue(index.row());
 			if (role == Qt::EditRole) 
 			{
-				if ((v.type() == QVariant::Int)&&(prop.m_values.isEmpty()==false))
+				if ((prop.type == CProperty::Enum)&&(prop.values.isEmpty()==false))
 				{
-					return prop.m_values;
+					return prop.values;
 				}
 				return v;
 			}
@@ -114,10 +115,10 @@ public:
 					v = (b ? "Yes" : "No");
 					return v;
 				}
-				else if ((v.type() == QVariant::Int)&&(prop.m_values.isEmpty()==false))
+				else if ((prop.type == CProperty::Enum)&&(prop.values.isEmpty()==false))
 				{
 					int n = v.value<int>();
-					return prop.m_values.at(n);
+					return prop.values.at(n);
 				}
 				return v;
 			}
@@ -131,7 +132,7 @@ public:
 		if (!index.isValid()) return 0;
 		if (index.column() == 1)
 		{
-			if (m_list->Property(index.row()).m_bedit)
+			if (m_list->Property(index.row()).isEditable())
 				return QAbstractTableModel::flags(index) | Qt::ItemIsEditable;
 		}
 		return QAbstractTableModel::flags(index);
@@ -141,18 +142,13 @@ public:
 	{
 		if (index.isValid() && (role == Qt::EditRole))
 		{
-			const CPropertyList::CProperty& prop = m_list->Property(index.row());
-			if (prop.m_type == QVariant::Bool)
-			{
-				int n = value.toInt();
-				bool b = (n==0? false : true);
-				m_list->SetPropertyValue(index.row(), b);
-			}
-			else m_list->SetPropertyValue(index.row(), value);
+			m_list->SetPropertyValue(index.row(), value);
 			return true;
 		}
 		return false;
 	}
+
+	const CPropertyList& getPropertyList() const { return *m_list; }
 	
 private:
 	CPropertyList*	m_list;
@@ -203,7 +199,7 @@ public:
 
 	QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const
 	{
-		const QAbstractItemModel* model = index.model();
+		const CPropertyListModel* model = dynamic_cast<const CPropertyListModel*>(index.model());
 		if ((model == 0)||(index.column()==0)) return QStyledItemDelegate::createEditor(parent, option, index);
 
 		QVariant data = index.data(Qt::EditRole);		
@@ -234,11 +230,25 @@ public:
 			m_view->connect(pc, SIGNAL(colorChanged(QColor)), m_view, SLOT(onDataChanged()));
 			return pc;
 		}
-		if (data.type() == QVariant::Double)
+		if ((data.type() == QVariant::Double)||(data.type() == QMetaType::Float))
 		{
 			QDoubleSpinBox* pc = new QDoubleSpinBox(parent);
-			pc->setSingleStep(0.01);
+			const CProperty& prop = model->getPropertyList().Property(index.row());
+			pc->setSingleStep(prop.fstep);
+			pc->setRange(prop.fmin, prop.fmax);
 			pc->textFromValue(data.value<double>());
+			pc->setAccelerated(true);
+			m_view->connect(pc, SIGNAL(valueChanged(double)), m_view, SLOT(onDataChanged()));
+			return pc;
+		}
+		if (data.type() == QVariant::Int)
+		{
+			QSpinBox* pc = new QSpinBox(parent);
+			const CProperty& prop = model->getPropertyList().Property(index.row());
+			pc->setRange(prop.imin, prop.imax);
+			pc->setValue(data.toInt());
+			pc->setAccelerated(true);
+			m_view->connect(pc, SIGNAL(valueChanged(int)), m_view, SLOT(onDataChanged()));
 			return pc;
 		}
 
@@ -319,8 +329,8 @@ void CPropertyListView::Update(CPropertyList* plist)
 	{
 		for (int i=0; i<plist->Properties(); ++i)
 		{
-			const CPropertyList::CProperty& p = plist->Property(i);
-			if (p.m_type == QVariant::Color)
+			const CProperty& p = plist->Property(i);
+			if (p.type == CProperty::Color)
 			{
 				ui->m_prop->openPersistentEditor(ui->m_data->index(i, 1));
 			}

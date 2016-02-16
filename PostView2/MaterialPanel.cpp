@@ -15,18 +15,18 @@ public:
 	MaterialProps()
 	{
 		m_mat = 0;
-		AddProperty("Render mode"      , QVariant::Int, "Render mode", QStringList() << "default" << "wireframe" << "solid");
-		AddProperty("Diffuse"          , QVariant::Color );
-		AddProperty("Ambient"          , QVariant::Color );
-		AddProperty("Specular"         , QVariant::Color );
-		AddProperty("Emission"         , QVariant::Color );
-		AddProperty("Mesh color"       , QVariant::Color );
-		AddProperty("Shininess"        , QVariant::Double);
-		AddProperty("Transparency"     , QVariant::Double);
-		AddProperty("Transparency mode", QVariant::Int, "Transparency mode", QStringList() << "constant" << "normal-weighed");
-		AddProperty("Show Mesh"        , QVariant::Bool);
-		AddProperty("Cast shadows"     , QVariant::Bool);
-		AddProperty("Clip"             , QVariant::Bool);
+		addProperty("Render mode"      , CProperty::Enum, "Render mode")->setEnumValues(QStringList() << "default" << "wireframe" << "solid");
+		addProperty("Diffuse"          , CProperty::Color );
+		addProperty("Ambient"          , CProperty::Color );
+		addProperty("Specular"         , CProperty::Color );
+		addProperty("Emission"         , CProperty::Color );
+		addProperty("Mesh color"       , CProperty::Color );
+		addProperty("Shininess"        , CProperty::Float)->setFloatRange(0.0, 1.0);
+		addProperty("Transparency"     , CProperty::Float)->setFloatRange(0.0, 1.0);
+		addProperty("Transparency mode", CProperty::Enum, "Transparency mode")->setEnumValues(QStringList() << "constant" << "normal-weighed");
+		addProperty("Show Mesh"        , CProperty::Bool);
+		addProperty("Cast shadows"     , CProperty::Bool);
+		addProperty("Clip"             , CProperty::Bool);
 	}
 
 	void SetMaterial(FEMaterial* pmat) { m_mat = pmat; }
@@ -39,13 +39,13 @@ public:
 			switch (i)
 			{
 			case 0: v = m_mat->m_nrender; break;
-			case 1: { GLCOLOR c = m_mat->diffuse ; v = QColor(c.r, c.g, c.b); } break;
-			case 2: { GLCOLOR c = m_mat->ambient ; v = QColor(c.r, c.g, c.b); } break;
-			case 3: { GLCOLOR c = m_mat->specular; v = QColor(c.r, c.g, c.b); } break;
-			case 4: { GLCOLOR c = m_mat->emission; v = QColor(c.r, c.g, c.b); } break;
-			case 5: { GLCOLOR c = m_mat->meshcol ; v = QColor(c.r, c.g, c.b); } break;
-			case 6: v = (double) m_mat->shininess; break;
-			case 7: v = (double) m_mat->transparency; break;
+			case 1: v = toQColor(m_mat->diffuse); break;
+			case 2: v = toQColor(m_mat->ambient); break;
+			case 3: v = toQColor(m_mat->specular); break;
+			case 4: v = toQColor(m_mat->emission); break;
+			case 5: v = toQColor(m_mat->meshcol); break;
+			case 6: v = m_mat->shininess; break;
+			case 7: v = m_mat->transparency; break;
 			case 8: v = m_mat->m_ntransmode; break;
 			case 9: v = m_mat->bmesh; break;
 			case 10: v = m_mat->bcast_shadows; break;
@@ -61,18 +61,18 @@ public:
 		{
 			switch (i)
 			{
-			case 0: m_mat->m_nrender = v.value<int>(); break;
-			case 1: { QColor c = v.value<QColor>(); GLCOLOR rgb(c.red(), c.green(), c.blue()); m_mat->diffuse = rgb; } break;
-			case 2: { QColor c = v.value<QColor>(); GLCOLOR rgb(c.red(), c.green(), c.blue()); m_mat->ambient = rgb; } break;
-			case 3: { QColor c = v.value<QColor>(); GLCOLOR rgb(c.red(), c.green(), c.blue()); m_mat->specular = rgb; } break;
-			case 4: { QColor c = v.value<QColor>(); GLCOLOR rgb(c.red(), c.green(), c.blue()); m_mat->emission = rgb; } break;
-			case 5: { QColor c = v.value<QColor>(); GLCOLOR rgb(c.red(), c.green(), c.blue()); m_mat->meshcol = rgb; } break;
-			case 6: m_mat->shininess = (float) v.value<double>(); break;
-			case 7: m_mat->transparency = (float) v.value<double>(); break;
-			case 8: m_mat->m_ntransmode = v.value<int>(); break;
-			case 9: m_mat->bmesh = v.value<bool>(); break;
-			case 10: m_mat->bcast_shadows = v.value<bool>(); break;
-			case 11: m_mat->bclip = v.value<bool>(); break;
+			case 0: m_mat->m_nrender = v.toInt(); break;
+			case 1: m_mat->diffuse  = toGLColor(v.value<QColor>()); break;
+			case 2: m_mat->ambient  = toGLColor(v.value<QColor>()); break;
+			case 3: m_mat->specular = toGLColor(v.value<QColor>()); break;
+			case 4: m_mat->emission = toGLColor(v.value<QColor>()); break;
+			case 5: m_mat->meshcol  = toGLColor(v.value<QColor>()); break;
+			case 6: m_mat->shininess = v.toFloat(); break;
+			case 7: m_mat->transparency = v.toFloat(); break;
+			case 8: m_mat->m_ntransmode = v.toInt(); break;
+			case 9: m_mat->bmesh = v.toBool(); break;
+			case 10: m_mat->bcast_shadows = v.toBool(); break;
+			case 11: m_mat->bclip = v.toBool(); break;
 			}
 		}
 	}

@@ -111,8 +111,10 @@
     <ClCompile Include="..\PostView2\moc_ModelViewer.cpp" />
     <ClCompile Include="..\PostView2\moc_PropertyListView.cpp" />
     <ClCompile Include="..\PostView2\moc_StatePanel.cpp" />
+    <ClCompile Include="..\PostView2\moc_ToolsPanel.cpp" />
     <ClCompile Include="..\PostView2\ModelViewer.cpp" />
     <ClCompile Include="..\PostView2\PostView2.cpp" />
+    <ClCompile Include="..\PostView2\PropertyList.cpp" />
     <ClCompile Include="..\PostView2\PropertyListView.cpp" />
     <ClCompile Include="..\PostView2\qrc_postview.cpp" />
     <ClCompile Include="..\PostView2\render.cpp" />
@@ -168,7 +170,11 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename).%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </CustomBuild>
-    <ClInclude Include="..\PostView2\ToolsPanel.h" />
+    <CustomBuild Include="..\PostView2\ToolsPanel.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)bin/moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename).%(Extension) using MOC</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </CustomBuild>
     <CustomBuild Include="..\PostView2\MainWindow.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)bin/moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename).%(Extension) using MOC</Message>
@@ -177,6 +183,7 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compiling %(Filename).%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </CustomBuild>
+    <ClInclude Include="..\PostView2\PropertyList.h" />
     <ClInclude Include="..\PostView2\stdafx.h" />
     <ClInclude Include="..\PostView2\targetver.h" />
   </ItemGroup>

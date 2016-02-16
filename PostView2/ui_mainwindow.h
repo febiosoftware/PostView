@@ -86,7 +86,7 @@ public:
 	// Note that this must be called after the menu is created.
 	void buildDockWidgets(CMainWindow* MainWindow)
 	{
-        QDockWidget* dock1 = new QDockWidget("File Viewer", MainWindow);
+        QDockWidget* dock1 = new QDockWidget("Files", MainWindow);
         dock1->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
         fileViewer = new CFileViewer(MainWindow, dock1);
         fileViewer->setObjectName(QStringLiteral("fileViewer"));
@@ -94,7 +94,7 @@ public:
 		MainWindow->addDockWidget(Qt::LeftDockWidgetArea, dock1);
 		menuView->addAction(dock1->toggleViewAction());
 
-		QDockWidget* dock2 = new QDockWidget("Model Viewer", MainWindow);
+		QDockWidget* dock2 = new QDockWidget("Model", MainWindow);
         dock1->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
 		modelViewer = new CModelViewer(MainWindow, dock2);
 		dock2->setWidget(modelViewer);
@@ -124,7 +124,7 @@ public:
 
 		QDockWidget* dock6 = new QDockWidget("Tools", MainWindow);
         dock6->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
-		toolsPanel = new CToolsPanel(dock6);
+		toolsPanel = new CToolsPanel(MainWindow, dock6);
 		dock6->setWidget(toolsPanel);
 		menuView->addAction(dock6->toggleViewAction());
 		MainWindow->addDockWidget(Qt::RightDockWidgetArea, dock6);

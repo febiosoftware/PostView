@@ -12,25 +12,23 @@
 #include "GLModel.h"
 #include <PostViewLib/FEModel.h>
 
-inline QColor toQColor(GLCOLOR c) { return QColor(c.r, c.g, c.b); }
-
 //-----------------------------------------------------------------------------
 class CModelProps : public CPropertyList
 {
 public:
 	CModelProps(CGLModel* fem) : m_fem(fem) 
 	{
-		AddProperty("Element subdivions"       , QVariant::Int);
-		AddProperty("Render mode"              , QVariant::Int, "Render mode", QStringList() << "default" << "wireframe" << "solid");
-		AddProperty("Render outline"           , QVariant::Bool);
-		AddProperty("Render undeformed outline", QVariant::Bool);
-		AddProperty("Outline color"            , QVariant::Color);
-		AddProperty("Node color"               , QVariant::Color);
-		AddProperty("Selection color"          , QVariant::Color);
-		AddProperty("Render smooth"            , QVariant::Bool);
-		AddProperty("Shells as hexes"          , QVariant::Bool);
-		AddProperty("Shell reference surface"  , QVariant::Int, "set the shell reference surface", QStringList() << "Mid surface" << "bottom surface" << "top surface");
-		AddProperty("Smoothing angle"          , QVariant::Double);
+		addProperty("Element subdivions"       , CProperty::Int)->setIntRange(0, 10);
+		addProperty("Render mode"              , CProperty::Enum, "Render mode")->setEnumValues(QStringList() << "default" << "wireframe" << "solid");
+		addProperty("Render outline"           , CProperty::Bool);
+		addProperty("Render undeformed outline", CProperty::Bool);
+		addProperty("Outline color"            , CProperty::Color);
+		addProperty("Node color"               , CProperty::Color);
+		addProperty("Selection color"          , CProperty::Color);
+		addProperty("Render smooth"            , CProperty::Bool);
+		addProperty("Shells as hexes"          , CProperty::Bool);
+		addProperty("Shell reference surface"  , CProperty::Enum, "set the shell reference surface")->setEnumValues(QStringList() << "Mid surface" << "bottom surface" << "top surface");
+		addProperty("Smoothing angle"          , CProperty::Float);
 	}
 
 	QVariant GetPropertyValue(int i)
@@ -57,10 +55,10 @@ public:
 	{
 		switch (i)
 		{
-		case 0: m_fem->m_nDivs    = v.value<int>(); break;
-		case 1: m_fem->m_nrender  = v.value<int>(); break;
-		case 2: m_fem->m_boutline = v.value<bool>(); break;
-		case 3: m_fem->m_bghost   = v.value<bool>(); break;
+		case 0: m_fem->m_nDivs    = v.toInt(); break;
+		case 1: m_fem->m_nrender  = v.toInt(); break;
+		case 2: m_fem->m_boutline = v.toBool(); break;
+		case 3: m_fem->m_bghost   = v.toBool(); break;
 		}
 	}
 	
@@ -75,11 +73,10 @@ public:
 	CMeshProps(FEModel* fem) : m_fem(fem) 
 	{
 		FEMesh& mesh = *fem->GetMesh();
-		CProperty* p;
-		p = AddProperty("Nodes", QVariant::Int, "Number of nodes"); p->m_bedit = false;
-		p = AddProperty("Faces", QVariant::Int, "Number of faces"); p->m_bedit = false;
-		p = AddProperty("Solid Elements", QVariant::Int, "Number of solid elements"); p->m_bedit = false;
-		p = AddProperty("Shell Elements", QVariant::Int, "Number of shell elemetns"); p->m_bedit = false;
+		addProperty("Nodes"         , CProperty::Int, "Number of nodes"         )->setFlags(CProperty::Visible);
+		addProperty("Faces"         , CProperty::Int, "Number of faces"         )->setFlags(CProperty::Visible);
+		addProperty("Solid Elements", CProperty::Int, "Number of solid elements")->setFlags(CProperty::Visible);
+		addProperty("Shell Elements", CProperty::Int, "Number of shell elemetns")->setFlags(CProperty::Visible);
 	}
 
 	QVariant GetPropertyValue(int i)
@@ -99,9 +96,7 @@ public:
 		return v;
 	}
 
-	void SetPropertyValue(int i, const QVariant& v)
-	{
-	}
+	void SetPropertyValue(int i, const QVariant& v) { }
 
 private:
 	FEModel*	m_fem;
