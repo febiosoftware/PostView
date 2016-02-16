@@ -75,10 +75,11 @@ public:
 	CMeshProps(FEModel* fem) : m_fem(fem) 
 	{
 		FEMesh& mesh = *fem->GetMesh();
-		AddProperty("Nodes", QVariant::Int, "Number of nodes");
-		AddProperty("Faces", QVariant::Int, "Number of faces");
-		AddProperty("Solid Elements", QVariant::Int, "Number of solid elements");
-		AddProperty("Shell Elements", QVariant::Int, "Number of shell elemetns");
+		CProperty* p;
+		p = AddProperty("Nodes", QVariant::Int, "Number of nodes"); p->m_bedit = false;
+		p = AddProperty("Faces", QVariant::Int, "Number of faces"); p->m_bedit = false;
+		p = AddProperty("Solid Elements", QVariant::Int, "Number of solid elements"); p->m_bedit = false;
+		p = AddProperty("Shell Elements", QVariant::Int, "Number of shell elemetns"); p->m_bedit = false;
 	}
 
 	QVariant GetPropertyValue(int i)

@@ -11,6 +11,8 @@
 #include <QDoubleValidator>
 #include <QtCore/QAbstractTableModel>
 #include <QStyledItemDelegate>
+#include <QtCore/QStringListModel>
+#include <QDoubleSpinBox>
 
 //-----------------------------------------------------------------------------
 class CIntInput : public QLineEdit
@@ -92,7 +94,14 @@ public:
 		else if (index.column() == 1)
 		{
 			QVariant v = m_list->GetPropertyValue(index.row());
-			if (role == Qt::EditRole) return v;
+			if (role == Qt::EditRole) 
+			{
+				if ((v.type() == QVariant::Int)&&(prop.m_values.isEmpty()==false))
+				{
+					return prop.m_values;
+				}
+				return v;
+			}
 			if (v.type() == QVariant::Color)
 			{
 				if (role == Qt::BackgroundRole) return v;
@@ -107,7 +116,7 @@ public:
 				}
 				else if ((v.type() == QVariant::Int)&&(prop.m_values.isEmpty()==false))
 				{
-					int n = v.toInt();
+					int n = v.value<int>();
 					return prop.m_values.at(n);
 				}
 				return v;
@@ -121,8 +130,11 @@ public:
 	{
 		if (!index.isValid()) return 0;
 		if (index.column() == 1)
-			return QAbstractTableModel::flags(index) | Qt::ItemIsEditable;
-		else return QAbstractTableModel::flags(index);
+		{
+			if (m_list->Property(index.row()).m_bedit)
+				return QAbstractTableModel::flags(index) | Qt::ItemIsEditable;
+		}
+		return QAbstractTableModel::flags(index);
 	}
 
 	bool setData(const QModelIndex& index, const QVariant& value, int role)
@@ -172,7 +184,7 @@ public:
 
 			// Fill the background before calling the base class paint
 			// otherwise selected cells would have a white background
-			QVariant background = index.data(Qt::BackgroundRole);
+/*			QVariant background = index.data(Qt::BackgroundRole);
 			if (background.canConvert<QBrush>())
 				painter->fillRect(option.rect, background.value<QBrush>());
 
@@ -186,7 +198,7 @@ public:
 				painter->drawRect(option.rect.adjusted(w,w,-w,-w));
 				painter->restore();
 			}
-		}
+*/		}
     }
 
 	QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const
@@ -194,7 +206,7 @@ public:
 		const QAbstractItemModel* model = index.model();
 		if ((model == 0)||(index.column()==0)) return QStyledItemDelegate::createEditor(parent, option, index);
 
-		QVariant data = index.data(Qt::EditRole);
+		QVariant data = index.data(Qt::EditRole);		
 		if (data.type() == QVariant::Bool)
 		{
 			QComboBox* box = new QComboBox(parent);
@@ -202,12 +214,31 @@ public:
 			box->addItem("Yes");
 			bool b = data.value<bool>();
 			box->setCurrentIndex(b ? 1 : 0);
+			m_view->connect(box, SIGNAL(currentIndexChanged(int)), m_view, SLOT(onDataChanged()));
 			return box;
+		}
+		if (data.type() == QVariant::StringList)
+		{
+			QComboBox* pc = new QComboBox(parent);
+			QStringListModel* pdata = new QStringListModel(pc);
+			pdata->setStringList(data.value<QStringList>());
+			pc->setModel(pdata);
+			pc->setCurrentText(index.data(Qt::DisplayRole).toString());
+			m_view->connect(pc, SIGNAL(currentIndexChanged(int)), m_view, SLOT(onDataChanged()));
+			return pc;
 		}
 		if (data.type() == QVariant::Color)
 		{
 			CColorButton* pc = new CColorButton(parent);
 			pc->setColor(data.value<QColor>());
+			m_view->connect(pc, SIGNAL(colorChanged(QColor)), m_view, SLOT(onDataChanged()));
+			return pc;
+		}
+		if (data.type() == QVariant::Double)
+		{
+			QDoubleSpinBox* pc = new QDoubleSpinBox(parent);
+			pc->setSingleStep(0.01);
+			pc->textFromValue(data.value<double>());
 			return pc;
 		}
 
@@ -235,7 +266,7 @@ public:
 	QTableView*				m_prop;
 	CPropertyListDelegate*	m_delegate;
 	CPropertyListModel*		m_data;
-	QLabel*					m_info;
+//	QLabel*					m_info;
 
 public:
 	void setupUi(::CPropertyListView* parent)
@@ -252,6 +283,7 @@ public:
 		m_prop->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
 		m_prop->verticalHeader()->setDefaultSectionSize(24);
 		m_prop->verticalHeader()->hide();
+		m_prop->setEditTriggers(QAbstractItemView::CurrentChanged);
 
 		m_delegate = new CPropertyListDelegate(parent);
 		m_prop->setItemDelegate(m_delegate);
@@ -259,12 +291,12 @@ public:
 		m_data = new CPropertyListModel(m_prop);
 		m_prop->setModel(m_data);
 
-		m_info = new QLabel;
+/*		m_info = new QLabel;
 		m_info->setFrameStyle(QFrame::Panel);
 		m_info->setMinimumHeight(50);
-		
+*/		
 		playout->addWidget(m_prop);
-		playout->addWidget(m_info);
+//		playout->addWidget(m_info);
 
 		QMetaObject::connectSlotsByName(parent);
 	}
@@ -281,12 +313,25 @@ void CPropertyListView::Update(CPropertyList* plist)
 {
 	ui->m_list = plist;
 	ui->m_data->setPropertyList(plist);
+
+	// we make persistent editors for color properties
+	if (plist)
+	{
+		for (int i=0; i<plist->Properties(); ++i)
+		{
+			const CPropertyList::CProperty& p = plist->Property(i);
+			if (p.m_type == QVariant::Color)
+			{
+				ui->m_prop->openPersistentEditor(ui->m_data->index(i, 1));
+			}
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
 void CPropertyListView::on_modelProps_clicked(const QModelIndex& index)
 {
-	if (ui->m_list)
+/*	if (ui->m_list)
 	{
 		if (index.isValid())
 		{
@@ -296,4 +341,17 @@ void CPropertyListView::on_modelProps_clicked(const QModelIndex& index)
 		}
 	}
 	ui->m_info->clear();
+*/
+}
+
+//-----------------------------------------------------------------------------
+void CPropertyListView::onDataChanged()
+{
+	QWidget* pw = qobject_cast<QWidget*>(sender());
+	if (pw)
+	{
+		QModelIndex index = ui->m_prop->currentIndex();
+		ui->m_delegate->setModelData(pw, ui->m_data, index);
+		QApplication::activeWindow()->repaint();
+	}
 }
