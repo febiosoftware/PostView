@@ -6,6 +6,9 @@
 #include <QStackedWidget>
 #include <QButtonGroup>
 #include <QLabel>
+#include <QFormLayout>
+#include <QSpinBox>
+#include "PropertyList.h"
 
 class CTool
 {
@@ -15,17 +18,74 @@ public:
 	const QString& name() { return m_name; }
 	void setName(const QString& s) { m_name = s; }
 
-	QWidget* createUi()
+	virtual QWidget* createUi()
 	{
-		QGroupBox* pg = new QGroupBox(name());
-		QVBoxLayout* layout = new QVBoxLayout;
-		pg->setLayout(layout);
-		layout->addWidget(new QLabel(name()));
-		return pg;
+		CPropertyList* pl = getPropertyList();
+		if (pl == 0) return 0;
+
+		QWidget* pw = new QWidget;
+		QFormLayout* pg = new QFormLayout(pw);
+		pw->setLayout(pg);
+
+		int nprops = pl->Properties();
+		for (int i=0; i<nprops; ++i)
+		{
+			const CProperty& pi = pl->Property(i);
+			if (pi.type == CProperty::Int)
+			{
+				pg->addRow(pi.name, new QSpinBox);
+			}
+		}
+		return pw;
+	}
+
+	virtual CPropertyList* getPropertyList()
+	{
+		return 0;
 	}
 
 private:
 	QString	m_name;
+};
+
+class CPointDistanceTool : public CTool
+{
+	class Props : public CPropertyList
+	{
+	public:
+		Props(CPointDistanceTool* ptool) : tool(ptool)
+		{
+			addProperty("node 1", CProperty::Int);
+			addProperty("node 2", CProperty::Int);
+		}
+
+		QVariant GetPropertyValue(int i)
+		{
+			if (i==0) return tool->m_node1;
+			if (i==1) return tool->m_node2;
+			return QVariant();
+		}
+
+		void SetPropertyValue(int i, const QVariant& v)
+		{
+		}
+
+	private:
+		CPointDistanceTool*	tool;
+	};
+
+public:
+	CPointDistanceTool() : CTool("Pt.Distance") {}
+
+	CPropertyList* getPropertyList()
+	{
+		return new Props(this);
+	}
+
+private:
+	int		m_node1, m_node2;
+
+	friend class Props;
 };
 
 static QList<CTool*>	tools;
@@ -71,8 +131,19 @@ public:
 		for (int i=0; i<ntools; ++i, ++it)
 		{
 			CTool* tool = *it;
-			QWidget* w = tool->createUi();
-			stack->addWidget(w);
+			QGroupBox* pg = new QGroupBox(tool->name());
+			QVBoxLayout* layout = new QVBoxLayout;
+			pg->setLayout(layout);
+
+			QWidget* pw = tool->createUi();
+			if (pw == 0)
+			{
+				QLabel* pl = new QLabel("(no properties)");
+				pl->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
+				layout->addWidget(pl);
+			}
+			else layout->addWidget(pw);
+			stack->addWidget(pg);
 		}
 
 		pg->addWidget(box);
@@ -91,7 +162,7 @@ CToolsPanel::CToolsPanel(CMainWindow* window, QWidget* parent) : CCommandPanel(w
 
 void CToolsPanel::initTools()
 {
-	tools.push_back(new CTool("Pt. Distance"));
+	tools.push_back(new CPointDistanceTool);
 	tools.push_back(new CTool("3Point Angle"));
 	tools.push_back(new CTool("4Point Angle"));
 	tools.push_back(new CTool("Plane"));
