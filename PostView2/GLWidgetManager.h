@@ -7,6 +7,13 @@ class CGLView;
 class CGLWidgetManager
 {
 public:
+	enum Event {
+		PUSH,
+		DRAG,
+		RELEASE
+	};
+
+public:
 	~CGLWidgetManager();
 
 	static CGLWidgetManager* GetInstance();
@@ -19,9 +26,9 @@ public:
 
 	void AttachToView(CGLView* pview);
 
-//	int handle(int nevent);
+	int handle(int x, int y, int nevent);
 
-	void DrawWidgets();
+	void DrawWidgets(QPainter* painter);
 
 protected:
 	void SnapWidget(GLWidget* pw);

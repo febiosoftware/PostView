@@ -65,6 +65,7 @@ public:
 
 		// create the central widget
 		glview = new CGLView(MainWindow);
+
 		MainWindow->setCentralWidget(glview);
 
 		// build the menu

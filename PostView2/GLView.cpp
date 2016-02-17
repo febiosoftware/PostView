@@ -8,6 +8,7 @@
 #include "GLContext.h"
 #include <PostViewLib/VolRender.h>
 #include <QMouseEvent>
+#include <QPainter>
 
 CGLView::CGLView(CMainWindow* pwnd, QWidget* parent) : QOpenGLWidget(parent), m_wnd(pwnd)
 {
@@ -17,6 +18,7 @@ CGLView::CGLView(CMainWindow* pwnd, QWidget* parent) : QOpenGLWidget(parent), m_
 
 	QSurfaceFormat fmt = format();
 	fmt.setSamples(4);
+	fmt.setRenderableType(QSurfaceFormat::OpenGL);
 	setFormat(fmt);
 
 	m_bdrag = false;
@@ -163,6 +165,10 @@ void CGLView::paintGL()
 	// get the scene's view settings
 	VIEWSETTINGS view = pdoc->GetViewSettings();
 
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	// turn on/off lighting
 	if (view.m_bLighting)
 		glEnable(GL_LIGHTING);
@@ -262,8 +268,15 @@ void CGLView::mousePressEvent(QMouseEvent* ev)
 	if (key & Qt::ShiftModifier  ) mode |= SELECT_ADD;
 	if (key & Qt::ControlModifier) mode |= SELECT_SUB;
 
-	int x = ev->globalX();
-	int y = ev->globalY();
+	int x = ev->x();
+	int y = ev->y();
+
+	// let the widget manager handle it first
+	if (m_Widget->handle(x, y, CGLWidgetManager::PUSH) == 1)
+	{
+		repaint();
+		return;
+	}
 
 	m_p1.x = m_p0.x = m_xp = x;
 	m_p1.y = m_p0.y = m_yp = y;
@@ -273,8 +286,15 @@ void CGLView::mousePressEvent(QMouseEvent* ev)
 //-----------------------------------------------------------------------------
 void CGLView::mouseMoveEvent(QMouseEvent* ev)
 {
-	int x = ev->globalX();
-	int y = ev->globalY();
+	int x = ev->x();
+	int y = ev->y();
+
+	// let the widget manager handle it first
+	if (m_Widget->handle(x, y, CGLWidgetManager::DRAG) == 1)
+	{
+		repaint();
+		return;
+	}
 
 	CGLCamera* pcam = &GetCamera();
 
@@ -353,9 +373,16 @@ void CGLView::mouseMoveEvent(QMouseEvent* ev)
 //-----------------------------------------------------------------------------
 void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 {
+	int x = ev->x();
+	int y = ev->y();
 
+	// let the widget manager handle it first
+	if (m_Widget->handle(x, y, CGLWidgetManager::RELEASE) == 1)
+	{
+		repaint();
+		return;
+	}
 }
-
 
 void CGLView::Clear()
 {
@@ -494,7 +521,10 @@ void CGLView::RenderWidgets()
 	if (view.m_bTriad) m_ptriad->show();
 	else m_ptriad->hide();
 
-	m_Widget->DrawWidgets();
+	QPainter painter(this);
+	painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+	m_Widget->DrawWidgets(&painter);
+	painter.end();
 }
 
 CGLCamera& CGLView::GetCamera()

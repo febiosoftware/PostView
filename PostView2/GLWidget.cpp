@@ -29,6 +29,9 @@ GLWidget::GLWidget(CGLObject* po, int x, int y, int w, int h, const char* szlabe
 	m_bgc[1] = GLCOLOR(0,0,0,0);
 	m_nbg = NONE;
 
+	m_font = QString("Helvetica");
+	m_font_size = 13;
+
 	m_nsnap = 0;
 
 	m_balloc = false;
@@ -127,24 +130,31 @@ void GLBox::draw_bg(int x0, int y0, int x1, int y1)
 	}
 }
 
-void GLBox::draw()
+void GLBox::draw(QPainter* painter)
 {
-	int vp[4];
-	glGetIntegerv(GL_VIEWPORT, vp);
-
 	int x0 = m_x;
-	int y0 = vp[3] - m_y;
+	int y0 = m_y;
 	int x1 = m_x + m_w;
-	int y1 = vp[3]-(m_y+m_h);
+	int y1 = m_y+m_h;
 
-	draw_bg(x0, y0, x1, y1);
+//	draw_bg(x0, y0, x1, y1);
 
 	if (m_szlabel)
 	{
 		char szlabel[256] = {0};
 		parse_label(szlabel, m_szlabel, 255);
 
-		// TODO: draw label
+		if (m_bshadow)
+		{
+			int dx = m_font_size/10+1;
+//			painter->setPen(QColor(m_shc.r, m_shc.g, m_shc.b));
+//			painter->drawText(x0+dx, y0+dx, QString(szlabel));
+		}
+		QPen pen = painter->pen();
+		pen.setColor(QColor(m_fgc.r, m_fgc.g, m_fgc.b));
+		painter->setPen(pen);
+		painter->setFont(QFont(m_font, m_font_size));
+		painter->drawText(x0, y0, m_w, m_h, Qt::AlignLeft| Qt::AlignVCenter, QString(szlabel));
 	}
 }
 
@@ -205,7 +215,7 @@ GLLegendBar::GLLegendBar(CGLObject* po, CColorMap* pm, int x, int y, int w, int 
 	m_nprec = 3;
 }
 
-void GLLegendBar::draw()
+void GLLegendBar::draw(QPainter* painter)
 {
 	switch (m_ntype)
 	{
@@ -468,8 +478,10 @@ GLTriad::GLTriad(CGLObject* po, int x, int y, int w, int h, CGLCamera *pcam) : G
 	m_bcoord_labels = true;
 }
 
-void GLTriad::draw()
+void GLTriad::draw(QPainter* painter)
 {
+	painter->beginNativePainting();
+	glPushAttrib(GL_ALL_ATTRIB_BITS);
 	GLfloat ones[] = {1.f, 1.f, 1.f, 1.f};
 	GLfloat ambient[] = {0.0f,0.0f,0.0f,1.f};
 	GLfloat specular[] = {0.5f,0.5f,0.5f,1};
@@ -600,6 +612,8 @@ void GLTriad::draw()
 
 	// restore viewport
 	glViewport(view[0], view[1], view[2], view[3]);
+
+	painter->endNativePainting();
 }
 
 //-----------------------------------------------------------------------------
@@ -609,7 +623,7 @@ GLSafeFrame::GLSafeFrame(CGLObject* po, int x, int y, int w, int h) : GLWidget(p
 	m_block = false;
 }
 
-void GLSafeFrame::draw()
+void GLSafeFrame::draw(QPainter* painter)
 {
 	int vp[4];
 	glGetIntegerv(GL_VIEWPORT, vp);

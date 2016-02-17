@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <gl/GL.h>
 #include "PostViewLib/ColorMap.h"
+#include <QPainter>
 
 class CGLView;
 class CGLWidgetManager;
@@ -28,7 +29,7 @@ public:
 
 	CGLObject* GetObject() { return m_po; }
 
-	virtual void draw() = 0;
+	virtual void draw(QPainter* painter) = 0;
 
 	void set_color(GLCOLOR fgc, GLCOLOR bgc);
 
@@ -82,7 +83,10 @@ protected:
 	int m_x, m_y;
 	int m_w, m_h;
 	bool	m_balloc;
-	char*		m_szlabel;
+	
+	char*			m_szlabel;
+	QString			m_font;
+	unsigned int	m_font_size;
 	
 	unsigned int	m_nsnap;	// alignment flag
 
@@ -109,7 +113,7 @@ class GLBox : public GLWidget
 public:
 	GLBox(CGLObject* po, int x, int y, int w, int h, CDocument* pdoc, const char* szlabel = 0);
 
-	void draw();
+	void draw(QPainter* painter);
 
 	void parse_label(char* szlabel, const char* szval, int nmax);
 
@@ -135,7 +139,7 @@ public:
 public:
 	GLLegendBar(CGLObject* po, CColorMap* pm, int x, int y, int w, int h);
 
-	void draw();
+	void draw(QPainter* painter);
 
 	void SetType(int n) { m_ntype = n; }
 	void SetOrientation(int n) { m_nrot = n; }
@@ -172,7 +176,7 @@ class GLTriad : public GLWidget
 public:
 	GLTriad(CGLObject* po, int x, int y, int w, int h, CGLCamera* pcam);
 
-	void draw();
+	void draw(QPainter* painter);
 
 	void show_coord_labels(bool bshow) { m_bcoord_labels = bshow; }
 	bool show_coord_labels() { return m_bcoord_labels; }
@@ -196,7 +200,7 @@ public:
 
 	bool is_inside(int x, int y);
 
-	void draw();
+	void draw(QPainter* painter);
 
 	void lock(bool b) { m_block = b; }
 	bool islocked() { return m_block; }
