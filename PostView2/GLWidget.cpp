@@ -219,21 +219,22 @@ void GLLegendBar::draw(QPainter* painter)
 {
 	switch (m_ntype)
 	{
-	case GRADIENT: draw_gradient(); break;
-	case DISCRETE: draw_discrete(); break;
+	case GRADIENT: draw_gradient(painter); break;
+	case DISCRETE: draw_discrete(painter); break;
 	default:
 		assert(false);
 	}
 }
 
-void GLLegendBar::draw_gradient()
+void GLLegendBar::draw_gradient(QPainter* painter)
 {
+	painter->beginNativePainting();
+	glPushAttrib(GL_ALL_ATTRIB_BITS);
+
 	// draw the legend
 	float fmin, fmax;
 	m_pMap->GetRange(fmin, fmax);
 	int nsteps = m_pMap->GetDivisions();
-
-	glPushAttrib(GL_ENABLE_BIT);
 
 	glDisable(GL_CULL_FACE);
 
@@ -289,13 +290,13 @@ void GLLegendBar::draw_gradient()
 	{
 		// TODO: draw title
 	}
-	/*
+	
 	glColor3ub(m_lbl_fc.r,m_lbl_fc.g,m_lbl_fc.b);
-	gl_font(m_lbl_font, m_lbl_font_size);
+//	gl_font(m_lbl_font, m_lbl_font_size);
 	
 	if (m_blabels)
 	{
-		if((abs(ipow)>2))
+/*		if((abs(ipow)>2))
 		{
 			sprintf(pstr, "x10");
 			gl_draw(pstr, x0, y0 + 8, 28, 20, FL_ALIGN_LEFT);
@@ -311,15 +312,15 @@ void GLLegendBar::draw_gradient()
 
 		char szfmt[16]={0};
 		sprintf(szfmt, "%%.%dg", m_nprec);
-
+*/
 		for (i=0; i<=nsteps; i++)
 		{
 			yt = y0 + i*(y1 - y0)/nsteps;
 			f = fmax + i*(fmin - fmax)/nsteps;
 		
-			sprintf(str, szfmt, (fabs(f/p) < 1e-5 ? 0 : f/p));
+//			sprintf(str, szfmt, (fabs(f/p) < 1e-5 ? 0 : f/p));
 
-			gl_draw(str, x0 - 55, yt-8, 50, 20, FL_ALIGN_RIGHT);
+//			gl_draw(str, x0 - 55, yt-8, 50, 20, FL_ALIGN_RIGHT);
 
 			glLineWidth(1.f);
 			glBegin(GL_LINES);
@@ -330,15 +331,18 @@ void GLLegendBar::draw_gradient()
 			glEnd();
 		}
 	}
-	*/
 
 	glDepthFunc(dfnc);
 
 	glPopAttrib();
+	painter->endNativePainting();
 }
 
-void GLLegendBar::draw_discrete()
+void GLLegendBar::draw_discrete(QPainter* painter)
 {
+	painter->beginNativePainting();
+	glPushAttrib(GL_ALL_ATTRIB_BITS);
+
 	// draw the legend
 	float fmin, fmax;
 	m_pMap->GetRange(fmin, fmax);
@@ -385,10 +389,10 @@ void GLLegendBar::draw_discrete()
 		ipow = (int) floor(g);
 	}
 	else ipow = 0;
-/*
-	gl_font(m_font, m_font_size);
+
+//	gl_font(m_font, m_font_size);
 	
-	if((abs(ipow)>2) && m_blabels)
+/*	if((abs(ipow)>2) && m_blabels)
 	{
 		sprintf(pstr, "x10");
 		gl_draw(pstr, x1+10, y1, 28, 20, (Fl_Align)(FL_ALIGN_LEFT | FL_ALIGN_INSIDE));
@@ -410,12 +414,12 @@ void GLLegendBar::draw_discrete()
 			gl_draw(m_po->GetName(), x(), vp[3] - y(), w(), -h()+30, FL_ALIGN_TOP);
 		}
 	}
-
+*/
 
 	if (m_blabels)
 	{
-		char szfmt[16]={0};
-		sprintf(szfmt, "%%.%dg", m_nprec);
+//		char szfmt[16]={0};
+//		sprintf(szfmt, "%%.%dg", m_nprec);
 
 		// render the lines and text
 		for (i=1; i<nsteps+1; i++)
@@ -425,10 +429,10 @@ void GLLegendBar::draw_discrete()
 				yt = y0 + i*(y1 - y0)/(nsteps+1);
 				f = fmax + i*(fmin - fmax)/(nsteps+1);
 		
-				sprintf(str, szfmt, (fabs(f/p) < 1e-5 ? 0 : f/p));
+//				sprintf(str, szfmt, (fabs(f/p) < 1e-5 ? 0 : f/p));
 
 				glColor3ub(m_fgc.r,m_fgc.g,m_fgc.b);
-				gl_draw(str, x0 - 55, yt-8, 50, 20, FL_ALIGN_RIGHT);
+//				gl_draw(str, x0 - 55, yt-8, 50, 20, FL_ALIGN_RIGHT);
 
 				GLCOLOR c = m_pMap->map((float) f);
 				glColor3ub(c.r, c.g, c.b);
@@ -446,10 +450,10 @@ void GLLegendBar::draw_discrete()
 				int xt = x0 + i*(x1 - x0)/(nsteps+1);
 				f = fmin + i*(fmax - fmin)/(nsteps+1);
 		
-				sprintf(str, szfmt, (fabs(f/p) < 1e-5 ? 0 : f/p));
+//				sprintf(str, szfmt, (fabs(f/p) < 1e-5 ? 0 : f/p));
 
 				glColor3ub(m_fgc.r,m_fgc.g,m_fgc.b);
-				gl_draw(str, xt - 25, y1-30, 50, 20, FL_ALIGN_CENTER);
+//				gl_draw(str, xt - 25, y1-30, 50, 20, FL_ALIGN_CENTER);
 
 				GLCOLOR c = m_pMap->map((float) f);
 				glColor3ub(c.r, c.g, c.b);
@@ -464,10 +468,11 @@ void GLLegendBar::draw_discrete()
 			}
 		}
 	}
-*/
+
 	glDepthFunc(dfnc);
 
 	glPopAttrib();
+	painter->endNativePainting();
 }
 
 //-----------------------------------------------------------------------------

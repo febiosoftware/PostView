@@ -6,6 +6,7 @@
 #include "Document.h"
 #include <PostViewLib/xpltReader.h>
 #include "Document.h"
+#include "GLModel.h"
 #include <string>
 
 CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMainWindow)
@@ -22,6 +23,8 @@ bool CMainWindow::OpenFile(const QString& fileName)
 {
 	std::string sfile = fileName.toStdString();
 
+	ui->actionColorMap->setDisabled(true);
+
 	XpltReader* reader = new XpltReader;
 	if (m_doc->LoadFEModel(reader, sfile.c_str()) == false)
 	{
@@ -30,6 +33,9 @@ bool CMainWindow::OpenFile(const QString& fileName)
 		b.setIcon(QMessageBox::Critical);
 		b.exec();
 	}
+
+	ui->selectData->BuildMenu(m_doc->GetFEModel(), DATA_FLOAT);
+	ui->actionColorMap->setEnabled(true);
 
 	// update the command panels
 	ui->modelViewer->Update();
@@ -68,4 +74,27 @@ void CMainWindow::on_actionOpen_triggered()
 void CMainWindow::on_actionQuit_triggered()
 {
 	QApplication::quit();
+}
+
+void CMainWindow::on_actionColorMap_toggled(bool bchecked)
+{
+	CDocument* pdoc = GetDocument();
+	CGLModel* po = pdoc->GetGLModel();
+	po->GetColorMap()->Activate(bchecked);
+	pdoc->UpdateFEModel();
+	ui->glview->repaint();
+}
+
+void CMainWindow::on_selectData_currentIndexChanged(int i)
+{
+	int nfield = ui->selectData->currentData(Qt::UserRole).toInt();
+
+	CDocument* pdoc = GetDocument();
+	CGLModel* pm = pdoc->GetGLModel();
+	pm->GetColorMap()->SetEvalField(nfield);
+
+	pdoc->SetFieldString(ui->selectData->currentText().toStdString().c_str());
+	pdoc->UpdateFEModel();
+
+	ui->glview->repaint();
 }

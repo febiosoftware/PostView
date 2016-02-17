@@ -141,6 +141,9 @@
     <ClCompile Include="..\PostView2\moc_PropertyListForm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\PostView2\DataFieldSelector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\PostView2\stdafx.h">
@@ -201,6 +204,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\PostView2\Tool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\PostView2\DataFieldSelector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

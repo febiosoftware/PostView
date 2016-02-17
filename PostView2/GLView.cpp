@@ -382,6 +382,8 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 		repaint();
 		return;
 	}
+
+	repaint();
 }
 
 void CGLView::Clear()

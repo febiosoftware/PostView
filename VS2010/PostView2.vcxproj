@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\PostView2\CommandPanel.cpp" />
+    <ClCompile Include="..\PostView2\DataFieldSelector.cpp" />
     <ClCompile Include="..\PostView2\DataPanel.cpp" />
     <ClCompile Include="..\PostView2\Document.cpp" />
     <ClCompile Include="..\PostView2\FileViewer.cpp" />
@@ -133,6 +134,7 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename).%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </CustomBuild>
+    <ClInclude Include="..\PostView2\DataFieldSelector.h" />
     <ClInclude Include="..\PostView2\Tool.h" />
     <CustomBuild Include="..\PostView2\DataPanel.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)bin/moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>

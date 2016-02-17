@@ -22,6 +22,8 @@ public:
 private slots:
 	void on_actionOpen_triggered();
 	void on_actionQuit_triggered();
+	void on_actionColorMap_toggled(bool bchecked);
+	void on_selectData_currentIndexChanged(int i);
 
 private:
 	Ui::CMainWindow*	ui;

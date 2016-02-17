@@ -14,6 +14,7 @@
 #include <QTreeWidget>
 #include <QHeaderView>
 #include "ToolsPanel.h"
+#include "DataFieldSelector.h"
 #include "GLView.h"
 
 QT_BEGIN_NAMESPACE
@@ -46,6 +47,8 @@ public:
 	QMenu* menuView;
 	QMenu* menuHelp; 
 
+	QAction*	actionColorMap;
+
 	CFileViewer*	fileViewer;
 	CModelViewer*	modelViewer;
 	CMaterialPanel*	matPanel;
@@ -53,6 +56,8 @@ public:
 	CStatePanel*	statePanel;
 	CToolsPanel*	toolsPanel;
 	CGLView*		glview;
+
+	CDataFieldSelector*	selectData;
 
 public:
 	// build the UI
@@ -171,7 +176,7 @@ public:
 		QAction* actionProperties      = addAction("Properties ..."  , "actionProperties"     );
 
 		// --- Post menu ---
-		QAction* actionColorMap        = addAction("Toggle colormap" , "actionColorMap"       , ":/icons/colormap.png");
+		actionColorMap        = addAction("Toggle colormap" , "actionColorMap"       , ":/icons/colormap.png");
 		QAction* actionPlaneCut        = addAction("Plane cut"       , "actionPlaneCut"       );
 		QAction* actionVectorPlot      = addAction("Vector plot"     , "actionVectorPlot"     );
 		QAction* actionIsosurfacePlot  = addAction("Isosurface plot" , "actionIsosurfacePlot" );
@@ -181,6 +186,9 @@ public:
 		QAction* actionStats           = addAction("Statistics  ..." , "actionStats"          );
 		QAction* actionGraph           = addAction("Graph ..."       , "actionGraph"          );
 		QAction* actionIntegrate       = addAction("Integrate ..."   , "actionIntegrate"      );
+
+		actionColorMap->setCheckable(true);
+		actionColorMap->setDisabled(true);
 
 		// --- Record menu ---
 		QAction* actionRecordNew   = addAction("New ...", "actionRecordNew"  );
@@ -305,32 +313,11 @@ public:
 		mainToolBar->addAction(actionUpdate);
 		mainToolBar->addSeparator();
 
-		QTreeWidget* pw = new QTreeWidget;
-		QTreeWidgetItem* pi1 = new QTreeWidgetItem(pw), *pi;
-		pw->header()->hide();
-		pi1->setText(0, "displacement");
-		pi1->setFlags(pi1->flags() & ~Qt::ItemIsSelectable); 
-		pi1->setExpanded(true);
-		pi = new QTreeWidgetItem(pi1); pi->setText(0, "X-displacement");
-		pi = new QTreeWidgetItem(pi1); pi->setText(0, "Y-displacement");
-		pi = new QTreeWidgetItem(pi1); pi->setText(0, "Z-displacement");
-		pi1 = new QTreeWidgetItem(pw);
-		pi1->setText(0, "stress");
-		pi1->setFlags(pi1->flags() & ~Qt::ItemIsSelectable); 
-//		pi1->setExpanded(true);
-		pi = new QTreeWidgetItem(pi1); pi->setText(0, "X-stress");
-		pi = new QTreeWidgetItem(pi1); pi->setText(0, "Y-stress");
-		pi = new QTreeWidgetItem(pi1); pi->setText(0, "Z-stress");
-		
-		QComboBox* pc = new CMyComboBox;
-		pc->setModel(pw->model());
-		pc->setView(pw);
-		pc->setMinimumWidth(200);
-		pc->view()->setMinimumWidth(200);
-		pc->view()->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
-		pc->setCurrentIndex(-1);
-		mainToolBar->addWidget(pc);
+		// create the data field selector
+		selectData = new CDataFieldSelector;
+		selectData->setObjectName("selectData");
 
+		mainToolBar->addWidget(selectData);
 		mainToolBar->addAction(actionColorMap);
 	}
 };
