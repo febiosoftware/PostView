@@ -36,6 +36,7 @@ bool CMainWindow::OpenFile(const QString& fileName)
 	ui->matPanel->Update();
 	ui->dataPanel->Update();
 	ui->statePanel->Update();
+	ui->toolsPanel->Update();
 
 	// update the gl view
 	ui->glview->GetCamera().Update(true);

@@ -132,6 +132,15 @@
     <ClCompile Include="..\PostView2\PropertyList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\PostView2\Tool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PostView2\PropertyListForm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PostView2\moc_PropertyListForm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\PostView2\stdafx.h">
@@ -191,6 +200,9 @@
     <ClInclude Include="..\PostView2\PropertyList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\PostView2\Tool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\PostView2\MainWindow.h">
@@ -215,6 +227,9 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\PostView2\ToolsPanel.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PostView2\PropertyListForm.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
