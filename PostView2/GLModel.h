@@ -2,6 +2,8 @@
 #include "PostViewLib/GLObject.h"
 #include "GLDataMap.h"
 #include "PostViewLib/FEModel.h"
+#include <PostViewLib/GDecoration.h>
+#include <list>
 
 class CGLModel : public CGLVisual
 {
@@ -48,6 +50,8 @@ public:
 
 	void RenderSelection(CGLContext& rc);
 
+	void RenderDecorations();
+
 //	void RenderFeatureEdges(FEModel* ps);
 	void RenderMeshLines(FEModel* ps);
 	void RenderMeshLines(FEModel* ps, int nmat);
@@ -61,6 +65,8 @@ public:
 
 	void RenderAllElements();	// used for element selection
 
+	void AddDecoration(GDecoration* pd);
+	void RemoveDecoration(GDecoration* pd);
 
 protected:
 	void RenderFace(FEFace& face, FEMesh* pm, int ndivs, bool bnode);
@@ -108,4 +114,5 @@ protected:
 
 	CGLDisplacementMap*	m_pdis;
 	CGLColorMap*		m_pcol;
+	std::list<GDecoration*>	m_decor;
 };

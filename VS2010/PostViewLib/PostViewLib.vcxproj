@@ -101,6 +101,7 @@
     <ClInclude Include="..\..\PostViewLib\FENodeFaceTable.h" />
     <ClInclude Include="..\..\PostViewLib\FEPointCongruency.h" />
     <ClInclude Include="..\..\PostViewLib\FEState.h" />
+    <ClInclude Include="..\..\PostViewLib\GDecoration.h" />
     <ClInclude Include="..\..\PostViewLib\GLCamera.h" />
     <ClInclude Include="..\..\PostViewLib\GLObject.h" />
     <ClInclude Include="..\..\PostViewLib\GLTexture1D.h" />
@@ -136,6 +137,7 @@
     <ClCompile Include="..\..\PostViewLib\FENodeFaceTable.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEPointCongruency.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEState.cpp" />
+    <ClCompile Include="..\..\PostViewLib\GDecoration.cpp" />
     <ClCompile Include="..\..\PostViewLib\GLCamera.cpp" />
     <ClCompile Include="..\..\PostViewLib\GLObject.cpp" />
     <ClCompile Include="..\..\PostViewLib\GLTexture1D.cpp" />

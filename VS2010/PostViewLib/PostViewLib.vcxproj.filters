@@ -123,6 +123,9 @@
     <ClInclude Include="..\..\PostViewLib\VolRender.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\PostViewLib\GDecoration.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\PostViewLib\FEFileReader.cpp">
@@ -222,6 +225,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\PostViewLib\VolRender.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PostViewLib\GDecoration.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

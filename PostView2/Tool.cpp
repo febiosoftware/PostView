@@ -1,5 +1,6 @@
 #include "Tool.h"
 #include "PropertyListForm.h"
+#include <QApplication>
 
 //-----------------------------------------------------------------------------
 CBasicTool::CBasicTool(const QString& s) : CAbstractTool(s)
@@ -23,5 +24,9 @@ QWidget* CBasicTool::createUi()
 //-----------------------------------------------------------------------------
 void CBasicTool::updateUi()
 {
-	if (m_form) m_form->updateData();
+	if (m_form) 
+	{
+		m_form->updateData();
+		QApplication::activeWindow()->repaint();
+	}
 }

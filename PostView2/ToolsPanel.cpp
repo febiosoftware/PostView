@@ -15,7 +15,48 @@
 #include "Document.h"
 #include <PostViewLib/FEMesh.h>
 #include <PostViewLib/FEModel.h>
+#include <PostViewLib/GDecoration.h>
+#include "GLModel.h"
 
+#ifdef GetCurrentTime
+#undef GetCurrentTime
+#endif
+
+class CPointDistanceDecoration : public GDecoration
+{
+public:
+	CPointDistanceDecoration()
+	{
+		point[0] = new GPointDecoration(vec3f(0,0,0));
+		point[1] = new GPointDecoration(vec3f(1,1,1));
+		line = new GLineDecoration(point[0], point[1]);
+		setVisible(false);
+	}
+
+	void setPosition(const vec3f& a, const vec3f& b)
+	{
+		point[0]->setPosition(a);
+		point[1]->setPosition(b);
+	}
+
+	~CPointDistanceDecoration()
+	{
+		delete line;
+		delete point[0];
+		delete point[1];
+	}
+
+	void render()
+	{
+		point[0]->render();
+		point[1]->render();
+		line->render();
+	}
+
+private:
+	GPointDecoration*	point[2];
+	GLineDecoration*	line;
+};
 class CPointDistanceTool : public CBasicTool
 {
 	class Props : public CPropertyList
@@ -57,19 +98,41 @@ class CPointDistanceTool : public CBasicTool
 	};
 
 public:
-	CPointDistanceTool() : CBasicTool("Pt.Distance") { m_node1 = 0; m_node2 = 0; m_d = vec3f(0,0,0); m_doc = 0; }
+	CPointDistanceTool() : CBasicTool("Pt.Distance") { m_node1 = 0; m_node2 = 0; m_d = vec3f(0,0,0); m_doc = 0; m_deco = 0; }
 
 	CPropertyList* getPropertyList() { return new Props(this); }
 
 	void activate(CDocument* pdoc)
 	{
 		m_doc = pdoc;
-		updateLength();
+		if (pdoc && pdoc->IsValid())
+		{
+			updateLength();
+			if (m_deco)
+			{
+				m_doc->GetGLModel()->RemoveDecoration(m_deco);
+				delete m_deco;
+				m_deco = 0;
+			}
+			m_deco = new CPointDistanceDecoration;
+			m_doc->GetGLModel()->AddDecoration(m_deco);
+		}
+	}
+
+	void deactivate()
+	{
+		if (m_deco)
+		{
+			m_doc->GetGLModel()->RemoveDecoration(m_deco);
+			delete m_deco;
+			m_deco = 0;
+		}
 	}
 
 	void updateLength()
 	{
 		m_d = vec3f(0.f,0.f,0.f);
+		if (m_deco) m_deco->setVisible(false);
 		if (m_doc && m_doc->IsValid())
 		{
 			FEModel& fem = *m_doc->GetFEModel();
@@ -81,6 +144,12 @@ public:
 				vec3f a = fem.NodePosition(m_node1-1, ntime);
 				vec3f b = fem.NodePosition(m_node2-1, ntime);
 				m_d = b - a;
+
+				if (m_deco) 
+				{
+					m_deco->setPosition(a, b);
+					m_deco->setVisible(true);
+				}
 			}
 		}
 		updateUi();
@@ -90,6 +159,7 @@ private:
 	int			m_node1, m_node2;	// mesh nodes
 	vec3f		m_d;				// displacement vector
 	CDocument*	m_doc;
+	CPointDistanceDecoration*	m_deco;
 
 	friend class Props;
 };
