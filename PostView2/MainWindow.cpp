@@ -35,7 +35,14 @@ bool CMainWindow::OpenFile(const QString& fileName)
 	}
 
 	ui->selectData->BuildMenu(m_doc->GetFEModel(), DATA_FLOAT);
-	ui->actionColorMap->setEnabled(true);
+	if (m_doc->GetFEModel()->GetStates() > 0)
+	{
+		ui->playToolBar->setEnabled(true);
+	}
+	else
+	{
+		ui->playToolBar->setDisabled(true);
+	}
 
 	// update the command panels
 	ui->modelViewer->Update();
@@ -87,14 +94,80 @@ void CMainWindow::on_actionColorMap_toggled(bool bchecked)
 
 void CMainWindow::on_selectData_currentIndexChanged(int i)
 {
-	int nfield = ui->selectData->currentData(Qt::UserRole).toInt();
+	if (i == -1)
+		ui->actionColorMap->setDisabled(true);
+	else
+	{
+		if (ui->actionColorMap->isEnabled() == false)
+			ui->actionColorMap->setEnabled(true);
 
+		int nfield = ui->selectData->currentData(Qt::UserRole).toInt();
+		CDocument* pdoc = GetDocument();
+		CGLModel* pm = pdoc->GetGLModel();
+		pm->GetColorMap()->SetEvalField(nfield);
+
+		pdoc->SetFieldString(ui->selectData->currentText().toStdString().c_str());
+		pdoc->UpdateFEModel();
+
+		ui->glview->repaint();
+	}
+}
+
+void CMainWindow::on_actionPlay_toggled(bool bchecked)
+{
+	if (bchecked)
+	{
+		m_timer.start(50, this);
+	}
+	else m_timer.stop();
+}
+
+void CMainWindow::timerEvent(QTimerEvent* ev)
+{
 	CDocument* pdoc = GetDocument();
-	CGLModel* pm = pdoc->GetGLModel();
-	pm->GetColorMap()->SetEvalField(nfield);
+	int N = pdoc->GetFEModel()->GetStates();
 
-	pdoc->SetFieldString(ui->selectData->currentText().toStdString().c_str());
-	pdoc->UpdateFEModel();
+	int nstep = pdoc->GetCurrentTime();
+	nstep++;
+	if (nstep >= N) nstep = 0;
+	pdoc->SetCurrentTime(nstep);
 
+	ui->glview->repaint();
+}
+
+void CMainWindow::on_actionFirst_triggered()
+{
+	CDocument* pdoc = GetDocument();
+	pdoc->SetCurrentTime(0);
+	ui->glview->repaint();
+}
+
+void CMainWindow::on_actionPrev_triggered()
+{
+	CDocument* pdoc = GetDocument();
+	int N = pdoc->GetFEModel()->GetStates();
+	int nstep = pdoc->GetCurrentTime();
+	nstep--;
+	if (nstep < 0) nstep = 0;
+	pdoc->SetCurrentTime(nstep);
+	ui->glview->repaint();
+}
+
+void CMainWindow::on_actionNext_triggered()
+{
+	CDocument* pdoc = GetDocument();
+	int N = pdoc->GetFEModel()->GetStates();
+	int nstep = pdoc->GetCurrentTime();
+	nstep++;
+	if (nstep >= N) nstep = N-1;
+	pdoc->SetCurrentTime(nstep);
+	ui->glview->repaint();
+}
+
+void CMainWindow::on_actionLast_triggered()
+{
+	CDocument* pdoc = GetDocument();
+	int N = pdoc->GetFEModel()->GetStates();
+	pdoc->SetCurrentTime(N-1);
 	ui->glview->repaint();
 }

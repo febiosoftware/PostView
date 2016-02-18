@@ -48,6 +48,7 @@ public:
 	QMenu* menuHelp; 
 
 	QAction*	actionColorMap;
+	QAction*	actionPlay;
 
 	CFileViewer*	fileViewer;
 	CModelViewer*	modelViewer;
@@ -58,6 +59,8 @@ public:
 	CGLView*		glview;
 
 	CDataFieldSelector*	selectData;
+
+	QToolBar* playToolBar;
 
 public:
 	// build the UI
@@ -176,7 +179,6 @@ public:
 		QAction* actionProperties      = addAction("Properties ..."  , "actionProperties"     );
 
 		// --- Post menu ---
-		actionColorMap        = addAction("Toggle colormap" , "actionColorMap"       , ":/icons/colormap.png");
 		QAction* actionPlaneCut        = addAction("Plane cut"       , "actionPlaneCut"       );
 		QAction* actionVectorPlot      = addAction("Vector plot"     , "actionVectorPlot"     );
 		QAction* actionIsosurfacePlot  = addAction("Isosurface plot" , "actionIsosurfacePlot" );
@@ -186,9 +188,6 @@ public:
 		QAction* actionStats           = addAction("Statistics  ..." , "actionStats"          );
 		QAction* actionGraph           = addAction("Graph ..."       , "actionGraph"          );
 		QAction* actionIntegrate       = addAction("Integrate ..."   , "actionIntegrate"      );
-
-		actionColorMap->setCheckable(true);
-		actionColorMap->setDisabled(true);
 
 		// --- Record menu ---
 		QAction* actionRecordNew   = addAction("New ...", "actionRecordNew"  );
@@ -308,6 +307,10 @@ public:
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
         MainWindow->addToolBar(Qt::TopToolBarArea, mainToolBar);
 
+		actionColorMap = addAction("Toggle colormap" , "actionColorMap"       , ":/icons/colormap.png");
+		actionColorMap->setCheckable(true);
+		actionColorMap->setDisabled(true);
+
 		mainToolBar->addAction(actionOpen);
 		mainToolBar->addAction(actionSave);
 		mainToolBar->addAction(actionUpdate);
@@ -319,6 +322,22 @@ public:
 
 		mainToolBar->addWidget(selectData);
 		mainToolBar->addAction(actionColorMap);
+
+		playToolBar = new QToolBar(MainWindow);
+        playToolBar->setObjectName(QStringLiteral("playToolBar"));
+        MainWindow->addToolBar(Qt::TopToolBarArea, playToolBar);
+
+		playToolBar->addAction(addAction("first"   , "actionFirst", ":/icons/back.png"));
+		playToolBar->addAction(addAction("previous", "actionPrev" , ":/icons/prev.png"));
+
+		actionPlay = addAction("Play" , "actionPlay"       , ":/icons/play.png");
+		actionPlay->setCheckable(true);
+		playToolBar->addAction(actionPlay);
+
+		playToolBar->addAction(addAction("next"   , "actionNext", ":/icons/next.png"));
+		playToolBar->addAction(addAction("last"   , "actionLast", ":/icons/forward.png"));
+
+		playToolBar->setDisabled(true);
 	}
 };
 

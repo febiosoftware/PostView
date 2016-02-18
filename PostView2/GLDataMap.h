@@ -96,7 +96,5 @@ public:
 
 	CColorMap		m_Col;	// colormap used for rendering
 
-	int		m_nRangeType;	// range type
-
 	GLLegendBar*	m_pbar;	// the legend bar
 };

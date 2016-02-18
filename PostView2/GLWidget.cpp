@@ -213,6 +213,7 @@ GLLegendBar::GLLegendBar(CGLObject* po, CColorMap* pm, int x, int y, int w, int 
 	m_btitle = false;
 	m_blabels = true;
 	m_nprec = 3;
+	m_lbl_font_size = 14;
 }
 
 void GLLegendBar::draw(QPainter* painter)
@@ -292,50 +293,58 @@ void GLLegendBar::draw_gradient(QPainter* painter)
 	}
 	
 	glColor3ub(m_lbl_fc.r,m_lbl_fc.g,m_lbl_fc.b);
-//	gl_font(m_lbl_font, m_lbl_font_size);
-	
-	if (m_blabels)
+	glLineWidth(1.f);
+	glBegin(GL_LINES);
 	{
-/*		if((abs(ipow)>2))
-		{
-			sprintf(pstr, "x10");
-			gl_draw(pstr, x0, y0 + 8, 28, 20, FL_ALIGN_LEFT);
-			// change font size and draw superscript
-			sprintf(pstr, "%d", ipow);
-			int l = (int) fl_width("x10");
-			gl_font(fl_font(), m_lbl_font_size-2);
-			gl_draw(pstr, x0+l, y0 + 14, 48, 20, FL_ALIGN_LEFT);
-			// reset font size
-			gl_font(fl_font(), m_lbl_font_size);
-			p = pow(10.0, ipow);
-		}
-
-		char szfmt[16]={0};
-		sprintf(szfmt, "%%.%dg", m_nprec);
-*/
 		for (i=0; i<=nsteps; i++)
 		{
 			yt = y0 + i*(y1 - y0)/nsteps;
 			f = fmax + i*(fmin - fmax)/nsteps;
 		
-//			sprintf(str, szfmt, (fabs(f/p) < 1e-5 ? 0 : f/p));
-
-//			gl_draw(str, x0 - 55, yt-8, 50, 20, FL_ALIGN_RIGHT);
-
-			glLineWidth(1.f);
-			glBegin(GL_LINES);
-			{
-				glVertex2i(x0+1, yt);
-				glVertex2i(x1-1, yt);
-			}
-			glEnd();
+			glVertex2i(x0+1, yt);
+			glVertex2i(x1-1, yt);
 		}
 	}
+	glEnd();
 
 	glDepthFunc(dfnc);
 
 	glPopAttrib();
 	painter->endNativePainting();
+
+	if (m_blabels)
+	{
+		painter->setPen(QColor(m_lbl_fc.r,m_lbl_fc.g,m_lbl_fc.b));
+		painter->setFont(QFont("Helvetica", m_lbl_font_size));
+	
+		if((abs(ipow)>2))
+		{
+			sprintf(pstr, "x10");
+			painter->drawText(x0, y0+8, 28, 20, Qt::AlignLeft| Qt::AlignVCenter, QString(pstr));
+			// change font size and draw superscript
+			sprintf(pstr, "%d", ipow);
+			QFontMetrics fm = painter->fontMetrics();
+			int l = fm.width(QString("x10"));
+			painter->setFont(QFont("Helvetica", m_lbl_font_size-2));
+			painter->drawText(x0+l, y0+14, 48, 20, Qt::AlignLeft| Qt::AlignVCenter, QString(pstr));
+			
+			// reset font size
+			painter->setFont(QFont("Helvetica", m_lbl_font_size));
+			p = pow(10.0, ipow);
+		}
+
+		char szfmt[16]={0};
+		sprintf(szfmt, "%%.%dg", m_nprec);
+
+		for (i=0; i<=nsteps; i++)
+		{
+			yt = vp[3] - (y0 + i*(y1 - y0)/nsteps);
+			f = fmax + i*(fmin - fmax)/nsteps;
+		
+			sprintf(str, szfmt, (fabs(f/p) < 1e-5 ? 0 : f/p));
+			painter->drawText(x0-55, yt-8, 50, 20, Qt::AlignRight | Qt::AlignVCenter, QString(str));
+		}
+	}
 }
 
 void GLLegendBar::draw_discrete(QPainter* painter)
