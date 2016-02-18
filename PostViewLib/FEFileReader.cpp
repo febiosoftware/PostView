@@ -15,6 +15,7 @@ bool FEFileReader::Open(const char* szfile, const char* szmode)
 {
 	if (m_fp) Close();
 	m_fp = fopen(szfile, szmode);
+	m_fileName = szfile;
 	return (m_fp != 0);
 }
 

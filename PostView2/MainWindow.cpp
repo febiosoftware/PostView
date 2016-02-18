@@ -7,6 +7,10 @@
 #include <PostViewLib/xpltReader.h>
 #include "Document.h"
 #include "GLModel.h"
+#include <PostViewLib/FEFEBioExport.h>
+#include <PostViewLib/FELSDYNAExport.h>
+#include <PostViewLib/FENikeExport.h>
+#include <PostViewLib/FEVTKExport.h>
 #include <string>
 
 CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMainWindow)
@@ -57,6 +61,66 @@ bool CMainWindow::OpenFile(const QString& fileName)
 	return true;
 }
 
+bool CMainWindow::SaveFile(const QString& fileName, const QString& flt)
+{
+	if (fileName.isEmpty()) return false;
+	const char* szfilename = flt.toStdString().c_str();
+
+	if (m_doc->IsValid() == false) return true;
+
+	FEModel& fem = *m_doc->GetFEModel();
+
+	bool bret = false;
+	if (flt=="feb")
+	{
+		FEFEBioExport fr;
+		bret = fr.Save(fem, szfilename);
+	}
+	else if (flt=="txt") // ASCII Scene
+	{
+		bret = m_doc->ExportAscii(szfilename);
+	}
+	else if (flt=="vrml")
+	{
+		bret = m_doc->ExportVRML(szfilename);
+	}
+	else if (flt=="k")
+	{
+//		CDlgExportLSDYNA dlg;
+//		if (dlg.DoModal() == FLX_OK)
+		{
+			FELSDYNAExport w;
+//			w.m_bsel = dlg.m_bsel;
+//			w.m_bsurf = dlg.m_bsurf;
+//			w.m_bnode = dlg.m_bnode;
+			bret = w.Save(fem, m_doc->GetCurrentTime(), szfilename);
+		}
+	}
+	else if (flt=="byu")
+	{
+		bret = m_doc->ExportBYU(szfilename);
+	}
+	else if (flt == "k")
+	{
+		FENikeExport fr;
+		bret = fr.Save(fem, szfilename);
+	}
+	else if (flt == "vtk")
+	{
+		FEVTKExport w;
+		bret = w.Save(fem, m_doc->GetCurrentTime(), szfilename);
+	}
+
+	if (bret == false)
+	{
+		QMessageBox b;
+		b.setText("Failed saving file.");
+		b.setIcon(QMessageBox::Critical);
+		b.exec();
+	}
+	return bret;
+}
+
 void CMainWindow::on_actionOpen_triggered()
 {
 	// build the file filter list
@@ -76,6 +140,52 @@ void CMainWindow::on_actionOpen_triggered()
 	QString fileName = QFileDialog::getOpenFileName(this, "Open Files", 0, filter, &selFilter);
 
 	if (fileName.isEmpty() == false) OpenFile(fileName);
+}
+
+void CMainWindow::on_actionUpdate_triggered()
+{
+	ui->actionColorMap->setDisabled(true);
+	ui->playToolBar->setDisabled(true);
+
+	if (m_doc->LoadFEModel(0, m_doc->GetFile(), true) == false)
+	{
+		QMessageBox::critical(this, tr("PostView2"), "Failed updating the model");
+	}
+	else if (m_doc->IsValid())
+	{
+		int N = m_doc->GetFEModel()->GetStates();
+		if (N > 1) ui->playToolBar->setEnabled(true);
+		ui->selectData->BuildMenu(m_doc->GetFEModel(), DATA_FLOAT);
+
+		// update the command panels
+		ui->modelViewer->Update();
+		ui->matPanel->Update();
+		ui->dataPanel->Update();
+		ui->statePanel->Update();
+		ui->toolsPanel->Update();
+
+		// update the gl view
+		ui->glview->GetCamera().Update(true);
+		ui->glview->repaint();
+	}
+}
+
+void CMainWindow::on_actionSave_triggered()
+{
+	QString filter;
+	filter.append("FEBio files (*.feb);;");
+	filter.append("ASCII files (*.*);;");
+	filter.append("VRML files (*.wrl);;");
+	filter.append("LSDYNA Keyword (*.k);;");
+	filter.append("BYU files(*.byu);;");
+	filter.append("NIKE3D files (*.n);;");
+	filter.append("VTK files (*.vtk);;");
+	filter.append("LSDYNA Database (*)");
+
+	QString selFilter;
+	QString fileName = QFileDialog::getSaveFileName(this, "Save", 0, filter, &selFilter);
+
+	if (fileName.isEmpty() == false) SaveFile(fileName, selFilter);
 }
 
 void CMainWindow::on_actionQuit_triggered()

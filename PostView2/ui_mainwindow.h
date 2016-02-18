@@ -157,11 +157,10 @@ public:
 		// create actions
 		// --- File menu ---
 		QAction* actionOpen        = addAction("Open ..."         , "actionOpen"  , ":/icons/open.png");
-		QAction* actionSave        = addAction("save. .."         , "actionSave"  , ":/icons/save.png");
+		QAction* actionSave        = addAction("Save ..."         , "actionSave"  , ":/icons/save.png");
 		QAction* actionUpdate      = addAction("Update"           , "actionUpdate", ":/icons/refresh.png");
-		QAction* actionExport      = addAction("Export ..."       , "actionExport");
 		QAction* actionModelInfo   = addAction("Model Info ..."   , "actionModelInfo"  );
-		QAction* actionSnapShot    = addAction("Snapshot ..."     , "actionSnapShot"   );
+		QAction* actionSnapShot    = addAction("Snapshot ..."     , "actionSnapShot", ":/icons/snapshot.png"   );
 		QAction* actionOpenSession = addAction("Open session ..." , "actionOpenSession");
 		QAction* actionSaveSession = addAction("Save session ..." , "actionSaveSession");
 		QAction* actionQuit        = addAction("Exit"             , "actionQuit"       );
@@ -234,8 +233,6 @@ public:
 		menuFile->addAction(actionSave); 
 		menuFile->addAction(actionUpdate);
 		menuFile->addSeparator();
-		menuFile->addAction(actionExport);
-		menuFile->addSeparator();
 		menuFile->addAction(actionModelInfo);
 		menuFile->addAction(actionSnapShot);
 		menuFile->addSeparator();
@@ -297,6 +294,7 @@ public:
 		menuView->addAction(actionViewVPSave    );
 		menuView->addAction(actionViewVPPrev    );
 		menuView->addAction(actionViewVPNext    );
+		menuView->addSeparator();
 
 		menuBar->addAction(menuHelp->menuAction());
 		menuHelp->addAction(actionHelp);
@@ -314,6 +312,7 @@ public:
 		mainToolBar->addAction(actionOpen);
 		mainToolBar->addAction(actionSave);
 		mainToolBar->addAction(actionUpdate);
+		mainToolBar->addAction(actionSnapShot);
 		mainToolBar->addSeparator();
 
 		// create the data field selector

@@ -49,7 +49,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -64,7 +64,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -89,18 +89,29 @@
     <ClInclude Include="..\..\PostViewLib\DataMap.h" />
     <ClInclude Include="..\..\PostViewLib\FEDataManager.h" />
     <ClInclude Include="..\..\PostViewLib\FEElement.h" />
+    <ClInclude Include="..\..\PostViewLib\FEFEBioExport.h" />
+    <ClInclude Include="..\..\PostViewLib\FEFileExport.h" />
     <ClInclude Include="..\..\PostViewLib\FEFileReader.h" />
     <ClInclude Include="..\..\PostViewLib\FEGroup.h" />
+    <ClInclude Include="..\..\PostViewLib\FELSDYNAExport.h" />
+    <ClInclude Include="..\..\PostViewLib\FELSDYNAimport.h" />
+    <ClInclude Include="..\..\PostViewLib\FELSDYNAPlot.h" />
     <ClInclude Include="..\..\PostViewLib\FEMaterial.h" />
     <ClInclude Include="..\..\PostViewLib\FEMesh.h" />
     <ClInclude Include="..\..\PostViewLib\FEMeshData.h" />
     <ClInclude Include="..\..\PostViewLib\FEMeshData_T.h" />
     <ClInclude Include="..\..\PostViewLib\FEModel.h" />
+    <ClInclude Include="..\..\PostViewLib\FENikeExport.h" />
+    <ClInclude Include="..\..\PostViewLib\FENikeImport.h" />
     <ClInclude Include="..\..\PostViewLib\FENodeElemList.h" />
     <ClInclude Include="..\..\PostViewLib\FENodeFaceList.h" />
     <ClInclude Include="..\..\PostViewLib\FENodeFaceTable.h" />
     <ClInclude Include="..\..\PostViewLib\FEPointCongruency.h" />
+    <ClInclude Include="..\..\PostViewLib\FERAWImageReader.h" />
     <ClInclude Include="..\..\PostViewLib\FEState.h" />
+    <ClInclude Include="..\..\PostViewLib\FESTLimport.h" />
+    <ClInclude Include="..\..\PostViewLib\FEVTKExport.h" />
+    <ClInclude Include="..\..\PostViewLib\FEVTKImport.h" />
     <ClInclude Include="..\..\PostViewLib\GDecoration.h" />
     <ClInclude Include="..\..\PostViewLib\GLCamera.h" />
     <ClInclude Include="..\..\PostViewLib\GLObject.h" />
@@ -112,6 +123,9 @@
     <ClInclude Include="..\..\PostViewLib\math3d.h" />
     <ClInclude Include="..\..\PostViewLib\stdafx.h" />
     <ClInclude Include="..\..\PostViewLib\VolRender.h" />
+    <ClInclude Include="..\..\PostViewLib\VRMLExporter.h" />
+    <ClInclude Include="..\..\PostViewLib\XMLReader.h" />
+    <ClInclude Include="..\..\PostViewLib\XMLWriter.h" />
     <ClInclude Include="..\..\PostViewLib\xpltReader.h" />
   </ItemGroup>
   <ItemGroup>
@@ -126,17 +140,28 @@
     <ClCompile Include="..\..\PostViewLib\evaluate.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEDataManager.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEElement.cpp" />
+    <ClCompile Include="..\..\PostViewLib\FEFEBioExport.cpp" />
+    <ClCompile Include="..\..\PostViewLib\FEFileExport.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEFileReader.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEGroup.cpp" />
+    <ClCompile Include="..\..\PostViewLib\FELSDYNAExport.cpp" />
+    <ClCompile Include="..\..\PostViewLib\FELSDYNAimport.cpp" />
+    <ClCompile Include="..\..\PostViewLib\FELSDYNAPlot.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEMaterial.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEMesh.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEMeshData.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEModel.cpp" />
+    <ClCompile Include="..\..\PostViewLib\FENikeExport.cpp" />
+    <ClCompile Include="..\..\PostViewLib\FENikeImport.cpp" />
     <ClCompile Include="..\..\PostViewLib\FENodeElemList.cpp" />
     <ClCompile Include="..\..\PostViewLib\FENodeFaceList.cpp" />
     <ClCompile Include="..\..\PostViewLib\FENodeFaceTable.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEPointCongruency.cpp" />
+    <ClCompile Include="..\..\PostViewLib\FERAWImageReader.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEState.cpp" />
+    <ClCompile Include="..\..\PostViewLib\FESTLimport.cpp" />
+    <ClCompile Include="..\..\PostViewLib\FEVTKExport.cpp" />
+    <ClCompile Include="..\..\PostViewLib\FEVTKImport.cpp" />
     <ClCompile Include="..\..\PostViewLib\GDecoration.cpp" />
     <ClCompile Include="..\..\PostViewLib\GLCamera.cpp" />
     <ClCompile Include="..\..\PostViewLib\GLObject.cpp" />
@@ -148,6 +173,9 @@
     <ClCompile Include="..\..\PostViewLib\lusolver.cpp" />
     <ClCompile Include="..\..\PostViewLib\math3d.cpp" />
     <ClCompile Include="..\..\PostViewLib\VolRender.cpp" />
+    <ClCompile Include="..\..\PostViewLib\VRMLExporter.cpp" />
+    <ClCompile Include="..\..\PostViewLib\XMLReader.cpp" />
+    <ClCompile Include="..\..\PostViewLib\XMLWriter.cpp" />
     <ClCompile Include="..\..\PostViewLib\xpltReader.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

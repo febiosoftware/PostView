@@ -31,7 +31,8 @@ protected:
 	bool errf(const char* szerr, ...);
 
 protected:
-	FILE*	m_fp;
+	FILE*			m_fp;
+	std::string		m_fileName;	//!< file name
 
 private:
 	const char*		m_sztype;	//!< type identifier
