@@ -16,11 +16,11 @@ CGLView::CGLView(CMainWindow* pwnd, QWidget* parent) : QOpenGLWidget(parent), m_
 	m_nanim = ANIM_STOPPED;
 	m_video_fmt = GL_RGB;
 
-	QSurfaceFormat fmt = format();
+/*	QSurfaceFormat fmt = format();
 	fmt.setSamples(4);
 	fmt.setRenderableType(QSurfaceFormat::OpenGL);
 	setFormat(fmt);
-
+*/
 	m_bdrag = false;
 
 	m_bZoomRect = false;
@@ -146,14 +146,14 @@ void CGLView::resizeGL(int w, int h)
 
 void CGLView::paintGL()
 {
-	if (m_nanim == ANIM_RECORDING)
+/*	if (m_nanim == ANIM_RECORDING)
 	{
 		assert(m_panim);
 		CRGBImage im;
 		CaptureScreen(&im, m_video_fmt);
 		m_panim->Write(im);
 	}
-
+*/
 	// clear the Graphics view
 	// This renders the background
 	Clear();
@@ -1625,41 +1625,9 @@ void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 	delete [] pbuf;
 }
 
-void CGLView::CaptureScreen(CRGBImage* pim, GLenum format)
+QImage CGLView::CaptureScreen()
 {
-	// make this RC current
-	makeCurrent();
-
-	int vp[4];
-	glGetIntegerv(GL_VIEWPORT, vp);
-
-	// Grab the current safe frame
-	int x = m_pframe->x();
-	int y = m_pframe->y();
-	int w = m_pframe->w();
-	int h = m_pframe->h();
-
-	if (x < 0) x = 0;
-	if (y < 0) y = 0;
-
-	if (x+w >= vp[2]) w = vp[2] - x;
-	if (y+h >= vp[3]) h = vp[3] - y;
-
-	y = vp[3] - (y + h);
-
-	// read pixels from the framebuffer
-	glPixelStorei(GL_PACK_ALIGNMENT, 1);
-	glPixelStorei(GL_PACK_ROW_LENGTH, 0);
-	glPixelStorei(GL_PACK_SKIP_ROWS, 0);
-	glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
-
-	pim->Create(w, h);
-
-	// wait for opengl to complete
-	glFinish();
-
-	// read the pixels
-	glReadPixels(x, y, w, h, format, GL_UNSIGNED_BYTE, pim->GetBytes());
+	return grabFramebuffer();
 }
 
 void CGLView::RenderRubberBand()

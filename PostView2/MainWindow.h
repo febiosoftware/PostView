@@ -16,8 +16,8 @@ public:
 	explicit CMainWindow(QWidget* parent = 0);
 	~CMainWindow();
 
-	bool OpenFile(const QString& fileName);
-	bool SaveFile(const QString& fileName, const QString& flt);
+	bool OpenFile(const QString& fileName, int nfilter);
+	bool SaveFile(const QString& fileName, int nfilter);
 
 	CDocument*	GetDocument() { return m_doc; }
 
@@ -25,6 +25,7 @@ private slots:
 	void on_actionOpen_triggered();
 	void on_actionSave_triggered();
 	void on_actionUpdate_triggered();
+	void on_actionSnapShot_triggered();
 	void on_actionQuit_triggered();
 	void on_actionColorMap_toggled(bool bchecked);
 	void on_selectData_currentIndexChanged(int i);

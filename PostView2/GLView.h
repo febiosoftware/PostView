@@ -71,6 +71,8 @@ public:
 
 	CGLCamera& GetCamera();
 
+	QImage CaptureScreen();
+
 protected:
 	void initializeGL();
 	void resizeGL(int w, int h);
@@ -106,8 +108,6 @@ protected:
 
 	//! Render the tags on the selected items
 	void RenderTags();
-
-	void CaptureScreen(CRGBImage* pim, GLenum format = GL_RGB);
 
 	void ZoomRect(MyPoint p0, MyPoint p1);
 /*

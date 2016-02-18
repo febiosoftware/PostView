@@ -11,6 +11,7 @@
 #include <PostViewLib/FELSDYNAExport.h>
 #include <PostViewLib/FENikeExport.h>
 #include <PostViewLib/FEVTKExport.h>
+#include <PostViewLib/FELSDYNAPlot.h>
 #include <string>
 
 CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMainWindow)
@@ -23,7 +24,7 @@ CMainWindow::~CMainWindow()
 {
 }
 
-bool CMainWindow::OpenFile(const QString& fileName)
+bool CMainWindow::OpenFile(const QString& fileName, int nfilter)
 {
 	std::string sfile = fileName.toStdString();
 
@@ -61,54 +62,70 @@ bool CMainWindow::OpenFile(const QString& fileName)
 	return true;
 }
 
-bool CMainWindow::SaveFile(const QString& fileName, const QString& flt)
+bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 {
 	if (fileName.isEmpty()) return false;
-	const char* szfilename = flt.toStdString().c_str();
+	const char* szfilename = fileName.toStdString().c_str();
 
 	if (m_doc->IsValid() == false) return true;
 
 	FEModel& fem = *m_doc->GetFEModel();
 
 	bool bret = false;
-	if (flt=="feb")
+	switch (nfilter)
 	{
-		FEFEBioExport fr;
-		bret = fr.Save(fem, szfilename);
-	}
-	else if (flt=="txt") // ASCII Scene
-	{
-		bret = m_doc->ExportAscii(szfilename);
-	}
-	else if (flt=="vrml")
-	{
-		bret = m_doc->ExportVRML(szfilename);
-	}
-	else if (flt=="k")
-	{
-//		CDlgExportLSDYNA dlg;
-//		if (dlg.DoModal() == FLX_OK)
+	case 0:
 		{
-			FELSDYNAExport w;
-//			w.m_bsel = dlg.m_bsel;
-//			w.m_bsurf = dlg.m_bsurf;
-//			w.m_bnode = dlg.m_bnode;
+			FEFEBioExport fr;
+			bret = fr.Save(fem, szfilename);
+		}
+		break;
+	case 1:
+		{
+			bret = m_doc->ExportAscii(szfilename);
+		}
+		break;
+	case 2:
+		{
+			bret = m_doc->ExportVRML(szfilename);
+		}
+		break;
+	case 3:
+		{
+//			CDlgExportLSDYNA dlg;
+//			if (dlg.DoModal() == FLX_OK)
+			{
+				FELSDYNAExport w;
+//				w.m_bsel = dlg.m_bsel;
+//				w.m_bsurf = dlg.m_bsurf;
+//				w.m_bnode = dlg.m_bnode;
+				bret = w.Save(fem, m_doc->GetCurrentTime(), szfilename);
+			}
+		}
+		break;
+	case 4:
+		{
+			bret = m_doc->ExportBYU(szfilename);
+		}
+		break;
+	case 5:
+		{
+			FENikeExport fr;
+			bret = fr.Save(fem, szfilename);
+		}
+		break;
+	case 6:
+		{
+			FEVTKExport w;
 			bret = w.Save(fem, m_doc->GetCurrentTime(), szfilename);
 		}
-	}
-	else if (flt=="byu")
-	{
-		bret = m_doc->ExportBYU(szfilename);
-	}
-	else if (flt == "k")
-	{
-		FENikeExport fr;
-		bret = fr.Save(fem, szfilename);
-	}
-	else if (flt == "vtk")
-	{
-		FEVTKExport w;
-		bret = w.Save(fem, m_doc->GetCurrentTime(), szfilename);
+		break;
+	case 7:
+		{
+//			FELSDYNAPlotExport w;
+//			bret = w.Save(fem, szfilename);
+		}
+		break;
 	}
 
 	if (bret == false)
@@ -124,22 +141,29 @@ bool CMainWindow::SaveFile(const QString& fileName, const QString& flt)
 void CMainWindow::on_actionOpen_triggered()
 {
 	// build the file filter list
-	QString filter;
-	filter.append("FEBio plot files (*.xplt);;");
-	filter.append("FEBio files (*.feb);;");
-	filter.append("LSDYNA database (*);;");
-	filter.append("GMesh (*.msh);;");
-	filter.append("NIKE3D (*.n);;");
-	filter.append("ASCII data (*.txt);;");
-	filter.append("STL ASCII (*.stl);;");
-	filter.append("RAW image data (*.raw);;");
-	filter.append("VTK files (*.vtk);;");
-	filter.append("All files (*)");
+	// Make sure this list matches the one in CFileViewer
+	// TODO: Can I somehow ensure that this is the case ?
+	QStringList filters;
+	filters << "FEBio plot files (*.xplt)"
+			<< "FEBio files (*.feb)"
+			<< "LSDYNA database (*)"
+			<< "GMesh (*.msh)"
+			<< "NIKE3D (*.n)"
+			<< "ASCII data (*.txt)"
+			<< "STL ASCII (*.stl)"
+			<< "RAW image data (*.raw)"
+			<< "VTK files (*.vtk)";
 
-	QString selFilter;
-	QString fileName = QFileDialog::getOpenFileName(this, "Open Files", 0, filter, &selFilter);
-
-	if (fileName.isEmpty() == false) OpenFile(fileName);
+	QFileDialog dlg(this, "Open");
+	dlg.setNameFilters(filters);
+	dlg.setFileMode(QFileDialog::ExistingFile);
+	if (dlg.exec())
+	{
+		QStringList files = dlg.selectedFiles();
+		QString filter = dlg.selectedNameFilter();
+		int nfilter = filters.indexOf(filter);
+		OpenFile(files.first(), nfilter);
+	}
 }
 
 void CMainWindow::on_actionUpdate_triggered()
@@ -172,20 +196,61 @@ void CMainWindow::on_actionUpdate_triggered()
 
 void CMainWindow::on_actionSave_triggered()
 {
-	QString filter;
-	filter.append("FEBio files (*.feb);;");
-	filter.append("ASCII files (*.*);;");
-	filter.append("VRML files (*.wrl);;");
-	filter.append("LSDYNA Keyword (*.k);;");
-	filter.append("BYU files(*.byu);;");
-	filter.append("NIKE3D files (*.n);;");
-	filter.append("VTK files (*.vtk);;");
-	filter.append("LSDYNA Database (*)");
+	QStringList filters;
+	filters << "FEBio files (*.feb)"
+			<< "ASCII files (*.*)"
+			<< "VRML files (*.wrl)"
+			<< "LSDYNA Keyword (*.k)"
+			<< "BYU files(*.byu)"
+			<< "NIKE3D files (*.n)"
+			<< "VTK files (*.vtk)"
+			<< "LSDYNA Database (*)";
 
-	QString selFilter;
-	QString fileName = QFileDialog::getSaveFileName(this, "Save", 0, filter, &selFilter);
+	QFileDialog dlg(this, "Save");
+	dlg.setFileMode(QFileDialog::AnyFile);
+	dlg.setNameFilters(filters);
+	dlg.setAcceptMode(QFileDialog::AcceptSave);
+	if (dlg.exec())
+	{
+		QStringList files = dlg.selectedFiles();
+		QString filter = dlg.selectedNameFilter();
 
-	if (fileName.isEmpty() == false) SaveFile(fileName, selFilter);
+		int nfilter = filters.indexOf(filter);
+		SaveFile(files.first(), nfilter);
+	}
+}
+
+void CMainWindow::on_actionSnapShot_triggered()
+{
+	QImage img = ui->glview->CaptureScreen();
+
+	const uchar* bits = img.bits();
+	
+	QStringList filters;
+	filters << "Bitmap files (*.bmp)"
+			<< "PNG files (*.png)"
+			<< "JPEG files (*.jpg)";
+
+	QFileDialog dlg(this, "Save Image");
+	dlg.setNameFilters(filters);
+	dlg.setFileMode(QFileDialog::AnyFile);
+	dlg.setAcceptMode(QFileDialog::AcceptSave);
+	if (dlg.exec())
+	{
+		QString fileName = dlg.selectedFiles().first();
+		int nfilter = filters.indexOf(dlg.selectedNameFilter());
+		bool bret = false;
+		switch (nfilter)
+		{
+		case 0: bret = img.save(fileName, "BMP"); break;
+		case 1: bret = img.save(fileName, "PNG"); break;
+		case 2: bret = img.save(fileName, "JPG"); break;
+		}
+		if (bret == false)
+		{
+			QMessageBox::critical(this, "PostView", "Failed saving image file.");
+		}
+	}
 }
 
 void CMainWindow::on_actionQuit_triggered()

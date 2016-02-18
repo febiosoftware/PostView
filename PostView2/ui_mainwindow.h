@@ -156,10 +156,9 @@ public:
 	{
 		// create actions
 		// --- File menu ---
-		QAction* actionOpen        = addAction("Open ..."         , "actionOpen"  , ":/icons/open.png");
-		QAction* actionSave        = addAction("Save ..."         , "actionSave"  , ":/icons/save.png");
-		QAction* actionUpdate      = addAction("Update"           , "actionUpdate", ":/icons/refresh.png");
-		QAction* actionModelInfo   = addAction("Model Info ..."   , "actionModelInfo"  );
+		QAction* actionOpen        = addAction("Open ..."         , "actionOpen"  , ":/icons/open.png"   ); actionOpen->setShortcuts(QKeySequence::Open);
+		QAction* actionSave        = addAction("Save ..."         , "actionSave"  , ":/icons/save.png"   ); actionSave->setShortcuts(QKeySequence::Save);
+		QAction* actionUpdate      = addAction("Update"           , "actionUpdate", ":/icons/refresh.png"); actionUpdate->setShortcuts(QKeySequence::Refresh);
 		QAction* actionSnapShot    = addAction("Snapshot ..."     , "actionSnapShot", ":/icons/snapshot.png"   );
 		QAction* actionOpenSession = addAction("Open session ..." , "actionOpenSession");
 		QAction* actionSaveSession = addAction("Save session ..." , "actionSaveSession");
@@ -233,7 +232,6 @@ public:
 		menuFile->addAction(actionSave); 
 		menuFile->addAction(actionUpdate);
 		menuFile->addSeparator();
-		menuFile->addAction(actionModelInfo);
 		menuFile->addAction(actionSnapShot);
 		menuFile->addSeparator();
 		menuFile->addAction(actionOpenSession);

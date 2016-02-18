@@ -42,9 +42,17 @@ CFileViewer::CFileViewer(CMainWindow* pwnd, QWidget* parent) : QWidget(parent), 
 	ui->setupUi(this);
 
 	// build the filter list
-	m_filters.push_back(pair<QString, QString>("XPLT files (*.xplt)", "*.xplt"));
-	m_filters.push_back(pair<QString, QString>("FEBio files (*.feb)", "*.feb"));
-	m_filters.push_back(pair<QString, QString>("All files (*)", "*"));
+	// Make sure this list matches the one in CMainWindow::on_actionOpen_triggered()
+	// TODO: Can I somehow ensure that this is the case ?
+	m_filters.push_back(pair<QString, QString>("XPLT files (*.xplt)"   , "*.xplt"));
+	m_filters.push_back(pair<QString, QString>("FEBio files (*.feb)"   , "*.feb" ));
+	m_filters.push_back(pair<QString, QString>("LSDYNA database (*)"   , "*"     ));
+	m_filters.push_back(pair<QString, QString>("GMesh (*.msh)"         , "*.msh" ));
+	m_filters.push_back(pair<QString, QString>("NIKE3D (*.n)"          , "*.n"   ));
+	m_filters.push_back(pair<QString, QString>("ASCII data (*.txt)"    , "*.txt" ));
+	m_filters.push_back(pair<QString, QString>("STL ASCII (*.stl)"     , "*.stl" ));
+	m_filters.push_back(pair<QString, QString>("RAW image data (*.raw)", "*.raw" ));
+	m_filters.push_back(pair<QString, QString>("VTK files (*.vtk)"     , "*.vtk" ));
 
 	// add filters to drop down
 	int nflts = m_filters.size();
@@ -75,7 +83,7 @@ void CFileViewer::on_fileList_doubleClicked(const QModelIndex& index)
 		ui->m_fileList->setRootIndex(index);
 	else
 	{
-		m_wnd->OpenFile(m_fileSystem->filePath(index));
+		m_wnd->OpenFile(m_fileSystem->filePath(index), ui->m_fileFilter->currentIndex());
 	}
 }
 
