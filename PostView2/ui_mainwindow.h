@@ -16,6 +16,7 @@
 #include "ToolsPanel.h"
 #include "DataFieldSelector.h"
 #include "GLView.h"
+#include "GraphWindow.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -61,6 +62,8 @@ public:
 	CDataFieldSelector*	selectData;
 
 	QToolBar* playToolBar;
+
+	QList<CGraphWindow*>	graphList;
 
 public:
 	// build the UI
@@ -182,9 +185,9 @@ public:
 		QAction* actionIsosurfacePlot  = addAction("Isosurface plot" , "actionIsosurfacePlot" );
 		QAction* actionSlicePlot       = addAction("Slice plot"      , "actionSlicePlot"      );
 		QAction* actionDisplacementMap = addAction("Displacement map", "actionDisplacementMap");
+		QAction* actionGraph           = addAction("New Graph ..."   , "actionGraph"          );
 		QAction* actionSummary         = addAction("Summary ..."     , "actionSummary"        );
 		QAction* actionStats           = addAction("Statistics  ..." , "actionStats"          );
-		QAction* actionGraph           = addAction("Graph ..."       , "actionGraph"          );
 		QAction* actionIntegrate       = addAction("Integrate ..."   , "actionIntegrate"      );
 
 		// --- Record menu ---
@@ -260,9 +263,10 @@ public:
 		menuPost->addAction(actionSlicePlot);
 		menuPost->addAction(actionDisplacementMap);
 		menuPost->addSeparator();
+		menuPost->addAction(actionGraph);
+		menuPost->addSeparator();
 		menuPost->addAction(actionSummary);
 		menuPost->addAction(actionStats);
-		menuPost->addAction(actionGraph);
 		menuPost->addAction(actionIntegrate);
 
 		menuBar->addAction(menuRecord->menuAction());

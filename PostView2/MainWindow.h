@@ -27,6 +27,9 @@ private slots:
 	void on_actionUpdate_triggered();
 	void on_actionSnapShot_triggered();
 	void on_actionQuit_triggered();
+
+	void on_actionGraph_triggered();
+
 	void on_actionColorMap_toggled(bool bchecked);
 	void on_selectData_currentIndexChanged(int i);
 	void on_actionPlay_toggled(bool bchecked);

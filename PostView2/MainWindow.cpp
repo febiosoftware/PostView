@@ -258,6 +258,39 @@ void CMainWindow::on_actionQuit_triggered()
 	QApplication::quit();
 }
 
+void CMainWindow::on_actionGraph_triggered()
+{
+	// let's find an unused graph
+	CGraphWindow* pg = 0;
+	if (ui->graphList.isEmpty() == false)
+	{
+		QList<CGraphWindow*>::iterator it;
+		for (it=ui->graphList.begin(); it != ui->graphList.end(); ++it)
+		{
+			if ((*it)->isVisible() == false)
+			{
+				pg = *it;
+				break;
+			}
+		}
+	}
+
+	// couldn't find one so let's create a new one
+	if (pg == 0)
+	{
+		pg = new CGraphWindow(this);
+		pg->setWindowTitle(QString("Graph%1").arg(ui->graphList.size()+1));
+		ui->graphList.push_back(pg);
+	}
+
+	if (pg)
+	{
+		pg->show();
+		pg->raise();
+		pg->activateWindow();
+	}
+}
+
 void CMainWindow::on_actionColorMap_toggled(bool bchecked)
 {
 	CDocument* pdoc = GetDocument();

@@ -81,6 +81,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="PostView.ico" />
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -103,13 +104,16 @@
     <ClCompile Include="..\PostView2\GLView.cpp" />
     <ClCompile Include="..\PostView2\GLWidget.cpp" />
     <ClCompile Include="..\PostView2\GLWidgetManager.cpp" />
+    <ClCompile Include="..\PostView2\GraphWindow.cpp" />
     <ClCompile Include="..\PostView2\MainWindow.cpp" />
     <ClCompile Include="..\PostView2\MaterialPanel.cpp" />
     <ClCompile Include="..\PostView2\moc_DataPanel.cpp" />
     <ClCompile Include="..\PostView2\moc_FileViewer.cpp" />
+    <ClCompile Include="..\PostView2\moc_GraphWindow.cpp" />
     <ClCompile Include="..\PostView2\moc_MainWindow.cpp" />
     <ClCompile Include="..\PostView2\moc_MaterialPanel.cpp" />
     <ClCompile Include="..\PostView2\moc_ModelViewer.cpp" />
+    <ClCompile Include="..\PostView2\moc_PlotWidget.cpp" />
     <ClCompile Include="..\PostView2\moc_PropertyListForm.cpp" />
     <ClCompile Include="..\PostView2\moc_PropertyListView.cpp" />
     <ClCompile Include="..\PostView2\moc_StatePanel.cpp" />
@@ -119,6 +123,7 @@
     <ClCompile Include="..\PostView2\PropertyList.cpp" />
     <ClCompile Include="..\PostView2\PropertyListForm.cpp" />
     <ClCompile Include="..\PostView2\PropertyListView.cpp" />
+    <ClCompile Include="..\PostView2\PlotWidget.cpp" />
     <ClCompile Include="..\PostView2\qrc_postview.cpp" />
     <ClCompile Include="..\PostView2\render.cpp" />
     <ClCompile Include="..\PostView2\StatePanel.cpp" />
@@ -129,6 +134,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\PostView2\CommandPanel.h" />
+    <CustomBuild Include="..\PostView2\GraphWindow.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)bin/moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename).%(Extension) using MOC</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\PostView2\PlotWidget.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)bin/moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename).%(Extension) using MOC</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </CustomBuild>
+    <ClInclude Include="resource.h" />
     <CustomBuild Include="..\PostView2\PropertyListForm.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)bin/moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename).%(Extension) using MOC</Message>
@@ -197,6 +213,9 @@
     <ClInclude Include="..\PostView2\PropertyList.h" />
     <ClInclude Include="..\PostView2\stdafx.h" />
     <ClInclude Include="..\PostView2\targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="PostView2.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
