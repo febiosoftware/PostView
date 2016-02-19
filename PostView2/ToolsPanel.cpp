@@ -18,10 +18,6 @@
 #include <PostViewLib/GDecoration.h>
 #include "GLModel.h"
 
-#ifdef GetCurrentTime
-#undef GetCurrentTime
-#endif
-
 class CPointDistanceDecoration : public GDecoration
 {
 public:
@@ -137,7 +133,7 @@ public:
 		{
 			FEModel& fem = *m_doc->GetFEModel();
 			FEMesh& mesh = *fem.GetMesh();
-			int ntime = m_doc->GetCurrentTime();
+			int ntime = m_doc->currentTime();
 			int NN = mesh.Nodes();
 			if ((m_node1 > 0)&&(m_node2 > 0)&&(m_node1 <= NN)&&(m_node2 <= NN))
 			{

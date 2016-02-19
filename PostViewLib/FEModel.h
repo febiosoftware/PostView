@@ -39,7 +39,7 @@ public:
 	FEMesh* GetMesh() { return &m_mesh; }
 
 	// get the current active state
-	int GetCurrentTime() { return m_ntime; }
+	int currentTime() { return m_ntime; }
 
 	//! get the data manager
 	FEDataManager* GetDataManager() { return m_pDM; }

@@ -647,13 +647,13 @@ bool CDocument::ExportASE(const char* szfile)
 	fprintf(fp, "* Nodes     : %d\n", fem.Nodes());
 	fprintf(fp, "* Elements  : %d\n", fem.Elements());
 	fprintf(fp, "* Materials : %d\n", m_FEScene.Materials());
-	fprintf(fp, "* Time      : %g (%d/%d)\n", GetTimeValue(), GetCurrentTime()+1, GetTimeSteps());
+	fprintf(fp, "* Time      : %g (%d/%d)\n", GetTimeValue(), currentTime()+1, GetTimeSteps());
 	fprintf(fp, "* Values    : %s\n", GetFieldString());
 
 	// export nodes
 	fprintf(fp, "* NODES\n");
 	FENode* pn = fem.NodePtr(0);
-	float* pv = fem.GetState(GetCurrentTime())->m_pval;
+	float* pv = fem.GetState(currentTime())->m_pval;
 	for (i=0; i<nodes; i++, pn++, pv++)
 	{
 		vec3f& r = pn->m_r0;
@@ -713,7 +713,7 @@ bool CDocument::ExportAscii(const char* szfile)
 
 	// decide which time steps to export
 	int n0, n1;
-	if (dlg.m_bcur) n0 = n1 = GetCurrentTime();
+	if (dlg.m_bcur) n0 = n1 = currentTime();
 	else
 	{
 		n0 = 0;
@@ -1062,7 +1062,7 @@ void CDocument::UpdateAllStates()
 {
 	if (m_bValid == false) return;
 	int N = m_fem->GetStates();
-	int ntime = GetCurrentTime();
+	int ntime = currentTime();
 	for (int i=0; i<N; ++i) SetCurrentTime(i);
 	SetCurrentTime(ntime);
 }

@@ -204,3 +204,10 @@ void CDataFieldSelector::addComponent(QTreeWidgetItem* parent, const char* sznam
 	pi->setText(0, szname);
 	pi->setData(0, Qt::UserRole, QVariant(ndata));
 }
+
+int CDataFieldSelector::currentValue() const
+{
+	int index = currentIndex();
+	if (index >= 0) return currentData(Qt::UserRole).toInt();
+	return -1;
+}

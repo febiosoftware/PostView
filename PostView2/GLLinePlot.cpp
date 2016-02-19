@@ -21,7 +21,7 @@ CGLLinePlot::~CGLLinePlot()
 void CGLLinePlot::Render(CGLContext& rc)
 {
 /*	CDocument* pdoc = flxGetMainWnd()->GetDocument();
-	int ns = pdoc->GetCurrentTime();
+	int ns = pdoc->currentTime();
 	FEModel& fem = *pdoc->GetFEModel();
 
 	GLfloat line_old;
@@ -153,7 +153,7 @@ CGLPointPlot::~CGLPointPlot()
 void CGLPointPlot::Render(CGLContext& rc)
 {
 /*	CDocument* pdoc = flxGetMainWnd()->GetDocument();
-	int ns = pdoc->GetCurrentTime();
+	int ns = pdoc->currentTime();
 	FEModel& fem = *pdoc->GetFEModel();
 
 	GLfloat size_old;

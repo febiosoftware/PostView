@@ -11,6 +11,8 @@ public:
 
 	void BuildMenu(FEModel* fem, int ntype, bool btvec = false);
 
+	int currentValue() const;
+
 private:
 	void addComponent(QTreeWidgetItem* parent, const char* szname, int ndata);
 };

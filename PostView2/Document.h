@@ -187,7 +187,7 @@ public:
 	// --- T I M E   M A N A G M E N T ---
 
 	// get the index of the active state
-	int GetCurrentTime() { return m_nTime; }
+	int currentTime() { return m_nTime; }
 
 	// set the active state
 	void SetCurrentTime(int ntime);

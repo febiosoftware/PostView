@@ -103,7 +103,7 @@ void FEDeformationGradient::eval(int n, mat3d* pv)
 	}
 
 	// get the current state
-	int nstate = m_pm->GetCurrentTime();
+	int nstate = m_pm->currentTime();
 
 	// loop over all the element nodes
 	int N = e.Nodes();
@@ -142,7 +142,7 @@ void FELagrangeStrain::eval(int n, mat3fs* pv)
 	}
 
 	// get the current state
-	int nstate = m_pm->GetCurrentTime();
+	int nstate = m_pm->currentTime();
 
 	// loop over all the element nodes
 	int N = e.Nodes();
@@ -189,7 +189,7 @@ void FEInfStrain::eval(int n, mat3fs* pv)
     e.iso_coord(-1, q);
 
 	// get the current state
-	int nstate = m_pm->GetCurrentTime();
+	int nstate = m_pm->currentTime();
 
 	// get the deformation gradient
 	mat3d F = deform_grad(*m_pm, n, q[0], q[1], q[2], nstate, m_nref);
@@ -225,7 +225,7 @@ void FERightCauchyGreen::eval(int n, mat3fs* pv)
     e.iso_coord(-1, q);
 
 	// get the current state
-	int nstate = m_pm->GetCurrentTime();
+	int nstate = m_pm->currentTime();
 
 	// get the deformation gradient
 	mat3d F = deform_grad(*m_pm, n, q[0], q[1], q[2], nstate, m_nref);
@@ -263,7 +263,7 @@ void FERightStretch::eval(int n, mat3fs* pv)
     e.iso_coord(-1, q);
 
 	// get the current state
-	int nstate = m_pm->GetCurrentTime();
+	int nstate = m_pm->currentTime();
 
 	// get the deformation gradient
 	mat3d F = deform_grad(*m_pm, n, q[0], q[1], q[2], nstate, m_nref);
@@ -320,7 +320,7 @@ void FEGLStrain::eval(int n, mat3fs* pv)
     e.iso_coord(-1, q);
 
 	// get the current state
-	int nstate = m_pm->GetCurrentTime();
+	int nstate = m_pm->currentTime();
 
 	// get the deformation gradient
 	mat3d F = deform_grad(*m_pm, n, q[0], q[1], q[2], nstate, m_nref);
@@ -358,7 +358,7 @@ void FEBiotStrain::eval(int n, mat3fs* pv)
     e.iso_coord(-1, q);
 
 	// get the current state
-	int nstate = m_pm->GetCurrentTime();
+	int nstate = m_pm->currentTime();
 
 	// get the deformation gradient
 	mat3d F = deform_grad(*m_pm, n, q[0], q[1], q[2], nstate, m_nref);
@@ -415,7 +415,7 @@ void FERightHencky::eval(int n, mat3fs* pv)
     e.iso_coord(-1, q);
 
 	// get the current state
-	int nstate = m_pm->GetCurrentTime();
+	int nstate = m_pm->currentTime();
 
 	// get the deformation gradient
 	mat3d F = deform_grad(*m_pm, n, q[0], q[1], q[2], nstate, m_nref);
@@ -472,7 +472,7 @@ void FELeftCauchyGreen::eval(int n, mat3fs* pv)
     e.iso_coord(-1, q);
     
     // get the current state
-    int nstate = m_pm->GetCurrentTime();
+    int nstate = m_pm->currentTime();
     
     // get the deformation gradient
     mat3d F = deform_grad(*m_pm, n, q[0], q[1], q[2], nstate, m_nref);
@@ -510,7 +510,7 @@ void FELeftStretch::eval(int n, mat3fs* pv)
     e.iso_coord(-1, q);
     
     // get the current state
-    int nstate = m_pm->GetCurrentTime();
+    int nstate = m_pm->currentTime();
     
     // get the deformation gradient
     mat3d F = deform_grad(*m_pm, n, q[0], q[1], q[2], nstate, m_nref);
@@ -567,7 +567,7 @@ void FELeftHencky::eval(int n, mat3fs* pv)
     e.iso_coord(-1, q);
     
     // get the current state
-    int nstate = m_pm->GetCurrentTime();
+    int nstate = m_pm->currentTime();
     
     // get the deformation gradient
     mat3d F = deform_grad(*m_pm, n, q[0], q[1], q[2], nstate, m_nref);
@@ -624,7 +624,7 @@ void FEAlmansi::eval(int n, mat3fs* pv)
     el.iso_coord(-1, q);
     
     // get the current state
-    int nstate = m_pm->GetCurrentTime();
+    int nstate = m_pm->currentTime();
     
     // get the deformation gradient
     mat3d F = deform_grad(*m_pm, n, q[0], q[1], q[2], nstate, m_nref);
@@ -717,7 +717,7 @@ void FEVolRatio::eval(int n, float* pv)
 
 	// get the initial and current nodal positions
 	vec3f X[8], x[8];
-	int ntime = m_pm->GetCurrentTime();
+	int ntime = m_pm->currentTime();
 	for (i=0; i<N; i++) 
 	{ 
 		node = pe->m_node[i];
@@ -972,7 +972,7 @@ void FEMinEdgeAngle::eval(int iel, float* pv)
 //-----------------------------------------------------------------------------
 void FENodePosition::eval(int n, vec3f* pv)
 {
-	int ntime = m_pm->GetCurrentTime();
+	int ntime = m_pm->currentTime();
 	*pv = m_pm->NodePosition(n, ntime);
 }
 
@@ -1078,7 +1078,7 @@ float FECurvature::nodal_curvature(int n, int m)
 	// get the model's surface
 	FEModel* pfem = GetFEModel();
 	FEMesh* pmesh = pfem->GetMesh();
-	int ntime = pfem->GetCurrentTime();
+	int ntime = pfem->currentTime();
 
 	// get the reference nodal position
 	vec3f r0 = pfem->NodePosition(n, ntime);
@@ -1411,7 +1411,7 @@ vec3f FEPrincCurvatureVector::nodal_curvature(int n, int m)
 	// get the model's surface
 	FEModel* pfem = GetFEModel();
 	FEMesh* pmesh = pfem->GetMesh();
-	int ntime = pfem->GetCurrentTime();
+	int ntime = pfem->currentTime();
 
 	// get the reference nodal position
 	vec3f r0 = pfem->NodePosition(n, ntime);
@@ -1625,7 +1625,7 @@ void FECongruency::eval(int n, float* f)
 
 	// get the face
 	FEFace& face = pmesh->Face(n);
-	int ntime = pfem->GetCurrentTime();
+	int ntime = pfem->currentTime();
 	for (int i=0; i<face.Nodes(); ++i)
 	{
 		int in = face.node[i];
@@ -1689,7 +1689,7 @@ void FEVolStrain::eval(int n, float* pv)
 
 	// get the initial and current nodal positions
 	vec3f X[8], x[8];
-	int ntime = m_pm->GetCurrentTime();
+	int ntime = m_pm->currentTime();
 	for (i=0; i<N; i++) 
 	{ 
 		node = pe->m_node[i];
@@ -1772,7 +1772,7 @@ FEElemPressure::FEElemPressure(FEModel* pm) : FEElemData_T<float, DATA_ITEM>(pm)
 void FEElemPressure::eval(int n, float* pv)
 {
 	// get current time
-	int ntime = m_pm->GetCurrentTime();
+	int ntime = m_pm->currentTime();
 
 	// get the state
 	FEState& state = *m_pm->GetState(ntime);
@@ -1807,7 +1807,7 @@ FEElemNodalPressure::FEElemNodalPressure(FEModel* pm) : FEElemData_T<float, DATA
 void FEElemNodalPressure::eval(int n, float* pv)
 {
 	// get current time
-	int ntime = m_pm->GetCurrentTime();
+	int ntime = m_pm->currentTime();
 
 	// get the state
 	FEState& state = *m_pm->GetState(ntime);
@@ -1848,7 +1848,7 @@ FESolidStress::FESolidStress(FEModel* pm) : FEElemData_T<mat3fs, DATA_ITEM>(pm)
 void FESolidStress::eval(int n, mat3fs* pv)
 {
 	// get current time
-	int ntime = m_pm->GetCurrentTime();
+	int ntime = m_pm->currentTime();
 	
 	// get the state
 	FEState& state = *m_pm->GetState(ntime);

@@ -114,7 +114,7 @@ bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 //				w.m_bsel = dlg.m_bsel;
 //				w.m_bsurf = dlg.m_bsurf;
 //				w.m_bnode = dlg.m_bnode;
-				bret = w.Save(fem, m_doc->GetCurrentTime(), szfilename);
+				bret = w.Save(fem, m_doc->currentTime(), szfilename);
 			}
 		}
 		break;
@@ -132,7 +132,7 @@ bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 	case 6:
 		{
 			FEVTKExport w;
-			bret = w.Save(fem, m_doc->GetCurrentTime(), szfilename);
+			bret = w.Save(fem, m_doc->currentTime(), szfilename);
 		}
 		break;
 	case 7:
@@ -343,7 +343,7 @@ void CMainWindow::timerEvent(QTimerEvent* ev)
 	CDocument* pdoc = GetDocument();
 	int N = pdoc->GetFEModel()->GetStates();
 
-	int nstep = pdoc->GetCurrentTime();
+	int nstep = pdoc->currentTime();
 	nstep++;
 	if (nstep >= N) nstep = 0;
 	pdoc->SetCurrentTime(nstep);
@@ -362,7 +362,7 @@ void CMainWindow::on_actionPrev_triggered()
 {
 	CDocument* pdoc = GetDocument();
 	int N = pdoc->GetFEModel()->GetStates();
-	int nstep = pdoc->GetCurrentTime();
+	int nstep = pdoc->currentTime();
 	nstep--;
 	if (nstep < 0) nstep = 0;
 	pdoc->SetCurrentTime(nstep);
@@ -373,7 +373,7 @@ void CMainWindow::on_actionNext_triggered()
 {
 	CDocument* pdoc = GetDocument();
 	int N = pdoc->GetFEModel()->GetStates();
-	int nstep = pdoc->GetCurrentTime();
+	int nstep = pdoc->currentTime();
 	nstep++;
 	if (nstep >= N) nstep = N-1;
 	pdoc->SetCurrentTime(nstep);

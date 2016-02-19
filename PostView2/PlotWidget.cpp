@@ -158,6 +158,12 @@ void CPlotWidget::clearData()
 }
 
 //-----------------------------------------------------------------------------
+void CPlotWidget::clear()
+{
+	m_data.clear();
+}
+
+//-----------------------------------------------------------------------------
 void CPlotWidget::addPlotData(const CPlotData& p)
 {
 	m_data.push_back(p);

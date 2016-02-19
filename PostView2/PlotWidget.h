@@ -53,7 +53,12 @@ public:
 	QSize minimumSizeHint() const { return QSize(200, 200); }
 
 	// clear plot data
+	// This just clears the data for each plot
+	// but does not delete the plots
 	void clearData();
+
+	// clears everything
+	void clear();
 
 	// change the view so that it fits the data
 	void fitToData();

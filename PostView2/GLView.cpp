@@ -289,6 +289,10 @@ void CGLView::mouseMoveEvent(QMouseEvent* ev)
 	int x = ev->x();
 	int y = ev->y();
 
+	// store mouse position
+	m_p1.x = x;
+	m_p1.y = y;
+
 	// let the widget manager handle it first
 	if (m_Widget->handle(x, y, CGLWidgetManager::DRAG) == 1)
 	{
@@ -381,6 +385,61 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 	{
 		repaint();
 		return;
+	}
+
+	int mode = 0;
+	Qt::KeyboardModifiers key = ev->modifiers();
+	if (key & Qt::ShiftModifier  ) mode |= SELECT_ADD;
+	if (key & Qt::ControlModifier) mode != SELECT_SUB;
+
+	Qt::MouseButton button = ev->button();
+
+	bool but1 = (button == Qt::LeftButton);
+	bool but2 = (button == Qt::MiddleButton);
+	bool but3 = (button == Qt::RightButton);
+
+	bool balt   = (key & Qt::AltModifier);
+	bool bshift = (key & Qt::ShiftModifier);
+
+
+	// get the view mode
+	CDocument* pdoc = GetDocument();
+	int view_mode = pdoc->GetSelectionMode();
+
+	if (but3)
+	{
+//		if ((m_p0.x == m_p1.x) && (m_p0.y == m_p1.y)) m_pop->popup();
+	}
+	else
+	{
+		m_bdrag = false;
+		if (but1)
+		{
+			if (m_bZoomRect)
+			{
+				ZoomRect(m_p0, m_p1);
+			}
+			else
+			{
+				// select items
+				if ((mode != 0) || (m_p0 == m_p1))
+				{
+					switch (view_mode)
+					{
+					case SELECT_ELEMS: SelectElements(m_p0.x, m_p0.y, m_p1.x, m_p1.y, mode); break;
+					case SELECT_FACES: SelectFaces   (m_p0.x, m_p0.y, m_p1.x, m_p1.y, mode); break;
+					case SELECT_NODES: SelectNodes   (m_p0.x, m_p0.y, m_p1.x, m_p1.y, mode); break;
+					}
+
+					// update the TrackView
+//					m_pParent->UpdateTrackWnd();
+				}
+			}
+		}
+		else if (but3)
+		{
+//				ZoomRect(m_p0, m_p1);
+		}
 	}
 
 	repaint();
