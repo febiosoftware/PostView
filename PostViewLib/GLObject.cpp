@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "GLObject.h"
+#include <string.h>
 
 CGLObject::CGLObject()
 {
@@ -11,3 +12,5 @@ CGLObject::~CGLObject(void)
 {
 
 }
+
+void CGLObject::SetName(const char* szname) { strcpy(m_szname, szname); }

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string.h>
-
 class CGLContext;
 
 //-----------------------------------------------------------------------------
@@ -19,7 +17,7 @@ public:
 
 	// get the name
 	const char* GetName() const { return m_szname; }
-	void SetName(const char* szname) { strcpy(m_szname, szname); }
+	void SetName(const char* szname);
 
 	// (de-)activate
 	virtual void Activate(bool bact) { m_bactive = bact; }

@@ -24,6 +24,28 @@ CMainWindow::~CMainWindow()
 {
 }
 
+void CMainWindow::UpdateUi()
+{
+	// update the command panels
+	ui->modelViewer->Update();
+	ui->matPanel->Update();
+	ui->dataPanel->Update();
+	ui->statePanel->Update();
+	ui->toolsPanel->Update();
+
+	// update all graph windows
+	if (ui->graphList.isEmpty() == false)
+	{
+		QList<CGraphWindow*>::iterator it;
+		for (it=ui->graphList.begin(); it != ui->graphList.end(); ++it)
+			(*it)->Update();
+	}
+
+	// update the gl view
+	ui->glview->GetCamera().Update(true);
+	ui->glview->repaint();
+}
+
 bool CMainWindow::OpenFile(const QString& fileName, int nfilter)
 {
 	std::string sfile = fileName.toStdString();
@@ -49,16 +71,9 @@ bool CMainWindow::OpenFile(const QString& fileName, int nfilter)
 		ui->playToolBar->setDisabled(true);
 	}
 
-	// update the command panels
-	ui->modelViewer->Update();
-	ui->matPanel->Update();
-	ui->dataPanel->Update();
-	ui->statePanel->Update();
-	ui->toolsPanel->Update();
+	// update all Ui components
+	UpdateUi();
 
-	// update the gl view
-	ui->glview->GetCamera().Update(true);
-	ui->glview->repaint();
 	return true;
 }
 
@@ -181,16 +196,8 @@ void CMainWindow::on_actionUpdate_triggered()
 		if (N > 1) ui->playToolBar->setEnabled(true);
 		ui->selectData->BuildMenu(m_doc->GetFEModel(), DATA_FLOAT);
 
-		// update the command panels
-		ui->modelViewer->Update();
-		ui->matPanel->Update();
-		ui->dataPanel->Update();
-		ui->statePanel->Update();
-		ui->toolsPanel->Update();
-
-		// update the gl view
-		ui->glview->GetCamera().Update(true);
-		ui->glview->repaint();
+		// update the UI
+		UpdateUi();
 	}
 }
 
@@ -281,6 +288,7 @@ void CMainWindow::on_actionGraph_triggered()
 		pg = new CGraphWindow(this);
 		pg->setWindowTitle(QString("Graph%1").arg(ui->graphList.size()+1));
 		ui->graphList.push_back(pg);
+		pg->Update();
 	}
 
 	if (pg)

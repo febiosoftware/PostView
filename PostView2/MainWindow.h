@@ -41,6 +41,10 @@ private slots:
 private:
 	void timerEvent(QTimerEvent* ev);
 
+	// this is called after a new model is loaded 
+	// or an existing model is reloaded
+	void UpdateUi();
+
 private:
 	Ui::CMainWindow*	ui;
 	CDocument*			m_doc;

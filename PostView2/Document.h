@@ -239,8 +239,8 @@ public:
 
 	int GetEvalField();
 
-	const char* GetFieldString() { return m_szField; }
-	void SetFieldString(const char* szfield) { strcpy(m_szField, szfield); }
+	const char* GetFieldString();
+	void SetFieldString(const char* szfield);
 
 	// --- V I E W   M A N A G M E N T ---
 

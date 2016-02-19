@@ -295,6 +295,12 @@ int CDocument::GetEvalField()
 }
 
 //-----------------------------------------------------------------------------
+const char* CDocument::GetFieldString() { return m_szField; }
+
+//-----------------------------------------------------------------------------
+void CDocument::SetFieldString(const char* szfield) { strcpy(m_szField, szfield); }
+
+//-----------------------------------------------------------------------------
 void CDocument::UpdateFEModel(bool breset)
 {
 	if (!m_bValid) return;

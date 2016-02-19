@@ -3,7 +3,6 @@
 #include "FEMeshData.h"
 #include <vector>
 #include <typeinfo>
-#include <string.h>
 
 using namespace std;
 
@@ -26,7 +25,7 @@ public:
 	const char* GetName() const { return m_szname; }
 
 	//! set the name of the field
-	void SetName(const char* szname) { strcpy(m_szname, szname); }
+	void SetName(const char* szname);
 
 	//! Create a copy
 	virtual FEDataField* Clone() const = 0;
