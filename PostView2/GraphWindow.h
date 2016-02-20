@@ -23,14 +23,14 @@ private:
 	void TrackNodeHistory   (int node , float* pval, int nfield, int nmin=0, int nmax=-1);
 
 private slots:
+	void on_selectTime_currentIndexChanged(int);
 	void on_selectX_currentIndexChanged(int);
 	void on_selectY_currentIndexChanged(int);
+	void on_selectPlot_currentIndexChanged(int);
 
 private:
 	CMainWindow*		m_wnd;
 	Ui::CGraphWindow*	ui;
-
-	int	m_ntype;	// chart type
 
 	bool	m_bUserRange;			//!< user sets range
 	bool	m_bAutoRange;			//!< track timer bar range

@@ -2,6 +2,7 @@
 #include "PlotWidget.h"
 #include "DataFieldSelector.h"
 #include <QToolbar>
+#include <QStackedWidget.h>
 #include "MainWindow.h"
 #include "Document.h"
 #include <PostViewLib/FEModel.h>
@@ -13,6 +14,9 @@ class Ui::CGraphWindow
 public:
 	CPlotWidget*		plot;
 	QToolBar*			tool;
+	QComboBox*			selectPlot;
+	QStackedWidget*		selectXSource;
+	QComboBox*			selectTime;
 	CDataFieldSelector*	selectX;
 	CDataFieldSelector*	selectY;
 
@@ -23,11 +27,31 @@ public:
 		parent->setCentralWidget(plot);
 
 		tool = new QToolBar(parent);
-		selectX = new CDataFieldSelector;
-		selectX->setObjectName("selectX");
-		selectY = new CDataFieldSelector;
-		selectY->setObjectName("selectY");
-		tool->addWidget(selectX);
+		{
+			selectPlot = new QComboBox;
+			selectPlot->setObjectName("selectPlot");
+			selectPlot->addItem("Line");
+			selectPlot->addItem("Scatter");
+
+			selectXSource = new QStackedWidget;
+			{
+				selectTime = new QComboBox;
+				selectTime->setObjectName("selectTime");
+				selectTime->addItem("Time");
+				selectTime->addItem("Steps");
+
+				selectX = new CDataFieldSelector;
+				selectX->setObjectName("selectX");
+			}
+			selectXSource->addWidget(selectTime);
+			selectXSource->addWidget(selectX);
+			selectXSource->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+			selectY = new CDataFieldSelector;
+			selectY->setObjectName("selectY");
+		}
+		tool->addWidget(selectPlot);
+		tool->addWidget(selectXSource);
 		tool->addWidget(selectY);
 
 		parent->addToolBar(Qt::TopToolBarArea, tool);
@@ -38,8 +62,6 @@ public:
 
 CGraphWindow::CGraphWindow(CMainWindow* pwnd) : m_wnd(pwnd), QMainWindow(pwnd), ui(new Ui::CGraphWindow)
 {
-	m_ntype = 1;	// start with scatter plot
-
 	m_bUserRange = true;
 	m_bAutoRange = false;
 	m_bTrackTime = false;
@@ -113,10 +135,14 @@ void CGraphWindow::Update(bool breset)
 	// get the graph of the track view and clear it
 	ui->plot->clear();
 
+	// plot type
+	int ntype = ui->selectPlot->currentIndex();
+
 	// get the field data
 	int dataX = ui->selectX->currentValue();
 	int dataY = ui->selectY->currentValue();
-	if ((dataX<0)||(dataY<0)) return;
+	if ((ntype==1) && (dataX<=0)) return;
+	if (dataY<=0) return;
 
 	// set current time point index (TODO: Not sure if this is still used)
 //	pview->SetCurrentTimeIndex(ntime);
@@ -127,17 +153,17 @@ void CGraphWindow::Update(bool breset)
 	FEMesh* pfe = pdoc->GetFEModel()->GetMesh();
 
 	// get the title
-	if (m_ntype == 0)
+	if (ntype == 0)
 	{
-//		strcpy(pview->GetTitle(), m_pYField->menu_text(m_nYField));
+		ui->plot->setTitle(ui->selectY->currentText());
 	}
 	else
 	{
-/*		char szx[256] = {0}, szy[256] = {0};
-		strcpy(szx, m_pXField->menu_text(m_nXField));
-		strcpy(szy, m_pYField->menu_text(m_nYField));
-		sprintf(pview->GetTitle(), "%s   ---   %s", szx, szy);
-*/	}
+		QString xtext = ui->selectX->currentText();
+		QString ytext = ui->selectY->currentText();
+
+		ui->plot->setTitle(QString("%1 --- %2").arg(xtext).arg(ytext));
+	}
 
 	int nelems = pfe->Elements();
 	int nodes  = pfe->Nodes();
@@ -158,6 +184,8 @@ void CGraphWindow::Update(bool breset)
 		for (int i=0; i<nsteps; ++i) po->GetDisplacementMap()->UpdateState(i);
 	}
 
+	int ncx = ui->selectTime->currentIndex();
+
 	// get the selected elements
 	for (int i=0; i<nelems; i++)
 	{
@@ -165,13 +193,13 @@ void CGraphWindow::Update(bool breset)
 		if (e.IsSelected())
 		{
 			// evaluate x-field
-			if (m_ntype == 0)
+			if (ntype == 0)
 			{
-/*				if (m_ncx == 0) 
+				if (ncx == 0) 
 					for (int j=0; j<cx; j++) px[j] = pfem->GetState(j + nmin)->m_time;
 				else
 					for (int j=0; j<cx; j++) px[j] = (float) j+1.f + nmin;
-*/			}
+			}
 			else
 			{
 				TrackElementHistory(i, px, dataX, nmin, nmax);
@@ -197,13 +225,13 @@ void CGraphWindow::Update(bool breset)
 		if (f.IsSelected())
 		{
 			// evaluate x-field
-			if (m_ntype == 0)
+			if (ntype == 0)
 			{
-/*				if (m_ncx == 0)
+				if (ncx == 0)
 					for (int j=0; j<cx; j++) px[j] = pfem->GetState(j + nmin)->m_time;
 				else
 					for (int j=0; j<cx; j++) px[j] = (float)j + 1.f + nmin;
-*/			}
+			}
 			else
 				TrackFaceHistory(i, px, dataX, nmin, nmax);
 
@@ -225,13 +253,13 @@ void CGraphWindow::Update(bool breset)
 		if (n.IsSelected())
 		{
 			// evaluate x-field
-			if (m_ntype == 0)
+			if (ntype == 0)
 			{
-/*				if (m_ncx == 0)
+				if (ncx == 0)
 					for (int j=0; j<cx; j++) px[j] = pfem->GetState(j + nmin)->m_time;
 				else 
 					for (int j=0; j<cx; j++) px[j] = (float) j +1.f + nmin;
-*/			}
+			}
 			else
 				TrackNodeHistory(i, px, dataX, nmin, nmax);
 
@@ -319,6 +347,12 @@ void CGraphWindow::TrackElementHistory(int nelem, float* pval, int nfield, int n
 }
 
 //-----------------------------------------------------------------------------
+void CGraphWindow::on_selectTime_currentIndexChanged(int)
+{
+	Update(false);
+}
+
+//-----------------------------------------------------------------------------
 void CGraphWindow::on_selectX_currentIndexChanged(int)
 {
 	Update(false);
@@ -327,5 +361,12 @@ void CGraphWindow::on_selectX_currentIndexChanged(int)
 //-----------------------------------------------------------------------------
 void CGraphWindow::on_selectY_currentIndexChanged(int)
 {
+	Update(false);
+}
+
+//-----------------------------------------------------------------------------
+void CGraphWindow::on_selectPlot_currentIndexChanged(int index)
+{
+	ui->selectXSource->setCurrentIndex(index);
 	Update(false);
 }

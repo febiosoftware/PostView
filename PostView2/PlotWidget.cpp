@@ -75,9 +75,7 @@ void CPlotData::addPoint(double x, double y)
 //-----------------------------------------------------------------------------
 CPlotWidget::CPlotWidget(QWidget* parent, int w, int h) : QWidget(parent)
 {
-	static int n = 0;
-
-	m_ncol = 13 + n++;
+	m_ncol = 13;
 
 	m_viewRect = QRectF(0.0, 0.0, 1.0, 1.0);
 	m_xscale = findScale(m_viewRect.left(), m_viewRect.right());
@@ -161,6 +159,7 @@ void CPlotWidget::clearData()
 void CPlotWidget::clear()
 {
 	m_data.clear();
+	repaint();
 }
 
 //-----------------------------------------------------------------------------
