@@ -162,7 +162,7 @@ public:
 		QAction* actionOpen        = addAction("Open ..."         , "actionOpen"  , ":/icons/open.png"   ); actionOpen->setShortcuts(QKeySequence::Open);
 		QAction* actionSave        = addAction("Save ..."         , "actionSave"  , ":/icons/save.png"   ); actionSave->setShortcuts(QKeySequence::Save);
 		QAction* actionUpdate      = addAction("Update"           , "actionUpdate", ":/icons/refresh.png"); actionUpdate->setShortcuts(QKeySequence::Refresh);
-		QAction* actionSnapShot    = addAction("Snapshot ..."     , "actionSnapShot", ":/icons/snapshot.png"   );
+		QAction* actionSnapShot    = addAction("Snapshot ..."     , "actionSnapShot", ":/icons/snapshot.png");
 		QAction* actionOpenSession = addAction("Open session ..." , "actionOpenSession");
 		QAction* actionSaveSession = addAction("Save session ..." , "actionSaveSession");
 		QAction* actionQuit        = addAction("Exit"             , "actionQuit"       );
@@ -201,12 +201,12 @@ public:
 		QAction* actionRecordStop  = addAction("Stop"   , "actionRecordStop" );
 
 		// --- View Menu ---
-		QAction* actionViewSettings   = addAction("Settings ..."          , "actionViewSettings"  );
-		QAction* actionViewCapture    = addAction("Toggle capture Frame"  , "actionViewCapture"   );
-		QAction* actionViewProjection = addAction("Toggle projection mode", "actionViewProjection");
-		QAction* actionViewMesh       = addAction("Toggle mesh lines",      "actionViewMesh"      );
-		QAction* actionViewOutline    = addAction("Toggle outline",         "actionViewOutline"   );
-		QAction* actionViewSmooth     = addAction("Toggle color smoothing", "actionViewSmooth"    );
+		QAction* actionViewSettings   = addAction("Settings ..."           , "actionViewSettings"  );
+		QAction* actionViewCapture    = addAction("Show capture Frame"     , "actionViewCapture"   );
+		QAction* actionViewProjection = addAction("Orthographic projection", "actionViewProjection");
+		QAction* actionViewMesh       = addAction("Show mesh lines"        , "actionViewMesh"      ); actionViewMesh   ->setShortcut(Qt::Key_M); actionViewMesh->setCheckable(true);
+		QAction* actionViewOutline    = addAction("Show outline"           , "actionViewOutline"   ); actionViewOutline->setShortcut(Qt::Key_Z); actionViewOutline->setCheckable(true);
+		QAction* actionViewSmooth     = addAction("Color smoothing"        , "actionViewSmooth"    ); actionViewSmooth ->setShortcut(Qt::Key_C); actionViewSmooth->setCheckable(true);
 		QAction* actionViewFront      = addAction("Front",                  "actionViewFront"     );
 		QAction* actionViewBack       = addAction("Back" ,                  "actionViewBack"      );
 		QAction* actionViewLeft       = addAction("Left" ,                  "actionViewLeft"      );

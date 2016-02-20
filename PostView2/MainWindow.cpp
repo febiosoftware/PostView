@@ -509,3 +509,34 @@ void CMainWindow::on_actionLast_triggered()
 	pdoc->SetCurrentTime(N-1);
 	ui->glview->repaint();
 }
+
+void CMainWindow::on_actionViewMesh_toggled(bool bchecked)
+{
+	VIEWSETTINGS& view = GetDocument()->GetViewSettings();
+	view.m_bmesh = bchecked;
+	ui->glview->repaint();
+}
+
+void CMainWindow::on_actionViewOutline_toggled(bool bchecked)
+{
+	CGLModel* po = GetDocument()->GetGLModel();
+	po->m_boutline = !po->m_boutline;
+	ui->glview->repaint();
+}
+
+void CMainWindow::on_actionViewSmooth_toggled(bool bchecked)
+{
+	CGLModel* po = GetDocument()->GetGLModel();
+	CGLColorMap* pcm = po->GetColorMap();
+	if (pcm)
+	{
+		CColorMap* pc = pcm->GetColorMap();
+		if (pc)
+		{
+			bool b = pc->Smooth();
+			pc->Smooth(!b);
+			m_doc->UpdateFEModel();
+			ui->glview->repaint();
+		}
+	}
+}
