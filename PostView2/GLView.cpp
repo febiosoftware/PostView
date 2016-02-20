@@ -43,6 +43,8 @@ CGLView::CGLView(CMainWindow* pwnd, QWidget* parent) : QOpenGLWidget(parent), m_
 	m_Widget->AddWidget(m_pframe = new GLSafeFrame(po, 0, 0, 800, 600));
 	m_pframe->align(GLW_ALIGN_HCENTER | GLW_ALIGN_VCENTER);
 	m_pframe->hide();
+
+	setFocusPolicy(Qt::StrongFocus);
 }
 
 CGLView::~CGLView()
@@ -259,7 +261,6 @@ void CGLView::paintGL()
 	}
 }
 
-
 //-----------------------------------------------------------------------------
 void CGLView::mousePressEvent(QMouseEvent* ev)
 {
@@ -281,6 +282,8 @@ void CGLView::mousePressEvent(QMouseEvent* ev)
 	m_p1.x = m_p0.x = m_xp = x;
 	m_p1.y = m_p0.y = m_yp = y;
 	if (mode != 0) m_bdrag = true;
+
+	ev->accept();
 }
 
 //-----------------------------------------------------------------------------

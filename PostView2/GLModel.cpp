@@ -556,7 +556,7 @@ void CGLModel::RenderMaterial(FEModel* ps, int m)
 		{
 			FEFace& face = dom.Face(i);
 			FEElement& el = pm->Element(face.m_elem[0]);
-			if (!el.IsSelected() && face.IsVisible() && face.IsActive())
+			if (!el.IsSelected() && !face.IsSelected() && face.IsVisible() && face.IsActive())
 			{
 				// okay, we got one, so let's render it
 				glLoadName(face.m_elem[0]+1);
@@ -571,7 +571,7 @@ void CGLModel::RenderMaterial(FEModel* ps, int m)
 		{
 			FEFace& face = dom.Face(i);
 			FEElement& el = pm->Element(face.m_elem[0]);
-			if (!el.IsSelected() && face.IsVisible() && !face.IsActive())
+			if (!el.IsSelected() && !face.IsSelected() && face.IsVisible() && !face.IsActive())
 			{
 				// okay, we got one, so let's render it
 				glLoadName(face.m_elem[0]+1);
@@ -593,7 +593,7 @@ void CGLModel::RenderMaterial(FEModel* ps, int m)
 			FEFace& face = dom.Face(i);
 			FEElement& el = pm->Element(face.m_elem[0]);
 
-			if (!el.IsSelected() && face.IsVisible())
+			if (!el.IsSelected() && !face.IsSelected() && face.IsVisible())
 			{
 				// okay, we got one, so let's render it
 				glLoadName(face.m_elem[0]+1);
@@ -608,7 +608,7 @@ void CGLModel::RenderMaterial(FEModel* ps, int m)
 			FEFace& face = dom.Face(i);
 			FEElement& el = pm->Element(face.m_elem[0]);
 
-			if (!el.IsSelected() && face.IsVisible())
+			if (!el.IsSelected() && !face.IsSelected() && face.IsVisible())
 			{
 				// okay, we got one, so let's render it
 				glLoadName(face.m_elem[0]+1);

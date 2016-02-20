@@ -265,6 +265,128 @@ void CMainWindow::on_actionQuit_triggered()
 	QApplication::quit();
 }
 
+void CMainWindow::on_selectNodes_triggered()
+{
+	m_doc->SetSelectionMode(SELECT_NODES);
+	ui->glview->repaint();
+}
+
+void CMainWindow::on_selectFaces_triggered()
+{
+	m_doc->SetSelectionMode(SELECT_FACES);
+	ui->glview->repaint();
+}
+
+void CMainWindow::on_selectElems_triggered()
+{
+	m_doc->SetSelectionMode(SELECT_ELEMS);
+	ui->glview->repaint();
+}
+
+void CMainWindow::on_actionHideSelected_triggered()
+{
+	CDocument* pdoc = GetDocument();
+	if (pdoc->IsValid() == false) return;
+
+	FEMesh* pm = pdoc->GetFEModel()->GetMesh();
+
+	switch (pdoc->GetSelectionMode())
+	{
+	case SELECT_NODES: pm->HideSelectedNodes(); break;
+	case SELECT_FACES: pm->HideSelectedFaces(); break;
+	case SELECT_ELEMS: pm->HideSelectedElements(); break;
+	}
+
+	pdoc->UpdateFEModel();
+	ui->glview->repaint();
+}
+
+void CMainWindow::on_actionHideUnselected_triggered()
+{
+	CDocument* pdoc = GetDocument();
+	FEMesh* pm = pdoc->GetFEModel()->GetMesh();
+
+	pm->HideUnselectedElements();
+
+	pdoc->UpdateFEModel();
+	ui->glview->repaint();
+}
+
+void CMainWindow::on_actionInvertSelection_triggered()
+{
+	CDocument* pdoc = GetDocument();
+	FEMesh* pfe = pdoc->GetFEModel()->GetMesh();
+
+	for (int i=0; i<pfe->Elements(); i++)
+	{
+		FEElement& e = pfe->Element(i);
+		if (e.IsVisible())
+			if (e.IsSelected()) e.Unselect(); else e.Select();
+	}
+
+	pdoc->UpdateFEModel();
+	ui->glview->repaint();
+}
+
+void CMainWindow::on_actionUnhideAll_triggered()
+{
+	CDocument* pdoc = GetDocument();
+	FEMesh* pfe = pdoc->GetFEModel()->GetMesh();
+	FEModel* ps = pdoc->GetFEModel();
+
+	// only unhide the visible materials
+	for (int i=0; i<ps->Materials(); i++) 
+	{
+		FEMaterial* pm = ps->GetMaterial(i);
+		if (pm->bvisible) pfe->ShowElements(i);
+	}
+
+	pdoc->UpdateFEModel();
+	ui->glview->repaint();
+}
+
+void CMainWindow::on_actionSelectAll_triggered()
+{
+	CDocument* pdoc = GetDocument();
+	FEMesh* pfe = pdoc->GetFEModel()->GetMesh();
+
+	for (int i=0; i<pfe->Elements(); i++) 
+	{
+		FEElement& e = pfe->Element(i);
+		if (e.IsVisible()) e.Select();
+	}
+
+	pdoc->UpdateFEModel();
+	ui->glview->repaint();
+}
+
+void CMainWindow::on_actionSelectRange_triggered()
+{
+}
+
+void CMainWindow::on_actionClearSelection_triggered()
+{
+	CDocument* pdoc = GetDocument();
+	if (pdoc->IsValid())
+	{
+		pdoc->GetFEModel()->GetMesh()->ClearSelection(); 
+		pdoc->UpdateFEModel();
+		ui->glview->repaint();
+	}
+}
+
+void CMainWindow::on_actionFind_triggered()
+{
+}
+
+void CMainWindow::on_actionDelete_triggered()
+{
+}
+
+void CMainWindow::on_actionProperties_triggered()
+{
+}
+
 void CMainWindow::on_actionGraph_triggered()
 {
 	// let's find an unused graph

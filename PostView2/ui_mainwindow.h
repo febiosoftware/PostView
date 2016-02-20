@@ -168,6 +168,10 @@ public:
 		QAction* actionQuit        = addAction("Exit"             , "actionQuit"       );
 
 		// --- Edit menu ---
+		QAction* selectNodes = addAction("Select Nodes"   , "selectNodes", ":/icons/node.png"   ); selectNodes->setCheckable(true);
+		QAction* selectFaces = addAction("Select Faces"   , "selectFaces", ":/icons/face.png"   ); selectFaces->setCheckable(true);
+		QAction* selectElems = addAction("Select Elements", "selectElems", ":/icons/element.png"); selectElems->setCheckable(true);
+
 		QAction* actionHideSelected    = addAction("Hide selected"   , "actionHideSelected"   );
 		QAction* actionHideUnselected  = addAction("Hide unselected" , "actionHideUnselected" );
 		QAction* actionInvertSelection = addAction("Invert selection", "actionInvertSelection");
@@ -229,6 +233,12 @@ public:
 		menuHelp   = new QMenu("Help"  , menuBar);
 		MainWindow->setMenuBar(menuBar);
 
+		QActionGroup* pag = new QActionGroup(MainWindow);
+		pag->addAction(selectNodes);
+		pag->addAction(selectFaces);
+		pag->addAction(selectElems);
+		selectElems->setChecked(true);
+
 		// build the menu
 		menuBar->addAction(menuFile->menuAction());
 		menuFile->addAction(actionOpen);
@@ -243,6 +253,10 @@ public:
 		menuFile->addAction(actionQuit);
 
 		menuBar->addAction(menuEdit->menuAction());
+		menuEdit->addAction(selectNodes);
+		menuEdit->addAction(selectFaces);
+		menuEdit->addAction(selectElems);
+		menuEdit->addSeparator();
 		menuEdit->addAction(actionHideSelected);
 		menuEdit->addAction(actionHideUnselected);
 		menuEdit->addAction(actionInvertSelection);
@@ -315,6 +329,11 @@ public:
 		mainToolBar->addAction(actionSave);
 		mainToolBar->addAction(actionUpdate);
 		mainToolBar->addAction(actionSnapShot);
+		mainToolBar->addSeparator();
+
+		mainToolBar->addAction(selectNodes);
+		mainToolBar->addAction(selectFaces);
+		mainToolBar->addAction(selectElems);
 		mainToolBar->addSeparator();
 
 		// create the data field selector
