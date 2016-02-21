@@ -1182,6 +1182,21 @@ void FEModel::EvaluateFace(int n, int ntime, int nfield, FACEDATA& d)
 				d.m_val = (d.m_nv[0] + d.m_nv[1] + d.m_nv[2] + d.m_nv[3] + d.m_nv[4] + d.m_nv[5] + d.m_nv[6] + d.m_nv[7])*0.125f;
 			}
 			break;
+		case FE_QUAD4:
+		case FE_QUAD8:
+		case FE_TRI3:
+		case FE_TRI6:
+			{
+				int nn = f.Nodes();
+				d.m_val = 0.0;
+				for (int i=0; i<nn; ++i)
+				{
+					d.m_nv[i] = e.m_nv[i];
+					d.m_val += d.m_nv[i];
+				}
+				d.m_val /= (nn);
+			}
+			break;
 		default:
 			assert(false);
 		}
