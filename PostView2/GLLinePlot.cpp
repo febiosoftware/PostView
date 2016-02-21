@@ -39,7 +39,7 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-CGLLinePlot::CGLLinePlot(CGLModel* po)
+CGLLinePlot::CGLLinePlot(CGLModel* po) : CGLPlot(po)
 {
 	static int n = 1;
 	sprintf(m_szname, "Line.%02d", n++);
@@ -61,9 +61,8 @@ CPropertyList* CGLLinePlot::propertyList()
 //-----------------------------------------------------------------------------
 void CGLLinePlot::Render(CGLContext& rc)
 {
-/*	CDocument* pdoc = flxGetMainWnd()->GetDocument();
-	int ns = pdoc->currentTime();
-	FEModel& fem = *pdoc->GetFEModel();
+	FEModel& fem = *GetModel()->GetFEModel();;
+	int ns = fem.currentTime();
 
 	GLfloat line_old;
 	glGetFloatv(GL_LINE_WIDTH, &line_old);
@@ -107,7 +106,6 @@ void CGLLinePlot::Render(CGLContext& rc)
 		}
 	}
 	glLineWidth(line_old);
-*/
 }
 
 //-----------------------------------------------------------------------------
@@ -207,7 +205,7 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-CGLPointPlot::CGLPointPlot(CGLModel* po)
+CGLPointPlot::CGLPointPlot(CGLModel* po) : CGLPlot(po)
 {
 	static int n = 1;
 	sprintf(m_szname, "Points.%02d", n++);
@@ -233,9 +231,8 @@ CPropertyList* CGLPointPlot::propertyList()
 //-----------------------------------------------------------------------------
 void CGLPointPlot::Render(CGLContext& rc)
 {
-/*	CDocument* pdoc = flxGetMainWnd()->GetDocument();
-	int ns = pdoc->currentTime();
-	FEModel& fem = *pdoc->GetFEModel();
+	FEModel& fem = *GetModel()->GetFEModel();;
+	int ns = fem.currentTime();
 
 	GLfloat size_old;
 	glGetFloatv(GL_POINT_SIZE, &size_old);
@@ -278,5 +275,4 @@ void CGLPointPlot::Render(CGLContext& rc)
 		}
 	}
 	glPointSize(size_old);
-*/
 }
