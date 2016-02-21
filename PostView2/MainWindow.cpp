@@ -12,6 +12,10 @@
 #include <PostViewLib/FENikeExport.h>
 #include <PostViewLib/FEVTKExport.h>
 #include <PostViewLib/FELSDYNAPlot.h>
+#include "GLPlaneCutPlot.h"
+#include "GLIsoSurfacePlot.h"
+#include "GLSlicePLot.h"
+#include "GLVectorPlot.h"
 #include <string>
 
 CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMainWindow)
@@ -387,6 +391,74 @@ void CMainWindow::on_actionProperties_triggered()
 {
 }
 
+void CMainWindow::on_actionPlaneCut_triggered()
+{
+	CDocument* pdoc = GetDocument();
+	CGLPlaneCutPlot* pp = new CGLPlaneCutPlot(pdoc->GetGLModel());
+	pdoc->AddPlot(pp);
+
+	ui->modelViewer->Update();
+	ui->modelViewer->selectObject(pp);
+	ui->glview->repaint();
+}
+
+void CMainWindow::on_actionVectorPlot_triggered()
+{
+	CDocument* pdoc = GetDocument();
+	CGLVectorPlot* pp = new CGLVectorPlot(pdoc->GetGLModel());
+	pdoc->AddPlot(pp);
+	pdoc->UpdateFEModel();
+	
+	ui->modelViewer->Update();
+	ui->modelViewer->selectObject(pp);
+
+	ui->glview->repaint();
+}
+
+void CMainWindow::on_actionIsosurfacePlot_triggered()
+{
+	CDocument* pdoc = GetDocument();
+	CGLIsoSurfacePlot* pp = new CGLIsoSurfacePlot(pdoc->GetGLModel());
+	pdoc->AddPlot(pp);
+	pdoc->UpdateFEModel();
+
+	ui->modelViewer->Update();
+	ui->modelViewer->selectObject(pp);
+
+	ui->glview->repaint();
+}
+
+void CMainWindow::on_actionSlicePlot_triggered()
+{
+	CDocument* pdoc = GetDocument();
+	CGLSlicePlot* pp = new CGLSlicePlot(pdoc->GetGLModel());
+	pdoc->AddPlot(pp);
+	pdoc->UpdateFEModel();
+
+	ui->modelViewer->Update();
+	ui->modelViewer->selectObject(pp);
+
+	ui->glview->repaint();
+}
+
+void CMainWindow::on_actionDisplacementMap_triggered()
+{
+	CDocument* pdoc = GetDocument();
+	CGLModel* pm = pdoc->GetGLModel();
+	if (pm->GetDisplacementMap() == 0)
+	{
+		if (pm->AddDisplacementMap() == false)
+		{
+			QMessageBox::warning(this, "PostView", "You need at least one vector field before you can define a displacement map.");
+		}
+//		else m_pCmdWnd->Update();
+	}
+	else
+	{
+		QMessageBox::information(this, "PostView", "You need at least one vector field before you can define a displacement map.");
+	}
+}
+
 void CMainWindow::on_actionGraph_triggered()
 {
 	// let's find an unused graph
@@ -419,6 +491,18 @@ void CMainWindow::on_actionGraph_triggered()
 		pg->raise();
 		pg->activateWindow();
 	}
+}
+
+void CMainWindow::on_actionSummary_triggered()
+{
+}
+
+void CMainWindow::on_actionStats_triggered()
+{
+}
+
+void CMainWindow::on_actionIntegrate_triggered()
+{
 }
 
 void CMainWindow::on_actionColorMap_toggled(bool bchecked)

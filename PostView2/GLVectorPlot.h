@@ -47,6 +47,8 @@ public:
 
 	void Update(int ntime, float dt, bool breset);
 
+	CPropertyList* propertyList();
+
 protected:
 	float	m_scale;
 	float	m_dens;

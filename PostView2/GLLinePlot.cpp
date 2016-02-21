@@ -1,6 +1,42 @@
 #include "stdafx.h"
 #include "GLLinePlot.h"
 #include "Document.h"
+#include "PropertyList.h"
+
+class CLineProps : public CPropertyList
+{
+public:
+	CLineProps(CGLLinePlot* p) : m_line(p)
+	{
+		addProperty("line width" , CProperty::Float);
+		addProperty("color"      , CProperty::Color);
+		addProperty("render mode", CProperty::Enum )->setEnumValues(QStringList() << "lines" << "fancy lines" << "3D lines");
+	}
+
+	QVariant GetPropertyValue(int i)
+	{
+		switch (i)
+		{
+		case 0: return m_line->GetLineWidth(); break;
+		case 1: return toQColor(m_line->GetLineColor()); break;
+		case 3: return m_line->GetRenderMode(); break;
+		}
+		return QVariant();
+	}
+
+	void SetPropertyValue(int i, const QVariant& v)
+	{
+		switch (i)
+		{
+		case 0: m_line->SetLineWidth(v.toFloat()); break;
+		case 1: m_line->SetLineColor(toGLColor(v.value<QColor>())); break;
+		case 2: m_line->SetRenderMode(v.toInt()); break;
+		}
+	}
+
+private:
+	CGLLinePlot* m_line;
+};
 
 //-----------------------------------------------------------------------------
 CGLLinePlot::CGLLinePlot(CGLModel* po)
@@ -15,6 +51,11 @@ CGLLinePlot::CGLLinePlot(CGLModel* po)
 //-----------------------------------------------------------------------------
 CGLLinePlot::~CGLLinePlot()
 {
+}
+
+CPropertyList* CGLLinePlot::propertyList()
+{
+	return new CLineProps(this);
 }
 
 //-----------------------------------------------------------------------------
@@ -130,6 +171,41 @@ void CGLLinePlot::Render3DLines(FEState& s)
 	}
 }
 
+class CPointProps : public CPropertyList
+{
+public:
+	CPointProps(CGLPointPlot* p) : m_pt(p)
+	{
+		addProperty("point size" , CProperty::Float);
+		addProperty("color"      , CProperty::Color);
+		addProperty("render mode", CProperty::Enum )->setEnumValues(QStringList() << "points");
+	}
+
+	QVariant GetPropertyValue(int i)
+	{
+		switch (i)
+		{
+		case 0: return m_pt->GetPointSize(); break;
+		case 1: return toQColor(m_pt->GetPointColor()); break;
+		case 3: return m_pt->GetRenderMode(); break;
+		}
+		return QVariant();
+	}
+
+	void SetPropertyValue(int i, const QVariant& v)
+	{
+		switch (i)
+		{
+		case 0: m_pt->SetPointSize(v.toFloat()); break;
+		case 1: m_pt->SetPointColor(toGLColor(v.value<QColor>())); break;
+		case 2: m_pt->SetRenderMode(v.toInt()); break;
+		}
+	}
+
+private:
+	CGLPointPlot* m_pt;
+};
+
 //-----------------------------------------------------------------------------
 CGLPointPlot::CGLPointPlot(CGLModel* po)
 {
@@ -147,6 +223,11 @@ CGLPointPlot::CGLPointPlot(CGLModel* po)
 //-----------------------------------------------------------------------------
 CGLPointPlot::~CGLPointPlot()
 {
+}
+
+CPropertyList* CGLPointPlot::propertyList()
+{
+	return new CPointProps(this);
 }
 
 //-----------------------------------------------------------------------------

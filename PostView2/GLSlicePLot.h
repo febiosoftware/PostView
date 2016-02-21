@@ -47,6 +47,8 @@ public:
 	float GetUserRangeMin() const { return m_fmin; }
 	void SetUserRangeMin(float f) { m_fmin = f; }
 
+	CPropertyList* propertyList();
+
 protected:
 	void RenderSlice(float ref);
 

@@ -31,7 +31,16 @@ private slots:
 	void on_selectNodes_triggered();
 	void on_selectFaces_triggered();
 	void on_selectElems_triggered();
+
+	void on_actionPlaneCut_triggered();
+	void on_actionVectorPlot_triggered();
+	void on_actionIsosurfacePlot_triggered();
+	void on_actionSlicePlot_triggered();
+	void on_actionDisplacementMap_triggered();
 	void on_actionGraph_triggered();
+	void on_actionSummary_triggered();
+	void on_actionStats_triggered();
+	void on_actionIntegrate_triggered();
 
 	void on_actionHideSelected_triggered();
 	void on_actionHideUnselected_triggered();

@@ -6,9 +6,64 @@
 #include "GLSlicePLot.h"
 #include "GLWidgetManager.h"
 #include "PostViewLib/constants.h"
+#include "PropertyList.h"
 
 extern int LUT[256][15];
 extern int ET_HEX[12][2];
+
+
+class CSliceProps : public CPropertyList
+{
+public:
+	CSliceProps(CGLSlicePlot* p) : m_slice(p)
+	{
+		addProperty("Allow clipping", CProperty::Bool);
+		addProperty("Show legend"   , CProperty::Bool);
+		addProperty("Slices"        , CProperty::Int);
+		addProperty("Range"         , CProperty::Enum)->setEnumValues(QStringList() << "dynamic" << "user");
+		addProperty("Range max"     , CProperty::Float);
+		addProperty("Range min"     , CProperty::Float);
+		addProperty("X-normal"      , CProperty::Float);
+		addProperty("Y-normal"      , CProperty::Float);
+		addProperty("Z-norma"       , CProperty::Float);
+	}
+
+	QVariant GetPropertyValue(int i)
+	{
+		switch (i)
+		{
+		case 0: return m_slice->AllowClipping(); break;
+		case 1: return m_slice->ShowLegend(); break;
+		case 2: return m_slice->GetSlices(); break;
+		case 3: return m_slice->GetRangeType(); break;
+		case 4: return m_slice->GetUserRangeMax(); break;
+		case 5: return m_slice->GetUserRangeMin(); break;
+		case 6: return m_slice->GetPlaneNormal().x; break;
+		case 7: return m_slice->GetPlaneNormal().y; break;
+		case 8: return m_slice->GetPlaneNormal().z; break;
+		}
+		return QVariant();
+	}
+
+	void SetPropertyValue(int i, const QVariant& v)
+	{
+		vec3f n = m_slice->GetPlaneNormal();
+		switch (i)
+		{
+		case 0: m_slice->AllowClipping(v.toBool()); break;
+		case 1: m_slice->ShowLegend(v.toBool()); break;
+		case 2: m_slice->SetSlices(v.toInt()); break;
+		case 3: m_slice->SetRangeType(v.toInt()); break;
+		case 4: m_slice->SetUserRangeMax(v.toFloat()); break;
+		case 5: m_slice->SetUserRangeMin(v.toFloat()); break;
+		case 6: m_slice->SetPlaneNormal(vec3f(v.toFloat(), n.y, n.z)); break;
+		case 7: m_slice->SetPlaneNormal(vec3f(n.x, v.toFloat(), n.z)); break;
+		case 8: m_slice->SetPlaneNormal(vec3f(n.x, n.y, v.toFloat())); break;
+		}
+	}
+private:
+	CGLSlicePlot*	m_slice;
+};
 
 CGLSlicePlot::CGLSlicePlot(CGLModel* po) : CGLPlot(po)
 {
@@ -35,6 +90,11 @@ CGLSlicePlot::~CGLSlicePlot()
 {
 	CGLWidgetManager::GetInstance()->RemoveWidget(m_pbar);
 	delete m_pbar;	
+}
+
+CPropertyList* CGLSlicePlot::propertyList()
+{
+	return new CSliceProps(this);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

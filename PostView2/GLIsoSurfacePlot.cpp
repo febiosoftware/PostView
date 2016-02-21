@@ -6,9 +6,52 @@
 #include "GLIsoSurfacePlot.h"
 #include "GLWidgetManager.h"
 #include "PostViewLib/constants.h"
+#include "PropertyList.h"
 
 extern int LUT[256][15];
 extern int ET_HEX[12][2];
+
+
+class CIsoSurfaceProps : public CPropertyList
+{
+public:
+	CIsoSurfaceProps(CGLIsoSurfacePlot* p) : m_iso(p)
+	{
+		addProperty("Allow clipping", CProperty::Bool);
+		addProperty("Slice hidden"  , CProperty::Bool);
+		addProperty("Slices"        , CProperty::Int );
+		addProperty("Show Legend"   , CProperty::Bool);
+		addProperty("Smooth"        , CProperty::Bool);
+	}
+
+	QVariant GetPropertyValue(int i)
+	{
+		switch (i)
+		{
+		case 0: m_iso->AllowClipping(); break;
+		case 1: m_iso->CutHidden(); break;
+		case 2: m_iso->GetSlices(); break;
+		case 3: m_iso->ShowLegend(); break;
+		case 4: m_iso->RenderSmooth(); break;
+		}
+		return QVariant();
+	}
+
+	void SetPropertyValue(int i, const QVariant& v)
+	{
+		switch (i)
+		{
+		case 0: m_iso->AllowClipping(v.toBool()); break;
+		case 1: m_iso->CutHidden(v.toBool()); break;
+		case 2: m_iso->SetSlices(v.toInt()); break;
+		case 3: m_iso->ShowLegend(v.toBool()); break;
+		case 4: m_iso->RenderSmooth(v.toBool()); break;
+		}
+	}
+
+private:
+	CGLIsoSurfacePlot*	m_iso;
+};
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -39,6 +82,11 @@ CGLIsoSurfacePlot::~CGLIsoSurfacePlot()
 {
 	CGLWidgetManager::GetInstance()->RemoveWidget(m_pbar);
 	delete m_pbar;	
+}
+
+CPropertyList* CGLIsoSurfacePlot::propertyList()
+{
+	return new CIsoSurfaceProps(this);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

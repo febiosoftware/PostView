@@ -21,6 +21,8 @@ public:
 	int GetRenderMode() { return m_nmode; }
 	void SetRenderMode(int m) { m_nmode = m; }
 
+	CPropertyList* propertyList();
+
 protected:
 	void RenderLines(FEState& s);
 	void Render3DLines(FEState& s);
@@ -48,6 +50,8 @@ class CGLPointPlot : public CGLPlot
 public:
 	CGLPointPlot(CGLModel* po);
 	virtual ~CGLPointPlot();
+
+	CPropertyList* propertyList();
 
 	void Render(CGLContext& rc);
 

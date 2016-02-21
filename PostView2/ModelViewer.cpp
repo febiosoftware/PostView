@@ -11,6 +11,7 @@
 #include "PropertyListView.h"
 #include "GLModel.h"
 #include <PostViewLib/FEModel.h>
+#include "GLPlot.h"
 
 //-----------------------------------------------------------------------------
 class CModelProps : public CPropertyList
@@ -223,6 +224,11 @@ CModelViewer::CModelViewer(CMainWindow* pwnd, QWidget* parent) : CCommandPanel(p
 	ui->setupUi(this);
 }
 
+void CModelViewer::selectObject(CGLObject* po)
+{
+	// Implement this
+}
+
 void CModelViewer::Update()
 {
 	if (ui->m_list.isEmpty() == false)
@@ -260,6 +266,18 @@ void CModelViewer::Update()
 		pi2->setText(0, "Color map");
 		ui->m_list.push_back(new CColorMapProps(mdl->GetColorMap()));
 		pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
+
+
+		GPlotList& pl = pdoc->GetPlotList();
+		GPlotList::iterator it;
+		for (it = pl.begin(); it != pl.end(); ++it)
+		{
+			CGLPlot& plot = *(*it);
+			QTreeWidgetItem* pi1 = new QTreeWidgetItem(ui->m_tree);
+			pi1->setText(0, plot.GetName());
+			ui->m_list.push_back(plot.propertyList());
+			pi1->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
+		}
 	}
 }
 

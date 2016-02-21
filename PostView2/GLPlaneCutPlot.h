@@ -42,6 +42,7 @@ public:
 
 	void GetNormalizedEquations(double a[4]);
 	vec3f GetPlaneNormal();
+	float GetPlaneOffset();
 
 	void Render(CGLContext& rc);
 	void RenderPlane();
@@ -52,6 +53,8 @@ public:
 	static void EnableClipPlanes();
 
 	void Activate(bool bact);
+
+	CPropertyList* propertyList();
 
 protected:
 	void RenderSlice();
@@ -65,6 +68,7 @@ protected:
 public:
 	bool	m_bshowplane;	// show the plane or not
 	bool	m_bcut_hidden;	// cut hidden materials
+	bool	m_bshow_mesh;
 
 protected:
 	GLdouble	m_eq[4];	// plane equation

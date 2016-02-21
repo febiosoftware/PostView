@@ -40,6 +40,8 @@ public:
 	bool CutHidden() { return m_bcut_hidden; }
 	void CutHidden(bool b) { m_bcut_hidden = b; }
 
+	CPropertyList* propertyList();
+
 protected:
 	void RenderSlice(float ref);
 

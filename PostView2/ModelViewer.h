@@ -3,6 +3,7 @@
 
 //-----------------------------------------------------------------------------
 class QTreeWidgetItem;
+class CGLObject;
 
 //-----------------------------------------------------------------------------
 namespace Ui {
@@ -19,6 +20,8 @@ public:
 
 public:
 	void Update();
+
+	void selectObject(CGLObject* po);
 
 private slots:
 	void on_modelTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* prev);

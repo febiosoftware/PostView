@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "GLPlaneCutPlot.h"
 #include "Document.h"
+#include "PropertyList.h"
 
 extern int LUT[256][15];
 extern int LUT2D[16][4];
@@ -14,6 +15,55 @@ extern int ET2D[4][2];
 const int HEX_NT[8] = {0, 1, 2, 3, 4, 5, 6, 7};
 const int PEN_NT[8] = {0, 1, 2, 2, 3, 4, 5, 5};
 const int TET_NT[8] = {0, 1, 2, 2, 3, 3, 3, 3};
+
+class CPlaneCutProps : public CPropertyList
+{
+public:
+	CPlaneCutProps(CGLPlaneCutPlot* pc) : m_planeCut(pc)
+	{
+		addProperty("Show plane", CProperty::Bool);
+		addProperty("Cut hidden", CProperty::Bool);
+		addProperty("Show Mesh" , CProperty::Bool);
+		addProperty("X-normal"  , CProperty::Float)->setFloatRange(-1.0, 1.0);
+		addProperty("Y-normal"  , CProperty::Float)->setFloatRange(-1.0, 1.0);
+		addProperty("Z-normal"  , CProperty::Float)->setFloatRange(-1.0, 1.0);
+		addProperty("offset"    , CProperty::Float);
+	}
+
+	QVariant GetPropertyValue(int i)
+	{
+		switch (i)
+		{
+		case 0: return m_planeCut->m_bshowplane; break;
+		case 1: return m_planeCut->m_bshow_mesh; break;
+		case 2: return m_planeCut->m_bcut_hidden; break;
+		case 3: return m_planeCut->GetPlaneNormal().x; break;
+		case 4: return m_planeCut->GetPlaneNormal().y; break;
+		case 5: return m_planeCut->GetPlaneNormal().z; break;
+		case 6: return m_planeCut->GetPlaneOffset(); break;
+		}
+		return QVariant();
+	}
+
+	void SetPropertyValue(int i, const QVariant& v)
+	{
+		double a[4];
+		m_planeCut->GetPlaneEqn(a);
+		switch (i)
+		{
+		case 0: m_planeCut->m_bshowplane = v.toBool(); break;
+		case 1: m_planeCut->m_bcut_hidden = v.toBool(); break;
+		case 2: m_planeCut->m_bshow_mesh = v.toBool(); break;
+		case 3: a[0] = v.toDouble(); m_planeCut->SetPlaneEqn(a); break;
+		case 4: a[1] = v.toDouble(); m_planeCut->SetPlaneEqn(a); break;
+		case 5: a[2] = v.toDouble(); m_planeCut->SetPlaneEqn(a); break;
+		case 6: a[3] = v.toDouble(); m_planeCut->SetPlaneEqn(a); break;
+		}
+	}
+
+private:
+	CGLPlaneCutPlot* m_planeCut;
+};
 
 
 //////////////////////////////////////////////////////////////////////
@@ -37,6 +87,7 @@ CGLPlaneCutPlot::CGLPlaneCutPlot(CGLModel* po) : CGLPlot(po)
 
 	m_bcut_hidden = false;
 	m_bshowplane = true;
+	m_bshow_mesh = false;
 
 	m_nclip = GetFreePlane();
 }
@@ -44,6 +95,11 @@ CGLPlaneCutPlot::CGLPlaneCutPlot(CGLModel* po) : CGLPlot(po)
 CGLPlaneCutPlot::~CGLPlaneCutPlot()
 {
 	ReleasePlane();
+}
+
+CPropertyList* CGLPlaneCutPlot::propertyList()
+{
+	return new CPlaneCutProps(this);
 }
 
 void CGLPlaneCutPlot::DisableClipPlanes()
@@ -95,19 +151,21 @@ vec3f CGLPlaneCutPlot::GetPlaneNormal()
 	return vec3f((float) a[0], (float) a[1], (float) a[2]);
 }
 
+float CGLPlaneCutPlot::GetPlaneOffset()
+{
+	return m_eq[3];
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 void CGLPlaneCutPlot::Render(CGLContext& rc)
 {
-/*	// make sure we have a clip plane ID assigned
+	// make sure we have a clip plane ID assigned
 	if (m_nclip == -1) return;
 
 	// get the plane equations
 	GLdouble a[4];
 	GetNormalizedEquations(a);
-
-	// TODO: This is ugly! Find a better solution.
-	bool bviewmesh = flxGetMainWnd()->GetDocument()->GetViewSettings().m_bmesh;
 
 	// set the plane normal
 	vec3f n((float) a[0], (float) a[1], (float) a[2]);
@@ -132,7 +190,7 @@ void CGLPlaneCutPlot::Render(CGLContext& rc)
 	RenderSlice();
 
 	// render the mesh
-	if (bviewmesh)
+	if (m_bshow_mesh)
 	{
 		glDepthRange(0, 0.9999);
 		RenderMesh();
@@ -155,7 +213,6 @@ void CGLPlaneCutPlot::Render(CGLContext& rc)
 
 	// enable the clip plane
 	glEnable(GL_CLIP_PLANE0 + m_nclip);
-*/
 }
 
 //-----------------------------------------------------------------------------

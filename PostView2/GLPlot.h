@@ -17,6 +17,8 @@
 #include "PostViewLib/GLObject.h"
 #include "PostViewLib/DataMap.h"
 
+class CPropertyList;
+
 class CGLPlot : public CGLVisual
 {
 protected:
@@ -32,6 +34,8 @@ public:
 
 	CGLModel* GetModel() { return m_pObj; }
 	void SetModel(CGLModel* pm) { m_pObj = pm; }
+
+	virtual CPropertyList* propertyList() { return 0; }
 
 protected:
 	CGLModel*	m_pObj;
