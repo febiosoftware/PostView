@@ -6,6 +6,167 @@
 
 void FEDataField::SetName(const char* szname) { strcpy(m_szname, szname); }
 
+int FEDataField::components(Data_Tensor_Type ntype)
+{
+	if (ntype == DATA_SCALAR)
+	{
+		switch (m_ntype)
+		{
+		case DATA_FLOAT: return 1; break;
+		case DATA_VEC3F: return 7; break;
+		case DATA_MAT3F: return 9; break;
+		case DATA_MAT3D: return 9; break;
+		case DATA_MAT3FS: return 14; break;
+		case DATA_MAT3FD: return 3; break;
+		case DATA_TENS4FS: return 21; break;
+		}
+	}
+	else if (ntype == DATA_VECTOR)
+	{
+		switch (m_ntype)
+		{
+		case DATA_FLOAT: return 0; break;
+		case DATA_VEC3F: return 1; break;
+		case DATA_MAT3F: return 0; break;
+		case DATA_MAT3D: return 0; break;
+		case DATA_MAT3FS: return 3; break;
+		case DATA_MAT3FD: return 0; break;
+		case DATA_TENS4FS: return 0; break;
+		}
+	}
+	else if (ntype == DATA_TENSOR2)
+	{
+		switch (m_ntype)
+		{
+		case DATA_FLOAT: return 0; break;
+		case DATA_VEC3F: return 0; break;
+		case DATA_MAT3F: return 1; break;
+		case DATA_MAT3D: return 1; break;
+		case DATA_MAT3FS: return 1; break;
+		case DATA_MAT3FD: return 1; break;
+		case DATA_TENS4FS: return 0; break;
+		}
+	}
+	return 0;
+}
+
+std::string FEDataField::componentName(int ncomp, Data_Tensor_Type ntype)
+{
+	const char* sz = GetName();
+	char szline[256] = {0};
+
+	if (ntype == DATA_SCALAR)
+	{
+		switch (m_ntype)
+		{
+		case DATA_FLOAT: return string(sz); break;
+		case DATA_VEC3F:
+			{
+				if      (ncomp == 0) sprintf(szline, "X - %s"  , sz);
+				else if (ncomp == 1) sprintf(szline, "Y - %s"  , sz);
+				else if (ncomp == 2) sprintf(szline, "Z - %s"  , sz);
+				else if (ncomp == 3) sprintf(szline, "XY - %s" , sz);
+				else if (ncomp == 4) sprintf(szline, "YZ - %s" , sz);
+				else if (ncomp == 5) sprintf(szline, "XZ - %s" , sz);
+				else if (ncomp == 6) sprintf(szline, "Total %s", sz);
+				return szline;
+			}
+			break;
+		case DATA_MAT3F:
+		case DATA_MAT3D:
+			{
+				if      (ncomp == 0) sprintf(szline, "XX - %s", sz);
+				else if (ncomp == 1) sprintf(szline, "XY - %s", sz);
+				else if (ncomp == 3) sprintf(szline, "XZ - %s", sz);
+				else if (ncomp == 4) sprintf(szline, "YX - %s", sz);
+				else if (ncomp == 5) sprintf(szline, "YY - %s", sz);
+				else if (ncomp == 6) sprintf(szline, "YZ - %s", sz);
+				else if (ncomp == 7) sprintf(szline, "ZX - %s", sz);
+				else if (ncomp == 8) sprintf(szline, "ZY - %s", sz);
+				else if (ncomp == 9) sprintf(szline, "ZZ - %s", sz);
+				return szline;
+			}
+			break;
+		case DATA_MAT3FS:
+			{
+				if      (ncomp ==  0) sprintf(szline, "X - %s", sz);
+				else if (ncomp ==  1) sprintf(szline, "Y - %s", sz);
+				else if (ncomp ==  2) sprintf(szline, "Z - %s", sz);
+				else if (ncomp ==  3) sprintf(szline, "XY - %s", sz);
+				else if (ncomp ==  4) sprintf(szline, "YZ - %s", sz);
+				else if (ncomp ==  5) sprintf(szline, "XZ - %s", sz);
+				else if (ncomp ==  6) sprintf(szline, "Effective %s", sz);
+				else if (ncomp ==  7) sprintf(szline, "1 Principal %s", sz);
+				else if (ncomp ==  8) sprintf(szline, "2 Principal %s", sz);
+				else if (ncomp ==  9) sprintf(szline, "3 Principal %s", sz);
+				else if (ncomp == 10) sprintf(szline, "1 Dev Principal %s", sz);
+				else if (ncomp == 11) sprintf(szline, "2 Dev Principal %s", sz);
+				else if (ncomp == 12) sprintf(szline, "3 Dev Principal %s", sz);
+				else if (ncomp == 13) sprintf(szline, "Max Shear %s", sz);
+				return szline;
+			}
+			break;
+		case DATA_MAT3FD:
+			{
+				if      (ncomp ==  0) sprintf(szline, "1 - %s", sz);
+				else if (ncomp ==  1) sprintf(szline, "2 - %s", sz);
+				else if (ncomp ==  2) sprintf(szline, "3 - %s", sz);			
+				return szline;
+			}
+			break;
+		case DATA_TENS4FS:
+			{
+				if      (ncomp ==  0) sprintf(szline, "XXXX - %s" , sz);
+				else if (ncomp ==  1) sprintf(szline, "XXYY - %s" , sz);
+				else if (ncomp ==  2) sprintf(szline, "YYYY - %s" , sz);
+				else if (ncomp ==  3) sprintf(szline, "XXZZ - %s" , sz);
+				else if (ncomp ==  4) sprintf(szline, "YYZZ - %s" , sz);
+				else if (ncomp ==  5) sprintf(szline, "ZZZZ - %s" , sz);
+				else if (ncomp ==  6) sprintf(szline, "XXXY - %s" , sz);
+				else if (ncomp ==  7) sprintf(szline, "YYXY - %s" , sz);
+				else if (ncomp ==  8) sprintf(szline, "ZZXY - %s" , sz);
+				else if (ncomp ==  9) sprintf(szline, "XYXY - %s" , sz);
+				else if (ncomp == 10) sprintf(szline, "XXYZ - %s" , sz);
+				else if (ncomp == 11) sprintf(szline, "YYYZ - %s" , sz);
+				else if (ncomp == 12) sprintf(szline, "ZZYZ - %s" , sz);
+				else if (ncomp == 13) sprintf(szline, "XYYZ - %s" , sz);
+				else if (ncomp == 14) sprintf(szline, "YZYZ - %s" , sz);
+				else if (ncomp == 15) sprintf(szline, "XXXZ - %s" , sz);
+				else if (ncomp == 16) sprintf(szline, "YYXZ - %s" , sz);
+				else if (ncomp == 17) sprintf(szline, "ZZXZ - %s" , sz);
+				else if (ncomp == 18) sprintf(szline, "XYXZ - %s" , sz);
+				else if (ncomp == 19) sprintf(szline, "YZXZ - %s" , sz);
+				else if (ncomp == 20) sprintf(szline, "XZXZ - %s" , sz);
+				return szline;
+			}
+			break;
+		}
+	}
+	else if (ntype == DATA_VECTOR)
+	{
+		switch (m_ntype)
+		{
+		case DATA_VEC3F: return string(sz); break;
+		case DATA_MAT3FS: 
+			{
+				if      (ncomp == 0) sprintf(szline, "1 Principal %s", sz);
+				else if (ncomp == 1) sprintf(szline, "2 Principal %s", sz);
+				else if (ncomp == 2) sprintf(szline, "3 Principal %s", sz);
+				return szline;
+			}
+			break;
+		}
+	}
+	else if (ntype == DATA_TENSOR2)
+	{
+		switch (m_ntype)
+		{
+		case DATA_TENS4FS: return string(sz); break;
+		}
+	}
+
+	return "(invalid)";
+}
 
 FEDataManager::FEDataManager(FEModel* pm)
 {
@@ -20,76 +181,33 @@ FEDataManager::~FEDataManager(void)
 void FEDataManager::Clear()
 {
 	vector<FEDataField*>::iterator pi;
-	for (pi = m_Node.begin(); pi != m_Node.end(); ++pi) delete (*pi);
-	for (pi = m_Elem.begin(); pi != m_Elem.end(); ++pi) delete (*pi);
-	for (pi = m_Face.begin(); pi != m_Face.end(); ++pi) delete (*pi);
-
-	m_Node.clear();
-	m_Elem.clear();
-	m_Face.clear();
+	for (pi = m_Data.begin(); pi != m_Data.end(); ++pi) delete (*pi);
+	m_Data.clear();
 }
 
-void FEDataManager::AddNodeData(FEDataField* pd)
+void FEDataManager::AddDataField(FEDataField* pd)
 {
-	m_Node.push_back(pd);
-	pd->SetFieldID(BUILD_FIELD(1, m_Node.size()-1, 0));
+	m_Data.push_back(pd);
+	pd->SetFieldID(BUILD_FIELD(pd->DataClass(), m_Data.size()-1, 0));
 }
 
-void FEDataManager::AddElemData(FEDataField* pd)
-{
-	m_Elem.push_back(pd);
-	pd->SetFieldID(BUILD_FIELD(2, m_Elem.size()-1, 0));
-}
-
-void FEDataManager::AddFaceData(FEDataField* pd)
-{
-	m_Face.push_back(pd);
-	pd->SetFieldID(BUILD_FIELD(4, m_Face.size()-1, 0));
-}
-
-void FEDataManager::DeleteNodeData(FEDataField* pd)
+void FEDataManager::DeleteDataField(FEDataField* pd)
 {
 	FEDataFieldPtr it;
-	for (it = m_Node.begin(); it != m_Node.end(); ++it)
+	for (it = m_Data.begin(); it != m_Data.end(); ++it)
 	{
 		if (*it == pd)
 		{
-			m_Node.erase(it);
+			m_Data.erase(it);
 			return;
 		}
 	}
 }
 
-void FEDataManager::DeleteFaceData(FEDataField* pd)
+int FEDataManager::FindDataField(const char* szname)
 {
-	FEDataFieldPtr it;
-	for (it = m_Face.begin(); it != m_Face.end(); ++it)
-	{
-		if (*it == pd)
-		{
-			m_Face.erase(it);
-			return;
-		}
-	}
-}
-
-void FEDataManager::DeleteElemData(FEDataField* pd)
-{
-	FEDataFieldPtr it;
-	for (it = m_Elem.begin(); it != m_Elem.end(); ++it)
-	{
-		if (*it == pd)
-		{
-			m_Elem.erase(it);
-			return;
-		}
-	}
-}
-
-int FEDataManager::FindElem(const char* szname)
-{
-	vector<FEDataField*>::iterator pe = m_Elem.begin();
-	for (int i=0; i<(int) m_Elem.size(); ++i, ++pe)
+	vector<FEDataField*>::iterator pe = m_Data.begin();
+	for (int i=0; i<(int) m_Data.size(); ++i, ++pe)
 	{
 		if (strcmp((*pe)->GetName(), szname) == 0) return i;
 	}
@@ -97,17 +215,22 @@ int FEDataManager::FindElem(const char* szname)
 	return -1;
 }
 
-FEDataFieldPtr FEDataManager::NodeData(int i)
+FEDataFieldPtr FEDataManager::DataField(int i)
 {
-	return m_Node.begin() + i;
+	return m_Data.begin() + i;
 }
 
-FEDataFieldPtr FEDataManager::FaceData(int i)
+std::string FEDataManager::getDataString(int nfield, Data_Tensor_Type ntype)
 {
-	return m_Face.begin() + i;
-}
-
-FEDataFieldPtr FEDataManager::ElementData(int i)
-{
-	return m_Elem.begin() + i;
+	if (IS_VALID(nfield))
+	{
+		int ndata = FIELD_CODE(nfield);
+		int ncomp = FIELD_COMP(nfield);
+		if ((ndata>=0) && (ndata< m_Data.size()))
+		{
+			FEDataField* pd = m_Data[ndata];
+			return pd->componentName(ncomp, ntype);
+		}
+	}
+	return "";
 }

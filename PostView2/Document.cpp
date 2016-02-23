@@ -90,12 +90,8 @@ ModelData::ModelData(CGLModel *po)
 	// store the data field strings
 	m_data.clear();
 	FEDataManager* pDM = ps->GetDataManager();
-	FEDataFieldPtr pdf = pDM->FirstNode();
-	for (int i=0; i<pDM->NodeFields(); ++i, ++pdf) m_data.push_back(string((*pdf)->GetName()));
-	pdf = pDM->FirstFace();
-	for (int i=0; i<pDM->FaceFields(); ++i, ++pdf) m_data.push_back(string((*pdf)->GetName()));
-	pdf = pDM->FirstElement();
-	for (int i=0; i<pDM->ElementFields(); ++i, ++pdf) m_data.push_back(string((*pdf)->GetName()));
+	FEDataFieldPtr pdf = pDM->FirstDataField();
+	for (int i=0; i<pDM->DataFields(); ++i, ++pdf) m_data.push_back(string((*pdf)->GetName()));
 }
 
 void ModelData::SetData(CGLModel* po)
@@ -158,28 +154,10 @@ void ModelData::SetData(CGLModel* po)
 
 		// see if the model already defines this field
 		bool bfound = false;
-		pdf = pDM->FirstNode();
-		for (int i=0; i<pDM->NodeFields(); ++i, ++pdf)
+		pdf = pDM->FirstDataField();
+		for (int i=0; i<pDM->DataFields(); ++i, ++pdf)
 		{
 			if (si.compare((*pdf)->GetName()) == 0) { bfound = true; break; }
-		}
-
-		if (bfound == false)
-		{
-			pdf = pDM->FirstFace();
-			for (int i=0; i<pDM->FaceFields(); ++i, ++pdf)
-			{
-				if (si.compare((*pdf)->GetName()) == 0) { bfound = true; break; }
-			}
-		}
-
-		if (bfound == false)
-		{
-			pdf = pDM->FirstElement();
-			for (int i=0; i<pDM->ElementFields(); ++i, ++pdf)
-			{
-				if (si.compare((*pdf)->GetName()) == 0) { bfound = true; break; }
-			}
 		}
 
 		if (bfound == false)
@@ -221,7 +199,6 @@ void ModelData::SetData(CGLModel* po)
 CDocument::CDocument(CMainWindow* pwnd) : m_wnd(pwnd)
 {
 	m_bValid = false;
-	for (int i=0; i<MAX_STRING; i++) { m_szField[i] = 0; }
 	m_nTime = 0;
 	m_fTime = 0.f;
 
@@ -295,10 +272,15 @@ int CDocument::GetEvalField()
 }
 
 //-----------------------------------------------------------------------------
-const char* CDocument::GetFieldString() { return m_szField; }
-
-//-----------------------------------------------------------------------------
-void CDocument::SetFieldString(const char* szfield) { strcpy(m_szField, szfield); }
+std::string CDocument::GetFieldString() 
+{ 
+	if (IsValid())
+	{
+		int nfield = GetGLModel()->GetColorMap()->GetEvalField();
+		return GetFEModel()->GetDataManager()->getDataString(nfield, DATA_SCALAR);
+	}
+	else return "";
+}
 
 //-----------------------------------------------------------------------------
 void CDocument::UpdateFEModel(bool breset)

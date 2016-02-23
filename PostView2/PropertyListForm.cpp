@@ -4,6 +4,7 @@
 #include <QSpinBox>
 #include <QComboBox>
 #include <QLineEdit>
+#include "DataFieldSelector.h"
 
 CPropertyListForm::CPropertyListForm(QWidget* parent) : QWidget(parent)
 {
@@ -217,6 +218,12 @@ void CPropertyListForm::onDataChanged()
 						{
 							QLineEdit* edit = qobject_cast<QLineEdit*>(pw);
 							if (edit) m_list->SetPropertyValue(i, edit->text());
+						}
+						break;
+					case CProperty::DataScalar:
+						{
+							CDataFieldSelector* pc = dynamic_cast<CDataFieldSelector*>(pw);
+							if (pc) m_list->SetPropertyValue(i, pc->currentData(Qt::UserRole));
 						}
 						break;
 					}

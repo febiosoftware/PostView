@@ -45,6 +45,7 @@ CGLView::CGLView(CMainWindow* pwnd, QWidget* parent) : QOpenGLWidget(parent), m_
 	m_pframe->hide();
 
 	setFocusPolicy(Qt::StrongFocus);
+	setAttribute(Qt::WA_AcceptTouchEvents, true);
 }
 
 CGLView::~CGLView()
@@ -375,6 +376,39 @@ void CGLView::mouseMoveEvent(QMouseEvent* ev)
 	m_xp = x;
 	m_yp = y;
 	pcam->Update(true);
+}
+
+//-----------------------------------------------------------------------------
+bool CGLView::event(QEvent* event)
+{
+	switch (event->type())
+	{
+	case QEvent::TouchBegin:
+	case QEvent::TouchCancel:
+	case QEvent::TouchEnd:
+	case QEvent::TouchUpdate:
+		event->accept();
+		{
+			QTouchEvent* te = static_cast<QTouchEvent*>(event);
+			QList<QTouchEvent::TouchPoint> points = te->touchPoints();
+			if (points.count() == 2)
+			{
+				QTouchEvent::TouchPoint p0 = points.first();
+				QTouchEvent::TouchPoint p1 = points.last();
+				QLineF line1(p0.startPos(), p1.startPos());
+				QLineF line2(p0.pos(), p1.pos());
+				double scale = line2.length() / line1.length();
+
+				CGLCamera* pcam = &GetCamera();
+				if (scale > 1.0) pcam->Zoom(0.95f);
+				else pcam->Zoom(1.0f/0.95f);
+
+				repaint();
+			}
+		}
+		return true;
+	}
+	return QOpenGLWidget::event(event);
 }
 
 //-----------------------------------------------------------------------------

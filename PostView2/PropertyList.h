@@ -14,7 +14,10 @@ public:
 		Float,
 		String,
 		Enum,
-		Color
+		Color,
+		DataScalar,
+		DataVec3,
+		DataMat3
 	};
 
 	enum Flags

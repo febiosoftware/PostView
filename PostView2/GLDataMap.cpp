@@ -130,7 +130,7 @@ CGLColorMap::CGLColorMap(CGLModel *po) : CGLDataMap(po)
 	m_range.min = m_range.max = 0;
 	m_range.ntype = RANGE_DYNA;
 
-	m_nfield = BUILD_FIELD(1,0,0);
+	m_nfield = 0;
 	m_breset = true;
 	m_bDispNodeVals = true;
 

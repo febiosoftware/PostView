@@ -8,9 +8,9 @@ class FEModel;
 //-----------------------------------------------------------------------------
 // Data class: defines possible class types for data fields
 enum Data_Class {
-	CLASS_NODE,
-	CLASS_FACE,
-	CLASS_ELEM
+	CLASS_NODE = 1,
+	CLASS_FACE = 2,
+	CLASS_ELEM = 4
 };
 
 //-----------------------------------------------------------------------------
@@ -42,6 +42,13 @@ enum Data_Format {
 	DATA_ITEM,
 	DATA_COMP,
 	DATA_REGION
+};
+
+//-----------------------------------------------------------------------------
+enum Data_Tensor_Type {
+	DATA_SCALAR,
+	DATA_VECTOR,
+	DATA_TENSOR2
 };
 
 //-----------------------------------------------------------------------------

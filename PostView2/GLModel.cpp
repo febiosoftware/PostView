@@ -24,10 +24,10 @@ CGLModel::CGLModel(FEModel* ps)
 	// see if the mesh has any vector fields
 	// which can be used for displacement maps
 	FEDataManager* pdm = ps->GetDataManager();
-	FEDataFieldPtr pd = pdm->FirstNode();
+	FEDataFieldPtr pd = pdm->FirstDataField();
 	int nv = 0;
 	int ndisp = -1;
-	for (int i=0; i<pdm->NodeFields(); ++i, ++pd)
+	for (int i=0; i<pdm->DataFields(); ++i, ++pd)
 	{
 		if ((*pd)->Type() == DATA_VEC3F) ++nv;
 		if (strcmp((*pd)->GetName(), "displacement") == 0) ndisp = i;
@@ -115,10 +115,10 @@ bool CGLModel::AddDisplacementMap()
 	// see if the mesh has any vector fields
 	// which can be used for displacement maps
 	FEDataManager* pdm = ps->GetDataManager();
-	FEDataFieldPtr pd = pdm->FirstNode();
+	FEDataFieldPtr pd = pdm->FirstDataField();
 	int nv = 0;
 	int ndisp = -1;
-	for (int i=0; i<pdm->NodeFields(); ++i, ++pd)
+	for (int i=0; i<pdm->DataFields(); ++i, ++pd)
 	{
 		if ((*pd)->Type() == DATA_VEC3F) ++nv;
 		if (strcmp((*pd)->GetName(), "displacement") == 0) ndisp = i;

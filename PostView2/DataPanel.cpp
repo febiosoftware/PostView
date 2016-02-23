@@ -25,7 +25,7 @@ public:
 	{
 		if (m_fem == 0) return 0;
 		FEDataManager& dm = *m_fem->GetDataManager();
-		return (dm.NodeFields() + dm.FaceFields() + dm.ElementFields());
+		return dm.DataFields();
 	}
 
 	int columnCount(const QModelIndex& index) const { return 3; }
@@ -55,25 +55,11 @@ public:
 			int nrow = index.row();
 			int ncol = index.column();
 			FEDataManager& dm = *m_fem->GetDataManager();
-			FEDataField* pd = 0;
-			if (nrow < dm.NodeFields()) pd = *dm.NodeData(nrow);
-			else
-			{
-				nrow -= dm.NodeFields();
-				if (nrow < dm.FaceFields()) pd = *dm.FaceData(nrow);
-				else
-				{
-					nrow -= dm.FaceFields();
-					if (nrow < dm.ElementFields()) pd = *dm.ElementData(nrow);
-				}
-			}
+			FEDataField* pd = *dm.DataField(nrow);
 
-			if (pd)
-			{
-				if (ncol == 0) return QString(pd->GetName());
-				else if (ncol==1) return QString(pd->TypeStr());
-				else if (ncol==2) return QString(szclass[pd->DataClass()]);
-			}
+			if      (ncol == 0) return QString(pd->GetName());
+			else if (ncol == 1) return QString(pd->TypeStr());
+			else if (ncol == 2) return QString(szclass[pd->DataClass()]);
 		}
 		return QVariant();
 	}

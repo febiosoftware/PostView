@@ -138,19 +138,8 @@ bool FEModel::IsValidFieldCode(int nfield, int nstate)
 	int ndata = FIELD_CODE(nfield);
 
 	// check the field sizes
-	if (IS_NODE_FIELD(nfield))
-	{
-		if (ndata >= state.m_Node.size()) return false;
-	}
-	else if (IS_ELEM_FIELD(nfield))
-	{
-		if (ndata >= state.m_Elem.size()) return false;
-	}
-	else if (IS_FACE_FIELD(nfield))
-	{
-		if (ndata >= state.m_Face.size()) return false;
-	}
-	else return false;
+	if (ndata < 0) return false;
+	if (ndata >= state.m_Data.size()) return false;
 
 	// if we get here, everything looks good
 	return true;
@@ -521,12 +510,12 @@ void FEModel::EvaluateNode(int n, int ntime, int nfield, NODEDATA& d)
 	{
 		// get the data ID
 		int ndata = FIELD_CODE(nfield);
-		assert((ndata >= 0) && (ndata < s.m_Node.size()));
+		assert((ndata >= 0) && (ndata < s.m_Data.size()));
 
 		// get the component
 		int ncomp = FIELD_COMP(nfield);
 
-		FEMeshData& rd = s.m_Node[ndata];
+		FEMeshData& rd = s.m_Data[ndata];
 		Data_Format fmt = rd.GetFormat();
 		assert(fmt == DATA_ITEM);
 
@@ -652,12 +641,12 @@ void FEModel::EvaluateFace(int n, int ntime, int nfield, FACEDATA& d)
 	{
 		// get the data ID
 		int ndata = FIELD_CODE(nfield);
-		assert ((ndata >= 0) && (ndata < s.m_Face.size()));
+		assert ((ndata >= 0) && (ndata < s.m_Data.size()));
 
 		// get the component
 		int ncomp = FIELD_COMP(nfield);
 
-		FEMeshData& rd = s.m_Face[ndata];
+		FEMeshData& rd = s.m_Data[ndata];
 		Data_Format fmt = rd.GetFormat();
 
 		switch (rd.GetType())
@@ -1228,12 +1217,12 @@ void FEModel::EvaluateElement(int n, int ntime, int nfield, ELEMDATA& d)
 	{
 		// get the data ID
 		int ndata = FIELD_CODE(nfield);
-		assert((ndata >= 0) && (ndata < state.m_Elem.size()));
+		assert((ndata >= 0) && (ndata < state.m_Data.size()));
 
 		// get the component
 		int ncomp = FIELD_COMP(nfield);
 
-		FEMeshData& rd = state.m_Elem[ndata];
+		FEMeshData& rd = state.m_Data[ndata];
 		Data_Format fmt = rd.GetFormat(); 
 
 		switch (rd.GetType())
@@ -1719,12 +1708,12 @@ vec3f FEModel::EvaluateNodeVector(int n, int ntime, int nvec)
 	{
 		// get the data ID
 		int ndata = FIELD_CODE(nvec);
-		if ((ndata < 0) || (ndata >= state.m_Node.size())) return vec3f(0.f, 0.f, 0.f);
+		if ((ndata < 0) || (ndata >= state.m_Data.size())) return vec3f(0.f, 0.f, 0.f);
 
 		// get the component
 		int ncomp = FIELD_COMP(nvec);
 
-		FEMeshData& rd = state.m_Node[ndata];
+		FEMeshData& rd = state.m_Data[ndata];
 		assert(rd.GetFormat() == DATA_ITEM);
 
 		switch (rd.GetType())
@@ -1796,12 +1785,12 @@ bool FEModel::EvaluateFaceVector(int n, int ntime, int nvec, vec3f& r)
 	{
 		// get the data ID
 		int ndata = FIELD_CODE(nvec);
-		if ((ndata < 0) || (ndata >= state.m_Elem.size())) { r = vec3f(0.f, 0.f, 0.f); return false; }
+		if ((ndata < 0) || (ndata >= state.m_Data.size())) { r = vec3f(0.f, 0.f, 0.f); return false; }
 
 		// get the component
 		int ncomp = FIELD_COMP(nvec);
 
-		FEMeshData& rd = state.m_Face[ndata];
+		FEMeshData& rd = state.m_Data[ndata];
 		Data_Format fmt = rd.GetFormat(); 
 
 		switch (rd.GetType())
@@ -1898,12 +1887,12 @@ vec3f FEModel::EvaluateElemVector(int n, int ntime, int nvec)
 	{
 		// get the data ID
 		int ndata = FIELD_CODE(nvec);
-		if ((ndata < 0) || (ndata >= state.m_Elem.size())) return vec3f(0.f, 0.f, 0.f);
+		if ((ndata < 0) || (ndata >= state.m_Data.size())) return vec3f(0.f, 0.f, 0.f);
 
 		// get the component
 		int ncomp = FIELD_COMP(nvec);
 
-		FEMeshData& rd = state.m_Elem[ndata];
+		FEMeshData& rd = state.m_Data[ndata];
 
 		int nfmt  = rd.GetFormat();
 
@@ -1993,9 +1982,9 @@ mat3fs FEModel::EvaluateNodeTensor(int n, int ntime, int nten)
 	{
 		// get the data ID
 		int ndata = FIELD_CODE(nten);
-		if ((ndata < 0) || (ndata >= state.m_Node.size())) return mat3fs();
+		if ((ndata < 0) || (ndata >= state.m_Data.size())) return mat3fs();
 
-		FEMeshData& rd = state.m_Node[ndata];
+		FEMeshData& rd = state.m_Data[ndata];
 
 		assert(rd.GetType() == DATA_MAT3FS);
 
@@ -2029,8 +2018,8 @@ mat3fs FEModel::EvaluateFaceTensor(int n, int ntime, int nten)
 	{
 		// get the data ID
 		int ndata = FIELD_CODE(nten);
-		if ((ndata < 0) || (ndata >= state.m_Elem.size())) return mat3fs();
-		FEMeshData& rd = state.m_Face[ndata];
+		if ((ndata < 0) || (ndata >= state.m_Data.size())) return mat3fs();
+		FEMeshData& rd = state.m_Data[ndata];
 
 		assert(rd.GetType() == DATA_MAT3FS);
 
@@ -2069,8 +2058,8 @@ mat3fs FEModel::EvaluateElemTensor(int n, int ntime, int nten)
 	{
 		// get the data ID
 		int ndata = FIELD_CODE(nten);
-		if ((ndata < 0) || (ndata >= state.m_Elem.size())) return mat3fs();
-		FEMeshData& rd = state.m_Elem[ndata];
+		if ((ndata < 0) || (ndata >= state.m_Data.size())) return mat3fs();
+		FEMeshData& rd = state.m_Data[ndata];
 		int nfmt  = rd.GetFormat();
 
 		assert(rd.GetType() == DATA_MAT3FS);

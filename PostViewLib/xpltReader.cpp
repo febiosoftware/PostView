@@ -37,17 +37,6 @@ void XpltReader::Clear()
 }
 
 //-----------------------------------------------------------------------------
-int XpltReader::FindElementFieldIndex(const char *szname)
-{
-	int N = (int) m_dic.m_Elem.size();
-	for (int i=0; i<N; ++i)
-	{
-		if (strcmp(m_dic.m_Elem[i].szname, szname) == 0) return i;
-	}
-	return -1;
-}
-
-//-----------------------------------------------------------------------------
 bool XpltReader::Load(FEModel& fem, const char* szfile)
 {
 	// make sure all data is cleared
@@ -233,12 +222,12 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 		// add nodal field
 		switch (it.ntype)
 		{
-		case FLOAT  : pdm->AddNodeData(new FEDataField_T<FENodeData<float  > >(it.szname)); break;
-		case VEC3F  : pdm->AddNodeData(new FEDataField_T<FENodeData<vec3f  > >(it.szname)); break;
-		case MAT3FS : pdm->AddNodeData(new FEDataField_T<FENodeData<mat3fs > >(it.szname)); break;
-		case MAT3FD : pdm->AddNodeData(new FEDataField_T<FENodeData<mat3fd > >(it.szname)); break;
-        case TENS4FS: pdm->AddNodeData(new FEDataField_T<FENodeData<tens4fs> >(it.szname)); break;
-		case MAT3F  : pdm->AddNodeData(new FEDataField_T<FENodeData<mat3f  > >(it.szname)); break;
+		case FLOAT  : pdm->AddDataField(new FEDataField_T<FENodeData<float  > >(it.szname)); break;
+		case VEC3F  : pdm->AddDataField(new FEDataField_T<FENodeData<vec3f  > >(it.szname)); break;
+		case MAT3FS : pdm->AddDataField(new FEDataField_T<FENodeData<mat3fs > >(it.szname)); break;
+		case MAT3FD : pdm->AddDataField(new FEDataField_T<FENodeData<mat3fd > >(it.szname)); break;
+        case TENS4FS: pdm->AddDataField(new FEDataField_T<FENodeData<tens4fs> >(it.szname)); break;
+		case MAT3F  : pdm->AddDataField(new FEDataField_T<FENodeData<mat3f  > >(it.szname)); break;
 		default:
 			return errf("Error while reading dictionar");
 		}
@@ -256,12 +245,12 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 			{
 				switch (it.ntype)
 				{
-				case FLOAT  : pdm->AddElemData(new FEDataField_T<FEElementData<float  ,DATA_NODE> >(it.szname)); break;
-				case VEC3F  : pdm->AddElemData(new FEDataField_T<FEElementData<vec3f  ,DATA_NODE> >(it.szname)); break;
-				case MAT3FS : pdm->AddElemData(new FEDataField_T<FEElementData<mat3fs ,DATA_NODE> >(it.szname)); break;
-				case MAT3FD : pdm->AddElemData(new FEDataField_T<FEElementData<mat3fd ,DATA_NODE> >(it.szname)); break;
-                case TENS4FS: pdm->AddElemData(new FEDataField_T<FEElementData<tens4fs,DATA_NODE> >(it.szname)); break;
-				case MAT3F  : pdm->AddElemData(new FEDataField_T<FEElementData<mat3f  ,DATA_NODE> >(it.szname)); break;
+				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEElementData<float  ,DATA_NODE> >(it.szname)); break;
+				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEElementData<vec3f  ,DATA_NODE> >(it.szname)); break;
+				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fs ,DATA_NODE> >(it.szname)); break;
+				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fd ,DATA_NODE> >(it.szname)); break;
+                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEElementData<tens4fs,DATA_NODE> >(it.szname)); break;
+				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEElementData<mat3f  ,DATA_NODE> >(it.szname)); break;
 				default:
 					assert(false);
 					return false;
@@ -272,12 +261,12 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 			{
 				switch (it.ntype)
 				{
-				case FLOAT  : pdm->AddElemData(new FEDataField_T<FEElementData<float  ,DATA_ITEM> >(it.szname)); break;
-				case VEC3F  : pdm->AddElemData(new FEDataField_T<FEElementData<vec3f  ,DATA_ITEM> >(it.szname)); break;
-				case MAT3FS : pdm->AddElemData(new FEDataField_T<FEElementData<mat3fs ,DATA_ITEM> >(it.szname)); break;
-				case MAT3FD : pdm->AddElemData(new FEDataField_T<FEElementData<mat3fd ,DATA_ITEM> >(it.szname)); break;
-                case TENS4FS: pdm->AddElemData(new FEDataField_T<FEElementData<tens4fs,DATA_ITEM> >(it.szname)); break;
-				case MAT3F  : pdm->AddElemData(new FEDataField_T<FEElementData<mat3f  ,DATA_ITEM> >(it.szname)); break;
+				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEElementData<float  ,DATA_ITEM> >(it.szname)); break;
+				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEElementData<vec3f  ,DATA_ITEM> >(it.szname)); break;
+				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fs ,DATA_ITEM> >(it.szname)); break;
+				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fd ,DATA_ITEM> >(it.szname)); break;
+                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEElementData<tens4fs,DATA_ITEM> >(it.szname)); break;
+				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEElementData<mat3f  ,DATA_ITEM> >(it.szname)); break;
 				default:
 					assert(false);
 					return false;
@@ -288,12 +277,12 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 			{
 				switch (it.ntype)
 				{
-				case FLOAT  : pdm->AddElemData(new FEDataField_T<FEElementData<float  ,DATA_COMP> >(it.szname)); break;
-				case VEC3F  : pdm->AddElemData(new FEDataField_T<FEElementData<vec3f  ,DATA_COMP> >(it.szname)); break;
-				case MAT3FS : pdm->AddElemData(new FEDataField_T<FEElementData<mat3fs ,DATA_COMP> >(it.szname)); break;
-				case MAT3FD : pdm->AddElemData(new FEDataField_T<FEElementData<mat3fd ,DATA_COMP> >(it.szname)); break;
-                case TENS4FS: pdm->AddElemData(new FEDataField_T<FEElementData<tens4fs,DATA_COMP> >(it.szname)); break;
-				case MAT3F  : pdm->AddElemData(new FEDataField_T<FEElementData<mat3f  ,DATA_COMP> >(it.szname)); break;
+				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEElementData<float  ,DATA_COMP> >(it.szname)); break;
+				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEElementData<vec3f  ,DATA_COMP> >(it.szname)); break;
+				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fs ,DATA_COMP> >(it.szname)); break;
+				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fd ,DATA_COMP> >(it.szname)); break;
+                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEElementData<tens4fs,DATA_COMP> >(it.szname)); break;
+				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEElementData<mat3f  ,DATA_COMP> >(it.szname)); break;
 				default:
 					assert(false);
 					return false;
@@ -304,12 +293,12 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 			{
 				switch (it.ntype)
 				{
-				case FLOAT  : pdm->AddElemData(new FEDataField_T<FEElementData<float  ,DATA_REGION> >(it.szname)); break;
-				case VEC3F  : pdm->AddElemData(new FEDataField_T<FEElementData<vec3f  ,DATA_REGION> >(it.szname)); break;
-				case MAT3FS : pdm->AddElemData(new FEDataField_T<FEElementData<mat3fs ,DATA_REGION> >(it.szname)); break;
-				case MAT3FD : pdm->AddElemData(new FEDataField_T<FEElementData<mat3fd ,DATA_REGION> >(it.szname)); break;
-                case TENS4FS: pdm->AddElemData(new FEDataField_T<FEElementData<tens4fs,DATA_REGION> >(it.szname)); break;
-				case MAT3F  : pdm->AddElemData(new FEDataField_T<FEElementData<mat3f  ,DATA_REGION> >(it.szname)); break;
+				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEElementData<float  ,DATA_REGION> >(it.szname)); break;
+				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEElementData<vec3f  ,DATA_REGION> >(it.szname)); break;
+				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fs ,DATA_REGION> >(it.szname)); break;
+				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fd ,DATA_REGION> >(it.szname)); break;
+                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEElementData<tens4fs,DATA_REGION> >(it.szname)); break;
+				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEElementData<mat3f  ,DATA_REGION> >(it.szname)); break;
 				default:
 					assert(false);
 					return false;
@@ -334,12 +323,12 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 			{
 				switch (it.ntype)
 				{
-				case FLOAT  : pdm->AddFaceData(new FEDataField_T<FEFaceData<float  ,DATA_NODE> >(it.szname)); break;
-				case VEC3F  : pdm->AddFaceData(new FEDataField_T<FEFaceData<vec3f  ,DATA_NODE> >(it.szname)); break;
-				case MAT3FS : pdm->AddFaceData(new FEDataField_T<FEFaceData<mat3fs ,DATA_NODE> >(it.szname)); break;
-				case MAT3FD : pdm->AddFaceData(new FEDataField_T<FEFaceData<mat3fd ,DATA_NODE> >(it.szname)); break;
-                case TENS4FS: pdm->AddFaceData(new FEDataField_T<FEFaceData<tens4fs,DATA_NODE> >(it.szname)); break;
-				case MAT3F  : pdm->AddFaceData(new FEDataField_T<FEFaceData<mat3f  ,DATA_NODE> >(it.szname)); break;
+				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEFaceData<float  ,DATA_NODE> >(it.szname)); break;
+				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<vec3f  ,DATA_NODE> >(it.szname)); break;
+				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fs ,DATA_NODE> >(it.szname)); break;
+				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fd ,DATA_NODE> >(it.szname)); break;
+                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEFaceData<tens4fs,DATA_NODE> >(it.szname)); break;
+				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3f  ,DATA_NODE> >(it.szname)); break;
 				default:
 					assert(false);
 				}
@@ -349,12 +338,12 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 			{
 				switch (it.ntype)
 				{
-				case FLOAT  : pdm->AddFaceData(new FEDataField_T<FEFaceData<float  ,DATA_ITEM> >(it.szname)); break;
-				case VEC3F  : pdm->AddFaceData(new FEDataField_T<FEFaceData<vec3f  ,DATA_ITEM> >(it.szname)); break;
-				case MAT3FS : pdm->AddFaceData(new FEDataField_T<FEFaceData<mat3fs ,DATA_ITEM> >(it.szname)); break;
-				case MAT3FD : pdm->AddFaceData(new FEDataField_T<FEFaceData<mat3fd ,DATA_ITEM> >(it.szname)); break;
-                case TENS4FS: pdm->AddFaceData(new FEDataField_T<FEFaceData<tens4fs,DATA_ITEM> >(it.szname)); break;
-				case MAT3F  : pdm->AddFaceData(new FEDataField_T<FEFaceData<mat3f  ,DATA_ITEM> >(it.szname)); break;
+				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEFaceData<float  ,DATA_ITEM> >(it.szname)); break;
+				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<vec3f  ,DATA_ITEM> >(it.szname)); break;
+				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fs ,DATA_ITEM> >(it.szname)); break;
+				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fd ,DATA_ITEM> >(it.szname)); break;
+                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEFaceData<tens4fs,DATA_ITEM> >(it.szname)); break;
+				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3f  ,DATA_ITEM> >(it.szname)); break;
 				default:
 					assert(false);
 				}
@@ -364,12 +353,12 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 			{
 				switch (it.ntype)
 				{
-				case FLOAT  : pdm->AddFaceData(new FEDataField_T<FEFaceData<float  ,DATA_COMP> >(it.szname)); break;
-				case VEC3F  : pdm->AddFaceData(new FEDataField_T<FEFaceData<vec3f  ,DATA_COMP> >(it.szname)); break;
-				case MAT3FS : pdm->AddFaceData(new FEDataField_T<FEFaceData<mat3fs ,DATA_COMP> >(it.szname)); break;
-				case MAT3FD : pdm->AddFaceData(new FEDataField_T<FEFaceData<mat3fd ,DATA_COMP> >(it.szname)); break;
-                case TENS4FS: pdm->AddFaceData(new FEDataField_T<FEFaceData<tens4fs,DATA_COMP> >(it.szname)); break;
-				case MAT3F  : pdm->AddFaceData(new FEDataField_T<FEFaceData<mat3f  ,DATA_COMP> >(it.szname)); break;
+				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEFaceData<float  ,DATA_COMP> >(it.szname)); break;
+				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<vec3f  ,DATA_COMP> >(it.szname)); break;
+				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fs ,DATA_COMP> >(it.szname)); break;
+				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fd ,DATA_COMP> >(it.szname)); break;
+                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEFaceData<tens4fs,DATA_COMP> >(it.szname)); break;
+				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3f  ,DATA_COMP> >(it.szname)); break;
 				default:
 					assert(false);
 				}
@@ -379,12 +368,12 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 			{
 				switch (it.ntype)
 				{
-				case FLOAT  : pdm->AddFaceData(new FEDataField_T<FEFaceData<float  ,DATA_REGION> >(it.szname)); break;
-				case VEC3F  : pdm->AddFaceData(new FEDataField_T<FEFaceData<vec3f  ,DATA_REGION> >(it.szname)); break;
-				case MAT3FS : pdm->AddFaceData(new FEDataField_T<FEFaceData<mat3fs ,DATA_REGION> >(it.szname)); break;
-				case MAT3FD : pdm->AddFaceData(new FEDataField_T<FEFaceData<mat3fd ,DATA_REGION> >(it.szname)); break;
-                case TENS4FS: pdm->AddFaceData(new FEDataField_T<FEFaceData<tens4fs,DATA_REGION> >(it.szname)); break;
-				case MAT3F  : pdm->AddFaceData(new FEDataField_T<FEFaceData<mat3f  ,DATA_REGION> >(it.szname)); break;
+				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEFaceData<float  ,DATA_REGION> >(it.szname)); break;
+				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<vec3f  ,DATA_REGION> >(it.szname)); break;
+				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fs ,DATA_REGION> >(it.szname)); break;
+				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fd ,DATA_REGION> >(it.szname)); break;
+                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEFaceData<tens4fs,DATA_REGION> >(it.szname)); break;
+				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3f  ,DATA_REGION> >(it.szname)); break;
 				default:
 					assert(false);
 				}
@@ -399,25 +388,25 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 	// add additional displacement fields
 	if (m_bHasDispl) 
 	{
-		pdm->AddElemData(new FEDataField_T<FELagrangeStrain>("Lagrange strain"  ));
-		pdm->AddNodeData(new FEDataField_T<FENodePosition  >("position"         ));
-		pdm->AddNodeData(new FEDataField_T<FENodeInitPos   >("initial position" ));
+		pdm->AddDataField(new FEDataField_T<FELagrangeStrain>("Lagrange strain"  ));
+		pdm->AddDataField(new FEDataField_T<FENodePosition  >("position"         ));
+		pdm->AddDataField(new FEDataField_T<FENodeInitPos   >("initial position" ));
 	}
 
 	// add additional stress fields
 	if (m_bHasStress)
 	{
-		pdm->AddElemData(new FEDataField_T<FEElemPressure>("pressure"));
+		pdm->AddDataField(new FEDataField_T<FEElemPressure>("pressure"));
 		
 		if (m_bHasFluidPressure) {
-			pdm->AddElemData(new FEDataField_T<FESolidStress>("solid stress"));
+			pdm->AddDataField(new FEDataField_T<FESolidStress>("solid stress"));
 		}
 	}
 
 	// add additional stress fields
 	if (m_bHasNodalStress)
 	{
-		pdm->AddElemData(new FEDataField_T<FEElemNodalPressure>("nodal pressure"));
+		pdm->AddDataField(new FEDataField_T<FEElemNodalPressure>("nodal pressure"));
 	}
 
 	return true;
@@ -1104,8 +1093,9 @@ bool XpltReader::ReadStateSection(FEModel& fem)
 	// Assign shell thicknesses
 	if (m_bHasShellThickness)
 	{
-		int n = FindElementFieldIndex("shell thickness");
-		FEElementData<float,DATA_COMP>& df = dynamic_cast<FEElementData<float,DATA_COMP>&>(ps->m_Elem[n]);
+		FEDataManager& dm = *fem.GetDataManager();
+		int n = dm.FindDataField("shell thickness");
+		FEElementData<float,DATA_COMP>& df = dynamic_cast<FEElementData<float,DATA_COMP>&>(ps->m_Data[n]);
 		FEMesh& mesh = *fem.GetMesh();
 		int NE = mesh.Elements();
 		float h[FEElement::MAX_NODES] = {0.f};
@@ -1139,6 +1129,7 @@ bool XpltReader::ReadMaterialData(FEModel& fem, FEState* pstate)
 //-----------------------------------------------------------------------------
 bool XpltReader::ReadNodeData(FEModel& fem, FEState* pstate)
 {
+	FEDataManager& dm = *fem.GetDataManager();
 	while (m_ar.OpenChunk() == IO_OK)
 	{
 		if (m_ar.GetChunkID() == PLT_STATE_VARIABLE)
@@ -1155,6 +1146,7 @@ bool XpltReader::ReadNodeData(FEModel& fem, FEState* pstate)
 					if ((nv<0) || (nv >= (int)m_dic.m_Node.size())) return errf("Failed reading node data");
 
 					DICT_ITEM it = m_dic.m_Node[nv];
+					int nfield = dm.FindDataField(it.szname);
 					int ndata = 0;
 					int NN = fem.GetMesh()->Nodes();
 					while (m_ar.OpenChunk() == IO_OK)
@@ -1167,7 +1159,7 @@ bool XpltReader::ReadNodeData(FEModel& fem, FEState* pstate)
 							vector<float> a(NN);
 							m_ar.read(a);
 
-							FENodeData<float>& df = dynamic_cast<FENodeData<float>&>(pstate->m_Node[nv]);
+							FENodeData<float>& df = dynamic_cast<FENodeData<float>&>(pstate->m_Data[nfield]);
 							for (int j=0; j<NN; ++j) df[j] = a[j];
 						}
 						else if (it.ntype == VEC3F)
@@ -1175,28 +1167,28 @@ bool XpltReader::ReadNodeData(FEModel& fem, FEState* pstate)
 							vector<vec3f> a(NN);
 							m_ar.read(a);
 
-							FENodeData<vec3f>& dv = dynamic_cast<FENodeData<vec3f>&>(pstate->m_Node[nv]);
+							FENodeData<vec3f>& dv = dynamic_cast<FENodeData<vec3f>&>(pstate->m_Data[nfield]);
 							for (int j=0; j<NN; ++j) dv[j] = a[j];
 						}
 						else if (it.ntype == MAT3FS)
 						{
 							vector<mat3fs> a(NN);
 							m_ar.read(a);
-							FENodeData<mat3fs>& dv = dynamic_cast<FENodeData<mat3fs>&>(pstate->m_Node[nv]);
+							FENodeData<mat3fs>& dv = dynamic_cast<FENodeData<mat3fs>&>(pstate->m_Data[nfield]);
 							for (int j=0; j<NN; ++j) dv[j] = a[j];
 						}
 						else if (it.ntype == TENS4FS)
 						{
 							vector<tens4fs> a(NN);
 							m_ar.read(a);
-							FENodeData<tens4fs>& dv = dynamic_cast<FENodeData<tens4fs>&>(pstate->m_Node[nv]);
+							FENodeData<tens4fs>& dv = dynamic_cast<FENodeData<tens4fs>&>(pstate->m_Data[nfield]);
 							for (int j=0; j<NN; ++j) dv[j] = a[j];
 						}
 						else if (it.ntype == MAT3F)
 						{
 							vector<mat3f> a(NN);
 							m_ar.read(a);
-							FENodeData<mat3f>& dv = dynamic_cast<FENodeData<mat3f>&>(pstate->m_Node[nv]);
+							FENodeData<mat3f>& dv = dynamic_cast<FENodeData<mat3f>&>(pstate->m_Data[nfield]);
 							for (int j=0; j<NN; ++j) dv[j] = a[j];
 						}
 						else
@@ -1229,6 +1221,7 @@ bool XpltReader::ReadNodeData(FEModel& fem, FEState* pstate)
 bool XpltReader::ReadElemData(FEModel &fem, FEState* pstate)
 {
 	FEMesh& m = *fem.GetMesh();
+	FEDataManager& dm = *fem.GetDataManager();
 	while (m_ar.OpenChunk() == IO_OK)
 	{
 		if (m_ar.GetChunkID() == PLT_STATE_VARIABLE)
@@ -1250,8 +1243,10 @@ bool XpltReader::ReadElemData(FEModel &fem, FEState* pstate)
 						assert((nd >= 0)&&(nd < (int)m_Dom.size()));
 						if ((nd < 0) || (nd >= (int) m_Dom.size())) return errf("Failed reading all state data");
 
+						int nfield = dm.FindDataField(it.szname);
+
 						Domain& dom = m_Dom[nd];
-						FEElemItemData& ed = dynamic_cast<FEElemItemData&>(pstate->m_Elem[nv]);
+						FEElemItemData& ed = dynamic_cast<FEElemItemData&>(pstate->m_Data[nfield]);
 						switch (it.nfmt)
 						{
 						case FMT_NODE: ReadElemData_NODE(*fem.GetMesh(), dom, ed, it.ntype); break;
@@ -1618,6 +1613,7 @@ bool XpltReader::ReadElemData_REGION(XpltReader::Domain& dom, FEMeshData& s, int
 bool XpltReader::ReadFaceData(FEModel& fem, FEState* pstate)
 {
 	FEMesh& m = *fem.GetMesh();
+	FEDataManager& dm = *fem.GetDataManager();
 	while (m_ar.OpenChunk() == IO_OK)
 	{
 		if (m_ar.GetChunkID() == PLT_STATE_VARIABLE)
@@ -1639,13 +1635,15 @@ bool XpltReader::ReadFaceData(FEModel& fem, FEState* pstate)
 						assert((ns >= 0)&&(ns < (int)m_Surf.size()));
 						if ((ns < 0) || (ns >= (int)m_Surf.size())) return errf("Failed reading all state data");
 
+						int nfield = dm.FindDataField(it.szname);
+
 						Surface& s = m_Surf[ns];
 						switch (it.nfmt)
 						{
-						case FMT_NODE  : if (ReadFaceData_NODE  (m, s, pstate->m_Face[nv], it.ntype) == false) return errf("Failed reading face data"); break;
-						case FMT_ITEM  : if (ReadFaceData_ITEM  (s, pstate->m_Face[nv], it.ntype   ) == false) return errf("Failed reading face data"); break;
-						case FMT_MULT  : if (ReadFaceData_MULT  (m, s, pstate->m_Face[nv], it.ntype) == false) return errf("Failed reading face data"); break;
-						case FMT_REGION: if (ReadFaceData_REGION(m, s, pstate->m_Face[nv], it.ntype) == false) return errf("Failed reading face data"); break;
+						case FMT_NODE  : if (ReadFaceData_NODE  (m, s, pstate->m_Data[nfield], it.ntype) == false) return errf("Failed reading face data"); break;
+						case FMT_ITEM  : if (ReadFaceData_ITEM  (s, pstate->m_Data[nfield], it.ntype   ) == false) return errf("Failed reading face data"); break;
+						case FMT_MULT  : if (ReadFaceData_MULT  (m, s, pstate->m_Data[nfield], it.ntype) == false) return errf("Failed reading face data"); break;
+						case FMT_REGION: if (ReadFaceData_REGION(m, s, pstate->m_Data[nfield], it.ntype) == false) return errf("Failed reading face data"); break;
 						default:
 							return errf("Failed reading face data");
 						}

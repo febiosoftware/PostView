@@ -239,8 +239,7 @@ public:
 
 	int GetEvalField();
 
-	const char* GetFieldString();
-	void SetFieldString(const char* szfield);
+	std::string GetFieldString();
 
 	// --- V I E W   M A N A G M E N T ---
 
@@ -326,9 +325,6 @@ protected:
 	// TODO: move to FEModel class?
 	float	m_fTime;		// current time value
 	int		m_nTime;		// active time step
-
-	// TODO: can I remove this?
-	char	m_szField[MAX_STRING];	// string description of evaluation field
 
 	// miscellenaeous
 	bool	m_bValid;	// the document is loaded and valid

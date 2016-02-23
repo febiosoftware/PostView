@@ -86,8 +86,8 @@ void CGraphWindow::Update(bool breset)
 	{
 		if (doc->IsValid())
 		{
-			ui->selectX->BuildMenu(doc->GetFEModel(), DATA_FLOAT);
-			ui->selectY->BuildMenu(doc->GetFEModel(), DATA_FLOAT);
+			ui->selectX->BuildMenu(doc->GetFEModel(), DATA_SCALAR);
+			ui->selectY->BuildMenu(doc->GetFEModel(), DATA_SCALAR);
 		}
 	}
 

@@ -92,26 +92,6 @@ public:
 	//! Copy a data field
 	void CopyDataField(FEDataField* pd);
 
-protected:
-	//! add a new data field
-	void AddNodeDataField(FEDataField* pd);
-
-	//! add a new data field
-	void AddElemDataField(FEDataField* pd);
-
-	//! add a new face data field
-	void AddFaceDataField(FEDataField* pd);
-	void AddFaceDataField(FEDataField* pd, vector<int>& L);
-
-	//! delete a node data field
-	void DeleteNodeDataField(FEDataField* pd);
-
-	//! delete a face data field
-	void DeleteFaceDataField(FEDataField* pd);
-
-	//! delete a element data field
-	void DeleteElemDataField(FEDataField* pd);
-
 public:
 	//! get the bounding box
 	BOUNDINGBOX GetBoundingBox() { return m_bbox; }
@@ -152,6 +132,9 @@ public:
 	// checks if the field code is valid for the given state
 	bool IsValidFieldCode(int nfield, int nstate);
 
+public:
+	static FEModel* GetInstance();
+
 protected:
 	// Helper functions for data evaluation
 	void EvalNodeField(int ntime, int nfield);
@@ -173,6 +156,8 @@ protected:
 	vector<FEState*>	m_State;	// array of pointers to FE-state structures
 	FEDataManager*		m_pDM;		// the Data Manager
 	int					m_ndisp;	// vector field defining the displacement
+
+	static FEModel*	m_pThis;
 };
 
 #endif // !defined(AFX_FESCENE_H__A88C5C01_5318_4768_8424_1F59D461D94C__INCLUDED_)

@@ -137,6 +137,7 @@ class CColorMapProps : public CPropertyList
 public:
 	CColorMapProps(CGLColorMap* map) : m_map(map)
 	{
+		addProperty("Data field"        , CProperty::DataScalar);
 		addProperty("Gradient smoothing", CProperty::Bool);
 		addProperty("Nodal Values"      , CProperty::Bool);
 		addProperty("Range type"        , CProperty::Enum)->setEnumValues(QStringList() << "dynamic" << "static" << "user");
@@ -154,13 +155,14 @@ public:
 			m_map->GetColorMap()->GetRange(fmin, fmax);
 			switch (i)
 			{
-			case 0: return m_map->GetColorMap()->Smooth(); break;
-			case 1: return m_map->m_bDispNodeVals; break;
-			case 2: return m_map->GetRangeType(); break;
-			case 3: return m_map->GetColorMap()->GetDivisions(); break;
-			case 4: return m_map->ShowLegend(); break;
-			case 5: return fmax; break;
-			case 6: return fmin; break;
+			case 0: return m_map->GetEvalField(); break;
+			case 1: return m_map->GetColorMap()->Smooth(); break;
+			case 2: return m_map->m_bDispNodeVals; break;
+			case 3: return m_map->GetRangeType(); break;
+			case 4: return m_map->GetColorMap()->GetDivisions(); break;
+			case 5: return m_map->ShowLegend(); break;
+			case 6: return fmax; break;
+			case 7: return fmin; break;
 			}
 		}
 		return QVariant();
@@ -174,13 +176,14 @@ public:
 
 		switch (i)
 		{
-		case 0: m_map->GetColorMap()->Smooth(v.toBool()); break;
-		case 1: m_map->m_bDispNodeVals = v.toBool(); break;
-		case 2: m_map->SetRangeType(v.toInt()); break;
-		case 3: m_map->GetColorMap()->SetDivisions(v.toInt()); break;
-		case 4: m_map->ShowLegend(v.toBool()); break;
-		case 5: m_map->GetColorMap()->SetRange(fmin, v.toFloat()); break;
-		case 6: m_map->GetColorMap()->SetRange(v.toFloat(), fmax); break;
+		case 0: m_map->SetEvalField(v.toInt()); break;
+		case 1: m_map->GetColorMap()->Smooth(v.toBool()); break;
+		case 2: m_map->m_bDispNodeVals = v.toBool(); break;
+		case 3: m_map->SetRangeType(v.toInt()); break;
+		case 4: m_map->GetColorMap()->SetDivisions(v.toInt()); break;
+		case 5: m_map->ShowLegend(v.toBool()); break;
+		case 6: m_map->GetColorMap()->SetRange(fmin, v.toFloat()); break;
+		case 7: m_map->GetColorMap()->SetRange(v.toFloat(), fmax); break;
 		}
 	}
 

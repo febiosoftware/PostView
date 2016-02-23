@@ -249,8 +249,6 @@ protected:
 
 	void Clear();
 
-	int FindElementFieldIndex(const char* szname);
-
 public:
 	void SetReadStateFlag(int n) { m_read_state_flag = n; }
 	void SetReadStatesList(vector<int>& l) { m_state_list = l; }

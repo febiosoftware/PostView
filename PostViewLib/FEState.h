@@ -74,12 +74,6 @@ public:
 	vector<LINEDATA>	m_Line;		// line data
 	vector<POINTDATA>	m_Point;	// point data
 
-	// Nodal Data
-	FEMeshDataList	m_Node;	// nodal data
-
-	// Element Data
-	FEMeshDataList	m_Elem;	// element data
-
-	// Face Data
-	FEMeshDataList	m_Face;	// face data
+	// Data
+	FEMeshDataList	m_Data;	// data
 };

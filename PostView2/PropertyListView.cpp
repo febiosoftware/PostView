@@ -14,6 +14,8 @@
 #include <QtCore/QStringListModel>
 #include <QDoubleSpinBox>
 #include <QSpinBox>
+#include "DataFieldSelector.h"
+#include <PostViewLib/FEModel.h>
 
 //-----------------------------------------------------------------------------
 class CIntInput : public QLineEdit
@@ -95,6 +97,16 @@ public:
 		else if (index.column() == 1)
 		{
 			QVariant v = m_list->GetPropertyValue(index.row());
+			if (prop.type == CProperty::DataScalar)
+			{
+				if (role == Qt::DisplayRole)
+				{
+					FEModel& fem = *FEModel::GetInstance();
+					std::string s = fem.GetDataManager()->getDataString(v.toInt(), DATA_SCALAR);
+					return QVariant(s.c_str());
+				}
+				else if (role == Qt::EditRole) return v;
+			}
 			if (role == Qt::EditRole) 
 			{
 				if ((prop.type == CProperty::Enum)&&(prop.values.isEmpty()==false))
@@ -213,7 +225,7 @@ public:
 			m_view->connect(box, SIGNAL(currentIndexChanged(int)), m_view, SLOT(onDataChanged()));
 			return box;
 		}
-		if (data.type() == QVariant::StringList)
+		else if (data.type() == QVariant::StringList)
 		{
 			QComboBox* pc = new QComboBox(parent);
 			QStringListModel* pdata = new QStringListModel(pc);
@@ -223,14 +235,14 @@ public:
 			m_view->connect(pc, SIGNAL(currentIndexChanged(int)), m_view, SLOT(onDataChanged()));
 			return pc;
 		}
-		if (data.type() == QVariant::Color)
+		else if (data.type() == QVariant::Color)
 		{
 			CColorButton* pc = new CColorButton(parent);
 			pc->setColor(data.value<QColor>());
 			m_view->connect(pc, SIGNAL(colorChanged(QColor)), m_view, SLOT(onDataChanged()));
 			return pc;
 		}
-		if ((data.type() == QVariant::Double)||(data.type() == QMetaType::Float))
+		else if ((data.type() == QVariant::Double)||(data.type() == QMetaType::Float))
 		{
 			QDoubleSpinBox* pc = new QDoubleSpinBox(parent);
 			const CProperty& prop = model->getPropertyList().Property(index.row());
@@ -241,23 +253,41 @@ public:
 			m_view->connect(pc, SIGNAL(valueChanged(double)), m_view, SLOT(onDataChanged()));
 			return pc;
 		}
-		if (data.type() == QVariant::Int)
+		else if (data.type() == QVariant::Int)
 		{
-			QSpinBox* pc = new QSpinBox(parent);
 			const CProperty& prop = model->getPropertyList().Property(index.row());
-			pc->setRange(prop.imin, prop.imax);
-			pc->setValue(data.toInt());
-			pc->setAccelerated(true);
-			m_view->connect(pc, SIGNAL(valueChanged(int)), m_view, SLOT(onDataChanged()));
-			return pc;
+			if (prop.type == CProperty::DataScalar)
+			{
+				CDataFieldSelector* pc = new CDataFieldSelector(parent);
+				FEModel& fem = *FEModel::GetInstance();
+				pc->BuildMenu(FEModel::GetInstance(), DATA_SCALAR);
+				int nfield = data.toInt();
+				pc->setCurrentValue(nfield);
+				m_view->connect(pc, SIGNAL(currentIndexChanged(int)), m_view, SLOT(onDataChanged()));
+				return pc;
+			}
+			else if (prop.type == CProperty::Int)
+			{
+				QSpinBox* pc = new QSpinBox(parent);
+				pc->setRange(prop.imin, prop.imax);
+				pc->setValue(data.toInt());
+				pc->setAccelerated(true);
+				m_view->connect(pc, SIGNAL(valueChanged(int)), m_view, SLOT(onDataChanged()));
+				return pc;
+			}
 		}
-
 		return QStyledItemDelegate::createEditor(parent, option, index);
 	}
 
 	void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
 	{
 		if (!index.isValid()) return;
+
+		CDataFieldSelector* sel = dynamic_cast<CDataFieldSelector*>(editor);
+		if (sel) { 
+			int nfield = sel->currentValue();
+			model->setData(index, nfield, Qt::EditRole); return; 
+		}
 
 		QComboBox* box = qobject_cast<QComboBox*>(editor);
 		if (box) { model->setData(index, box->currentIndex(), Qt::EditRole); return; }

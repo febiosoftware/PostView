@@ -146,37 +146,37 @@ bool FELSDYNAPlotImport::ReadHeader(FEModel& fem)
 
 	int nn = 0, ne = 0;
 	// nodal data
-	if (m_hdr.flagU) { pdm->AddNodeData(new FEDataField_T<FENodeData<vec3f> >("Displacement")); m_nfield[LSDYNA_DISP] = nn++; }
-	if (m_hdr.flagV) { pdm->AddNodeData(new FEDataField_T<FENodeData<vec3f> >("Velocity"    )); m_nfield[LSDYNA_VEL ] = nn++; }
-	if (m_hdr.flagA) { pdm->AddNodeData(new FEDataField_T<FENodeData<vec3f> >("Acceleration")); m_nfield[LSDYNA_ACC ] = nn++; }
-	if (m_hdr.flagT) { pdm->AddNodeData(new FEDataField_T<FENodeData<float> >("Temperature" )); m_nfield[LSDYNA_TEMP] = nn++; }
-	pdm->AddNodeData(new FEDataField_T<FENodeInitPos >("Initial position"));
-	pdm->AddNodeData(new FEDataField_T<FENodePosition>("Position"));
+	if (m_hdr.flagU) { pdm->AddDataField(new FEDataField_T<FENodeData<vec3f> >("Displacement")); m_nfield[LSDYNA_DISP] = nn++; }
+	if (m_hdr.flagV) { pdm->AddDataField(new FEDataField_T<FENodeData<vec3f> >("Velocity"    )); m_nfield[LSDYNA_VEL ] = nn++; }
+	if (m_hdr.flagA) { pdm->AddDataField(new FEDataField_T<FENodeData<vec3f> >("Acceleration")); m_nfield[LSDYNA_ACC ] = nn++; }
+	if (m_hdr.flagT) { pdm->AddDataField(new FEDataField_T<FENodeData<float> >("Temperature" )); m_nfield[LSDYNA_TEMP] = nn++; }
+	pdm->AddDataField(new FEDataField_T<FENodeInitPos >("Initial position"));
+	pdm->AddDataField(new FEDataField_T<FENodePosition>("Position"));
 
 	// add some additional data
 	if (m_hdr.flagU)
 	{
 		// element data
-		pdm->AddElemData(new FEDataField_T<FEElementData<mat3fs,DATA_ITEM> >("Stress")); m_nfield[LSDYNA_STRESS] = ne++;
-		pdm->AddElemData(new FEDataField_T<FEElementData<float ,DATA_ITEM> >("Pressure")); m_nfield[LSDYNA_PRESSURE] = ne++;
-		pdm->AddElemData(new FEDataField_T<FEElementData<float,DATA_ITEM>  >("Plastic strain")); m_nfield[LSDYNA_PLASTIC] = ne++;
-		if (m_hdr.nv2d == 44) { pdm->AddElemData(new FEDataField_T<FEElementData<mat3fs,DATA_ITEM> >("Shell strain")); m_nfield[LSDYNA_SHELL_STRAIN] = ne++; }
+		pdm->AddDataField(new FEDataField_T<FEElementData<mat3fs,DATA_ITEM> >("Stress")); m_nfield[LSDYNA_STRESS] = ne++;
+		pdm->AddDataField(new FEDataField_T<FEElementData<float ,DATA_ITEM> >("Pressure")); m_nfield[LSDYNA_PRESSURE] = ne++;
+		pdm->AddDataField(new FEDataField_T<FEElementData<float,DATA_ITEM>  >("Plastic strain")); m_nfield[LSDYNA_PLASTIC] = ne++;
+		if (m_hdr.nv2d == 44) { pdm->AddDataField(new FEDataField_T<FEElementData<mat3fs,DATA_ITEM> >("Shell strain")); m_nfield[LSDYNA_SHELL_STRAIN] = ne++; }
 
 		// additional element data
-		pdm->AddElemData(new FEDataField_T<FELagrangeStrain  >("Lagrange strain"   ));
-		pdm->AddElemData(new FEDataField_T<FEInfStrain       >("Inf strain"        ));
-		pdm->AddElemData(new FEDataField_T<FERightCauchyGreen>("Right Cauchy-Green"));
-		pdm->AddElemData(new FEDataField_T<FERightStretch    >("Right stretch"     ));
-		pdm->AddElemData(new FEDataField_T<FEGLStrain        >("GL strain"         ));
-		pdm->AddElemData(new FEDataField_T<FEBiotStrain      >("Biot strain"       ));
-		pdm->AddElemData(new FEDataField_T<FERightHencky     >("Right Hencky"      ));
-        pdm->AddElemData(new FEDataField_T<FELeftCauchyGreen >("Left Cauchy-Green" ));
-        pdm->AddElemData(new FEDataField_T<FELeftStretch     >("Left stretch"      ));
-        pdm->AddElemData(new FEDataField_T<FELeftHencky      >("Left Hencky"       ));
-        pdm->AddElemData(new FEDataField_T<FEAlmansi         >("Almansi strain"    ));
-		pdm->AddElemData(new FEDataField_T<FEElementVolume   >("Volume"            ));
-		pdm->AddElemData(new FEDataField_T<FEVolRatio        >("Volume ratio"      ));
-		pdm->AddElemData(new FEDataField_T<FEVolStrain       >("Volume strain"     ));
+		pdm->AddDataField(new FEDataField_T<FELagrangeStrain  >("Lagrange strain"   ));
+		pdm->AddDataField(new FEDataField_T<FEInfStrain       >("Inf strain"        ));
+		pdm->AddDataField(new FEDataField_T<FERightCauchyGreen>("Right Cauchy-Green"));
+		pdm->AddDataField(new FEDataField_T<FERightStretch    >("Right stretch"     ));
+		pdm->AddDataField(new FEDataField_T<FEGLStrain        >("GL strain"         ));
+		pdm->AddDataField(new FEDataField_T<FEBiotStrain      >("Biot strain"       ));
+		pdm->AddDataField(new FEDataField_T<FERightHencky     >("Right Hencky"      ));
+        pdm->AddDataField(new FEDataField_T<FELeftCauchyGreen >("Left Cauchy-Green" ));
+        pdm->AddDataField(new FEDataField_T<FELeftStretch     >("Left stretch"      ));
+        pdm->AddDataField(new FEDataField_T<FELeftHencky      >("Left Hencky"       ));
+        pdm->AddDataField(new FEDataField_T<FEAlmansi         >("Almansi strain"    ));
+		pdm->AddDataField(new FEDataField_T<FEElementVolume   >("Volume"            ));
+		pdm->AddDataField(new FEDataField_T<FEVolRatio        >("Volume ratio"      ));
+		pdm->AddDataField(new FEDataField_T<FEVolStrain       >("Volume strain"     ));
 	}
 	else fem.SetDisplacementField(-1);
  
@@ -457,7 +457,7 @@ bool FELSDYNAPlotImport::ReadStates(FEModel& fem)
 				if (m_hdr.flagU)
 				{
 					// Note that LSDYNA actually stores the current nodal positions, not the displacements
-					FENodeData<vec3f>& dsp = dynamic_cast<FENodeData<vec3f>&>(pstate->m_Node[m_nfield[LSDYNA_DISP]]);
+					FENodeData<vec3f>& dsp = dynamic_cast<FENodeData<vec3f>&>(pstate->m_Data[m_nfield[LSDYNA_DISP]]);
 					for (int i=0; i<m_hdr.nump; ++i, pf += 3)
 					{
 						vec3f& r0 = mesh.Node(i).m_r0;
@@ -470,7 +470,7 @@ bool FELSDYNAPlotImport::ReadStates(FEModel& fem)
 				// read nodal velocity
 				if (m_hdr.flagV)
 				{
-					FENodeData<vec3f>& vel = dynamic_cast<FENodeData<vec3f>&>(pstate->m_Node[m_nfield[LSDYNA_VEL]]);
+					FENodeData<vec3f>& vel = dynamic_cast<FENodeData<vec3f>&>(pstate->m_Data[m_nfield[LSDYNA_VEL]]);
 					for (int i=0; i<m_hdr.nump; i++, pf += 3)
 					{
 						vel[i].x = pf[0];
@@ -482,7 +482,7 @@ bool FELSDYNAPlotImport::ReadStates(FEModel& fem)
 				// read nodal acceleration
 				if (m_hdr.flagA)
 				{
-					FENodeData<vec3f>& acc = dynamic_cast<FENodeData<vec3f>&>(pstate->m_Node[m_nfield[LSDYNA_ACC]]);
+					FENodeData<vec3f>& acc = dynamic_cast<FENodeData<vec3f>&>(pstate->m_Data[m_nfield[LSDYNA_ACC]]);
 					for (int i=0; i<m_hdr.nump; i++, pf += 3)
 					{
 						acc[i].x = pf[0];
@@ -494,16 +494,16 @@ bool FELSDYNAPlotImport::ReadStates(FEModel& fem)
 				// read the nodal temperatures
 				if (m_hdr.flagT)
 				{
-					FENodeData<float>& T = dynamic_cast<FENodeData<float>&>(pstate->m_Node[m_nfield[LSDYNA_TEMP]]);
+					FENodeData<float>& T = dynamic_cast<FENodeData<float>&>(pstate->m_Data[m_nfield[LSDYNA_TEMP]]);
 					for (int i=0; i<m_hdr.nump; ++i, ++pf) T[i] = *pf;
 				}
 
 				// load solid stress data
 				if (m_hdr.flagU)
 				{
-					FEElementData<mat3fs,DATA_ITEM>& s  = dynamic_cast<FEElementData<mat3fs,DATA_ITEM>&>(pstate->m_Elem[m_nfield[LSDYNA_STRESS  ]]);
-					FEElementData<float ,DATA_ITEM>& p  = dynamic_cast<FEElementData<float ,DATA_ITEM>&>(pstate->m_Elem[m_nfield[LSDYNA_PRESSURE]]);
-					FEElementData<float ,DATA_ITEM>& ps = dynamic_cast<FEElementData<float ,DATA_ITEM>&>(pstate->m_Elem[m_nfield[LSDYNA_PLASTIC ]]);
+					FEElementData<mat3fs,DATA_ITEM>& s  = dynamic_cast<FEElementData<mat3fs,DATA_ITEM>&>(pstate->m_Data[m_nfield[LSDYNA_STRESS  ]]);
+					FEElementData<float ,DATA_ITEM>& p  = dynamic_cast<FEElementData<float ,DATA_ITEM>&>(pstate->m_Data[m_nfield[LSDYNA_PRESSURE]]);
+					FEElementData<float ,DATA_ITEM>& ps = dynamic_cast<FEElementData<float ,DATA_ITEM>&>(pstate->m_Data[m_nfield[LSDYNA_PLASTIC ]]);
 					for (int i=0; i<m_hdr.nel8; i++, pf += m_hdr.nv3d)
 					{
 						mat3fs m;
@@ -540,7 +540,7 @@ bool FELSDYNAPlotImport::ReadStates(FEModel& fem)
 
 						if (m_hdr.nv2d == 44)
 						{
-							FEElementData<mat3fs,DATA_ITEM>& E  = dynamic_cast<FEElementData<mat3fs,DATA_ITEM>&>(pstate->m_Elem[m_nfield[LSDYNA_SHELL_STRAIN]]);
+							FEElementData<mat3fs,DATA_ITEM>& E  = dynamic_cast<FEElementData<mat3fs,DATA_ITEM>&>(pstate->m_Data[m_nfield[LSDYNA_SHELL_STRAIN]]);
 							mat3fs m;
 							m.x = 0.5f*(pf[32] + pf[38]);
 							m.y = 0.5f*(pf[33] + pf[39]);

@@ -64,6 +64,12 @@ public:
 		return "unknown";
 	}
 
+	//! number of components
+	int components(Data_Tensor_Type ntype);
+
+	//! return the name of a component
+	std::string componentName(int ncomp, Data_Tensor_Type ntype);
+
 	virtual const std::type_info& TypeInfo() { return typeid(FEDataField); }
 
 protected:
@@ -103,52 +109,28 @@ public:
 	FEDataManager(FEModel* pm);
 	~FEDataManager(void);
 
-	//! add a nodal data field
-	void AddNodeData(FEDataField* pd);
+	//! add a data field
+	void AddDataField(FEDataField* pd);
 
-	//! add an element data field
-	void AddElemData(FEDataField* pd);
+	//! delete a data field
+	void DeleteDataField(FEDataField* pd);
 
-	//! add a face data field
-	void AddFaceData(FEDataField* pd);
-
-	//! delete a nodal data field
-	void DeleteNodeData(FEDataField* pd);
-
-	//! delete a face data field
-	void DeleteFaceData(FEDataField* pd);
-
-	//! delete a element data field
-	void DeleteElemData(FEDataField* pd);
-
-	//! get the first nodal datafield
-	FEDataFieldPtr FirstNode() { return m_Node.begin(); }
-	int NodeFields() { return m_Node.size(); }
-
-	//! get the first element datafield
-	FEDataFieldPtr FirstElement() { return m_Elem.begin(); }
-	int ElementFields() { return m_Elem.size(); }
-
-	//! get the first face datafield
-	FEDataFieldPtr FirstFace() { return m_Face.begin(); }
-	int FaceFields() { return m_Face.size(); }
+	//! get the nodal datafield
+	FEDataFieldPtr FirstDataField() { return m_Data.begin(); }
+	int DataFields() { return m_Data.size(); }
 
 	//! clear data
 	void Clear();
 
 	//! find the index of a datafield
-	int FindElem(const char* sz);
+	int FindDataField(const char* sz);
 
 	//! find the data field given an index
-	FEDataFieldPtr NodeData(int i);
-	FEDataFieldPtr FaceData(int i);
-	FEDataFieldPtr ElementData(int i);
+	FEDataFieldPtr DataField(int i);
+
+	std::string getDataString(int nfield, Data_Tensor_Type ntype);
 
 protected:
-	vector<FEDataField*>	m_Node;		// nodal data
-	vector<FEDataField*>	m_Elem;		// element data
-	vector<FEDataField*>	m_Face;		// face data
-
+	vector<FEDataField*>	m_Data;		// nodal data
 	FEModel*	m_pm;
 };
-

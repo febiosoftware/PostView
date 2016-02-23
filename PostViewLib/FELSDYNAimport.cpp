@@ -359,19 +359,19 @@ bool FELSDYNAimport::BuildMesh(FEModel& fem)
 	int ndata[2] = {-1, -1}, nd=0;
 	if (m_bnresults)
 	{
-		pdm->AddNodeData(new FEDataField_T<FENodeData<float> >("Nodal Results")); 
+		pdm->AddDataField(new FEDataField_T<FENodeData<float> >("Nodal Results")); 
 		ndata[0] = nd;	nd++;
 	}
 
 	if (m_bdispl)
 	{
-		pdm->AddNodeData(new FEDataField_T<FENodeData<vec3f> >("Displacement"));
+		pdm->AddDataField(new FEDataField_T<FENodeData<vec3f> >("Displacement"));
 		ndata[1] = nd; nd++;
 	}
 
 	if (m_bshellthick)
 	{
-		pdm->AddElemData(new FEDataField_T<FEElementData<float ,DATA_COMP> >("shell thickness"));
+		pdm->AddDataField(new FEDataField_T<FEElementData<float ,DATA_COMP> >("shell thickness"));
 	}
 
 	// we need a single state
@@ -381,7 +381,7 @@ bool FELSDYNAimport::BuildMesh(FEModel& fem)
 	// add some data
 	if (m_bnresults)
 	{
-		FENodeData<float>& d = dynamic_cast<FENodeData<float>&>(ps->m_Node[ndata[0]]);
+		FENodeData<float>& d = dynamic_cast<FENodeData<float>&>(ps->m_Data[ndata[0]]);
 		list<NODE>::iterator pn = m_node.begin();
 		for (i=0; i<nodes; ++i, ++pn) d[i] = (float) pn->v;
 	}
@@ -402,7 +402,7 @@ bool FELSDYNAimport::BuildMesh(FEModel& fem)
 			pd[i].m_h[3] = (float) h[3];
 		}
 
-		FEElementData<float,DATA_COMP>& d = dynamic_cast<FEElementData<float,DATA_COMP>&>(ps->m_Elem[0]);
+		FEElementData<float,DATA_COMP>& d = dynamic_cast<FEElementData<float,DATA_COMP>&>(ps->m_Data[0]);
 		pe = m_shell.begin();
 		float h[4];
 		for (i=0; i<(int) m_shell.size(); ++i, ++pe)
@@ -418,7 +418,7 @@ bool FELSDYNAimport::BuildMesh(FEModel& fem)
 
 	if (m_bdispl)
 	{
-		FENodeData<vec3f>& d = dynamic_cast<FENodeData<vec3f>&>(ps->m_Node[ndata[1]]);
+		FENodeData<vec3f>& d = dynamic_cast<FENodeData<vec3f>&>(ps->m_Data[ndata[1]]);
 		for (i=0; i<nodes; ++i) d[i] = vec3f(0.f, 0.f, 0.f);
 	}
 

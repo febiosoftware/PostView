@@ -215,11 +215,11 @@ bool FEVTKimport::Load(FEModel& fem, const char* szfile)
 			}
 
 			FEDataManager& dm = *fem.GetDataManager();
-			dm.AddNodeData(new FEDataField_T<FENodeData<float> >("data"));
+			dm.AddDataField(new FEDataField_T<FENodeData<float> >("data"));
 
 			FEState* ps = new FEState(0.f, m_pfem);
 			m_pfem->AddState(ps);
-			FENodeData<float>& df = dynamic_cast<FENodeData<float>&>(ps->m_Node[0]);
+			FENodeData<float>& df = dynamic_cast<FENodeData<float>&>(ps->m_Data[0]);
 			for (int j=0; j<pm->Nodes(); ++j) df[j] = (float) data[j];
 		}
 
@@ -227,11 +227,11 @@ bool FEVTKimport::Load(FEModel& fem, const char* szfile)
 		if(isCellData)
 		{
 			FEDataManager& dm = *fem.GetDataManager();
-			dm.AddNodeData(new FEDataField_T<FENodeData<float> >("data"));
+			dm.AddDataField(new FEDataField_T<FENodeData<float> >("data"));
 
 			FEState* ps = new FEState(0.f, m_pfem);
 			m_pfem->AddState(ps);
-			FEElementData<float, DATA_ITEM>& ed = dynamic_cast<FEElementData<float, DATA_ITEM>&>(ps->m_Elem[0]);
+			FEElementData<float, DATA_ITEM>& ed = dynamic_cast<FEElementData<float, DATA_ITEM>&>(ps->m_Data[0]);
 
 			for (i=0; i<size; ++i)
 			{

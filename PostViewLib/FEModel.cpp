@@ -11,6 +11,8 @@
 
 extern int ET_HEX[12][2];
 
+FEModel* FEModel::m_pThis = 0;
+
 //=============================================================================
 //								F E M O D E L
 //=============================================================================
@@ -22,6 +24,8 @@ FEModel::FEModel()
 	m_ndisp = BUILD_FIELD(1,0,0);
 	m_pDM = new FEDataManager(this);
 	m_ntime = 0;
+
+	m_pThis = this;
 }
 
 //-----------------------------------------------------------------------------
@@ -30,6 +34,12 @@ FEModel::~FEModel()
 {
 	Clear();
 	delete m_pDM;
+	m_pThis = 0;
+}
+
+FEModel* FEModel::GetInstance()
+{
+	return m_pThis;
 }
 
 //-----------------------------------------------------------------------------
@@ -127,15 +137,7 @@ void FEModel::CopyDataField(FEDataField* pd)
 	for (int i=0; i<nstates; ++i)
 	{
 		FEState& state = *GetState(i);
-
-		FEMeshDataList* pDL = 0;
-		switch (pd->DataClass())
-		{
-		case CLASS_NODE: pDL = &state.m_Node; break;
-		case CLASS_FACE: pDL = &state.m_Face; break;
-		case CLASS_ELEM: pDL = &state.m_Elem; break;
-		}
-		FEMeshDataList& DL = *pDL;
+		FEMeshDataList& DL = state.m_Data;
 
 		switch (pd->Format())
 		{
@@ -168,20 +170,9 @@ void FEModel::CopyDataField(FEDataField* pd)
 // Delete a data field
 void FEModel::DeleteDataField(FEDataField* pd)
 {
-	if      (pd->DataClass() == CLASS_NODE) DeleteNodeDataField(pd);
-	else if (pd->DataClass() == CLASS_FACE) DeleteFaceDataField(pd);
-	else if (pd->DataClass() == CLASS_ELEM) DeleteElemDataField(pd);
-	else assert(false);
-}
-
-//-----------------------------------------------------------------------------
-void FEModel::DeleteNodeDataField(FEDataField* pd)
-{
-	assert(pd->DataClass() == CLASS_NODE);
-
 	// find out which data field this is
-	FEDataFieldPtr it = m_pDM->FirstNode();
-	int NDF = m_pDM->NodeFields(), m = -1;
+	FEDataFieldPtr it = m_pDM->FirstDataField();
+	int NDF = m_pDM->DataFields(), m = -1;
 	for (int i=0; i<NDF; ++i, ++it)
 	{
 		if (*it == pd)
@@ -197,100 +188,23 @@ void FEModel::DeleteNodeDataField(FEDataField* pd)
 	for (int i=0; i<NS; ++i)
 	{
 		FEState* ps = GetState(i);
-		ps->m_Node.erase(m);
+		ps->m_Data.erase(m);
 	}
-	m_pDM->DeleteNodeData(pd);
+	m_pDM->DeleteDataField(pd);
 }
 
 //-----------------------------------------------------------------------------
-void FEModel::DeleteFaceDataField(FEDataField* pd)
-{
-	assert(pd->DataClass() == CLASS_FACE);
-
-	// find out which data field this is
-	FEDataFieldPtr it = m_pDM->FirstFace();
-	int NDF = m_pDM->FaceFields(), m = -1;
-	for (int i=0; i<NDF; ++i, ++it)
-	{
-		if (*it == pd)
-		{
-			m = i;
-			break;
-		}
-	}
-	if (m == -1) { assert(false); return; }
-
-	// remove this field from all states
-	int NS = GetStates();
-	for (int i=0; i<NS; ++i)
-	{
-		FEState* ps = GetState(i);
-		ps->m_Face.erase(m);
-	}
-	m_pDM->DeleteFaceData(pd);
-}
-
-//-----------------------------------------------------------------------------
-void FEModel::DeleteElemDataField(FEDataField* pd)
-{
-	assert(pd->DataClass() == CLASS_ELEM);
-
-	// find out which data field this is
-	FEDataFieldPtr it = m_pDM->FirstElement();
-	int NDF = m_pDM->ElementFields(), m = -1;
-	for (int i=0; i<NDF; ++i, ++it)
-	{
-		if (*it == pd)
-		{
-			m = i;
-			break;
-		}
-	}
-	if (m == -1) { assert(false); return; }
-
-	// remove this field from all states
-	int NS = GetStates();
-	for (int i=0; i<NS; ++i)
-	{
-		FEState* ps = GetState(i);
-		ps->m_Elem.erase(m);
-	}
-	m_pDM->DeleteElemData(pd);
-}
-
-//-----------------------------------------------------------------------------
-//! Adda a data field to the states
-void FEModel::AddDataField(FEDataField* pd, vector<int>& L)
-{
-	if      (pd->DataClass() == CLASS_NODE) AddNodeDataField(pd);
-	else if (pd->DataClass() == CLASS_FACE) AddFaceDataField(pd, L);
-	else if (pd->DataClass() == CLASS_ELEM) AddElemDataField(pd);
-	else assert(false);
-}
-
-
-//-----------------------------------------------------------------------------
-//! Adda a data field to the states
+// Add a data field to all states of the model
 void FEModel::AddDataField(FEDataField* pd)
 {
-	if      (pd->DataClass() == CLASS_NODE) AddNodeDataField(pd);
-	else if (pd->DataClass() == CLASS_FACE) AddFaceDataField(pd);
-	else if (pd->DataClass() == CLASS_ELEM) AddElemDataField(pd);
-	else assert(false);
-}
-
-//-----------------------------------------------------------------------------
-// Add a nodal data field to all states of the model
-void FEModel::AddNodeDataField(FEDataField* pd)
-{
 	// add the data field to the data manager
-	m_pDM->AddNodeData(pd);
+	m_pDM->AddDataField(pd);
 
 	// now add new data for each of the states
 	vector<FEState*>::iterator it;
 	for (it=m_State.begin(); it != m_State.end(); ++it)
 	{
-		(*it)->m_Node.push_back(pd->CreateData(this));
+		(*it)->m_Data.push_back(pd->CreateData(this));
 	}
 
 	// create a new ID for the mesh so that all dependant
@@ -299,58 +213,20 @@ void FEModel::AddNodeDataField(FEDataField* pd)
 }
 
 //-----------------------------------------------------------------------------
-// Add an element data field to all states of the model
-void FEModel::AddElemDataField(FEDataField* pd)
+// Add an data field to all states of the model
+void FEModel::AddDataField(FEDataField* pd, vector<int>& L)
 {
+	assert(pd->DataClass() == CLASS_FACE);
+
 	// add the data field to the data manager
-	m_pDM->AddElemData(pd);
-
-	// now add new meshdata for each of the states
-	vector<FEState*>::iterator it;
-	for (it=m_State.begin(); it != m_State.end(); ++it)
-	{
-		FEElemItemData* pmd = dynamic_cast<FEElemItemData*>(pd->CreateData(this));
-		(*it)->m_Elem.push_back(pmd);
-	}
-
-	// create a new ID for the mesh so that all dependant
-	// objects will update themselves
-	m_mesh.NewID();
-}
-
-//-----------------------------------------------------------------------------
-// Add an facet data field to all states of the model
-void FEModel::AddFaceDataField(FEDataField* pd)
-{
-	// add the data field to the data manager
-	m_pDM->AddFaceData(pd);
+	m_pDM->AddDataField(pd);
 
 	// now add new meshdata for each of the states
 	vector<FEState*>::iterator it;
 	for (it=m_State.begin(); it != m_State.end(); ++it)
 	{
 		FEFaceItemData* pmd = dynamic_cast<FEFaceItemData*>(pd->CreateData(this));
-		(*it)->m_Face.push_back(pmd);
-	}
-
-	// create a new ID for the mesh so that all dependant
-	// objects will update themselves
-	m_mesh.NewID();
-}
-
-//-----------------------------------------------------------------------------
-// Add an facet data field to all states of the model
-void FEModel::AddFaceDataField(FEDataField* pd, vector<int>& L)
-{
-	// add the data field to the data manager
-	m_pDM->AddFaceData(pd);
-
-	// now add new meshdata for each of the states
-	vector<FEState*>::iterator it;
-	for (it=m_State.begin(); it != m_State.end(); ++it)
-	{
-		FEFaceItemData* pmd = dynamic_cast<FEFaceItemData*>(pd->CreateData(this));
-		(*it)->m_Face.push_back(pmd);
+		(*it)->m_Data.push_back(pmd);
 		if (dynamic_cast<FECurvature*>(pmd))
 		{
 			FECurvature* pcrv = dynamic_cast<FECurvature*>(pmd);

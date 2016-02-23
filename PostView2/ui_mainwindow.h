@@ -338,6 +338,7 @@ public:
 
 		// create the data field selector
 		selectData = new CDataFieldSelector;
+		selectData->setMinimumWidth(200);
 		selectData->setObjectName("selectData");
 
 		mainToolBar->addWidget(selectData);

@@ -1765,7 +1765,7 @@ FEElemPressure::FEElemPressure(FEModel* pm) : FEElemData_T<float, DATA_ITEM>(pm)
 {
 	// find the stress field
 	FEDataManager* pdm = pm->GetDataManager();
-	m_nstress = pdm->FindElem("stress");
+	m_nstress = pdm->FindDataField("stress");
 }
 
 //-----------------------------------------------------------------------------
@@ -1778,7 +1778,7 @@ void FEElemPressure::eval(int n, float* pv)
 	FEState& state = *m_pm->GetState(ntime);
 
 	// get stress field
-	FEMeshData& rd = state.m_Elem[m_nstress];
+	FEMeshData& rd = state.m_Data[m_nstress];
 	FEElemData_T<mat3fs,DATA_ITEM>& dm = dynamic_cast<FEElemData_T<mat3fs,DATA_ITEM>&>(rd);
 
 	// evaluate pressure
@@ -1800,7 +1800,7 @@ FEElemNodalPressure::FEElemNodalPressure(FEModel* pm) : FEElemData_T<float, DATA
 {
 	// find the stress field
 	FEDataManager* pdm = pm->GetDataManager();
-	m_nstress = pdm->FindElem("nodal stress");
+	m_nstress = pdm->FindDataField("nodal stress");
 }
 
 //-----------------------------------------------------------------------------
@@ -1813,7 +1813,7 @@ void FEElemNodalPressure::eval(int n, float* pv)
 	FEState& state = *m_pm->GetState(ntime);
 
 	// get stress field
-	FEMeshData& rd = state.m_Elem[m_nstress];
+	FEMeshData& rd = state.m_Data[m_nstress];
 	FEElemData_T<mat3fs,DATA_COMP>& dm = dynamic_cast<FEElemData_T<mat3fs,DATA_COMP>&>(rd);
 
 	// get number of nodes for this element
@@ -1840,8 +1840,8 @@ FESolidStress::FESolidStress(FEModel* pm) : FEElemData_T<mat3fs, DATA_ITEM>(pm)
 {
 	// find the stress field
 	FEDataManager* pdm = pm->GetDataManager();
-	m_nstress = pdm->FindElem("stress");
-	m_nflp = pdm->FindElem("fluid pressure");
+	m_nstress = pdm->FindDataField("stress");
+	m_nflp = pdm->FindDataField("fluid pressure");
 }
 
 //-----------------------------------------------------------------------------
@@ -1854,11 +1854,11 @@ void FESolidStress::eval(int n, mat3fs* pv)
 	FEState& state = *m_pm->GetState(ntime);
 	
 	// get stress field
-	FEMeshData& rd = state.m_Elem[m_nstress];
+	FEMeshData& rd = state.m_Data[m_nstress];
 	FEElemData_T<mat3fs,DATA_ITEM>& dm = dynamic_cast<FEElemData_T<mat3fs,DATA_ITEM>&>(rd);
 	
 	// get fluid pressure field
-	FEMeshData& rdp = state.m_Elem[m_nflp];
+	FEMeshData& rdp = state.m_Data[m_nflp];
 	FEElemData_T<float,DATA_ITEM>& dmp = dynamic_cast<FEElemData_T<float,DATA_ITEM>&>(rdp);
 	
 	// evaluate pressure

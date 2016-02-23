@@ -17,7 +17,7 @@ void DataScale(FEModel& fem, int nfield, double scale)
 		FEState& s = *fem.GetState(i);
 		if (IS_NODE_FIELD(nfield))
 		{
-			FEMeshData& d = s.m_Node[ndata];
+			FEMeshData& d = s.m_Data[ndata];
 			switch (d.GetType())
 			{
 			case DATA_FLOAT:
@@ -56,7 +56,7 @@ void DataScale(FEModel& fem, int nfield, double scale)
 		}
 		else if (IS_ELEM_FIELD(nfield))
 		{
-			FEMeshData& d = s.m_Elem[ndata];
+			FEMeshData& d = s.m_Data[ndata];
 			Data_Format fmt = d.GetFormat();
 			switch (d.GetType())
 			{
@@ -196,7 +196,7 @@ bool DataSmoothStep(FEModel& fem, int nfield, double theta)
 		if (IS_NODE_FIELD(nfield))
 		{
 			int NN = mesh.Nodes();
-			FEMeshData& d = s.m_Node[ndata];
+			FEMeshData& d = s.m_Data[ndata];
 			
 			switch (d.GetType())
 			{
@@ -303,8 +303,8 @@ void DataArithmetic(FEModel& fem, int nfield, int nop, int noperand)
 		FEState& state = *fem.GetState(n);
 		if (IS_ELEM_FIELD(nfield)&&IS_ELEM_FIELD(noperand))
 		{
-			FEMeshData& d= state.m_Elem[ndst];
-			FEMeshData& s= state.m_Elem[nsrc];
+			FEMeshData& d= state.m_Data[ndst];
+			FEMeshData& s= state.m_Data[nsrc];
 			Data_Format fmt = d.GetFormat();
 			if (d.GetFormat() != s.GetFormat())
 			{

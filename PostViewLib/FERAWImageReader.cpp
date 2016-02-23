@@ -126,7 +126,7 @@ bool FERAWImageReader::Load(FEModel& fem, const char* szfile)
 	fem.AddState(ps);
 
 	// add the image data
-	FENodeData<float>& d = dynamic_cast<FENodeData<float>&>(ps->m_Node[0]);
+	FENodeData<float>& d = dynamic_cast<FENodeData<float>&>(ps->m_Data[0]);
 	unsigned char* pb = new unsigned char[ m_ops.nx*m_ops.ny ];
 	n = 0;
 	for (int k=0; k<m_ops.nz; ++k)

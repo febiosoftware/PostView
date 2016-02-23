@@ -65,7 +65,7 @@ bool CMainWindow::OpenFile(const QString& fileName, int nfilter)
 		b.exec();
 	}
 
-	ui->selectData->BuildMenu(m_doc->GetFEModel(), DATA_FLOAT);
+	ui->selectData->BuildMenu(m_doc->GetFEModel(), DATA_SCALAR);
 	if (m_doc->GetFEModel()->GetStates() > 0)
 	{
 		ui->playToolBar->setEnabled(true);
@@ -198,7 +198,7 @@ void CMainWindow::on_actionUpdate_triggered()
 	{
 		int N = m_doc->GetFEModel()->GetStates();
 		if (N > 1) ui->playToolBar->setEnabled(true);
-		ui->selectData->BuildMenu(m_doc->GetFEModel(), DATA_FLOAT);
+		ui->selectData->BuildMenu(m_doc->GetFEModel(), DATA_SCALAR);
 
 		// update the UI
 		UpdateUi();
@@ -528,7 +528,6 @@ void CMainWindow::on_selectData_currentIndexChanged(int i)
 		CGLModel* pm = pdoc->GetGLModel();
 		pm->GetColorMap()->SetEvalField(nfield);
 
-		pdoc->SetFieldString(ui->selectData->currentText().toStdString().c_str());
 		pdoc->UpdateFEModel();
 
 		ui->glview->repaint();
