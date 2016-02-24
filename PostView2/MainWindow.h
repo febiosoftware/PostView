@@ -61,10 +61,21 @@ private slots:
 	void on_actionNext_triggered();
 	void on_actionLast_triggered();
 
+	void on_actionViewCapture_toggled(bool bchecked);
+	void on_actionViewProjection_toggled(bool bchecked);
+	void on_actionViewFront_triggered();
+	void on_actionViewBack_triggered();
+	void on_actionViewLeft_triggered();
+	void on_actionViewRight_triggered();
+	void on_actionViewTop_triggered();
+	void on_actionViewBottom_triggered();
 	void on_actionViewMesh_toggled(bool bchecked);
 	void on_actionViewOutline_toggled(bool bchecked);
 	void on_actionViewSmooth_toggled(bool bchecked);
 	void on_actionViewTrack_toggled(bool bchecked);
+	void on_actionViewVPSave_triggered();
+	void on_actionViewVPPrev_triggered();
+	void on_actionViewVPNext_triggered();
 
 private:
 	void timerEvent(QTimerEvent* ev);

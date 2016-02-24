@@ -624,8 +624,84 @@ void CMainWindow::on_actionViewSmooth_toggled(bool bchecked)
 	}
 }
 
+void CMainWindow::on_actionViewCapture_toggled(bool bchecked)
+{
+	ui->glview->showSafeFrame(bchecked);
+	ui->glview->repaint();
+}
+
+void CMainWindow::on_actionViewProjection_toggled(bool bchecked)
+{
+	ui->glview->setPerspective(!bchecked);
+}
+
+void CMainWindow::on_actionViewFront_triggered()
+{
+	ui->glview->SetView(VIEW_FRONT);
+}
+
+void CMainWindow::on_actionViewBack_triggered()
+{
+	ui->glview->SetView(VIEW_BACK);
+}
+
+void CMainWindow::on_actionViewLeft_triggered()
+{
+	ui->glview->SetView(VIEW_LEFT);
+}
+
+void CMainWindow::on_actionViewRight_triggered()
+{
+	ui->glview->SetView(VIEW_RIGHT);
+}
+
+void CMainWindow::on_actionViewTop_triggered()
+{
+	ui->glview->SetView(VIEW_TOP);
+}
+
+void CMainWindow::on_actionViewBottom_triggered()
+{
+	ui->glview->SetView(VIEW_BOTTOM);
+}
+
 void CMainWindow::on_actionViewTrack_toggled(bool bchecked)
 {
 	ui->glview->TrackSelection(bchecked);
 	ui->glview->repaint();
+}
+
+void CMainWindow::on_actionViewVPSave_triggered()
+{
+	CGLCamera& cam = ui->glview->GetCamera();
+	GLCameraTransform t;
+	cam.GetTransform(t);
+
+	CGView& view = *GetDocument()->GetView();
+	static int n = 0; n++;
+	char szname[64]={0};
+	sprintf(szname, "key%02d", n);
+	t.SetName(szname);
+	view.AddCameraKey(t);
+	ui->modelViewer->Update();
+}
+
+void CMainWindow::on_actionViewVPPrev_triggered()
+{
+	CGView& view = *GetDocument()->GetView();
+	if (view.CameraKeys() > 0)
+	{
+		view.PrevKey();
+		ui->glview->repaint();
+	}
+}
+
+void CMainWindow::on_actionViewVPNext_triggered()
+{
+	CGView& view = *GetDocument()->GetView();
+	if (view.CameraKeys() > 0)
+	{
+		view.NextKey();
+		ui->glview->repaint();
+	}
 }

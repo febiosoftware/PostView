@@ -202,21 +202,21 @@ public:
 
 		// --- View Menu ---
 		QAction* actionViewSettings   = addAction("Settings ..."           , "actionViewSettings"  );
-		QAction* actionViewCapture    = addAction("Show capture Frame"     , "actionViewCapture"   );
-		QAction* actionViewProjection = addAction("Orthographic projection", "actionViewProjection");
+		QAction* actionViewCapture    = addAction("Show capture Frame"     , "actionViewCapture"   ); actionViewCapture->setShortcut(Qt::CTRL + Qt::Key_F); actionViewCapture->setCheckable(true);
+		QAction* actionViewProjection = addAction("Orthographic projection", "actionViewProjection"); actionViewProjection->setShortcut(Qt::CTRL + Qt::Key_0); actionViewProjection->setCheckable(true);
 		QAction* actionViewMesh       = addAction("Show mesh lines"        , "actionViewMesh"      ); actionViewMesh   ->setShortcut(Qt::Key_M); actionViewMesh->setCheckable(true);
 		QAction* actionViewOutline    = addAction("Show outline"           , "actionViewOutline"   ); actionViewOutline->setShortcut(Qt::Key_Z); actionViewOutline->setCheckable(true);
 		QAction* actionViewSmooth     = addAction("Color smoothing"        , "actionViewSmooth"    ); actionViewSmooth ->setShortcut(Qt::Key_C); actionViewSmooth->setCheckable(true);
-		QAction* actionViewFront      = addAction("Front",                  "actionViewFront"     );
-		QAction* actionViewBack       = addAction("Back" ,                  "actionViewBack"      );
-		QAction* actionViewLeft       = addAction("Left" ,                  "actionViewLeft"      );
-		QAction* actionViewRight      = addAction("Right",                  "actionViewRight"     );
-		QAction* actionViewTop        = addAction("Top" ,                   "actionViewTop"       );
-		QAction* actionViewBottom     = addAction("Bottom" ,                "actionViewBottom"    );
+		QAction* actionViewFront      = addAction("Front",                  "actionViewFront"     ); actionViewFront->setShortcut(Qt::CTRL + Qt::Key_1);
+		QAction* actionViewBack       = addAction("Back" ,                  "actionViewBack"      ); actionViewBack->setShortcut(Qt::CTRL + Qt::Key_3);
+		QAction* actionViewLeft       = addAction("Left" ,                  "actionViewLeft"      ); actionViewLeft->setShortcut(Qt::CTRL + Qt::Key_4);
+		QAction* actionViewRight      = addAction("Right",                  "actionViewRight"     ); actionViewRight->setShortcut(Qt::CTRL + Qt::Key_6);
+		QAction* actionViewTop        = addAction("Top" ,                   "actionViewTop"       ); actionViewTop->setShortcut(Qt::CTRL + Qt::Key_8);
+		QAction* actionViewBottom     = addAction("Bottom" ,                "actionViewBottom"    ); actionViewBottom->setShortcut(Qt::CTRL + Qt::Key_2);
 		QAction* actionViewTrack      = addAction("Track selection",        "actionViewTrack"     ); actionViewTrack->setShortcut(Qt::CTRL + Qt::Key_T); actionViewTrack->setCheckable(true);
-		QAction* actionViewVPSave     = addAction("Save viewpoint",         "actionViewVPSave"    );
-		QAction* actionViewVPPrev     = addAction("Prev viewpoint",         "actionViewVPPrev"    );
-		QAction* actionViewVPNext     = addAction("Next viewpoint",         "actionViewVPNext"    );
+		QAction* actionViewVPSave     = addAction("Save viewpoint",         "actionViewVPSave"    ); actionViewVPSave->setShortcut(Qt::CTRL + Qt::Key_K);
+		QAction* actionViewVPPrev     = addAction("Prev viewpoint",         "actionViewVPPrev"    ); actionViewVPPrev->setShortcut(Qt::CTRL + Qt::Key_J);
+		QAction* actionViewVPNext     = addAction("Next viewpoint",         "actionViewVPNext"    ); actionViewVPNext->setShortcut(Qt::CTRL + Qt::Key_L);
 
 		// --- Help Menu ---
 		QAction* actionHelp  = new QAction("Help ... " , MainWindow); actionHelp ->setObjectName(QStringLiteral("actionHelp" ));
@@ -292,6 +292,7 @@ public:
 
 		menuBar->addAction(menuView->menuAction());
 		menuView->addAction(actionViewSettings  );
+		menuView->addSeparator();
 		menuView->addAction(actionViewCapture   );
 		menuView->addAction(actionViewProjection);
 		menuView->addAction(actionViewMesh      );

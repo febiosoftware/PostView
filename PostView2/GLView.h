@@ -65,6 +65,8 @@ struct GLNODE_PICK
 
 class CGLView : public QOpenGLWidget
 {
+	Q_OBJECT
+
 public:
 	CGLView(CMainWindow* pwnd, QWidget* parent = 0);
 	~CGLView();
@@ -75,6 +77,12 @@ public:
 
 	void TrackSelection(bool b);
 
+	void setPerspective(bool b);
+
+	void showSafeFrame(bool b);
+
+	void SetView(View_Mode nview);
+
 protected:
 	void initializeGL();
 	void resizeGL(int w, int h);
@@ -84,6 +92,9 @@ protected:
 	void mouseMoveEvent   (QMouseEvent* ev);
 	void mouseReleaseEvent(QMouseEvent* ev);
 	bool event(QEvent* event);
+
+protected slots:
+	void repaintEvent();
 
 protected:
 	void Clear();
@@ -135,21 +146,12 @@ protected:
 		}
 	}
 
-	void ToggleSafeFrame()
-	{
-		if (m_pframe->visible()) m_pframe->hide();
-		else m_pframe->show();
-	}
-
 	void SetRenderStyle(int nstyle);
 
 	void NewAnimation(const char* szfile, CAnimation* panim, GLenum fmt = GL_RGB);
 	void StartAnimation();
 	void StopAnimation();
 	void PauseAnimation();
-
-	void TogglePerspective();
-	void SetView(View_Mode nview);
 
 	vec3f Global2Local(vec3f r);
 	void Local2View(vec3f r, GLdouble g[2]);

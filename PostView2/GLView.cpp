@@ -9,6 +9,7 @@
 #include <PostViewLib/VolRender.h>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QtCore/QTimer>
 
 CGLView::CGLView(CMainWindow* pwnd, QWidget* parent) : QOpenGLWidget(parent), m_wnd(pwnd)
 {
@@ -16,11 +17,11 @@ CGLView::CGLView(CMainWindow* pwnd, QWidget* parent) : QOpenGLWidget(parent), m_
 	m_nanim = ANIM_STOPPED;
 	m_video_fmt = GL_RGB;
 
-/*	QSurfaceFormat fmt = format();
+	// NOTE: multi-sampling prevents the snapshot feature from working
+	QSurfaceFormat fmt = format();
 	fmt.setSamples(4);
-	fmt.setRenderableType(QSurfaceFormat::OpenGL);
 	setFormat(fmt);
-*/
+
 	m_bdrag = false;
 
 	m_bZoomRect = false;
@@ -258,8 +259,14 @@ void CGLView::paintGL()
 	if (GetCamera().IsAnimating())
 	{
 		GetCamera().Update();
-//		Fl::add_timeout(0.05, cb_redraw, (void*) this);
+		QTimer::singleShot(50, this, SLOT(repaintEvent()));
 	}
+}
+
+//-----------------------------------------------------------------------------
+void CGLView::repaintEvent()
+{
+	repaint();
 }
 
 //-----------------------------------------------------------------------------
@@ -1901,7 +1908,7 @@ void CGLView::RenderDoc()
 			// with more than just polygons.
 			if (view.m_bmesh)
 			{
-				glDepthRange(0, 0.99999);
+				glDepthRange(0, 0.999999);
 				po->RenderMeshLines(pdoc->GetFEModel());
 				glDepthRange(0, 1);
 			}
@@ -2148,14 +2155,21 @@ void CGLView::SetView(View_Mode n)
 	repaint();
 }
 
-void CGLView::TogglePerspective()
+void CGLView::showSafeFrame(bool b)
+{
+	if (b) m_pframe->show();
+	else m_pframe->hide();
+}
+
+void CGLView::setPerspective(bool b)
 {
 	CDocument* pdoc = GetDocument();
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
 
-	view.m_nproj = (view.m_nproj == RENDER_ORTHO? RENDER_PERSP : RENDER_ORTHO);
+	view.m_nproj = (b ? RENDER_PERSP : RENDER_ORTHO);
 	repaint();
 }
+
 /*
 void CGLView::OnPopup(Fl_Widget* pw, void* pd)
 {

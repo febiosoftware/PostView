@@ -133,7 +133,7 @@ void CGLCamera::Transform()
 	vec3f r = Target();
 
 	// zoom-in a little when in decal mode
-	if (m_bdecal) r.z *= .999f;
+//	if (m_bdecal) r.z *= .999f;
 
 	// move the camera back
 	glxTranslate(-r);
