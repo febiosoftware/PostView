@@ -73,6 +73,8 @@ public:
 
 	QImage CaptureScreen();
 
+	void TrackSelection(bool b);
+
 protected:
 	void initializeGL();
 	void resizeGL(int w, int h);
@@ -155,7 +157,6 @@ protected:
 
 	void Global2Screen(vec3f r, int n[2]);
 
-	void TrackSelection();
 	void RenderTrack();
 
 	void SetVideoFormat(GLenum fmt) { m_video_fmt = fmt; }

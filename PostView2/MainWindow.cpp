@@ -623,3 +623,9 @@ void CMainWindow::on_actionViewSmooth_toggled(bool bchecked)
 		}
 	}
 }
+
+void CMainWindow::on_actionViewTrack_toggled(bool bchecked)
+{
+	ui->glview->TrackSelection(bchecked);
+	ui->glview->repaint();
+}

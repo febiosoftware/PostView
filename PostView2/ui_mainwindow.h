@@ -213,7 +213,7 @@ public:
 		QAction* actionViewRight      = addAction("Right",                  "actionViewRight"     );
 		QAction* actionViewTop        = addAction("Top" ,                   "actionViewTop"       );
 		QAction* actionViewBottom     = addAction("Bottom" ,                "actionViewBottom"    );
-		QAction* actionViewTrack      = addAction("Track selection",        "actionViewTrack"     );
+		QAction* actionViewTrack      = addAction("Track selection",        "actionViewTrack"     ); actionViewTrack->setShortcut(Qt::CTRL + Qt::Key_T); actionViewTrack->setCheckable(true);
 		QAction* actionViewVPSave     = addAction("Save viewpoint",         "actionViewVPSave"    );
 		QAction* actionViewVPPrev     = addAction("Prev viewpoint",         "actionViewVPPrev"    );
 		QAction* actionViewVPNext     = addAction("Next viewpoint",         "actionViewVPNext"    );

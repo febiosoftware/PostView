@@ -2292,37 +2292,44 @@ void CGLView::View2Screen(double x, double y, int n[2])
 	n[1] = vp[1] + (int) ((wy/2 + y)/wy * vp[3]);
 }
 
-void CGLView::TrackSelection()
+void CGLView::TrackSelection(bool b)
 {
-	m_btrack = false;
-	CDocument* pdoc = GetDocument();
-	if (pdoc->IsValid())
+	if (b==false)
 	{
-		int nmode = pdoc->GetSelectionMode();
-		FEMesh* pm = pdoc->GetFEModel()->GetMesh();
-		if (nmode == SELECT_ELEMS)
+		m_btrack = false;
+	}
+	else
+	{
+		m_btrack = false;
+		CDocument* pdoc = GetDocument();
+		if (pdoc->IsValid())
 		{
-			for (int i=0; i<pm->Elements(); ++i) 
-				if (pm->Element(i).IsSelected()) 
-				{
-					int* n = pm->Element(i).m_node;
-					m_ntrack[0] = n[0];
-					m_ntrack[1] = n[1];
-					m_ntrack[2] = n[2];
-					m_btrack = true; 
-					break; 
-				}
-		}
-		else if (nmode == SELECT_NODES)
-		{
-			int ns = 0;
-			for (int i=0; i<pm->Nodes(); ++i)
+			int nmode = pdoc->GetSelectionMode();
+			FEMesh* pm = pdoc->GetFEModel()->GetMesh();
+			if (nmode == SELECT_ELEMS)
 			{
-				if (pm->Node(i).IsSelected()) m_ntrack[ns++] = i;
-				if (ns == 3)
+				for (int i=0; i<pm->Elements(); ++i) 
+					if (pm->Element(i).IsSelected()) 
+					{
+						int* n = pm->Element(i).m_node;
+						m_ntrack[0] = n[0];
+						m_ntrack[1] = n[1];
+						m_ntrack[2] = n[2];
+						m_btrack = true; 
+						break; 
+					}
+			}
+			else if (nmode == SELECT_NODES)
+			{
+				int ns = 0;
+				for (int i=0; i<pm->Nodes(); ++i)
 				{
-					m_btrack = true;
-					break;
+					if (pm->Node(i).IsSelected()) m_ntrack[ns++] = i;
+					if (ns == 3)
+					{
+						m_btrack = true;
+						break;
+					}
 				}
 			}
 		}

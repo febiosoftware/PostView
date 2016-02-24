@@ -64,6 +64,7 @@ private slots:
 	void on_actionViewMesh_toggled(bool bchecked);
 	void on_actionViewOutline_toggled(bool bchecked);
 	void on_actionViewSmooth_toggled(bool bchecked);
+	void on_actionViewTrack_toggled(bool bchecked);
 
 private:
 	void timerEvent(QTimerEvent* ev);
