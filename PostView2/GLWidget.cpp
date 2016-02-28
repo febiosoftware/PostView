@@ -585,34 +585,6 @@ void GLTriad::draw(QPainter* painter)
 
 	gluDeleteQuadric(pcyl);
 
-	// NOTE: I don't know why but for some reason this solves
-	//       the problem with the dissappearing fonts.
-/*	gl_font(m_font, 8);
-
-	// restore identity matrix
-	if (m_bcoord_labels)
-	{
-		glLoadIdentity();
-
-		glDisable(GL_DEPTH_TEST);
-		glDisable(GL_LIGHTING);
-
-		float a = 1.1f;
-
-		vec3f ex(a, 0.f, 0.f);
-		vec3f ey(0.f, a, 0.f);
-		vec3f ez(0.f, 0.f, a);
-		q.RotateVector(ex);
-		q.RotateVector(ey);
-		q.RotateVector(ez);
-
-		glColor3ub(m_fgc.r, m_fgc.g, m_fgc.b);
-		gl_font(m_font, m_font_size);
-		gl_draw("X", ex.x, ex.y);
-		gl_draw("Y", ey.x, ey.y);
-		gl_draw("Z", ez.x, ez.y);
-	}
-*/
 	// restore project matrix
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
@@ -628,6 +600,29 @@ void GLTriad::draw(QPainter* painter)
 	glViewport(view[0], view[1], view[2], view[3]);
 
 	painter->endNativePainting();
+
+	// restore identity matrix
+	if (m_bcoord_labels)
+	{
+		float a = 1.1f;
+		vec3f ex(a, 0.f, 0.f);
+		vec3f ey(0.f, a, 0.f);
+		vec3f ez(0.f, 0.f, a);
+		q.RotateVector(ex);
+		q.RotateVector(ey);
+		q.RotateVector(ez);
+
+		y0 = view[3] - y0;
+		y1 = view[3] - y1;
+
+		ex.x = x0 + (x1 - x0)*(ex.x + 1)*0.5; ex.y = y0 + (y1 - y0)*(ex.y + 1)*0.5;
+		ey.x = x0 + (x1 - x0)*(ey.x + 1)*0.5; ey.y = y0 + (y1 - y0)*(ey.y + 1)*0.5;
+		ez.x = x0 + (x1 - x0)*(ez.x + 1)*0.5; ez.y = y0 + (y1 - y0)*(ez.y + 1)*0.5;
+
+		painter->drawText(ex.x, ex.y, "X");
+		painter->drawText(ey.x, ey.y, "Y");
+		painter->drawText(ez.x, ez.y, "Z");
+	}
 }
 
 //-----------------------------------------------------------------------------
