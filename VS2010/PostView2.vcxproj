@@ -120,6 +120,7 @@
     <ClCompile Include="..\PostView2\moc_StatePanel.cpp" />
     <ClCompile Include="..\PostView2\moc_ToolsPanel.cpp" />
     <ClCompile Include="..\PostView2\ModelViewer.cpp" />
+    <ClCompile Include="..\PostView2\PointDistanceTool.cpp" />
     <ClCompile Include="..\PostView2\PostView2.cpp" />
     <ClCompile Include="..\PostView2\PropertyList.cpp" />
     <ClCompile Include="..\PostView2\PropertyListForm.cpp" />
@@ -145,6 +146,7 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename).%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </CustomBuild>
+    <ClInclude Include="..\PostView2\PointDistanceTool.h" />
     <ClInclude Include="resource.h" />
     <CustomBuild Include="..\PostView2\PropertyListForm.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)bin/moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
