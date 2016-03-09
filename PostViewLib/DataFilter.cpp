@@ -268,6 +268,51 @@ bool DataSmoothStep(FEModel& fem, int nfield, double theta)
 				return false;
 			}
 		}
+		else if (IS_ELEM_FIELD(nfield))
+		{
+			FEMeshData& d = s.m_Data[ndata];
+			if ((d.GetFormat() == DATA_ITEM)&&(d.GetType() == DATA_FLOAT))
+			{
+				int NE = mesh.Elements();
+
+				vector<float> D; D.assign(NE, 0.f);
+				vector<int> tag; tag.assign(NE, 0);
+				FEElementData<float, DATA_ITEM>& data = dynamic_cast< FEElementData<float, DATA_ITEM>& >(d);
+
+				for (int i=0; i<NE; ++i) mesh.Element(i).m_ntag = i;
+
+				// evaluate the average value of the neighbors
+				for (int i=0; i<NE; ++i)
+				{
+					FEElement& el = mesh.Element(i);
+					int nf = el.Faces();
+					for (int j=0; j<nf; ++j)
+					{
+						FEElement* pj = el.m_pElem[j];
+						if (pj && (data.active(pj->m_ntag)))
+						{
+							float f;
+							data.eval(pj->m_ntag, &f);
+							D[i] += f;
+							tag[i]++;
+						}
+					}
+				}
+
+				// normalize 
+				for (int i=0; i<NE; ++i) if (tag[i]>0) D[i] /= (float) tag[i];
+
+				// assign to data field
+				for (int i = 0; i<NE; ++i) 
+					if (data.active(i))
+					{
+						float f;
+						data.eval(i, &f);
+						D[i] = (1.f - theta)*f + theta*D[i];
+						data.set(i, D[i]);
+					}
+			}
+		}
 	}
 
 	return true;

@@ -264,6 +264,58 @@ void CMainWindow::on_actionSnapShot_triggered()
 	}
 }
 
+void CMainWindow::on_actionOpenSession_triggered()
+{
+	char szfile[1024] = {0};
+	QString filename = QFileDialog::getOpenFileName(this, "Open session file", 0, "PostView session (*.pvs)");
+	if (filename.isEmpty() == false)
+	{
+		CDocument* pdoc = GetDocument();
+		// try to open the session
+		if (pdoc->OpenSession(szfile) == false)
+		{
+			QMessageBox::critical(this, "PostView", "Failed restoring session.");
+//			ShowTimeController(false);
+			ui->playToolBar->setDisabled(true);
+		}
+		else
+		{
+			int N = pdoc->GetFEModel()->GetStates();
+//			ShowTimeController(N > 1);
+
+			char* ch = strrchr(szfile, '\\');
+			if (ch == 0) 
+			{
+				ch = strrchr(szfile, '/'); 
+				if (ch == 0) ch = szfile; else ch++;
+			} else ch++;
+
+			QString title; title = QString("%1 - PostView").arg(ch);
+			setWindowTitle(title);
+			
+			ui->selectData->BuildMenu(m_doc->GetFEModel(), DATA_SCALAR);
+			if (m_doc->GetFEModel()->GetStates() > 0) ui->playToolBar->setEnabled(true);
+			else ui->playToolBar->setDisabled(true);
+
+			// update all Ui components
+			UpdateUi();
+		}
+	}
+}
+
+void CMainWindow::on_actionSaveSession_triggered()
+{
+	QString fileName = QFileDialog::getSaveFileName(this, "Save session", 0, "PostView session (*.pvs)");
+	if (fileName.isEmpty() == false)
+	{
+		const char* szfile = fileName.toStdString().c_str();
+		if (m_doc->SaveSession(szfile) == false)
+		{
+			QMessageBox::critical(this, "PostView", "Failed storing PostView session.");
+		}
+	}
+}
+
 void CMainWindow::on_actionQuit_triggered()
 {
 	QApplication::quit();

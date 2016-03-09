@@ -228,6 +228,7 @@ template <typename T> class FEElementData<T, DATA_ITEM> : public FEElemData_T<T,
 public:
 	FEElementData(FEModel* pm) : FEElemData_T<T,DATA_ITEM>(pm) { m_elem.assign(pm->GetMesh()->Elements(), -1); }
 	void eval(int n, T* pv) { assert(m_elem[n] >= 0); (*pv) = m_data[m_elem[n]]; }
+	void set(int n, const T& v) { assert(m_elem[n] >= 0); m_data[m_elem[n]] = v; }
 	void copy(FEElementData<T, DATA_ITEM>& d) { m_data = d.m_data; m_elem = d.m_elem; }
 	bool active(int n) { return (m_elem[n] >= 0); }
 	void add(int n, const T& v) { int m = m_elem[n]; if (m == -1) { m_elem[n] = m_data.size(); m_data.push_back(v); } else m_data[m] = v; }

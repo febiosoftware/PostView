@@ -87,6 +87,8 @@
     <ClInclude Include="..\..\PostViewLib\constants.h" />
     <ClInclude Include="..\..\PostViewLib\DataFilter.h" />
     <ClInclude Include="..\..\PostViewLib\DataMap.h" />
+    <ClInclude Include="..\..\PostViewLib\FEASCIIImport.h" />
+    <ClInclude Include="..\..\PostViewLib\FEBioImport.h" />
     <ClInclude Include="..\..\PostViewLib\FEDataManager.h" />
     <ClInclude Include="..\..\PostViewLib\FEElement.h" />
     <ClInclude Include="..\..\PostViewLib\FEFEBioExport.h" />
@@ -116,6 +118,7 @@
     <ClInclude Include="..\..\PostViewLib\GLCamera.h" />
     <ClInclude Include="..\..\PostViewLib\GLObject.h" />
     <ClInclude Include="..\..\PostViewLib\GLTexture1D.h" />
+    <ClInclude Include="..\..\PostViewLib\GMeshImport.h" />
     <ClInclude Include="..\..\PostViewLib\GView.h" />
     <ClInclude Include="..\..\PostViewLib\Image.h" />
     <ClInclude Include="..\..\PostViewLib\Interpolator.h" />
@@ -138,6 +141,8 @@
     <ClCompile Include="..\..\PostViewLib\DataFilter.cpp" />
     <ClCompile Include="..\..\PostViewLib\DataMap.cpp" />
     <ClCompile Include="..\..\PostViewLib\evaluate.cpp" />
+    <ClCompile Include="..\..\PostViewLib\FEASCIIImport.cpp" />
+    <ClCompile Include="..\..\PostViewLib\FEBioImport.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEDataManager.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEElement.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEFEBioExport.cpp" />
@@ -166,6 +171,7 @@
     <ClCompile Include="..\..\PostViewLib\GLCamera.cpp" />
     <ClCompile Include="..\..\PostViewLib\GLObject.cpp" />
     <ClCompile Include="..\..\PostViewLib\GLTexture1D.cpp" />
+    <ClCompile Include="..\..\PostViewLib\GMeshImport.cpp" />
     <ClCompile Include="..\..\PostViewLib\GView.cpp" />
     <ClCompile Include="..\..\PostViewLib\Image.cpp" />
     <ClCompile Include="..\..\PostViewLib\integrate.cpp" />

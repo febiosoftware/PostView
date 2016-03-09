@@ -293,12 +293,12 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 			{
 				switch (it.ntype)
 				{
-				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEElementData<float  ,DATA_REGION> >(it.szname)); break;
-				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEElementData<vec3f  ,DATA_REGION> >(it.szname)); break;
-				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fs ,DATA_REGION> >(it.szname)); break;
-				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fd ,DATA_REGION> >(it.szname)); break;
-                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEElementData<tens4fs,DATA_REGION> >(it.szname)); break;
-				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEElementData<mat3f  ,DATA_REGION> >(it.szname)); break;
+				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEElementData<float  ,DATA_ITEM> >(it.szname)); break;
+				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEElementData<vec3f  ,DATA_ITEM> >(it.szname)); break;
+				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fs ,DATA_ITEM> >(it.szname)); break;
+				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fd ,DATA_ITEM> >(it.szname)); break;
+                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEElementData<tens4fs,DATA_ITEM> >(it.szname)); break;
+				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEElementData<mat3f  ,DATA_ITEM> >(it.szname)); break;
 				default:
 					assert(false);
 					return false;
@@ -368,12 +368,12 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 			{
 				switch (it.ntype)
 				{
-				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEFaceData<float  ,DATA_REGION> >(it.szname)); break;
-				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<vec3f  ,DATA_REGION> >(it.szname)); break;
-				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fs ,DATA_REGION> >(it.szname)); break;
-				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fd ,DATA_REGION> >(it.szname)); break;
-                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEFaceData<tens4fs,DATA_REGION> >(it.szname)); break;
-				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3f  ,DATA_REGION> >(it.szname)); break;
+				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEFaceData<float  ,DATA_ITEM> >(it.szname)); break;
+				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<vec3f  ,DATA_ITEM> >(it.szname)); break;
+				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fs ,DATA_ITEM> >(it.szname)); break;
+				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fd ,DATA_ITEM> >(it.szname)); break;
+                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEFaceData<tens4fs,DATA_ITEM> >(it.szname)); break;
+				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3f  ,DATA_ITEM> >(it.szname)); break;
 				default:
 					assert(false);
 				}
@@ -1551,54 +1551,48 @@ bool XpltReader::ReadElemData_REGION(XpltReader::Domain& dom, FEMeshData& s, int
 		{
 			float a;
 			m_ar.read(a);
-			FEElementData<float,DATA_REGION>& df = dynamic_cast<FEElementData<float,DATA_REGION>&>(s);
-			df.set(a);
-			for (int i=0; i<NE; ++i) df.add(dom.elem[i].index);
+			FEElementData<float,DATA_ITEM>& df = dynamic_cast<FEElementData<float,DATA_ITEM>&>(s);
+			for (int i=0; i<NE; ++i) df.add(dom.elem[i].index, a);
 		}
 		break;
 	case VEC3F:
 		{
 			vec3f a;
 			m_ar.read(a);
-			FEElementData<vec3f,DATA_REGION>& df = dynamic_cast<FEElementData<vec3f,DATA_REGION>&>(s);
-			df.set(a);
-			for (int i=0; i<NE; ++i) df.add(dom.elem[i].index);
+			FEElementData<vec3f,DATA_ITEM>& df = dynamic_cast<FEElementData<vec3f,DATA_ITEM>&>(s);
+			for (int i=0; i<NE; ++i) df.add(dom.elem[i].index, a);
 		};
 		break;
 	case MAT3FS:
 		{
 			mat3fs a;
 			m_ar.read(a);
-			FEElementData<mat3fs,DATA_REGION>& df = dynamic_cast<FEElementData<mat3fs,DATA_REGION>&>(s);
-			df.set(a);
-			for (int i=0; i<NE; ++i) df.add(dom.elem[i].index);
+			FEElementData<mat3fs,DATA_ITEM>& df = dynamic_cast<FEElementData<mat3fs,DATA_ITEM>&>(s);
+			for (int i=0; i<NE; ++i) df.add(dom.elem[i].index, a);
 		};
 		break;
 	case MAT3FD:
 		{
 			mat3fd a;
 			m_ar.read(a);
-			FEElementData<mat3fd,DATA_REGION>& df = dynamic_cast<FEElementData<mat3fd,DATA_REGION>&>(s);
-			df.set(a);
-			for (int i=0; i<NE; ++i) df.add(dom.elem[i].index);
+			FEElementData<mat3fd,DATA_ITEM>& df = dynamic_cast<FEElementData<mat3fd,DATA_ITEM>&>(s);
+			for (int i=0; i<NE; ++i) df.add(dom.elem[i].index, a);
 		};
 		break;
 	case MAT3F:
 		{
 			mat3f a;
 			m_ar.read(a);
-			FEElementData<mat3f,DATA_REGION>& df = dynamic_cast<FEElementData<mat3f,DATA_REGION>&>(s);
-			df.set(a);
-			for (int i=0; i<NE; ++i) df.add(dom.elem[i].index);
+			FEElementData<mat3f,DATA_ITEM>& df = dynamic_cast<FEElementData<mat3f,DATA_ITEM>&>(s);
+			for (int i=0; i<NE; ++i) df.add(dom.elem[i].index, a);
 		};
 		break;
     case TENS4FS:
 		{
 			tens4fs a;
 			m_ar.read(a);
-			FEElementData<tens4fs,DATA_REGION>& df = dynamic_cast<FEElementData<tens4fs,DATA_REGION>&>(s);
-			df.set(a);
-			for (int i=0; i<NE; ++i) df.add(dom.elem[i].index);
+			FEElementData<tens4fs,DATA_ITEM>& df = dynamic_cast<FEElementData<tens4fs,DATA_ITEM>&>(s);
+			for (int i=0; i<NE; ++i) df.add(dom.elem[i].index, a);
 		};
         break;
 	default:
@@ -1791,79 +1785,73 @@ bool XpltReader::ReadFaceData_REGION(FEMesh& m, XpltReader::Surface &s, FEMeshDa
 	{
 	case FLOAT:
 		{
-			FEFaceData<float,DATA_REGION>& df = dynamic_cast<FEFaceData<float,DATA_REGION>&>(data);
+			FEFaceData<float,DATA_ITEM>& df = dynamic_cast<FEFaceData<float,DATA_ITEM>&>(data);
 			float a;
 			m_ar.read(a);
-			df.set(a);
 			for (int i=0; i<NF; ++i)
 			{
 				FACE& f = s.face[i];
-				df.add(f.nid);
+				df.add(f.nid, a);
 			}
 		}
 		break;
 	case VEC3F:
 		{
-			FEFaceData<vec3f,DATA_REGION>& df = dynamic_cast<FEFaceData<vec3f,DATA_REGION>&>(data);
+			FEFaceData<vec3f,DATA_ITEM>& df = dynamic_cast<FEFaceData<vec3f,DATA_ITEM>&>(data);
 			vec3f a;
 			m_ar.read(a);
-			df.set(a);
 			for (int i=0; i<NF; ++i)
 			{
 				FACE& f = s.face[i];
-				df.add(f.nid);
+				df.add(f.nid, a);
 			}
 		}
 		break;
 	case MAT3FS:
 		{
-			FEFaceData<mat3fs,DATA_REGION>& df = dynamic_cast<FEFaceData<mat3fs,DATA_REGION>&>(data);
+			FEFaceData<mat3fs,DATA_ITEM>& df = dynamic_cast<FEFaceData<mat3fs,DATA_ITEM>&>(data);
 			mat3fs a;
 			m_ar.read(a);
-			df.set(a);
 			for (int i=0; i<NF; ++i)
 			{
 				FACE& f = s.face[i];
-				df.add(f.nid);
+				df.add(f.nid, a);
 			}
 		}
 		break;
 	case MAT3F:
 		{
-			FEFaceData<mat3f,DATA_REGION>& df = dynamic_cast<FEFaceData<mat3f,DATA_REGION>&>(data);
+			FEFaceData<mat3f,DATA_ITEM>& df = dynamic_cast<FEFaceData<mat3f,DATA_ITEM>&>(data);
 			mat3f a;
 			m_ar.read(a);
-			df.set(a);
 			for (int i=0; i<NF; ++i)
 			{
 				FACE& f = s.face[i];
-				df.add(f.nid);
+				df.add(f.nid, a);
 			}
 		}
 		break;
 	case MAT3FD:
 		{
-			FEFaceData<mat3fd,DATA_REGION>& df = dynamic_cast<FEFaceData<mat3fd,DATA_REGION>&>(data);
+			FEFaceData<mat3fd,DATA_ITEM>& df = dynamic_cast<FEFaceData<mat3fd,DATA_ITEM>&>(data);
 			mat3fd a;
 			m_ar.read(a);
-			df.set(a);
 			for (int i=0; i<NF; ++i)
 			{
 				FACE& f = s.face[i];
-				df.add(f.nid);
+				df.add(f.nid, a);
 			}
 		}
 		break;	
     case TENS4FS:
 		{
-			FEFaceData<tens4fs,DATA_REGION>& df = dynamic_cast<FEFaceData<tens4fs,DATA_REGION>&>(data);
+			FEFaceData<tens4fs,DATA_ITEM>& df = dynamic_cast<FEFaceData<tens4fs,DATA_ITEM>&>(data);
 			tens4fs a;
 			m_ar.read(a);
-			df.set(a);
 			for (int i=0; i<NF; ++i)
 			{
 				FACE& f = s.face[i];
-				df.add(f.nid);
+				df.add(f.nid, a);
 			}
 		}
         break;
