@@ -88,6 +88,7 @@
     <ClCompile Include="..\PostView2\CommandPanel.cpp" />
     <ClCompile Include="..\PostView2\DataFieldSelector.cpp" />
     <ClCompile Include="..\PostView2\DataPanel.cpp" />
+    <ClCompile Include="..\PostView2\DlgViewSettings.cpp" />
     <ClCompile Include="..\PostView2\Document.cpp" />
     <ClCompile Include="..\PostView2\FileViewer.cpp" />
     <ClCompile Include="..\PostView2\GLContext.cpp" />
@@ -108,6 +109,7 @@
     <ClCompile Include="..\PostView2\MainWindow.cpp" />
     <ClCompile Include="..\PostView2\MaterialPanel.cpp" />
     <ClCompile Include="..\PostView2\moc_DataPanel.cpp" />
+    <ClCompile Include="..\PostView2\moc_DlgViewSettings.cpp" />
     <ClCompile Include="..\PostView2\moc_FileViewer.cpp" />
     <ClCompile Include="..\PostView2\moc_GLView.cpp" />
     <ClCompile Include="..\PostView2\moc_GraphWindow.cpp" />
@@ -143,6 +145,11 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </CustomBuild>
     <CustomBuild Include="..\PostView2\PlotWidget.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)bin/moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename).%(Extension) using MOC</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\PostView2\DlgViewSettings.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)bin/moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename).%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>

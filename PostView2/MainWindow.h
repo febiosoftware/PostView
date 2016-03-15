@@ -63,6 +63,7 @@ private slots:
 	void on_actionNext_triggered();
 	void on_actionLast_triggered();
 
+	void on_actionViewSettings_triggered();
 	void on_actionViewCapture_toggled(bool bchecked);
 	void on_actionViewProjection_toggled(bool bchecked);
 	void on_actionViewFront_triggered();

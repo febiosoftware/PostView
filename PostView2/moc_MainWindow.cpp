@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_CMainWindow_t {
-    QByteArrayData data[55];
-    char stringdata0[1464];
+    QByteArrayData data[56];
+    char stringdata0[1496];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -69,21 +69,22 @@ QT_MOC_LITERAL(36, 935, 24), // "on_actionFirst_triggered"
 QT_MOC_LITERAL(37, 960, 23), // "on_actionPrev_triggered"
 QT_MOC_LITERAL(38, 984, 23), // "on_actionNext_triggered"
 QT_MOC_LITERAL(39, 1008, 23), // "on_actionLast_triggered"
-QT_MOC_LITERAL(40, 1032, 28), // "on_actionViewCapture_toggled"
-QT_MOC_LITERAL(41, 1061, 31), // "on_actionViewProjection_toggled"
-QT_MOC_LITERAL(42, 1093, 28), // "on_actionViewFront_triggered"
-QT_MOC_LITERAL(43, 1122, 27), // "on_actionViewBack_triggered"
-QT_MOC_LITERAL(44, 1150, 27), // "on_actionViewLeft_triggered"
-QT_MOC_LITERAL(45, 1178, 28), // "on_actionViewRight_triggered"
-QT_MOC_LITERAL(46, 1207, 26), // "on_actionViewTop_triggered"
-QT_MOC_LITERAL(47, 1234, 29), // "on_actionViewBottom_triggered"
-QT_MOC_LITERAL(48, 1264, 25), // "on_actionViewMesh_toggled"
-QT_MOC_LITERAL(49, 1290, 28), // "on_actionViewOutline_toggled"
-QT_MOC_LITERAL(50, 1319, 27), // "on_actionViewSmooth_toggled"
-QT_MOC_LITERAL(51, 1347, 26), // "on_actionViewTrack_toggled"
-QT_MOC_LITERAL(52, 1374, 29), // "on_actionViewVPSave_triggered"
-QT_MOC_LITERAL(53, 1404, 29), // "on_actionViewVPPrev_triggered"
-QT_MOC_LITERAL(54, 1434, 29) // "on_actionViewVPNext_triggered"
+QT_MOC_LITERAL(40, 1032, 31), // "on_actionViewSettings_triggered"
+QT_MOC_LITERAL(41, 1064, 28), // "on_actionViewCapture_toggled"
+QT_MOC_LITERAL(42, 1093, 31), // "on_actionViewProjection_toggled"
+QT_MOC_LITERAL(43, 1125, 28), // "on_actionViewFront_triggered"
+QT_MOC_LITERAL(44, 1154, 27), // "on_actionViewBack_triggered"
+QT_MOC_LITERAL(45, 1182, 27), // "on_actionViewLeft_triggered"
+QT_MOC_LITERAL(46, 1210, 28), // "on_actionViewRight_triggered"
+QT_MOC_LITERAL(47, 1239, 26), // "on_actionViewTop_triggered"
+QT_MOC_LITERAL(48, 1266, 29), // "on_actionViewBottom_triggered"
+QT_MOC_LITERAL(49, 1296, 25), // "on_actionViewMesh_toggled"
+QT_MOC_LITERAL(50, 1322, 28), // "on_actionViewOutline_toggled"
+QT_MOC_LITERAL(51, 1351, 27), // "on_actionViewSmooth_toggled"
+QT_MOC_LITERAL(52, 1379, 26), // "on_actionViewTrack_toggled"
+QT_MOC_LITERAL(53, 1406, 29), // "on_actionViewVPSave_triggered"
+QT_MOC_LITERAL(54, 1436, 29), // "on_actionViewVPPrev_triggered"
+QT_MOC_LITERAL(55, 1466, 29) // "on_actionViewVPNext_triggered"
 
     },
     "CMainWindow\0on_actionOpen_triggered\0"
@@ -120,6 +121,7 @@ QT_MOC_LITERAL(54, 1434, 29) // "on_actionViewVPNext_triggered"
     "on_actionPlay_toggled\0on_actionFirst_triggered\0"
     "on_actionPrev_triggered\0on_actionNext_triggered\0"
     "on_actionLast_triggered\0"
+    "on_actionViewSettings_triggered\0"
     "on_actionViewCapture_toggled\0"
     "on_actionViewProjection_toggled\0"
     "on_actionViewFront_triggered\0"
@@ -144,7 +146,7 @@ static const uint qt_meta_data_CMainWindow[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      51,   14, // methods
+      52,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -152,57 +154,58 @@ static const uint qt_meta_data_CMainWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,  269,    2, 0x08 /* Private */,
-       3,    0,  270,    2, 0x08 /* Private */,
-       4,    0,  271,    2, 0x08 /* Private */,
-       5,    0,  272,    2, 0x08 /* Private */,
-       6,    0,  273,    2, 0x08 /* Private */,
-       7,    0,  274,    2, 0x08 /* Private */,
-       8,    0,  275,    2, 0x08 /* Private */,
-       9,    0,  276,    2, 0x08 /* Private */,
-      10,    0,  277,    2, 0x08 /* Private */,
-      11,    0,  278,    2, 0x08 /* Private */,
-      12,    0,  279,    2, 0x08 /* Private */,
-      13,    0,  280,    2, 0x08 /* Private */,
-      14,    0,  281,    2, 0x08 /* Private */,
-      15,    0,  282,    2, 0x08 /* Private */,
-      16,    0,  283,    2, 0x08 /* Private */,
-      17,    0,  284,    2, 0x08 /* Private */,
-      18,    0,  285,    2, 0x08 /* Private */,
-      19,    0,  286,    2, 0x08 /* Private */,
-      20,    0,  287,    2, 0x08 /* Private */,
-      21,    0,  288,    2, 0x08 /* Private */,
-      22,    0,  289,    2, 0x08 /* Private */,
-      23,    0,  290,    2, 0x08 /* Private */,
-      24,    0,  291,    2, 0x08 /* Private */,
-      25,    0,  292,    2, 0x08 /* Private */,
-      26,    0,  293,    2, 0x08 /* Private */,
-      27,    0,  294,    2, 0x08 /* Private */,
-      28,    0,  295,    2, 0x08 /* Private */,
-      29,    0,  296,    2, 0x08 /* Private */,
-      30,    0,  297,    2, 0x08 /* Private */,
-      31,    1,  298,    2, 0x08 /* Private */,
-      33,    1,  301,    2, 0x08 /* Private */,
-      35,    1,  304,    2, 0x08 /* Private */,
-      36,    0,  307,    2, 0x08 /* Private */,
-      37,    0,  308,    2, 0x08 /* Private */,
-      38,    0,  309,    2, 0x08 /* Private */,
-      39,    0,  310,    2, 0x08 /* Private */,
-      40,    1,  311,    2, 0x08 /* Private */,
-      41,    1,  314,    2, 0x08 /* Private */,
-      42,    0,  317,    2, 0x08 /* Private */,
-      43,    0,  318,    2, 0x08 /* Private */,
-      44,    0,  319,    2, 0x08 /* Private */,
-      45,    0,  320,    2, 0x08 /* Private */,
-      46,    0,  321,    2, 0x08 /* Private */,
-      47,    0,  322,    2, 0x08 /* Private */,
-      48,    1,  323,    2, 0x08 /* Private */,
-      49,    1,  326,    2, 0x08 /* Private */,
-      50,    1,  329,    2, 0x08 /* Private */,
-      51,    1,  332,    2, 0x08 /* Private */,
-      52,    0,  335,    2, 0x08 /* Private */,
-      53,    0,  336,    2, 0x08 /* Private */,
-      54,    0,  337,    2, 0x08 /* Private */,
+       1,    0,  274,    2, 0x08 /* Private */,
+       3,    0,  275,    2, 0x08 /* Private */,
+       4,    0,  276,    2, 0x08 /* Private */,
+       5,    0,  277,    2, 0x08 /* Private */,
+       6,    0,  278,    2, 0x08 /* Private */,
+       7,    0,  279,    2, 0x08 /* Private */,
+       8,    0,  280,    2, 0x08 /* Private */,
+       9,    0,  281,    2, 0x08 /* Private */,
+      10,    0,  282,    2, 0x08 /* Private */,
+      11,    0,  283,    2, 0x08 /* Private */,
+      12,    0,  284,    2, 0x08 /* Private */,
+      13,    0,  285,    2, 0x08 /* Private */,
+      14,    0,  286,    2, 0x08 /* Private */,
+      15,    0,  287,    2, 0x08 /* Private */,
+      16,    0,  288,    2, 0x08 /* Private */,
+      17,    0,  289,    2, 0x08 /* Private */,
+      18,    0,  290,    2, 0x08 /* Private */,
+      19,    0,  291,    2, 0x08 /* Private */,
+      20,    0,  292,    2, 0x08 /* Private */,
+      21,    0,  293,    2, 0x08 /* Private */,
+      22,    0,  294,    2, 0x08 /* Private */,
+      23,    0,  295,    2, 0x08 /* Private */,
+      24,    0,  296,    2, 0x08 /* Private */,
+      25,    0,  297,    2, 0x08 /* Private */,
+      26,    0,  298,    2, 0x08 /* Private */,
+      27,    0,  299,    2, 0x08 /* Private */,
+      28,    0,  300,    2, 0x08 /* Private */,
+      29,    0,  301,    2, 0x08 /* Private */,
+      30,    0,  302,    2, 0x08 /* Private */,
+      31,    1,  303,    2, 0x08 /* Private */,
+      33,    1,  306,    2, 0x08 /* Private */,
+      35,    1,  309,    2, 0x08 /* Private */,
+      36,    0,  312,    2, 0x08 /* Private */,
+      37,    0,  313,    2, 0x08 /* Private */,
+      38,    0,  314,    2, 0x08 /* Private */,
+      39,    0,  315,    2, 0x08 /* Private */,
+      40,    0,  316,    2, 0x08 /* Private */,
+      41,    1,  317,    2, 0x08 /* Private */,
+      42,    1,  320,    2, 0x08 /* Private */,
+      43,    0,  323,    2, 0x08 /* Private */,
+      44,    0,  324,    2, 0x08 /* Private */,
+      45,    0,  325,    2, 0x08 /* Private */,
+      46,    0,  326,    2, 0x08 /* Private */,
+      47,    0,  327,    2, 0x08 /* Private */,
+      48,    0,  328,    2, 0x08 /* Private */,
+      49,    1,  329,    2, 0x08 /* Private */,
+      50,    1,  332,    2, 0x08 /* Private */,
+      51,    1,  335,    2, 0x08 /* Private */,
+      52,    1,  338,    2, 0x08 /* Private */,
+      53,    0,  341,    2, 0x08 /* Private */,
+      54,    0,  342,    2, 0x08 /* Private */,
+      55,    0,  343,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
@@ -237,6 +240,7 @@ static const uint qt_meta_data_CMainWindow[] = {
     QMetaType::Void, QMetaType::Bool,   32,
     QMetaType::Void, QMetaType::Int,   34,
     QMetaType::Void, QMetaType::Bool,   32,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -302,21 +306,22 @@ void CMainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         case 33: _t->on_actionPrev_triggered(); break;
         case 34: _t->on_actionNext_triggered(); break;
         case 35: _t->on_actionLast_triggered(); break;
-        case 36: _t->on_actionViewCapture_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 37: _t->on_actionViewProjection_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 38: _t->on_actionViewFront_triggered(); break;
-        case 39: _t->on_actionViewBack_triggered(); break;
-        case 40: _t->on_actionViewLeft_triggered(); break;
-        case 41: _t->on_actionViewRight_triggered(); break;
-        case 42: _t->on_actionViewTop_triggered(); break;
-        case 43: _t->on_actionViewBottom_triggered(); break;
-        case 44: _t->on_actionViewMesh_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 45: _t->on_actionViewOutline_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 46: _t->on_actionViewSmooth_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 47: _t->on_actionViewTrack_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 48: _t->on_actionViewVPSave_triggered(); break;
-        case 49: _t->on_actionViewVPPrev_triggered(); break;
-        case 50: _t->on_actionViewVPNext_triggered(); break;
+        case 36: _t->on_actionViewSettings_triggered(); break;
+        case 37: _t->on_actionViewCapture_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 38: _t->on_actionViewProjection_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 39: _t->on_actionViewFront_triggered(); break;
+        case 40: _t->on_actionViewBack_triggered(); break;
+        case 41: _t->on_actionViewLeft_triggered(); break;
+        case 42: _t->on_actionViewRight_triggered(); break;
+        case 43: _t->on_actionViewTop_triggered(); break;
+        case 44: _t->on_actionViewBottom_triggered(); break;
+        case 45: _t->on_actionViewMesh_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 46: _t->on_actionViewOutline_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 47: _t->on_actionViewSmooth_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 48: _t->on_actionViewTrack_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 49: _t->on_actionViewVPSave_triggered(); break;
+        case 50: _t->on_actionViewVPPrev_triggered(); break;
+        case 51: _t->on_actionViewVPNext_triggered(); break;
         default: ;
         }
     }
@@ -347,13 +352,13 @@ int CMainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 51)
+        if (_id < 52)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 51;
+        _id -= 52;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 51)
+        if (_id < 52)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 51;
+        _id -= 52;
     }
     return _id;
 }

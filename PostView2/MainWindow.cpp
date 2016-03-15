@@ -16,6 +16,7 @@
 #include "GLIsoSurfacePlot.h"
 #include "GLSlicePLot.h"
 #include "GLVectorPlot.h"
+#include "DlgViewSettings.h"
 #include <string>
 
 CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMainWindow)
@@ -643,6 +644,12 @@ void CMainWindow::on_actionLast_triggered()
 	int N = pdoc->GetFEModel()->GetStates();
 	pdoc->SetCurrentTime(N-1);
 	ui->glview->repaint();
+}
+
+void CMainWindow::on_actionViewSettings_triggered()
+{
+	CDlgViewSettings dlg(this);
+	dlg.exec();
 }
 
 void CMainWindow::on_actionViewMesh_toggled(bool bchecked)
