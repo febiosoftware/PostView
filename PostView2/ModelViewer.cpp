@@ -286,6 +286,10 @@ void CModelViewer::Update()
 
 void CModelViewer::on_modelTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* prev)
 {
-	QVariant v = current->data(0, Qt::UserRole);
-	ui->m_props->Update(ui->m_list[v.toInt()]);
+	if (current)
+	{
+		QVariant v = current->data(0, Qt::UserRole);
+		ui->m_props->Update(ui->m_list[v.toInt()]);
+	}
+	else ui->m_props->Update(0);
 }

@@ -19,7 +19,7 @@ private:
 };
 
 //-------------------------------------------------------------------
-class GPointDecoration
+class GPointDecoration : public GDecoration
 {
 public:
 	GPointDecoration() {}
@@ -36,7 +36,7 @@ private:
 };
 
 //-------------------------------------------------------------------
-class GLineDecoration
+class GLineDecoration : public GDecoration
 {
 public:
 	GLineDecoration() { p1 = p2 = 0; }

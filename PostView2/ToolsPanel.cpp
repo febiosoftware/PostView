@@ -18,6 +18,11 @@
 #include <PostViewLib/GDecoration.h>
 #include "GLModel.h"
 #include "PointDistanceTool.h"
+#include "3PointAngleTool.h"
+#include "4PointAngleTool.h"
+#include "AddPointTool.h"
+#include "MeasureAreaTool.h"
+#include "TransformTool.h"
 
 static QList<CAbstractTool*>	tools;
 
@@ -105,24 +110,23 @@ void CToolsPanel::Update()
 void CToolsPanel::initTools()
 {
 	tools.push_back(new CPointDistanceTool);
-/*	tools.push_back(new CTool("3Point Angle"));
-	tools.push_back(new CTool("4Point Angle"));
-	tools.push_back(new CTool("Plane"));
-	tools.push_back(new CTool("Plotmix"));
-	tools.push_back(new CTool("Measure Area"));
-	tools.push_back(new CTool("Import Lines"));
-	tools.push_back(new CTool("Kinemat"));
-	tools.push_back(new CTool("Distance map"));
-	tools.push_back(new CTool("Curvature map"));
-	tools.push_back(new CTool("Pt. Congruency"));
-	tools.push_back(new CTool("Add image"));
-	tools.push_back(new CTool("Sphere fit"));
-	tools.push_back(new CTool("Transform"));
-	tools.push_back(new CTool("Shell thickness"));
-	tools.push_back(new CTool("Line cut"));
-	tools.push_back(new CTool("Add Point"));
-	tools.push_back(new CTool("Import points"));
-*/
+	tools.push_back(new C3PointAngleTool  );
+	tools.push_back(new C4PointAngleTool  );
+	//tools.push_back(new CTool("Plane"));
+	//tools.push_back(new CTool("Plotmix"));
+	tools.push_back(new CMeasureAreaTool);
+	//tools.push_back(new CTool("Import Lines"));
+	//tools.push_back(new CTool("Kinemat"));
+	//tools.push_back(new CTool("Distance map"));
+	//tools.push_back(new CTool("Curvature map"));
+	//tools.push_back(new CTool("Pt. Congruency"));
+	//tools.push_back(new CTool("Add image"));
+	//tools.push_back(new CTool("Sphere fit"));
+	tools.push_back(new CTransformTool);
+	//tools.push_back(new CTool("Shell thickness"));
+	//tools.push_back(new CTool("Line cut"));
+	tools.push_back(new CAddPointTool);
+	//tools.push_back(new CTool("Import points"));
 }
 
 void CToolsPanel::on_buttons_buttonClicked(int id)

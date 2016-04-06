@@ -90,7 +90,6 @@ void CPointDistanceTool::activate(CDocument* pdoc)
 	m_doc = pdoc;
 	if (pdoc && pdoc->IsValid())
 	{
-		updateLength();
 		if (m_deco)
 		{
 			m_doc->GetGLModel()->RemoveDecoration(m_deco);
@@ -99,6 +98,7 @@ void CPointDistanceTool::activate(CDocument* pdoc)
 		}
 		m_deco = new CPointDistanceDecoration;
 		m_doc->GetGLModel()->AddDecoration(m_deco);
+		updateLength();
 	}
 }
 
