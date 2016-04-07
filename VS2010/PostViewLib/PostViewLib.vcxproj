@@ -124,6 +124,7 @@
     <ClInclude Include="..\..\PostViewLib\Interpolator.h" />
     <ClInclude Include="..\..\PostViewLib\lusolver.h" />
     <ClInclude Include="..\..\PostViewLib\math3d.h" />
+    <ClInclude Include="..\..\PostViewLib\SphereFit.h" />
     <ClInclude Include="..\..\PostViewLib\stdafx.h" />
     <ClInclude Include="..\..\PostViewLib\VolRender.h" />
     <ClInclude Include="..\..\PostViewLib\VRMLExporter.h" />
@@ -178,6 +179,7 @@
     <ClCompile Include="..\..\PostViewLib\Interpolator.cpp" />
     <ClCompile Include="..\..\PostViewLib\lusolver.cpp" />
     <ClCompile Include="..\..\PostViewLib\math3d.cpp" />
+    <ClCompile Include="..\..\PostViewLib\SphereFit.cpp" />
     <ClCompile Include="..\..\PostViewLib\VolRender.cpp" />
     <ClCompile Include="..\..\PostViewLib\VRMLExporter.cpp" />
     <ClCompile Include="..\..\PostViewLib\XMLReader.cpp" />

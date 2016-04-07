@@ -23,6 +23,9 @@
 #include "AddPointTool.h"
 #include "MeasureAreaTool.h"
 #include "TransformTool.h"
+#include "ShellThicknessTool.h"
+#include "SphereFitTool.h"
+#include "PointCongruencyTool.h"
 
 static QList<CAbstractTool*>	tools;
 
@@ -119,11 +122,11 @@ void CToolsPanel::initTools()
 	//tools.push_back(new CTool("Kinemat"));
 	//tools.push_back(new CTool("Distance map"));
 	//tools.push_back(new CTool("Curvature map"));
-	//tools.push_back(new CTool("Pt. Congruency"));
+	tools.push_back(new CPointCongruencyTool);
 	//tools.push_back(new CTool("Add image"));
-	//tools.push_back(new CTool("Sphere fit"));
+	tools.push_back(new CSphereFitTool);
 	tools.push_back(new CTransformTool);
-	//tools.push_back(new CTool("Shell thickness"));
+	tools.push_back(new CShellThicknessTool);
 	//tools.push_back(new CTool("Line cut"));
 	tools.push_back(new CAddPointTool);
 	//tools.push_back(new CTool("Import points"));

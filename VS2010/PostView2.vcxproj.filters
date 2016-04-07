@@ -192,6 +192,21 @@
     <ClCompile Include="..\PostView2\TransformTool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\PostView2\ShellThicknessTool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PostView2\SphereFitTool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PostView2\moc_SphereFitTool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PostView2\PointCongruencyTool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PostView2\moc_PointCongruencyTool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\PostView2\stdafx.h">
@@ -272,6 +287,9 @@
     <ClInclude Include="..\PostView2\TransformTool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\PostView2\ShellThicknessTool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\PostView2\MainWindow.h">
@@ -314,6 +332,12 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\PostView2\Tool.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PostView2\SphereFitTool.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PostView2\PointCongruencyTool.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
