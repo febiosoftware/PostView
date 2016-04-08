@@ -30,6 +30,9 @@ public:
 	// the ui is no longer shown
 	virtual void deactivate() {}
 
+	// update the Ui
+	virtual void updateUi();
+
 private:
 	QString	m_name;
 };

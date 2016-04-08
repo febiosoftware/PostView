@@ -90,6 +90,7 @@
     <ClInclude Include="..\..\PostViewLib\FEASCIIImport.h" />
     <ClInclude Include="..\..\PostViewLib\FEBioImport.h" />
     <ClInclude Include="..\..\PostViewLib\FEDataManager.h" />
+    <ClInclude Include="..\..\PostViewLib\FEDistanceMap.h" />
     <ClInclude Include="..\..\PostViewLib\FEElement.h" />
     <ClInclude Include="..\..\PostViewLib\FEFEBioExport.h" />
     <ClInclude Include="..\..\PostViewLib\FEFileExport.h" />
@@ -145,6 +146,7 @@
     <ClCompile Include="..\..\PostViewLib\FEASCIIImport.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEBioImport.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEDataManager.cpp" />
+    <ClCompile Include="..\..\PostViewLib\FEDistanceMap.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEElement.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEFEBioExport.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEFileExport.cpp" />

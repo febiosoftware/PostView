@@ -5,6 +5,12 @@
 #include <QPushButton>
 
 //-----------------------------------------------------------------------------
+void CAbstractTool::updateUi()
+{
+	QApplication::activeWindow()->repaint();
+}
+
+//-----------------------------------------------------------------------------
 CBasicTool::CBasicTool(const QString& s, unsigned int flags) : CAbstractTool(s)
 {
 	m_list = 0;
@@ -53,6 +59,6 @@ void CBasicTool::updateUi()
 	if (m_form) 
 	{
 		m_form->updateData();
-		QApplication::activeWindow()->repaint();
 	}
+	CAbstractTool::updateUi();
 }
