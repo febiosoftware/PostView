@@ -18,6 +18,8 @@ public:
 	const char* GetName();
 	void SetName(const char* szname);
 
+	FEMesh* GetMesh() const { return m_pm; }
+
 protected:
 	FEMesh*	m_pm;	// pointer to the parent mesh
 	char	m_szname[64];
@@ -50,6 +52,10 @@ class FEPart : public FEGroup
 public:
 	FEPart(FEMesh* pm) : FEGroup(pm) {}
 
+	int Size() const { return (int) m_Elem.size(); }
+
+	void GetNodeList(vector<int>& node, vector<int>& lnode);
+
 public:
 	vector<int>	m_Elem;	// element indices
 };
@@ -60,6 +66,10 @@ class FESurface : public FEGroup
 {
 public:
 	FESurface(FEMesh* pm) : FEGroup(pm) {}
+
+	int Size() const { return (int) m_Face.size(); }
+
+	void GetNodeList(vector<int>& node, vector<int>& lnode);
 
 public:
 	vector<int>	m_Face;	// face indices

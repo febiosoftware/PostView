@@ -119,7 +119,7 @@ bool FERAWImageReader::Load(FEModel& fem, const char* szfile)
 	fem.UpdateBoundingBox();
 
 	// Add a data field
-	fem.AddDataField(new FEDataField_T<FENodeData<float> >("Image"));
+	fem.AddDataField(new FEDataField_T<FENodeData<float> >("Image", EXPORT_DATA));
 
 	// we need a single state
 	FEState* ps = new FEState(0.f, &fem);

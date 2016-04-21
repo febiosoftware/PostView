@@ -11,6 +11,12 @@ using namespace std;
 class FEModel;
 
 //-----------------------------------------------------------------------------
+// data field flags
+enum DataFieldFlags {
+	EXPORT_DATA = 1			// data field can be exported
+};
+
+//-----------------------------------------------------------------------------
 // Base class describing a data field
 class FEDataField
 {
@@ -18,7 +24,15 @@ public:
 	enum { MAX_DATA_NAME = 64 };
 
 public:
-	FEDataField(Data_Type ntype, Data_Format nfmt, Data_Class ncls) { m_szname[0] = 0; m_ntype = ntype; m_nfmt = nfmt; m_nclass = ncls; m_nref = 0;}
+	FEDataField(Data_Type ntype, Data_Format nfmt, Data_Class ncls, unsigned int flag = 0)
+	{ 
+		m_szname[0] = 0; 
+		m_ntype = ntype; 
+		m_nfmt = nfmt; 
+		m_nclass = ncls; 
+		m_nref = 0;
+		m_flag = flag;
+	}
 	virtual ~FEDataField(){}
 
 	//! get the name of the field
@@ -72,12 +86,15 @@ public:
 
 	virtual const std::type_info& TypeInfo() { return typeid(FEDataField); }
 
+	unsigned int Flags() const { return m_flag; }
+
 protected:
 	char		m_szname[MAX_DATA_NAME];	//!< field name
 	int			m_nfield;					//!< field ID
 	Data_Type	m_ntype;					//!< data type
 	Data_Format	m_nfmt;						//!< data format
 	Data_Class  m_nclass;					//!< data class
+	unsigned int	m_flag;					//!< flags
 
 public:
 	// TODO: Add properties list for data fields (e.g. strains and curvature could use this)
@@ -89,7 +106,7 @@ public:
 template<typename T> class FEDataField_T : public FEDataField
 {
 public:
-	FEDataField_T(const char* szname) : FEDataField(T::Type(), T::Format(), T::Class()) { SetName(szname); }
+	FEDataField_T(const char* szname, unsigned int flag = 0) : FEDataField(T::Type(), T::Format(), T::Class(), flag) { SetName(szname); }
 	FEMeshData* CreateData(FEModel* pm) { return new T(pm); }
 
 	virtual FEDataField* Clone() const { return new FEDataField_T<T>(GetName()); }

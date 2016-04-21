@@ -359,19 +359,19 @@ bool FELSDYNAimport::BuildMesh(FEModel& fem)
 	int ndata[2] = {-1, -1}, nd=0;
 	if (m_bnresults)
 	{
-		pdm->AddDataField(new FEDataField_T<FENodeData<float> >("Nodal Results")); 
+		pdm->AddDataField(new FEDataField_T<FENodeData<float> >("Nodal Results", EXPORT_DATA)); 
 		ndata[0] = nd;	nd++;
 	}
 
 	if (m_bdispl)
 	{
-		pdm->AddDataField(new FEDataField_T<FENodeData<vec3f> >("Displacement"));
+		pdm->AddDataField(new FEDataField_T<FENodeData<vec3f> >("Displacement", EXPORT_DATA));
 		ndata[1] = nd; nd++;
 	}
 
 	if (m_bshellthick)
 	{
-		pdm->AddDataField(new FEDataField_T<FEElementData<float ,DATA_COMP> >("shell thickness"));
+		pdm->AddDataField(new FEDataField_T<FEElementData<float ,DATA_COMP> >("shell thickness", EXPORT_DATA));
 	}
 
 	// we need a single state

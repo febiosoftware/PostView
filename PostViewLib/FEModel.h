@@ -32,7 +32,7 @@ public:
 	void Clear();
 
 	// get/set title of model
-	void SetTitle(const char* sztitle) { strcpy(m_szTitle, sztitle); }
+	void SetTitle(const char* sztitle);
 	const char* GetTitle() { return m_szTitle; }
 
 	// get the FE mesh for this model

@@ -101,7 +101,7 @@ void FEDistanceMap::Apply(FEModel& fem)
 	m_pfem = &fem;
 
 	// add a new data field
-	fem.AddDataField(new FEDataField_T<FEFaceData<float, DATA_NODE> >(szname));
+	fem.AddDataField(new FEDataField_T<FEFaceData<float, DATA_NODE> >(szname, EXPORT_DATA));
 	int NDATA = fem.GetDataManager()->DataFields()-1;
 
 	// get the mesh

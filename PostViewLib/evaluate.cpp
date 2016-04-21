@@ -607,7 +607,7 @@ void FEModel::EvaluateNode(int n, int ntime, int nfield, NODEDATA& d)
 		{
 			for (int i=0; i<ne; ++i)
 			{
-				EvaluateElement(m_mesh.Element(nel[i].first).m_nId, ntime, nfield, e);
+				EvaluateElement(nel[i].first, ntime, nfield, e);
 				if (e.m_ntag > 0)
 				{
 					d.m_val += e.m_nv[nel[i].second];
@@ -1997,7 +1997,7 @@ mat3fs FEModel::EvaluateNodeTensor(int n, int ntime, int nten)
 		vector<NodeElemRef>& nel = m_mesh.NodeElemList(n);
 		if (!nel.empty())
 		{
-			for (int i=0; i<(int) nel.size(); ++i) m += EvaluateElemTensor(m_mesh.Element(nel[i].first).m_nId, ntime, nten);
+			for (int i=0; i<(int) nel.size(); ++i) m += EvaluateElemTensor(nel[i].first, ntime, nten);
 			m /= (float) nel.size();
 		}
 	}

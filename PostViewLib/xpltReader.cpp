@@ -222,12 +222,12 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 		// add nodal field
 		switch (it.ntype)
 		{
-		case FLOAT  : pdm->AddDataField(new FEDataField_T<FENodeData<float  > >(it.szname)); break;
-		case VEC3F  : pdm->AddDataField(new FEDataField_T<FENodeData<vec3f  > >(it.szname)); break;
-		case MAT3FS : pdm->AddDataField(new FEDataField_T<FENodeData<mat3fs > >(it.szname)); break;
-		case MAT3FD : pdm->AddDataField(new FEDataField_T<FENodeData<mat3fd > >(it.szname)); break;
-        case TENS4FS: pdm->AddDataField(new FEDataField_T<FENodeData<tens4fs> >(it.szname)); break;
-		case MAT3F  : pdm->AddDataField(new FEDataField_T<FENodeData<mat3f  > >(it.szname)); break;
+		case FLOAT  : pdm->AddDataField(new FEDataField_T<FENodeData<float  > >(it.szname, EXPORT_DATA)); break;
+		case VEC3F  : pdm->AddDataField(new FEDataField_T<FENodeData<vec3f  > >(it.szname, EXPORT_DATA)); break;
+		case MAT3FS : pdm->AddDataField(new FEDataField_T<FENodeData<mat3fs > >(it.szname, EXPORT_DATA)); break;
+		case MAT3FD : pdm->AddDataField(new FEDataField_T<FENodeData<mat3fd > >(it.szname, EXPORT_DATA)); break;
+        case TENS4FS: pdm->AddDataField(new FEDataField_T<FENodeData<tens4fs> >(it.szname, EXPORT_DATA)); break;
+		case MAT3F  : pdm->AddDataField(new FEDataField_T<FENodeData<mat3f  > >(it.szname, EXPORT_DATA)); break;
 		default:
 			return errf("Error while reading dictionar");
 		}
@@ -245,12 +245,12 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 			{
 				switch (it.ntype)
 				{
-				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEElementData<float  ,DATA_NODE> >(it.szname)); break;
-				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEElementData<vec3f  ,DATA_NODE> >(it.szname)); break;
-				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fs ,DATA_NODE> >(it.szname)); break;
-				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fd ,DATA_NODE> >(it.szname)); break;
-                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEElementData<tens4fs,DATA_NODE> >(it.szname)); break;
-				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEElementData<mat3f  ,DATA_NODE> >(it.szname)); break;
+				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEElementData<float  ,DATA_NODE> >(it.szname, EXPORT_DATA)); break;
+				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEElementData<vec3f  ,DATA_NODE> >(it.szname, EXPORT_DATA)); break;
+				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fs ,DATA_NODE> >(it.szname, EXPORT_DATA)); break;
+				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fd ,DATA_NODE> >(it.szname, EXPORT_DATA)); break;
+                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEElementData<tens4fs,DATA_NODE> >(it.szname, EXPORT_DATA)); break;
+				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEElementData<mat3f  ,DATA_NODE> >(it.szname, EXPORT_DATA)); break;
 				default:
 					assert(false);
 					return false;
@@ -261,12 +261,12 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 			{
 				switch (it.ntype)
 				{
-				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEElementData<float  ,DATA_ITEM> >(it.szname)); break;
-				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEElementData<vec3f  ,DATA_ITEM> >(it.szname)); break;
-				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fs ,DATA_ITEM> >(it.szname)); break;
-				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fd ,DATA_ITEM> >(it.szname)); break;
-                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEElementData<tens4fs,DATA_ITEM> >(it.szname)); break;
-				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEElementData<mat3f  ,DATA_ITEM> >(it.szname)); break;
+				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEElementData<float  ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
+				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEElementData<vec3f  ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
+				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fs ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
+				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fd ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
+                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEElementData<tens4fs,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
+				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEElementData<mat3f  ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
 				default:
 					assert(false);
 					return false;
@@ -277,12 +277,12 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 			{
 				switch (it.ntype)
 				{
-				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEElementData<float  ,DATA_COMP> >(it.szname)); break;
-				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEElementData<vec3f  ,DATA_COMP> >(it.szname)); break;
-				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fs ,DATA_COMP> >(it.szname)); break;
-				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fd ,DATA_COMP> >(it.szname)); break;
-                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEElementData<tens4fs,DATA_COMP> >(it.szname)); break;
-				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEElementData<mat3f  ,DATA_COMP> >(it.szname)); break;
+				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEElementData<float  ,DATA_COMP> >(it.szname, EXPORT_DATA)); break;
+				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEElementData<vec3f  ,DATA_COMP> >(it.szname, EXPORT_DATA)); break;
+				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fs ,DATA_COMP> >(it.szname, EXPORT_DATA)); break;
+				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fd ,DATA_COMP> >(it.szname, EXPORT_DATA)); break;
+                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEElementData<tens4fs,DATA_COMP> >(it.szname, EXPORT_DATA)); break;
+				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEElementData<mat3f  ,DATA_COMP> >(it.szname, EXPORT_DATA)); break;
 				default:
 					assert(false);
 					return false;
@@ -293,12 +293,12 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 			{
 				switch (it.ntype)
 				{
-				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEElementData<float  ,DATA_ITEM> >(it.szname)); break;
-				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEElementData<vec3f  ,DATA_ITEM> >(it.szname)); break;
-				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fs ,DATA_ITEM> >(it.szname)); break;
-				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fd ,DATA_ITEM> >(it.szname)); break;
-                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEElementData<tens4fs,DATA_ITEM> >(it.szname)); break;
-				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEElementData<mat3f  ,DATA_ITEM> >(it.szname)); break;
+				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEElementData<float  ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
+				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEElementData<vec3f  ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
+				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fs ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
+				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fd ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
+                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEElementData<tens4fs,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
+				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEElementData<mat3f  ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
 				default:
 					assert(false);
 					return false;
@@ -323,12 +323,12 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 			{
 				switch (it.ntype)
 				{
-				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEFaceData<float  ,DATA_NODE> >(it.szname)); break;
-				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<vec3f  ,DATA_NODE> >(it.szname)); break;
-				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fs ,DATA_NODE> >(it.szname)); break;
-				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fd ,DATA_NODE> >(it.szname)); break;
-                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEFaceData<tens4fs,DATA_NODE> >(it.szname)); break;
-				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3f  ,DATA_NODE> >(it.szname)); break;
+				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEFaceData<float  ,DATA_NODE> >(it.szname, EXPORT_DATA)); break;
+				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<vec3f  ,DATA_NODE> >(it.szname, EXPORT_DATA)); break;
+				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fs ,DATA_NODE> >(it.szname, EXPORT_DATA)); break;
+				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fd ,DATA_NODE> >(it.szname, EXPORT_DATA)); break;
+                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEFaceData<tens4fs,DATA_NODE> >(it.szname, EXPORT_DATA)); break;
+				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3f  ,DATA_NODE> >(it.szname, EXPORT_DATA)); break;
 				default:
 					assert(false);
 				}
@@ -338,12 +338,12 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 			{
 				switch (it.ntype)
 				{
-				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEFaceData<float  ,DATA_ITEM> >(it.szname)); break;
-				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<vec3f  ,DATA_ITEM> >(it.szname)); break;
-				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fs ,DATA_ITEM> >(it.szname)); break;
-				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fd ,DATA_ITEM> >(it.szname)); break;
-                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEFaceData<tens4fs,DATA_ITEM> >(it.szname)); break;
-				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3f  ,DATA_ITEM> >(it.szname)); break;
+				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEFaceData<float  ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
+				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<vec3f  ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
+				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fs ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
+				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fd ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
+                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEFaceData<tens4fs,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
+				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3f  ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
 				default:
 					assert(false);
 				}
@@ -353,12 +353,12 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 			{
 				switch (it.ntype)
 				{
-				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEFaceData<float  ,DATA_COMP> >(it.szname)); break;
-				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<vec3f  ,DATA_COMP> >(it.szname)); break;
-				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fs ,DATA_COMP> >(it.szname)); break;
-				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fd ,DATA_COMP> >(it.szname)); break;
-                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEFaceData<tens4fs,DATA_COMP> >(it.szname)); break;
-				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3f  ,DATA_COMP> >(it.szname)); break;
+				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEFaceData<float  ,DATA_COMP> >(it.szname, EXPORT_DATA)); break;
+				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<vec3f  ,DATA_COMP> >(it.szname, EXPORT_DATA)); break;
+				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fs ,DATA_COMP> >(it.szname, EXPORT_DATA)); break;
+				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fd ,DATA_COMP> >(it.szname, EXPORT_DATA)); break;
+                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEFaceData<tens4fs,DATA_COMP> >(it.szname, EXPORT_DATA)); break;
+				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3f  ,DATA_COMP> >(it.szname, EXPORT_DATA)); break;
 				default:
 					assert(false);
 				}
@@ -368,12 +368,12 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 			{
 				switch (it.ntype)
 				{
-				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEFaceData<float  ,DATA_ITEM> >(it.szname)); break;
-				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<vec3f  ,DATA_ITEM> >(it.szname)); break;
-				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fs ,DATA_ITEM> >(it.szname)); break;
-				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fd ,DATA_ITEM> >(it.szname)); break;
-                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEFaceData<tens4fs,DATA_ITEM> >(it.szname)); break;
-				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3f  ,DATA_ITEM> >(it.szname)); break;
+				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEFaceData<float  ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
+				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<vec3f  ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
+				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fs ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
+				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fd ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
+                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEFaceData<tens4fs,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
+				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3f  ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
 				default:
 					assert(false);
 				}

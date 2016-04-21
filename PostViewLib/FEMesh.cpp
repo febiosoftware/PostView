@@ -150,7 +150,7 @@ bool FEMesh::Create(int nodes, int elems)
 		}
 
 		// set element ID's
-		for (i=0; i<elems; i++) m_Elem[i].m_nId = i;	
+		for (i=0; i<elems; i++) m_Elem[i].m_nId = m_Elem[i].m_lid = i;	
 	}
 
 	return true;
@@ -950,7 +950,7 @@ void FEMesh::SelectConnectedSurfaceElements(FEElement &el)
 	for (i=0; i<Faces(); ++i)
 	{
 		FEFace& f = Face(i);
-		if (f.m_elem[0] == el.m_nId)
+		if (f.m_elem[0] == el.m_lid)
 		{
 			// propagate through all neighbors
 			stack<FEFace*> S;

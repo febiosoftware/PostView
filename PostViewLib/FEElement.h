@@ -318,6 +318,7 @@ public:
 public:
 	FEElemType	m_ntype;			// type of element
 	int			m_nId;				// id of this element
+	int			m_lid;				// local ID (zero-based index into element array)
 	int			m_MatID;			// material id
 	int			m_node[MAX_NODES];	// array of nodes ID
 

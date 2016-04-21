@@ -215,7 +215,7 @@ bool FEVTKimport::Load(FEModel& fem, const char* szfile)
 			}
 
 			FEDataManager& dm = *fem.GetDataManager();
-			dm.AddDataField(new FEDataField_T<FENodeData<float> >("data"));
+			dm.AddDataField(new FEDataField_T<FENodeData<float> >("data", EXPORT_DATA));
 
 			FEState* ps = new FEState(0.f, m_pfem);
 			m_pfem->AddState(ps);
@@ -227,7 +227,7 @@ bool FEVTKimport::Load(FEModel& fem, const char* szfile)
 		if(isCellData)
 		{
 			FEDataManager& dm = *fem.GetDataManager();
-			dm.AddDataField(new FEDataField_T<FENodeData<float> >("data"));
+			dm.AddDataField(new FEDataField_T<FENodeData<float> >("data", EXPORT_DATA));
 
 			FEState* ps = new FEState(0.f, m_pfem);
 			m_pfem->AddState(ps);

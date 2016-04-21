@@ -304,7 +304,6 @@ public:
 		int N = m.Elements();
 		m_elem.resize(N);
 		for (int i=0; i<N; ++i) { m_elem[i].first = -1; m_elem[i].second = 0; }
-		m_indx.assign(N, -1);
 	}
 	void eval(int i, T* pv)
 	{ 

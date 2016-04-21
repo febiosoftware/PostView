@@ -89,6 +89,7 @@
     <ClInclude Include="..\..\PostViewLib\DataMap.h" />
     <ClInclude Include="..\..\PostViewLib\FEASCIIImport.h" />
     <ClInclude Include="..\..\PostViewLib\FEBioImport.h" />
+    <ClInclude Include="..\..\PostViewLib\FEBioPlotExport.h" />
     <ClInclude Include="..\..\PostViewLib\FEDataManager.h" />
     <ClInclude Include="..\..\PostViewLib\FEDistanceMap.h" />
     <ClInclude Include="..\..\PostViewLib\FEElement.h" />
@@ -125,6 +126,7 @@
     <ClInclude Include="..\..\PostViewLib\Interpolator.h" />
     <ClInclude Include="..\..\PostViewLib\lusolver.h" />
     <ClInclude Include="..\..\PostViewLib\math3d.h" />
+    <ClInclude Include="..\..\PostViewLib\PltArchive.h" />
     <ClInclude Include="..\..\PostViewLib\SphereFit.h" />
     <ClInclude Include="..\..\PostViewLib\stdafx.h" />
     <ClInclude Include="..\..\PostViewLib\VolRender.h" />
@@ -145,6 +147,7 @@
     <ClCompile Include="..\..\PostViewLib\evaluate.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEASCIIImport.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEBioImport.cpp" />
+    <ClCompile Include="..\..\PostViewLib\FEBioPlotExport.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEDataManager.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEDistanceMap.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEElement.cpp" />
@@ -181,6 +184,7 @@
     <ClCompile Include="..\..\PostViewLib\Interpolator.cpp" />
     <ClCompile Include="..\..\PostViewLib\lusolver.cpp" />
     <ClCompile Include="..\..\PostViewLib\math3d.cpp" />
+    <ClCompile Include="..\..\PostViewLib\PltArchive.cpp" />
     <ClCompile Include="..\..\PostViewLib\SphereFit.cpp" />
     <ClCompile Include="..\..\PostViewLib\VolRender.cpp" />
     <ClCompile Include="..\..\PostViewLib\VRMLExporter.cpp" />

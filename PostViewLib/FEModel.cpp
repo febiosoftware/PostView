@@ -55,6 +55,12 @@ void FEModel::Clear()
 }
 
 //-----------------------------------------------------------------------------
+void FEModel::SetTitle(const char* sztitle)
+{
+	strcpy(m_szTitle, sztitle); 
+}
+
+//-----------------------------------------------------------------------------
 // add a material to the model
 void FEModel::AddMaterial(FEMaterial& mat)
 { 

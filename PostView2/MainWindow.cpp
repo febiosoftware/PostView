@@ -12,11 +12,13 @@
 #include <PostViewLib/FENikeExport.h>
 #include <PostViewLib/FEVTKExport.h>
 #include <PostViewLib/FELSDYNAPlot.h>
+#include <PostViewLib/FEBioPlotExport.h>
 #include "GLPlaneCutPlot.h"
 #include "GLIsoSurfacePlot.h"
 #include "GLSlicePLot.h"
 #include "GLVectorPlot.h"
 #include "DlgViewSettings.h"
+#include "DlgExportXPLT.h"
 #include <string>
 
 CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMainWindow)
@@ -85,32 +87,46 @@ bool CMainWindow::OpenFile(const QString& fileName, int nfilter)
 bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 {
 	if (fileName.isEmpty()) return false;
-	const char* szfilename = fileName.toStdString().c_str();
+	string sfilename = fileName.toStdString();
+	const char* szfilename = sfilename.c_str();
 
 	if (m_doc->IsValid() == false) return true;
 
 	FEModel& fem = *m_doc->GetFEModel();
 
 	bool bret = false;
+	QString error("(unknown)");
 	switch (nfilter)
 	{
 	case 0:
+		{
+			CDlgExportXPLT dlg(this);
+			if (dlg.exec() == QDialog::Accepted)
+			{
+				FEBioPlotExport ex;
+				ex.SetCompression(dlg.m_bcompress);
+				bret = ex.Save(fem, szfilename);
+				error = ex.GetErrorMessage();
+			}
+		}
+		break;
+	case 1:
 		{
 			FEFEBioExport fr;
 			bret = fr.Save(fem, szfilename);
 		}
 		break;
-	case 1:
+	case 2:
 		{
 			bret = m_doc->ExportAscii(szfilename);
 		}
 		break;
-	case 2:
+	case 3:
 		{
 			bret = m_doc->ExportVRML(szfilename);
 		}
 		break;
-	case 3:
+	case 4:
 		{
 //			CDlgExportLSDYNA dlg;
 //			if (dlg.DoModal() == FLX_OK)
@@ -123,24 +139,24 @@ bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 			}
 		}
 		break;
-	case 4:
+	case 5:
 		{
 			bret = m_doc->ExportBYU(szfilename);
 		}
 		break;
-	case 5:
+	case 6:
 		{
 			FENikeExport fr;
 			bret = fr.Save(fem, szfilename);
 		}
 		break;
-	case 6:
+	case 7:
 		{
 			FEVTKExport w;
 			bret = w.Save(fem, m_doc->currentTime(), szfilename);
 		}
 		break;
-	case 7:
+	case 8:
 		{
 //			FELSDYNAPlotExport w;
 //			bret = w.Save(fem, szfilename);
@@ -151,7 +167,7 @@ bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 	if (bret == false)
 	{
 		QMessageBox b;
-		b.setText("Failed saving file.");
+		b.setText(QString("Failed saving file.\nReason:%1").arg(error));
 		b.setIcon(QMessageBox::Critical);
 		b.exec();
 	}
@@ -209,7 +225,8 @@ void CMainWindow::on_actionUpdate_triggered()
 void CMainWindow::on_actionSave_triggered()
 {
 	QStringList filters;
-	filters << "FEBio files (*.feb)"
+	filters << "FEBio xplt files (*.xplt)"
+			<< "FEBio files (*.feb)"
 			<< "ASCII files (*.*)"
 			<< "VRML files (*.wrl)"
 			<< "LSDYNA Keyword (*.k)"
