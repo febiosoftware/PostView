@@ -60,7 +60,7 @@ public:
 	void SetFieldID(int nid) { m_nfield = nid; }
 
 	//! get the field ID
-	int GetFieldID() { return m_nfield; }
+	int GetFieldID() const { return m_nfield; }
 
 	//! type string
 	const char* TypeStr()

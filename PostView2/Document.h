@@ -25,6 +25,7 @@ class CVolRender;
 class FEModel;
 class FEState;
 class FEFileReader;
+class FEDataField;
 
 //-----------------------------------------------------------------------------
 #define MAX_STRING		256
@@ -227,6 +228,8 @@ public:
 	bool ExportDXF   (const char* szfile);
 	bool ExportRAW   (const char* szfile);
 
+	bool ExportDataField(const FEDataField& df, const char* szfile);
+
 	// get the current file name
 	const char* GetFile() { return m_szfile; }
 
@@ -297,6 +300,14 @@ public:
 
 	C3DImage* Get3DImage() { return m_pImg; }
 	CVolRender* GetVolumeRenderer() { return m_pVR; }
+
+	// Add a data field
+	// NOTE: the ndata relates to the index in DataPanel::on_AddStandard_triggered
+	// TODO: Find a better mechanism
+	bool AddStandardDataField(int ndata, bool bselection_only);
+
+	bool AddNodeDataFromFile(const char* szfile, const char* szname, int ntype);
+	bool AddElemDataFromFile(const char* szfile, const char* szname, int ntype);
 
 protected:
 	void ClearPlots();

@@ -128,12 +128,21 @@ template <typename Type, Data_Format Fmt> void copy_data(FEMeshData& d, FEMeshDa
 
 //-----------------------------------------------------------------------------
 // Copy a data field
-void FEModel::CopyDataField(FEDataField* pd)
+void FEModel::CopyDataField(FEDataField* pd, const char* sznewname)
 {
-	char szname[256] = {0};
-	sprintf(szname, "%s_copy", pd->GetName());
+	// Clone the data field
 	FEDataField* pdcopy = pd->Clone();
-	pdcopy->SetName(szname);
+
+	// create a new name
+	if (sznewname == 0)
+	{
+		char szname[256] = {0};
+		sprintf(szname, "%s_copy", pd->GetName());
+		pdcopy->SetName(szname);
+	}
+	else pdcopy->SetName(sznewname);
+
+	// Add it to the model
 	AddDataField(pdcopy);
 
 	int ndst = FIELD_CODE(pdcopy->GetFieldID());
