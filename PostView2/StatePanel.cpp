@@ -7,6 +7,11 @@
 #include <QLabel>
 #include <QHeaderView>
 #include <QtCore/QAbstractTableModel>
+#include <QPushButton>
+#include <QMessageBox>
+#include <QInputDialog>
+#include <QFormLayout>
+#include <QDialogButtonBox>
 
 class CStateModel : public QAbstractTableModel
 {
@@ -67,6 +72,47 @@ private:
 	FEModel*	m_fem;
 };
 
+class Ui::CDlgAddState
+{
+public:
+	QLineEdit* pstates;
+	QLineEdit* pstart;
+	QLineEdit* pend;
+
+public:
+	void setupUi(QDialog *parent)
+	{
+		QVBoxLayout* pv = new QVBoxLayout(parent);
+
+		QFormLayout* pform = new QFormLayout;
+		pform->addRow("states:"    , pstates = new QLineEdit); pstates->setValidator(new QIntValidator(1, 1000));
+		pform->addRow("start time:", pstart  = new QLineEdit); pstart ->setValidator(new QDoubleValidator(-1e99, 1e99, 6));
+		pform->addRow("end time"   , pend    = new QLineEdit); pend   ->setValidator(new QDoubleValidator(-1e99, 1e99, 6));
+
+		pv->addLayout(pform);
+
+		QDialogButtonBox* b = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+		pv->addWidget(b);
+
+		QObject::connect(b, SIGNAL(accepted()), parent, SLOT(accept()));
+		QObject::connect(b, SIGNAL(rejected()), parent, SLOT(reject()));
+	}
+};
+
+CDlgAddState::CDlgAddState(QWidget* parent) : QDialog(parent), ui(new Ui::CDlgAddState)
+{
+	ui->setupUi(this);
+}
+
+void CDlgAddState::accept()
+{
+	m_nstates = ui->pstates->text().toInt();
+	m_minTime = ui->pstart->text().toDouble();
+	m_maxTime = ui->pend  ->text().toDouble();
+
+	QDialog::accept();
+}
+
 class Ui::CStatePanel
 {
 public:
@@ -77,10 +123,23 @@ public:
 	void setupUi(::CStatePanel* parent)
 	{
 		QVBoxLayout* pg = new QVBoxLayout(parent);
+
+		QPushButton* pAdd  = new QPushButton("Add..." ); pAdd ->setObjectName("addButton"   ); pAdd ->setFixedWidth(60);
+		QPushButton* pEdit = new QPushButton("Edit..."); pEdit->setObjectName("editButton"  ); pEdit->setFixedWidth(60);
+		QPushButton* pDel  = new QPushButton("Delete" ); pDel ->setObjectName("deleteButton"); pDel ->setFixedWidth(60);
+		QHBoxLayout* ph = new QHBoxLayout;
+		ph->setSpacing(0);
+		ph->addWidget(pAdd);
+		ph->addWidget(pEdit);
+		ph->addWidget(pDel);
+		ph->addStretch();
+
+		pg->addLayout(ph);
+
 		list = new QTableView;
 		list->setObjectName(QStringLiteral("stateList"));
 		list->setSelectionBehavior(QAbstractItemView::SelectRows);
-		list->setSelectionMode(QAbstractItemView::SingleSelection);
+		list->setSelectionMode(QAbstractItemView::ExtendedSelection);
 		list->horizontalHeader()->show();
 		list->horizontalHeader()->setStretchLastSection(true);
 		list->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
@@ -115,4 +174,78 @@ void CStatePanel::on_stateList_doubleClicked(const QModelIndex& index)
 	CDocument* pdoc = m_wnd->GetDocument();
 	pdoc->SetCurrentTime(index.row());
 	m_wnd->repaint();
+}
+
+void CStatePanel::on_addButton_clicked()
+{
+	CDocument& doc = *m_wnd->GetDocument();
+	if (doc.IsValid() == false) return;
+
+	CDlgAddState dlg(this);
+	if (dlg.exec())
+	{
+		FEModel& fem = *doc.GetFEModel();
+		int N = dlg.m_nstates;
+		int M = (N < 2 ? 1 : N - 1);
+		double t0 = dlg.m_minTime;
+		double t1 = dlg.m_maxTime;
+		for (int i=0; i<N; ++i)
+		{
+			double f = t0 + i*(t1 - t0)/M;
+			fem.AddState(f);
+		}
+		Update();
+	}
+}
+
+void CStatePanel::on_editButton_clicked()
+{
+	CDocument& doc = *m_wnd->GetDocument();
+	if (doc.IsValid() == false) return;
+
+	FEModel& fem = *doc.GetFEModel();
+	QItemSelectionModel* selection = ui->list->selectionModel();
+	QModelIndexList selRows = selection->selectedRows();
+	int ncount = selRows.count();
+	if (ncount != 1) return;
+
+	QModelIndex sel = selRows.at(0);
+	int nrow = sel.row();
+
+	FEState* pstate = fem.GetState(nrow);
+	double ftime = pstate->m_time;
+
+	bool bok = false;
+	double newTime = QInputDialog::getDouble(this, QString("Edit state %1").arg(nrow), "new time:", ftime, -1e99, 1e99, 6, &bok);
+	if (bok)
+	{
+		pstate->m_time = newTime;
+		fem.DeleteState(nrow);
+		fem.InsertState(pstate, newTime);
+		Update();
+	}
+}
+
+void CStatePanel::on_deleteButton_clicked()
+{
+	CDocument& doc = *m_wnd->GetDocument();
+	if (doc.IsValid() == false) return;
+
+	FEModel& fem = *doc.GetFEModel();
+	QItemSelectionModel* selection = ui->list->selectionModel();
+	QModelIndexList selRows = selection->selectedRows();
+
+	QString s = QString("Are you sure you want to delete %1 state(s)?").arg(selRows.count());
+	if (QMessageBox::question(this, "Delete States", s, QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes)
+	{
+		// delete states
+		int m = 0;
+		for (int i=0; i<selRows.count(); ++i)
+		{
+			int nrow = selRows.at(i).row();
+			fem.DeleteState(nrow-m); 
+			++m;
+		}
+		Update();
+	}
 }

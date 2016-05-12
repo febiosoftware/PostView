@@ -103,13 +103,13 @@ public:
 		QVBoxLayout* pg = new QVBoxLayout(parent);
 
 		const int BW = 60;
-		const int BH = 22;
+		const int BH = 23;
 
 		QAction* addActionStd  = new QAction("Standard ...", parent); addActionStd ->setObjectName("AddStandard");
 		QAction* addActionFile = new QAction("From file ...", parent); addActionFile->setObjectName("AddFromFile");
 
 		QToolButton* pbAdd = new QToolButton(); pbAdd->setFixedSize(BW, BH);
-		pbAdd->setText("Add...");
+		pbAdd->setText("Add");
 		pbAdd->setPopupMode(QToolButton::InstantPopup);
 		pbAdd->addAction(addActionStd);
 		pbAdd->addAction(addActionFile);
