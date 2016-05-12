@@ -23,6 +23,14 @@ public:
 	const char* GetName();
 	void SetName(const char* szname);
 
+	bool visible() const { return bvisible; }
+	void hide() { bvisible = false; }
+	void show() { bvisible = true; }
+
+	bool enabled() const { return benable; }
+	void enable() { benable = true; }
+	void disable() { benable = false; }
+
 public:
 	GLCOLOR	diffuse;		// diffuse material color
 	GLCOLOR	ambient;		// ambient material color

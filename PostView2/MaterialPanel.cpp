@@ -92,12 +92,26 @@ public:
 	{
 		QVBoxLayout* pg = new QVBoxLayout(parent);
 
+		QPushButton* phide = new QPushButton("Hide"); phide->setObjectName("hideButton"); phide->setFixedWidth(60);
+		QPushButton* pshow = new QPushButton("Show"); pshow->setObjectName("showButton"); pshow->setFixedWidth(60);
+		QPushButton* pactiv= new QPushButton("Enable" ); pactiv->setObjectName("enableButton" ); pactiv->setFixedWidth(60);
+		QPushButton* pdeact= new QPushButton("Disable"); pdeact->setObjectName("disableButton"); pdeact->setFixedWidth(60);
+		QHBoxLayout* ph = new QHBoxLayout;
+		ph->setSpacing(0);
+		ph->addWidget(phide);
+		ph->addWidget(pshow);
+		ph->addWidget(pactiv);
+		ph->addWidget(pdeact);
+		pg->addLayout(ph);
+		ph->addStretch();
+
 		QSplitter* psplitter = new QSplitter;
 		psplitter->setOrientation(Qt::Vertical);
 		pg->addWidget(psplitter);
 
 		m_list = new QListWidget;
 		m_list->setObjectName(QStringLiteral("materialList"));
+		m_list->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
 		m_prop = new ::CPropertyListView;
 
@@ -105,7 +119,6 @@ public:
 		psplitter->addWidget(m_prop);
 
 		QMetaObject::connectSlotsByName(parent);
-
 	}
 };
 
@@ -127,7 +140,38 @@ void CMaterialPanel::Update()
 	int nmat = fem.Materials();
 	for (int i=0; i<nmat; ++i)
 	{
-		ui->m_list->addItem(fem.GetMaterial(i)->GetName());
+		FEMaterial& mat = *fem.GetMaterial(i);
+		ui->m_list->addItem(mat.GetName());
+	}
+
+	UpdateStates();
+}
+
+void CMaterialPanel::UpdateStates()
+{
+	CDocument* pdoc = m_wnd->GetDocument();
+	FEModel& fem = *pdoc->GetFEModel();
+
+	int nmat = fem.Materials();
+	for (int i=0; i<nmat; ++i)
+	{
+		FEMaterial& mat = *fem.GetMaterial(i);
+		QListWidgetItem* pi = ui->m_list->item(i);
+		QFont font = pi->font();
+		if (mat.visible())
+		{
+			pi->setForeground(Qt::black);
+			font.setBold(true);
+			pi->setFont(font);
+		}
+		else 
+		{
+			pi->setForeground(Qt::gray);
+			font.setBold(false);
+			pi->setFont(font);
+		}
+
+		pi->setBackgroundColor((mat.enabled() ? Qt::white : Qt::yellow));
 	}
 }
 
@@ -140,4 +184,103 @@ void CMaterialPanel::on_materialList_currentRowChanged(int nrow)
 		m_pmat->SetMaterial(pmat);
 		ui->m_prop->Update(m_pmat);
 	}
+}
+
+void CMaterialPanel::on_hideButton_clicked()
+{
+	CDocument& doc = *m_wnd->GetDocument();
+	if (doc.IsValid() == false) return;
+
+	FEModel& fem = *doc.GetFEModel();
+
+	QItemSelectionModel* pselect = ui->m_list->selectionModel();
+	QModelIndexList selection = pselect->selectedRows();
+	int ncount = selection.count();
+	for (int i=0; i<ncount; ++i)
+	{
+		QModelIndex index = selection.at(i);
+		int nmat = index.row();
+
+		FEMaterial& mat = *fem.GetMaterial(nmat);
+		mat.hide();
+
+	}
+
+	UpdateStates();
+	m_wnd->repaint();
+}
+
+void CMaterialPanel::on_showButton_clicked()
+{
+	CDocument& doc = *m_wnd->GetDocument();
+	if (doc.IsValid() == false) return;
+
+	FEModel& fem = *doc.GetFEModel();
+
+	QItemSelectionModel* pselect = ui->m_list->selectionModel();
+	QModelIndexList selection = pselect->selectedRows();
+	int ncount = selection.count();
+	for (int i=0; i<ncount; ++i)
+	{
+		QModelIndex index = selection.at(i);
+		int nmat = index.row();
+
+		FEMaterial& mat = *fem.GetMaterial(nmat);
+		mat.show();
+	}
+
+	UpdateStates();
+	m_wnd->repaint();
+}
+
+void CMaterialPanel::on_enableButton_clicked()
+{
+	CDocument& doc = *m_wnd->GetDocument();
+	if (doc.IsValid() == false) return;
+
+	FEModel& fem = *doc.GetFEModel();
+	FEMesh& mesh = *fem.GetMesh();
+
+	QItemSelectionModel* pselect = ui->m_list->selectionModel();
+	QModelIndexList selection = pselect->selectedRows();
+	int ncount = selection.count();
+	for (int i=0; i<ncount; ++i)
+	{
+		QModelIndex index = selection.at(i);
+		int nmat = index.row();
+
+		FEMaterial& mat = *fem.GetMaterial(nmat);
+		mat.enable();
+
+		mesh.EnableElements(nmat);
+	}
+
+	UpdateStates();
+	m_wnd->repaint();
+}
+
+void CMaterialPanel::on_disableButton_clicked()
+{
+	CDocument& doc = *m_wnd->GetDocument();
+	if (doc.IsValid() == false) return;
+
+	FEModel& fem = *doc.GetFEModel();
+	FEMesh& mesh = *fem.GetMesh();
+
+	QItemSelectionModel* pselect = ui->m_list->selectionModel();
+	QModelIndexList selection = pselect->selectedRows();
+	int ncount = selection.count();
+	for (int i=0; i<ncount; ++i)
+	{
+		QModelIndex index = selection.at(i);
+		int nmat = index.row();
+
+		FEMaterial& mat = *fem.GetMaterial(nmat);
+		mat.disable();
+
+		mesh.DisableElements(nmat);
+	}
+
+	UpdateStates();
+	m_wnd->repaint();
 }

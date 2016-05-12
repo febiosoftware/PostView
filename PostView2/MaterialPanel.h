@@ -16,9 +16,14 @@ public:
 	CMaterialPanel(CMainWindow* wnd, QWidget* parent = 0);
 
 	void Update();
+	void UpdateStates();
 
 private slots:
 	void on_materialList_currentRowChanged(int nrow);
+	void on_hideButton_clicked();
+	void on_showButton_clicked();
+	void on_enableButton_clicked();
+	void on_disableButton_clicked();
 
 private:
 	Ui::CMaterialPanel*	ui;
