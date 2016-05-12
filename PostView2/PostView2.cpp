@@ -14,5 +14,10 @@ int main(int argc, char* argv[])
 	CMainWindow wnd;
 	wnd.show();
 
+	if (argc==2)
+	{
+		bool bok = wnd.OpenFile(argv[1], -1);
+	}
+
 	return app.exec();
 }

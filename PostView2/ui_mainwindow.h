@@ -352,7 +352,7 @@ public:
 		playToolBar->addAction(addAction("first"   , "actionFirst", ":/icons/back.png"));
 		playToolBar->addAction(addAction("previous", "actionPrev" , ":/icons/prev.png"));
 
-		actionPlay = addAction("Play" , "actionPlay"       , ":/icons/play.png");
+		actionPlay = addAction("Play" , "actionPlay"       , ":/icons/play.png"); actionPlay->setShortcut(Qt::Key_Space);
 		actionPlay->setCheckable(true);
 		playToolBar->addAction(actionPlay);
 
