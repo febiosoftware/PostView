@@ -20,6 +20,7 @@
 #include "DlgViewSettings.h"
 #include "DlgExportXPLT.h"
 #include "DlgWidgetProps.h"
+#include "DlgFind.h"
 #include <string>
 
 CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMainWindow)
@@ -452,10 +453,45 @@ void CMainWindow::on_actionClearSelection_triggered()
 
 void CMainWindow::on_actionFind_triggered()
 {
+	CDocument& doc = *GetDocument();
+	if (doc.IsValid() == false) return;
+
+	int nview = doc.GetSelectionMode();
+	int nsel = 0;
+	if (nview == SELECT_NODES) nsel = 0;
+	if (nview == SELECT_FACES) nsel = 1;
+	if (nview == SELECT_ELEMS) nsel = 2;
+
+	CDlgFind dlg(this, nsel);
+
+	if (dlg.exec())
+	{
+		FEMesh* pm = doc.GetFEModel()->GetMesh();
+
+		if (dlg.m_bsel[0]) nview = SELECT_NODES;
+		if (dlg.m_bsel[1]) nview = SELECT_FACES;
+		if (dlg.m_bsel[2]) nview = SELECT_ELEMS;
+
+		switch (nview)
+		{
+		case SELECT_NODES: on_selectNodes_triggered(); pm->SelectNodes   (dlg.m_item, dlg.m_bclear); break;
+		case SELECT_FACES: on_selectFaces_triggered(); pm->SelectFaces   (dlg.m_item, dlg.m_bclear); break;
+		case SELECT_ELEMS: on_selectElems_triggered(); pm->SelectElements(dlg.m_item, dlg.m_bclear); break;
+		}
+
+		repaint();
+	}
 }
 
 void CMainWindow::on_actionDelete_triggered()
 {
+	GLWidget* pg = GLWidget::get_focus();
+	if (pg && (pg->GetObject() == 0))
+	{
+		CGLWidgetManager* pwm = CGLWidgetManager::GetInstance();
+		pwm->RemoveWidget(pg);
+		repaint();
+	}
 }
 
 void CMainWindow::on_actionProperties_triggered()

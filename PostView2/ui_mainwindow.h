@@ -178,8 +178,8 @@ public:
 		QAction* actionUnhideAll       = addAction("Unhide all      ", "actionUnhideAll"      );
 		QAction* actionSelectAll       = addAction("Select all      ", "actionSelectAll"      );
 		QAction* actionSelectRange     = addAction("Select range ...", "actionSelectRange"    );
-		QAction* actionClearSelection  = addAction("Clear selection" , "actionClearSelection" );
-		QAction* actionFind            = addAction("Find ..."        , "actionFind"           );
+		QAction* actionClearSelection  = addAction("Clear selection" , "actionClearSelection" ); actionClearSelection->setShortcut(Qt::Key_Escape);
+		QAction* actionFind            = addAction("Find ..."        , "actionFind"           ); actionFind->setShortcut(Qt::CTRL + Qt::Key_F);
 		QAction* actionDelete          = addAction("Delete ..."      , "actionDelete"         );
 		QAction* actionProperties      = addAction("Properties ..."  , "actionProperties"     );
 
@@ -202,7 +202,7 @@ public:
 
 		// --- View Menu ---
 		QAction* actionViewSettings   = addAction("Settings ..."           , "actionViewSettings"  );
-		QAction* actionViewCapture    = addAction("Show capture Frame"     , "actionViewCapture"   ); actionViewCapture->setShortcut(Qt::CTRL + Qt::Key_F); actionViewCapture->setCheckable(true);
+		QAction* actionViewCapture    = addAction("Show capture Frame"     , "actionViewCapture"   ); actionViewCapture->setCheckable(true);
 		QAction* actionViewProjection = addAction("Orthographic projection", "actionViewProjection"); actionViewProjection->setShortcut(Qt::CTRL + Qt::Key_0); actionViewProjection->setCheckable(true);
 		QAction* actionViewMesh       = addAction("Show mesh lines"        , "actionViewMesh"      ); actionViewMesh   ->setShortcut(Qt::Key_M); actionViewMesh->setCheckable(true);
 		QAction* actionViewOutline    = addAction("Show outline"           , "actionViewOutline"   ); actionViewOutline->setShortcut(Qt::Key_Z); actionViewOutline->setCheckable(true);
