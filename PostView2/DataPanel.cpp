@@ -12,6 +12,7 @@
 #include <QAction>
 #include <QComboBox>
 #include <QDialogButtonBox>
+#include <QStackedWidget>
 #include "MainWindow.h"
 #include "Document.h"
 #include <PostViewLib/FEModel.h>
@@ -219,6 +220,70 @@ void CDlgAddDataFile::onBrowse()
 }
 
 //=================================================================================================
+class Ui::CDlgFilter
+{
+public:
+
+public:
+	void setupUi(QDialog* parent)
+	{
+		QComboBox* pselect = new QComboBox;
+		pselect->addItem("Scale");
+		pselect->addItem("Smooth");
+		pselect->addItem("Arithmetic");
+
+		QLabel* label;
+		label = new QLabel("Filter:");
+		label->setBuddy(pselect);
+
+		QHBoxLayout* ph = new QHBoxLayout;
+		ph->addWidget(label);
+		ph->addWidget(pselect);
+
+		QVBoxLayout* pvl = new QVBoxLayout;
+		pvl->addLayout(ph);
+
+		QWidget* scalePage = new QWidget;
+		QFormLayout* pform = new QFormLayout;
+		pform->addRow("scale:", new QLineEdit);
+		scalePage->setLayout(pform);
+
+		QWidget* smoothPage = new QWidget;
+		pform = new QFormLayout;
+		pform->addRow("theta:", new QLineEdit);
+		pform->addRow("iterations:", new QLineEdit);
+		smoothPage->setLayout(pform);
+
+		QWidget* mathPage = new QWidget;
+		pform = new QFormLayout;
+		pform->addRow("Operation:", new QComboBox);
+		pform->addRow("Operand:", new QComboBox);
+		mathPage->setLayout(pform);
+
+		QStackedWidget* stack = new QStackedWidget;
+		stack->addWidget(scalePage );
+		stack->addWidget(smoothPage);
+		stack->addWidget(mathPage  );
+		
+		pvl->addWidget(stack);
+
+		QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+		pvl->addWidget(buttonBox);
+
+		parent->setLayout(pvl);
+
+		QObject::connect(pselect, SIGNAL(currentIndexChanged(int)), stack, SLOT(setCurrentIndex(int)));
+		QObject::connect(buttonBox, SIGNAL(accepted()), parent, SLOT(accept()));
+		QObject::connect(buttonBox, SIGNAL(rejected()), parent, SLOT(reject()));
+	}
+};
+
+CDlgFilter::CDlgFilter(QWidget* parent) : QDialog(parent), ui(new Ui::CDlgFilter)
+{
+	ui->setupUi(this);
+}
+
+//=================================================================================================
 CDataPanel::CDataPanel(CMainWindow* pwnd, QWidget* parent) : CCommandPanel(pwnd, parent), ui(new Ui::CDataPanel)
 {
 	ui->setupUi(this);
@@ -358,7 +423,11 @@ void CDataPanel::on_DeleteButton_clicked()
 
 void CDataPanel::on_FilterButton_clicked()
 {
+	CDlgFilter dlg(this);
+	if (dlg.exec())
+	{
 
+	}
 }
 
 void CDataPanel::on_ExportButton_clicked()

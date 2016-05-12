@@ -8,6 +8,7 @@ class CMainWindow;
 namespace Ui {
 	class CDataPanel;
 	class CDlgAddDataFile;
+	class CDlgFilter;
 }
 
 class CDataPanel : public CCommandPanel
@@ -51,4 +52,13 @@ public:
 
 private:
 	Ui::CDlgAddDataFile* ui;
+};
+
+class CDlgFilter : public QDialog
+{
+public:
+	CDlgFilter(QWidget* parent);
+
+private:
+	Ui::CDlgFilter* ui;
 };
