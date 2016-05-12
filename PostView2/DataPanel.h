@@ -59,6 +59,19 @@ class CDlgFilter : public QDialog
 public:
 	CDlgFilter(QWidget* parent);
 
+	void accept();
+
+public:
+	int	m_nflt;
+
+	double	m_scale;
+
+	double	m_theta;
+	int		m_iters;
+
+	int		m_nop;
+	int		m_ndata;
+
 private:
 	Ui::CDlgFilter* ui;
 };

@@ -18,6 +18,7 @@
 #include <PostViewLib/FEModel.h>
 #include "GLModel.h"
 #include <QtCore/QAbstractTableModel>
+#include <PostViewLib/DataFilter.h>
 
 class CDataModel : public QAbstractTableModel
 {
@@ -223,11 +224,23 @@ void CDlgAddDataFile::onBrowse()
 class Ui::CDlgFilter
 {
 public:
+	QComboBox* pselect;
+
+	// scale filter
+	QLineEdit* pscale;
+	
+	// smooth filter
+	QLineEdit* ptheta;
+	QLineEdit* piters;
+
+	// math page
+	QComboBox* poperation;
+	QComboBox* poperand;
 
 public:
 	void setupUi(QDialog* parent)
 	{
-		QComboBox* pselect = new QComboBox;
+		pselect = new QComboBox;
 		pselect->addItem("Scale");
 		pselect->addItem("Smooth");
 		pselect->addItem("Arithmetic");
@@ -245,19 +258,19 @@ public:
 
 		QWidget* scalePage = new QWidget;
 		QFormLayout* pform = new QFormLayout;
-		pform->addRow("scale:", new QLineEdit);
+		pform->addRow("scale:", pscale = new QLineEdit); pscale->setValidator(new QDoubleValidator(-1e99, 1e99, 6));
 		scalePage->setLayout(pform);
 
 		QWidget* smoothPage = new QWidget;
 		pform = new QFormLayout;
-		pform->addRow("theta:", new QLineEdit);
-		pform->addRow("iterations:", new QLineEdit);
+		pform->addRow("theta:", ptheta = new QLineEdit); ptheta->setValidator(new QDoubleValidator(0.0, 1.0, 6));
+		pform->addRow("iterations:", piters = new QLineEdit); piters->setValidator(new QIntValidator(1, 1000));
 		smoothPage->setLayout(pform);
 
 		QWidget* mathPage = new QWidget;
 		pform = new QFormLayout;
-		pform->addRow("Operation:", new QComboBox);
-		pform->addRow("Operand:", new QComboBox);
+		pform->addRow("Operation:", poperation = new QComboBox);
+		pform->addRow("Operand:"  , poperand   = new QComboBox);
 		mathPage->setLayout(pform);
 
 		QStackedWidget* stack = new QStackedWidget;
@@ -281,6 +294,21 @@ public:
 CDlgFilter::CDlgFilter(QWidget* parent) : QDialog(parent), ui(new Ui::CDlgFilter)
 {
 	ui->setupUi(this);
+}
+
+void CDlgFilter::accept()
+{
+	m_nflt = ui->pselect->currentIndex();
+
+	m_scale = ui->pscale->text().toDouble();
+
+	m_theta = ui->ptheta->text().toDouble();
+	m_iters = ui->piters->text().toInt();
+
+	m_nop   = ui->poperation->currentIndex();
+	m_ndata = ui->poperand->currentIndex();
+
+	QDialog::accept();
 }
 
 //=================================================================================================
@@ -423,10 +451,47 @@ void CDataPanel::on_DeleteButton_clicked()
 
 void CDataPanel::on_FilterButton_clicked()
 {
-	CDlgFilter dlg(this);
-	if (dlg.exec())
+	QItemSelectionModel* select = ui->list->selectionModel();
+	QModelIndexList selRow = select->selectedRows();
+	if (selRow.count() == 1)
 	{
+		int nsel = selRow.at(0).row();
+		CDocument& doc = *m_wnd->GetDocument();
+		FEModel& fem = *doc.GetFEModel();
+		FEDataManager& dm = *fem.GetDataManager();
+		FEDataField* pdf = *dm.DataField(nsel);
+		if (pdf)
+		{
+			CDlgFilter dlg(this);
+			if (dlg.exec())
+			{
+				int nfield = pdf->GetFieldID();
+				switch(dlg.m_nflt)
+				{
+				case 0:
+					{
+						DataScale(fem, nfield, dlg.m_scale);
+					}
+					break;
+				case 1:
+					{
+						DataSmooth(fem, nfield, dlg.m_theta, dlg.m_iters);
+					}
+					break;
+				case 2:
+					{
+						FEDataFieldPtr p = fem.GetDataManager()->DataField(dlg.m_ndata);
+						DataArithmetic(fem, nfield, dlg.m_nop, (*p)->GetFieldID());
+					}
+					break;
+				default:
+					QMessageBox::critical(this, "Data Filter", "Don't know this filter.");
+				}
 
+				doc.UpdateFEModel(true);
+				m_wnd->repaint();
+			}
+		}
 	}
 }
 
