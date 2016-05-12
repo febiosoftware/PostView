@@ -79,6 +79,16 @@ public:
 
 	void align(unsigned int n) { m_nsnap = n; }
 
+	QString get_font() const { return m_font; }
+	void set_font(const QString& s) { m_font = s; }
+
+	int get_font_size() const { return m_font_size; }
+	void set_font_size(int n) { m_font_size = n; }
+
+public:
+	bool	m_font_bold;
+	bool	m_font_italic;
+
 protected:
 	int m_x, m_y;
 	int m_w, m_h;
@@ -118,7 +128,7 @@ public:
 	void parse_label(char* szlabel, const char* szval, int nmax);
 
 protected:
-	void draw_bg(int x0, int y0, int x1, int y1);
+	void draw_bg(int x0, int y0, int x1, int y1, QPainter* painter);
 
 protected:
 	CDocument*	m_pdoc;

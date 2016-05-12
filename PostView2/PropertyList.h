@@ -1,7 +1,6 @@
 #pragma once
 #include <QtCore/QVariant>
-#include <QColor>
-#include <PostViewLib/color.h>
+#include "convert.h"
 
 //-----------------------------------------------------------------------------
 class CProperty
@@ -81,6 +80,3 @@ private:
 private:
 	std::vector<CProperty>	m_list;
 };
-
-inline QColor toQColor(GLCOLOR c) { return QColor(c.r, c.g, c.b); }
-inline GLCOLOR toGLColor(QColor c) { return GLCOLOR(c.red(), c.green(), c.blue()); }

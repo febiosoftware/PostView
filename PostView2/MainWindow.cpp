@@ -19,6 +19,7 @@
 #include "GLVectorPlot.h"
 #include "DlgViewSettings.h"
 #include "DlgExportXPLT.h"
+#include "DlgWidgetProps.h"
 #include <string>
 
 CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMainWindow)
@@ -459,6 +460,15 @@ void CMainWindow::on_actionDelete_triggered()
 
 void CMainWindow::on_actionProperties_triggered()
 {
+	// get the selected widget
+	GLWidget* pglw = GLWidget::get_focus();
+	if (pglw == 0) return;
+
+	// edit the properties
+	CDlgBoxProps dlg(pglw, this);
+	dlg.exec();
+
+	repaint();
 }
 
 void CMainWindow::on_actionPlaneCut_triggered()

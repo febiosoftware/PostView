@@ -8,6 +8,7 @@
 #include <ctype.h>
 #include <time.h>
 #include <assert.h>
+#include "convert.h"
 
 //-----------------------------------------------------------------------------
 
@@ -31,6 +32,8 @@ GLWidget::GLWidget(CGLObject* po, int x, int y, int w, int h, const char* szlabe
 
 	m_font = QString("Helvetica");
 	m_font_size = 13;
+	m_font_bold = false;
+	m_font_italic = false;
 
 	m_nsnap = 0;
 
@@ -74,58 +77,40 @@ GLBox::GLBox(CGLObject* po, int x, int y, int w, int h, CDocument* pdoc, const c
 {
 	m_pdoc = pdoc;
 	m_bshadow = false;
-	m_shc = GLCOLOR(0,0,0);
+	m_shc = GLCOLOR(200,200,200);
 }
 
-void GLBox::draw_bg(int x0, int y0, int x1, int y1)
+void GLBox::draw_bg(int x0, int y0, int x1, int y1, QPainter* painter)
 {
-	GLCOLOR c1 = m_bgc[0];
-	GLCOLOR c2 = m_bgc[1];
+	QColor c1 = toQColor(m_bgc[0]);
+	QColor c2 = toQColor(m_bgc[1]);
+
+	QRect rt(x0, y0, x1 - x0, y1 - y0);
 
 	switch (m_nbg)
 	{
 	case NONE: break;
 	case COLOR1:
-		glBegin(GL_QUADS);
-		{
-			glColor3ub(c1.r, c1.g, c1.b); 
-			glVertex2i(x0, y0);
-			glVertex2i(x1, y0);
-			glVertex2i(x1, y1);
-			glVertex2i(x0, y1);
-		}
-		glEnd();
+		painter->fillRect(rt, c1);
 		break;
 	case COLOR2:
-		glBegin(GL_QUADS);
-		{
-			glColor3ub(c2.r, c2.g, c2.b); 
-			glVertex2i(x0, y0);
-			glVertex2i(x1, y0);
-			glVertex2i(x1, y1);
-			glVertex2i(x0, y1);
-		}
-		glEnd();
+		painter->fillRect(rt, c2);
 		break;
 	case HORIZONTAL:
-		glBegin(GL_QUADS);
 		{
-			glColor3ub(c1.r, c1.g, c1.b); glVertex2i(x0, y0);
-			glColor3ub(c1.r, c1.g, c1.b); glVertex2i(x1, y0);
-			glColor3ub(c2.r, c2.g, c2.b); glVertex2i(x1, y1);
-			glColor3ub(c2.r, c2.g, c2.b); glVertex2i(x0, y1);
+			QLinearGradient grad(rt.topLeft(), rt.topRight());
+			grad.setColorAt(0, c1);
+			grad.setColorAt(1, c2);
+			painter->fillRect(rt, grad);
 		}
-		glEnd();
 		break;
 	case VERTICAL:
-		glBegin(GL_QUADS);
 		{
-			glColor3ub(c1.r, c1.g, c1.b); glVertex2i(x0, y0);
-			glColor3ub(c2.r, c2.g, c2.b); glVertex2i(x1, y0);
-			glColor3ub(c2.r, c2.g, c2.b); glVertex2i(x1, y1);
-			glColor3ub(c1.r, c1.g, c1.b); glVertex2i(x0, y1);
+			QLinearGradient grad(rt.topLeft(), rt.bottomLeft());
+			grad.setColorAt(0, c1);
+			grad.setColorAt(1, c2);
+			painter->fillRect(rt, grad);
 		}
-		glEnd();
 		break;
 	}
 }
@@ -135,9 +120,9 @@ void GLBox::draw(QPainter* painter)
 	int x0 = m_x;
 	int y0 = m_y;
 	int x1 = m_x + m_w;
-	int y1 = m_y+m_h;
+	int y1 = m_y + m_h;
 
-//	draw_bg(x0, y0, x1, y1);
+	draw_bg(x0, y0, x1, y1, painter);
 
 	if (m_szlabel)
 	{
@@ -147,13 +132,14 @@ void GLBox::draw(QPainter* painter)
 		if (m_bshadow)
 		{
 			int dx = m_font_size/10+1;
-//			painter->setPen(QColor(m_shc.r, m_shc.g, m_shc.b));
-//			painter->drawText(x0+dx, y0+dx, QString(szlabel));
+			painter->setPen(QColor(m_shc.r, m_shc.g, m_shc.b));
+			painter->setFont(QFont(m_font, m_font_size, (m_font_bold ? QFont::Bold : QFont::Normal), m_font_italic));
+			painter->drawText(x0+dx, y0+dx, m_w, m_h, Qt::AlignLeft| Qt::AlignVCenter, QString(szlabel));
 		}
 		QPen pen = painter->pen();
 		pen.setColor(QColor(m_fgc.r, m_fgc.g, m_fgc.b));
+		painter->setFont(QFont(m_font, m_font_size, (m_font_bold ? QFont::Bold : QFont::Normal), m_font_italic));
 		painter->setPen(pen);
-		painter->setFont(QFont(m_font, m_font_size));
 		painter->drawText(x0, y0, m_w, m_h, Qt::AlignLeft| Qt::AlignVCenter, QString(szlabel));
 	}
 }
