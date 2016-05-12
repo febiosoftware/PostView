@@ -21,6 +21,9 @@ public:
 public:
 	void Update();
 
+	// this is called when the view needs to be updated
+	void UpdateView();
+
 	void selectObject(CGLObject* po);
 
 private slots:

@@ -316,7 +316,7 @@ void CGLView::mouseMoveEvent(QMouseEvent* ev)
 	int mode = 0;
 	Qt::KeyboardModifiers key = ev->modifiers();
 	if (key & Qt::ShiftModifier  ) mode |= SELECT_ADD;
-	if (key & Qt::ControlModifier) mode != SELECT_SUB;
+	if (key & Qt::ControlModifier) mode |= SELECT_SUB;
 
 	Qt::MouseButtons buttons = ev->buttons();
 
@@ -383,6 +383,7 @@ void CGLView::mouseMoveEvent(QMouseEvent* ev)
 	m_xp = x;
 	m_yp = y;
 	pcam->Update(true);
+	m_wnd->UpdateView();
 }
 
 //-----------------------------------------------------------------------------
@@ -434,7 +435,7 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 	int mode = 0;
 	Qt::KeyboardModifiers key = ev->modifiers();
 	if (key & Qt::ShiftModifier  ) mode |= SELECT_ADD;
-	if (key & Qt::ControlModifier) mode != SELECT_SUB;
+	if (key & Qt::ControlModifier) mode |= SELECT_SUB;
 
 	Qt::MouseButton button = ev->button();
 
@@ -486,6 +487,7 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 		}
 	}
 
+	m_wnd->UpdateView();
 	repaint();
 }
 

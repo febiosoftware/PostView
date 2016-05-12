@@ -192,6 +192,80 @@ private:
 };
 
 //-----------------------------------------------------------------------------
+class CViewProps : public CPropertyList
+{
+public:
+	CViewProps(CGView& view) : m_view(view)
+	{
+		addProperty("X-angle", CProperty::Float);
+		addProperty("Y-angle", CProperty::Float);
+		addProperty("Z-angle", CProperty::Float);
+		addProperty("X-target", CProperty::Float);
+		addProperty("Y-target", CProperty::Float);
+		addProperty("Z-target", CProperty::Float);
+		addProperty("Target distance", CProperty::Float);
+	}
+
+	QVariant GetPropertyValue(int i)
+	{
+		CGLCamera& cam = m_view.GetCamera();
+		quat4f q = cam.GetOrientation();
+		float w = q.GetAngle()*180.f/PI;
+		vec3f v = q.GetVector()*w;
+
+		vec3f r = cam.GetPosition();
+		float d = cam.GetTargetDistance();
+
+		switch (i)
+		{
+		case 0: return v.x; break;
+		case 1: return v.y; break;
+		case 2: return v.z; break;
+		case 3: return r.x; break;
+		case 4: return r.y; break;
+		case 5: return r.z; break;
+		case 6: return d; break;
+		}
+
+		return QVariant();
+	}
+
+	void SetPropertyValue(int i, const QVariant& val)
+	{
+		CGLCamera& cam = m_view.GetCamera();
+		quat4f q = cam.GetOrientation();
+		float w = q.GetAngle()*180.f/PI;
+		vec3f v = q.GetVector()*w;
+
+		vec3f r = cam.GetPosition();
+		float d = cam.GetTargetDistance();
+
+		switch (i)
+		{
+		case 0: v.x = val.toFloat(); break;
+		case 1: v.y = val.toFloat(); break;
+		case 2: v.z = val.toFloat(); break;
+		case 3: r.x = val.toFloat(); break;
+		case 4: r.y = val.toFloat(); break;
+		case 5: r.z = val.toFloat(); break;
+		case 6: d = val.toFloat(); break;
+		}
+
+		w = PI*v.Length()/180.f; v.Normalize();
+		q = quat4f(w, v);
+		cam.SetOrientation(q);
+
+		cam.SetTarget(r);
+		cam.SetTargetDistance(d);
+
+		cam.Update(true);
+	}
+
+private:
+	CGView&	m_view;
+};
+
+//-----------------------------------------------------------------------------
 class Ui::CModelViewer
 {
 public:
@@ -232,6 +306,15 @@ void CModelViewer::selectObject(CGLObject* po)
 	// Implement this
 }
 
+void CModelViewer::UpdateView()
+{
+	QTreeWidgetItem* psel = ui->m_tree->currentItem();
+	if (psel && psel->text(0) == QString("View"))
+	{
+		on_modelTree_currentItemChanged(psel, psel);
+	}
+}
+
 void CModelViewer::Update()
 {
 	if (ui->m_list.isEmpty() == false)
@@ -270,7 +353,6 @@ void CModelViewer::Update()
 		ui->m_list.push_back(new CColorMapProps(mdl->GetColorMap()));
 		pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
 
-
 		GPlotList& pl = pdoc->GetPlotList();
 		GPlotList::iterator it;
 		for (it = pl.begin(); it != pl.end(); ++it)
@@ -281,6 +363,11 @@ void CModelViewer::Update()
 			ui->m_list.push_back(plot.propertyList());
 			pi1->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
 		}
+
+		pi2 = new QTreeWidgetItem(ui->m_tree);
+		pi2->setText(0, "View");
+		ui->m_list.push_back(new CViewProps(*pdoc->GetView()));
+		pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size() - 1));
 	}
 }
 

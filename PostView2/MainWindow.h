@@ -3,6 +3,7 @@
 #include <QtCore/QBasicTimer>
 
 class CDocument;
+class CGLView;
 
 namespace Ui {
 	class CMainWindow;
@@ -20,6 +21,10 @@ public:
 	bool SaveFile(const QString& fileName, int nfilter);
 
 	CDocument*	GetDocument() { return m_doc; }
+
+	CGLView* GetGLView();
+
+	void UpdateView();
 
 private slots:
 	void on_actionOpen_triggered();

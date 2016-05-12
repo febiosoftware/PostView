@@ -33,6 +33,11 @@ CMainWindow::~CMainWindow()
 {
 }
 
+CGLView* CMainWindow::GetGLView()
+{
+	return ui->glview;
+}
+
 void CMainWindow::UpdateUi()
 {
 	// update the command panels
@@ -53,6 +58,11 @@ void CMainWindow::UpdateUi()
 	// update the gl view
 	ui->glview->GetCamera().Update(true);
 	ui->glview->repaint();
+}
+
+void CMainWindow::UpdateView()
+{
+	ui->modelViewer->UpdateView();
 }
 
 bool CMainWindow::OpenFile(const QString& fileName, int nfilter)
