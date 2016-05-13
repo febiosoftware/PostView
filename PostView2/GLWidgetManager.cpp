@@ -86,7 +86,7 @@ int CGLWidgetManager::handle(int x, int y, int nevent)
 				{
 					bresize = true; 
 					hp = pw->m_h;
-					fsp = pw->m_font_size;
+					fsp = pw->m_font.pointSize();
 				}
 				else bresize = false;
 
@@ -115,7 +115,7 @@ int CGLWidgetManager::handle(int x, int y, int nevent)
 
 					float ar = (float) hn / (float) hp;
 
-					pw->m_font_size = (int) (ar*fsp);
+					pw->m_font.setPointSize((int) (ar*fsp));
 				}
 				else
 				{

@@ -26,6 +26,28 @@ public:
 	CColorButton*	pfontColor;
 	QCheckBox		*pfontBold, *pfontItalic;
 
+	void setFont(const QFont& font, const QColor& col)
+	{
+		pfontStyle->setCurrentFont(font);
+		pfontSize->setValue(font.pointSize());
+		pfontBold->setChecked(font.bold());
+		pfontItalic->setChecked(font.italic());
+		pfontColor->setColor(col);
+	}
+
+	QFont getFont() const
+	{
+		QFont font(pfontStyle->currentFont().family(), pfontSize->value());
+		font.setBold(pfontBold->isChecked());
+		font.setItalic(pfontItalic->isChecked());
+		return font;
+	}
+
+	QColor getFontColor() const
+	{
+		return pfontColor->color();
+	}
+
 public:
 	CFontWidget(QWidget* parent = 0) : QGroupBox("Font", parent)
 	{
@@ -171,11 +193,8 @@ CDlgBoxProps::CDlgBoxProps(GLWidget* widget, QWidget* parent) : QDialog(parent),
 	ui->bgCol1->setColor(toQColor(pb->get_bg_color(0)));
 	ui->bgCol2->setColor(toQColor(pb->get_bg_color(1)));
 
-	ui->pfont->pfontStyle->setCurrentFont(QFont(pb->get_font()));
-	ui->pfont->pfontSize->setValue(pb->get_font_size());
-	ui->pfont->pfontBold->setChecked(pb->m_font_bold);
-	ui->pfont->pfontItalic->setChecked(pb->m_font_italic);
-	ui->pfont->pfontColor->setColor(toQColor(pb->get_fg_color()));
+	QFont font = pb->get_font();
+	ui->pfont->setFont(font, toQColor(pb->get_fg_color()));
 }
 
 void CDlgBoxProps::accept()
@@ -197,11 +216,9 @@ void CDlgBoxProps::accept()
 	pb->set_bg_style(ui->pbgstyle->currentIndex());
 	pb->set_bg_color(toGLColor(ui->bgCol1->color()), toGLColor(ui->bgCol2->color()));
 
-	pb->set_font(ui->pfont->pfontStyle->currentFont().family());
-	pb->set_font_size(ui->pfont->pfontSize->value());
-	pb->m_font_bold = ui->pfont->pfontBold->isChecked();
-	pb->m_font_italic = ui->pfont->pfontItalic->isChecked();
-	pb->set_fg_color(toGLColor(ui->pfont->pfontColor->color()));
+	QFont font = ui->pfont->getFont();
+	pb->set_font(font);
+	pb->set_fg_color(toGLColor(ui->pfont->getFontColor()));
 
 	QDialog::accept();
 }
@@ -282,19 +299,14 @@ CDlgLegendProps::CDlgLegendProps(GLWidget* widget, QWidget* parent) : QDialog(pa
 
 	ui->pshowLabels->setChecked(pb->ShowLabels());
 	ui->pprec->setValue(pb->GetPrecision());
-	ui->plabelFont->pfontStyle->setCurrentFont(pb->get_font());
-	ui->plabelFont->pfontSize->setValue(pb->get_font_size());
-	ui->plabelFont->pfontColor->setColor(toQColor(pb->get_fg_color()));
-	ui->plabelFont->pfontBold->setChecked(pb->m_font_bold);
-	ui->plabelFont->pfontItalic->setChecked(pb->m_font_italic);
+
+	QFont labelFont = pb->getLabelFont();
+	ui->plabelFont->setFont(labelFont, toQColor(pb->getLabelColor()));
 
 	ui->pshowTitle->setChecked(pb->ShowTitle());
 	ui->ptitleText->setText(pb->get_label());
-	ui->ptitleFont->pfontStyle->setCurrentFont(pb->get_font());
-	ui->ptitleFont->pfontSize->setValue(pb->get_font_size());
-	ui->ptitleFont->pfontColor->setColor(toQColor(pb->get_fg_color()));
-	ui->ptitleFont->pfontBold->setChecked(pb->m_font_bold);
-	ui->ptitleFont->pfontItalic->setChecked(pb->m_font_italic);
+	QFont titleFont = pb->get_font();
+	ui->ptitleFont->setFont(pb->get_font(), toQColor(pb->get_fg_color()));
 
 	ui->ppos->setPosition(widget->x(), widget->y(), widget->w(), widget->h());
 }
@@ -313,11 +325,89 @@ void CDlgLegendProps::accept()
 	GLLegendBar* pb = dynamic_cast<GLLegendBar*>(pw);
 	pb->ShowLabels(ui->pshowLabels->isChecked());
 	pb->SetPrecision(ui->pprec->value());
-	pb->set_font(ui->plabelFont->pfontStyle->currentFont().family());
-	pb->set_font_size(ui->plabelFont->pfontSize->value());
-	pb->m_font_bold = ui->plabelFont->pfontBold->isChecked();
-	pb->m_font_italic = ui->plabelFont->pfontItalic->isChecked();
-	pb->set_fg_color(toGLColor(ui->plabelFont->pfontColor->color()));
+
+	QFont labelFont = ui->plabelFont->getFont();
+	pb->setLabelFont(labelFont);
+	pb->setLabelColor(toGLColor(ui->plabelFont->getFontColor()));
+
+	QFont titleFont = ui->ptitleFont->getFont();
+	pb->set_font(titleFont);
+	pb->set_fg_color(toGLColor(ui->ptitleFont->getFontColor()));
+
+	QDialog::accept();
+}
+
+class Ui::CDlgTriadProps
+{
+public:
+	// Labels page
+	QCheckBox* pshowLabels;
+	CFontWidget* plabelFont;
+
+	// Position page
+	CPositionWidget* ppos;
+
+public:
+	void setupUi(QDialog* parent)
+	{
+		// main layout
+		QVBoxLayout* pv = new QVBoxLayout(parent);
+
+		// create tab widget
+		QTabWidget* tab = new QTabWidget;
+
+		// Labels page
+		QWidget* labelsPage = new QWidget;
+			QVBoxLayout* labelsPageLayout = new QVBoxLayout;
+				labelsPageLayout->addWidget(pshowLabels = new QCheckBox("show labels"));
+				labelsPageLayout->addWidget(plabelFont = new CFontWidget);
+			labelsPage->setLayout(labelsPageLayout);
+
+		// Position page
+		ppos = new CPositionWidget;
+
+		// add all the tabs
+		tab->addTab(labelsPage, "Labels");
+		tab->addTab(ppos, "Position");
+		pv->addWidget(tab);
+
+		// create the dialog button box
+		QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+		pv->addWidget(buttonBox);
+		QObject::connect(buttonBox, SIGNAL(accepted()), parent, SLOT(accept()));
+		QObject::connect(buttonBox, SIGNAL(rejected()), parent, SLOT(reject()));
+	}
+};
+
+CDlgTriadProps::CDlgTriadProps(GLWidget* widget, QWidget* parent) : QDialog(parent), ui(new Ui::CDlgTriadProps)
+{
+	ui->setupUi(this);
+
+	pw = widget;
+	GLTriad* pt = dynamic_cast<GLTriad*>(pw);
+
+	ui->pshowLabels->setChecked(pt->show_coord_labels());
+
+	QFont labelFont = pt->get_font();
+	ui->plabelFont->setFont(labelFont, toQColor(pt->get_fg_color()));
+
+	ui->ppos->setPosition(widget->x(), widget->y(), widget->w(), widget->h());
+}
+
+void CDlgTriadProps::accept()
+{
+	int x = ui->ppos->x();
+	int y = ui->ppos->y();
+	int w = ui->ppos->w();
+	int h = ui->ppos->h();
+	pw->resize(x, y, w, h);
+
+	GLTriad* pb = dynamic_cast<GLTriad*>(pw);
+	pb->show_coord_labels(ui->pshowLabels->isChecked());
+
+	QFont labelFont = ui->plabelFont->getFont();
+	pw->set_font(labelFont);
+	pw->set_fg_color(toGLColor(ui->plabelFont->getFontColor()));
 
 	QDialog::accept();
 }

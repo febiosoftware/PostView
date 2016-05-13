@@ -17,7 +17,6 @@ class CDlgWidgetProps;
 #define GLW_ALIGN_VCENTER	0x0020
 
 //-----------------------------------------------------------------------------
-
 class GLWidget
 {
 public:
@@ -79,15 +78,8 @@ public:
 
 	void align(unsigned int n) { m_nsnap = n; }
 
-	QString get_font() const { return m_font; }
-	void set_font(const QString& s) { m_font = s; }
-
-	int get_font_size() const { return m_font_size; }
-	void set_font_size(int n) { m_font_size = n; }
-
-public:
-	bool	m_font_bold;
-	bool	m_font_italic;
+	QFont get_font() const { return m_font; }
+	void set_font(const QFont& f) { m_font = f; }
 
 protected:
 	int m_x, m_y;
@@ -95,8 +87,8 @@ protected:
 	bool	m_balloc;
 	
 	char*			m_szlabel;
-	QString			m_font;
-	unsigned int	m_font_size;
+
+	QFont	m_font;	// label font
 	
 	unsigned int	m_nsnap;	// alignment flag
 
@@ -163,6 +155,12 @@ public:
 	int GetPrecision() { return m_nprec; }
 	void SetPrecision(int n) { n = (n<1?1:(n>7?7:n)); m_nprec = n; }
 
+	QFont getLabelFont() const { return m_lbl_font; }
+	void setLabelFont(const QFont& f) { m_lbl_font = f; }
+
+	GLCOLOR getLabelColor() const { return m_lbl_fc; }
+	void setLabelColor(const GLCOLOR& c) { m_lbl_fc = c; }
+
 protected:
 	void draw_gradient(QPainter* painter);
 	void draw_discrete(QPainter* painter);
@@ -174,7 +172,7 @@ protected:
 	bool	m_blabels;	// show labels
 	int		m_nprec;	// precision
 
-	int		m_lbl_font_size;
+	QFont	m_lbl_font;
 	GLCOLOR	m_lbl_fc;
 
 	CColorMap*		m_pMap;

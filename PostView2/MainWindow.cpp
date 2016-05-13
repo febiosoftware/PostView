@@ -534,6 +534,11 @@ void CMainWindow::on_actionProperties_triggered()
 		CDlgLegendProps dlg(pglw, this);
 		dlg.exec();
 	}
+	else if (dynamic_cast<GLTriad*>(pglw))
+	{
+		CDlgTriadProps dlg(pglw, this);
+		dlg.exec();
+	}
 
 	repaint();
 }

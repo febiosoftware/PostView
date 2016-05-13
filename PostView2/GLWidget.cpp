@@ -30,10 +30,9 @@ GLWidget::GLWidget(CGLObject* po, int x, int y, int w, int h, const char* szlabe
 	m_bgc[1] = GLCOLOR(0,0,0,0);
 	m_nbg = NONE;
 
-	m_font = QString("Helvetica");
-	m_font_size = 13;
-	m_font_bold = false;
-	m_font_italic = false;
+	m_font = QFont("Helvetica", 13);
+	m_font.setBold(false);
+	m_font.setItalic(false);
 
 	m_nsnap = 0;
 
@@ -131,14 +130,14 @@ void GLBox::draw(QPainter* painter)
 
 		if (m_bshadow)
 		{
-			int dx = m_font_size/10+1;
+			int dx = m_font.pointSize()/10+1;
 			painter->setPen(QColor(m_shc.r, m_shc.g, m_shc.b));
-			painter->setFont(QFont(m_font, m_font_size, (m_font_bold ? QFont::Bold : QFont::Normal), m_font_italic));
+			painter->setFont(m_font);
 			painter->drawText(x0+dx, y0+dx, m_w, m_h, Qt::AlignLeft| Qt::AlignVCenter, QString(szlabel));
 		}
 		QPen pen = painter->pen();
 		pen.setColor(QColor(m_fgc.r, m_fgc.g, m_fgc.b));
-		painter->setFont(QFont(m_font, m_font_size, (m_font_bold ? QFont::Bold : QFont::Normal), m_font_italic));
+		painter->setFont(m_font);
 		painter->setPen(pen);
 		painter->drawText(x0, y0, m_w, m_h, Qt::AlignLeft| Qt::AlignVCenter, QString(szlabel));
 	}
@@ -199,7 +198,7 @@ GLLegendBar::GLLegendBar(CGLObject* po, CColorMap* pm, int x, int y, int w, int 
 	m_btitle = false;
 	m_blabels = true;
 	m_nprec = 3;
-	m_lbl_font_size = 14;
+	m_lbl_font = QFont("Helvetica", 13);
 }
 
 void GLLegendBar::draw(QPainter* painter)
@@ -298,24 +297,32 @@ void GLLegendBar::draw_gradient(QPainter* painter)
 	glPopAttrib();
 	painter->endNativePainting();
 
+	// convert back to normal window coordinates
+	y0 = vp[3] - y0;
+	y1 = vp[3] - y1;
+
 	if (m_blabels)
 	{
 		painter->setPen(QColor(m_lbl_fc.r,m_lbl_fc.g,m_lbl_fc.b));
-		painter->setFont(QFont("Helvetica", m_lbl_font_size));
+		painter->setFont(m_lbl_font);
+		QFontMetrics fm(m_lbl_font);
 	
 		if((abs(ipow)>2))
 		{
 			sprintf(pstr, "x10");
-			painter->drawText(x0, y0+8, 28, 20, Qt::AlignLeft| Qt::AlignVCenter, QString(pstr));
+			painter->drawText(x0, y0-5, QString(pstr));
+
 			// change font size and draw superscript
 			sprintf(pstr, "%d", ipow);
 			QFontMetrics fm = painter->fontMetrics();
 			int l = fm.width(QString("x10"));
-			painter->setFont(QFont("Helvetica", m_lbl_font_size-2));
-			painter->drawText(x0+l, y0+14, 48, 20, Qt::AlignLeft| Qt::AlignVCenter, QString(pstr));
+			QFont f = m_lbl_font;
+			f.setPointSize(m_lbl_font.pointSize() - 2);
+			painter->setFont(f);
+			painter->drawText(x0+l, y0-14, QString(pstr));
 			
 			// reset font size
-			painter->setFont(QFont("Helvetica", m_lbl_font_size));
+			painter->setFont(m_lbl_font);
 			p = pow(10.0, ipow);
 		}
 
@@ -324,11 +331,16 @@ void GLLegendBar::draw_gradient(QPainter* painter)
 
 		for (i=0; i<=nsteps; i++)
 		{
-			yt = vp[3] - (y0 + i*(y1 - y0)/nsteps);
+			yt = y0 + i*(y1 - y0)/nsteps;
 			f = fmax + i*(fmin - fmax)/nsteps;
-		
+
 			sprintf(str, szfmt, (fabs(f/p) < 1e-5 ? 0 : f/p));
-			painter->drawText(x0-55, yt-8, 50, 20, Qt::AlignRight | Qt::AlignVCenter, QString(str));
+			QString s(str);
+
+			int w = fm.width(s);
+			int h = fm.ascent()/2;
+		
+			painter->drawText(x0-w-5, yt + h, s);
 		}
 	}
 }
@@ -590,7 +602,7 @@ void GLTriad::draw(QPainter* painter)
 	// restore identity matrix
 	if (m_bcoord_labels)
 	{
-		float a = 1.1f;
+		float a = 0.8f;
 		vec3f ex(a, 0.f, 0.f);
 		vec3f ey(0.f, a, 0.f);
 		vec3f ez(0.f, 0.f, a);
@@ -605,6 +617,8 @@ void GLTriad::draw(QPainter* painter)
 		ey.x = x0 + (x1 - x0)*(ey.x + 1)*0.5; ey.y = y0 + (y1 - y0)*(ey.y + 1)*0.5;
 		ez.x = x0 + (x1 - x0)*(ez.x + 1)*0.5; ez.y = y0 + (y1 - y0)*(ez.y + 1)*0.5;
 
+		painter->setFont(m_font);
+		painter->setPen(toQColor(m_fgc));
 		painter->drawText(ex.x, ex.y, "X");
 		painter->drawText(ey.x, ey.y, "Y");
 		painter->drawText(ez.x, ez.y, "Z");

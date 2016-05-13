@@ -4,6 +4,7 @@
 namespace Ui{
 	class CDlgBoxProps;
 	class CDlgLegendProps;
+	class CDlgTriadProps;
 };
 
 class GLWidget;
@@ -33,5 +34,19 @@ public:
 
 private:
 	Ui::CDlgLegendProps* ui;
+	GLWidget* pw;
+};
+
+class CDlgTriadProps : public QDialog
+{
+	Q_OBJECT
+
+public:
+	CDlgTriadProps(GLWidget* widget, QWidget* parent);
+
+	void accept();
+
+private:
+	Ui::CDlgTriadProps* ui;
 	GLWidget* pw;
 };
