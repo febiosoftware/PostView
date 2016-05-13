@@ -9,6 +9,7 @@
 #include <QBoxLayout>
 #include <QPushButton>
 #include <QTabWidget>
+#include <QDialogButtonBox>
 #include "PropertyList.h"
 #include "PropertyListView.h"
 
@@ -200,6 +201,40 @@ public:
 };
 
 //-----------------------------------------------------------------------------
+class CSelectionProps : public CPropertyList
+{
+public:
+	CSelectionProps()
+	{
+		addProperty("Select connected" , CProperty::Bool);
+
+		m_bconnect = false;
+	}
+
+	QVariant GetPropertyValue(int i)
+	{
+		QVariant v;
+		switch (i)
+		{
+		case 0: return m_bconnect; break;
+		}
+		return v;
+	}
+
+	void SetPropertyValue(int i, const QVariant& v)
+	{
+		switch (i)
+		{
+		case 0: m_bconnect = v.toBool(); break;
+		}
+	}
+
+public:
+	bool	m_bconnect;
+};
+
+
+//-----------------------------------------------------------------------------
 class Ui::CDlgViewSettings
 {
 public:
@@ -207,6 +242,8 @@ public:
 	CBackgroundProps*	m_bg;
 	CLightingProps*		m_light;
 	CCameraProps*		m_cam;
+	CSelectionProps*	m_select;
+	QDialogButtonBox*	buttonBox;
 
 public:
 	void setupUi(::CDlgViewSettings* pwnd)
@@ -219,20 +256,21 @@ public:
 		::CPropertyListView* pw2 = new ::CPropertyListView; pw2->Update(m_bg    );
 		::CPropertyListView* pw3 = new ::CPropertyListView; pw3->Update(m_light );
 		::CPropertyListView* pw4 = new ::CPropertyListView; pw4->Update(m_cam   );
+		::CPropertyListView* pw5 = new ::CPropertyListView; pw5->Update(m_select);
 
 		pt->addTab(pw1, "Rendering");
 		pt->addTab(pw2, "Background");
 		pt->addTab(pw3, "Lighting");
 		pt->addTab(pw4, "Camera");
+		pt->addTab(pw5, "Selection");
 		pg->addWidget(pt);
 
-		QHBoxLayout* ph2 = new QHBoxLayout;
-		QPushButton* pb = new QPushButton("OK");
-		ph2->addStretch();
-		ph2->addWidget(pb);
-		pg->addLayout(ph2);
+		buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Apply); 
+		pg->addWidget(buttonBox);
 
-		QObject::connect(pb, SIGNAL(clicked()), pwnd, SLOT(accept()));
+		QObject::connect(buttonBox, SIGNAL(accepted()), pwnd, SLOT(accept()));
+		QObject::connect(buttonBox, SIGNAL(rejected()), pwnd, SLOT(reject()));
+		QObject::connect(buttonBox, SIGNAL(clicked(QAbstractButton*)), pwnd, SLOT(onClicked(QAbstractButton*)));
 	}
 };
 
@@ -252,6 +290,7 @@ CDlgViewSettings::CDlgViewSettings(CMainWindow* pwnd) : ui(new Ui::CDlgViewSetti
 	ui->m_bg     = new CBackgroundProps;
 	ui->m_light  = new CLightingProps;
 	ui->m_cam    = new CCameraProps;
+	ui->m_select = new CSelectionProps;
 
 	ui->m_render->m_bproj = view.m_nproj == RENDER_PERSP;
 	ui->m_render->m_bline = view.m_blinesmooth;
@@ -270,6 +309,8 @@ CDlgViewSettings::CDlgViewSettings(CMainWindow* pwnd) : ui(new Ui::CDlgViewSetti
 	ui->m_cam->m_speed = cam.GetCameraSpeed();
 	ui->m_cam->m_bias  = cam.GetCameraBias();
 
+	ui->m_select->m_bconnect = view.m_bconn;
+
 	ui->setupUi(this);
 	resize(400, 300);
 }
@@ -279,7 +320,7 @@ CDlgViewSettings::~CDlgViewSettings()
 
 }
 
-void CDlgViewSettings::accept()
+void CDlgViewSettings::apply()
 {
 	CDocument* pdoc = m_pwnd->GetDocument();
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
@@ -302,5 +343,18 @@ void CDlgViewSettings::accept()
 	cam.SetCameraSpeed(ui->m_cam->m_speed);
 	cam.SetCameraBias(ui->m_cam->m_bias);
 
+	view.m_bconn = ui->m_select->m_bconnect;
+
+	m_pwnd->repaint();
+}
+
+void CDlgViewSettings::accept()
+{
+	apply();
 	QDialog::accept();
+}
+
+void CDlgViewSettings::onClicked(QAbstractButton* button)
+{
+	if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::ApplyRole) apply();
 }

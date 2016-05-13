@@ -3,6 +3,7 @@
 #include "PostViewLib/ColorMap.h"
 
 class CMainWindow;
+class QAbstractButton;
 
 namespace Ui {
 	class CDlgViewSettings;
@@ -16,8 +17,11 @@ public:
 	CDlgViewSettings(CMainWindow* pwnd);
 	virtual ~CDlgViewSettings();
 
+	void apply();
+
 public slots:
 	void accept();
+	void onClicked(QAbstractButton*);
 
 protected:
 	CMainWindow*			m_pwnd;

@@ -243,7 +243,7 @@ void CGLView::paintGL()
 	RenderWidgets();
 
 	// render the selection rectangle
-//	if (m_bdrag) RenderRubberBand();
+	if (m_bdrag) RenderRubberBand();
 
 	if (m_nanim != ANIM_STOPPED)
 	{
