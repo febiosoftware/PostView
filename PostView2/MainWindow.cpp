@@ -524,8 +524,16 @@ void CMainWindow::on_actionProperties_triggered()
 	if (pglw == 0) return;
 
 	// edit the properties
-	CDlgBoxProps dlg(pglw, this);
-	dlg.exec();
+	if (dynamic_cast<GLBox*>(pglw))
+	{
+		CDlgBoxProps dlg(pglw, this);
+		dlg.exec();
+	}
+	else if (dynamic_cast<GLLegendBar*>(pglw))
+	{
+		CDlgLegendProps dlg(pglw, this);
+		dlg.exec();
+	}
 
 	repaint();
 }
