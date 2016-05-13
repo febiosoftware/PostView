@@ -71,13 +71,26 @@ bool CMainWindow::OpenFile(const QString& fileName, int nfilter)
 
 	ui->actionColorMap->setDisabled(true);
 
+	setWindowTitle(QString("PostView2"));
+
 	XpltReader* reader = new XpltReader;
 	if (m_doc->LoadFEModel(reader, sfile.c_str()) == false)
 	{
-		QMessageBox b;
-		b.setText("Failed reading file.");
-		b.setIcon(QMessageBox::Critical);
-		b.exec();
+		QMessageBox::critical(this, "PostView2", "Failed reading file");
+	}
+	else
+	{
+		// copy just the file title
+		std::string stitle = sfile;
+		int npos = sfile.rfind('/');
+		if (npos == std::string::npos) npos = sfile.rfind('\\');
+		if (npos != std::string::npos)
+		{
+			stitle = sfile.substr(npos+1);
+		}
+
+		// set the window title
+		setWindowTitle(QString("PostView2 - %1").arg(QString(stitle.c_str())));
 	}
 
 	ui->selectData->BuildMenu(m_doc->GetFEModel(), DATA_SCALAR);
