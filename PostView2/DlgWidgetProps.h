@@ -5,9 +5,11 @@ namespace Ui{
 	class CDlgBoxProps;
 	class CDlgLegendProps;
 	class CDlgTriadProps;
+	class CDlgCaptureFrameProps;
 };
 
 class GLWidget;
+class QAbstractButton;
 
 class CDlgBoxProps : public QDialog
 {
@@ -17,6 +19,10 @@ public:
 	CDlgBoxProps(GLWidget* widget, QWidget* parent);
 
 	void accept();
+	void apply();
+
+private slots:
+	void onClicked(QAbstractButton* button);
 
 private:
 	Ui::CDlgBoxProps* ui;
@@ -31,6 +37,10 @@ public:
 	CDlgLegendProps(GLWidget* widget, QWidget* parent);
 
 	void accept();
+	void apply();
+
+private slots:
+	void onClicked(QAbstractButton* button);
 
 private:
 	Ui::CDlgLegendProps* ui;
@@ -45,8 +55,33 @@ public:
 	CDlgTriadProps(GLWidget* widget, QWidget* parent);
 
 	void accept();
+	void apply();
+
+private slots:
+	void onClicked(QAbstractButton* button);
 
 private:
 	Ui::CDlgTriadProps* ui;
+	GLWidget* pw;
+};
+
+class CDlgCaptureFrameProps : public QDialog
+{
+	Q_OBJECT
+
+public:
+	CDlgCaptureFrameProps(GLWidget* widget, QWidget* parent);
+
+	void accept();
+	void apply();
+
+private slots:
+	void onClicked(QAbstractButton* button);
+
+private slots:
+	void onFormat(int nindex);
+
+private:
+	Ui::CDlgCaptureFrameProps* ui;
 	GLWidget* pw;
 };

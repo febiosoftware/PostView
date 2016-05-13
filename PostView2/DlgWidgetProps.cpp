@@ -108,6 +108,7 @@ public:
 	QComboBox* pbgstyle;
 	CColorButton *bgCol1, *bgCol2;
 	CFontWidget* pfont;
+	QDialogButtonBox* buttonBox;
 
 public:
 	void setupUi(QDialog* parent)
@@ -169,10 +170,11 @@ public:
 		pv->addWidget(tab);
 
 		// create the dialog button box
-		QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+		buttonBox = new QDialogButtonBox(QDialogButtonBox::Apply | QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
 		pv->addWidget(buttonBox);
 		QObject::connect(buttonBox, SIGNAL(accepted()), parent, SLOT(accept()));
 		QObject::connect(buttonBox, SIGNAL(rejected()), parent, SLOT(reject()));
+		QObject::connect(buttonBox, SIGNAL(clicked(QAbstractButton*)), parent, SLOT(onClicked(QAbstractButton*)));
 	}
 };
 
@@ -197,7 +199,7 @@ CDlgBoxProps::CDlgBoxProps(GLWidget* widget, QWidget* parent) : QDialog(parent),
 	ui->pfont->setFont(font, toQColor(pb->get_fg_color()));
 }
 
-void CDlgBoxProps::accept()
+void CDlgBoxProps::apply()
 {
 	int x = ui->ppos->x();
 	int y = ui->ppos->y();
@@ -220,7 +222,18 @@ void CDlgBoxProps::accept()
 	pb->set_font(font);
 	pb->set_fg_color(toGLColor(ui->pfont->getFontColor()));
 
+	if (parentWidget()) parentWidget()->repaint();
+}
+
+void CDlgBoxProps::accept()
+{
+	apply();
 	QDialog::accept();
+}
+
+void CDlgBoxProps::onClicked(QAbstractButton* button)
+{
+	if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::ApplyRole) apply();
 }
 
 class Ui::CDlgLegendProps
@@ -238,6 +251,8 @@ public:
 
 	// Position page
 	CPositionWidget* ppos;
+
+	QDialogButtonBox* buttonBox;
 
 public:
 	void setupUi(QDialog* parent)
@@ -283,10 +298,11 @@ public:
 		pv->addWidget(tab);
 
 		// create the dialog button box
-		QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+		buttonBox = new QDialogButtonBox(QDialogButtonBox::Apply | QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
 		pv->addWidget(buttonBox);
 		QObject::connect(buttonBox, SIGNAL(accepted()), parent, SLOT(accept()));
 		QObject::connect(buttonBox, SIGNAL(rejected()), parent, SLOT(reject()));
+		QObject::connect(buttonBox, SIGNAL(clicked(QAbstractButton*)), parent, SLOT(onClicked(QAbstractButton*)));
 	}
 };
 
@@ -311,7 +327,7 @@ CDlgLegendProps::CDlgLegendProps(GLWidget* widget, QWidget* parent) : QDialog(pa
 	ui->ppos->setPosition(widget->x(), widget->y(), widget->w(), widget->h());
 }
 
-void CDlgLegendProps::accept()
+void CDlgLegendProps::apply()
 {
 	int x = ui->ppos->x();
 	int y = ui->ppos->y();
@@ -334,7 +350,18 @@ void CDlgLegendProps::accept()
 	pb->set_font(titleFont);
 	pb->set_fg_color(toGLColor(ui->ptitleFont->getFontColor()));
 
+	if (parentWidget()) parentWidget()->repaint();
+}
+
+void CDlgLegendProps::accept()
+{
+	apply();
 	QDialog::accept();
+}
+
+void CDlgLegendProps::onClicked(QAbstractButton* button)
+{
+	if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::ApplyRole) apply();
 }
 
 class Ui::CDlgTriadProps
@@ -346,6 +373,8 @@ public:
 
 	// Position page
 	CPositionWidget* ppos;
+	
+	QDialogButtonBox* buttonBox;
 
 public:
 	void setupUi(QDialog* parent)
@@ -372,10 +401,11 @@ public:
 		pv->addWidget(tab);
 
 		// create the dialog button box
-		QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+		buttonBox = new QDialogButtonBox(QDialogButtonBox::Apply | QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
 		pv->addWidget(buttonBox);
 		QObject::connect(buttonBox, SIGNAL(accepted()), parent, SLOT(accept()));
 		QObject::connect(buttonBox, SIGNAL(rejected()), parent, SLOT(reject()));
+		QObject::connect(buttonBox, SIGNAL(clicked(QAbstractButton*)), parent, SLOT(onClicked(QAbstractButton*)));
 	}
 };
 
@@ -394,7 +424,7 @@ CDlgTriadProps::CDlgTriadProps(GLWidget* widget, QWidget* parent) : QDialog(pare
 	ui->ppos->setPosition(widget->x(), widget->y(), widget->w(), widget->h());
 }
 
-void CDlgTriadProps::accept()
+void CDlgTriadProps::apply()
 {
 	int x = ui->ppos->x();
 	int y = ui->ppos->y();
@@ -409,5 +439,129 @@ void CDlgTriadProps::accept()
 	pw->set_font(labelFont);
 	pw->set_fg_color(toGLColor(ui->plabelFont->getFontColor()));
 
+	if (parentWidget()) parentWidget()->repaint();
+}
+
+void CDlgTriadProps::accept()
+{
+	apply();
 	QDialog::accept();
+}
+
+void CDlgTriadProps::onClicked(QAbstractButton* button)
+{
+	if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::ApplyRole) apply();
+}
+
+class Ui::CDlgCaptureFrameProps
+{
+public:
+	QComboBox* pformat;
+	CIntInput *px, *py;
+	CIntInput *pw, *ph;
+	QDialogButtonBox* buttonBox;
+
+public:
+	void setupUi(QDialog* parent)
+	{
+		// main layout
+		QVBoxLayout* pv = new QVBoxLayout(parent);
+
+		QStringList items;
+		items << "User" << "HD 720" << "HD 1080" << "NTSC" << "PAL" << "SVGA" << "VGA";
+
+		QHBoxLayout* phbox = new QHBoxLayout;
+		QLabel* label = new QLabel("Format");
+		pformat = new QComboBox; label->setBuddy(pformat);
+		pformat->addItems(items);
+		pformat->setCurrentIndex(0);
+
+		phbox->addWidget(label);
+		phbox->addWidget(pformat);
+		phbox->addStretch();
+		pv->addLayout(phbox);
+
+		QGridLayout* pgrid = new QGridLayout;
+		pgrid->addWidget(label = new QLabel("x:"), 0, 0);
+		pgrid->addWidget(px = new CIntInput, 0, 1); label->setBuddy(px);
+
+		pgrid->addWidget(label = new QLabel("y:"), 1, 0);
+		pgrid->addWidget(py = new CIntInput, 1, 1); label->setBuddy(py);
+
+		pgrid->addWidget(label = new QLabel("width:"), 0, 2);
+		pgrid->addWidget(pw = new CIntInput, 0, 3); label->setBuddy(pw);
+
+		pgrid->addWidget(label = new QLabel("height:"), 1, 2);
+		pgrid->addWidget(ph = new CIntInput, 1, 3); label->setBuddy(ph);
+		pv->addLayout(pgrid);
+
+		// create the dialog button box
+		buttonBox = new QDialogButtonBox(QDialogButtonBox::Apply | QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+		pv->addWidget(buttonBox);
+		QObject::connect(buttonBox, SIGNAL(accepted()), parent, SLOT(accept()));
+		QObject::connect(buttonBox, SIGNAL(rejected()), parent, SLOT(reject()));
+		QObject::connect(buttonBox, SIGNAL(clicked(QAbstractButton*)), parent, SLOT(onClicked(QAbstractButton*)));
+
+		QObject::connect(pformat, SIGNAL(currentIndexChanged(int)), parent, SLOT(onFormat(int)));
+	}
+};
+
+CDlgCaptureFrameProps::CDlgCaptureFrameProps(GLWidget* widget, QWidget* parent) : QDialog(parent), ui(new Ui::CDlgCaptureFrameProps)
+{
+	ui->setupUi(this);
+
+	pw = widget;
+
+	ui->px->setValue(pw->x());
+	ui->py->setValue(pw->y());
+	ui->pw->setValue(pw->w());
+	ui->ph->setValue(pw->h());
+}
+
+void CDlgCaptureFrameProps::apply()
+{
+	int x = ui->px->value();
+	int y = ui->py->value();
+	int w = ui->pw->value();
+	int h = ui->ph->value();
+	pw->resize(x, y, w, h);
+
+	if (parentWidget()) parentWidget()->repaint();
+}
+
+void CDlgCaptureFrameProps::accept()
+{
+	apply();
+	QDialog::accept();
+}
+
+void CDlgCaptureFrameProps::onClicked(QAbstractButton* button)
+{
+	if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::ApplyRole) apply();
+}
+
+void CDlgCaptureFrameProps::onFormat(int nindex)
+{
+	int LUT[][2] = {
+		{0,0},
+		{1280, 720},
+		{1920, 1080},
+		{720, 480},
+		{768, 576},
+		{800, 600},
+		{640,480}};
+
+	if (nindex == 0)
+	{
+		ui->pw->setEnabled(true);
+		ui->ph->setEnabled(true);
+	}
+	else
+	{
+		ui->pw->setValue(LUT[nindex][0]);
+		ui->ph->setValue(LUT[nindex][1]);
+
+		ui->pw->setEnabled(false);
+		ui->ph->setEnabled(false);
+	}
 }

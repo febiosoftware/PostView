@@ -26,7 +26,7 @@ public:
 
 	void UpdateView();
 
-private slots:
+public slots:
 	void on_actionOpen_triggered();
 	void on_actionSave_triggered();
 	void on_actionUpdate_triggered();

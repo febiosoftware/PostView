@@ -539,6 +539,15 @@ void CMainWindow::on_actionProperties_triggered()
 		CDlgTriadProps dlg(pglw, this);
 		dlg.exec();
 	}
+	else if (dynamic_cast<GLSafeFrame*>(pglw))
+	{
+		CDlgCaptureFrameProps dlg(pglw, this);
+		dlg.exec();
+	}
+	else
+	{
+		QMessageBox::information(this, "Properties", "No properties available");
+	}
 
 	repaint();
 }

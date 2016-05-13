@@ -295,6 +295,15 @@ void CGLView::mousePressEvent(QMouseEvent* ev)
 }
 
 //-----------------------------------------------------------------------------
+void CGLView::mouseDoubleClickEvent(QMouseEvent* ev)
+{
+	if (ev->button() == Qt::LeftButton)
+	{
+		m_wnd->on_actionProperties_triggered();
+	}
+}
+
+//-----------------------------------------------------------------------------
 void CGLView::mouseMoveEvent(QMouseEvent* ev)
 {
 	int x = ev->x();

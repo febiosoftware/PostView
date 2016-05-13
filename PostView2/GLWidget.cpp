@@ -634,6 +634,7 @@ GLSafeFrame::GLSafeFrame(CGLObject* po, int x, int y, int w, int h) : GLWidget(p
 
 void GLSafeFrame::draw(QPainter* painter)
 {
+	painter->beginNativePainting();
 	int vp[4];
 	glGetIntegerv(GL_VIEWPORT, vp);
 
@@ -661,6 +662,7 @@ void GLSafeFrame::draw(QPainter* painter)
 	glEnd();
 
 	glPopAttrib();
+	painter->endNativePainting();
 }
 
 bool GLSafeFrame::is_inside(int x, int y)

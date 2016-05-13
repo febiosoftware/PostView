@@ -91,6 +91,7 @@ protected:
 	void mousePressEvent  (QMouseEvent* ev);
 	void mouseMoveEvent   (QMouseEvent* ev);
 	void mouseReleaseEvent(QMouseEvent* ev);
+	void mouseDoubleClickEvent(QMouseEvent* ev);
 	bool event(QEvent* event);
 
 protected slots:
