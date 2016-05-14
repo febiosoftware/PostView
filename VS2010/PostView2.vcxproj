@@ -89,6 +89,7 @@
     <ClCompile Include="..\PostView2\4PointAngleTool.cpp" />
     <ClCompile Include="..\PostView2\AddPointTool.cpp" />
     <ClCompile Include="..\PostView2\CColorButton.cpp" />
+    <ClCompile Include="..\PostView2\CDlgImportXPLT.cpp" />
     <ClCompile Include="..\PostView2\CommandPanel.cpp" />
     <ClCompile Include="..\PostView2\DataFieldSelector.cpp" />
     <ClCompile Include="..\PostView2\DataPanel.cpp" />
@@ -207,6 +208,7 @@
     </CustomBuild>
     <ClInclude Include="..\PostView2\convert.h" />
     <ClInclude Include="..\PostView2\DlgFind.h" />
+    <ClInclude Include="..\PostView2\DlgImportXPLT.h" />
     <ClInclude Include="..\PostView2\MeasureAreaTool.h" />
     <CustomBuild Include="..\PostView2\PointCongruencyTool.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)bin/moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>

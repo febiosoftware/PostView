@@ -21,6 +21,7 @@
 #include "DlgExportXPLT.h"
 #include "DlgWidgetProps.h"
 #include "DlgFind.h"
+#include "DlgImportXPLT.h"
 #include <string>
 
 CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMainWindow)
@@ -74,6 +75,18 @@ bool CMainWindow::OpenFile(const QString& fileName, int nfilter)
 	setWindowTitle(QString("PostView2"));
 
 	XpltReader* reader = new XpltReader;
+
+	if (nfilter == 0)
+	{
+		CDlgImportXPLT dlg(this);
+		if (dlg.exec())
+		{
+			reader->SetReadStateFlag(dlg.m_nop);
+			reader->SetReadStatesList(dlg.m_item);
+		}
+		else return false;
+	}
+
 	if (m_doc->LoadFEModel(reader, sfile.c_str()) == false)
 	{
 		QMessageBox::critical(this, "PostView2", "Failed reading file");
