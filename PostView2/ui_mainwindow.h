@@ -64,6 +64,7 @@ public:
 	QAction* actionViewVPSave;    
 	QAction* actionViewVPPrev;   
 	QAction* actionViewVPNext;   
+	QAction* actionViewShowTags;
 
 	QAction*	actionColorMap;
 	QAction*	actionPlay;
@@ -223,6 +224,7 @@ public:
 		actionViewProjection = addAction("Orthographic projection", "actionViewProjection"); actionViewProjection->setShortcut(Qt::CTRL + Qt::Key_0); actionViewProjection->setCheckable(true);
 		actionViewMesh       = addAction("Show mesh lines"        , "actionViewMesh"      ); actionViewMesh   ->setShortcut(Qt::Key_M); actionViewMesh->setCheckable(true);
 		actionViewOutline    = addAction("Show outline"           , "actionViewOutline"   ); actionViewOutline->setShortcut(Qt::Key_Z); actionViewOutline->setCheckable(true);
+		actionViewShowTags   = addAction("Show tags"              , "actionViewShowTags"  ); actionViewShowTags->setShortcut(Qt::Key_T); actionViewShowTags->setCheckable(true);
 		actionViewSmooth     = addAction("Color smoothing"        , "actionViewSmooth"    ); actionViewSmooth ->setShortcut(Qt::Key_C); actionViewSmooth->setCheckable(true);
 		actionViewFront      = addAction("Front",                  "actionViewFront"     ); actionViewFront->setShortcut(Qt::CTRL + Qt::Key_1);
 		actionViewBack       = addAction("Back" ,                  "actionViewBack"      ); actionViewBack->setShortcut(Qt::CTRL + Qt::Key_3);
@@ -313,6 +315,7 @@ public:
 		menuView->addAction(actionViewCapture   );
 		menuView->addAction(actionViewProjection);
 		menuView->addAction(actionViewMesh      );
+		menuView->addAction(actionViewShowTags  );
 		menuView->addAction(actionViewOutline   );
 		menuView->addAction(actionViewSmooth    );
 		menuView->addSeparator();

@@ -90,6 +90,23 @@ void CPointDistanceTool::activate(CDocument* pdoc)
 	m_doc = pdoc;
 	if (pdoc && pdoc->IsValid())
 	{
+		FEMesh& mesh = *m_doc->GetFEModel()->GetMesh();
+		int N = mesh.Nodes();
+		for (int i=0; i<N; ++i)
+		{
+			FENode& ni = mesh.Node(i);
+			if (ni.IsSelected())
+			{
+				if (m_node1 == 0) m_node1 = i+1;
+				else if (m_node2 == 0) m_node2 = i+1;
+				else
+				{
+					m_node1 = m_node2;
+					m_node2 = i+1;
+				}
+			}
+		}
+
 		if (m_deco)
 		{
 			m_doc->GetGLModel()->RemoveDecoration(m_deco);
@@ -110,6 +127,11 @@ void CPointDistanceTool::deactivate()
 		delete m_deco;
 		m_deco = 0;
 	}
+}
+
+void CPointDistanceTool::updateUi()
+{
+	CBasicTool::updateUi();
 }
 
 void CPointDistanceTool::updateLength()

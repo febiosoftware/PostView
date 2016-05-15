@@ -22,6 +22,7 @@
 #include "DlgWidgetProps.h"
 #include "DlgFind.h"
 #include "DlgImportXPLT.h"
+#include "DlgSelectRange.h"
 #include <string>
 
 CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMainWindow)
@@ -490,6 +491,31 @@ void CMainWindow::on_actionSelectAll_triggered()
 
 void CMainWindow::on_actionSelectRange_triggered()
 {
+	CDocument* pdoc = GetDocument();
+	if (!pdoc->IsValid()) return;
+
+	CGLColorMap* pcol = pdoc->GetGLModel()->GetColorMap();
+	if (pcol == 0) return;
+
+	float d[2];
+	pcol->GetRange(d);
+
+	CDlgSelectRange dlg(this);
+	dlg.m_min = d[0];
+	dlg.m_max = d[1];
+
+	if (dlg.exec())
+	{
+		switch (pdoc->GetSelectionMode())
+		{
+		case SELECT_NODES: pdoc->SelectNodesInRange(dlg.m_min, dlg.m_max, dlg.m_brange); break;
+		case SELECT_FACES: pdoc->SelectFacesInRange(dlg.m_min, dlg.m_max, dlg.m_brange); break;
+		case SELECT_ELEMS: pdoc->SelectElemsInRange(dlg.m_min, dlg.m_max, dlg.m_brange); break;
+		}
+		
+		pdoc->UpdateFEModel();
+		UpdateUi();
+	}
 }
 
 void CMainWindow::on_actionClearSelection_triggered()
@@ -800,6 +826,13 @@ void CMainWindow::on_actionViewOutline_toggled(bool bchecked)
 {
 	CGLModel* po = GetDocument()->GetGLModel();
 	po->m_boutline = !po->m_boutline;
+	ui->glview->repaint();
+}
+
+void CMainWindow::on_actionViewShowTags_toggled(bool bchecked)
+{
+	VIEWSETTINGS& view = GetDocument()->GetViewSettings();
+	view.m_bTags = bchecked;
 	ui->glview->repaint();
 }
 

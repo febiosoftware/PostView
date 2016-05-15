@@ -224,10 +224,10 @@ void CGLView::paintGL()
 	if (pdoc->IsValid()) RenderModel();
 
 	// render the tracking
-//	if (m_btrack) RenderTrack();
+	if (m_btrack) RenderTrack();
 
 	// render the tags
-//	if (view.m_bTags && pdoc->IsValid()) RenderTags();
+	if (view.m_bTags && pdoc->IsValid()) RenderTags();
 
 	// give the command window a chance to render stuff
 	CGLContext cgl(this);
@@ -393,6 +393,7 @@ void CGLView::mouseMoveEvent(QMouseEvent* ev)
 	m_xp = x;
 	m_yp = y;
 	pcam->Update(true);
+
 	m_wnd->UpdateView();
 }
 
@@ -504,6 +505,7 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 		ev->accept();
 	}
 
+	m_wnd->UpdateUi();
 	m_wnd->UpdateView();
 	repaint();
 }
@@ -813,15 +815,27 @@ void CGLView::RenderTags()
 				glVertex2f(vtag[i].wx-1, vtag[i].wy+1);
 			}
 			glEnd();
-
-/*			gl_color(FL_BLACK);
-			gl_draw(vtag[i].sztag, vtag[i].wx+3, vtag[i].wy);
-			
-			if (vtag[i].ntag == 0) gl_color(FL_YELLOW);
-			else gl_color(FL_RED);
-			gl_draw(vtag[i].sztag, vtag[i].wx+2, vtag[i].wy+1);
-*/
 		}
+
+	QPainter painter(this);
+	painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+	painter.setFont(QFont("Helvetica", 10));
+	for (int i=0; i<nsel; ++i)
+		if (vtag[i].bvis)
+		{
+			int x = vtag[i].wx;
+			int y = height() - vtag[i].wy;
+			painter.setPen(Qt::black);
+			
+			painter.drawText(x+3, y-2, vtag[i].sztag);
+			
+			if (vtag[i].ntag == 0) painter.setPen(Qt::yellow);
+			else painter.setPen(Qt::red);
+
+			painter.drawText(x+2, y-3, vtag[i].sztag);
+		}
+	
+	painter.end();
 
 	// clean up
 	delete [] pbuf;

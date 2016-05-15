@@ -26,6 +26,12 @@ public:
 
 	void UpdateView();
 
+	// this is called after a new model is loaded 
+	// or an existing model is reloaded
+	// and also after a mouse release event
+	void UpdateUi();
+
+
 	QMenu* BuildContextMenu();
 
 public slots:
@@ -81,6 +87,7 @@ public slots:
 	void on_actionViewBottom_triggered();
 	void on_actionViewMesh_toggled(bool bchecked);
 	void on_actionViewOutline_toggled(bool bchecked);
+	void on_actionViewShowTags_toggled(bool bchecked);
 	void on_actionViewSmooth_toggled(bool bchecked);
 	void on_actionViewTrack_toggled(bool bchecked);
 	void on_actionViewVPSave_triggered();
@@ -89,10 +96,6 @@ public slots:
 
 private:
 	void timerEvent(QTimerEvent* ev);
-
-	// this is called after a new model is loaded 
-	// or an existing model is reloaded
-	void UpdateUi();
 
 private:
 	Ui::CMainWindow*	ui;

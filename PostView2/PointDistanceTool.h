@@ -28,6 +28,8 @@ public:
 
 	void updateLength();
 
+	void updateUi();
+
 private:
 	int			m_node1, m_node2;	// mesh nodes
 	vec3f		m_d;				// displacement vector

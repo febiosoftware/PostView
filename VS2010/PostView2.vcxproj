@@ -96,6 +96,7 @@
     <ClCompile Include="..\PostView2\DistanceMapTool.cpp" />
     <ClCompile Include="..\PostView2\DlgExportXPLT.cpp" />
     <ClCompile Include="..\PostView2\DlgFind.cpp" />
+    <ClCompile Include="..\PostView2\DlgSelectRange.cpp" />
     <ClCompile Include="..\PostView2\DlgViewSettings.cpp" />
     <ClCompile Include="..\PostView2\DlgWidgetProps.cpp" />
     <ClCompile Include="..\PostView2\Document.cpp" />
@@ -209,6 +210,7 @@
     <ClInclude Include="..\PostView2\convert.h" />
     <ClInclude Include="..\PostView2\DlgFind.h" />
     <ClInclude Include="..\PostView2\DlgImportXPLT.h" />
+    <CustomBuild Include="..\PostView2\DlgSelectRange.h" />
     <ClInclude Include="..\PostView2\MeasureAreaTool.h" />
     <CustomBuild Include="..\PostView2\PointCongruencyTool.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)bin/moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
