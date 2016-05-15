@@ -146,20 +146,11 @@ public:
 	void SetType(int n) { m_ntype = n; }
 	void SetOrientation(int n) { m_nrot = n; }
 
-	bool ShowTitle() { return m_btitle; }
-	void ShowTitle(bool btitle) { m_btitle = btitle; }
-
 	bool ShowLabels() { return m_blabels; }
 	void ShowLabels(bool bshow) { m_blabels = bshow; }
 
 	int GetPrecision() { return m_nprec; }
 	void SetPrecision(int n) { n = (n<1?1:(n>7?7:n)); m_nprec = n; }
-
-	QFont getLabelFont() const { return m_lbl_font; }
-	void setLabelFont(const QFont& f) { m_lbl_font = f; }
-
-	GLCOLOR getLabelColor() const { return m_lbl_fc; }
-	void setLabelColor(const GLCOLOR& c) { m_lbl_fc = c; }
 
 protected:
 	void draw_gradient(QPainter* painter);
@@ -171,9 +162,6 @@ protected:
 	bool	m_btitle;	// show title
 	bool	m_blabels;	// show labels
 	int		m_nprec;	// precision
-
-	QFont	m_lbl_font;
-	GLCOLOR	m_lbl_fc;
 
 	CColorMap*		m_pMap;
 };

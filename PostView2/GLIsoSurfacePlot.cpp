@@ -74,7 +74,6 @@ CGLIsoSurfacePlot::CGLIsoSurfacePlot(CGLModel* po) : CGLPlot(po)
 	m_pbar->align(GLW_ALIGN_BOTTOM | GLW_ALIGN_HCENTER);
 	m_pbar->SetType(GLLegendBar::DISCRETE);
 	m_pbar->SetOrientation(GLLegendBar::HORIZONTAL);
-	m_pbar->ShowTitle(true);
 	CGLWidgetManager::GetInstance()->AddWidget(m_pbar);
 }
 

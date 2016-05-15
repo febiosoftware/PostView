@@ -198,7 +198,6 @@ GLLegendBar::GLLegendBar(CGLObject* po, CColorMap* pm, int x, int y, int w, int 
 	m_btitle = false;
 	m_blabels = true;
 	m_nprec = 3;
-	m_lbl_font = QFont("Helvetica", 13);
 }
 
 void GLLegendBar::draw(QPainter* painter)
@@ -270,14 +269,7 @@ void GLLegendBar::draw_gradient(QPainter* painter)
 	}
 	else ipow = 0;
 
-
-	// render the title
-	if (m_btitle && m_szlabel)
-	{
-		// TODO: draw title
-	}
-	
-	glColor3ub(m_lbl_fc.r,m_lbl_fc.g,m_lbl_fc.b);
+	glColor3ub(m_fgc.r,m_fgc.g,m_fgc.b);
 	glLineWidth(1.f);
 	glBegin(GL_LINES);
 	{
@@ -303,9 +295,9 @@ void GLLegendBar::draw_gradient(QPainter* painter)
 
 	if (m_blabels)
 	{
-		painter->setPen(QColor(m_lbl_fc.r,m_lbl_fc.g,m_lbl_fc.b));
-		painter->setFont(m_lbl_font);
-		QFontMetrics fm(m_lbl_font);
+		painter->setPen(QColor(m_fgc.r,m_fgc.g,m_fgc.b));
+		painter->setFont(m_font);
+		QFontMetrics fm(m_font);
 	
 		if((abs(ipow)>2))
 		{
@@ -316,13 +308,13 @@ void GLLegendBar::draw_gradient(QPainter* painter)
 			sprintf(pstr, "%d", ipow);
 			QFontMetrics fm = painter->fontMetrics();
 			int l = fm.width(QString("x10"));
-			QFont f = m_lbl_font;
-			f.setPointSize(m_lbl_font.pointSize() - 2);
+			QFont f = m_font;
+			f.setPointSize(m_font.pointSize() - 2);
 			painter->setFont(f);
 			painter->drawText(x0+l, y0-14, QString(pstr));
 			
 			// reset font size
-			painter->setFont(m_lbl_font);
+			painter->setFont(m_font);
 			p = pow(10.0, ipow);
 		}
 

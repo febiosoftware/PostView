@@ -244,11 +244,6 @@ public:
 	QSpinBox* pprec;
 	CFontWidget* plabelFont;
 
-	// title page
-	QCheckBox* pshowTitle;
-	QLineEdit* ptitleText;
-	CFontWidget* ptitleFont;
-
 	// Position page
 	CPositionWidget* ppos;
 
@@ -277,23 +272,11 @@ public:
 				labelsPageLayout->addWidget(plabelFont);
 			labelsPage->setLayout(labelsPageLayout);
 
-		// Titles page
-		QWidget* ptitlePage = new QWidget;
-			QVBoxLayout* titlePageLayout = new QVBoxLayout;
-				titlePageLayout->addWidget(pshowTitle = new QCheckBox("show title"));
-				ph = new QHBoxLayout;
-					ph->addWidget(plabel = new QLabel("Title:"));
-					ph->addWidget(ptitleText = new QLineEdit); plabel->setBuddy(ptitleText);
-				titlePageLayout->addLayout(ph);
-				titlePageLayout->addWidget(ptitleFont = new CFontWidget);
-			ptitlePage->setLayout(titlePageLayout);
-
 		// Position page
 		ppos = new CPositionWidget;
 
 		// add all the tabs
 		tab->addTab(labelsPage, "Labels");
-		tab->addTab(ptitlePage, "Title");
 		tab->addTab(ppos, "Position");
 		pv->addWidget(tab);
 
@@ -316,13 +299,8 @@ CDlgLegendProps::CDlgLegendProps(GLWidget* widget, QWidget* parent) : QDialog(pa
 	ui->pshowLabels->setChecked(pb->ShowLabels());
 	ui->pprec->setValue(pb->GetPrecision());
 
-	QFont labelFont = pb->getLabelFont();
-	ui->plabelFont->setFont(labelFont, toQColor(pb->getLabelColor()));
-
-	ui->pshowTitle->setChecked(pb->ShowTitle());
-	ui->ptitleText->setText(pb->get_label());
-	QFont titleFont = pb->get_font();
-	ui->ptitleFont->setFont(pb->get_font(), toQColor(pb->get_fg_color()));
+	QFont labelFont = pb->get_font();
+	ui->plabelFont->setFont(labelFont, toQColor(pb->get_fg_color()));
 
 	ui->ppos->setPosition(widget->x(), widget->y(), widget->w(), widget->h());
 }
@@ -335,20 +313,13 @@ void CDlgLegendProps::apply()
 	int h = ui->ppos->h();
 	pw->resize(x, y, w, h);
 
-	std::string text = ui->ptitleText->text().toStdString();
-	pw->copy_label(text.c_str());
-
 	GLLegendBar* pb = dynamic_cast<GLLegendBar*>(pw);
 	pb->ShowLabels(ui->pshowLabels->isChecked());
 	pb->SetPrecision(ui->pprec->value());
 
 	QFont labelFont = ui->plabelFont->getFont();
-	pb->setLabelFont(labelFont);
-	pb->setLabelColor(toGLColor(ui->plabelFont->getFontColor()));
-
-	QFont titleFont = ui->ptitleFont->getFont();
-	pb->set_font(titleFont);
-	pb->set_fg_color(toGLColor(ui->ptitleFont->getFontColor()));
+	pb->set_font(labelFont);
+	pb->set_fg_color(toGLColor(ui->plabelFont->getFontColor()));
 
 	if (parentWidget()) parentWidget()->repaint();
 }
