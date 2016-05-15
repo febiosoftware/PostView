@@ -13,6 +13,15 @@
 #include <PostViewLib/FEVTKExport.h>
 #include <PostViewLib/FELSDYNAPlot.h>
 #include <PostViewLib/FEBioPlotExport.h>
+#include <PostViewLib/FEBioImport.h>
+#include <PostViewLib/FELSDYNAimport.h>
+#include <PostViewLib/FELSDYNAPlot.h>
+#include <PostViewLib/FEVTKImport.h>
+#include <PostViewLib/GMeshImport.h>
+#include <PostViewLib/FENikeImport.h>
+#include <PostViewLib/FEASCIIImport.h>
+#include <PostViewLib/FESTLimport.h>
+#include <PostViewLib/FERAWImageReader.h>
 #include "GLPlaneCutPlot.h"
 #include "GLIsoSurfacePlot.h"
 #include "GLSlicePLot.h"
@@ -91,17 +100,64 @@ bool CMainWindow::OpenFile(const QString& fileName, int nfilter)
 
 	setWindowTitle(QString("PostView2"));
 
-	XpltReader* reader = new XpltReader;
+	// create a file reader
+	FEFileReader* reader = 0;
 
-	if (nfilter == 0)
+	// If filter not specified, use extension
+	if (nfilter == -1)
 	{
-		CDlgImportXPLT dlg(this);
-		if (dlg.exec())
+		std::string sfile = fileName.toStdString();
+		// conver to lower case
+		std::transform(sfile.begin(), sfile.end(), sfile.begin(), ::tolower);
+		
+		int npos = sfile.find_last_of('.');
+		if (npos == std::string::npos) nfilter = 2; // LSDYNA Database
+		else
 		{
-			reader->SetReadStateFlag(dlg.m_nop);
-			reader->SetReadStatesList(dlg.m_item);
+			std::string ext = sfile.substr(npos+1);
+			if      (ext.compare("xplt") == 0) nfilter = -1;
+			else if (ext.compare("feb" ) == 0) nfilter =  1;
+			else if (ext.compare("msh" ) == 0) nfilter =  3;
+			else if (ext.compare("n  " ) == 0) nfilter =  4;
+			else if (ext.compare("txt" ) == 0) nfilter =  5;
+			else if (ext.compare("stl" ) == 0) nfilter =  6;
+			else if (ext.compare("raw" ) == 0) nfilter =  7;
+			else if (ext.compare("vtk" ) == 0) nfilter =  8;
+			else
+			{
+				return false;
+			}
 		}
-		else return false;
+	}
+
+	switch (nfilter)
+	{
+	case -1: reader = new XpltReader; break;
+	case 0: 
+		{
+			XpltReader* xplt = new XpltReader;
+			reader = xplt;
+
+			CDlgImportXPLT dlg(this);
+			if (dlg.exec())
+			{
+				xplt->SetReadStateFlag(dlg.m_nop);
+				xplt->SetReadStatesList(dlg.m_item);
+			}
+			else return false;
+		}
+		break;
+	case 1: reader = new FEBioImport; break;
+	case 2: reader = new FELSDYNAPlotImport; break;
+	case 3: reader = new GMeshImport; break;
+	case 4: reader = new FENikeImport; break;
+	case 5: reader = new FEASCIIImport; break;
+	case 6: reader = new FESTLimport; break;
+	case 7: reader = new FERAWImageReader; break;
+	case 8: reader = new FEVTKimport; break;
+	default:
+		QMessageBox::critical(this, "PostView2", "Don't know how to read this file");
+		return false;
 	}
 
 	if (m_doc->LoadFEModel(reader, sfile.c_str()) == false)

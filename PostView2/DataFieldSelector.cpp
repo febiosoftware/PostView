@@ -31,6 +31,8 @@ void CDataFieldSelector::BuildMenu(FEModel* fem, Data_Tensor_Type nclass, bool b
 	pw->clear();
 
 	// get the datamanager
+	if (fem == 0) return;
+
 	FEDataManager& dm = *fem->GetDataManager();
 
 	QTreeWidgetItem* pi;
