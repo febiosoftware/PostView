@@ -94,6 +94,8 @@ public slots:
 	void on_actionViewVPPrev_triggered();
 	void on_actionViewVPNext_triggered();
 
+	void on_fontStyle_currentFontChanged(const QFont& font);
+
 private:
 	void timerEvent(QTimerEvent* ev);
 

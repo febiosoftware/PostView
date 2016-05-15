@@ -17,6 +17,8 @@
 #include "DataFieldSelector.h"
 #include "GLView.h"
 #include "GraphWindow.h"
+#include <QFontComboBox>
+#include <QSpinBox>
 
 QT_BEGIN_NAMESPACE
 
@@ -80,6 +82,10 @@ public:
 	CDataFieldSelector*	selectData;
 
 	QToolBar* playToolBar;
+	QToolBar* pFontToolBar;
+
+	QFontComboBox*	pFontStyle;
+	QSpinBox*		pFontSize;
 
 	QList<CGraphWindow*>	graphList;
 
@@ -365,6 +371,7 @@ public:
 		mainToolBar->addWidget(selectData);
 		mainToolBar->addAction(actionColorMap);
 
+		// Play tool bar
 		playToolBar = new QToolBar(MainWindow);
         playToolBar->setObjectName(QStringLiteral("playToolBar"));
         MainWindow->addToolBar(Qt::TopToolBarArea, playToolBar);
@@ -380,6 +387,18 @@ public:
 		playToolBar->addAction(addAction("last"   , "actionLast", ":/icons/forward.png"));
 
 		playToolBar->setDisabled(true);
+
+		// Font tool bar
+		pFontToolBar = new QToolBar(MainWindow);
+		pFontToolBar->setObjectName("FontToolBar");
+		MainWindow->addToolBar(Qt::TopToolBarArea, pFontToolBar);
+
+		pFontToolBar->addWidget(pFontStyle = new QFontComboBox); pFontStyle->setObjectName("fontStyle");
+		pFontToolBar->addWidget(pFontSize = new QSpinBox);
+		pFontToolBar->addAction(addAction("Bold", "fontBold", ":/icons/font_inc.png"));
+		pFontToolBar->addAction(addAction("Bold", "fontBold", ":/icons/font_dec.png"));
+		pFontToolBar->addAction(addAction("Bold", "fontBold", ":/icons/font_bold.png"));
+		pFontToolBar->addAction(addAction("Bold", "fontBold", ":/icons/font_italic.png"));
 	}
 };
 

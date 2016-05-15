@@ -990,3 +990,16 @@ void CMainWindow::on_actionViewVPNext_triggered()
 		ui->glview->repaint();
 	}
 }
+
+void CMainWindow::on_fontStyle_currentFontChanged(const QFont& font)
+{
+	GLWidget* pw = GLWidget::get_focus();
+	if (pw)
+	{
+		QFont old_font = pw->get_font();
+		std::string s = font.family().toStdString();
+		QFont new_font(font.family(), old_font.pointSize()); 
+		pw->set_font(new_font);
+		repaint();
+	}
+}
