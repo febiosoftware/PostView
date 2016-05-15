@@ -94,9 +94,11 @@ protected:
 	void mouseDoubleClickEvent(QMouseEvent* ev);
 	bool event(QEvent* event);
 
+	void contextMenuEvent(QContextMenuEvent* ev);
+
 protected slots:
 	void repaintEvent();
-
+	
 protected:
 	void Clear();
 

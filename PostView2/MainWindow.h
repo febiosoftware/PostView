@@ -26,6 +26,8 @@ public:
 
 	void UpdateView();
 
+	QMenu* BuildContextMenu();
+
 public slots:
 	void on_actionOpen_triggered();
 	void on_actionSave_triggered();

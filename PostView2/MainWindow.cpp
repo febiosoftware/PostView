@@ -66,6 +66,22 @@ void CMainWindow::UpdateView()
 	ui->modelViewer->UpdateView();
 }
 
+QMenu* CMainWindow::BuildContextMenu()
+{
+	QMenu* menu = new QMenu(this);
+	menu->addAction(ui->actionViewFront);
+	menu->addAction(ui->actionViewBack);
+	menu->addAction(ui->actionViewLeft);
+	menu->addAction(ui->actionViewRight);
+	menu->addAction(ui->actionViewTop);
+	menu->addAction(ui->actionViewBottom);
+	menu->addSeparator();
+	menu->addAction(ui->actionViewProjection);
+	menu->addSeparator();
+	menu->addAction(ui->actionViewSettings);
+	return menu;
+}
+
 bool CMainWindow::OpenFile(const QString& fileName, int nfilter)
 {
 	std::string sfile = fileName.toStdString();

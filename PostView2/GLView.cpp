@@ -10,6 +10,7 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QtCore/QTimer>
+#include <QMenu>
 
 CGLView::CGLView(CMainWindow* pwnd, QWidget* parent) : QOpenGLWidget(parent), m_wnd(pwnd)
 {
@@ -429,6 +430,14 @@ bool CGLView::event(QEvent* event)
 }
 
 //-----------------------------------------------------------------------------
+void CGLView::contextMenuEvent(QContextMenuEvent* ev)
+{
+	QMenu* menu = m_wnd->BuildContextMenu();
+	menu->exec(ev->globalPos());
+	ev->accept();
+}
+
+//-----------------------------------------------------------------------------
 void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 {
 	int x = ev->x();
@@ -437,6 +446,7 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 	// let the widget manager handle it first
 	if (m_Widget->handle(x, y, CGLWidgetManager::RELEASE) == 1)
 	{
+		ev->accept();
 		repaint();
 		return;
 	}
@@ -463,6 +473,7 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 	if (but3)
 	{
 //		if ((m_p0.x == m_p1.x) && (m_p0.y == m_p1.y)) m_pop->popup();
+		ev->accept();
 	}
 	else
 	{
@@ -490,10 +501,7 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 				}
 			}
 		}
-		else if (but3)
-		{
-//				ZoomRect(m_p0, m_p1);
-		}
+		ev->accept();
 	}
 
 	m_wnd->UpdateView();
