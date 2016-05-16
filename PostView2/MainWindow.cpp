@@ -660,6 +660,8 @@ void CMainWindow::on_actionProperties_triggered()
 		QMessageBox::information(this, "Properties", "No properties available");
 	}
 
+	UpdateFontToolbar();
+
 	repaint();
 }
 
@@ -991,6 +993,22 @@ void CMainWindow::on_actionViewVPNext_triggered()
 	}
 }
 
+void CMainWindow::UpdateFontToolbar()
+{
+	GLWidget* pw = GLWidget::get_focus();
+	if (pw)
+	{
+		QFont font = pw->get_font();
+		ui->pFontStyle->setCurrentFont(font);
+		ui->pFontSize->setValue(font.pointSize());
+		ui->actionFontBold->setChecked(font.bold());
+		ui->actionFontItalic->setChecked(font.italic());
+		ui->pFontToolBar->setEnabled(true);
+	}
+	else ui->pFontToolBar->setDisabled(true);
+}
+
+
 void CMainWindow::on_fontStyle_currentFontChanged(const QFont& font)
 {
 	GLWidget* pw = GLWidget::get_focus();
@@ -999,7 +1017,45 @@ void CMainWindow::on_fontStyle_currentFontChanged(const QFont& font)
 		QFont old_font = pw->get_font();
 		std::string s = font.family().toStdString();
 		QFont new_font(font.family(), old_font.pointSize()); 
+		new_font.setBold(old_font.bold());
+		new_font.setItalic(old_font.italic());
 		pw->set_font(new_font);
+		repaint();
+	}
+}
+
+void CMainWindow::on_fontSize_valueChanged(int i)
+{
+	GLWidget* pw = GLWidget::get_focus();
+	if (pw)
+	{
+		QFont font = pw->get_font();
+		font.setPointSize(i);
+		pw->set_font(font);
+		repaint();
+	}
+}
+
+void CMainWindow::on_fontBold_toggled(bool checked)
+{
+	GLWidget* pw = GLWidget::get_focus();
+	if (pw)
+	{
+		QFont font = pw->get_font();
+		font.setBold(checked);
+		pw->set_font(font);
+		repaint();
+	}
+}
+
+void CMainWindow::on_fontItalic_toggled(bool bchecked)
+{
+	GLWidget* pw = GLWidget::get_focus();
+	if (pw)
+	{
+		QFont font = pw->get_font();
+		font.setItalic(bchecked);
+		pw->set_font(font);
 		repaint();
 	}
 }

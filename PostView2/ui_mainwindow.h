@@ -86,6 +86,8 @@ public:
 
 	QFontComboBox*	pFontStyle;
 	QSpinBox*		pFontSize;
+	QAction*		actionFontBold;
+	QAction*		actionFontItalic;
 
 	QList<CGraphWindow*>	graphList;
 
@@ -371,6 +373,18 @@ public:
 		mainToolBar->addWidget(selectData);
 		mainToolBar->addAction(actionColorMap);
 
+		// Font tool bar
+		pFontToolBar = new QToolBar(MainWindow);
+		pFontToolBar->setObjectName("FontToolBar");
+		MainWindow->addToolBar(Qt::TopToolBarArea, pFontToolBar);
+
+		pFontToolBar->addWidget(pFontStyle = new QFontComboBox); pFontStyle->setObjectName("fontStyle");
+		pFontToolBar->addWidget(pFontSize = new QSpinBox); pFontSize->setObjectName("fontSize");
+		pFontToolBar->addAction(actionFontBold   = addAction("Bold"  , "fontBold"  , ":/icons/font_bold.png"  )); actionFontBold->setCheckable(true);
+		pFontToolBar->addAction(actionFontItalic = addAction("Italic", "fontItalic", ":/icons/font_italic.png")); actionFontItalic->setCheckable(true);
+		pFontToolBar->setEnabled(false);
+
+
 		// Play tool bar
 		playToolBar = new QToolBar(MainWindow);
         playToolBar->setObjectName(QStringLiteral("playToolBar"));
@@ -387,18 +401,6 @@ public:
 		playToolBar->addAction(addAction("last"   , "actionLast", ":/icons/forward.png"));
 
 		playToolBar->setDisabled(true);
-
-		// Font tool bar
-		pFontToolBar = new QToolBar(MainWindow);
-		pFontToolBar->setObjectName("FontToolBar");
-		MainWindow->addToolBar(Qt::TopToolBarArea, pFontToolBar);
-
-		pFontToolBar->addWidget(pFontStyle = new QFontComboBox); pFontStyle->setObjectName("fontStyle");
-		pFontToolBar->addWidget(pFontSize = new QSpinBox);
-		pFontToolBar->addAction(addAction("Bold", "fontBold", ":/icons/font_inc.png"));
-		pFontToolBar->addAction(addAction("Bold", "fontBold", ":/icons/font_dec.png"));
-		pFontToolBar->addAction(addAction("Bold", "fontBold", ":/icons/font_bold.png"));
-		pFontToolBar->addAction(addAction("Bold", "fontBold", ":/icons/font_italic.png"));
 	}
 };
 

@@ -282,10 +282,19 @@ void CGLView::mousePressEvent(QMouseEvent* ev)
 	int y = ev->y();
 
 	// let the widget manager handle it first
+	GLWidget* pw = GLWidget::get_focus();
 	if (m_Widget->handle(x, y, CGLWidgetManager::PUSH) == 1)
 	{
+		m_wnd->UpdateFontToolbar();
 		repaint();
 		return;
+	}
+
+	if (pw && (GLWidget::get_focus()==0))
+	{
+		// If we get here, the current widget selection was cleared
+		m_wnd->UpdateFontToolbar();
+		repaint();
 	}
 
 	m_p1.x = m_p0.x = m_xp = x;
@@ -318,6 +327,7 @@ void CGLView::mouseMoveEvent(QMouseEvent* ev)
 	if (m_Widget->handle(x, y, CGLWidgetManager::DRAG) == 1)
 	{
 		repaint();
+		m_wnd->UpdateFontToolbar();
 		return;
 	}
 
@@ -448,6 +458,7 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 	if (m_Widget->handle(x, y, CGLWidgetManager::RELEASE) == 1)
 	{
 		ev->accept();
+		m_wnd->UpdateFontToolbar();
 		repaint();
 		return;
 	}

@@ -34,6 +34,8 @@ public:
 
 	QMenu* BuildContextMenu();
 
+	void UpdateFontToolbar();
+
 public slots:
 	void on_actionOpen_triggered();
 	void on_actionSave_triggered();
@@ -95,6 +97,9 @@ public slots:
 	void on_actionViewVPNext_triggered();
 
 	void on_fontStyle_currentFontChanged(const QFont& font);
+	void on_fontSize_valueChanged(int i);
+	void on_fontBold_toggled(bool checked);
+	void on_fontItalic_toggled(bool bchecked);
 
 private:
 	void timerEvent(QTimerEvent* ev);
