@@ -80,6 +80,7 @@ public:
 
 	QFont get_font() const { return m_font; }
 	void set_font(const QFont& f) { m_font = f; }
+	void set_font_size(int nsize) { m_font.setPointSize(nsize); }
 
 protected:
 	int m_x, m_y;
@@ -118,6 +119,8 @@ public:
 	void draw(QPainter* painter);
 
 	void parse_label(char* szlabel, const char* szval, int nmax);
+
+	void fit_to_size();
 
 protected:
 	void draw_bg(int x0, int y0, int x1, int y1, QPainter* painter);

@@ -38,8 +38,10 @@ CGLView::CGLView(CMainWindow* pwnd, QWidget* parent) : QOpenGLWidget(parent), m_
 	m_Widget = CGLWidgetManager::GetInstance();
 	m_Widget->AttachToView(this);
 
-	m_Widget->AddWidget(m_ptitle = new GLBox(po, 20, 20, 300, 20, pdoc, "%title")); 
-	m_Widget->AddWidget(m_psubtitle = new GLBox(po, 20, 40, 300, 40, pdoc, "%field\\nTime = %time"));
+	m_Widget->AddWidget(m_ptitle = new GLBox(po, 20, 20, 300, 50, pdoc, "%title")); 
+	m_ptitle->set_font_size(30);
+
+	m_Widget->AddWidget(m_psubtitle = new GLBox(po, 20, 70, 300, 60, pdoc, "%field\\nTime = %time")); m_psubtitle->set_font_size(20);
 	m_Widget->AddWidget(m_ptriad = new GLTriad(po, 0, 0, 150, 150, &GetCamera()));
 	m_ptriad->align(GLW_ALIGN_LEFT | GLW_ALIGN_BOTTOM);
 	m_Widget->AddWidget(m_pframe = new GLSafeFrame(po, 0, 0, 800, 600));
@@ -1977,6 +1979,9 @@ void CGLView::RenderDoc()
 				po->RenderNodes(pdoc->GetFEModel(), rc);
 				glDepthRange(0, 1);
 			}
+
+			// render decorations
+			po->RenderDecorations();
 
 			// render the bounding box
 			if (view.m_bBox) RenderBox();

@@ -28,6 +28,7 @@
 #include "PointCongruencyTool.h"
 #include "ImportLinesTool.h"
 #include "DistanceMapTool.h"
+#include "PlaneTool.h"
 
 static QList<CAbstractTool*>	tools;
 
@@ -117,7 +118,7 @@ void CToolsPanel::initTools()
 	tools.push_back(new CPointDistanceTool);
 	tools.push_back(new C3PointAngleTool  );
 	tools.push_back(new C4PointAngleTool  );
-	//tools.push_back(new CTool("Plane"));
+	tools.push_back(new CPlaneTool        );
 	//tools.push_back(new CTool("Plotmix"));
 	tools.push_back(new CMeasureAreaTool);
 	tools.push_back(new CImportLinesTool);

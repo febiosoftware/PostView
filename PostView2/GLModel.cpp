@@ -153,9 +153,6 @@ void CGLModel::Render(CGLContext& rc)
 
 	// render the ghost
 	if (m_bghost) RenderGhost(rc);
-
-	// render decorations
-	RenderDecorations();
 }
 
 //-----------------------------------------------------------------------------
@@ -2424,6 +2421,7 @@ void CGLModel::RenderDecorations()
 		glPushAttrib(GL_ENABLE_BIT | GL_LIGHTING_BIT);
 		glDisable(GL_DEPTH_TEST);
 		glDisable(GL_LIGHTING);
+		glColor3ub(255, 255, 0);
 
 		std::list<GDecoration*>::iterator it;
 		for (it=m_decor.begin(); it != m_decor.end(); ++it)

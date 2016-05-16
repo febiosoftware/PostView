@@ -79,6 +79,15 @@ GLBox::GLBox(CGLObject* po, int x, int y, int w, int h, CDocument* pdoc, const c
 	m_shc = GLCOLOR(200,200,200);
 }
 
+void GLBox::fit_to_size()
+{
+	QFontMetrics fm(m_font);
+	char szlabel[256] = {0};
+	parse_label(szlabel, m_szlabel, 255);
+	QRect rt = fm.boundingRect(szlabel);
+	resize(x(), y(), rt.width(), rt.height());
+}
+
 void GLBox::draw_bg(int x0, int y0, int x1, int y1, QPainter* painter)
 {
 	QColor c1 = toQColor(m_bgc[0]);
