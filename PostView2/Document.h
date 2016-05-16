@@ -91,6 +91,7 @@ struct VIEWSETTINGS
 	// OpenGL settings
 	bool	m_blinesmooth;	// line smoothing
 	float	m_flinethick;	// line thickness
+	float	m_fpointsize;	// point size
 
 	void Defaults();
 };

@@ -85,7 +85,7 @@ void CGLView::initializeGL()
 	}
 	else glDisable(GL_LINE_SMOOTH);
 
-	glPointSize(6.0f);
+	glPointSize(view.m_fpointsize);
 	glEnable(GL_POINT_SMOOTH);
 	glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 
@@ -173,6 +173,9 @@ void CGLView::paintGL()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glPointSize(view.m_fpointsize);
+	glLineWidth(view.m_flinethick);
 
 	// turn on/off lighting
 	if (view.m_bLighting)

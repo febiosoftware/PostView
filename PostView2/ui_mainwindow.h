@@ -22,14 +22,6 @@
 
 QT_BEGIN_NAMESPACE
 
-class CMyComboBox : public QComboBox
-{
-public:
-	CMyComboBox(QWidget* parent = 0) : QComboBox(parent){}
-
-//	void hidePopup(){}
-};
-
 class Ui_MainWindow
 {
 	enum 

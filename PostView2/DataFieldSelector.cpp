@@ -57,7 +57,7 @@ void CDataFieldSelector::BuildMenu(FEModel* fem, Data_Tensor_Type nclass, bool b
 			{
 				pi = new QTreeWidgetItem(pw); pi->setText(0, d.GetName());
 				pi->setFlags(pi->flags() & ~Qt::ItemIsSelectable); 
-				pi->setExpanded(true);
+				pi->setExpanded(false);
 
 				for (int n=0; n<dataComponents; ++n)
 				{

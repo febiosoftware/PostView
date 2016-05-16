@@ -19,7 +19,7 @@ class CModelProps : public CPropertyList
 public:
 	CModelProps(CGLModel* fem) : m_fem(fem) 
 	{
-		addProperty("Element subdivions"       , CProperty::Int)->setIntRange(0, 10);
+		addProperty("Element subdivions"       , CProperty::Int)->setIntRange(0, 100);
 		addProperty("Render mode"              , CProperty::Enum, "Render mode")->setEnumValues(QStringList() << "default" << "wireframe" << "solid");
 		addProperty("Render outline"           , CProperty::Bool);
 		addProperty("Render undeformed outline", CProperty::Bool);

@@ -248,6 +248,7 @@ bool CDocument::SaveSession(const char* szfile)
 			xml.add_leaf("cull_face", v.m_bcull);
 			xml.add_leaf("line_smooth", v.m_blinesmooth);
 			xml.add_leaf("line_thickness", v.m_flinethick);
+			xml.add_leaf("point_size", v.m_fpointsize);
 		}
 		xml.close_branch();
 	}
@@ -527,6 +528,7 @@ bool CDocument::OpenSession(const char* szfile)
 				else if (tag == "cull_face") tag.value(v.m_bcull);
 				else if (tag == "line_smooth") tag.value(v.m_blinesmooth);
 				else if (tag == "line_thickness") tag.value(v.m_flinethick);
+				else if (tag == "point_size") tag.value(v.m_fpointsize);
 				else xml.SkipTag(tag);
 				xml.NextTag(tag);
 			}

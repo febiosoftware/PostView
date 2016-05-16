@@ -22,12 +22,14 @@ public:
 		addProperty("Render style", CProperty::Enum, "The rendering style sets defaults for colors and other attributes.")->setEnumValues(QStringList()<<"User"<<"Default"<<"CAD");
 		addProperty("Perspective Projection", CProperty::Bool);
 		addProperty("Line smoothing", CProperty::Bool);
-		addProperty("Line thickness", CProperty::Float)->setFloatRange(0.0, 25.0);
+		addProperty("Line thickness", CProperty::Float)->setFloatRange(0.0, 25.0).setFloatStep(0.5f);
+		addProperty("point size"    , CProperty::Float)->setFloatRange(0.0, 25.0).setFloatStep(0.5f);
 
 		m_nrender = 0;
 		m_bproj = true;
 		m_bline = true;
 		m_thick = 1.0f;
+		m_point = 6.0f;
 	}
 
 	QVariant GetPropertyValue(int i)
@@ -39,6 +41,7 @@ public:
 		case 1: return m_bproj; break;
 		case 2: return m_bline; break;
 		case 3: return m_thick; break;
+		case 4: return m_point; break;
 		}
 		return v;
 	}
@@ -51,6 +54,7 @@ public:
 		case 1: m_bproj   = v.toBool(); break;
 		case 2: m_bline   = v.toBool(); break;
 		case 3: m_thick   = v.toFloat(); break;
+		case 4: m_point   = v.toFloat(); break;
 		}
 	}
 
@@ -59,6 +63,7 @@ public:
 	bool	m_bproj;
 	bool	m_bline;
 	float	m_thick;
+	float	m_point;
 };
 
 //-----------------------------------------------------------------------------
@@ -295,6 +300,7 @@ CDlgViewSettings::CDlgViewSettings(CMainWindow* pwnd) : ui(new Ui::CDlgViewSetti
 	ui->m_render->m_bproj = view.m_nproj == RENDER_PERSP;
 	ui->m_render->m_bline = view.m_blinesmooth;
 	ui->m_render->m_thick = view.m_flinethick;
+	ui->m_render->m_point = view.m_fpointsize;
 
 	ui->m_bg->m_col1 = view.bgcol1;
 	ui->m_bg->m_col2 = view.bgcol2;
@@ -329,6 +335,7 @@ void CDlgViewSettings::apply()
 	view.m_nproj = (ui->m_render->m_bproj ? RENDER_PERSP : RENDER_ORTHO);
 	view.m_blinesmooth = ui->m_render->m_bline;
 	view.m_flinethick  = ui->m_render->m_thick;
+	view.m_fpointsize  = ui->m_render->m_point;
 
 	view.bgcol1 = ui->m_bg->m_col1;
 	view.bgcol2 = ui->m_bg->m_col2;

@@ -43,9 +43,9 @@ void VIEWSETTINGS::Defaults()
 	m_diffuse     = 0.7f;
 	m_bcull		 = false;
 	m_blinesmooth = true;
-	m_flinethick  = 0.5f;
+	m_flinethick  = 1.0f;
+	m_fpointsize  = 6.0f;
 }
-
 
 //-----------------------------------------------------------------------------
 ModelData::ModelData(CGLModel *po)
