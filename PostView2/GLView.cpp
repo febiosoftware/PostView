@@ -314,6 +314,16 @@ void CGLView::mouseDoubleClickEvent(QMouseEvent* ev)
 }
 
 //-----------------------------------------------------------------------------
+void CGLView::wheelEvent(QWheelEvent* ev)
+{
+	CGLCamera& cam = GetCamera();
+	if (ev->delta() > 0) cam.Zoom(0.95f);
+	else cam.Zoom(1.0f/0.95f);
+	cam.Update(true);
+	repaint();
+}
+
+//-----------------------------------------------------------------------------
 void CGLView::mouseMoveEvent(QMouseEvent* ev)
 {
 	int x = ev->x();

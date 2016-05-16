@@ -92,6 +92,7 @@ protected:
 	void mouseMoveEvent   (QMouseEvent* ev);
 	void mouseReleaseEvent(QMouseEvent* ev);
 	void mouseDoubleClickEvent(QMouseEvent* ev);
+	void wheelEvent(QWheelEvent* ev);
 	bool event(QEvent* event);
 
 	void contextMenuEvent(QContextMenuEvent* ev);
