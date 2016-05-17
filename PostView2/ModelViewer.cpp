@@ -109,23 +109,33 @@ class CDisplacementMapProps : public CPropertyList
 public:
 	CDisplacementMapProps(CGLDisplacementMap* map) : m_map(map)
 	{
-		addProperty("Scale factor", CProperty::Float);
+		addProperty("Data field"  , CProperty::DataVec3);
+		addProperty("Scale factor", CProperty::Float   );
 	}
 
 	QVariant GetPropertyValue(int i)
 	{
 		if (m_map)
 		{
-			if (i==0) return m_map->m_scl;
+			if (i==0)
+			{
+				FEModel* pfem = m_map->GetModel()->GetFEModel();
+				return pfem->GetDisplacementField();
+			}
+			if (i==1) return m_map->m_scl;
 		}
 		return QVariant();
 	}
 
 	void SetPropertyValue(int i, const QVariant& v)
 	{
-		if (i==0) m_map->m_scl = v.toFloat();
+		if (i==0)
+		{
+			FEModel* pfem = m_map->GetModel()->GetFEModel();
+			pfem->SetDisplacementField(v.toInt());
+		}
+		if (i==1) m_map->m_scl = v.toFloat();
 	}
-
 
 private:
 	CGLDisplacementMap*	m_map;
@@ -303,7 +313,20 @@ CModelViewer::CModelViewer(CMainWindow* pwnd, QWidget* parent) : CCommandPanel(p
 
 void CModelViewer::selectObject(CGLObject* po)
 {
-	// Implement this
+	if (po == 0) ui->m_tree->clearSelection();
+
+	QString s(po->GetName());
+	QTreeWidgetItemIterator it(ui->m_tree);
+	while (*it)
+	{
+		if ((*it)->text(0) == s)
+		{
+			(*it)->setSelected(true);
+			on_modelTree_currentItemChanged(*it, 0);
+			break;
+		}
+		++it;
+	}
 }
 
 void CModelViewer::UpdateView()

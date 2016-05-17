@@ -206,6 +206,9 @@ void FEModel::DeleteDataField(FEDataField* pd)
 		ps->m_Data.erase(m);
 	}
 	m_pDM->DeleteDataField(pd);
+
+	// Inform all dependants
+	UpdateDependants();
 }
 
 //-----------------------------------------------------------------------------
@@ -222,9 +225,8 @@ void FEModel::AddDataField(FEDataField* pd)
 		(*it)->m_Data.push_back(pd->CreateData(this));
 	}
 
-	// create a new ID for the mesh so that all dependant
-	// objects will update themselves
-	m_mesh.NewID();
+	// update all dependants
+	UpdateDependants();
 }
 
 //-----------------------------------------------------------------------------
@@ -254,9 +256,8 @@ void FEModel::AddDataField(FEDataField* pd, vector<int>& L)
 		}
 	}
 
-	// create a new ID for the mesh so that all dependant
-	// objects will update themselves
-	m_mesh.NewID();
+	// update all dependants
+	UpdateDependants();
 }
 
 //-----------------------------------------------------------------------------
@@ -315,3 +316,38 @@ void FEModel::UpdateBoundingBox()
 		if (n.m_r0.z > m_bbox.z1) m_bbox.z1 = n.m_r0.z;
 	}
 }
+
+//-----------------------------------------------------------------------------
+void FEModel::AddDependant(FEModelDependant* pc)
+{
+	m_Dependants.push_back(pc);
+}
+
+//-----------------------------------------------------------------------------
+void FEModel::UpdateDependants()
+{
+	int N = m_Dependants.size();
+	for (int i=0; i<N; ++i) m_Dependants[i]->Update(this);
+}
+
+//-----------------------------------------------------------------------------
+void FEModel::RemoveDependant(FEModelDependant* pc)
+{
+	int N = m_Dependants.size();
+	vector<FEModelDependant*>::iterator it = m_Dependants.begin();
+	for (int i=0; i<N; ++i) 
+	{
+		if (m_Dependants[i] == pc) 
+		{
+			m_Dependants.erase(it);
+			break;
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+void FEModel::ClearDependants()
+{
+	m_Dependants.clear();
+}
+

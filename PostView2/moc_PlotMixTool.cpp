@@ -1,16 +1,16 @@
 /****************************************************************************
-** Meta object code from reading C++ file 'DistanceMapTool.h'
+** Meta object code from reading C++ file 'PlotMixTool.h'
 **
 ** Created by: The Qt Meta Object Compiler version 67 (Qt 5.5.0)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "DistanceMapTool.h"
+#include "PlotMixTool.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
-#error "The header file 'DistanceMapTool.h' doesn't include <QObject>."
+#error "The header file 'PlotMixTool.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
 #error "This file was generated using the moc from 5.5.0. It"
 #error "cannot be used with the include files from this version of Qt."
@@ -18,36 +18,38 @@
 #endif
 
 QT_BEGIN_MOC_NAMESPACE
-struct qt_meta_stringdata_CDistanceMapTool_t {
-    QByteArrayData data[5];
-    char stringdata0[46];
+struct qt_meta_stringdata_CPlotMixTool_t {
+    QByteArrayData data[7];
+    char stringdata0[60];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
-    qptrdiff(offsetof(qt_meta_stringdata_CDistanceMapTool_t, stringdata0) + ofs \
+    qptrdiff(offsetof(qt_meta_stringdata_CPlotMixTool_t, stringdata0) + ofs \
         - idx * sizeof(QByteArrayData)) \
     )
-static const qt_meta_stringdata_CDistanceMapTool_t qt_meta_stringdata_CDistanceMapTool = {
+static const qt_meta_stringdata_CPlotMixTool_t qt_meta_stringdata_CPlotMixTool = {
     {
-QT_MOC_LITERAL(0, 0, 16), // "CDistanceMapTool"
-QT_MOC_LITERAL(1, 17, 9), // "OnAssign1"
-QT_MOC_LITERAL(2, 27, 0), // ""
-QT_MOC_LITERAL(3, 28, 9), // "OnAssign2"
-QT_MOC_LITERAL(4, 38, 7) // "OnApply"
+QT_MOC_LITERAL(0, 0, 12), // "CPlotMixTool"
+QT_MOC_LITERAL(1, 13, 8), // "OnBrowse"
+QT_MOC_LITERAL(2, 22, 0), // ""
+QT_MOC_LITERAL(3, 23, 8), // "OnRemove"
+QT_MOC_LITERAL(4, 32, 8), // "OnMoveUp"
+QT_MOC_LITERAL(5, 41, 10), // "OnMoveDown"
+QT_MOC_LITERAL(6, 52, 7) // "OnApply"
 
     },
-    "CDistanceMapTool\0OnAssign1\0\0OnAssign2\0"
-    "OnApply"
+    "CPlotMixTool\0OnBrowse\0\0OnRemove\0"
+    "OnMoveUp\0OnMoveDown\0OnApply"
 };
 #undef QT_MOC_LITERAL
 
-static const uint qt_meta_data_CDistanceMapTool[] = {
+static const uint qt_meta_data_CPlotMixTool[] = {
 
  // content:
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       3,   14, // methods
+       5,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -55,11 +57,15 @@ static const uint qt_meta_data_CDistanceMapTool[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,   29,    2, 0x08 /* Private */,
-       3,    0,   30,    2, 0x08 /* Private */,
-       4,    0,   31,    2, 0x08 /* Private */,
+       1,    0,   39,    2, 0x08 /* Private */,
+       3,    0,   40,    2, 0x08 /* Private */,
+       4,    0,   41,    2, 0x08 /* Private */,
+       5,    0,   42,    2, 0x08 /* Private */,
+       6,    0,   43,    2, 0x08 /* Private */,
 
  // slots: parameters
+    QMetaType::Void,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -67,80 +73,82 @@ static const uint qt_meta_data_CDistanceMapTool[] = {
        0        // eod
 };
 
-void CDistanceMapTool::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+void CPlotMixTool::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
     if (_c == QMetaObject::InvokeMetaMethod) {
-        CDistanceMapTool *_t = static_cast<CDistanceMapTool *>(_o);
+        CPlotMixTool *_t = static_cast<CPlotMixTool *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->OnAssign1(); break;
-        case 1: _t->OnAssign2(); break;
-        case 2: _t->OnApply(); break;
+        case 0: _t->OnBrowse(); break;
+        case 1: _t->OnRemove(); break;
+        case 2: _t->OnMoveUp(); break;
+        case 3: _t->OnMoveDown(); break;
+        case 4: _t->OnApply(); break;
         default: ;
         }
     }
     Q_UNUSED(_a);
 }
 
-const QMetaObject CDistanceMapTool::staticMetaObject = {
-    { &CAbstractTool::staticMetaObject, qt_meta_stringdata_CDistanceMapTool.data,
-      qt_meta_data_CDistanceMapTool,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
+const QMetaObject CPlotMixTool::staticMetaObject = {
+    { &CAbstractTool::staticMetaObject, qt_meta_stringdata_CPlotMixTool.data,
+      qt_meta_data_CPlotMixTool,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
 };
 
 
-const QMetaObject *CDistanceMapTool::metaObject() const
+const QMetaObject *CPlotMixTool::metaObject() const
 {
     return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
 }
 
-void *CDistanceMapTool::qt_metacast(const char *_clname)
+void *CPlotMixTool::qt_metacast(const char *_clname)
 {
     if (!_clname) return Q_NULLPTR;
-    if (!strcmp(_clname, qt_meta_stringdata_CDistanceMapTool.stringdata0))
-        return static_cast<void*>(const_cast< CDistanceMapTool*>(this));
+    if (!strcmp(_clname, qt_meta_stringdata_CPlotMixTool.stringdata0))
+        return static_cast<void*>(const_cast< CPlotMixTool*>(this));
     return CAbstractTool::qt_metacast(_clname);
 }
 
-int CDistanceMapTool::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+int CPlotMixTool::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = CAbstractTool::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 3)
+        if (_id < 5)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 3;
+        _id -= 5;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 3)
+        if (_id < 5)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 3;
+        _id -= 5;
     }
     return _id;
 }
-struct qt_meta_stringdata_CCurvatureMapTool_t {
+struct qt_meta_stringdata_CKinematTool_t {
     QByteArrayData data[5];
-    char stringdata0[47];
+    char stringdata0[42];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
-    qptrdiff(offsetof(qt_meta_stringdata_CCurvatureMapTool_t, stringdata0) + ofs \
+    qptrdiff(offsetof(qt_meta_stringdata_CKinematTool_t, stringdata0) + ofs \
         - idx * sizeof(QByteArrayData)) \
     )
-static const qt_meta_stringdata_CCurvatureMapTool_t qt_meta_stringdata_CCurvatureMapTool = {
+static const qt_meta_stringdata_CKinematTool_t qt_meta_stringdata_CKinematTool = {
     {
-QT_MOC_LITERAL(0, 0, 17), // "CCurvatureMapTool"
-QT_MOC_LITERAL(1, 18, 9), // "OnAssign1"
-QT_MOC_LITERAL(2, 28, 0), // ""
-QT_MOC_LITERAL(3, 29, 9), // "OnAssign2"
-QT_MOC_LITERAL(4, 39, 7) // "OnApply"
+QT_MOC_LITERAL(0, 0, 12), // "CKinematTool"
+QT_MOC_LITERAL(1, 13, 9), // "OnBrowse1"
+QT_MOC_LITERAL(2, 23, 0), // ""
+QT_MOC_LITERAL(3, 24, 9), // "OnBrowse2"
+QT_MOC_LITERAL(4, 34, 7) // "OnApply"
 
     },
-    "CCurvatureMapTool\0OnAssign1\0\0OnAssign2\0"
+    "CKinematTool\0OnBrowse1\0\0OnBrowse2\0"
     "OnApply"
 };
 #undef QT_MOC_LITERAL
 
-static const uint qt_meta_data_CCurvatureMapTool[] = {
+static const uint qt_meta_data_CKinematTool[] = {
 
  // content:
        7,       // revision
@@ -166,14 +174,14 @@ static const uint qt_meta_data_CCurvatureMapTool[] = {
        0        // eod
 };
 
-void CCurvatureMapTool::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+void CKinematTool::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
     if (_c == QMetaObject::InvokeMetaMethod) {
-        CCurvatureMapTool *_t = static_cast<CCurvatureMapTool *>(_o);
+        CKinematTool *_t = static_cast<CKinematTool *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->OnAssign1(); break;
-        case 1: _t->OnAssign2(); break;
+        case 0: _t->OnBrowse1(); break;
+        case 1: _t->OnBrowse2(); break;
         case 2: _t->OnApply(); break;
         default: ;
         }
@@ -181,26 +189,26 @@ void CCurvatureMapTool::qt_static_metacall(QObject *_o, QMetaObject::Call _c, in
     Q_UNUSED(_a);
 }
 
-const QMetaObject CCurvatureMapTool::staticMetaObject = {
-    { &CAbstractTool::staticMetaObject, qt_meta_stringdata_CCurvatureMapTool.data,
-      qt_meta_data_CCurvatureMapTool,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
+const QMetaObject CKinematTool::staticMetaObject = {
+    { &CAbstractTool::staticMetaObject, qt_meta_stringdata_CKinematTool.data,
+      qt_meta_data_CKinematTool,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
 };
 
 
-const QMetaObject *CCurvatureMapTool::metaObject() const
+const QMetaObject *CKinematTool::metaObject() const
 {
     return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
 }
 
-void *CCurvatureMapTool::qt_metacast(const char *_clname)
+void *CKinematTool::qt_metacast(const char *_clname)
 {
     if (!_clname) return Q_NULLPTR;
-    if (!strcmp(_clname, qt_meta_stringdata_CCurvatureMapTool.stringdata0))
-        return static_cast<void*>(const_cast< CCurvatureMapTool*>(this));
+    if (!strcmp(_clname, qt_meta_stringdata_CKinematTool.stringdata0))
+        return static_cast<void*>(const_cast< CKinematTool*>(this));
     return CAbstractTool::qt_metacast(_clname);
 }
 
-int CCurvatureMapTool::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+int CKinematTool::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = CAbstractTool::qt_metacall(_c, _id, _a);
     if (_id < 0)

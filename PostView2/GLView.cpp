@@ -531,7 +531,7 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 		ev->accept();
 	}
 
-	m_wnd->UpdateUi();
+//	m_wnd->UpdateUi();
 	m_wnd->UpdateView();
 	repaint();
 }

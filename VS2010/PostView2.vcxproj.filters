@@ -252,6 +252,21 @@
     <ClCompile Include="..\PostView2\moc_PlaneTool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\PostView2\AddImage3DTool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PostView2\moc_AddImage3DTool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PostView2\PlotMixTool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PostView2\moc_PlotMixTool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\PostView2\FEKinemat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\PostView2\stdafx.h">
@@ -347,6 +362,9 @@
     <ClInclude Include="..\PostView2\DlgImportXPLT.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\PostView2\FEKinemat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\PostView2\MainWindow.h">
@@ -416,6 +434,12 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\PostView2\PlaneTool.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PostView2\AddImage3DTool.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\PostView2\PlotMixTool.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

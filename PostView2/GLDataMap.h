@@ -67,8 +67,8 @@ public:
 
 	CGLModel* GetModel();
 
-	int GetEvalField() { return m_nfield; }
-	void SetEvalField(int n) { if (n != m_nfield) {m_nfield = n; m_breset = true; } }
+	int GetEvalField() const { return m_nfield; }
+	void SetEvalField(int n);
 
 	void GetRange(float* pd) { pd[0] = m_range.min; pd[1] = m_range.max; }
 	int GetRangeType() { return m_range.ntype; }

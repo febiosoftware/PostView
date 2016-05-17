@@ -90,6 +90,7 @@
     <ClInclude Include="..\..\PostViewLib\FEASCIIImport.h" />
     <ClInclude Include="..\..\PostViewLib\FEBioImport.h" />
     <ClInclude Include="..\..\PostViewLib\FEBioPlotExport.h" />
+    <ClInclude Include="..\..\PostViewLib\FECurvatureMap.h" />
     <ClInclude Include="..\..\PostViewLib\FEDataManager.h" />
     <ClInclude Include="..\..\PostViewLib\FEDistanceMap.h" />
     <ClInclude Include="..\..\PostViewLib\FEElement.h" />
@@ -110,6 +111,7 @@
     <ClInclude Include="..\..\PostViewLib\FENodeElemList.h" />
     <ClInclude Include="..\..\PostViewLib\FENodeFaceList.h" />
     <ClInclude Include="..\..\PostViewLib\FENodeFaceTable.h" />
+    <ClInclude Include="..\..\PostViewLib\FEPlotMix.h" />
     <ClInclude Include="..\..\PostViewLib\FEPointCongruency.h" />
     <ClInclude Include="..\..\PostViewLib\FERAWImageReader.h" />
     <ClInclude Include="..\..\PostViewLib\FEState.h" />
@@ -148,6 +150,7 @@
     <ClCompile Include="..\..\PostViewLib\FEASCIIImport.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEBioImport.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEBioPlotExport.cpp" />
+    <ClCompile Include="..\..\PostViewLib\FECurvatureMap.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEDataManager.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEDistanceMap.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEElement.cpp" />
@@ -167,6 +170,7 @@
     <ClCompile Include="..\..\PostViewLib\FENodeElemList.cpp" />
     <ClCompile Include="..\..\PostViewLib\FENodeFaceList.cpp" />
     <ClCompile Include="..\..\PostViewLib\FENodeFaceTable.cpp" />
+    <ClCompile Include="..\..\PostViewLib\FEPlotMix.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEPointCongruency.cpp" />
     <ClCompile Include="..\..\PostViewLib\FERAWImageReader.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEState.cpp" />

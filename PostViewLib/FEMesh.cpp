@@ -13,7 +13,6 @@
 FEMesh::FEMesh()
 {
 	m_stol = 60.*PI/180.0;
-	NewID();
 }
 
 //-----------------------------------------------------------------------------
@@ -21,15 +20,6 @@ FEMesh::FEMesh()
 FEMesh::~FEMesh()
 {
 	CleanUp();
-}
-
-//-----------------------------------------------------------------------------
-// Generate a unique mesh-ID (this is used in the Document Update to see if 
-// the mesh has to be recreated)
-void FEMesh::NewID()
-{
-	static int n = 1;
-	m_nID = n++;
 }
 
 //-----------------------------------------------------------------------------

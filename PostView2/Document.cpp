@@ -32,7 +32,7 @@ void VIEWSETTINGS::Defaults()
 	m_bmesh		 = false;
 	m_bShadows    = false;
 	m_bTriad      = true;
-	m_bTags       = false;
+	m_bTags       = true;
 	m_bTitle      = true;
 	m_bconn		 = false;
 	m_bext       = true;

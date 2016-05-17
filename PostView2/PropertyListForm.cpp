@@ -226,6 +226,12 @@ void CPropertyListForm::onDataChanged()
 							if (pc) m_list->SetPropertyValue(i, pc->currentData(Qt::UserRole));
 						}
 						break;
+					case CProperty::DataVec3:
+						{
+							CDataFieldSelector* pc = dynamic_cast<CDataFieldSelector*>(pw);
+							if (pc) m_list->SetPropertyValue(i, pc->currentData(Qt::UserRole));
+						}
+						break;
 					}
 				}
 				return;

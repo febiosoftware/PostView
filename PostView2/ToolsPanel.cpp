@@ -29,6 +29,8 @@
 #include "ImportLinesTool.h"
 #include "DistanceMapTool.h"
 #include "PlaneTool.h"
+#include "AddImage3DTool.h"
+#include "PlotMixTool.h"
 
 static QList<CAbstractTool*>	tools;
 
@@ -115,24 +117,23 @@ void CToolsPanel::Update()
 
 void CToolsPanel::initTools()
 {
-	tools.push_back(new CPointDistanceTool);
-	tools.push_back(new C3PointAngleTool  );
-	tools.push_back(new C4PointAngleTool  );
-	tools.push_back(new CPlaneTool        );
-	//tools.push_back(new CTool("Plotmix"));
-	tools.push_back(new CMeasureAreaTool);
-	tools.push_back(new CImportLinesTool);
-	//tools.push_back(new CTool("Kinemat"));
-	tools.push_back(new CDistanceMapTool);
-	//tools.push_back(new CTool("Curvature map"));
+	tools.push_back(new CPointDistanceTool  );
+	tools.push_back(new C3PointAngleTool    );
+	tools.push_back(new C4PointAngleTool    );
+	tools.push_back(new CPlaneTool          );
+	tools.push_back(new CPlotMixTool        );
+	tools.push_back(new CMeasureAreaTool    );
+	tools.push_back(new CImportLinesTool    );
+	tools.push_back(new CKinematTool        );
+	tools.push_back(new CDistanceMapTool    );
+	tools.push_back(new CCurvatureMapTool   );
 	tools.push_back(new CPointCongruencyTool);
-	//tools.push_back(new CTool("Add image"));
-	tools.push_back(new CSphereFitTool);
-	tools.push_back(new CTransformTool);
-	tools.push_back(new CShellThicknessTool);
-	//tools.push_back(new CTool("Line cut"));
-	tools.push_back(new CAddPointTool);
-	//tools.push_back(new CTool("Import points"));
+	tools.push_back(new CAddImage3DTool     );
+	tools.push_back(new CSphereFitTool      );
+	tools.push_back(new CTransformTool      );
+	tools.push_back(new CShellThicknessTool );
+	tools.push_back(new CAddPointTool       );
+	tools.push_back(new CImportPointsTool   );
 }
 
 void CToolsPanel::on_buttons_buttonClicked(int id)

@@ -37,12 +37,6 @@ public:
 	//! clean mesh and all data
 	void ClearAll();
 
-	//! get the mesh ID
-	int GetID() { return m_nID; }
-
-	//! generate a new mesh ID
-	void NewID();
-
 	vector<NodeElemRef>& NodeElemList(int n) { return m_NEL.ElemList(n); }
 	vector<NodeFaceRef>& NodeFaceList(int n) { return m_NFL.FaceList(n); }
 

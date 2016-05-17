@@ -87,6 +87,7 @@
   <ItemGroup>
     <ClCompile Include="..\PostView2\3PointAngleTool.cpp" />
     <ClCompile Include="..\PostView2\4PointAngleTool.cpp" />
+    <ClCompile Include="..\PostView2\AddImage3DTool.cpp" />
     <ClCompile Include="..\PostView2\AddPointTool.cpp" />
     <ClCompile Include="..\PostView2\CColorButton.cpp" />
     <ClCompile Include="..\PostView2\CDlgImportXPLT.cpp" />
@@ -100,6 +101,7 @@
     <ClCompile Include="..\PostView2\DlgViewSettings.cpp" />
     <ClCompile Include="..\PostView2\DlgWidgetProps.cpp" />
     <ClCompile Include="..\PostView2\Document.cpp" />
+    <ClCompile Include="..\PostView2\FEKinemat.cpp" />
     <ClCompile Include="..\PostView2\FileViewer.cpp" />
     <ClCompile Include="..\PostView2\GLContext.cpp" />
     <ClCompile Include="..\PostView2\GLDataMap.cpp" />
@@ -120,6 +122,7 @@
     <ClCompile Include="..\PostView2\MainWindow.cpp" />
     <ClCompile Include="..\PostView2\MaterialPanel.cpp" />
     <ClCompile Include="..\PostView2\MeasureAreaTool.cpp" />
+    <ClCompile Include="..\PostView2\moc_AddImage3DTool.cpp" />
     <ClCompile Include="..\PostView2\moc_CColorButton.cpp" />
     <ClCompile Include="..\PostView2\moc_DataPanel.cpp" />
     <ClCompile Include="..\PostView2\moc_DistanceMapTool.cpp" />
@@ -134,6 +137,7 @@
     <ClCompile Include="..\PostView2\moc_MaterialPanel.cpp" />
     <ClCompile Include="..\PostView2\moc_ModelViewer.cpp" />
     <ClCompile Include="..\PostView2\moc_PlaneTool.cpp" />
+    <ClCompile Include="..\PostView2\moc_PlotMixTool.cpp" />
     <ClCompile Include="..\PostView2\moc_PlotWidget.cpp" />
     <ClCompile Include="..\PostView2\moc_PointCongruencyTool.cpp" />
     <ClCompile Include="..\PostView2\moc_PropertyListForm.cpp" />
@@ -144,6 +148,7 @@
     <ClCompile Include="..\PostView2\moc_ToolsPanel.cpp" />
     <ClCompile Include="..\PostView2\ModelViewer.cpp" />
     <ClCompile Include="..\PostView2\PlaneTool.cpp" />
+    <ClCompile Include="..\PostView2\PlotMixTool.cpp" />
     <ClCompile Include="..\PostView2\PointCongruencyTool.cpp" />
     <ClCompile Include="..\PostView2\PointDistanceTool.cpp" />
     <ClCompile Include="..\PostView2\PostView2.cpp" />
@@ -166,6 +171,11 @@
   <ItemGroup>
     <ClInclude Include="..\PostView2\3PointAngleTool.h" />
     <ClInclude Include="..\PostView2\4PointAngleTool.h" />
+    <CustomBuild Include="..\PostView2\AddImage3DTool.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)bin/moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename).%(Extension) using MOC</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </CustomBuild>
     <ClInclude Include="..\PostView2\AddPointTool.h" />
     <CustomBuild Include="..\PostView2\CColorButton.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)bin/moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
@@ -213,6 +223,7 @@
     <ClInclude Include="..\PostView2\DlgFind.h" />
     <ClInclude Include="..\PostView2\DlgImportXPLT.h" />
     <CustomBuild Include="..\PostView2\DlgSelectRange.h" />
+    <ClInclude Include="..\PostView2\FEKinemat.h" />
     <ClInclude Include="..\PostView2\MeasureAreaTool.h" />
     <CustomBuild Include="..\PostView2\PointCongruencyTool.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)bin/moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
@@ -220,6 +231,11 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </CustomBuild>
     <CustomBuild Include="..\PostView2\PlaneTool.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)bin/moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename).%(Extension) using MOC</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\PostView2\PlotMixTool.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)bin/moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename).%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>

@@ -31,9 +31,16 @@ public:
 	// and also after a mouse release event
 	void UpdateUi();
 
-
+	// Build the context menu
+	// Called when user right-clicks on OpenGL view
 	QMenu* BuildContextMenu();
 
+	// update the main toolbar
+	// (e.g. when the field drop down needs to be updated)
+	void UpdateMainToolbar();
+
+	// update the font toolbar
+	// (e.g. when a GL widget gets selected)s
 	void UpdateFontToolbar();
 
 public slots:

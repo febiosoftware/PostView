@@ -3,18 +3,16 @@
 
 //-----------------------------------------------------------------------------
 class CDocument;
+class CPlotMixToolUI;
+class CKinematToolUI;
 
-class CImportLinesToolUI;
-class CImportPointsToolUI;
-
-//-----------------------------------------------------------------------------
-class CImportLinesTool : public CAbstractTool
+class CPlotMixTool : public CAbstractTool
 {
 	Q_OBJECT
 
 public:
 	// constructor
-	CImportLinesTool();
+	CPlotMixTool();
 
 	// get the property list
 	QWidget* createUi();
@@ -26,23 +24,25 @@ public:
 	void deactivate();
 
 private slots:
-	void OnApply();
 	void OnBrowse();
+	void OnRemove();
+	void OnMoveUp();
+	void OnMoveDown();
+	void OnApply();
 
 private:
-	CDocument*				m_doc;
-	CImportLinesToolUI*		ui;
+	CDocument*			m_doc;
+	CPlotMixToolUI*		ui;
 	friend class Props;
 };
 
-//-----------------------------------------------------------------------------
-class CImportPointsTool : public CAbstractTool
+class CKinematTool : public CAbstractTool
 {
 	Q_OBJECT
 
 public:
 	// constructor
-	CImportPointsTool();
+	CKinematTool();
 
 	// get the property list
 	QWidget* createUi();
@@ -54,11 +54,12 @@ public:
 	void deactivate();
 
 private slots:
+	void OnBrowse1();
+	void OnBrowse2();
 	void OnApply();
-	void OnBrowse();
 
 private:
-	CDocument*				m_doc;
-	CImportPointsToolUI*	ui;
+	CDocument*			m_doc;
+	CKinematToolUI*		ui;
 	friend class Props;
 };

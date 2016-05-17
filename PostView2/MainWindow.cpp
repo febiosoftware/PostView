@@ -179,7 +179,8 @@ bool CMainWindow::OpenFile(const QString& fileName, int nfilter)
 		setWindowTitle(QString("PostView2 - %1").arg(QString(stitle.c_str())));
 	}
 
-	ui->selectData->BuildMenu(m_doc->GetFEModel(), DATA_SCALAR);
+	UpdateMainToolbar();
+
 	if (m_doc->GetFEModel()->GetStates() > 0)
 	{
 		ui->playToolBar->setEnabled(true);
@@ -673,6 +674,7 @@ void CMainWindow::on_actionPlaneCut_triggered()
 
 	ui->modelViewer->Update();
 	ui->modelViewer->selectObject(pp);
+	ui->modelViewer->parentWidget()->raise();
 	ui->glview->repaint();
 }
 
@@ -685,6 +687,7 @@ void CMainWindow::on_actionVectorPlot_triggered()
 	
 	ui->modelViewer->Update();
 	ui->modelViewer->selectObject(pp);
+	ui->modelViewer->parentWidget()->raise();
 
 	ui->glview->repaint();
 }
@@ -698,6 +701,7 @@ void CMainWindow::on_actionIsosurfacePlot_triggered()
 
 	ui->modelViewer->Update();
 	ui->modelViewer->selectObject(pp);
+	ui->modelViewer->parentWidget()->raise();
 
 	ui->glview->repaint();
 }
@@ -711,6 +715,7 @@ void CMainWindow::on_actionSlicePlot_triggered()
 
 	ui->modelViewer->Update();
 	ui->modelViewer->selectObject(pp);
+	ui->modelViewer->parentWidget()->raise();
 
 	ui->glview->repaint();
 }
@@ -991,6 +996,11 @@ void CMainWindow::on_actionViewVPNext_triggered()
 		view.NextKey();
 		ui->glview->repaint();
 	}
+}
+
+void CMainWindow::UpdateMainToolbar()
+{
+	ui->selectData->BuildMenu(m_doc->GetFEModel(), DATA_SCALAR);
 }
 
 void CMainWindow::UpdateFontToolbar()

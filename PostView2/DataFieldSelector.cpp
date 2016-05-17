@@ -22,10 +22,29 @@ CDataFieldSelector::CDataFieldSelector(QWidget* parent) : QComboBox(parent)
 
     setStyleSheet(styleSheet); 
 */
+	m_fem = 0;
+}
+
+CDataFieldSelector::~CDataFieldSelector()
+{
+	if (m_fem) m_fem->RemoveDependant(this);
 }
 
 void CDataFieldSelector::BuildMenu(FEModel* fem, Data_Tensor_Type nclass, bool btvec)
 {
+	if (m_fem == 0)
+	{
+		m_fem = fem;
+		fem->AddDependant(this);
+	}
+	assert(fem == m_fem);
+
+	m_class = nclass;
+	m_bvec = btvec;
+
+	// get the current field
+	int noldField = currentValue();
+
 	// get the tree view and clear it
 	QTreeWidget* pw = qobject_cast<QTreeWidget*>(view());
 	pw->clear();
@@ -69,8 +88,8 @@ void CDataFieldSelector::BuildMenu(FEModel* fem, Data_Tensor_Type nclass, bool b
 		}
 	}
 
-	// clear the current selection
-	setCurrentIndex(-1);
+	// reset the current selection
+	setCurrentValue(noldField);
 }
 
 void CDataFieldSelector::addComponent(QTreeWidgetItem* parent, const char* szname, int ndata)
@@ -92,25 +111,18 @@ void CDataFieldSelector::setCurrentValue(int nfield)
 	int n = count();
 	for (int i=0; i<n; ++i)
 	{
-		int nfield = itemData(i, Qt::UserRole).toInt();
-	}
-
-/*	if (IS_VALID(nfield))
-	{
-		int ndata = FIELD_CODE(nfield);
-		int ncomp = FIELD_COMP(nfield);
-		QTreeWidget* pw = qobject_cast<QTreeWidget*>(view());
-		QTreeWidgetItemIterator it(pw);
-		while (*it)
+		int nitemValue = itemData(i, Qt::UserRole).toInt();
+		if (nitemValue == nfield)
 		{
-			if ((*it)->data(0, Qt::UserRole) == nfield)
-			{
-				pw->setCurrentItem(*it);
-				break;
-			}
-			++it;
+			setCurrentIndex(i);
+			return;
 		}
 	}
-	else setCurrentIndex(-1);
-*/
+
+	setCurrentIndex(-1);
+}
+
+void CDataFieldSelector::Update(FEModel* pfem)
+{
+	if (m_fem) BuildMenu(pfem, m_class, m_bvec);
 }

@@ -162,6 +162,16 @@ CGLModel* CGLColorMap::GetModel()
 }
 
 //-----------------------------------------------------------------------------
+void CGLColorMap::SetEvalField(int n)
+{ 
+	if (n != m_nfield) 
+	{
+		m_nfield = n; 
+		m_breset = true; 
+	}
+}
+
+//-----------------------------------------------------------------------------
 
 void CGLColorMap::Update(int ntime, float dt, bool breset)
 {

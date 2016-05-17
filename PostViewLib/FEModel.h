@@ -18,6 +18,18 @@
 using namespace std;
 
 //-----------------------------------------------------------------------------
+// Base class for derived classes that need to be informed when the model changes
+class FEModelDependant
+{
+public:
+	FEModelDependant() {}
+	virtual ~FEModelDependant() {}
+
+	// this function is called whenever the model changes
+	virtual void Update(FEModel* pfem) = 0;
+};
+
+//-----------------------------------------------------------------------------
 // Class that describes an FEModel. A model consists of a mesh (in the future
 // there can be multiple meshes to support remeshing), a list of materials
 // and a list of states. The states contain the data associated with the model
@@ -133,6 +145,12 @@ public:
 	bool IsValidFieldCode(int nfield, int nstate);
 
 public:
+	void AddDependant(FEModelDependant* pc);
+	void UpdateDependants();
+	void RemoveDependant(FEModelDependant* pc);
+	void ClearDependants();
+
+public:
 	static FEModel* GetInstance();
 
 protected:
@@ -156,6 +174,9 @@ protected:
 	vector<FEState*>	m_State;	// array of pointers to FE-state structures
 	FEDataManager*		m_pDM;		// the Data Manager
 	int					m_ndisp;	// vector field defining the displacement
+
+	// dependants
+	vector<FEModelDependant*>	m_Dependants;
 
 	static FEModel*	m_pThis;
 };

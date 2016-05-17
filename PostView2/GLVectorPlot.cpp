@@ -16,6 +16,7 @@ class CVectorPlotProps : public CPropertyList
 public:
 	CVectorPlotProps(CGLVectorPlot* v) : m_vec(v)
 	{
+		addProperty("Data field"    , CProperty::DataVec3);
 		addProperty("Allow clipping", CProperty::Bool );
 		addProperty("Density"       , CProperty::Float)->setFloatRange(0.0, 1.0);
 		addProperty("Glyph"         , CProperty::Enum )->setEnumValues(QStringList() << "Arrow" << "Cone" << "Cylinder" << "Sphere" << "Box" << "Line");
@@ -29,13 +30,14 @@ public:
 	{
 		switch (i)
 		{
-		case 0: return m_vec->AllowClipping(); break;
-		case 1: return m_vec->GetDensity(); break;
-		case 2: return m_vec->GetGlyphType(); break;
-		case 3: return toQColor(m_vec->GetGlyphColor()); break;
-		case 4: return m_vec->NormalizeVectors(); break;
-		case 5: return m_vec->GetAutoScale(); break;
-		case 6: return m_vec->GetScaleFactor(); break;
+		case 0: return m_vec->GetVectorType(); break;
+		case 1: return m_vec->AllowClipping(); break;
+		case 2: return m_vec->GetDensity(); break;
+		case 3: return m_vec->GetGlyphType(); break;
+		case 4: return toQColor(m_vec->GetGlyphColor()); break;
+		case 5: return m_vec->NormalizeVectors(); break;
+		case 6: return m_vec->GetAutoScale(); break;
+		case 7: return m_vec->GetScaleFactor(); break;
 		}
 		return QVariant();
 	}
@@ -44,13 +46,14 @@ public:
 	{
 		switch (i)
 		{
-		case 0: m_vec->AllowClipping(v.toBool()); break;
-		case 1: m_vec->SetDensity(v.toFloat()); break;
-		case 2: m_vec->SetGlyphType(v.toInt()); break;
-		case 3: m_vec->SetGlyphColor(toGLColor(v.value<QColor>())); break;
-		case 4: m_vec->NormalizeVectors(v.toBool()); break;
-		case 5: m_vec->SetAutoScale(v.toBool()); break;
-		case 6: m_vec->SetScaleFactor(v.toFloat()); break;
+		case 0: m_vec->SetVectorType(v.toInt()); break;
+		case 1: m_vec->AllowClipping(v.toBool()); break;
+		case 2: m_vec->SetDensity(v.toFloat()); break;
+		case 3: m_vec->SetGlyphType(v.toInt()); break;
+		case 4: m_vec->SetGlyphColor(toGLColor(v.value<QColor>())); break;
+		case 5: m_vec->NormalizeVectors(v.toBool()); break;
+		case 6: m_vec->SetAutoScale(v.toBool()); break;
+		case 7: m_vec->SetScaleFactor(v.toFloat()); break;
 		}
 	}
 
