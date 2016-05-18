@@ -72,6 +72,7 @@ public:
 	CGLView*		glview;
 
 	CDataFieldSelector*	selectData;
+	QSpinBox* pspin;
 
 	QToolBar* playToolBar;
 	QToolBar* pFontToolBar;
@@ -199,18 +200,18 @@ public:
 		QAction* actionClearSelection  = addAction("Clear selection" , "actionClearSelection" ); actionClearSelection->setShortcut(Qt::Key_Escape);
 		QAction* actionFind            = addAction("Find ..."        , "actionFind"           ); actionFind->setShortcut(Qt::CTRL + Qt::Key_F);
 		QAction* actionDelete          = addAction("Delete ..."      , "actionDelete"         );
-		QAction* actionProperties      = addAction("Properties ..."  , "actionProperties"     );
+		QAction* actionProperties      = addAction("Properties ..."  , "actionProperties"     , ":/icons/properties.png");
 
 		// --- Post menu ---
-		QAction* actionPlaneCut        = addAction("Plane cut"       , "actionPlaneCut"       );
-		QAction* actionVectorPlot      = addAction("Vector plot"     , "actionVectorPlot"     );
-		QAction* actionIsosurfacePlot  = addAction("Isosurface plot" , "actionIsosurfacePlot" );
-		QAction* actionSlicePlot       = addAction("Slice plot"      , "actionSlicePlot"      );
-		QAction* actionDisplacementMap = addAction("Displacement map", "actionDisplacementMap");
-		QAction* actionGraph           = addAction("New Graph ..."   , "actionGraph"          );
+		QAction* actionPlaneCut        = addAction("Plane cut"       , "actionPlaneCut"       , ":/icons/cut.png");
+		QAction* actionVectorPlot      = addAction("Vector plot"     , "actionVectorPlot"     , ":/icons/vectors.png");
+		QAction* actionIsosurfacePlot  = addAction("Isosurface plot" , "actionIsosurfacePlot" , ":/icons/isosurface.png");
+		QAction* actionSlicePlot       = addAction("Slice plot"      , "actionSlicePlot"      , ":icons/slice.png");
+		QAction* actionDisplacementMap = addAction("Displacement map", "actionDisplacementMap", ":/icons/distort.png");
+		QAction* actionGraph           = addAction("New Graph ..."   , "actionGraph"          , ":/icons/chart.png");
 		QAction* actionSummary         = addAction("Summary ..."     , "actionSummary"        );
 		QAction* actionStats           = addAction("Statistics  ..." , "actionStats"          );
-		QAction* actionIntegrate       = addAction("Integrate ..."   , "actionIntegrate"      );
+		QAction* actionIntegrate       = addAction("Integrate ..."   , "actionIntegrate"      , ":/icons/integrate.png");
 
 		// --- Record menu ---
 		QAction* actionRecordNew   = addAction("New ...", "actionRecordNew"  );
@@ -365,6 +366,17 @@ public:
 		mainToolBar->addWidget(selectData);
 		mainToolBar->addAction(actionColorMap);
 
+		// --- Post Tool bar
+		QToolBar* postToolbar = new QToolBar(MainWindow);
+		postToolbar->setObjectName("postToolbar");
+		postToolbar->addAction(actionPlaneCut      );
+		postToolbar->addAction(actionVectorPlot    );
+		postToolbar->addAction(actionIsosurfacePlot);
+		postToolbar->addAction(actionSlicePlot     );
+		postToolbar->addSeparator();
+		postToolbar->addAction(actionGraph);
+		postToolbar->addAction(actionIntegrate);
+		MainWindow->addToolBar(Qt::TopToolBarArea, postToolbar);
 
 		// Play tool bar
 		playToolBar = new QToolBar(MainWindow);
@@ -381,6 +393,11 @@ public:
 		playToolBar->addAction(addAction("next"   , "actionNext", ":/icons/next.png"));
 		playToolBar->addAction(addAction("last"   , "actionLast", ":/icons/forward.png"));
 
+		playToolBar->addWidget(pspin = new QSpinBox); 
+		pspin->setObjectName("selectTime");
+		pspin->setMinimumWidth(80);
+		pspin->setSuffix("/100");
+	
 		playToolBar->setDisabled(true);
 
 		// Font tool bar
@@ -393,6 +410,7 @@ public:
 		pFontToolBar->addWidget(pFontSize = new QSpinBox); pFontSize->setObjectName("fontSize");
 		pFontToolBar->addAction(actionFontBold   = addAction("Bold"  , "fontBold"  , ":/icons/font_bold.png"  )); actionFontBold->setCheckable(true);
 		pFontToolBar->addAction(actionFontItalic = addAction("Italic", "fontItalic", ":/icons/font_italic.png")); actionFontItalic->setCheckable(true);
+		pFontToolBar->addAction(actionProperties);
 		pFontToolBar->setEnabled(false);
 
 	}

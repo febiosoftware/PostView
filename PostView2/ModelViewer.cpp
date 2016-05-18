@@ -12,6 +12,11 @@
 #include "GLModel.h"
 #include <PostViewLib/FEModel.h>
 #include "GLPlot.h"
+#include "GLPlaneCutPlot.h"
+#include "GLVectorPlot.h"
+#include "GLSlicePLot.h"
+#include "GLIsoSurfacePlot.h"
+#include "GLLinePlot.h"
 
 //-----------------------------------------------------------------------------
 class CModelProps : public CPropertyList
@@ -357,22 +362,27 @@ void CModelViewer::Update()
 		ui->m_tree->clear();
 		QTreeWidgetItem* pi1 = new QTreeWidgetItem(ui->m_tree);
 		pi1->setText(0, "Model");
+		pi1->setIcon(0, QIcon(QString(":/icons/postview_small.png")));
 		ui->m_list.push_back(new CModelProps(mdl));
 		pi1->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
+		pi1->setExpanded(true);
 
 		// add the mesh
 		QTreeWidgetItem* pi2 = new QTreeWidgetItem(pi1);
 		pi2->setText(0, "Mesh");
+		pi2->setIcon(0, QIcon(QString(":/icons/mesh.png")));
 		ui->m_list.push_back(new CMeshProps(fem));
 		pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
 		
 		pi2 = new QTreeWidgetItem(pi1);
 		pi2->setText(0, "Displacement map");
+		pi2->setIcon(0, QIcon(QString(":/icons/distort.png")));
 		ui->m_list.push_back(new CDisplacementMapProps(mdl->GetDisplacementMap()));
 		pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
 
 		pi2 = new QTreeWidgetItem(pi1);
 		pi2->setText(0, "Color map");
+		pi2->setIcon(0, QIcon(QString(":/icons/colormap.png")));
 		ui->m_list.push_back(new CColorMapProps(mdl->GetColorMap()));
 		pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
 
@@ -382,6 +392,12 @@ void CModelViewer::Update()
 		{
 			CGLPlot& plot = *(*it);
 			QTreeWidgetItem* pi1 = new QTreeWidgetItem(ui->m_tree);
+
+			if      (dynamic_cast<CGLPlaneCutPlot  *>(&plot))  pi1->setIcon(0, QIcon(QString(":/icons/cut.png")));
+			else if (dynamic_cast<CGLVectorPlot    *>(&plot))  pi1->setIcon(0, QIcon(QString(":/icons/vectors.png")));
+			else if (dynamic_cast<CGLSlicePlot     *>(&plot))  pi1->setIcon(0, QIcon(QString(":/icons/slice.png")));
+			else if (dynamic_cast<CGLIsoSurfacePlot*>(&plot))  pi1->setIcon(0, QIcon(QString(":/icons/isosurface.png")));
+			
 			pi1->setText(0, plot.GetName());
 			ui->m_list.push_back(plot.propertyList());
 			pi1->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
@@ -389,6 +405,7 @@ void CModelViewer::Update()
 
 		pi2 = new QTreeWidgetItem(ui->m_tree);
 		pi2->setText(0, "View");
+		pi2->setIcon(0, QIcon(QString(":/icons/view.png")));
 		ui->m_list.push_back(new CViewProps(*pdoc->GetView()));
 		pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size() - 1));
 	}

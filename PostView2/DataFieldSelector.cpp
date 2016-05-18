@@ -32,12 +32,11 @@ CDataFieldSelector::~CDataFieldSelector()
 
 void CDataFieldSelector::BuildMenu(FEModel* fem, Data_Tensor_Type nclass, bool btvec)
 {
-	if (m_fem == 0)
+	if (m_fem != fem)
 	{
 		m_fem = fem;
 		fem->AddDependant(this);
 	}
-	assert(fem == m_fem);
 
 	m_class = nclass;
 	m_bvec = btvec;

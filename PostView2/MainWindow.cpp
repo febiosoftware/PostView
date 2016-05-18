@@ -824,6 +824,11 @@ void CMainWindow::on_actionPlay_toggled(bool bchecked)
 	else m_timer.stop();
 }
 
+void CMainWindow::SetCurrentTime(int n)
+{
+	ui->pspin->setValue(n + 1);
+}
+
 void CMainWindow::timerEvent(QTimerEvent* ev)
 {
 	CDocument* pdoc = GetDocument();
@@ -832,16 +837,12 @@ void CMainWindow::timerEvent(QTimerEvent* ev)
 	int nstep = pdoc->currentTime();
 	nstep++;
 	if (nstep >= N) nstep = 0;
-	pdoc->SetCurrentTime(nstep);
-
-	ui->glview->repaint();
+	SetCurrentTime(nstep);
 }
 
 void CMainWindow::on_actionFirst_triggered()
 {
-	CDocument* pdoc = GetDocument();
-	pdoc->SetCurrentTime(0);
-	ui->glview->repaint();
+	SetCurrentTime(0);
 }
 
 void CMainWindow::on_actionPrev_triggered()
@@ -851,8 +852,7 @@ void CMainWindow::on_actionPrev_triggered()
 	int nstep = pdoc->currentTime();
 	nstep--;
 	if (nstep < 0) nstep = 0;
-	pdoc->SetCurrentTime(nstep);
-	ui->glview->repaint();
+	SetCurrentTime(nstep);
 }
 
 void CMainWindow::on_actionNext_triggered()
@@ -862,16 +862,14 @@ void CMainWindow::on_actionNext_triggered()
 	int nstep = pdoc->currentTime();
 	nstep++;
 	if (nstep >= N) nstep = N-1;
-	pdoc->SetCurrentTime(nstep);
-	ui->glview->repaint();
+	SetCurrentTime(nstep);
 }
 
 void CMainWindow::on_actionLast_triggered()
 {
 	CDocument* pdoc = GetDocument();
 	int N = pdoc->GetFEModel()->GetStates();
-	pdoc->SetCurrentTime(N-1);
-	ui->glview->repaint();
+	SetCurrentTime(N-1);
 }
 
 void CMainWindow::on_actionViewSettings_triggered()
@@ -1002,7 +1000,29 @@ void CMainWindow::on_actionViewVPNext_triggered()
 
 void CMainWindow::UpdateMainToolbar()
 {
-	ui->selectData->BuildMenu(m_doc->GetFEModel(), DATA_SCALAR);
+	FEModel* pfem = m_doc->GetFEModel();
+	ui->selectData->BuildMenu(pfem, DATA_SCALAR);
+	UpdatePlayToolbar(true);
+}
+
+void CMainWindow::UpdatePlayToolbar(bool breset)
+{
+	FEModel* pfem = m_doc->GetFEModel();
+	if (breset)
+	{
+		int states = pfem->GetStates();
+		QString suff = QString("/%1").arg(states);
+		ui->pspin->setSuffix(suff);
+		ui->pspin->setRange(1, states);
+	};
+	int n = pfem->currentTime();
+	ui->pspin->setValue(n);
+}
+
+void CMainWindow::on_selectTime_valueChanged(int i)
+{
+	GetDocument()->SetCurrentTime(i - 1);
+	repaint();
 }
 
 void CMainWindow::UpdateFontToolbar()

@@ -171,9 +171,7 @@ void CStatePanel::Update()
 
 void CStatePanel::on_stateList_doubleClicked(const QModelIndex& index)
 {
-	CDocument* pdoc = m_wnd->GetDocument();
-	pdoc->SetCurrentTime(index.row());
-	m_wnd->repaint();
+	m_wnd->SetCurrentTime(index.row());
 }
 
 void CStatePanel::on_addButton_clicked()
