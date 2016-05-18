@@ -58,6 +58,11 @@ class FEDataField;
 #define RENDER_ORTHO	0
 #define RENDER_PERSP	1
 
+// Timer modes
+#define MODE_FORWARD	0
+#define MODE_REVERSE	1
+#define MODE_CYLCE		2
+
 //-----------------------------------------------------------------------------
 typedef std::list<CGLPlot*>	GPlotList;
 
@@ -92,6 +97,21 @@ struct VIEWSETTINGS
 	bool	m_blinesmooth;	// line smoothing
 	float	m_flinethick;	// line thickness
 	float	m_fpointsize;	// point size
+
+	void Defaults();
+};
+
+//-----------------------------------------------------------------------------
+struct TIMESETTINGS
+{
+	int		m_mode;		// play mode
+	double	m_fps;		// frames per second
+	int		m_start;	// start time
+	int		m_end;		// end time
+	int		m_inc;		// used when MODE_CYCLE
+	bool	m_bloop;	// loop or not
+	bool	m_bfix;		// use a fixed time step
+	double	m_dt;		// fixed time step size
 
 	void Defaults();
 };
@@ -245,6 +265,8 @@ public:
 
 	std::string GetFieldString();
 
+	TIMESETTINGS& GetTimeSettings() { return m_time; }
+
 	// --- V I E W   M A N A G M E N T ---
 
 	// get the view settings
@@ -333,6 +355,9 @@ protected:
 	VIEWSETTINGS	m_ops;		// the view settings
 	CGView			m_view;		// view orientation/position
 	vec3f			m_light;	// lightposition // TODO: should I move this to the CGView class?
+
+	// timer data
+	TIMESETTINGS	m_time;
 
 	// TODO: move to FEModel class?
 	float	m_fTime;		// current time value

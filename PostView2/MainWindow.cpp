@@ -33,6 +33,7 @@
 #include "DlgFind.h"
 #include "DlgImportXPLT.h"
 #include "DlgSelectRange.h"
+#include "DlgTimeSettings.h"
 #include <string>
 
 CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMainWindow)
@@ -817,9 +818,14 @@ void CMainWindow::on_selectData_currentIndexChanged(int i)
 
 void CMainWindow::on_actionPlay_toggled(bool bchecked)
 {
+	TIMESETTINGS& time = GetDocument()->GetTimeSettings();
+	double fps = time.m_fps;
+	if (fps < 1.0) fps = 1.0;
+	double msec_per_frame = 1000.0 / fps;
+
 	if (bchecked)
 	{
-		m_timer.start(50, this);
+		m_timer.start(msec_per_frame, this);
 	}
 	else m_timer.stop();
 }
@@ -829,14 +835,55 @@ void CMainWindow::SetCurrentTime(int n)
 	ui->pspin->setValue(n + 1);
 }
 
+void CMainWindow::StopAnimation()
+{
+	m_timer.stop();
+	ui->actionPlay->setChecked(false);
+}
+
 void CMainWindow::timerEvent(QTimerEvent* ev)
 {
 	CDocument* pdoc = GetDocument();
+	TIMESETTINGS& time = pdoc->GetTimeSettings();
+
 	int N = pdoc->GetFEModel()->GetStates();
 
 	int nstep = pdoc->currentTime();
-	nstep++;
-	if (nstep >= N) nstep = 0;
+
+	if (time.m_mode == MODE_FORWARD)
+	{
+		nstep++;
+		if (nstep >= N)
+		{
+			if (time.m_bloop) nstep = 0;
+			else { nstep = N - 1; StopAnimation(); }
+		}
+	}
+	else if (time.m_mode == MODE_REVERSE)
+	{
+		nstep--;
+		if (nstep < 0) 
+		{
+			if (time.m_bloop) nstep = N - 1;
+			else { nstep = 0; StopAnimation(); }
+		}
+	}
+	else if (time.m_mode == MODE_CYLCE)
+	{
+		nstep += time.m_inc;
+		if (nstep >= N)
+		{
+			time.m_inc = -1;
+			nstep = N - 1;
+			if (time.m_bloop == false) StopAnimation();
+		}
+		else if (nstep < 0)
+		{
+			time.m_inc = 1;
+			nstep = 0;
+			if (time.m_bloop == false) StopAnimation();
+		}
+	}
 	SetCurrentTime(nstep);
 }
 
@@ -870,6 +917,15 @@ void CMainWindow::on_actionLast_triggered()
 	CDocument* pdoc = GetDocument();
 	int N = pdoc->GetFEModel()->GetStates();
 	SetCurrentTime(N-1);
+}
+
+void CMainWindow::on_actionTimeSettings_triggered()
+{
+	CDlgTimeSettings dlg(GetDocument(), this);
+	if (dlg.exec())
+	{
+		repaint();
+	}
 }
 
 void CMainWindow::on_actionViewSettings_triggered()

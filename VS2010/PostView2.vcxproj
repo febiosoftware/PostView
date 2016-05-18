@@ -98,6 +98,7 @@
     <ClCompile Include="..\PostView2\DlgExportXPLT.cpp" />
     <ClCompile Include="..\PostView2\DlgFind.cpp" />
     <ClCompile Include="..\PostView2\DlgSelectRange.cpp" />
+    <ClCompile Include="..\PostView2\DlgTimeSettings.cpp" />
     <ClCompile Include="..\PostView2\DlgViewSettings.cpp" />
     <ClCompile Include="..\PostView2\DlgWidgetProps.cpp" />
     <ClCompile Include="..\PostView2\Document.cpp" />
@@ -223,6 +224,7 @@
     <ClInclude Include="..\PostView2\DlgFind.h" />
     <ClInclude Include="..\PostView2\DlgImportXPLT.h" />
     <CustomBuild Include="..\PostView2\DlgSelectRange.h" />
+    <ClInclude Include="..\PostView2\DlgTimeSettings.h" />
     <ClInclude Include="..\PostView2\FEKinemat.h" />
     <ClInclude Include="..\PostView2\MeasureAreaTool.h" />
     <CustomBuild Include="..\PostView2\PointCongruencyTool.h">

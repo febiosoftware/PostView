@@ -92,6 +92,7 @@ public slots:
 	void on_actionPrev_triggered();
 	void on_actionNext_triggered();
 	void on_actionLast_triggered();
+	void on_actionTimeSettings_triggered();
 
 	void on_actionViewSettings_triggered();
 	void on_actionViewCapture_toggled(bool bchecked);
@@ -121,6 +122,7 @@ public slots:
 private:
 	void timerEvent(QTimerEvent* ev);
 	void closeEvent(QCloseEvent* ev);
+	void StopAnimation();
 
 private:
 	void writeSettings();

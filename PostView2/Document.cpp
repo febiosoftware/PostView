@@ -47,6 +47,18 @@ void VIEWSETTINGS::Defaults()
 	m_fpointsize  = 6.0f;
 }
 
+void TIMESETTINGS::Defaults()
+{
+	m_mode  = MODE_FORWARD;
+	m_fps   = 10.0;
+	m_start = 1;
+	m_end   = 0;	//	has to be set after loading a model
+	m_bloop = true;
+	m_bfix  = false;
+	m_inc   = 1;
+	m_dt    = 0.01;
+}
+
 //-----------------------------------------------------------------------------
 ModelData::ModelData(CGLModel *po)
 {
@@ -217,6 +229,7 @@ CDocument::CDocument(CMainWindow* pwnd) : m_wnd(pwnd)
 
 	// initialize view settings
 	m_ops.Defaults();
+	m_time.Defaults();
 }
 
 CDocument::~CDocument()
@@ -391,6 +404,9 @@ bool CDocument::LoadFEModel(FEFileReader* pimp, const char* szfile, bool bup)
 	if (szwdir) chdir(szwdir);
 
 	if (m_nTime >= GetTimeSteps()-1) m_nTime = GetTimeSteps()-1;
+
+	m_time.m_start = 0;
+	m_time.m_end   = GetTimeSteps() - 1;
 
 	// reset settings
 	if (bup)

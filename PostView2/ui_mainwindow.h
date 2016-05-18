@@ -397,6 +397,7 @@ public:
 		pspin->setObjectName("selectTime");
 		pspin->setMinimumWidth(80);
 		pspin->setSuffix("/100");
+		playToolBar->addAction(addAction("Time settings", "actionTimeSettings", ":/icons/clock.png"));
 	
 		playToolBar->setDisabled(true);
 
