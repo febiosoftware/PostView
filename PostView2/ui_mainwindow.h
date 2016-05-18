@@ -116,7 +116,7 @@ public:
 	// Note that this must be called after the menu is created.
 	void buildDockWidgets(CMainWindow* MainWindow)
 	{
-        QDockWidget* dock1 = new QDockWidget("Files", MainWindow);
+        QDockWidget* dock1 = new QDockWidget("Files", MainWindow); dock1->setObjectName("dockFiles");
         dock1->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
         fileViewer = new CFileViewer(MainWindow, dock1);
         fileViewer->setObjectName(QStringLiteral("fileViewer"));
@@ -124,35 +124,35 @@ public:
 		MainWindow->addDockWidget(Qt::LeftDockWidgetArea, dock1);
 		menuView->addAction(dock1->toggleViewAction());
 
-		QDockWidget* dock2 = new QDockWidget("Model", MainWindow);
+		QDockWidget* dock2 = new QDockWidget("Model", MainWindow); dock2->setObjectName("dockModel");
         dock1->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
 		modelViewer = new CModelViewer(MainWindow, dock2);
 		dock2->setWidget(modelViewer);
 		menuView->addAction(dock2->toggleViewAction());
 		MainWindow->tabifyDockWidget(dock1, dock2);
 
-		QDockWidget* dock3 = new QDockWidget("Materials", MainWindow);
+		QDockWidget* dock3 = new QDockWidget("Materials", MainWindow); dock3->setObjectName("dockMaterials");
         dock3->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
 		matPanel = new CMaterialPanel(MainWindow, dock3);
 		dock3->setWidget(matPanel);
 		menuView->addAction(dock3->toggleViewAction());
 		MainWindow->tabifyDockWidget(dock2, dock3);
 
-		QDockWidget* dock4 = new QDockWidget("Data", MainWindow);
+		QDockWidget* dock4 = new QDockWidget("Data", MainWindow); dock4->setObjectName("dockData");
         dock4->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
 		dataPanel = new CDataPanel(MainWindow, dock4);
 		dock4->setWidget(dataPanel);
 		menuView->addAction(dock4->toggleViewAction());
 		MainWindow->tabifyDockWidget(dock3, dock4);
 
-		QDockWidget* dock5 = new QDockWidget("State", MainWindow);
+		QDockWidget* dock5 = new QDockWidget("State", MainWindow); dock5->setObjectName("dockState");
         dock5->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
 		statePanel = new CStatePanel(MainWindow, dock5);
 		dock5->setWidget(statePanel);
 		menuView->addAction(dock5->toggleViewAction());
 		MainWindow->tabifyDockWidget(dock4, dock5);
 
-		QDockWidget* dock6 = new QDockWidget("Tools", MainWindow);
+		QDockWidget* dock6 = new QDockWidget("Tools", MainWindow); dock6->setObjectName("dockTools");
         dock6->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
 		toolsPanel = new CToolsPanel(MainWindow, dock6);
 		dock6->setWidget(toolsPanel);
@@ -365,17 +365,6 @@ public:
 		mainToolBar->addWidget(selectData);
 		mainToolBar->addAction(actionColorMap);
 
-		// Font tool bar
-		pFontToolBar = new QToolBar(MainWindow);
-		pFontToolBar->setObjectName("FontToolBar");
-		MainWindow->addToolBar(Qt::TopToolBarArea, pFontToolBar);
-
-		pFontToolBar->addWidget(pFontStyle = new QFontComboBox); pFontStyle->setObjectName("fontStyle");
-		pFontToolBar->addWidget(pFontSize = new QSpinBox); pFontSize->setObjectName("fontSize");
-		pFontToolBar->addAction(actionFontBold   = addAction("Bold"  , "fontBold"  , ":/icons/font_bold.png"  )); actionFontBold->setCheckable(true);
-		pFontToolBar->addAction(actionFontItalic = addAction("Italic", "fontItalic", ":/icons/font_italic.png")); actionFontItalic->setCheckable(true);
-		pFontToolBar->setEnabled(false);
-
 
 		// Play tool bar
 		playToolBar = new QToolBar(MainWindow);
@@ -393,6 +382,19 @@ public:
 		playToolBar->addAction(addAction("last"   , "actionLast", ":/icons/forward.png"));
 
 		playToolBar->setDisabled(true);
+
+		// Font tool bar
+		pFontToolBar = new QToolBar(MainWindow);
+		pFontToolBar->setObjectName("FontToolBar");
+		MainWindow->addToolBarBreak();
+		MainWindow->addToolBar(Qt::TopToolBarArea, pFontToolBar);
+
+		pFontToolBar->addWidget(pFontStyle = new QFontComboBox); pFontStyle->setObjectName("fontStyle");
+		pFontToolBar->addWidget(pFontSize = new QSpinBox); pFontSize->setObjectName("fontSize");
+		pFontToolBar->addAction(actionFontBold   = addAction("Bold"  , "fontBold"  , ":/icons/font_bold.png"  )); actionFontBold->setCheckable(true);
+		pFontToolBar->addAction(actionFontItalic = addAction("Italic", "fontItalic", ":/icons/font_italic.png")); actionFontItalic->setCheckable(true);
+		pFontToolBar->setEnabled(false);
+
 	}
 };
 

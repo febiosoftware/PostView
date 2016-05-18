@@ -1,6 +1,7 @@
 #pragma once
 #include <QMainWindow>
 #include <QtCore/QBasicTimer>
+#include <QCloseEvent>
 
 class CDocument;
 class CGLView;
@@ -110,6 +111,11 @@ public slots:
 
 private:
 	void timerEvent(QTimerEvent* ev);
+	void closeEvent(QCloseEvent* ev);
+
+private:
+	void writeSettings();
+	void readSettings();
 
 private:
 	Ui::CMainWindow*	ui;

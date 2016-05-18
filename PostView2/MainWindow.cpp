@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QtCore/QSettings>
 #include "Document.h"
 #include <PostViewLib/xpltReader.h>
 #include "Document.h"
@@ -38,6 +39,7 @@ CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMai
 {
 	m_doc = new CDocument(this);
 	ui->setupUi(this);
+	readSettings();
 }
 
 CMainWindow::~CMainWindow()
@@ -1068,4 +1070,28 @@ void CMainWindow::on_fontItalic_toggled(bool bchecked)
 		pw->set_font(font);
 		repaint();
 	}
+}
+
+void CMainWindow::closeEvent(QCloseEvent* ev)
+{
+	writeSettings();
+	ev->accept();
+}
+
+void CMainWindow::writeSettings()
+{
+	QSettings settings("MRLSoftware", "PostView");
+	settings.beginGroup("MainWindow");
+	settings.setValue("geometry", saveGeometry());
+	settings.setValue("state", saveState());
+	settings.endGroup();
+}
+
+void CMainWindow::readSettings()
+{
+	QSettings settings("MRLSoftware", "PostView");
+	settings.beginGroup("MainWindow");
+	restoreGeometry(settings.value("geometry").toByteArray());
+	restoreState(settings.value("state").toByteArray());
+	settings.endGroup();
 }
