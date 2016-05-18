@@ -51,6 +51,10 @@ public:
 	// set the current time
 	void SetCurrentTime(int n);
 
+	// update the graph windows
+	// (e.g. when selection has changed)
+	void UpdateGraphs(bool breset = true);
+
 public slots:
 	void on_actionOpen_triggered();
 	void on_actionSave_triggered();

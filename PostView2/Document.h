@@ -6,12 +6,6 @@
 #include <PostViewLib/bbox.h>
 #include <PostViewLib/GView.h>
 
-#ifdef WIN32
-	#ifdef GetFileTitle
-		#undef GetFileTitle
-	#endif
-#endif
-
 //-----------------------------------------------------------------------------
 // Forward declarations
 class CMainWindow;
@@ -256,7 +250,7 @@ public:
 
 	int GetFileName(char* szfilename);
 	int GetFilePath(char* szpath);
-	int GetFileTitle(char* sztitle);
+	int GetDocTitle(char* sztitle);
 
 	const char* GetTitle();
 	void SetTitle(const char* sztitle);

@@ -47,6 +47,7 @@ public:
 
 	//! Set the plot title
 	void setTitle(const QString& s);
+	QString title() const { return m_title; }
 
 	// size hint
 	QSize sizeHint() const { return m_sizeHint; }
@@ -61,6 +62,8 @@ public:
 	void clear();
 
 	// change the view so that it fits the data
+	void fitWidthToData();
+	void fitHeightToData();
 	void fitToData();
 
 	// add a data field
@@ -75,6 +78,7 @@ protected:
 	void mouseMoveEvent   (QMouseEvent* ev);
 	void mouseReleaseEvent(QMouseEvent* ev);
 	void contextMenuEvent (QContextMenuEvent* ev);
+	void wheelEvent       (QWheelEvent* ev);
 
 public:
 	QString	m_title;
@@ -82,6 +86,9 @@ public:
 	QRect	m_screenRect;
 	QPoint	m_mousePos;
 	double	m_xscale, m_yscale;
+
+	bool	m_select;
+	QPointF	m_selectedPoint;
 
 	QPointF ScreenToView(const QPoint& p);
 	QPoint ViewToScreen(const QPointF& p);
@@ -91,6 +98,8 @@ private:
 	void paintEvent(QPaintEvent* pe);
 
 public slots:
+	void OnZoomToWidth();
+	void OnZoomToHeight();
 	void OnZoomToFit();
 	void OnShowProps();
 	void OnCopyToClipboard();

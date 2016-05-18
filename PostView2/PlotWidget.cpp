@@ -28,7 +28,6 @@ double findScale(double fmin, double fmax)
 //-----------------------------------------------------------------------------
 CPlotData::CPlotData()
 {
-
 }
 
 //-----------------------------------------------------------------------------
@@ -75,6 +74,7 @@ void CPlotData::addPoint(double x, double y)
 //-----------------------------------------------------------------------------
 CPlotWidget::CPlotWidget(QWidget* parent, int w, int h) : QWidget(parent)
 {
+	m_select = false;
 	m_ncol = 13;
 
 	m_viewRect = QRectF(0.0, 0.0, 1.0, 1.0);
@@ -85,13 +85,13 @@ CPlotWidget::CPlotWidget(QWidget* parent, int w, int h) : QWidget(parent)
 	if (h < 200) h = 200;
 	m_sizeHint = QSize(w, h);
 
-	m_pZoomToFit = new QAction(tr("Zoom to fit"), this);
+	m_pZoomToFit = new QAction(QIcon(QString(":/icons/zoom_fit.png")), tr("Zoom to fit"), this);
 	connect(m_pZoomToFit, SIGNAL(triggered()), this, SLOT(OnZoomToFit()));
 
-	m_pShowProps = new QAction(tr("Properties"), this);
+	m_pShowProps = new QAction(QIcon(QString(":/icons/properties.png")), tr("Properties"), this);
 	connect(m_pShowProps, SIGNAL(triggered()), this, SLOT(OnShowProps()));
 
-	m_pCopyToClip = new QAction(tr("Copy to clipboard"), this);
+	m_pCopyToClip = new QAction(QIcon(QString(":/icons/clipboard.png")), tr("Copy to clipboard"), this);
 	connect(m_pCopyToClip, SIGNAL(triggered()), this, SLOT(OnCopyToClipboard()));
 }
 
@@ -107,6 +107,20 @@ void CPlotWidget::contextMenuEvent(QContextMenuEvent* ev)
 }
 
 //-----------------------------------------------------------------------------
+void CPlotWidget::OnZoomToWidth()
+{
+	fitWidthToData();
+	repaint();
+}
+
+//-----------------------------------------------------------------------------
+void CPlotWidget::OnZoomToHeight()
+{
+	fitHeightToData();
+	repaint();
+}
+
+//-----------------------------------------------------------------------------
 void CPlotWidget::OnZoomToFit()
 {
 	fitToData();
@@ -117,7 +131,7 @@ void CPlotWidget::OnZoomToFit()
 void CPlotWidget::OnShowProps()
 {
 	QMessageBox b;
-	b.setText("Comgin soon!");
+	b.setText("Coming soon!");
 	b.setIcon(QMessageBox::Information);
 	b.exec();
 }
@@ -169,6 +183,50 @@ void CPlotWidget::addPlotData(const CPlotData& p)
 }
 
 //-----------------------------------------------------------------------------
+void CPlotWidget::fitWidthToData()
+{
+	if (m_data.empty()) return;
+
+	QRectF r = m_data[0].boundRect();
+	for (int i=1; i<(int) m_data.size(); ++i)
+	{
+		QRectF ri = m_data[i].boundRect();
+		r = ri.united(r);
+	}
+
+	m_viewRect.setLeft(r.left());
+	m_viewRect.setRight(r.right());
+
+	double dx = 0.05*m_viewRect.width();
+	double dy = 0.05*m_viewRect.height();
+	m_viewRect.adjust(0.0, 0.0, dx, 0.0);
+
+	m_xscale = findScale(m_viewRect.left(), m_viewRect.right());
+}
+
+//-----------------------------------------------------------------------------
+void CPlotWidget::fitHeightToData()
+{
+	if (m_data.empty()) return;
+
+	QRectF r = m_data[0].boundRect();
+	for (int i=1; i<(int) m_data.size(); ++i)
+	{
+		QRectF ri = m_data[i].boundRect();
+		r = ri.united(r);
+	}
+
+	m_viewRect.setTop(r.top());
+	m_viewRect.setBottom(r.bottom());
+
+	double dx = 0.05*m_viewRect.width();
+	double dy = 0.05*m_viewRect.height();
+	m_viewRect.adjust(0.0, 0.0, 0.0, dy);
+
+	m_yscale = findScale(m_viewRect.top(), m_viewRect.bottom());
+}
+
+//-----------------------------------------------------------------------------
 void CPlotWidget::fitToData()
 {
 	if (m_data.empty()) return;
@@ -193,24 +251,72 @@ void CPlotWidget::fitToData()
 //-----------------------------------------------------------------------------
 void CPlotWidget::mousePressEvent(QMouseEvent* ev)
 {
+	if (ev->button() == Qt::LeftButton)
+	{
+		QPoint pt = ev->pos();
+		const int eps = 3;
+
+		m_select = false;
+		for (int i=0; i<m_data.size(); ++i)
+		{
+			CPlotData& plot = m_data[i];
+			for (int j=0; j<plot.size(); ++j)
+			{
+				QPointF& rj = plot.Point(j);
+				QPoint p = ViewToScreen(rj);
+				if ((abs(p.x() - pt.x()) <= eps) && (abs(p.y() - pt.y()) <= eps))
+				{
+					m_select = true;
+					m_selectedPoint = rj;
+				}
+			}
+		}
+		repaint();
+	}
 	m_mousePos = ev->pos();
+	ev->accept();
 }
 
 //-----------------------------------------------------------------------------
 void CPlotWidget::mouseMoveEvent(QMouseEvent* ev)
 {
-	QPoint p = ev->pos();
-	QPointF r0 = ScreenToView(m_mousePos);
-	QPointF r1 = ScreenToView(p);
-	m_viewRect.translate(r0.x() - r1.x(), r0.y() - r1.y());
-	m_mousePos = p;
-	repaint();
+	if (ev->buttons() & Qt::LeftButton)
+	{
+		QPoint p = ev->pos();
+		QPointF r0 = ScreenToView(m_mousePos);
+		QPointF r1 = ScreenToView(p);
+		m_viewRect.translate(r0.x() - r1.x(), r0.y() - r1.y());
+		m_mousePos = p;
+		repaint();
+	}
+	ev->accept();
 }
 
 //-----------------------------------------------------------------------------
 void CPlotWidget::mouseReleaseEvent(QMouseEvent* ev)
 {
+	ev->accept();
+}
 
+//-----------------------------------------------------------------------------
+void CPlotWidget::wheelEvent(QWheelEvent* ev)
+{
+	double W = m_viewRect.width();
+	double H = m_viewRect.height();
+	double dx = W*0.05;
+	double dy = H*0.05;
+	if (ev->delta() < 0)
+	{
+		m_viewRect.adjust(-dx, -dy, dx, dy);
+	}
+	else
+	{
+		m_viewRect.adjust(dx, dy, -dx, -dy);
+	}
+	m_xscale = findScale(m_viewRect.left(), m_viewRect.right());
+	m_yscale = findScale(m_viewRect.top(), m_viewRect.bottom());
+	repaint();
+	ev->accept();
 }
 
 //-----------------------------------------------------------------------------
@@ -263,6 +369,37 @@ void CPlotWidget::paintEvent(QPaintEvent* pe)
 	// render the data
 	p.setClipRect(m_screenRect);
 	drawAllData(p);
+
+	// render the selection
+	if (m_select)
+	{
+		QPoint pt = ViewToScreen(m_selectedPoint);
+		if (m_screenRect.contains(pt, true))
+		{
+			QFontMetrics fm(p.font());
+			QString sx = QString("X:%1").arg(m_selectedPoint.x());
+			QString sy = QString("Y:%1").arg(m_selectedPoint.y());
+			int wx = fm.width(sx);
+			int wy = fm.width(sy);
+			int d = 3;
+			int W = (wx > wy ? wx : wy) + 2*d;
+			int H = 2*fm.height() + 3*d;
+			p.setPen(Qt::black);
+
+			int X = pt.x();
+			int Y = pt.y();
+			if (X + W > m_screenRect.right()) X = m_screenRect.right() - W;
+			if (Y + H > m_screenRect.bottom()) Y = m_screenRect.bottom() - H;
+
+			p.setBrush(Qt::black);
+			p.drawEllipse(pt, 5, 5);
+
+			p.setBrush(Qt::yellow);
+			p.drawRect(X, Y, W, H);
+			p.drawText(X+d, Y + fm.ascent() + d, sx);
+			p.drawText(X+d, Y + fm.ascent() + fm.height() + d, sy);
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------

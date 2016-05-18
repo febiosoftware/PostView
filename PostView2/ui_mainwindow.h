@@ -208,7 +208,7 @@ public:
 		QAction* actionIsosurfacePlot  = addAction("Isosurface plot" , "actionIsosurfacePlot" , ":/icons/isosurface.png");
 		QAction* actionSlicePlot       = addAction("Slice plot"      , "actionSlicePlot"      , ":icons/slice.png");
 		QAction* actionDisplacementMap = addAction("Displacement map", "actionDisplacementMap", ":/icons/distort.png");
-		QAction* actionGraph           = addAction("New Graph ..."   , "actionGraph"          , ":/icons/chart.png");
+		QAction* actionGraph           = addAction("New Graph ..."   , "actionGraph"          , ":/icons/chart.png"); actionGraph->setShortcut(Qt::Key_F3);
 		QAction* actionSummary         = addAction("Summary ..."     , "actionSummary"        );
 		QAction* actionStats           = addAction("Statistics  ..." , "actionStats"          );
 		QAction* actionIntegrate       = addAction("Integrate ..."   , "actionIntegrate"      , ":/icons/integrate.png");

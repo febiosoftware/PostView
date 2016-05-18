@@ -359,9 +359,12 @@ void CModelViewer::Update()
 		FEModel* fem = pdoc->GetFEModel();
 		CGLModel* mdl = pdoc->GetGLModel();
 
+		char szfile[256] = {0};
+		pdoc->GetDocTitle(szfile);
+
 		ui->m_tree->clear();
 		QTreeWidgetItem* pi1 = new QTreeWidgetItem(ui->m_tree);
-		pi1->setText(0, "Model");
+		pi1->setText(0, szfile);
 		pi1->setIcon(0, QIcon(QString(":/icons/postview_small.png")));
 		ui->m_list.push_back(new CModelProps(mdl));
 		pi1->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));

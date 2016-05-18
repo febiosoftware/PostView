@@ -174,7 +174,7 @@ void GLBox::parse_label(char* szlabel, const char* szval, int nmax)
 				else if (strncmp(cs+1, "time"     , n) == 0) cd += sprintf(cd, "%.4g", m_pdoc->GetTimeValue());
 				else if (strncmp(cs+1, "state"    , n) == 0) cd += sprintf(cd, "%d", m_pdoc->currentTime()+1);
 				else if (strncmp(cs+1, "filename" , n) == 0) cd += m_pdoc->GetFileName(cd);
-				else if (strncmp(cs+1, "filetitle", n) == 0) cd += m_pdoc->GetFileTitle(cd);
+				else if (strncmp(cs+1, "filetitle", n) == 0) cd += m_pdoc->GetDocTitle(cd);
 				else if (strncmp(cs+1, "filepath" , n) == 0) cd += m_pdoc->GetFilePath(cd);
 //				else if (strncmp(cs+1, "date"     , n) == 0) _strdate(cd); cd = szlabel + strlen(szlabel);
 				cs += n+1;

@@ -27,6 +27,12 @@ private slots:
 	void on_selectX_currentIndexChanged(int);
 	void on_selectY_currentIndexChanged(int);
 	void on_selectPlot_currentIndexChanged(int);
+	void on_actionSave_triggered();
+	void on_actionClipboard_triggered();
+	void on_actionProps_triggered();
+	void on_actionZoomWidth_triggered();
+	void on_actionZoomHeight_triggered();
+	void on_actionZoomFit_triggered();
 
 private:
 	CMainWindow*		m_wnd;

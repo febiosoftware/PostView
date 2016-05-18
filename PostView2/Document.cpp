@@ -1345,7 +1345,7 @@ int CDocument::GetFilePath(char *szpath)
 	return n;
 }
 
-int CDocument::GetFileTitle(char* sztitle)
+int CDocument::GetDocTitle(char* sztitle)
 {
 	char* ch = strrchr(m_szfile, '\\');
 	if (ch == 0) 

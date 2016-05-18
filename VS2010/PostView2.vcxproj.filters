@@ -371,6 +371,9 @@
     <ClInclude Include="..\PostView2\DlgTimeSettings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\PostView2\version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\PostView2\MainWindow.h">

@@ -316,6 +316,7 @@ public:
 		m_prop->verticalHeader()->setDefaultSectionSize(24);
 		m_prop->verticalHeader()->hide();
 		m_prop->setEditTriggers(QAbstractItemView::CurrentChanged);
+//		m_prop->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
 		m_delegate = new CPropertyListDelegate(parent);
 		m_prop->setItemDelegate(m_delegate);
@@ -345,6 +346,8 @@ void CPropertyListView::Update(CPropertyList* plist)
 {
 	ui->m_list = plist;
 	ui->m_data->setPropertyList(plist);
+//	ui->m_prop->resizeColumnToContents(0);
+	ui->m_prop->setColumnWidth(0, 150);
 
 	// we make persistent editors for color properties
 	if (plist)

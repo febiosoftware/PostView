@@ -62,12 +62,7 @@ void CMainWindow::UpdateUi()
 	ui->toolsPanel->Update();
 
 	// update all graph windows
-	if (ui->graphList.isEmpty() == false)
-	{
-		QList<CGraphWindow*>::iterator it;
-		for (it=ui->graphList.begin(); it != ui->graphList.end(); ++it)
-			(*it)->Update();
-	}
+	UpdateGraphs();
 
 	// update the gl view
 	ui->glview->GetCamera().Update(true);
@@ -77,6 +72,16 @@ void CMainWindow::UpdateUi()
 void CMainWindow::UpdateView()
 {
 	ui->modelViewer->UpdateView();
+}
+
+void CMainWindow::UpdateGraphs(bool breset)
+{
+	if (ui->graphList.isEmpty() == false)
+	{
+		QList<CGraphWindow*>::iterator it;
+		for (it=ui->graphList.begin(); it != ui->graphList.end(); ++it)
+			(*it)->Update(breset);
+	}
 }
 
 QMenu* CMainWindow::BuildContextMenu()
@@ -762,7 +767,7 @@ void CMainWindow::on_actionGraph_triggered()
 	if (pg == 0)
 	{
 		pg = new CGraphWindow(this);
-		pg->setWindowTitle(QString("Graph%1").arg(ui->graphList.size()+1));
+		pg->setWindowTitle(QString("PostView2 : Graph%1").arg(ui->graphList.size()+1));
 		ui->graphList.push_back(pg);
 		pg->Update();
 	}
