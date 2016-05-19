@@ -94,6 +94,8 @@ void CPlotData::clear()
 //-----------------------------------------------------------------------------
 QRectF CPlotData::boundRect() const
 {
+	if (m_data.empty()) return QRectF(0., 0., 0., 0.);
+
 	QRectF r(m_data[0].x(), m_data[0].y(), 0.0, 0.0);
 	for (int i=1; i<(int)m_data.size(); ++i)
 	{
@@ -121,6 +123,8 @@ CPlotWidget::CPlotWidget(QWidget* parent, int w, int h) : QWidget(parent)
 	m_select = false;
 	m_bzoomRect = false;
 	m_bvalidRect = false;
+
+	m_bshowLegend = true;
 
 	m_viewRect = QRectF(0.0, 0.0, 1.0, 1.0);
 	m_xscale = findScale(m_viewRect.left(), m_viewRect.right());
@@ -252,14 +256,9 @@ void CPlotWidget::fitWidthToData()
 		r = ri.united(r);
 	}
 
-	m_viewRect.setLeft(r.left());
-	m_viewRect.setRight(r.right());
-
-	double dx = 0.05*m_viewRect.width();
-	double dy = 0.05*m_viewRect.height();
-	m_viewRect.adjust(0.0, 0.0, dx, 0.0);
-
-	m_xscale = findScale(m_viewRect.left(), m_viewRect.right());
+	r.setTop(m_viewRect.top());
+	r.setBottom(m_viewRect.bottom());
+	setViewRect(r);
 }
 
 //-----------------------------------------------------------------------------
@@ -274,14 +273,9 @@ void CPlotWidget::fitHeightToData()
 		r = ri.united(r);
 	}
 
-	m_viewRect.setTop(r.top());
-	m_viewRect.setBottom(r.bottom());
-
-	double dx = 0.05*m_viewRect.width();
-	double dy = 0.05*m_viewRect.height();
-	m_viewRect.adjust(0.0, 0.0, 0.0, dy);
-
-	m_yscale = findScale(m_viewRect.top(), m_viewRect.bottom());
+	r.setLeft (m_viewRect.left ());
+	r.setRight(m_viewRect.right());
+	setViewRect(r);
 }
 
 //-----------------------------------------------------------------------------
@@ -295,9 +289,15 @@ void CPlotWidget::fitToData()
 		QRectF ri = m_data[i].boundRect();
 		r = ri.united(r);
 	}
-	if (fabs(r.height()) < 1e-12) r.setHeight(1.0);
+	setViewRect(r);
+}
 
-	m_viewRect = r;
+//-----------------------------------------------------------------------------
+void CPlotWidget::setViewRect(const QRectF& rt)
+{
+	m_viewRect = rt;
+	if (fabs(rt.height()) < 1e-7) m_viewRect.setHeight(1.0);
+	if (fabs(rt.width ()) < 1e-7) m_viewRect.setWidth (1.0);
 
 	double dx = 0.05*m_viewRect.width();
 	double dy = 0.05*m_viewRect.height();
@@ -317,13 +317,7 @@ void CPlotWidget::fitToRect(const QRect& rt)
 	QPointF r1 = ScreenToView(p1);
 	QRectF rf = QRectF(r0.x(), r1.y(), r1.x() - r0.x(), r0.y() - r1.y());
 
-	m_viewRect = rf;
-	double dx = 0.05*m_viewRect.width();
-	double dy = 0.05*m_viewRect.height();
-	m_viewRect.adjust(0.0, 0.0, dx, dy);
-
-	m_xscale = findScale(m_viewRect.left(), m_viewRect.right());
-	m_yscale = findScale(m_viewRect.top(), m_viewRect.bottom());
+	setViewRect(rf);
 }
 
 //-----------------------------------------------------------------------------
@@ -483,7 +477,7 @@ void CPlotWidget::paintEvent(QPaintEvent* pe)
 	drawAxes(p);
 
 	// draw the legend
-	drawLegend(p);
+	if (m_bshowLegend) drawLegend(p);
 
 	// render the data
 	p.setClipRect(m_screenRect);

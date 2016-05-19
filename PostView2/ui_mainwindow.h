@@ -18,6 +18,7 @@
 #include "GLView.h"
 #include "GraphWindow.h"
 #include "SummaryWindow.h"
+#include "IntegrateWindow.h"
 #include <QFontComboBox>
 #include <QSpinBox>
 
@@ -85,12 +86,14 @@ public:
 
 	QList<CGraphWindow*>	graphList;
 	CSummaryWindow*			summaryWindow;
+	CIntegrateWindow*		integrateWindow;
 
 public:
 	// build the UI
 	void setupUi(CMainWindow* MainWindow)
 	{
 		summaryWindow = 0;
+		integrateWindow = 0;
 		pwnd = MainWindow;
 
 		// set the initial window size

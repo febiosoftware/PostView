@@ -78,11 +78,17 @@ public:
 	// clears everything
 	void clear();
 
+	// get/set show legend
+	bool showLegend() const { return m_bshowLegend; }
+	void showLegend(bool b) { m_bshowLegend = b; }
+
 	// change the view so that it fits the data
 	void fitWidthToData();
 	void fitHeightToData();
 	void fitToData();
 	void fitToRect(const QRect& rt);
+
+	void setViewRect(const QRectF& rt);
 
 	// add a data field
 	void addPlotData(CPlotData& p);
@@ -145,6 +151,7 @@ private: // drawing helper functions
 
 private:
 	vector<CPlotData>	m_data;
+	bool				m_bshowLegend;
 
 private:
 	QAction*	m_pZoomToFit;

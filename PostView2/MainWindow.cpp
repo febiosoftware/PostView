@@ -82,6 +82,9 @@ void CMainWindow::UpdateGraphs(bool breset)
 		for (it=ui->graphList.begin(); it != ui->graphList.end(); ++it)
 			(*it)->Update(breset);
 	}
+
+	if (ui->integrateWindow && ui->integrateWindow->isVisible()) 
+		ui->integrateWindow->Update(false);
 }
 
 QMenu* CMainWindow::BuildContextMenu()
@@ -798,6 +801,14 @@ void CMainWindow::on_actionStats_triggered()
 
 void CMainWindow::on_actionIntegrate_triggered()
 {
+	if (ui->integrateWindow == 0)
+	{
+		ui->integrateWindow = new CIntegrateWindow(this);
+	}
+	ui->integrateWindow->Update(true);
+	ui->integrateWindow->show();
+	ui->integrateWindow->raise();
+	ui->integrateWindow->activateWindow();
 }
 
 void CMainWindow::on_actionColorMap_toggled(bool bchecked)
@@ -827,6 +838,9 @@ void CMainWindow::on_selectData_currentIndexChanged(int i)
 
 		ui->glview->repaint();
 	}
+
+	if (ui->integrateWindow && ui->integrateWindow->isVisible()) 
+		ui->integrateWindow->Update(true);
 }
 
 void CMainWindow::on_actionPlay_toggled(bool bchecked)
