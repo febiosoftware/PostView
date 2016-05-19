@@ -33,6 +33,8 @@ private slots:
 	void on_actionZoomWidth_triggered();
 	void on_actionZoomHeight_triggered();
 	void on_actionZoomFit_triggered();
+	void on_actionZoomSelect_toggled(bool bchecked);
+	void on_plot_doneZoomToRect();
 
 private:
 	CMainWindow*		m_wnd;

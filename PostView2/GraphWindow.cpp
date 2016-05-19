@@ -29,11 +29,13 @@ public:
 	QAction* actionSave;
 	QAction* actionClipboard;
 	QAction* actionProps;
+	QAction* actionZoomSelect;
 
 public:
 	void setupUi(::CGraphWindow* parent)
 	{
 		plot = new CPlotWidget(parent);
+		plot->setObjectName("plot");
 		parent->setCentralWidget(plot);
 
 		tool = new QToolBar(parent);
@@ -70,12 +72,14 @@ public:
 		tool->addWidget(selectXSource);
 		tool->addWidget(new QLabel(" Y: "));
 		tool->addWidget(selectY);
-		actionProps = tool->addAction(QIcon(QString(":/icons/properties.png")), "Properties"); actionProps->setObjectName("actionProps");
 
 		zoomBar = new QToolBar(parent);
 		QAction* actionZoomWidth  = zoomBar->addAction(QIcon(QString(":/icons/zoom_width.png" )), "Zoom Width" ); actionZoomWidth->setObjectName("actionZoomWidth" );
 		QAction* actionZoomHeight = zoomBar->addAction(QIcon(QString(":/icons/zoom_height.png")), "Zoom Height"); actionZoomHeight->setObjectName("actionZoomHeight");
 		QAction* actionZoomFit    = zoomBar->addAction(QIcon(QString(":/icons/zoom_fit.png"   )), "Zoom Fit"   ); actionZoomFit->setObjectName("actionZoomFit"   );
+		actionZoomSelect = zoomBar->addAction(QIcon(QString(":/icons/zoom_select.png")), "Zoom Select"); actionZoomSelect->setObjectName("actionZoomSelect"); actionZoomSelect->setCheckable(true);
+		zoomBar->addSeparator();
+		actionProps = zoomBar->addAction(QIcon(QString(":/icons/properties.png")), "Properties"); actionProps->setObjectName("actionProps");
 
 		parent->addToolBar(Qt::TopToolBarArea, tool);
 		parent->addToolBar(Qt::BottomToolBarArea, zoomBar);
@@ -235,10 +239,8 @@ void CGraphWindow::Update(bool breset)
 			sprintf(str, "E%d", i+1);
 			CPlotData plot;
 			for (int j=0; j<cx; ++j) plot.addPoint(px[j], py[j]);
+			plot.setLabel(QString(str));
 			ui->plot->addPlotData(plot);
-
-//			pview->AddSeries(px, py, cx, str, i);
-			
 		}
 	}
 
@@ -263,8 +265,8 @@ void CGraphWindow::Update(bool breset)
 			TrackFaceHistory(i, py, dataY, nmin, nmax);
 
 			sprintf(str, "F%d", i+1);
-//			pview->AddSeries(px, py, cx, str, i);			
 			CPlotData plot;
+			plot.setLabel(QString(str));
 			for (int j=0; j<cx; ++j) plot.addPoint(px[j], py[j]);
 			ui->plot->addPlotData(plot);
 		}
@@ -291,8 +293,8 @@ void CGraphWindow::Update(bool breset)
 			TrackNodeHistory(i, py, dataY, nmin, nmax);
 
 			sprintf(str, "N%d", i+1);
-//			pview->AddSeries(px, py, cx, str, -i-1);
 			CPlotData plot;
+			plot.setLabel(QString(str));
 			for (int j=0; j<cx; ++j) plot.addPoint(px[j], py[j]);
 			ui->plot->addPlotData(plot);
 		}
@@ -463,4 +465,16 @@ void CGraphWindow::on_actionZoomHeight_triggered()
 void CGraphWindow::on_actionZoomFit_triggered()
 {
 	ui->plot->OnZoomToFit();
+}
+
+//-----------------------------------------------------------------------------
+void CGraphWindow::on_actionZoomSelect_toggled(bool bchecked)
+{
+	ui->plot->ZoomToRect(bchecked);
+}
+
+//-----------------------------------------------------------------------------
+void CGraphWindow::on_plot_doneZoomToRect()
+{
+	ui->actionZoomSelect->setChecked(false);
 }

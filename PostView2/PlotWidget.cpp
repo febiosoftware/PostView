@@ -9,6 +9,44 @@
 #include <QApplication>
 #include <QClipBoard>
 
+class CPalette
+{
+public:
+	enum { Colors = 16 };
+
+public:
+	static QColor color(int i) { return m_col[i%m_col.size()]; }
+	static void init()
+	{
+		QStringList colorNames = QColor::colorNames();
+		m_col.resize(Colors);
+		m_col[ 0] = QColor(colorNames[13]);
+		m_col[ 1] = QColor(colorNames[14]);
+		m_col[ 2] = QColor(colorNames[15]);
+		m_col[ 3] = QColor(colorNames[16]);
+		m_col[ 4] = QColor(colorNames[17]);
+		m_col[ 5] = QColor(colorNames[19]);
+		m_col[ 6] = QColor(colorNames[20]);
+		m_col[ 7] = QColor(colorNames[21]);
+		m_col[ 8] = QColor(colorNames[22]);
+		m_col[ 9] = QColor(colorNames[23]);
+		m_col[10] = QColor(colorNames[24]);
+		m_col[11] = QColor(colorNames[25]);
+		m_col[12] = QColor(colorNames[27]);
+		m_col[13] = QColor(colorNames[28]);
+		m_col[14] = QColor(colorNames[29]);
+		m_col[15] = QColor(colorNames[30]);
+	}
+
+private:
+	CPalette() {}
+	CPalette(const CPalette&) {}
+
+private:
+	static vector<QColor>	m_col;
+};
+vector<QColor> CPalette::m_col;
+
 //-----------------------------------------------------------------------------
 double findScale(double fmin, double fmax)
 {
@@ -34,12 +72,16 @@ CPlotData::CPlotData()
 CPlotData::CPlotData(const CPlotData& d)
 {
 	m_data = d.m_data;
+	m_label = d.m_label;
+	m_col = d.m_col;
 }
 
 //-----------------------------------------------------------------------------
 CPlotData& CPlotData::operator = (const CPlotData& d)
 {
 	m_data = d.m_data;
+	m_label = d.m_label;
+	m_col = d.m_col;
 	return *this;
 }
 
@@ -74,8 +116,11 @@ void CPlotData::addPoint(double x, double y)
 //-----------------------------------------------------------------------------
 CPlotWidget::CPlotWidget(QWidget* parent, int w, int h) : QWidget(parent)
 {
+	CPalette::init();
+
 	m_select = false;
-	m_ncol = 13;
+	m_bzoomRect = false;
+	m_bvalidRect = false;
 
 	m_viewRect = QRectF(0.0, 0.0, 1.0, 1.0);
 	m_xscale = findScale(m_viewRect.left(), m_viewRect.right());
@@ -104,6 +149,13 @@ void CPlotWidget::contextMenuEvent(QContextMenuEvent* ev)
 	menu.addSeparator();
 	menu.addAction(m_pShowProps);
 	menu.exec(ev->globalPos());
+}
+
+//-----------------------------------------------------------------------------
+void CPlotWidget::ZoomToRect(bool b)
+{
+	m_bzoomRect = b;
+	m_bvalidRect = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -166,19 +218,25 @@ void CPlotWidget::setTitle(const QString& t)
 //-----------------------------------------------------------------------------
 void CPlotWidget::clearData()
 {
+	m_select = false;
 	for (int i=0; i<(int) m_data.size(); ++i) m_data[i].clear();
 }
 
 //-----------------------------------------------------------------------------
 void CPlotWidget::clear()
 {
+	m_select = false;
 	m_data.clear();
 	repaint();
 }
 
 //-----------------------------------------------------------------------------
-void CPlotWidget::addPlotData(const CPlotData& p)
+void CPlotWidget::addPlotData(CPlotData& p)
 {
+	int N = m_data.size();
+
+	p.setColor(CPalette::color(N));
+
 	m_data.push_back(p);
 }
 
@@ -249,6 +307,25 @@ void CPlotWidget::fitToData()
 }
 
 //-----------------------------------------------------------------------------
+void CPlotWidget::fitToRect(const QRect& rt)
+{
+	QPoint p0(rt.topLeft());
+	QPoint p1(rt.bottomRight());
+
+	QPointF r0 = ScreenToView(p0);
+	QPointF r1 = ScreenToView(p1);
+	QRectF rf = QRectF(r0.x(), r1.y(), r1.x() - r0.x(), r0.y() - r1.y());
+
+	m_viewRect = rf;
+	double dx = 0.05*m_viewRect.width();
+	double dy = 0.05*m_viewRect.height();
+	m_viewRect.adjust(0.0, 0.0, dx, dy);
+
+	m_xscale = findScale(m_viewRect.left(), m_viewRect.right());
+	m_yscale = findScale(m_viewRect.top(), m_viewRect.bottom());
+}
+
+//-----------------------------------------------------------------------------
 void CPlotWidget::mousePressEvent(QMouseEvent* ev)
 {
 	if (ev->button() == Qt::LeftButton)
@@ -257,7 +334,7 @@ void CPlotWidget::mousePressEvent(QMouseEvent* ev)
 		const int eps = 3;
 
 		m_select = false;
-		for (int i=0; i<m_data.size(); ++i)
+		for (int i=0; i<(int)m_data.size(); ++i)
 		{
 			CPlotData& plot = m_data[i];
 			for (int j=0; j<plot.size(); ++j)
@@ -267,13 +344,16 @@ void CPlotWidget::mousePressEvent(QMouseEvent* ev)
 				if ((abs(p.x() - pt.x()) <= eps) && (abs(p.y() - pt.y()) <= eps))
 				{
 					m_select = true;
-					m_selectedPoint = rj;
+					m_selection.ndataIndex = i;
+					m_selection.point      = rj;
 				}
 			}
 		}
 		repaint();
 	}
 	m_mousePos = ev->pos();
+	m_mouseInitPos = m_mousePos;
+	if (m_bzoomRect) m_bvalidRect = true;
 	ev->accept();
 }
 
@@ -283,9 +363,12 @@ void CPlotWidget::mouseMoveEvent(QMouseEvent* ev)
 	if (ev->buttons() & Qt::LeftButton)
 	{
 		QPoint p = ev->pos();
-		QPointF r0 = ScreenToView(m_mousePos);
-		QPointF r1 = ScreenToView(p);
-		m_viewRect.translate(r0.x() - r1.x(), r0.y() - r1.y());
+		if (m_bzoomRect == false)
+		{
+			QPointF r0 = ScreenToView(m_mousePos);
+			QPointF r1 = ScreenToView(p);
+			m_viewRect.translate(r0.x() - r1.x(), r0.y() - r1.y());
+		}
 		m_mousePos = p;
 		repaint();
 	}
@@ -295,6 +378,20 @@ void CPlotWidget::mouseMoveEvent(QMouseEvent* ev)
 //-----------------------------------------------------------------------------
 void CPlotWidget::mouseReleaseEvent(QMouseEvent* ev)
 {
+	if (m_bzoomRect)
+	{
+		int X0 = m_mouseInitPos.x();
+		int Y0 = m_mouseInitPos.y();
+		int X1 = m_mousePos.x();
+		int Y1 = m_mousePos.y();
+		if (X1 < X0) { X0 ^= X1; X1 ^= X0; X0 ^= X1; }
+		if (Y1 < Y0) { Y0 ^= Y1; Y1 ^= Y0; Y0 ^= Y1; }
+		fitToRect(QRect(X0, Y0, X1-X0+1, Y1-Y0+1));
+		m_bzoomRect = false;
+		m_bvalidRect = false;
+		emit doneZoomToRect();
+		repaint();
+	}
 	ev->accept();
 }
 
@@ -353,10 +450,28 @@ void CPlotWidget::paintEvent(QPaintEvent* pe)
 	// clear the background
 	p.fillRect(m_screenRect, Qt::white);
 
+/*	int W = rect().width();
+	int H = rect().height();
+	int NX = 10;
+	QStringList colorNames = QColor::colorNames();
+	int colors = colorNames.size();
+	for (int i=0; i<colors; ++i)
+	{
+		int X = rect().x() + ((i%10)*(rect().width()))/NX;
+		int Y = rect().y() + ((i/10)*(rect().width()))/NX;
+		int w = rect().width()/NX, h = w;
+		QColor col(colorNames[i]);
+		p.fillRect(X, Y, w, h, col);
+		QString s = QString("%1").arg(i);
+		p.drawText(X, Y, w, h, Qt::AlignCenter, s);
+	}
+	return;
+*/
+
 	// render the title
 	drawTitle(p);
 
-	m_screenRect.adjust(50, 0, -60, -30);
+	m_screenRect.adjust(50, 0, -90, -30);
 	p.setBrush(Qt::NoBrush);
 	p.drawRect(m_screenRect);
 
@@ -366,39 +481,102 @@ void CPlotWidget::paintEvent(QPaintEvent* pe)
 	// draw the grid axes
 	drawAxes(p);
 
+	// draw the legend
+	drawLegend(p);
+
 	// render the data
 	p.setClipRect(m_screenRect);
 	drawAllData(p);
 
-	// render the selection
-	if (m_select)
+	if (m_bzoomRect && m_bvalidRect)
 	{
-		QPoint pt = ViewToScreen(m_selectedPoint);
-		if (m_screenRect.contains(pt, true))
-		{
-			QFontMetrics fm(p.font());
-			QString sx = QString("X:%1").arg(m_selectedPoint.x());
-			QString sy = QString("Y:%1").arg(m_selectedPoint.y());
-			int wx = fm.width(sx);
-			int wy = fm.width(sy);
-			int d = 3;
-			int W = (wx > wy ? wx : wy) + 2*d;
-			int H = 2*fm.height() + 3*d;
-			p.setPen(Qt::black);
+		QRect rt(m_mouseInitPos, m_mousePos);
+		p.setBrush(Qt::NoBrush);
+		p.setPen(QPen(Qt::black, 1, Qt::DashLine));
+		p.drawRect(rt);
+	}
 
-			int X = pt.x();
-			int Y = pt.y();
-			if (X + W > m_screenRect.right()) X = m_screenRect.right() - W;
-			if (Y + H > m_screenRect.bottom()) Y = m_screenRect.bottom() - H;
+	// render the selection
+	if (m_select) drawSelection(p);
+}
 
-			p.setBrush(Qt::black);
-			p.drawEllipse(pt, 5, 5);
+void CPlotWidget::drawLegend(QPainter& p)
+{
+	int N = m_data.size();
+	if (N == 0) return;
 
-			p.setBrush(Qt::yellow);
-			p.drawRect(X, Y, W, H);
-			p.drawText(X+d, Y + fm.ascent() + d, sx);
-			p.drawText(X+d, Y + fm.ascent() + fm.height() + d, sy);
-		}
+	QRect legendRect = m_screenRect;
+	legendRect.setLeft(m_screenRect.right());
+	legendRect.setRight(rect().right());
+
+	QFontMetrics fm(p.font());
+	int fh = fm.height();
+	int fa = fm.ascent();
+
+	int X0 = legendRect.left() + 5;
+	int LW = 25;
+	int X1 = X0 + LW + 5;
+	int YC = legendRect.center().y();
+	int H = legendRect.height() - 10;
+	int Y0 = YC - N/2*(fh + 2);
+	int Y1 = YC + N*(fh + 2);
+
+	// draw the lines
+	for (int i=0; i<N; ++i)
+	{
+		CPlotData& plot = m_data[i];
+		p.setPen(QPen(plot.color(), 2));
+		int Y = Y0 + i*(Y1 - Y0)/N;
+		p.drawLine(X0, Y, X0 + LW, Y);
+	}
+
+	// draw the text
+	p.setPen(Qt::black);
+	for (int i=0; i<N; ++i)
+	{
+		CPlotData& plot = m_data[i];
+		int Y = Y0 + i*(Y1 - Y0)/N;
+		p.drawText(X1, Y + fa/3, plot.label());
+	}
+}
+
+void CPlotWidget::drawSelection(QPainter& p)
+{
+	QPoint pt = ViewToScreen(m_selection.point);
+	if (m_screenRect.contains(pt, true))
+	{
+		if ((m_selection.ndataIndex < 0) || (m_selection.ndataIndex >= m_data.size())) return;
+
+		const QString& label = m_data[m_selection.ndataIndex].label();
+
+		QFont font = p.font();
+		QFont boldFont = font; boldFont.setBold(true);
+
+		QFontMetrics fm(font);
+		QString sx = QString("X:%1").arg(m_selection.point.x());
+		QString sy = QString("Y:%1").arg(m_selection.point.y());
+		int wx = fm.width(sx);
+		int wy = fm.width(sy);
+		int d = 3;
+		int W = (wx > wy ? wx : wy) + 2*d;
+		int H = 3*fm.height() + 4*d;
+		p.setPen(Qt::black);
+
+		int X = pt.x();
+		int Y = pt.y();
+		if (X + W > m_screenRect.right()) X = m_screenRect.right() - W;
+		if (Y + H > m_screenRect.bottom()) Y = m_screenRect.bottom() - H;
+
+		p.setBrush(Qt::black);
+		p.drawEllipse(pt, 5, 5);
+		p.setBrush(Qt::yellow);
+		p.drawRect(X, Y, W, H);
+
+		p.setFont(boldFont);
+		p.drawText(X+d, Y + fm.ascent() + d, label);
+		p.setFont(font);
+		p.drawText(X+d, Y + fm.ascent() + fm.height() + 2*d, sx);
+		p.drawText(X+d, Y + fm.ascent() + 2*fm.height() + 3*d, sy);
 	}
 }
 
@@ -558,12 +736,10 @@ void CPlotWidget::drawAxes(QPainter& p)
 //-----------------------------------------------------------------------------
 void CPlotWidget::drawAllData(QPainter& p)
 {
-	QStringList colorNames = QColor::colorNames();
-
 	int N = m_data.size();
 	for (int i=0; i<N; ++i)
 	{
-		QColor col(colorNames[(i+m_ncol)%colorNames.count()]);
+		QColor col = m_data[i].color();
 		QPen pen(col, 2);
 		p.setPen(pen);
 		p.setBrush(col);

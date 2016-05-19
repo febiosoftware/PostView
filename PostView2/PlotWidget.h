@@ -31,8 +31,18 @@ public:
 	// get the bounding rectangle
 	QRectF boundRect() const;
 
+	// set/get the label
+	const QString& label() const { return m_label; }
+	void setLabel(const QString& label) { m_label = label; }
+
+	// set/get color
+	QColor color() const { return m_col; }
+	void setColor(const QColor& col) { m_col = col; }
+
 protected:
 	vector<QPointF>	m_data;
+	QString			m_label;
+	QColor			m_col;
 };
 
 //-----------------------------------------------------------------------------
@@ -40,6 +50,13 @@ protected:
 class CPlotWidget : public QWidget
 {
 	Q_OBJECT
+
+public:
+	struct Selection
+	{
+		int			ndataIndex;
+		QPointF		point;
+	};
 
 public:
 	//! constructor
@@ -65,13 +82,19 @@ public:
 	void fitWidthToData();
 	void fitHeightToData();
 	void fitToData();
+	void fitToRect(const QRect& rt);
 
 	// add a data field
-	void addPlotData(const CPlotData& p);
+	void addPlotData(CPlotData& p);
 
 	// get a data field
 	int plots() { return (int) m_data.size(); }
 	CPlotData& getPlotData(int i) { return m_data[i]; }
+
+	void ZoomToRect(bool b = true);
+
+signals:
+	void doneZoomToRect();
 
 protected:
 	void mousePressEvent  (QMouseEvent* ev);
@@ -84,11 +107,14 @@ public:
 	QString	m_title;
 	QRectF	m_viewRect;
 	QRect	m_screenRect;
-	QPoint	m_mousePos;
+	QPoint	m_mousePos, m_mouseInitPos;
 	double	m_xscale, m_yscale;
 
-	bool	m_select;
-	QPointF	m_selectedPoint;
+	bool		m_bzoomRect;
+	bool		m_bvalidRect;
+
+	bool		m_select;
+	Selection	m_selection;
 
 	QPointF ScreenToView(const QPoint& p);
 	QPoint ViewToScreen(const QPointF& p);
@@ -110,10 +136,11 @@ private: // drawing helper functions
 	void drawData(QPainter& p, CPlotData& data);
 	void drawGrid(QPainter& p);
 	void drawTitle(QPainter& p);
+	void drawSelection(QPainter& p);
+	void drawLegend(QPainter& p);
 
 private:
 	vector<CPlotData>	m_data;
-	int			m_ncol;
 
 private:
 	QAction*	m_pZoomToFit;
