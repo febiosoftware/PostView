@@ -782,6 +782,14 @@ void CMainWindow::on_actionGraph_triggered()
 
 void CMainWindow::on_actionSummary_triggered()
 {
+	if (ui->summaryWindow == 0)
+	{
+		ui->summaryWindow = new CSummaryWindow(this);
+	}
+	ui->summaryWindow->Update(true);
+	ui->summaryWindow->show();
+	ui->summaryWindow->raise();
+	ui->summaryWindow->activateWindow();
 }
 
 void CMainWindow::on_actionStats_triggered()

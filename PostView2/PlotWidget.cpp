@@ -295,6 +295,7 @@ void CPlotWidget::fitToData()
 		QRectF ri = m_data[i].boundRect();
 		r = ri.united(r);
 	}
+	if (fabs(r.height()) < 1e-12) r.setHeight(1.0);
 
 	m_viewRect = r;
 
@@ -560,6 +561,7 @@ void CPlotWidget::drawSelection(QPainter& p)
 		int d = 3;
 		int W = (wx > wy ? wx : wy) + 2*d;
 		int H = 3*fm.height() + 4*d;
+		if (W < H) W = H;
 		p.setPen(Qt::black);
 
 		int X = pt.x();
@@ -773,4 +775,31 @@ void CPlotWidget::drawData(QPainter& p, CPlotData& d)
 		QRect r(pt.x()-2, pt.y()-2,5,5);
 		p.drawRect(r);
 	}
+}
+
+//-----------------------------------------------------------------------------
+bool CPlotWidget::Save(const QString& fileName)
+{
+	// dump the data to a text file
+	std::string sfile = fileName.toStdString();
+	FILE* fp = fopen(sfile.c_str(), "wt");
+	if (fp == 0) return false;
+
+	std::string title = m_title.toStdString();
+	fprintf(fp, "#Data : %s\n", title.c_str());
+	fprintf(fp,"\n");
+
+	CPlotData& plot = getPlotData(0);
+	for (int i=0; i<plot.size(); i++)
+	{
+		fprintf(fp, "%16.9g ", plot.Point(i).x());
+		for (int j=0; j<plots(); j++)
+		{
+			CPlotData& plotj = getPlotData(j);
+			fprintf(fp,"%16.9g ", plotj.Point(j).y());
+		}
+		fprintf(fp,"\n");
+	}
+	fclose(fp);
+	return true;
 }

@@ -91,7 +91,11 @@ public:
 	int plots() { return (int) m_data.size(); }
 	CPlotData& getPlotData(int i) { return m_data[i]; }
 
+	// turn on/off zoom-to-rect mode
 	void ZoomToRect(bool b = true);
+
+	// save data to file
+	bool Save(const QString& fileName);
 
 signals:
 	void doneZoomToRect();

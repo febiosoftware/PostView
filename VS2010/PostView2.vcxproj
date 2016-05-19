@@ -145,6 +145,7 @@
     <ClCompile Include="..\PostView2\moc_PropertyListView.cpp" />
     <ClCompile Include="..\PostView2\moc_SphereFitTool.cpp" />
     <ClCompile Include="..\PostView2\moc_StatePanel.cpp" />
+    <ClCompile Include="..\PostView2\moc_SummaryWindow.cpp" />
     <ClCompile Include="..\PostView2\moc_Tool.cpp" />
     <ClCompile Include="..\PostView2\moc_ToolsPanel.cpp" />
     <ClCompile Include="..\PostView2\ModelViewer.cpp" />
@@ -164,6 +165,7 @@
     <ClCompile Include="..\PostView2\SphereFitTool.cpp" />
     <ClCompile Include="..\PostView2\StatePanel.cpp" />
     <ClCompile Include="..\PostView2\stdafx.cpp" />
+    <ClCompile Include="..\PostView2\SummaryWindow.cpp" />
     <ClCompile Include="..\PostView2\Tool.cpp" />
     <ClCompile Include="..\PostView2\ToolsPanel.cpp" />
     <ClCompile Include="..\PostView2\TransformTool.cpp" />
@@ -245,6 +247,11 @@
     <ClInclude Include="..\PostView2\PointDistanceTool.h" />
     <ClInclude Include="..\PostView2\ShellThicknessTool.h" />
     <CustomBuild Include="..\PostView2\SphereFitTool.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)bin/moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename).%(Extension) using MOC</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\PostView2\SummaryWindow.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)bin/moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename).%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>

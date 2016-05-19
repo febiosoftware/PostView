@@ -17,6 +17,7 @@
 #include "DataFieldSelector.h"
 #include "GLView.h"
 #include "GraphWindow.h"
+#include "SummaryWindow.h"
 #include <QFontComboBox>
 #include <QSpinBox>
 
@@ -83,11 +84,13 @@ public:
 	QAction*		actionFontItalic;
 
 	QList<CGraphWindow*>	graphList;
+	CSummaryWindow*			summaryWindow;
 
 public:
 	// build the UI
 	void setupUi(CMainWindow* MainWindow)
 	{
+		summaryWindow = 0;
 		pwnd = MainWindow;
 
 		// set the initial window size
