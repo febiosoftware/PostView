@@ -129,6 +129,12 @@ CPlotWidget::CPlotWidget(QWidget* parent, int w, int h) : QWidget(parent)
 	m_bviewLocked = false;
 	m_bshowPopup = true;
 
+	m_bdrawXLines = true;
+	m_bdrawYLines = true;
+
+	m_bdrawXAxis = true;
+	m_bdrawYAxis = true;
+
 	m_chartStyle = CPlotWidget::LineChart;
 
 	m_viewRect = QRectF(0.0, 0.0, 1.0, 1.0);
@@ -686,33 +692,39 @@ void CPlotWidget::drawGrid(QPainter& p)
 	p.setRenderHint(QPainter::Antialiasing, false);
 
 	// draw the y-grid lines
-	fy = yscale*(int)(m_viewRect.top()/yscale);
-	while (fy < m_viewRect.bottom())
+	if (m_bdrawYLines)
 	{
-		int iy = ViewToScreen(QPointF(0.0, fy)).y();
-		if (iy < y1)
+		fy = yscale*(int)(m_viewRect.top()/yscale);
+		while (fy < m_viewRect.bottom())
 		{
-			QPainterPath path;
-			path.moveTo(x0, iy);
-			path.lineTo(x1-1, iy);
-			p.drawPath(path);
+			int iy = ViewToScreen(QPointF(0.0, fy)).y();
+			if (iy < y1)
+			{
+				QPainterPath path;
+				path.moveTo(x0, iy);
+				path.lineTo(x1-1, iy);
+				p.drawPath(path);
+			}
+			fy += yscale;
 		}
-		fy += yscale;
 	}
 
 	// draw the x-grid lines
-	fx = xscale*(int)(m_viewRect.left()/xscale);
-	while (fx < m_viewRect.right())
+	if (m_bdrawXLines)
 	{
-		int ix = ViewToScreen(QPointF(fx, 0.0)).x();
-		if (ix > x0)
+		fx = xscale*(int)(m_viewRect.left()/xscale);
+		while (fx < m_viewRect.right())
 		{
-			QPainterPath path;
-			path.moveTo(ix, y0);
-			path.lineTo(ix, y1-1);
-			p.drawPath(path);
+			int ix = ViewToScreen(QPointF(fx, 0.0)).x();
+			if (ix > x0)
+			{
+				QPainterPath path;
+				path.moveTo(ix, y0);
+				path.lineTo(ix, y1-1);
+				p.drawPath(path);
+			}
+			fx += xscale;
 		}
-		fx += xscale;
 	}
 
 	p.setRenderHint(QPainter::Antialiasing, true);
@@ -726,23 +738,27 @@ void CPlotWidget::drawAxes(QPainter& p)
 	p.setPen(QPen(Qt::black, 2));
 
 	// render the X-axis
-	if ((c.y() > m_screenRect.top   ()) &&
-		(c.y() < m_screenRect.bottom()))
+	if (m_bdrawXAxis)
 	{
-		QPainterPath xaxis;
-		xaxis.moveTo(m_screenRect.left (), c.y());
-		xaxis.lineTo(m_screenRect.right(), c.y());
-		p.drawPath(xaxis);
+		if ((c.y() > m_screenRect.top   ()) && (c.y() < m_screenRect.bottom()))
+		{
+			QPainterPath xaxis;
+			xaxis.moveTo(m_screenRect.left (), c.y());
+			xaxis.lineTo(m_screenRect.right(), c.y());
+			p.drawPath(xaxis);
+		}
 	}
 
 	// render the Y-axis
-	if ((c.x() > m_screenRect.left ()) &&
-		(c.x() < m_screenRect.right()))
+	if (m_bdrawYAxis)
 	{
-		QPainterPath yaxis;
-		yaxis.moveTo(c.x(), m_screenRect.top   ());
-		yaxis.lineTo(c.x(), m_screenRect.bottom());
-		p.drawPath(yaxis);
+		if ((c.x() > m_screenRect.left ()) && (c.x() < m_screenRect.right()))
+		{
+			QPainterPath yaxis;
+			yaxis.moveTo(c.x(), m_screenRect.top   ());
+			yaxis.lineTo(c.x(), m_screenRect.bottom());
+			p.drawPath(yaxis);
+		}
 	}
 }
 

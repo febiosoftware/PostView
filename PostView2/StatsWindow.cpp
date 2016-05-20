@@ -30,6 +30,9 @@ public:
 		plot->showLegend(false);
 		plot->setViewLocked(true);
 		plot->showPopup(false);
+		plot->showVerticalGridLines(false);
+		plot->showXAxis(false);
+		plot->ShowYAxis(false);
 		plot->setChartStyle(CPlotWidget::BarChart);
 		parent->setCentralWidget(plot);
 

@@ -120,6 +120,12 @@ public:
 	// set the chart style
 	void setChartStyle(int chartStyle);
 
+	void showHorizontalGridLines(bool b) { m_bdrawYLines = b; }
+	void showVerticalGridLines(bool b) { m_bdrawXLines = b; }
+
+	void showXAxis(bool b) { m_bdrawXAxis = b; }
+	void ShowYAxis(bool b) { m_bdrawYAxis = b; }
+
 signals:
 	void doneZoomToRect();
 
@@ -173,6 +179,10 @@ private:
 	bool				m_bshowLegend;
 	bool				m_bviewLocked;
 	bool				m_bshowPopup;
+	bool				m_bdrawXLines;
+	bool				m_bdrawYLines;
+	bool				m_bdrawXAxis;
+	bool				m_bdrawYAxis;
 
 	int		m_chartStyle;
 
