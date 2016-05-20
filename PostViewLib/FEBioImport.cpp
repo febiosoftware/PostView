@@ -27,10 +27,11 @@ bool FEBioImport::ParseVersion(XMLTag& tag)
 	if ((n2 < 0) || (n2 > 0xFF)) return false;
 	m_nversion = (n1 << 8) + n2;
 
-	// we only support version 1.0, 1.1, 1.2
+	// we only support version 1.0, 1.1, 1.2, 2.0
 	if ((m_nversion != 0x0100) && 
 		(m_nversion != 0x0101) &&
-		(m_nversion != 0x0102)) return false;
+		(m_nversion != 0x0102) && 
+		(m_nversion != 0x0200)) return false;
 	return true;
 }
 
@@ -60,7 +61,11 @@ bool FEBioImport::Load(FEModel& fem, const char* szfile)
 		do
 		{
 			if      (tag == "Material") ParseMaterialSection(fem, tag);
-			else if (tag == "Geometry") ParseGeometrySection(fem, tag);
+			else if (tag == "Geometry") 
+			{
+				if (m_nversion >= 0x0200) ParseGeometrySection2(fem, tag);
+				else ParseGeometrySection(fem, tag);
+			}
 			else m_xml.SkipTag(tag);
 	
 			// go to the next tag
@@ -125,8 +130,8 @@ void FEBioImport::ParseMaterialSection(FEModel& fem, XMLTag& tag)
 	// make sure the section is not empty
 	if (tag.isleaf()) return;
 
+	// count the number of materials
 	m_nmat = 0;
-
 	m_xml.NextTag(tag);
 	do
 	{
@@ -135,6 +140,24 @@ void FEBioImport::ParseMaterialSection(FEModel& fem, XMLTag& tag)
 		m_xml.NextTag(tag);
 	}
 	while (!tag.isend());
+
+	// add the materials
+	for (int i=0; i<m_nmat; ++i)
+	{
+		// add a material to the scene
+		FEMaterial mat;
+		mat.diffuse = pal[i%MAX_PAL_COLORS];
+		mat.ambient = mat.diffuse;
+		mat.specular = GLCOLOR(128,128,128);
+		mat.emission = GLCOLOR(0,0,0);
+		mat.shininess = 0.5f;
+		mat.transparency = 1.f;
+		mat.benable = true;
+		mat.bvisible = true;
+		mat.bmesh = true;
+		mat.bcast_shadows = true;
+		m_pfem->AddMaterial(mat);
+	}
 }
 
 void FEBioImport::ParseGeometrySection(FEModel &fem, XMLTag &tag)
@@ -213,21 +236,93 @@ void FEBioImport::ParseGeometrySection(FEModel &fem, XMLTag &tag)
 		m_xml.NextTag(tag);
 	}
 	while (!tag.isend());
+}
 
-	for (int i=0; i<m_nmat; ++i)
+void FEBioImport::ParseGeometrySection2(FEModel &fem, XMLTag &tag)
+{
+	// make sure the section is not empty
+	if (tag.isleaf()) return;
+
+	m_xml.NextTag(tag);
+	do
 	{
-		// add a material to the scene
-		FEMaterial mat;
-		mat.diffuse = pal[i%MAX_PAL_COLORS];
-		mat.ambient = mat.diffuse;
-		mat.specular = GLCOLOR(128,128,128);
-		mat.emission = GLCOLOR(0,0,0);
-		mat.shininess = 0.5f;
-		mat.transparency = 1.f;
-		mat.benable = true;
-		mat.bvisible = true;
-		mat.bmesh = true;
-		mat.bcast_shadows = true;
-		m_pfem->AddMaterial(mat);
+		if (tag == "Nodes")
+		{
+			// first we need to figure out how many nodes there are
+			XMLTag t(tag);
+			int nn = 0;
+			m_xml.NextTag(t);
+			while (!t.isend()) { nn++; m_xml.NextTag(t); }
+
+			// create nodes
+			m_pm->Create(nn, 0);
+
+			// read nodal coordinates
+			m_xml.NextTag(tag);
+			for (int i=0; i<nn; ++i)
+			{
+				FENode& node = m_pm->Node(i);
+				tag.value(node.m_r0);
+				node.m_rt = node.m_r0;
+				m_xml.NextTag(tag);
+			}
+		}
+		else if (tag == "Elements")
+		{
+			// get the element type
+			const char* sztype = tag.AttributeValue("type");
+			FEElemType etype;
+			if      (strcmp(sztype, "hex8"  ) == 0) etype = FE_HEX8; 
+			else if (strcmp(sztype, "tet4"  ) == 0) etype = FE_TET4; 
+			else if (strcmp(sztype, "penta6") == 0) etype = FE_PENTA6; 
+			else if (strcmp(sztype, "quad4" ) == 0) etype = FE_QUAD4; 
+			else if (strcmp(sztype, "tri3"  ) == 0) etype = FE_TRI3; 
+			else if (strcmp(sztype, "hex20" ) == 0) etype = FE_HEX20; 
+			else if (strcmp(sztype, "quad8" ) == 0) etype = FE_QUAD8; 
+			else if (strcmp(sztype, "tet10" ) == 0) etype = FE_TET10; 
+			else if (strcmp(sztype, "tet15" ) == 0) etype = FE_TET15; 
+			else if (strcmp(sztype, "hex27" ) == 0) etype = FE_HEX27; 
+			else if (strcmp(sztype, "tri6"  ) == 0) etype = FE_TRI6; 
+			else if (strcmp(sztype, "quad9" ) == 0) etype = FE_QUAD9; 
+			else throw XMLReader::InvalidAttributeValue(tag, "type", sztype);
+
+			// get the material ID
+			int nmat = tag.AttributeValue<int>("mat", -1);
+			if (nmat == -1) throw XMLReader::MissingAttribute(tag, "mat");
+			nmat--;
+
+			// first we need to figure out how many elementsthere are
+			XMLTag t(tag);
+			int ne = 0;
+			m_xml.NextTag(t);
+			while (!t.isend()) { ne++; m_xml.NextTag(t); }
+
+			// create elements
+			int NE = m_pm->Elements();
+			m_pm->Create(0, NE + ne);
+
+			// read element data
+			m_xml.NextTag(tag);
+			int n[FEElement::MAX_NODES];
+			int nbel = 0;
+			int nsel = 0;
+			for (int i=0; i<ne; ++i)
+			{
+				FEElement& el = m_pm->Element(NE + i);
+				int nid = tag.AttributeValue<int>("id", 0);
+				el.m_nId = nid;
+				el.m_ntype = etype;
+
+				tag.value(n,el.Nodes());
+				for (int j=0; j<el.Nodes(); ++j) el.m_node[j] = n[j]-1;
+				el.m_MatID = nmat;
+
+				m_xml.NextTag(tag);
+			}
+		}
+		else m_xml.SkipTag(tag);
+
+		m_xml.NextTag(tag);
 	}
+	while (!tag.isend());
 }

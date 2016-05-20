@@ -195,7 +195,9 @@ bool CMainWindow::OpenFile(const QString& fileName, int nfilter)
 
 	UpdateMainToolbar();
 
-	if (m_doc->GetFEModel()->GetStates() > 0)
+	// This is already done in UpdateMainToolbar so I can probably remove this
+	FEModel* fem = m_doc->GetFEModel();
+	if (fem && fem->GetStates() > 0)
 	{
 		ui->playToolBar->setEnabled(true);
 	}
@@ -1112,15 +1114,19 @@ void CMainWindow::UpdateMainToolbar()
 void CMainWindow::UpdatePlayToolbar(bool breset)
 {
 	FEModel* pfem = m_doc->GetFEModel();
-	if (breset)
+	if (pfem == 0) ui->playToolBar->setDisabled(true);
+	else
 	{
-		int states = pfem->GetStates();
-		QString suff = QString("/%1").arg(states);
-		ui->pspin->setSuffix(suff);
-		ui->pspin->setRange(1, states);
-	};
-	int n = pfem->currentTime();
-	ui->pspin->setValue(n);
+		if (breset)
+		{
+			int states = pfem->GetStates();
+			QString suff = QString("/%1").arg(states);
+			ui->pspin->setSuffix(suff);
+			ui->pspin->setRange(1, states);
+		};
+		int n = pfem->currentTime();
+		ui->pspin->setValue(n);
+	}
 }
 
 void CMainWindow::on_selectTime_valueChanged(int i)

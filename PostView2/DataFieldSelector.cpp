@@ -35,7 +35,7 @@ void CDataFieldSelector::BuildMenu(FEModel* fem, Data_Tensor_Type nclass, bool b
 	if (m_fem != fem)
 	{
 		m_fem = fem;
-		fem->AddDependant(this);
+		if (fem) fem->AddDependant(this);
 	}
 
 	m_class = nclass;

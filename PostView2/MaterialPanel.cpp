@@ -147,27 +147,31 @@ void CMaterialPanel::Update(bool breset)
 	m_pmat->SetMaterial(0);
 
 	CDocument* pdoc = m_wnd->GetDocument();
-	FEModel& fem = *pdoc->GetFEModel();
+	FEModel* fem = pdoc->GetFEModel();
 
-	int nmat = fem.Materials();
-	for (int i=0; i<nmat; ++i)
+	if (fem)
 	{
-		FEMaterial& mat = *fem.GetMaterial(i);
-		ui->m_list->addItem(mat.GetName());
-	}
+		int nmat = fem->Materials();
+		for (int i=0; i<nmat; ++i)
+		{
+			FEMaterial& mat = *fem->GetMaterial(i);
+			ui->m_list->addItem(mat.GetName());
+		}
 
-	UpdateStates();
+		UpdateStates();
+	}
 }
 
 void CMaterialPanel::UpdateStates()
 {
 	CDocument* pdoc = m_wnd->GetDocument();
-	FEModel& fem = *pdoc->GetFEModel();
+	FEModel* fem = pdoc->GetFEModel();
+	if (fem == 0) return;
 
-	int nmat = fem.Materials();
+	int nmat = fem->Materials();
 	for (int i=0; i<nmat; ++i)
 	{
-		FEMaterial& mat = *fem.GetMaterial(i);
+		FEMaterial& mat = *fem->GetMaterial(i);
 		QListWidgetItem* pi = ui->m_list->item(i);
 		QFont font = pi->font();
 		if (mat.visible())

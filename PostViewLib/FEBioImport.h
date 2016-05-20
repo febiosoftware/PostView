@@ -16,6 +16,7 @@ public:
 protected:
 	void ParseMaterialSection(FEModel& fem, XMLTag& tag);
 	void ParseGeometrySection(FEModel& fem, XMLTag& tag);
+	void ParseGeometrySection2(FEModel& fem, XMLTag& tag);
 	bool ParseVersion(XMLTag& tag);
 
 protected:
