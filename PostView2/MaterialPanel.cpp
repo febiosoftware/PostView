@@ -86,24 +86,12 @@ class Ui::CMaterialPanel
 public:
 	QListWidget*		m_list;
 	::CPropertyListView*	m_prop;
+	QLineEdit* name;
 
 public:
 	void setupUi(::CMaterialPanel* parent)
 	{
 		QVBoxLayout* pg = new QVBoxLayout(parent);
-
-		QPushButton* phide = new QPushButton("Hide"); phide->setObjectName("hideButton"); phide->setFixedWidth(60);
-		QPushButton* pshow = new QPushButton("Show"); pshow->setObjectName("showButton"); pshow->setFixedWidth(60);
-		QPushButton* pactiv= new QPushButton("Enable" ); pactiv->setObjectName("enableButton" ); pactiv->setFixedWidth(60);
-		QPushButton* pdeact= new QPushButton("Disable"); pdeact->setObjectName("disableButton"); pdeact->setFixedWidth(60);
-		QHBoxLayout* ph = new QHBoxLayout;
-		ph->setSpacing(0);
-		ph->addWidget(phide);
-		ph->addWidget(pshow);
-		ph->addWidget(pactiv);
-		ph->addWidget(pdeact);
-		pg->addLayout(ph);
-		ph->addStretch();
 
 		QSplitter* psplitter = new QSplitter;
 		psplitter->setOrientation(Qt::Vertical);
@@ -113,10 +101,32 @@ public:
 		m_list->setObjectName(QStringLiteral("materialList"));
 		m_list->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
+		QWidget* w = new QWidget;
+		QVBoxLayout* pvl = new QVBoxLayout;
+		pvl->setMargin(0);
+		w->setLayout(pvl);
+
+		QPushButton* phide = new QPushButton("Hide"); phide->setObjectName("hideButton"); phide->setFixedWidth(50);
+		QPushButton* pshow = new QPushButton("Show"); pshow->setObjectName("showButton"); pshow->setFixedWidth(50);
+		QPushButton* pactiv= new QPushButton("Enable" ); pactiv->setObjectName("enableButton" ); pactiv->setFixedWidth(50);
+		QPushButton* pdeact= new QPushButton("Disable"); pdeact->setObjectName("disableButton"); pdeact->setFixedWidth(50);
+		QHBoxLayout* ph = new QHBoxLayout;
+		ph->setSpacing(0);
+		QLabel* label = new QLabel("Name:");
+		ph->addWidget(label);
+		ph->addWidget(name = new QLineEdit); label->setBuddy(name); name->setObjectName("editName");
+		ph->addWidget(phide);
+		ph->addWidget(pshow);
+		ph->addWidget(pactiv);
+		ph->addWidget(pdeact);
+		ph->addStretch();
+		pvl->addLayout(ph);
+
 		m_prop = new ::CPropertyListView;
+		pvl->addWidget(m_prop);
 
 		psplitter->addWidget(m_list);
-		psplitter->addWidget(m_prop);
+		psplitter->addWidget(w);
 
 		QMetaObject::connectSlotsByName(parent);
 	}
@@ -185,6 +195,7 @@ void CMaterialPanel::on_materialList_currentRowChanged(int nrow)
 		FEMaterial* pmat = fem.GetMaterial(nrow);
 		m_pmat->SetMaterial(pmat);
 		ui->m_prop->Update(m_pmat);
+		ui->name->setText(QString(pmat->GetName()));
 	}
 }
 
@@ -285,4 +296,22 @@ void CMaterialPanel::on_disableButton_clicked()
 
 	UpdateStates();
 	m_wnd->repaint();
+}
+
+void CMaterialPanel::on_editName_editingFinished()
+{
+	CDocument& doc = *m_wnd->GetDocument();
+	QModelIndex n = ui->m_list->currentIndex();
+	if (n.isValid())
+	{
+		int nmat = n.row();
+
+		FEModel& fem = *doc.GetFEModel();
+		FEMaterial& mat = *fem.GetMaterial(nmat);
+
+		QListWidgetItem* item = ui->m_list->item(nmat);
+		string name = ui->name->text().toStdString();
+		mat.SetName(name.c_str());
+		item->setText(ui->name->text());
+	}
 }

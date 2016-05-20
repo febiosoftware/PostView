@@ -289,6 +289,8 @@ public:
 	::CPropertyListView*	m_props;
 	QVector<CPropertyList*>	m_list;
 
+	QLineEdit* name;
+
 public:
 	void setupUi(::CModelViewer* parent)
 	{
@@ -303,10 +305,24 @@ public:
 		m_tree->setColumnCount(1);
 		m_tree->setHeaderHidden(true);
 
+		QWidget* w = new QWidget;
+		QVBoxLayout* pvl = new QVBoxLayout;
+		pvl->setMargin(0);
+		
+		QHBoxLayout* phl = new QHBoxLayout;
+		QLabel* label = new QLabel("name");
+		phl->addWidget(label);
+		phl->addWidget(name = new QLineEdit); name->setObjectName("nameEdit"); label->setBuddy(name);
+		QPushButton* del = new QPushButton("Delete"); del->setObjectName("deleteButton");
+		phl->addWidget(del);
+		phl->addStretch();
+		pvl->addLayout(phl);
 		m_props = new ::CPropertyListView;
+		pvl->addWidget(m_props);
+		w->setLayout(pvl);
 
 		psplitter->addWidget(m_tree);
-		psplitter->addWidget(m_props);
+		psplitter->addWidget(w);
 
 		QMetaObject::connectSlotsByName(parent);
 	}
@@ -320,18 +336,20 @@ CModelViewer::CModelViewer(CMainWindow* pwnd, QWidget* parent) : CCommandPanel(p
 void CModelViewer::selectObject(CGLObject* po)
 {
 	if (po == 0) ui->m_tree->clearSelection();
-
-	QString s(po->GetName());
-	QTreeWidgetItemIterator it(ui->m_tree);
-	while (*it)
+	else
 	{
-		if ((*it)->text(0) == s)
+		QString s(po->GetName());
+		QTreeWidgetItemIterator it(ui->m_tree);
+		while (*it)
 		{
-			(*it)->setSelected(true);
-			on_modelTree_currentItemChanged(*it, 0);
-			break;
+			if ((*it)->text(0) == s)
+			{
+				(*it)->setSelected(true);
+				on_modelTree_currentItemChanged(*it, 0);
+				break;
+			}
+			++it;
 		}
-		++it;
 	}
 }
 
@@ -356,6 +374,11 @@ void CModelViewer::Update(bool breset)
 			ui->m_list.clear();
 		}
 
+		// clear object list
+		m_obj.clear();
+
+		ui->name->clear();
+
 		// rebuild the tree
 		CDocument* pdoc = m_wnd->GetDocument();
 		ui->m_props->Update(0);
@@ -373,6 +396,7 @@ void CModelViewer::Update(bool breset)
 			pi1->setIcon(0, QIcon(QString(":/icons/postview_small.png")));
 			ui->m_list.push_back(new CModelProps(mdl));
 			pi1->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
+			m_obj.push_back(0);
 			pi1->setExpanded(true);
 
 			// add the mesh
@@ -381,18 +405,21 @@ void CModelViewer::Update(bool breset)
 			pi2->setIcon(0, QIcon(QString(":/icons/mesh.png")));
 			ui->m_list.push_back(new CMeshProps(fem));
 			pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
+			m_obj.push_back(0);
 		
 			pi2 = new QTreeWidgetItem(pi1);
 			pi2->setText(0, "Displacement map");
 			pi2->setIcon(0, QIcon(QString(":/icons/distort.png")));
 			ui->m_list.push_back(new CDisplacementMapProps(mdl->GetDisplacementMap()));
 			pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
+			m_obj.push_back(0);
 
 			pi2 = new QTreeWidgetItem(pi1);
 			pi2->setText(0, "Color map");
 			pi2->setIcon(0, QIcon(QString(":/icons/colormap.png")));
 			ui->m_list.push_back(new CColorMapProps(m_wnd, mdl->GetColorMap()));
 			pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
+			m_obj.push_back(0);
 
 			GPlotList& pl = pdoc->GetPlotList();
 			GPlotList::iterator it;
@@ -409,6 +436,7 @@ void CModelViewer::Update(bool breset)
 				pi1->setText(0, plot.GetName());
 				ui->m_list.push_back(plot.propertyList());
 				pi1->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
+				m_obj.push_back(&plot);
 			}
 	
 			pi2 = new QTreeWidgetItem(ui->m_tree);
@@ -416,6 +444,7 @@ void CModelViewer::Update(bool breset)
 			pi2->setIcon(0, QIcon(QString(":/icons/view.png")));
 			ui->m_list.push_back(new CViewProps(*pdoc->GetView()));
 			pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size() - 1));
+			m_obj.push_back(0);
 		}
 	}
 	else
@@ -428,8 +457,34 @@ void CModelViewer::on_modelTree_currentItemChanged(QTreeWidgetItem* current, QTr
 {
 	if (current)
 	{
+		ui->name->setText(current->text(0));
 		QVariant v = current->data(0, Qt::UserRole);
 		ui->m_props->Update(ui->m_list[v.toInt()]);
 	}
 	else ui->m_props->Update(0);
+}
+
+void CModelViewer::on_nameEdit_editingFinished()
+{
+	QString name = ui->name->text();
+	QTreeWidgetItem* item = ui->m_tree->currentItem();
+	if (item) item->setText(0, name);
+}
+
+void CModelViewer::on_deleteButton_clicked()
+{
+	QTreeWidgetItem* item = ui->m_tree->currentItem();
+	if (item)
+	{
+		QVariant v = item->data(0, Qt::UserRole);
+		int n = v.toInt();
+		CGLObject* po = m_obj[n];
+		if (po)
+		{
+			m_wnd->GetDocument()->DeleteObject(po);
+			Update(true);
+			m_wnd->repaint();
+		}
+		else QMessageBox::information(this, "PostView2", "Cannot delete this object");
+	}
 }
