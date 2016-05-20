@@ -55,6 +55,10 @@ public:
 	// (e.g. when selection has changed)
 	void UpdateGraphs(bool breset = true);
 
+	// update the tool window
+	// (e.g. when selection was changed)
+	void UpdateTools();
+
 	// set the data field on the toolbar
 	void SetCurrentDataField(int nfield);
 

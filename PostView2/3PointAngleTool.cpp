@@ -102,6 +102,19 @@ void C3PointAngleTool::activate(CDocument* pdoc)
 	m_doc = pdoc;
 	if (pdoc && pdoc->IsValid())
 	{
+		FEMesh& mesh = *m_doc->GetFEModel()->GetMesh();
+		int N = mesh.Nodes();
+		int nsel = 0;
+		for (int i=0; i<N; ++i)
+		{
+			FENode& ni = mesh.Node(i);
+			if (ni.IsSelected())
+			{
+				m_node[nsel++] = i + 1;
+				if (nsel >= 3) break;
+			}
+		}
+
 		if (m_deco)
 		{
 			m_doc->GetGLModel()->RemoveDecoration(m_deco);

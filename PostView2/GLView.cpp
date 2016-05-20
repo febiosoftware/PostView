@@ -522,6 +522,7 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 					case SELECT_FACES: SelectFaces   (m_p0.x, m_p0.y, m_p1.x, m_p1.y, mode); break;
 					case SELECT_NODES: SelectNodes   (m_p0.x, m_p0.y, m_p1.x, m_p1.y, mode); break;
 					}
+					m_wnd->UpdateTools();
 
 					// update the TrackView
 //					m_pParent->UpdateTrackWnd();

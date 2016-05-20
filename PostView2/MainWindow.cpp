@@ -74,6 +74,11 @@ void CMainWindow::UpdateView()
 	ui->modelViewer->UpdateView();
 }
 
+void CMainWindow::UpdateTools()
+{
+	ui->toolsPanel->Update(false);
+}
+
 void CMainWindow::UpdateGraphs(bool breset)
 {
 	if (ui->graphList.isEmpty() == false)
