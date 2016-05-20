@@ -52,6 +52,13 @@ class CPlotWidget : public QWidget
 	Q_OBJECT
 
 public:
+	enum ChartStyle
+	{
+		LineChart,
+		BarChart
+	};
+
+public:
 	struct Selection
 	{
 		int			ndataIndex;
@@ -100,8 +107,18 @@ public:
 	// turn on/off zoom-to-rect mode
 	void ZoomToRect(bool b = true);
 
+	// is view locked
+	bool isViewLocked() const { return m_bviewLocked; }
+	void setViewLocked(bool b) { m_bviewLocked = b; }
+
+	// popup menu
+	void showPopup(bool b) { m_bshowPopup = b; }
+
 	// save data to file
 	bool Save(const QString& fileName);
+
+	// set the chart style
+	void setChartStyle(int chartStyle);
 
 signals:
 	void doneZoomToRect();
@@ -122,7 +139,6 @@ public:
 
 	bool		m_bzoomRect;
 	bool		m_bvalidRect;
-
 	bool		m_select;
 	Selection	m_selection;
 
@@ -149,9 +165,16 @@ private: // drawing helper functions
 	void drawSelection(QPainter& p);
 	void drawLegend(QPainter& p);
 
+	void drawLineChartData(QPainter& p, CPlotData& data);
+	void drawBarChartData(QPainter& p, CPlotData& data);
+
 private:
 	vector<CPlotData>	m_data;
 	bool				m_bshowLegend;
+	bool				m_bviewLocked;
+	bool				m_bshowPopup;
+
+	int		m_chartStyle;
 
 private:
 	QAction*	m_pZoomToFit;

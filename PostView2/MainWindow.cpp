@@ -85,6 +85,9 @@ void CMainWindow::UpdateGraphs(bool breset)
 
 	if (ui->integrateWindow && ui->integrateWindow->isVisible()) 
 		ui->integrateWindow->Update(false);
+
+	if (ui->statsWindow && ui->statsWindow->isVisible()) 
+		ui->statsWindow->Update(false);
 }
 
 QMenu* CMainWindow::BuildContextMenu()
@@ -797,6 +800,14 @@ void CMainWindow::on_actionSummary_triggered()
 
 void CMainWindow::on_actionStats_triggered()
 {
+	if (ui->statsWindow == 0)
+	{
+		ui->statsWindow = new CStatsWindow(this);
+	}
+	ui->statsWindow->Update(true);
+	ui->statsWindow->show();
+	ui->statsWindow->raise();
+	ui->statsWindow->activateWindow();
 }
 
 void CMainWindow::on_actionIntegrate_triggered()
@@ -841,6 +852,9 @@ void CMainWindow::on_selectData_currentIndexChanged(int i)
 
 	if (ui->integrateWindow && ui->integrateWindow->isVisible()) 
 		ui->integrateWindow->Update(true);
+
+	if (ui->statsWindow && ui->statsWindow->isVisible()) 
+		ui->statsWindow->Update(true);
 }
 
 void CMainWindow::on_actionPlay_toggled(bool bchecked)

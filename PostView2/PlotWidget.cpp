@@ -8,6 +8,7 @@
 #include <QMenu>
 #include <QApplication>
 #include <QClipBoard>
+#include <assert.h>
 
 class CPalette
 {
@@ -125,6 +126,10 @@ CPlotWidget::CPlotWidget(QWidget* parent, int w, int h) : QWidget(parent)
 	m_bvalidRect = false;
 
 	m_bshowLegend = true;
+	m_bviewLocked = false;
+	m_bshowPopup = true;
+
+	m_chartStyle = CPlotWidget::LineChart;
 
 	m_viewRect = QRectF(0.0, 0.0, 1.0, 1.0);
 	m_xscale = findScale(m_viewRect.left(), m_viewRect.right());
@@ -145,14 +150,23 @@ CPlotWidget::CPlotWidget(QWidget* parent, int w, int h) : QWidget(parent)
 }
 
 //-----------------------------------------------------------------------------
+void CPlotWidget::setChartStyle(int chartStyle)
+{
+	m_chartStyle = chartStyle;
+}
+
+//-----------------------------------------------------------------------------
 void CPlotWidget::contextMenuEvent(QContextMenuEvent* ev)
 {
-	QMenu menu(this);
-	menu.addAction(m_pZoomToFit);
-	menu.addAction(m_pCopyToClip);
-	menu.addSeparator();
-	menu.addAction(m_pShowProps);
-	menu.exec(ev->globalPos());
+	if (m_bshowPopup)
+	{
+		QMenu menu(this);
+		menu.addAction(m_pZoomToFit);
+		menu.addAction(m_pCopyToClip);
+		menu.addSeparator();
+		menu.addAction(m_pShowProps);
+		menu.exec(ev->globalPos());
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -358,7 +372,7 @@ void CPlotWidget::mouseMoveEvent(QMouseEvent* ev)
 	if (ev->buttons() & Qt::LeftButton)
 	{
 		QPoint p = ev->pos();
-		if (m_bzoomRect == false)
+		if ((m_bzoomRect == false) && (m_bviewLocked == false))
 		{
 			QPointF r0 = ScreenToView(m_mousePos);
 			QPointF r1 = ScreenToView(p);
@@ -393,22 +407,25 @@ void CPlotWidget::mouseReleaseEvent(QMouseEvent* ev)
 //-----------------------------------------------------------------------------
 void CPlotWidget::wheelEvent(QWheelEvent* ev)
 {
-	double W = m_viewRect.width();
-	double H = m_viewRect.height();
-	double dx = W*0.05;
-	double dy = H*0.05;
-	if (ev->delta() < 0)
+	if (m_bviewLocked == false)
 	{
-		m_viewRect.adjust(-dx, -dy, dx, dy);
+		double W = m_viewRect.width();
+		double H = m_viewRect.height();
+		double dx = W*0.05;
+		double dy = H*0.05;
+		if (ev->delta() < 0)
+		{
+			m_viewRect.adjust(-dx, -dy, dx, dy);
+		}
+		else
+		{
+			m_viewRect.adjust(dx, dy, -dx, -dy);
+		}
+		m_xscale = findScale(m_viewRect.left(), m_viewRect.right());
+		m_yscale = findScale(m_viewRect.top(), m_viewRect.bottom());
+		repaint();
+		ev->accept();
 	}
-	else
-	{
-		m_viewRect.adjust(dx, dy, -dx, -dy);
-	}
-	m_xscale = findScale(m_viewRect.left(), m_viewRect.right());
-	m_yscale = findScale(m_viewRect.top(), m_viewRect.bottom());
-	repaint();
-	ev->accept();
 }
 
 //-----------------------------------------------------------------------------
@@ -746,6 +763,18 @@ void CPlotWidget::drawAllData(QPainter& p)
 //-----------------------------------------------------------------------------
 void CPlotWidget::drawData(QPainter& p, CPlotData& d)
 {
+	switch (m_chartStyle)
+	{
+	case LineChart: drawLineChartData(p, d); break;
+	case BarChart : drawBarChartData(p, d); break;
+	default:
+		assert(false);
+	}
+}
+
+//-----------------------------------------------------------------------------
+void CPlotWidget::drawLineChartData(QPainter& p, CPlotData& d)
+{
 	int N = d.size();
 	if (N == 0) return;
 
@@ -767,6 +796,24 @@ void CPlotWidget::drawData(QPainter& p, CPlotData& d)
 	{
 		pt = ViewToScreen(d.Point(i));
 		QRect r(pt.x()-2, pt.y()-2,5,5);
+		p.drawRect(r);
+	}
+}
+
+//-----------------------------------------------------------------------------
+void CPlotWidget::drawBarChartData(QPainter& p, CPlotData& d)
+{
+	int N = d.size();
+	if (N == 0) return;
+
+	p.setPen(Qt::NoPen);
+	p.setBrush(d.color());
+	for (int i=0; i<N; ++i)
+	{
+		QPointF& pi = d.Point(i);
+		QPoint p0 = ViewToScreen(pi);
+		QPoint p1 = ViewToScreen(QPointF(pi.x(), 0.0));
+		QRect r(p0.x()-5, p0.y(), 10, p1.y() - p0.y());
 		p.drawRect(r);
 	}
 }
