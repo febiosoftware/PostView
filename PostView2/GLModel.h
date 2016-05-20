@@ -37,7 +37,7 @@ public:
 	void ShellReferenceSurface(int n) { m_nshellref = n; }
 
 	void SetSubDivisions(int ndivs) { m_nDivs = ndivs; }
-	int GetSubDivisions() { return m_nDivs; }
+	int GetSubDivisions();
 
 	int GetRenderMode() { return m_nrender; }
 	void SetRenderMode(int nmode) { m_nrender = nmode; }

@@ -12,6 +12,7 @@ CProperty& CProperty::operator = (const CProperty& p)
 	fmin = p.fmin;
 	fmax = p.fmax;
 	fstep = p.fstep;
+	bauto = p.bauto;
 	return *this;
 }
 
@@ -23,6 +24,7 @@ CProperty::CProperty(const QString& sname, CProperty::Type itype) : name(sname),
 	fmin = -1e99;
 	fmax =  1e99;
 	fstep = 0.01;
+	bauto = false;
 }
 
 CProperty::CProperty(const QString& sname, CProperty::Type itype, const QString& sinfo) : name(sname), type(itype), info(sinfo)
@@ -33,4 +35,5 @@ CProperty::CProperty(const QString& sname, CProperty::Type itype, const QString&
 	fmin = -1e99;
 	fmax =  1e99;
 	fstep = 0.01;
+	bauto = false;
 }

@@ -31,6 +31,7 @@ public:
 	int		imin, imax;			// range for Int (and Enum unless values is not empty)
 	double	fmin, fmax;			// range for floats
 	double	fstep;				// step for floats
+	double	bauto;
 
 	QString			name;		// the name of the property
 	QString			info;		// description of the property
@@ -45,6 +46,7 @@ public:
 	CProperty& setFloatRange(double Min, double Max) { fmin = Min; fmax = Max; return *this; }
 	CProperty& setFloatStep(double fStep) { fstep = fStep; return *this; }
 	CProperty& setEnumValues(QStringList& val) { values = val; return *this; }
+	CProperty& setAutoValue(bool b) { bauto = b; return *this; }
 
 public:
 	void setFlags(unsigned int flag) { flags = flag; }

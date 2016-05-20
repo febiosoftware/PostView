@@ -48,7 +48,7 @@ CGLModel::CGLModel(FEModel* ps)
 	m_bsmooth = (pm->Elements() > 100000 ? false : true);
 	m_boutline = false;
 	m_bghost = false;
-	m_nDivs = 2;
+	m_nDivs = 0; // this means "auto"
 
 	m_bShell2Hex  = false;
 	m_nshellref   = 0;
@@ -212,6 +212,8 @@ void CGLModel::RenderSelection(CGLContext &rc)
 	glColor4ub(c.r,c.g,c.g,128);
 	glDisable(GL_LIGHTING);
 
+	int ndivs = GetSubDivisions();
+
 	// render the selected faces
 	for ( i=0; i<pm->Faces(); ++i)
 	{
@@ -223,7 +225,7 @@ void CGLModel::RenderSelection(CGLContext &rc)
 		{
 			// okay, we got one, so let's render it
 			glLoadName(face.m_elem[0]+1);
-			RenderFace(face, pm, m_nDivs, bnode);
+			RenderFace(face, pm, ndivs, bnode);
 		}
 	}
 	glEnable(GL_LIGHTING);
@@ -382,6 +384,8 @@ void CGLModel::RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m)
 	GLCOLOR c[4];
 	double tm = pmat->transparency;
 
+	int ndivs = GetSubDivisions();
+
 	glCullFace(GL_FRONT);
 	for ( i=0; i<NF; ++i)
 	{
@@ -426,7 +430,7 @@ void CGLModel::RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m)
 
 			// okay, we got one, so let's render it
 			glLoadName(face.m_elem[0]+1);
-			RenderFace(face, pm, c, m_nDivs, bnode);
+			RenderFace(face, pm, c, ndivs, bnode);
 		}
 	}
 
@@ -475,7 +479,7 @@ void CGLModel::RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m)
 
 			// okay, we got one, so let's render it
 			glLoadName(face.m_elem[0]+1);
-			RenderFace(face, pm, c, m_nDivs, bnode);
+			RenderFace(face, pm, c, ndivs, bnode);
 		}
 	}
 	glPopAttrib();
@@ -545,6 +549,8 @@ void CGLModel::RenderMaterial(FEModel* ps, int m)
 	FEDomain& dom = pm->Domain(m);
 	int NF = dom.Faces();
 
+	int ndivs = GetSubDivisions();
+
 	if (pmat->transparency > .999f)
 	{
 		if (btex) glEnable(GL_TEXTURE_1D);
@@ -557,7 +563,7 @@ void CGLModel::RenderMaterial(FEModel* ps, int m)
 			{
 				// okay, we got one, so let's render it
 				glLoadName(face.m_elem[0]+1);
-				RenderFace(face, pm, m_nDivs, bnode);
+				RenderFace(face, pm, ndivs, bnode);
 			}
 		}
 
@@ -572,7 +578,7 @@ void CGLModel::RenderMaterial(FEModel* ps, int m)
 			{
 				// okay, we got one, so let's render it
 				glLoadName(face.m_elem[0]+1);
-				RenderFace(face, pm, m_nDivs, bnode);
+				RenderFace(face, pm, ndivs, bnode);
 			}
 		}
 
@@ -594,7 +600,7 @@ void CGLModel::RenderMaterial(FEModel* ps, int m)
 			{
 				// okay, we got one, so let's render it
 				glLoadName(face.m_elem[0]+1);
-				RenderFace(face, pm, m_nDivs, bnode);
+				RenderFace(face, pm, ndivs, bnode);
 			}
 		}
 
@@ -609,7 +615,7 @@ void CGLModel::RenderMaterial(FEModel* ps, int m)
 			{
 				// okay, we got one, so let's render it
 				glLoadName(face.m_elem[0]+1);
-				RenderFace(face, pm, m_nDivs, bnode);
+				RenderFace(face, pm, ndivs, bnode);
 			}
 		}
 
@@ -751,6 +757,8 @@ void CGLModel::RenderOutline(CGLContext& rc)
 
 	double eps = cos(pm->GetSmoothingAngleRadians());
 
+	int ndivs = GetSubDivisions();
+
 	for (i=0; i<pm->Faces(); ++i)
 	{
 		FEFace& f = pm->Face(i);
@@ -823,7 +831,7 @@ void CGLModel::RenderOutline(CGLContext& rc)
 							{
 								float r, H[3];
 								vec3f p;
-								int n = (m_nDivs<=1?2:m_nDivs);
+								int n = (ndivs<=1?2:ndivs);
 								for (int i=0; i<n; ++i)
 								{
 									r = -1.f + 2.f*i/n;
@@ -855,7 +863,7 @@ void CGLModel::RenderOutline(CGLContext& rc)
 							{
 								float r, H[3];
 								vec3f p;
-								int n = (m_nDivs<=1?2:m_nDivs);
+								int n = (ndivs<=1?2:ndivs);
 								for (int i=0; i<n; ++i)
 								{
 									r = -1.f + 2.f*i/n;
@@ -1184,6 +1192,8 @@ void CGLModel::RenderMeshLines(FEModel* ps, int nmat)
 	// get the mesh
 	FEMesh* pm = ps->GetMesh();
 
+	int ndivs = GetSubDivisions();
+
 	// now loop over all faces and see which face belongs to this material
 	for (int i=0; i<pm->Faces(); ++i)
 	{
@@ -1191,7 +1201,7 @@ void CGLModel::RenderMeshLines(FEModel* ps, int nmat)
 		if ((face.m_mat == nmat) && (face.IsVisible()))
 		{
 			// okay, we got one, so let's render it
-			RenderFaceOutline(face, pm, m_nDivs);
+			RenderFaceOutline(face, pm, ndivs);
 		}
 	}
 
@@ -1207,7 +1217,7 @@ void CGLModel::RenderMeshLines(FEModel* ps, int nmat)
 				if (el.m_pElem[j] && !el.m_pElem[j]->IsVisible())
 				{
 					FEFace f = el.GetFace(j);
-					RenderFaceOutline(f, pm, m_nDivs);
+					RenderFaceOutline(f, pm, ndivs);
 				}
 			}
 		}
@@ -1483,26 +1493,26 @@ void CGLModel::RenderFace(FEFace& face, FEMesh* pm, int ndivs, bool bnode)
 	switch (face.m_ntype)
 	{
 	case FACE_QUAD4:
-		if (ndivs <= 1) RenderQUAD4(face, m_bsmooth, bnode);
+		if (ndivs == 1) RenderQUAD4(face, m_bsmooth, bnode);
 		else RenderSmoothQUAD4(face, pm, ndivs, bnode);
 		break;
 	case FACE_QUAD8:
-		if (ndivs <= 1) RenderQUAD8(face, m_bsmooth, bnode);
+		if (ndivs == 1) RenderQUAD8(face, m_bsmooth, bnode);
 		else RenderSmoothQUAD8(face, pm, ndivs, bnode);
 		break;
 	case FACE_QUAD9:
-		if (ndivs <= 1) RenderQUAD9(face, m_bsmooth, bnode);
+		if (ndivs == 1) RenderQUAD9(face, m_bsmooth, bnode);
 		else RenderSmoothQUAD9(face, pm, ndivs, bnode);
 		break;
 	case FACE_TRI3:
 		RenderTRI3(face, m_bsmooth, bnode);
 		break;
 	case FACE_TRI6:
-		if (ndivs <= 1) RenderTRI6(face, m_bsmooth, bnode);
+		if (ndivs == 1) RenderTRI6(face, m_bsmooth, bnode);
 		else RenderSmoothTRI6(face, pm, ndivs, bnode);
 		break;
 	case FACE_TRI7:
-		if (ndivs <= 1) RenderTRI7(face, m_bsmooth, bnode);
+		if (ndivs == 1) RenderTRI7(face, m_bsmooth, bnode);
 		else RenderSmoothTRI7(face, pm, ndivs, bnode);
 		break;
 	default:
@@ -2449,4 +2459,21 @@ void CGLModel::RemoveDecoration(GDecoration* pd)
 			return;
 		}
 	}
+}
+
+int CGLModel::GetSubDivisions()
+{
+	if (m_nDivs < 1)
+	{
+		FEMesh& mesh = *GetMesh();
+		int NE = mesh.Elements();
+
+		const int max_elem = 50000;
+		int ndivs = max_elem / NE;
+		if (ndivs > 10) ndivs = 10;
+		if (ndivs <  1) ndivs = 1;
+
+		return ndivs;
+	}
+	else return m_nDivs;
 }

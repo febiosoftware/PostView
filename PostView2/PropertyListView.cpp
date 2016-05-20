@@ -69,6 +69,17 @@ public:
 		else if (index.column() == 1)
 		{
 			QVariant v = m_list->GetPropertyValue(index.row());
+			if (prop.type == CProperty::Int)
+			{
+				if (role == Qt::DisplayRole)
+				{
+					if (prop.bauto)
+					{
+						int n = v.toInt();
+						if (n == 0) return QVariant(QString("auto"));
+					}
+				}
+			}
 			if (prop.type == CProperty::DataScalar)
 			{
 				if (role == Qt::DisplayRole)
@@ -264,6 +275,7 @@ public:
 				pc->setRange(prop.imin, prop.imax);
 				pc->setValue(data.toInt());
 				pc->setAccelerated(true);
+				if (prop.bauto) pc->setSpecialValueText("auto");
 				m_view->connect(pc, SIGNAL(valueChanged(int)), m_view, SLOT(onDataChanged()));
 				return pc;
 			}
