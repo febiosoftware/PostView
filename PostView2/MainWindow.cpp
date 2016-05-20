@@ -1208,12 +1208,60 @@ void CMainWindow::closeEvent(QCloseEvent* ev)
 	ev->accept();
 }
 
+QByteArray colorToByteArray(GLCOLOR c)
+{
+	QByteArray a;
+	a.resize(4);
+	a[0] = c.r;
+	a[1] = c.g;
+	a[2] = c.b;
+	a[3] = c.a;
+	return a;
+}
+
+GLCOLOR byteArrayToColor(const QByteArray& a)
+{
+	GLCOLOR c;
+	if (a.size() == 4)
+	{
+		c.r = a[0];
+		c.g = a[1];
+		c.b = a[2];
+		c.a = a[3];
+	}
+	return c;
+}
+
 void CMainWindow::writeSettings()
 {
 	QSettings settings("MRLSoftware", "PostView");
 	settings.beginGroup("MainWindow");
 	settings.setValue("geometry", saveGeometry());
 	settings.setValue("state", saveState());
+	settings.endGroup();
+
+	VIEWSETTINGS& view = GetDocument()->GetViewSettings();
+	settings.beginGroup("ViewSettings");
+	settings.setValue("bgcol1", colorToByteArray(view.bgcol1));
+	settings.setValue("bgcol2", colorToByteArray(view.bgcol2));
+	settings.setValue("fgcol" , colorToByteArray(view.fgcol));
+	settings.setValue("bgstyle"           , view.bgstyle);
+	settings.setValue("m_bShadows"        , view.m_bShadows);
+	settings.setValue("m_shadow_intensity", view.m_shadow_intensity);
+	settings.setValue("m_ambient"         , view.m_ambient);
+	settings.setValue("m_diffuse"         , view.m_diffuse);
+	settings.setValue("m_bTriad"          , view.m_bTriad);
+	settings.setValue("m_bTitle"          , view.m_bTitle);
+	settings.setValue("m_bconn"           , view.m_bconn);
+	settings.setValue("m_bext"            , view.m_bext);
+	settings.setValue("m_bmesh"           , view.m_bmesh);
+	settings.setValue("m_bBox"            , view.m_bBox);
+	settings.setValue("m_nproj"           , view.m_nproj);
+	settings.setValue("m_bLighting"       , view.m_bLighting);
+	settings.setValue("m_bcull"           , view.m_bcull);
+	settings.setValue("m_blinesmooth"     , view.m_blinesmooth);
+	settings.setValue("m_flinethick"      , view.m_flinethick);
+	settings.setValue("m_fpointsize"      , view.m_fpointsize);
 	settings.endGroup();
 }
 
@@ -1223,5 +1271,31 @@ void CMainWindow::readSettings()
 	settings.beginGroup("MainWindow");
 	restoreGeometry(settings.value("geometry").toByteArray());
 	restoreState(settings.value("state").toByteArray());
+	settings.endGroup();
+
+	VIEWSETTINGS& view = GetDocument()->GetViewSettings();
+	view.Defaults();
+	settings.beginGroup("ViewSettings");
+	view.bgcol1 = byteArrayToColor(settings.value("bgcol1", colorToByteArray(view.bgcol1)).toByteArray());
+	view.bgcol2 = byteArrayToColor(settings.value("bgcol2", colorToByteArray(view.bgcol2)).toByteArray());
+	view.fgcol  = byteArrayToColor(settings.value("fgcol" , colorToByteArray(view.fgcol )).toByteArray());
+	view.bgstyle            = settings.value("bgstyle"      , view.bgstyle   ).toInt();
+	view.m_bShadows         = settings.value("m_bShadows"   , view.m_bShadows).toBool();
+	view.m_shadow_intensity = settings.value("m_shadow_intensity", view.m_shadow_intensity).toFloat();
+	view.m_ambient          = settings.value("m_ambient"    , view.m_ambient).toFloat();
+	view.m_diffuse          = settings.value("m_diffuse"    , view.m_diffuse).toFloat();
+	view.m_bTriad           = settings.value("m_bTriad"     , view.m_bTriad).toBool();
+	view.m_bTags            = settings.value("m_bTags"      , view.m_bTags ).toBool();
+	view.m_bTitle           = settings.value("m_bTitle"     , view.m_bTitle).toBool();
+	view.m_bconn            = settings.value("m_bconn"      , view.m_bconn).toBool();
+	view.m_bext             = settings.value("m_bext"       , view.m_bext).toBool();
+	view.m_bmesh            = settings.value("m_bmesh"      , view.m_bmesh).toBool();
+	view.m_bBox             = settings.value("m_bBox"       , view.m_bBox).toBool();
+	view.m_nproj            = settings.value("m_nproj"      , view.m_nproj).toInt();
+	view.m_bLighting        = settings.value("m_bLighting"  , view.m_bLighting).toBool();
+	view.m_bcull            = settings.value("m_bcull"      , view.m_bcull).toBool();
+	view.m_blinesmooth      = settings.value("m_blinesmooth", view.m_blinesmooth).toBool();
+	view.m_flinethick       = settings.value("m_flinethick" , view.m_flinethick).toFloat();
+	view.m_fpointsize       = settings.value("m_fpointsize" , view.m_fpointsize).toFloat();
 	settings.endGroup();
 }
