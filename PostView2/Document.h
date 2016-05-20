@@ -191,9 +191,6 @@ public:
 	// get the number of time steps
 	int GetTimeSteps();
 
-	// get the current active state
-	FEState* GetCurrentState();
-
 	// get the model's bounding box
 	BOUNDINGBOX GetBoundingBox();
 
@@ -203,22 +200,13 @@ public:
 	// --- T I M E   M A N A G M E N T ---
 
 	// get the index of the active state
-	int currentTime() { return m_nTime; }
+	int currentTime();
 
 	// set the active state
 	void SetCurrentTime(int ntime);
 
-	// get the state closest to time t
-	int GetClosestTime(double t);
-
-	// set the active state closest to time t
-	void SetTimeValue(float ftime);
-
-	// get the time value of state n
-	float GetTimeValue(int ntime);
-
 	// get the of active state
-	float GetTimeValue() { return m_fTime; }
+	float GetTimeValue();
 
 	// get the time range
 	void GetTimeRange(double& t0, double& t1);
@@ -352,10 +340,6 @@ protected:
 
 	// timer data
 	TIMESETTINGS	m_time;
-
-	// TODO: move to FEModel class?
-	float	m_fTime;		// current time value
-	int		m_nTime;		// active time step
 
 	// miscellenaeous
 	bool	m_bValid;	// the document is loaded and valid

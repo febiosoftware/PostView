@@ -19,6 +19,9 @@ extern int ET_TET10[6][3];
 // constructor
 CGLModel::CGLModel(FEModel* ps)
 {
+	m_nTime = 0;
+	m_fTime = 0.f;
+
 	FEMesh* pm = ps->GetMesh();
 
 	// see if the mesh has any vector fields
@@ -69,14 +72,64 @@ CGLModel::~CGLModel(void)
 }
 
 //-----------------------------------------------------------------------------
-// Update the model data
-void CGLModel::Update(int ntime, float dt, bool breset)
+float CGLModel::GetTimeValue(int ntime)
+{ 
+	FEModel* pfem = GetFEModel();
+	if (pfem && (pfem->GetStates() > 0)) return pfem->GetState(ntime)->m_time;
+	return 0.f; 
+}
+
+//-----------------------------------------------------------------------------
+void CGLModel::setCurrentTimeIndex(int ntime)
 {
+	m_nTime = ntime;
+	m_fTime = GetTimeValue(m_nTime);
+}
+
+//-----------------------------------------------------------------------------
+void CGLModel::SetTimeValue(float ftime)
+{
+	m_nTime = GetClosestTime(ftime);
+	m_fTime = ftime;
+}
+
+//------------------------------------------------------------------------------------------
+// This returns the time step whose time value is closest but less than t
+//
+int CGLModel::GetClosestTime(double t)
+{
+	FEModel* pfem = GetFEModel();
+	if ((pfem == 0) || (pfem->GetStates() <= 1)) return 0;
+
+	FEState& s = *pfem->GetState(0);
+	if (s.m_time >= t) return 0;
+
+	for (int i=1; i<pfem->GetStates(); ++i)
+	{
+		FEState& s = *pfem->GetState(i);
+		if (s.m_time >= t) return i-1;
+	}
+	return pfem->GetStates()-1;
+}
+
+//-----------------------------------------------------------------------------
+FEState* CGLModel::currentState()
+{
+	return GetFEModel()->GetState(m_nTime);
+}
+
+//-----------------------------------------------------------------------------
+// Update the model data
+void CGLModel::Update(bool breset)
+{
+	// get the time inc value
+	float dt = m_fTime - GetTimeValue(m_nTime);
+
 	// update displacement map
-	if (m_pdis && m_pdis->IsActive()) m_pdis->Update(ntime, dt, breset);
+	if (m_pdis && m_pdis->IsActive()) m_pdis->Update(m_nTime, dt, breset);
 
 	// update the colormap
-	if (m_pcol && m_pcol->IsActive()) m_pcol->Update(ntime, dt, breset);
+	if (m_pcol && m_pcol->IsActive()) m_pcol->Update(m_nTime, dt, breset);
 }
 
 //-----------------------------------------------------------------------------

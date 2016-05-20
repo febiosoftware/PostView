@@ -77,7 +77,7 @@ void CStatsWindow::Update(bool breset)
 
 	std::vector<int> bin(nbins, 0);
 
-	FEState* ps = doc->GetCurrentState();
+	FEState* ps = doc->GetGLModel()->currentState();
 	double v, minv = 0, maxv = 0;
 	N = 0;
 	if (belemfield)

@@ -4,6 +4,7 @@
 #include <PostViewLib/FEModel.h>
 
 class QTreeWidgetItem;
+class QTreeWidget;
 
 class CDataFieldSelector : public QComboBox, public FEModelDependant
 {
@@ -25,5 +26,6 @@ private:
 	void addComponent(QTreeWidgetItem* parent, const char* szname, int ndata);
 	FEModel*	m_fem;
 	Data_Tensor_Type	m_class;
+	QTreeWidget*	m_tree;
 	bool m_bvec;
 };

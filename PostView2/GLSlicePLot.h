@@ -30,7 +30,7 @@ public:
 	void Render(CGLContext& rc);
 
 	int GetEvalField() { return m_nfield; }
-	void SetEvalField(int n) { m_nfield = n; }
+	void SetEvalField(int n);
 
 	CColorMap* GetColorMap() { return &m_Col; }
 

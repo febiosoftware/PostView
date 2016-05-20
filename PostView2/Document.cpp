@@ -212,8 +212,6 @@ void ModelData::SetData(CGLModel* po)
 CDocument::CDocument(CMainWindow* pwnd) : m_wnd(pwnd)
 {
 	m_bValid = false;
-	m_nTime = 0;
-	m_fTime = 0.f;
 
 	m_szfile[0] = 0;
 
@@ -297,20 +295,29 @@ std::string CDocument::GetFieldString()
 }
 
 //-----------------------------------------------------------------------------
+int CDocument::currentTime() 
+{ 
+	return m_pGLModel->currentTimeIndex(); 
+}
+
+//-----------------------------------------------------------------------------
+float CDocument::GetTimeValue()
+{ 
+	return m_pGLModel->currentTime(); 
+}
+
+//-----------------------------------------------------------------------------
 void CDocument::UpdateFEModel(bool breset)
 {
 	if (!m_bValid) return;
 
-	// get the time inc value
-	float dt = m_fTime - GetTimeValue(m_nTime);
-
 	// update the model
-	if (m_pGLModel) m_pGLModel->Update(m_nTime, dt, breset);
+	if (m_pGLModel) m_pGLModel->Update(breset);
 
 	// update the plot list
 	list<CGLPlot*>::iterator it = m_pPlot.begin();
 	for (int i=0; i<(int) m_pPlot.size(); ++i, ++it) 
-		if ((*it)->IsActive()) (*it)->Update(m_nTime, dt, breset);
+		if ((*it)->IsActive()) (*it)->Update(m_pGLModel->currentTimeIndex(), 0.0, breset);
 }
 
 //-----------------------------------------------------------------------------
@@ -376,6 +383,9 @@ bool CDocument::LoadFEModel(FEFileReader* pimp, const char* szfile, bool bup)
 	// if this is a file update, store the model data settings
 	ModelData MD(m_pGLModel);
 
+	// get the current time index
+	int ntime = (m_pGLModel ? m_pGLModel->currentTimeIndex() : 0);
+
 	// remove the old object
 	delete m_pGLModel; m_pGLModel = 0;
 
@@ -403,7 +413,7 @@ bool CDocument::LoadFEModel(FEFileReader* pimp, const char* szfile, bool bup)
 	// go back to the original working directory
 	if (szwdir) chdir(szwdir);
 
-	if (m_nTime >= GetTimeSteps()-1) m_nTime = GetTimeSteps()-1;
+	if (ntime >= GetTimeSteps()-1) ntime = GetTimeSteps()-1;
 
 	m_time.m_start = 0;
 	m_time.m_end   = GetTimeSteps() - 1;
@@ -413,7 +423,7 @@ bool CDocument::LoadFEModel(FEFileReader* pimp, const char* szfile, bool bup)
 	{
 		MD.SetData(m_pGLModel);
 		m_bValid = true;
-		SetCurrentTime(m_nTime);
+		SetCurrentTime(ntime);
 	}
 	else
 	{
@@ -457,28 +467,9 @@ void CDocument::SetCurrentTime(int ntime)
 {
 	if (m_bValid && m_pGLModel)
 	{
-		m_nTime = ntime;
-		m_fTime = GetTimeValue(m_nTime);
+		m_pGLModel->setCurrentTimeIndex(ntime);
 		UpdateFEModel();
 	}
-}
-
-//-----------------------------------------------------------------------------
-void CDocument::SetTimeValue(float ftime)
-{
-	if (m_bValid && m_pGLModel)
-	{
-		m_nTime = GetClosestTime(ftime);
-		m_fTime = ftime;
-		UpdateFEModel();
-	}
-}
-
-//-----------------------------------------------------------------------------
-float CDocument::GetTimeValue(int ntime)
-{ 
-	if (m_fem && (m_fem->GetStates() > 0)) return m_fem->GetState(ntime)->m_time;
-	return 0.f; 
 }
 
 //-----------------------------------------------------------------------------
@@ -1043,24 +1034,6 @@ bool CDocument::ExportDataField(const FEDataField& df, const char* szfile)
 	return true;
 }
 
-//------------------------------------------------------------------------------------------
-// This returns the time step whose time value is closest but less than t
-//
-int CDocument::GetClosestTime(double t)
-{
-	if ((m_fem == 0) || (m_fem->GetStates() <= 1)) return 0;
-
-	FEState& s = *m_fem->GetState(0);
-	if (s.m_time >= t) return 0;
-
-	for (int i=1; i<m_fem->GetStates(); ++i)
-	{
-		FEState& s = *m_fem->GetState(i);
-		if (s.m_time >= t) return i-1;
-	}
-	return m_fem->GetStates()-1;
-}
-
 bool CDocument::ExportPlot(const char* szfile, bool bflag[6], int ncode[6])
 {
 	if (IsValid() == false) return true;
@@ -1254,7 +1227,7 @@ void CDocument::SelectElemsInRange(float fmin, float fmax, bool bsel)
 {
 	FEMesh* pm = m_fem->GetMesh();
 	int N = pm->Elements();
-	FEState* ps = m_fem->GetState(m_nTime);
+	FEState* ps = m_pGLModel->currentState();
 	for (int i=0; i<N; ++i)
 	{
 		FEElement& el = pm->Element(i);
@@ -1272,7 +1245,7 @@ void CDocument::SelectNodesInRange(float fmin, float fmax, bool bsel)
 {
 	FEMesh* pm = m_fem->GetMesh();
 	int N = pm->Nodes();
-	FEState* ps = m_fem->GetState(m_nTime);
+	FEState* ps = m_pGLModel->currentState();
 	for (int i=0; i<N; ++i)
 	{
 		FENode& node = pm->Node(i);
@@ -1289,7 +1262,7 @@ void CDocument::SelectNodesInRange(float fmin, float fmax, bool bsel)
 void CDocument::SelectFacesInRange(float fmin, float fmax, bool bsel)
 {
 	FEMesh* pm = m_fem->GetMesh();
-	FEState* ps = m_fem->GetState(m_nTime);
+	FEState* ps = m_pGLModel->currentState();
 	int N = pm->Faces();
 	for (int i=0; i<N; ++i)
 	{
@@ -1459,9 +1432,6 @@ void CDocument::GetSelectionList(vector<int>& L)
 
 // get the number of time steps
 int CDocument::GetTimeSteps() { return (m_fem?m_fem->GetStates():0); }
-
-// get the current active state
-FEState* CDocument::GetCurrentState() { return (m_fem? m_fem->GetState(m_nTime) : 0); }
 
 const char* CDocument::GetTitle() { return (m_fem?m_fem->GetTitle():0); }
 void CDocument::SetTitle(const char* sztitle) { if (m_fem) m_fem->SetTitle(sztitle); }

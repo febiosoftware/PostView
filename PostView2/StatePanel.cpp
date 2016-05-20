@@ -161,12 +161,15 @@ CStatePanel::CStatePanel(CMainWindow* pwnd, QWidget* parent) : CCommandPanel(pwn
 	ui->setupUi(this);
 }
 
-void CStatePanel::Update()
+void CStatePanel::Update(bool breset)
 {
-	CDocument* pdoc = m_wnd->GetDocument();
-	FEModel* fem = pdoc->GetFEModel();
+	if (breset)
+	{
+		CDocument* pdoc = m_wnd->GetDocument();
+		FEModel* fem = pdoc->GetFEModel();
 
-	ui->data->SetFEModel(fem);
+		ui->data->SetFEModel(fem);
+	}
 }
 
 void CStatePanel::on_stateList_doubleClicked(const QModelIndex& index)
@@ -192,7 +195,7 @@ void CStatePanel::on_addButton_clicked()
 			double f = t0 + i*(t1 - t0)/M;
 			fem.AddState(f);
 		}
-		Update();
+		Update(true);
 	}
 }
 
@@ -220,7 +223,7 @@ void CStatePanel::on_editButton_clicked()
 		pstate->m_time = newTime;
 		fem.DeleteState(nrow);
 		fem.InsertState(pstate, newTime);
-		Update();
+		Update(true);
 	}
 }
 
@@ -244,6 +247,6 @@ void CStatePanel::on_deleteButton_clicked()
 			fem.DeleteState(nrow-m); 
 			++m;
 		}
-		Update();
+		Update(true);
 	}
 }

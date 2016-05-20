@@ -16,7 +16,7 @@ class CStatePanel : public CCommandPanel
 public:
 	CStatePanel(CMainWindow* pwnd, QWidget* parent = 0);
 
-	void Update();
+	void Update(bool breset);
 
 private slots:
 	void on_stateList_doubleClicked(const QModelIndex& index);

@@ -30,7 +30,7 @@ public:
 	// this is called after a new model is loaded 
 	// or an existing model is reloaded
 	// and also after a mouse release event
-	void UpdateUi();
+	void UpdateUi(bool breset);
 
 	// Build the context menu
 	// Called when user right-clicks on OpenGL view
@@ -54,6 +54,9 @@ public:
 	// update the graph windows
 	// (e.g. when selection has changed)
 	void UpdateGraphs(bool breset = true);
+
+	// set the data field on the toolbar
+	void SetCurrentDataField(int nfield);
 
 public slots:
 	void on_actionOpen_triggered();

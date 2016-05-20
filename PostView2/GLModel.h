@@ -17,7 +17,7 @@ public:
 	FEMesh* GetMesh() { return m_ps->GetMesh(); }
 	FEModel* GetFEModel() { return m_ps; }
 
-	void Update(int ntime, float dt, bool breset);
+	void Update(bool breset);
 
 	bool AddDisplacementMap();
 
@@ -97,6 +97,24 @@ protected:
 	void RenderTRI7 (FEFace& f, bool bsmooth, bool bnode);
 
 public:
+	float currentTime() const { return m_fTime; }
+	int currentTimeIndex() const { return m_nTime; }
+
+	void setCurrentTimeIndex(int n);
+
+	// set the active state closest to time t
+	void SetTimeValue(float ftime);
+
+	// get the time value of state n
+	float GetTimeValue(int ntime);
+
+	// get the state closest to time t
+	int GetClosestTime(double t);
+
+	// get the currently active state
+	FEState* currentState();
+
+public:
 	bool		m_bnorm;		//!< calculate normals or not
 	bool		m_bsmooth;		//!< render smooth or not
 	bool		m_boutline;		//!< render as outline
@@ -109,10 +127,16 @@ public:
 	GLCOLOR		m_node_col;		//!< color for rendering (unselected) nodes
 	GLCOLOR		m_sel_col;		//!< selection color
 
+	float	m_fTime;		// current time value
+	int		m_nTime;		// active time step
+
 protected:
 	FEModel*	m_ps;
 
-	CGLDisplacementMap*	m_pdis;
-	CGLColorMap*		m_pcol;
+
+	CGLDisplacementMap*		m_pdis;
+	CGLColorMap*			m_pcol;
+
+	// TODO: move to document?
 	std::list<GDecoration*>	m_decor;
 };

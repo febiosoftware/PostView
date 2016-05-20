@@ -5,7 +5,7 @@ CCommandPanel::CCommandPanel(CMainWindow* pwnd, QWidget* parent) : QWidget(paren
 
 }
 
-void CCommandPanel::Update()
+void CCommandPanel::Update(bool breset)
 {
 
 }

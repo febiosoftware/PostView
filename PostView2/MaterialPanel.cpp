@@ -128,8 +128,10 @@ CMaterialPanel::CMaterialPanel(CMainWindow* pwnd, QWidget* parent) : CCommandPan
 	m_pmat = new MaterialProps;
 }
 
-void CMaterialPanel::Update()
+void CMaterialPanel::Update(bool breset)
 {
+	if (breset == false) return;
+
 	ui->m_list->clear();
 	ui->m_prop->Update(0);
 	m_pmat->SetMaterial(0);

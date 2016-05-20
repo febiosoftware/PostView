@@ -6,10 +6,10 @@
 
 CDataFieldSelector::CDataFieldSelector(QWidget* parent) : QComboBox(parent)
 {
-	QTreeWidget* pw = new QTreeWidget;
-	pw->header()->hide();
-	setModel(pw->model());
-	setView(pw);
+	m_tree = new QTreeWidget;
+	m_tree->header()->hide();
+	setModel(m_tree->model());
+	setView(m_tree);
 //	setMinimumWidth(200);
 	view()->setMinimumWidth(200);
 	view()->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
@@ -107,15 +107,33 @@ int CDataFieldSelector::currentValue() const
 
 void CDataFieldSelector::setCurrentValue(int nfield)
 {
-	int n = count();
-	for (int i=0; i<n; ++i)
+	if (nfield == -1) { setCurrentIndex(-1); return; }
+
+	int ncode = FIELD_CODE(nfield);
+	int ncomp = FIELD_COMP(nfield);
+
+	QTreeWidgetItemIterator it(m_tree);
+	while (*it)
 	{
-		int nitemValue = itemData(i, Qt::UserRole).toInt();
+		int nitemValue = (*it)->data(0, Qt::UserRole).toInt();
 		if (nitemValue == nfield)
 		{
-			setCurrentIndex(i);
+			if ((*it)->parent() == 0)
+			{
+				setCurrentIndex(ncode);
+			}
+			else
+			{
+				m_tree->setCurrentItem((*it)->parent(), 0);
+				setRootModelIndex(m_tree->currentIndex());
+				setCurrentIndex(ncomp);
+				m_tree->setCurrentItem(m_tree->invisibleRootItem(), 0);
+				setRootModelIndex(m_tree->currentIndex());
+			}
 			return;
 		}
+
+		++it;
 	}
 
 	setCurrentIndex(-1);

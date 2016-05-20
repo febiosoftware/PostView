@@ -19,7 +19,7 @@ public:
 	CModelViewer(CMainWindow* pwnd, QWidget* parent = 0);
 
 public:
-	void Update();
+	void Update(bool breset);
 
 	// this is called when the view needs to be updated
 	void UpdateView();

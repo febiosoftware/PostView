@@ -52,14 +52,14 @@ CGLView* CMainWindow::GetGLView()
 	return ui->glview;
 }
 
-void CMainWindow::UpdateUi()
+void CMainWindow::UpdateUi(bool breset)
 {
 	// update the command panels
-	ui->modelViewer->Update();
-	ui->matPanel->Update();
-	ui->dataPanel->Update();
-	ui->statePanel->Update();
-	ui->toolsPanel->Update();
+	ui->modelViewer->Update(breset);
+	ui->matPanel->Update(breset);
+	ui->dataPanel->Update(breset);
+	ui->statePanel->Update(breset);
+	ui->toolsPanel->Update(breset);
 
 	// update all graph windows
 	UpdateGraphs();
@@ -205,7 +205,7 @@ bool CMainWindow::OpenFile(const QString& fileName, int nfilter)
 	}
 
 	// update all Ui components
-	UpdateUi();
+	UpdateUi(true);
 
 	return true;
 }
@@ -344,7 +344,7 @@ void CMainWindow::on_actionUpdate_triggered()
 		ui->selectData->BuildMenu(m_doc->GetFEModel(), DATA_SCALAR);
 
 		// update the UI
-		UpdateUi();
+		UpdateUi(true);
 	}
 }
 
@@ -442,7 +442,7 @@ void CMainWindow::on_actionOpenSession_triggered()
 			else ui->playToolBar->setDisabled(true);
 
 			// update all Ui components
-			UpdateUi();
+			UpdateUi(true);
 		}
 	}
 }
@@ -585,7 +585,7 @@ void CMainWindow::on_actionSelectRange_triggered()
 		}
 		
 		pdoc->UpdateFEModel();
-		UpdateUi();
+		UpdateUi(false);
 	}
 }
 
@@ -686,7 +686,7 @@ void CMainWindow::on_actionPlaneCut_triggered()
 	CGLPlaneCutPlot* pp = new CGLPlaneCutPlot(pdoc->GetGLModel());
 	pdoc->AddPlot(pp);
 
-	ui->modelViewer->Update();
+	ui->modelViewer->Update(true);
 	ui->modelViewer->selectObject(pp);
 	ui->modelViewer->parentWidget()->raise();
 	ui->glview->repaint();
@@ -699,7 +699,7 @@ void CMainWindow::on_actionVectorPlot_triggered()
 	pdoc->AddPlot(pp);
 	pdoc->UpdateFEModel();
 	
-	ui->modelViewer->Update();
+	ui->modelViewer->Update(true);
 	ui->modelViewer->selectObject(pp);
 	ui->modelViewer->parentWidget()->raise();
 
@@ -713,7 +713,7 @@ void CMainWindow::on_actionIsosurfacePlot_triggered()
 	pdoc->AddPlot(pp);
 	pdoc->UpdateFEModel();
 
-	ui->modelViewer->Update();
+	ui->modelViewer->Update(true);
 	ui->modelViewer->selectObject(pp);
 	ui->modelViewer->parentWidget()->raise();
 
@@ -727,7 +727,7 @@ void CMainWindow::on_actionSlicePlot_triggered()
 	pdoc->AddPlot(pp);
 	pdoc->UpdateFEModel();
 
-	ui->modelViewer->Update();
+	ui->modelViewer->Update(true);
 	ui->modelViewer->selectObject(pp);
 	ui->modelViewer->parentWidget()->raise();
 
@@ -831,9 +831,14 @@ void CMainWindow::on_actionColorMap_toggled(bool bchecked)
 	ui->glview->repaint();
 }
 
-void CMainWindow::on_selectData_currentIndexChanged(int i)
+void CMainWindow::SetCurrentDataField(int nfield)
 {
-	if (i == -1)
+	ui->selectData->setCurrentValue(nfield);
+}
+
+void CMainWindow::on_selectData_currentIndexChanged(int index)
+{
+	if (index == -1)
 		ui->actionColorMap->setDisabled(true);
 	else
 	{
@@ -855,6 +860,8 @@ void CMainWindow::on_selectData_currentIndexChanged(int i)
 
 	if (ui->statsWindow && ui->statsWindow->isVisible()) 
 		ui->statsWindow->Update(true);
+
+	if (ui->modelViewer->isVisible()) ui->modelViewer->Update(false);
 }
 
 void CMainWindow::on_actionPlay_toggled(bool bchecked)
@@ -1072,7 +1079,7 @@ void CMainWindow::on_actionViewVPSave_triggered()
 	sprintf(szname, "key%02d", n);
 	t.SetName(szname);
 	view.AddCameraKey(t);
-	ui->modelViewer->Update();
+	ui->modelViewer->Update(true);
 }
 
 void CMainWindow::on_actionViewVPPrev_triggered()

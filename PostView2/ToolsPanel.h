@@ -15,7 +15,7 @@ class CToolsPanel : public CCommandPanel
 public:
 	CToolsPanel(CMainWindow* window, QWidget* parent = 0);
 
-	void Update();
+	void Update(bool breset);
 
 private:
 	void initTools();

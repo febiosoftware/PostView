@@ -1771,7 +1771,7 @@ void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 	{
 		FENode& n = pm->Node(nn);
 		vec3f r = n.m_rt;
-		float f = pdoc->GetCurrentState()->m_NODE[nn].m_val;
+		float f = pdoc->GetGLModel()->currentState()->m_NODE[nn].m_val;
 //		m_wnd->SetStatusBar("1 node selected: Id = %d, val = %g, pos = (%g, %g, %g)", nn+1, f, r.x, r.y, r.z);
 	}
 	else if (N > 1)

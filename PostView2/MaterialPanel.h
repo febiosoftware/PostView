@@ -15,7 +15,7 @@ class CMaterialPanel : public CCommandPanel
 public:
 	CMaterialPanel(CMainWindow* wnd, QWidget* parent = 0);
 
-	void Update();
+	void Update(bool breset);
 	void UpdateStates();
 
 private slots:

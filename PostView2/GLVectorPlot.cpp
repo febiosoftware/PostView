@@ -73,6 +73,7 @@ CGLVectorPlot::CGLVectorPlot(CGLModel* po) : CGLPlot(po)
 	m_scale = 1;
 	m_dens = 1;
 
+	m_ntime = -1;
 	m_nvec = BUILD_FIELD(1,0,0);
 
 	m_nglyph = GLYPH_ARROW;
@@ -313,6 +314,12 @@ void CGLVectorPlot::Render(CGLContext& rc)
 	// restore attributes
 	glPopAttrib();
 
+}
+
+void CGLVectorPlot::SetVectorType(int ntype) 
+{ 
+	m_nvec = ntype; 
+	Update(GetModel()->currentTimeIndex(), 0.0, false);
 }
 
 void CGLVectorPlot::Update(int ntime, float dt, bool breset)

@@ -18,7 +18,7 @@ class CDataPanel : public CCommandPanel
 public:
 	CDataPanel(CMainWindow* pwnd, QWidget* parent = 0);
 
-	void Update();
+	void Update(bool breset);
 
 private slots:
 	void on_AddStandard_triggered();

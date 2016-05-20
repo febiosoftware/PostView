@@ -317,10 +317,13 @@ CDataPanel::CDataPanel(CMainWindow* pwnd, QWidget* parent) : CCommandPanel(pwnd,
 	ui->setupUi(this);
 }
 
-void CDataPanel::Update()
+void CDataPanel::Update(bool breset)
 {
-	CDocument* pdoc = m_wnd->GetDocument();
-	ui->data->SetFEModel(pdoc->GetFEModel());
+	if (breset)
+	{
+		CDocument* pdoc = m_wnd->GetDocument();
+		ui->data->SetFEModel(pdoc->GetFEModel());
+	}
 }
 
 void CDataPanel::on_AddStandard_triggered()
@@ -366,7 +369,7 @@ void CDataPanel::on_AddStandard_triggered()
 		}
 
 		// update the data list
-		Update();
+		Update(true);
 	}
 }
 
@@ -397,7 +400,7 @@ void CDataPanel::on_AddFromFile_triggered()
 		}
 
 		// update the data list
-		Update();
+		Update(true);
 	}
 }
 
@@ -420,7 +423,7 @@ void CDataPanel::on_CopyButton_clicked()
 			{
 				std::string sname = text.toStdString();
 				fem.CopyDataField(pdf, sname.c_str());
-				Update();
+				Update(true);
 			}
 		}
 	}
@@ -443,7 +446,7 @@ void CDataPanel::on_DeleteButton_clicked()
 			if (QMessageBox::question(this, "Delete Data Field", sz) == QMessageBox::Yes)
 			{
 				fem.DeleteDataField(pdf);
-				Update();
+				Update(true);
 			}
 		}
 	}

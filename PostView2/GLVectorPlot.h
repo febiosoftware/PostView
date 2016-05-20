@@ -26,7 +26,7 @@ public:
 	double GetDensity() { return m_dens; }
 
 	int GetVectorType() { return m_nvec; }
-	void SetVectorType(int ntype) { m_nvec = ntype; }
+	void SetVectorType(int ntype);
 
 	int GetGlyphType() { return m_nglyph; }
 	void SetGlyphType(int ntype) { m_nglyph = ntype; }
@@ -67,6 +67,7 @@ protected:
 	vector<vec2f>	m_rng;	// nodal ranges
 	DataMap<vec3f>	m_map;	// nodal values map
 	
+	int				m_ntime;	// current time at which this plot is evaluated
 	vector<vec3f>	m_val;	// current nodal values
 	vec2f			m_crng;	// current range
 };

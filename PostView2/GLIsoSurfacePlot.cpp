@@ -235,7 +235,13 @@ void CGLIsoSurfacePlot::RenderSlice(float ref)
 }
 
 //-----------------------------------------------------------------------------
+void CGLIsoSurfacePlot::SetEvalField(int n) 
+{ 
+	m_nfield = n; 
+	Update(GetModel()->currentTimeIndex(), 0.0, false);
+}
 
+//-----------------------------------------------------------------------------
 void CGLIsoSurfacePlot::Update(int ntime, float dt, bool breset)
 {
 	FEMesh* pm = m_pObj->GetMesh();

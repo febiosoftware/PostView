@@ -150,7 +150,7 @@ private:
 class CColorMapProps : public CPropertyList
 {
 public:
-	CColorMapProps(CGLColorMap* map) : m_map(map)
+	CColorMapProps(CMainWindow* wnd, CGLColorMap* map) : m_wnd(wnd), m_map(map)
 	{
 		addProperty("Data field"        , CProperty::DataScalar);
 		addProperty("Gradient smoothing", CProperty::Bool);
@@ -191,7 +191,7 @@ public:
 
 		switch (i)
 		{
-		case 0: m_map->SetEvalField(v.toInt()); break;
+		case 0: m_wnd->SetCurrentDataField(v.toInt()); break;
 		case 1: m_map->GetColorMap()->Smooth(v.toBool()); break;
 		case 2: m_map->m_bDispNodeVals = v.toBool(); break;
 		case 3: m_map->SetRangeType(v.toInt()); break;
@@ -203,6 +203,7 @@ public:
 	}
 
 private:
+	CMainWindow*	m_wnd;
 	CGLColorMap*	m_map;
 };
 
@@ -343,74 +344,83 @@ void CModelViewer::UpdateView()
 	}
 }
 
-void CModelViewer::Update()
+void CModelViewer::Update(bool breset)
 {
-	if (ui->m_list.isEmpty() == false)
+	if (breset)
 	{
-		QVector<CPropertyList*>::iterator it;
-		for (it=ui->m_list.begin(); it != ui->m_list.end(); ++it) delete (*it);
-		ui->m_list.clear();
-	}
-
-	CDocument* pdoc = m_wnd->GetDocument();
-	ui->m_props->Update(0);
-	if (pdoc->IsValid())
-	{
-		FEModel* fem = pdoc->GetFEModel();
-		CGLModel* mdl = pdoc->GetGLModel();
-
-		char szfile[256] = {0};
-		pdoc->GetDocTitle(szfile);
-
-		ui->m_tree->clear();
-		QTreeWidgetItem* pi1 = new QTreeWidgetItem(ui->m_tree);
-		pi1->setText(0, szfile);
-		pi1->setIcon(0, QIcon(QString(":/icons/postview_small.png")));
-		ui->m_list.push_back(new CModelProps(mdl));
-		pi1->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
-		pi1->setExpanded(true);
-
-		// add the mesh
-		QTreeWidgetItem* pi2 = new QTreeWidgetItem(pi1);
-		pi2->setText(0, "Mesh");
-		pi2->setIcon(0, QIcon(QString(":/icons/mesh.png")));
-		ui->m_list.push_back(new CMeshProps(fem));
-		pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
-		
-		pi2 = new QTreeWidgetItem(pi1);
-		pi2->setText(0, "Displacement map");
-		pi2->setIcon(0, QIcon(QString(":/icons/distort.png")));
-		ui->m_list.push_back(new CDisplacementMapProps(mdl->GetDisplacementMap()));
-		pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
-
-		pi2 = new QTreeWidgetItem(pi1);
-		pi2->setText(0, "Color map");
-		pi2->setIcon(0, QIcon(QString(":/icons/colormap.png")));
-		ui->m_list.push_back(new CColorMapProps(mdl->GetColorMap()));
-		pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
-
-		GPlotList& pl = pdoc->GetPlotList();
-		GPlotList::iterator it;
-		for (it = pl.begin(); it != pl.end(); ++it)
+		// clear all property lists
+		if (ui->m_list.isEmpty() == false)
 		{
-			CGLPlot& plot = *(*it);
-			QTreeWidgetItem* pi1 = new QTreeWidgetItem(ui->m_tree);
-
-			if      (dynamic_cast<CGLPlaneCutPlot  *>(&plot))  pi1->setIcon(0, QIcon(QString(":/icons/cut.png")));
-			else if (dynamic_cast<CGLVectorPlot    *>(&plot))  pi1->setIcon(0, QIcon(QString(":/icons/vectors.png")));
-			else if (dynamic_cast<CGLSlicePlot     *>(&plot))  pi1->setIcon(0, QIcon(QString(":/icons/slice.png")));
-			else if (dynamic_cast<CGLIsoSurfacePlot*>(&plot))  pi1->setIcon(0, QIcon(QString(":/icons/isosurface.png")));
-			
-			pi1->setText(0, plot.GetName());
-			ui->m_list.push_back(plot.propertyList());
-			pi1->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
+			QVector<CPropertyList*>::iterator it;
+			for (it=ui->m_list.begin(); it != ui->m_list.end(); ++it) delete (*it);
+			ui->m_list.clear();
 		}
 
-		pi2 = new QTreeWidgetItem(ui->m_tree);
-		pi2->setText(0, "View");
-		pi2->setIcon(0, QIcon(QString(":/icons/view.png")));
-		ui->m_list.push_back(new CViewProps(*pdoc->GetView()));
-		pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size() - 1));
+		// rebuild the tree
+		CDocument* pdoc = m_wnd->GetDocument();
+		ui->m_props->Update(0);
+		if (pdoc->IsValid())
+		{
+			FEModel* fem = pdoc->GetFEModel();
+			CGLModel* mdl = pdoc->GetGLModel();
+
+			char szfile[256] = {0};
+			pdoc->GetDocTitle(szfile);
+
+			ui->m_tree->clear();
+			QTreeWidgetItem* pi1 = new QTreeWidgetItem(ui->m_tree);
+			pi1->setText(0, szfile);
+			pi1->setIcon(0, QIcon(QString(":/icons/postview_small.png")));
+			ui->m_list.push_back(new CModelProps(mdl));
+			pi1->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
+			pi1->setExpanded(true);
+
+			// add the mesh
+			QTreeWidgetItem* pi2 = new QTreeWidgetItem(pi1);
+			pi2->setText(0, "Mesh");
+			pi2->setIcon(0, QIcon(QString(":/icons/mesh.png")));
+			ui->m_list.push_back(new CMeshProps(fem));
+			pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
+		
+			pi2 = new QTreeWidgetItem(pi1);
+			pi2->setText(0, "Displacement map");
+			pi2->setIcon(0, QIcon(QString(":/icons/distort.png")));
+			ui->m_list.push_back(new CDisplacementMapProps(mdl->GetDisplacementMap()));
+			pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
+
+			pi2 = new QTreeWidgetItem(pi1);
+			pi2->setText(0, "Color map");
+			pi2->setIcon(0, QIcon(QString(":/icons/colormap.png")));
+			ui->m_list.push_back(new CColorMapProps(m_wnd, mdl->GetColorMap()));
+			pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
+
+			GPlotList& pl = pdoc->GetPlotList();
+			GPlotList::iterator it;
+			for (it = pl.begin(); it != pl.end(); ++it)
+			{
+				CGLPlot& plot = *(*it);
+				QTreeWidgetItem* pi1 = new QTreeWidgetItem(ui->m_tree);
+
+				if      (dynamic_cast<CGLPlaneCutPlot  *>(&plot))  pi1->setIcon(0, QIcon(QString(":/icons/cut.png")));
+				else if (dynamic_cast<CGLVectorPlot    *>(&plot))  pi1->setIcon(0, QIcon(QString(":/icons/vectors.png")));
+				else if (dynamic_cast<CGLSlicePlot     *>(&plot))  pi1->setIcon(0, QIcon(QString(":/icons/slice.png")));
+				else if (dynamic_cast<CGLIsoSurfacePlot*>(&plot))  pi1->setIcon(0, QIcon(QString(":/icons/isosurface.png")));
+			
+				pi1->setText(0, plot.GetName());
+				ui->m_list.push_back(plot.propertyList());
+				pi1->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
+			}
+	
+			pi2 = new QTreeWidgetItem(ui->m_tree);
+			pi2->setText(0, "View");
+			pi2->setIcon(0, QIcon(QString(":/icons/view.png")));
+			ui->m_list.push_back(new CViewProps(*pdoc->GetView()));
+			pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size() - 1));
+		}
+	}
+	else
+	{
+		on_modelTree_currentItemChanged(ui->m_tree->currentItem(), 0);
 	}
 }
 

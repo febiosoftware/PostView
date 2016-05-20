@@ -30,7 +30,7 @@ public:
 	void RenderSmooth(bool b) { m_bsmooth = b; }
 
 	int GetEvalField() { return m_nfield; }
-	void SetEvalField(int n) { m_nfield = n; }
+	void SetEvalField(int n);
 
 	CColorMap* GetColorMap() { return &m_Col; }
 

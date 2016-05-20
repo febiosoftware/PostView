@@ -17,7 +17,7 @@ class CSliceProps : public CPropertyList
 public:
 	CSliceProps(CGLSlicePlot* p) : m_slice(p)
 	{
-		addProperty("Data field", CProperty::DataScalar);
+		addProperty("Data field"    , CProperty::DataScalar);
 		addProperty("Allow clipping", CProperty::Bool);
 		addProperty("Show legend"   , CProperty::Bool);
 		addProperty("Slices"        , CProperty::Int);
@@ -233,7 +233,13 @@ void CGLSlicePlot::RenderSlice(float ref)
 }
 
 //-----------------------------------------------------------------------------
+void CGLSlicePlot::SetEvalField(int n) 
+{ 
+	m_nfield = n; 
+	Update(GetModel()->currentTimeIndex(), 0.0, false);
+}
 
+//-----------------------------------------------------------------------------
 void CGLSlicePlot::Update(int ntime, float dt, bool breset)
 {
 	FEMesh* pm = m_pObj->GetMesh();
