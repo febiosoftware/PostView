@@ -111,8 +111,9 @@ void CSummaryWindow::Update(bool breset)
 	// decide if we want to find the node/face/elem stat
 	int neval = -1;
 	if ((bsel && (nmode == SELECT_NODES)) || IS_NODE_FIELD(m_ncurrentData)) neval = 0;
-	if ((bsel && (nmode == SELECT_FACES)) || IS_FACE_FIELD(m_ncurrentData)) neval = 1;
-	if ((bsel && (nmode == SELECT_ELEMS)) || IS_ELEM_FIELD(m_ncurrentData)) neval = 2;
+	if ((bsel && (nmode == SELECT_EDGES)) || IS_EDGE_FIELD(m_ncurrentData)) neval = 1;
+	if ((bsel && (nmode == SELECT_FACES)) || IS_FACE_FIELD(m_ncurrentData)) neval = 2;
+	if ((bsel && (nmode == SELECT_ELEMS)) || IS_ELEM_FIELD(m_ncurrentData)) neval = 3;
 	assert(neval >= 0);
 
 	// clear the graph
@@ -160,8 +161,9 @@ void CSummaryWindow::Update(bool breset)
 		switch (neval)
 		{
 		case 0: rng = EvalNodeRange(*pfem, i, bsel); break;
-		case 1: rng = EvalFaceRange(*pfem, i, bsel, bvol); break;
-		case 2: rng = EvalElemRange(*pfem, i, bsel, bvol); break;
+		case 1: rng = EvalEdgeRange(*pfem, i, bsel); break;
+		case 2: rng = EvalFaceRange(*pfem, i, bsel, bvol); break;
+		case 3: rng = EvalElemRange(*pfem, i, bsel, bvol); break;
 		}
 		dataMax.addPoint(x[i], rng.fmax);
 		dataMin.addPoint(x[i], rng.fmin);
@@ -199,6 +201,37 @@ CSummaryWindow::RANGE CSummaryWindow::EvalNodeRange(FEModel& fem, int nstate, bo
 		if ((bsel == false) || (node.IsSelected()))
 		{
 			float val = state.m_NODE[i].m_val;
+			rng.favg += val;
+			sum += 1.f;
+			if (val > rng.fmax) rng.fmax = val;
+			if (val < rng.fmin) rng.fmin = val;
+		}
+	}
+
+	if (sum == 0.f) rng.fmin = rng.fmax = 0.f;
+	else rng.favg /= sum;
+
+	return rng;
+}
+
+//-----------------------------------------------------------------------------
+// Evaluate the range of unpacked nodal data values
+CSummaryWindow::RANGE CSummaryWindow::EvalEdgeRange(FEModel& fem, int nstate, bool bsel)
+{
+	RANGE rng = {-1e20f, 1e20f, 0.f};
+
+	FEState& state = *fem.GetState(nstate);
+	FEMesh& mesh = *fem.GetMesh();
+
+	float sum = 0;
+	
+	int NE = mesh.Edges();
+	for (int i=0; i<NE; i++)
+	{
+		FEEdge& edge = mesh.Edge(i);
+		if ((bsel == false) || (edge.IsSelected()))
+		{
+			float val = state.m_EDGE[i].m_val;
 			rng.favg += val;
 			sum += 1.f;
 			if (val > rng.fmax) rng.fmax = val;

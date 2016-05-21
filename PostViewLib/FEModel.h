@@ -122,6 +122,7 @@ public:
 
 	// evaluate scalar functions
 	void EvaluateNode   (int n, int ntime, int nfield, NODEDATA& d);
+	void EvaluateEdge   (int n, int ntime, int nfield, EDGEDATA& d);
 	void EvaluateFace   (int n, int ntime, int nfield, FACEDATA& d);
 	void EvaluateElement(int n, int ntime, int nfield, ELEMDATA& d);
 

@@ -120,6 +120,7 @@ protected:
 	void SelectElements(int x0, int y0, int x1, int y1, int mode);
 	void SelectFaces   (int x0, int y0, int x1, int y1, int mode);
 	void SelectNodes   (int x0, int y0, int x1, int y1, int mode);
+	void SelectEdges   (int x0, int y0, int x1, int y1, int mode);
 
 	FEElement* PickElement(int x, int y);
 	GLNODE_PICK PickNode(int x, int y, bool bselect = false);

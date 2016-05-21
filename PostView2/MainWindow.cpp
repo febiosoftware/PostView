@@ -478,6 +478,12 @@ void CMainWindow::on_selectNodes_triggered()
 	ui->glview->repaint();
 }
 
+void CMainWindow::on_selectEdges_triggered()
+{
+	m_doc->SetSelectionMode(SELECT_EDGES);
+	ui->glview->repaint();
+}
+
 void CMainWindow::on_selectFaces_triggered()
 {
 	m_doc->SetSelectionMode(SELECT_FACES);
@@ -500,6 +506,7 @@ void CMainWindow::on_actionHideSelected_triggered()
 	switch (pdoc->GetSelectionMode())
 	{
 	case SELECT_NODES: pm->HideSelectedNodes(); break;
+	case SELECT_EDGES: pm->HideSelectedEdges(); break;
 	case SELECT_FACES: pm->HideSelectedFaces(); break;
 	case SELECT_ELEMS: pm->HideSelectedElements(); break;
 	}
@@ -587,6 +594,7 @@ void CMainWindow::on_actionSelectRange_triggered()
 		switch (pdoc->GetSelectionMode())
 		{
 		case SELECT_NODES: pdoc->SelectNodesInRange(dlg.m_min, dlg.m_max, dlg.m_brange); break;
+		case SELECT_EDGES: pdoc->SelectEdgesInRange(dlg.m_min, dlg.m_max, dlg.m_brange); break;
 		case SELECT_FACES: pdoc->SelectFacesInRange(dlg.m_min, dlg.m_max, dlg.m_brange); break;
 		case SELECT_ELEMS: pdoc->SelectElemsInRange(dlg.m_min, dlg.m_max, dlg.m_brange); break;
 		}
@@ -615,8 +623,9 @@ void CMainWindow::on_actionFind_triggered()
 	int nview = doc.GetSelectionMode();
 	int nsel = 0;
 	if (nview == SELECT_NODES) nsel = 0;
-	if (nview == SELECT_FACES) nsel = 1;
-	if (nview == SELECT_ELEMS) nsel = 2;
+	if (nview == SELECT_EDGES) nsel = 1;
+	if (nview == SELECT_FACES) nsel = 2;
+	if (nview == SELECT_ELEMS) nsel = 3;
 
 	CDlgFind dlg(this, nsel);
 
@@ -625,12 +634,14 @@ void CMainWindow::on_actionFind_triggered()
 		FEMesh* pm = doc.GetFEModel()->GetMesh();
 
 		if (dlg.m_bsel[0]) nview = SELECT_NODES;
-		if (dlg.m_bsel[1]) nview = SELECT_FACES;
-		if (dlg.m_bsel[2]) nview = SELECT_ELEMS;
+		if (dlg.m_bsel[1]) nview = SELECT_EDGES;
+		if (dlg.m_bsel[2]) nview = SELECT_FACES;
+		if (dlg.m_bsel[3]) nview = SELECT_ELEMS;
 
 		switch (nview)
 		{
 		case SELECT_NODES: on_selectNodes_triggered(); pm->SelectNodes   (dlg.m_item, dlg.m_bclear); break;
+		case SELECT_EDGES: on_selectEdges_triggered(); pm->SelectEdges   (dlg.m_item, dlg.m_bclear); break;
 		case SELECT_FACES: on_selectFaces_triggered(); pm->SelectFaces   (dlg.m_item, dlg.m_bclear); break;
 		case SELECT_ELEMS: on_selectElems_triggered(); pm->SelectElements(dlg.m_item, dlg.m_bclear); break;
 		}

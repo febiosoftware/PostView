@@ -8,23 +8,21 @@
 // Constructor
 FEState::FEState(float time, FEModel* pfem)
 {
-	int i, N;
-
-	FEMesh* pm = pfem->GetMesh();
-
-
-	int nodes = pm->Nodes();
-	int elems = pm->Elements();
-	int faces = pm->Faces();
+	FEMesh& mesh = *pfem->GetMesh();
+	int nodes = mesh.Nodes();
+	int edges = mesh.Edges();
+	int elems = mesh.Elements();
+	int faces = mesh.Faces();
 
 	// allocate storage
 	m_NODE.resize(nodes);
+	m_EDGE.resize(edges);
 	m_ELEM.resize(elems);
 	m_FACE.resize(faces);
 
 	// initialize data
-	for (i=0; i<nodes; ++i) m_NODE[i].m_rt = pm->Node(i).m_r0;
-	for (i=0; i<elems; ++i)
+	for (int i=0; i<nodes; ++i) m_NODE[i].m_rt = mesh.Node(i).m_r0;
+	for (int i=0; i<elems; ++i)
 	{
 		m_ELEM[i].m_h[0] = 0.f;
 		m_ELEM[i].m_h[1] = 0.f;
@@ -39,9 +37,9 @@ FEState::FEState(float time, FEModel* pfem)
 	FEDataManager* pdm = pfem->GetDataManager();
 
 	// Nodal data
-	N = pdm->DataFields();
+	int N = pdm->DataFields();
 	FEDataFieldPtr it = pdm->FirstDataField();
-	for (i=0; i<N; ++i, ++it)
+	for (int i=0; i<N; ++i, ++it)
 	{
 		FEDataField& d = *(*it);
 		m_Data.push_back(d.CreateData(pfem));
@@ -52,22 +50,22 @@ FEState::FEState(float time, FEModel* pfem)
 // Constructor
 FEState::FEState(float time, FEModel* pfem, FEState* pstate)
 {
-	int i, N;
+	FEMesh& mesh = *pfem->GetMesh();
 
-	FEMesh* pm = pfem->GetMesh();
-
-	int nodes = pm->Nodes();
-	int elems = pm->Elements();
-	int faces = pm->Faces();
+	int nodes = mesh.Nodes();
+	int edges = mesh.Edges();
+	int elems = mesh.Elements();
+	int faces = mesh.Faces();
 
 	// allocate storage
 	m_NODE.resize(nodes);
+	m_EDGE.resize(edges);
 	m_ELEM.resize(elems);
 	m_FACE.resize(faces);
 
 	// initialize data
-	for (i=0; i<nodes; ++i) m_NODE[i].m_rt = pm->Node(i).m_r0;
-	for (i=0; i<elems; ++i)
+	for (int i=0; i<nodes; ++i) m_NODE[i].m_rt = mesh.Node(i).m_r0;
+	for (int i=0; i<elems; ++i)
 	{
 		m_ELEM[i].m_h[0] = 0.f;
 		m_ELEM[i].m_h[1] = 0.f;
@@ -82,16 +80,16 @@ FEState::FEState(float time, FEModel* pfem, FEState* pstate)
 	FEDataManager* pdm = pfem->GetDataManager();
 
 	// Nodal data
-	N = pdm->DataFields();
+	int N = pdm->DataFields();
 	FEDataFieldPtr pn = pdm->FirstDataField();
-	for (i=0; i<N; ++i, ++pn)
+	for (int i=0; i<N; ++i, ++pn)
 	{
 		m_Data.push_back((*pn)->CreateData(pfem));
 	}
 
-	// copy nodal data
+	// copy data
 	pn = pdm->FirstDataField();
-	for (i=0; i<N; ++i, ++pn)
+	for (int i=0; i<N; ++i, ++pn)
 	{
 		FEDataField& d = *(*pn);
 		FEMeshData& md = m_Data[i];

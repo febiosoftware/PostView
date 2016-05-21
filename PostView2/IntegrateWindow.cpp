@@ -179,6 +179,7 @@ void CIntegrateWindow::IntegrateSelection(CPlotData& data)
 			// evaluate sum/integration
 			double res = 0.0;
 			if      (nview == SELECT_NODES) res = IntegrateNodes(mesh, ps);
+			else if (nview == SELECT_EDGES) res = IntegrateEdges(mesh, ps);
 			else if (nview == SELECT_FACES) res = IntegrateFaces(mesh, ps);
 			else if (nview == SELECT_ELEMS) res = IntegrateElems(mesh, ps);
 			else assert(false);
@@ -202,6 +203,13 @@ double CIntegrateWindow::IntegrateNodes(FEMesh& mesh, FEState* ps)
 		}
 	}
 	return res;
+}
+
+//-----------------------------------------------------------------------------
+double CIntegrateWindow::IntegrateEdges(FEMesh& mesh, FEState* ps)
+{
+	assert(false);
+	return 0.0;
 }
 
 //-----------------------------------------------------------------------------

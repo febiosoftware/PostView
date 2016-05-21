@@ -25,6 +25,7 @@ public:
 
 private:
 	double IntegrateNodes(FEMesh& mesh, FEState* ps);
+	double IntegrateEdges(FEMesh& mesh, FEState* ps);
 	double IntegrateFaces(FEMesh& mesh, FEState* ps);
 	double IntegrateElems(FEMesh& mesh, FEState* ps);
 

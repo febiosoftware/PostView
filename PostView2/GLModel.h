@@ -61,6 +61,7 @@ public:
 	void RenderThickShellOutline(FEFace& face, FEMesh* pm);
 	void RenderShadows(FEModel* ps, vec3f lp, float inf);
 	void RenderNodes(FEModel* ps, CGLContext& rc);
+	void RenderEdges(FEModel* ps, CGLContext& rc);
 	void RenderFaces(FEModel* ps, CGLContext& rc);
 
 	void RenderAllElements();	// used for element selection

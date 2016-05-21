@@ -161,6 +161,7 @@ public:
 	int	node[MAX_NODES];	// array of indices to the four nodes of a face
 	int	m_ntype;			// type of face
 
+	int	m_nsg;				// smoothing group ID
 	int	m_mat;				// material id
 	int	m_nbr[4];			// neighbour faces
 	int	m_elem[2];			// first index = element to which this face belongs, second index = local element face number

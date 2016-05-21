@@ -131,6 +131,7 @@ vec3f FEEdge::eval(vec3f* d, double r)
 //-----------------------------------------------------------------------------
 FEFace::FEFace()
 {
+	m_nsg = 0;
 	m_ntype = -1;
 	for (int i=0; i<MAX_NODES; ++i) node[i] = -1;
 }

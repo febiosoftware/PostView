@@ -39,6 +39,7 @@ private slots:
 
 private:
 	RANGE EvalNodeRange(FEModel& fem, int ntime, bool bsel);
+	RANGE EvalEdgeRange(FEModel& fem, int ntime, bool bsel);
 	RANGE EvalFaceRange(FEModel& fem, int ntime, bool bsel, bool bvol);
 	RANGE EvalElemRange(FEModel& fem, int ntime, bool bsel, bool bvol);
 

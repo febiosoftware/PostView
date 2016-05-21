@@ -621,6 +621,15 @@ void FEModel::EvaluateNode(int n, int ntime, int nfield, NODEDATA& d)
 }
 
 //-----------------------------------------------------------------------------
+// Calculate field value of edge n at time ntime
+void FEModel::EvaluateEdge(int n, int ntime, int nfield, EDGEDATA& d)
+{
+	d.m_val = 0.f;
+	d.m_ntag = 0;
+	d.m_nv[0] = d.m_nv[1] = d.m_nv[2] = 0.f;
+}
+
+//-----------------------------------------------------------------------------
 // Calculate field value of face n at time ntime
 void FEModel::EvaluateFace(int n, int ntime, int nfield, FACEDATA& d)
 {

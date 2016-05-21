@@ -110,13 +110,12 @@ CGraphWindow::CGraphWindow(CMainWindow* pwnd) : m_wnd(pwnd), QMainWindow(pwnd), 
 void CGraphWindow::Update(bool breset)
 {
 	CDocument* doc = m_wnd->GetDocument();
+	if (doc->IsValid() == false) return;
+
 	if (breset)
 	{
-		if (doc->IsValid())
-		{
-			ui->selectX->BuildMenu(doc->GetFEModel(), DATA_SCALAR);
-			ui->selectY->BuildMenu(doc->GetFEModel(), DATA_SCALAR);
-		}
+		ui->selectX->BuildMenu(doc->GetFEModel(), DATA_SCALAR);
+		ui->selectY->BuildMenu(doc->GetFEModel(), DATA_SCALAR);
 	}
 
 	// Currently, when the time step changes, Update is called with breset set to false.
@@ -126,9 +125,8 @@ void CGraphWindow::Update(bool breset)
 //	if (m_bUserRange && (breset == false)) return;
 
 	// get the document and current time point and time steps
-	CDocument* pdoc = m_wnd->GetDocument();
-	int ntime  = pdoc->currentTime();
-	int nsteps = pdoc->GetTimeSteps();
+	int ntime  = doc->currentTime();
+	int nsteps = doc->GetTimeSteps();
 
 	// Figure out the time range
 	int nmin = 0, nmax = 0;
@@ -165,20 +163,22 @@ void CGraphWindow::Update(bool breset)
 
 	// plot type
 	int ntype = ui->selectPlot->currentIndex();
+	int ncx = ui->selectTime->currentIndex();
+	if (ntype == 0) m_xtype = ncx; else m_xtype = 2;
 
 	// get the field data
-	int dataX = ui->selectX->currentValue();
-	int dataY = ui->selectY->currentValue();
-	if ((ntype==1) && (dataX<=0)) return;
-	if (dataY<=0) return;
+	m_dataX = ui->selectX->currentValue();
+	m_dataY = ui->selectY->currentValue();
+	if ((ntype==1) && (m_dataX<=0)) return;
+	if (m_dataY<=0) return;
 
 	// set current time point index (TODO: Not sure if this is still used)
 //	pview->SetCurrentTimeIndex(ntime);
 
-	CGLModel* po = pdoc->GetGLModel();
-	FEModel* pfem = pdoc->GetFEModel();
+	CGLModel* po = doc->GetGLModel();
+	FEModel& fem = *doc->GetFEModel();
 
-	FEMesh* pfe = pdoc->GetFEModel()->GetMesh();
+	FEMesh& mesh = *doc->GetFEModel()->GetMesh();
 
 	// get the title
 	if (ntype == 0)
@@ -193,16 +193,8 @@ void CGraphWindow::Update(bool breset)
 		ui->plot->setTitle(QString("%1 --- %2").arg(xtext).arg(ytext));
 	}
 
-	int nelems = pfe->Elements();
-	int nodes  = pfe->Nodes();
-	int nfaces = pfe->Faces();
-
-	char str[256];
-
-	// allocate temporary buffers for storing plot data
-	int cx = nmax - nmin + 1;
-	float* px = new float[cx];
-	float* py = new float[cx];
+	m_firstState = nmin;
+	m_lastState  = nmax;
 
 	// we need to update the displacement map for all time steps
 	// since the strain calculations depend on it
@@ -212,101 +204,183 @@ void CGraphWindow::Update(bool breset)
 		for (int i=0; i<nsteps; ++i) po->GetDisplacementMap()->UpdateState(i);
 	}
 
-	int ncx = ui->selectTime->currentIndex();
-
-	// get the selected elements
-	for (int i=0; i<nelems; i++)
-	{
-		FEElement& e = pfe->Element(i);
-		if (e.IsSelected())
-		{
-			// evaluate x-field
-			if (ntype == 0)
-			{
-				if (ncx == 0) 
-					for (int j=0; j<cx; j++) px[j] = pfem->GetState(j + nmin)->m_time;
-				else
-					for (int j=0; j<cx; j++) px[j] = (float) j+1.f + nmin;
-			}
-			else
-			{
-				TrackElementHistory(i, px, dataX, nmin, nmax);
-			}
-
-			// evaluate y-field
-			TrackElementHistory(i, py, dataY, nmin, nmax);
-
-			sprintf(str, "E%d", i+1);
-			CPlotData plot;
-			for (int j=0; j<cx; ++j) plot.addPoint(px[j], py[j]);
-			plot.setLabel(QString(str));
-			ui->plot->addPlotData(plot);
-		}
-	}
-
-	// get the selected faces
-	for (int i=0; i<nfaces; ++i)
-	{
-		FEFace& f = pfe->Face(i);
-		if (f.IsSelected())
-		{
-			// evaluate x-field
-			if (ntype == 0)
-			{
-				if (ncx == 0)
-					for (int j=0; j<cx; j++) px[j] = pfem->GetState(j + nmin)->m_time;
-				else
-					for (int j=0; j<cx; j++) px[j] = (float)j + 1.f + nmin;
-			}
-			else
-				TrackFaceHistory(i, px, dataX, nmin, nmax);
-
-			// evaluate y-field
-			TrackFaceHistory(i, py, dataY, nmin, nmax);
-
-			sprintf(str, "F%d", i+1);
-			CPlotData plot;
-			plot.setLabel(QString(str));
-			for (int j=0; j<cx; ++j) plot.addPoint(px[j], py[j]);
-			ui->plot->addPlotData(plot);
-		}
-	}
-
-	// get the selected nodes
-	for (int i=0; i<nodes; i++)
-	{
-		FENode& n = pfe->Node(i);
-		if (n.IsSelected())
-		{
-			// evaluate x-field
-			if (ntype == 0)
-			{
-				if (ncx == 0)
-					for (int j=0; j<cx; j++) px[j] = pfem->GetState(j + nmin)->m_time;
-				else 
-					for (int j=0; j<cx; j++) px[j] = (float) j +1.f + nmin;
-			}
-			else
-				TrackNodeHistory(i, px, dataX, nmin, nmax);
-
-			// evaluate y-field
-			TrackNodeHistory(i, py, dataY, nmin, nmax);
-
-			sprintf(str, "N%d", i+1);
-			CPlotData plot;
-			plot.setLabel(QString(str));
-			for (int j=0; j<cx; ++j) plot.addPoint(px[j], py[j]);
-			ui->plot->addPlotData(plot);
-		}
-	}
-
-	// clean up
-	delete [] px;
-	delete [] py;
+	// add selections
+	addSelectedNodes();
+	addSelectedEdges();
+	addSelectedFaces();
+	addSelectedElems();
 
 	// redraw
 	ui->plot->fitToData();
 	ui->plot->repaint();
+}
+
+//-----------------------------------------------------------------------------
+void CGraphWindow::addSelectedNodes()
+{
+	CDocument* pdoc = m_wnd->GetDocument();
+	FEModel& fem = *pdoc->GetFEModel();
+	FEMesh& mesh = *fem.GetMesh();
+
+	int nsteps = m_lastState - m_firstState + 1;
+	vector<float> xdata(nsteps);
+	vector<float> ydata(nsteps);
+
+	// get the selected nodes
+	int NN = mesh.Nodes();
+	for (int i=0; i<NN; i++)
+	{
+		FENode& node = mesh.Node(i);
+		if (node.IsSelected())
+		{
+			// evaluate x-field
+			switch (m_xtype)
+			{
+			case 0: 
+				for (int j=0; j<nsteps; j++) xdata[j] = fem.GetState(j + m_firstState)->m_time;
+				break;
+			case 1:
+				for (int j=0; j<nsteps; j++) xdata[j] = (float) j + 1.f + m_firstState;
+				break;
+			default:
+				TrackNodeHistory(i, &xdata[0], m_dataX, m_firstState, m_lastState);
+			}
+
+			// evaluate y-field
+			TrackNodeHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
+
+			CPlotData plot;
+			plot.setLabel(QString("N%1").arg(i+1));
+			for (int j=0; j<nsteps; ++j) plot.addPoint(xdata[j], ydata[j]);
+			ui->plot->addPlotData(plot);
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+void CGraphWindow::addSelectedEdges()
+{
+	CDocument* pdoc = m_wnd->GetDocument();
+	FEModel& fem = *pdoc->GetFEModel();
+	FEMesh& mesh = *fem.GetMesh();
+
+	int nsteps = m_lastState - m_firstState + 1;
+	vector<float> xdata(nsteps);
+	vector<float> ydata(nsteps);
+
+	// get the selected nodes
+	int NL = mesh.Edges();
+	for (int i=0; i<NL; i++)
+	{
+		FEEdge& edge = mesh.Edge(i);
+		if (edge.IsSelected())
+		{
+			// evaluate x-field
+			switch (m_xtype)
+			{
+			case 0: 
+				for (int j=0; j<nsteps; j++) xdata[j] = fem.GetState(j + m_firstState)->m_time;
+				break;
+			case 1:
+				for (int j=0; j<nsteps; j++) xdata[j] = (float) j + 1.f + m_firstState;
+				break;
+			default:
+				TrackEdgeHistory(i, &xdata[0], m_dataX, m_firstState, m_lastState);
+			}
+
+			// evaluate y-field
+			TrackEdgeHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
+
+			CPlotData plot;
+			plot.setLabel(QString("L%1").arg(i+1));
+			for (int j=0; j<nsteps; ++j) plot.addPoint(xdata[j], ydata[j]);
+			ui->plot->addPlotData(plot);
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+void CGraphWindow::addSelectedFaces()
+{
+	CDocument* pdoc = m_wnd->GetDocument();
+	FEModel& fem = *pdoc->GetFEModel();
+	FEMesh& mesh = *fem.GetMesh();
+
+	int nsteps = m_lastState - m_firstState + 1;
+	vector<float> xdata(nsteps);
+	vector<float> ydata(nsteps);
+
+	// get the selected faces
+	int NF = mesh.Faces();
+	for (int i=0; i<NF; ++i)
+	{
+		FEFace& f = mesh.Face(i);
+		if (f.IsSelected())
+		{
+			// evaluate x-field
+			switch (m_xtype)
+			{
+			case 0: 
+				for (int j=0; j<nsteps; j++) xdata[j] = fem.GetState(j + m_firstState)->m_time;
+				break;
+			case 1:
+				for (int j=0; j<nsteps; j++) xdata[j] = (float) j + 1.f + m_firstState;
+				break;
+			default:
+				TrackFaceHistory(i, &xdata[0], m_dataX, m_firstState, m_lastState);
+			}
+
+			// evaluate y-field
+			TrackFaceHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
+
+			CPlotData plot;
+			plot.setLabel(QString("F%1").arg(i+1));
+			for (int j=0; j<nsteps; ++j) plot.addPoint(xdata[j], ydata[j]);
+			ui->plot->addPlotData(plot);
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+void CGraphWindow::addSelectedElems()
+{
+	CDocument* pdoc = m_wnd->GetDocument();
+	FEModel& fem = *pdoc->GetFEModel();
+	FEMesh& mesh = *fem.GetMesh();
+
+	int nsteps = m_lastState - m_firstState + 1;
+	vector<float> xdata(nsteps);
+	vector<float> ydata(nsteps);
+
+	// get the selected elements
+	int NE = mesh.Elements();
+	for (int i=0; i<NE; i++)
+	{
+		FEElement& e = mesh.Element(i);
+		if (e.IsSelected())
+		{
+			// evaluate x-field
+			switch (m_xtype)
+			{
+			case 0: 
+				for (int j=0; j<nsteps; j++) xdata[j] = fem.GetState(j + m_firstState)->m_time;
+				break;
+			case 1:
+				for (int j=0; j<nsteps; j++) xdata[j] = (float) j + 1.f + m_firstState;
+				break;
+			default:
+				TrackElementHistory(i, &xdata[0], m_dataX, m_firstState, m_lastState);
+			}
+
+			// evaluate y-field
+			TrackElementHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
+
+			CPlotData plot;
+			for (int j=0; j<nsteps; ++j) plot.addPoint(xdata[j], ydata[j]);
+			plot.setLabel(QString("E%1").arg(i+1));
+			ui->plot->addPlotData(plot);
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -326,6 +400,27 @@ void CGraphWindow::TrackNodeHistory(int node, float* pval, int nfield, int nmin,
 	for (int n=0; n<nn; n++)
 	{
 		fem.EvaluateNode(node, n + nmin, nfield, nd);
+		pval[n] = nd.m_val;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Calculate time history of a edge
+void CGraphWindow::TrackEdgeHistory(int edge, float* pval, int nfield, int nmin, int nmax)
+{
+	FEModel& fem = *m_wnd->GetDocument()->GetFEModel();
+
+	int nsteps = fem.GetStates();
+	if (nmin <       0) nmin = 0;
+	if (nmax ==     -1) nmax = nsteps - 1;
+	if (nmax >= nsteps) nmax = nsteps - 1;
+	if (nmax <    nmin) nmax = nmin;
+	int nn = nmax - nmin + 1;
+
+	EDGEDATA nd;
+	for (int n=0; n<nn; n++)
+	{
+		fem.EvaluateEdge(edge, n + nmin, nfield, nd);
 		pval[n] = nd.m_val;
 	}
 }

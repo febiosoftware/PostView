@@ -521,6 +521,7 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 					case SELECT_ELEMS: SelectElements(m_p0.x, m_p0.y, m_p1.x, m_p1.y, mode); break;
 					case SELECT_FACES: SelectFaces   (m_p0.x, m_p0.y, m_p1.x, m_p1.y, mode); break;
 					case SELECT_NODES: SelectNodes   (m_p0.x, m_p0.y, m_p1.x, m_p1.y, mode); break;
+					case SELECT_EDGES: SelectEdges   (m_p0.x, m_p0.y, m_p1.x, m_p1.y, mode); break;
 					}
 					m_wnd->UpdateTools();
 
@@ -750,6 +751,21 @@ void CGLView::RenderTags()
 			vtag.push_back(tag);
 		}
 	}
+
+	// process edges
+	for (int i=0; i<pfe->Edges(); i++)
+	{
+		FEEdge& edge = pfe->Edge(i);
+		if (edge.IsSelected())
+		{
+			tag.r = pfe->EdgeCenter(edge);
+			tag.bvis = false;
+			tag.ntag = 0;
+			sprintf(tag.sztag, "L%d", i+1);
+			vtag.push_back(tag);
+		}
+	}
+
 
 	// if we don't have any tags, just return
 	if (vtag.empty()) return;
@@ -1789,6 +1805,199 @@ void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 	delete [] pbuf;
 }
 
+void CGLView::SelectEdges(int x0, int y0, int x1, int y1, int mode)
+{
+	CDocument* pdoc = GetDocument();
+	if (pdoc->IsValid() == false) return;
+
+	int x = (x0+x1)/2;
+	int y = (y0+y1)/2;
+	int wx = abs(x1-x0);
+	int wy = abs(y1-y0);
+
+	bool bsingle = (wx==0) && (wy==0);
+
+	if (wx == 0) wx = 4;
+	if (wy == 0) wy = 4;
+
+	// activate the gl rendercontext
+	makeCurrent();
+
+	BOUNDINGBOX box = pdoc->GetBoundingBox();
+	VIEWSETTINGS& view = pdoc->GetViewSettings();
+
+	FEModel* ps = pdoc->GetFEModel();
+	FEMesh* pm = ps->GetMesh();
+
+	double radius = box.Radius();
+	vec3f rc = box.Center();
+
+	m_fnear = 0.01*radius;
+	m_ffar  = 10*radius;
+
+/*	if (!valid())
+	{
+		SetupGL();
+		glViewport(0,0,w(),h());
+		valid(1);	// validate window
+	}
+*/
+	// set up selection buffer
+	int size = pm->Nodes();
+	GLuint *pbuf = new GLuint[4*size];
+
+	glSelectBuffer(4*size, pbuf);
+
+	// viewport storage
+	GLint viewport[4];
+	glGetIntegerv(GL_VIEWPORT, viewport);
+
+	// switch to projection and save the matrix
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+
+	// change render mode
+	glRenderMode(GL_SELECT);
+
+	// establish new clipping volume
+	glLoadIdentity();
+	gluPickMatrix(x, viewport[3] - y, wx, wy, viewport);
+
+	// apply perspective projection
+	if (view.m_nproj == RENDER_ORTHO)
+	{
+		double z = GetCamera().GetTargetDistance();
+		double dx = z*tan(0.5*m_fov*PI/180.0)*m_ar;
+		double dy = z*tan(0.5*m_fov*PI/180.0);
+		glOrtho(-dx, dx, -dy, dy, m_fnear, m_ffar);
+	}
+	else
+	{
+		gluPerspective(m_fov, m_ar, m_fnear, m_ffar);
+	}
+
+	glInitNames();
+	glPushName(0);
+
+	// draw the scene
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	// store attributes
+	glPushAttrib(GL_ENABLE_BIT);
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHTING);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glPushMatrix();
+
+	// setup the rendering context
+	CGLContext grc(this);
+
+	// render the scene
+	PositionCam();
+
+	if (view.m_bcull) glEnable(GL_CULL_FACE);
+	else glDisable(GL_CULL_FACE);
+
+	pdoc->GetGLModel()->RenderEdges(ps, grc);
+
+	glPopMatrix();
+
+	// restore attributes
+	glPopAttrib();
+
+	// collect the hits
+	GLint hits = glRenderMode(GL_RENDER);
+
+	if (mode == 0)
+	{
+		int edges = pm->Edges();
+		for (int i=0; i<edges; i++) pm->Edge(i).Unselect();
+
+		mode = SELECT_ADD;
+	}
+
+	// parse the selection buffer
+	if (hits > 0)
+	{
+		if (bsingle)
+		{
+			unsigned int index = pbuf[3];
+			unsigned int minz = pbuf[1];
+			for (int i=1; i<hits; i++)
+			{
+				if (pbuf[4*i+1] < minz)
+				{
+					minz = pbuf[4*i+1];
+					index = pbuf[4*i+3];
+				}
+			}
+
+			if (index >= 0) 
+			{
+				FEEdge& edge = pm->Edge(index-1);
+				if (mode == SELECT_ADD) 
+				{
+					edge.Select();
+					if (view.m_bconn == false) edge.Select();
+					else 
+					{
+						pm->SelectConnectedEdges(edge);
+					}
+				}
+				else edge.Unselect();
+			}
+		}
+		else
+		{
+			int n;
+			for (int i=0; i<hits; i++)
+			{
+				n = pbuf[4*i+3];
+				if ((n>0) && (n<=size))
+				{
+					FEEdge& edge = pm->Edge(n-1);
+					if (mode == SELECT_ADD)	edge.Select();
+					else edge.Unselect();
+				}
+			}
+		}
+	}
+
+	// count nodal selection
+	int N = 0, nn = -1, i;
+	for (i=0; i<pm->Edges(); ++i)
+	{
+		if (pm->Edge(i).IsSelected())
+		{
+			N++;
+			nn = i;
+		}
+	}
+
+	if (N==1)
+	{
+		FEEdge& n = pm->Edge(nn);
+		float f = pdoc->GetGLModel()->currentState()->m_EDGE[nn].m_val;
+//		m_wnd->SetStatusBar("1 node selected: Id = %d, val = %g, pos = (%g, %g, %g)", nn+1, f, r.x, r.y, r.z);
+	}
+	else if (N > 1)
+	{
+//		m_wnd->SetStatusBar("%d nodes selected", N);
+	}
+//	else m_wnd->SetStatusBar(0);
+
+	// Restore the projection matrix
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+
+	// clean up
+	delete [] pbuf;
+}
+
 QImage CGLView::CaptureScreen()
 {
 	return grabFramebuffer();
@@ -1967,10 +2176,18 @@ void CGLView::RenderDoc()
 			// the mesh polygons. I could have used glPolygonOffset but I found
 			// that this approach gave better results. Furthermore, this way works
 			// with more than just polygons.
-			if (view.m_bmesh)
+			if (view.m_bmesh && (mode != SELECT_EDGES))
 			{
 				glDepthRange(0, 0.999999);
 				po->RenderMeshLines(pdoc->GetFEModel());
+				glDepthRange(0, 1);
+			}
+
+			// render the edges
+			if (mode == SELECT_EDGES)
+			{
+				glDepthRange(0, 0.999999);
+				po->RenderEdges(pdoc->GetFEModel(), rc);
 				glDepthRange(0, 1);
 			}
 

@@ -1259,6 +1259,24 @@ void CDocument::SelectNodesInRange(float fmin, float fmax, bool bsel)
 }
 
 //-----------------------------------------------------------------------------
+void CDocument::SelectEdgesInRange(float fmin, float fmax, bool bsel)
+{
+	FEMesh* pm = m_fem->GetMesh();
+	int N = pm->Edges();
+	FEState* ps = m_pGLModel->currentState();
+	for (int i=0; i<N; ++i)
+	{
+		FEEdge& edge = pm->Edge(i);
+		if (edge.IsEnabled() && edge.IsVisible() && ((bsel == false) || (edge.IsSelected())))
+		{
+			float v = ps->m_EDGE[i].m_val;
+			if ((v >= fmin) && (v <= fmax)) edge.Select();
+			else edge.Unselect();
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
 void CDocument::SelectFacesInRange(float fmin, float fmax, bool bsel)
 {
 	FEMesh* pm = m_fem->GetMesh();
@@ -1415,6 +1433,11 @@ void CDocument::GetSelectionList(vector<int>& L)
 	case SELECT_NODES:
 		{
 			for (int i=0; i<m.Nodes(); ++i) if (m.Node(i).IsSelected()) L.push_back(i);
+		}
+		break;
+	case SELECT_EDGES:
+		{
+			for (int i=0; i<m.Edges(); ++i) if (m.Edge(i).IsSelected()) L.push_back(i);
 		}
 		break;
 	case SELECT_FACES:

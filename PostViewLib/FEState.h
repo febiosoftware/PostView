@@ -17,6 +17,13 @@ struct NODEDATA
 	int		m_ntag;	// active flag
 };
 
+struct EDGEDATA
+{
+	float	m_val;		// current value
+	int		m_ntag;		// active flag
+	float	m_nv[FEEdge::MAX_NODES]; // nodal values
+};
+
 struct ELEMDATA
 {
 	float	m_val;		// current element value
@@ -69,6 +76,7 @@ public:
 	bool	m_bsmooth;
 
 	vector<NODEDATA>	m_NODE;		// nodal data
+	vector<EDGEDATA>	m_EDGE;		// edge data
 	vector<FACEDATA>	m_FACE;		// face data
 	vector<ELEMDATA>	m_ELEM;		// element data
 	vector<LINEDATA>	m_Line;		// line data

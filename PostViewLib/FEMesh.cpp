@@ -12,6 +12,7 @@
 // Constructor
 FEMesh::FEMesh()
 {
+	// TODO: store this elsewhere
 	m_stol = 60.*PI/180.0;
 }
 
@@ -41,6 +42,7 @@ void FEMesh::ClearAll()
 {
 	CleanUp();
 	m_Node.clear();
+	m_Edge.clear();
 	m_Face.clear();
 	m_Elem.clear();
 }
@@ -245,6 +247,31 @@ void FEMesh::UpdateDomains()
 }
 
 //-----------------------------------------------------------------------------
+// Build the edges. 
+// Currently, only edges from outside facets are created
+void FEMesh::BuildEdges()
+{
+	int NF = Faces();
+	for (int i=0; i<NF; ++i) Face(i).m_ntag = i;
+
+	m_Edge.reserve(NF);
+	for (int i=0; i<NF; ++i)
+	{
+		FEFace& fi = Face(i);
+		int ne = fi.Edges();
+		for (int j=0; j<ne; ++j)
+		{
+			FEFace* pfj = (fi.m_nbr[j] == -1 ? 0 : &Face(fi.m_nbr[j]));
+			if ((pfj == 0) || (pfj->m_ntag > fi.m_ntag))
+			{
+				FEEdge e = fi.Edge(j);
+				m_Edge.push_back(e);
+			}
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
 // Build the FE faces. Note that we only create exterior faces
 void FEMesh::BuildFaces()
 {
@@ -344,6 +371,91 @@ void FEMesh::BuildFaces()
 }
 
 //-----------------------------------------------------------------------------
+void FEMesh::FindFaceNeighbors()
+{
+	int nodes = Nodes();
+	int faces = Faces();
+
+	// calculate the valences
+	vector<int> pnv(nodes, 0);
+	for(int i=0; i<faces; ++i)
+	{
+		FEFace& f = m_Face[i];
+		int n = f.Nodes();
+		for (int j=0; j<n; ++j) pnv[ f.node[j] ]++;
+	}
+
+	// figure out which face is attached to which node
+	int nsize = 0;
+	for (int i=0; i<nodes; ++i) nsize += pnv[i];
+
+	vector<int> pnf(nsize);
+	vector<int*> ppnf(nodes);
+	ppnf[0] = &pnf[0];
+	for (int i=1; i<nodes; ++i)	ppnf[i] = ppnf[i-1] + pnv[i-1];
+	for (int i=0; i<nodes; ++i) pnv[i] = 0;
+
+	for (int i=0; i<faces; ++i)
+	{
+		FEFace& f = m_Face[i];
+		int n = f.Nodes();
+		for (int j=0; j<n; ++j)
+		{
+			int nj = f.node[j];
+			ppnf[nj][pnv[nj]] = i;
+			pnv[nj]++;
+		}
+	}
+
+	// clear the neighbours
+	for (int i=0; i<faces; ++i)
+	{
+		FEFace& f = m_Face[i];
+		f.m_nbr[0] = -1;
+		f.m_nbr[1] = -1;
+		f.m_nbr[2] = -1;
+		f.m_nbr[3] = -1;
+	}
+
+	// find neighbours
+	for (int i=0; i<faces; ++i)
+	{
+		FEFace& f = m_Face[i];
+
+		// find all neighbours of this face
+		int n = f.Edges();
+		int jp1;
+		int n1, n2, nval;
+		for (int j=0; j<n; ++j)
+		{
+			jp1 = (j+1)%n;
+			n1 = f.node[j];
+			n2 = f.node[jp1];
+			nval = pnv[n1];
+
+			for (int k=0; k<nval; ++k)
+			{
+				FEFace& f2 = m_Face[ ppnf[n1][k] ];
+				if ((&f2 != &f) && (f2.HasEdge(n1, n2)))
+				{
+					// we found the neighbour
+					// also make sure that they are of similar type,
+					// that is: shells can connect only to shells and solids to solids
+					int e1 = (Element(f .m_elem[0]).IsSolid()?1:0);
+					int e2 = (Element(f2.m_elem[0]).IsSolid()?1:0);
+					if (e1 == e2)
+					{
+						// Eureka! We found one!
+						f.m_nbr[j] = ppnf[n1][k];
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
 // Update the FE data
 void FEMesh::Update()
 {
@@ -351,7 +463,14 @@ void FEMesh::Update()
 	if (m_NEL.Empty()) FindNeighbours();
 
 	// now that we have found the neighbours, let's find the faces
-	if (m_Face.empty()) BuildFaces();
+	if (m_Face.empty()) 
+	{
+		BuildFaces();
+		FindFaceNeighbors();
+	}
+
+	// next, we build the edges
+	if (m_Edge.empty()) BuildEdges();
 
 	// create the parts
 	UpdateDomains();
@@ -392,45 +511,8 @@ void FEMesh::UpdateNodes()
 // are only set when the faces belong to the same smoothing group.
 void FEMesh::AutoSmooth()
 {
-	int i, j, k, n;
-
-	int nodes = Nodes();
 	int faces = Faces();
-
-	// calculate the valences
-	int* pnv = new int[nodes];
-	for (i=0; i<nodes; ++i) pnv[i] = 0;
-
-	for(i=0; i<faces; ++i)
-	{
-		FEFace& f = m_Face[i];
-		n = f.Nodes();
-		for (j=0; j<n; ++j) pnv[ f.node[j] ]++;
-	}
-
-	// figure out which face is attached to which node
-	int nsize = 0;
-	for (i=0; i<nodes; ++i) nsize += pnv[i];
-
-	int* pnf = new int[nsize];
-	int** ppnf = new int*[nodes];
-	ppnf[0] = pnf;
-	for (i=1; i<nodes; ++i)	ppnf[i] = ppnf[i-1] + pnv[i-1];
-	for (i=0; i<nodes; ++i) pnv[i] = 0;
-
-	for (i=0; i<faces; ++i)
-	{
-		FEFace& f = m_Face[i];
-		n = f.Nodes();
-		for (j=0; j<n; ++j)
-		{
-			int nj = f.node[j];
-			ppnf[nj][pnv[nj]] = i;
-			pnv[nj]++;
-		}
-	}
-
-	for (i=0; i<faces; ++i)
+	for (int i=0; i<faces; ++i)
 	{
 		FEFace& f = m_Face[i];
 
@@ -441,65 +523,18 @@ void FEMesh::AutoSmooth()
 
 		f.m_fn = (r1 - r0)^(r2 - r0);
 		f.m_fn.Normalize();
-
-		// clear the neighbours
-		f.m_nbr[0] = -1;
-		f.m_nbr[1] = -1;
-		f.m_nbr[2] = -1;
-		f.m_nbr[3] = -1;
+		f.m_nsg = 0;
 	}
 
 	// smoothing threshold
 	double eps = cos(m_stol);
 
-	// find neighbours
-	for (i=0; i<faces; ++i)
-	{
-		FEFace& f = m_Face[i];
-
-		// find all neighbours of this face
-		n = f.Edges();
-		int jp1;
-		int n1, n2, nval;
-		for (j=0; j<n; ++j)
-		{
-			jp1 = (j+1)%n;
-			n1 = f.node[j];
-			n2 = f.node[jp1];
-			nval = pnv[n1];
-
-			for (k=0; k<nval; ++k)
-			{
-				FEFace& f2 = m_Face[ ppnf[n1][k] ];
-				if ((&f2 != &f) && (f2.HasEdge(n1, n2)))
-				{
-					// we found the neighbour
-					// now let's see if it would belong to the smoothing group
-					// also make sure that they are of similar type,
-					// that is: shells can connect only to shells and solids to solids
-					int e1 = (Element(f .m_elem[0]).IsSolid()?1:0);
-					int e2 = (Element(f2.m_elem[0]).IsSolid()?1:0);
-					if ((f.m_fn*f2.m_fn >= eps) && (e1 == e2))
-					{
-						// Eureka! We found one!
-						f.m_nbr[j] = ppnf[n1][k];
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	// clean up
-	delete [] pnv;
-	delete [] pnf;
-	delete [] ppnf;
-
 	//calculate the node normals
+	int nodes = Nodes();
 	vector<vec3f> pnorm(nodes);
-	for (i=0; i<nodes; ++i) pnorm[i] = vec3f(0,0,0);
+	for (int i=0; i<nodes; ++i) pnorm[i] = vec3f(0,0,0);
 
-	for (i=0; i<faces; ++i)
+	for (int i=0; i<faces; ++i)
 	{
 		FEFace& f = m_Face[i];
 		f.m_ntag = -1;
@@ -521,7 +556,7 @@ void FEMesh::AutoSmooth()
 			if (nsg > 0)
 			{
 				// assign node normals
-				for (i=0; i<NF; ++i)
+				for (int i=0; i<NF; ++i)
 				{
 					FEFace& f = *F[i];
 					assert(f.m_ntag == nsg);
@@ -530,7 +565,7 @@ void FEMesh::AutoSmooth()
 				}
 
 				// clear normals
-				for (i=0; i<NF; ++i)
+				for (int i=0; i<NF; ++i)
 				{
 					FEFace& f = *F[i];
 					int nf = f.Nodes();
@@ -540,7 +575,7 @@ void FEMesh::AutoSmooth()
 
 			// find an unprocessed face
 			pf = 0;
-			for (i = ui; i<faces; ++i, ++ui) if (Face(i).m_ntag == -1) { pf = &m_Face[i]; break; }
+			for (int i = ui; i<faces; ++i, ++ui) if (Face(i).m_ntag == -1) { pf = &m_Face[i]; break; }
 
 			if (pf) stack.push(pf);
 			++nsg;
@@ -553,22 +588,24 @@ void FEMesh::AutoSmooth()
 
 			// mark as processed
 			pf->m_ntag = nsg;
+			pf->m_nsg = nsg;
 			F[NF++] = pf;
 
 			int nf = pf->Nodes();
+			int n = -1;
 			if ((nf==3)||(nf==6)) n = 3;
 			if ((nf==4)||(nf==8)) n = 4;
 
 			// add face normal to node normal
-			for (i=0; i<nf; ++i) pnorm[pf->node[i]] += pf->m_fn;
+			for (int i=0; i<nf; ++i) pnorm[pf->node[i]] += pf->m_fn;
 
 			// push unprocessed neighbours
-			for (i=0; i<n; ++i)
+			for (int i=0; i<n; ++i)
 			{
 				if (pf->m_nbr[i] >= 0)
 				{
 					FEFace& f2 = m_Face[pf->m_nbr[i]];
-					if (f2.m_ntag == -1)
+					if ((f2.m_ntag == -1) && (pf->m_fn*f2.m_fn > eps))
 					{
 						f2.m_ntag = -2;
 						stack.push(&f2);
@@ -580,7 +617,7 @@ void FEMesh::AutoSmooth()
 	while (pf);
 
 	// normalize face normals
-	for (i=0; i<faces; ++i)
+	for (int i=0; i<faces; ++i)
 	{
 		FEFace& f = m_Face[i];
 		int nf = f.Nodes();
@@ -595,12 +632,13 @@ void FEMesh::ClearSelection()
 	int i;
 	for (i=0; i<Elements(); i++) m_Elem[i].Unselect();
 	for (i=0; i<Faces   (); i++) m_Face[i].Unselect();
+	for (i=0; i<Edges   (); i++) m_Edge[i].Unselect();
 	for (i=0; i<Nodes   (); i++) m_Node[i].Unselect();
 }
 
 //-----------------------------------------------------------------------------
 // Count the selected nodes
-int FEMesh::CountSelectedNodes()
+int FEMesh::CountSelectedNodes() const
 {
 	int i, N = Nodes();
 	int count = 0;
@@ -609,8 +647,18 @@ int FEMesh::CountSelectedNodes()
 }
 
 //-----------------------------------------------------------------------------
+// Count the selected nodes
+int FEMesh::CountSelectedEdges() const
+{
+	int N = Edges();
+	int count = 0;
+	for (int i=0; i<N; i++) if (m_Edge[i].IsSelected()) count++;
+	return count;
+}
+
+//-----------------------------------------------------------------------------
 // Count the selected elements
-int FEMesh::CountSelectedElems()
+int FEMesh::CountSelectedElems() const
 {
 	int i, N = Elements();
 	int count = 0;
@@ -620,7 +668,7 @@ int FEMesh::CountSelectedElems()
 
 //-----------------------------------------------------------------------------
 // Count the selected faces
-int FEMesh::CountSelectedFaces()
+int FEMesh::CountSelectedFaces() const
 {
 	int i, N = Faces();
 	int count = 0;
@@ -658,7 +706,7 @@ void FEMesh::UpdateNormals(bool bsmooth)
 	// calculate node normals based on smoothing groups
 	if (bsmooth)
 	{
-		vector<FEFace*> stack(faces);
+		vector<FEFace*> stack(2*faces);
 		int ns = 0;
 
 		int nsg = 0;
@@ -699,7 +747,7 @@ void FEMesh::UpdateNormals(bool bsmooth)
 						if (pf->m_nbr[j] >= 0)
 						{
 							pf2 = &m_Face[pf->m_nbr[j]];
-							if (pf2->m_ntag == -1) stack[ns++] = pf2;
+							if ((pf2->m_ntag == -1) && (pf2->m_nsg == pf->m_nsg)) stack[ns++] = pf2;
 						}
 					}
 				}
@@ -881,6 +929,29 @@ void FEMesh::SelectNodes(std::vector<int> &item, bool bclear)
 }
 
 //-----------------------------------------------------------------------------
+// Select edges from a list
+void FEMesh::SelectEdges(std::vector<int> &item, bool bclear)
+{
+	int i, N = Edges();
+
+	// clear the current selection
+	if (bclear)
+	{
+		for (i=0; i<N; ++i) m_Edge[i].Unselect();
+	}
+
+	// select the nodes in the list
+	for (i=0; i<(int) item.size(); ++i)
+	{
+		int n = item[i];
+		if ((n >= 0) && (n < N))
+		{
+			if (m_Edge[n].IsVisible()) m_Edge[n].Select();
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
 // select the elements from a list
 void FEMesh::SelectElements(std::vector<int> &item, bool bclear)
 {
@@ -987,6 +1058,13 @@ void FEMesh::SelectConnectedVolumeElements(FEElement &el)
 			if (pe2 && pe2->IsVisible() && (pe2->m_ntag == 0)) S.push(pe2);
 		}
 	}
+}
+
+//-----------------------------------------------------------------------------
+// Select faces that are connected
+void FEMesh::SelectConnectedEdges(FEEdge& e)
+{
+	assert(false);
 }
 
 //-----------------------------------------------------------------------------
@@ -1145,7 +1223,7 @@ double triangle_area(vec3f& r0, vec3f& r1, vec3f& r2)
 
 //-----------------------------------------------------------------------------
 // Calculate the area of a FEFace
-float FEMesh::FaceArea(FEFace &f)
+double FEMesh::FaceArea(FEFace &f)
 {
 	switch (f.Nodes())
 	{
@@ -1166,7 +1244,7 @@ float FEMesh::FaceArea(FEFace &f)
 			vec3f r3 = m_Node[f.node[3]].m_rt;
 			vec3f r4 = m_Node[f.node[4]].m_rt;
 			vec3f r5 = m_Node[f.node[5]].m_rt;
-			float A = 0.f;
+			double A = 0.0;
 			A += triangle_area(r0, r3, r5);
 			A += triangle_area(r3, r1, r4);
 			A += triangle_area(r2, r5, r4);
@@ -1721,6 +1799,12 @@ void FEMesh::HideSelectedFaces()
 		FEFace& f = m_Face[i];
 		if (m_Elem[f.m_elem[0]].IsVisible() == false) f.Hide();
 	}
+}
+//-----------------------------------------------------------------------------
+// hide selected edges
+void FEMesh::HideSelectedEdges()
+{
+	assert(false);
 }
 
 //-----------------------------------------------------------------------------

@@ -39,10 +39,11 @@ class FEDataField;
 
 // the selection modes
 #define SELECT_NODES	1
-#define SELECT_FACES	2
-#define SELECT_ELEMS	4
-#define SELECT_ADD		8
-#define SELECT_SUB		16
+#define SELECT_EDGES	2
+#define SELECT_FACES	4
+#define SELECT_ELEMS	8
+#define SELECT_ADD		16
+#define SELECT_SUB		32
 
 // render styles
 #define RENDER_DEFAULT	1
@@ -264,6 +265,7 @@ public:
 	// selection
 	// TODO: Maybe we can let the GLView take care of this
 	void SelectNodesInRange(float fmin, float fmax, bool bsel);
+	void SelectEdgesInRange(float fmin, float fmax, bool bsel);
 	void SelectFacesInRange(float fmin, float fmax, bool bsel);
 	void SelectElemsInRange(float fmin, float fmax, bool bsel);
 

@@ -72,6 +72,7 @@ public slots:
 	void on_actionQuit_triggered();
 
 	void on_selectNodes_triggered();
+	void on_selectEdges_triggered();
 	void on_selectFaces_triggered();
 	void on_selectElems_triggered();
 

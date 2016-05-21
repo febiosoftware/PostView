@@ -197,6 +197,7 @@ public:
 
 		// --- Edit menu ---
 		QAction* selectNodes = addAction("Select Nodes"   , "selectNodes", ":/icons/node.png"   ); selectNodes->setCheckable(true);
+		QAction* selectEdges = addAction("Select Edges"   , "selectEdges", ":/icons/edge.png"   ); selectEdges->setCheckable(true);
 		QAction* selectFaces = addAction("Select Faces"   , "selectFaces", ":/icons/face.png"   ); selectFaces->setCheckable(true);
 		QAction* selectElems = addAction("Select Elements", "selectElems", ":/icons/element.png"); selectElems->setCheckable(true);
 
@@ -264,6 +265,7 @@ public:
 
 		QActionGroup* pag = new QActionGroup(MainWindow);
 		pag->addAction(selectNodes);
+		pag->addAction(selectEdges);
 		pag->addAction(selectFaces);
 		pag->addAction(selectElems);
 		selectElems->setChecked(true);
@@ -283,6 +285,7 @@ public:
 
 		menuBar->addAction(menuEdit->menuAction());
 		menuEdit->addAction(selectNodes);
+		menuEdit->addAction(selectEdges);
 		menuEdit->addAction(selectFaces);
 		menuEdit->addAction(selectElems);
 		menuEdit->addSeparator();
@@ -363,6 +366,7 @@ public:
 		mainToolBar->addSeparator();
 
 		mainToolBar->addAction(selectNodes);
+		mainToolBar->addAction(selectEdges);
 		mainToolBar->addAction(selectFaces);
 		mainToolBar->addAction(selectElems);
 		mainToolBar->addSeparator();
@@ -370,6 +374,7 @@ public:
 		// create the data field selector
 		selectData = new CDataFieldSelector;
 		selectData->setMinimumWidth(200);
+		selectData->setFixedHeight(23);
 		selectData->setObjectName("selectData");
 
 		mainToolBar->addWidget(selectData);

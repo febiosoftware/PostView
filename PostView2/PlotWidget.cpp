@@ -531,13 +531,13 @@ void CPlotWidget::drawLegend(QPainter& p)
 	int fh = fm.height();
 	int fa = fm.ascent();
 
-	int X0 = legendRect.left() + 5;
+	int X0 = legendRect.left() + 10;
 	int LW = 25;
 	int X1 = X0 + LW + 5;
 	int YC = legendRect.center().y();
 	int H = legendRect.height() - 10;
 	int Y0 = YC - N/2*(fh + 2);
-	int Y1 = YC + N*(fh + 2);
+	int Y1 = Y0 + N*(fh + 2);
 
 	// draw the lines
 	for (int i=0; i<N; ++i)

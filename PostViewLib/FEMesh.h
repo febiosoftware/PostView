@@ -42,13 +42,16 @@ public:
 
 	// --- G E O M E T R Y ---
 	//! return nr of nodes
-	int Nodes    () { return m_Node.size(); }
+	int Nodes() const { return (int) m_Node.size(); }
+
+	//! return nr of edges
+	int Edges() const { return (int) m_Edge.size(); }
 
 	//! return nr of faces
-	int Faces    () { return m_Face.size(); }
+	int Faces() const { return (int) m_Face.size(); }
 
 	//! return nr of elements
-	int Elements () { return m_Elem.size(); }
+	int Elements() const { return (int) m_Elem.size(); }
 
 	//! return nr of shell elements
 	int ShellElements();
@@ -60,22 +63,29 @@ public:
 	int BeamElements();
 
 	//! return a node
-	FENode&		Node   (int i) { return m_Node[i]; }
+	FENode& Node(int i) { return m_Node[i]; }
+	const FENode& Node(int i) const { return m_Node[i]; }
+
+	//! return an edge
+	FEEdge& Edge(int i) { return m_Edge[i]; }
+	const FEEdge& Edge(int i) const { return m_Edge[i]; }
 
 	//! return a face
-	FEFace&		Face   (int i) { return m_Face[i]; }
+	FEFace& Face(int i) { return m_Face[i]; }
+	const FEFace& Face(int i) const { return m_Face[i]; }
 
 	//! return an element
-	FEElement&	Element(int i) { return m_Elem[i]; }
+	FEElement& Element(int i) { return m_Elem[i]; }
+	const FEElement& Element(int i) const { return m_Elem[i]; }
 
 	//! return domains
-	int Domains() { return (int) m_Dom.size(); }
+	int Domains() const { return (int) m_Dom.size(); }
 
 	//! return a domain
 	FEDomain& Domain(int i) { return *m_Dom[i]; }
 
 	//! nr of parts
-	int Parts() { return (int) m_Part.size(); }
+	int Parts() const { return (int) m_Part.size(); }
 
 	//! add a part
 	void AddPart(FEPart* pg) { m_Part.push_back(pg); }
@@ -84,7 +94,7 @@ public:
 	FEPart& Part(int n) { return *m_Part[n]; }
 
 	// number of surfaces
-	int Surfaces() { return (int) m_Surf.size(); }
+	int Surfaces() const { return (int) m_Surf.size(); }
 
 	// return a surface
 	FESurface& Surface(int n) { return *m_Surf[n]; }
@@ -93,7 +103,7 @@ public:
 	void AddSurface(FESurface* ps) { m_Surf.push_back(ps); }
 
 	//! number of node sets
-	int NodeSets() { return (int) m_NSet.size(); }
+	int NodeSets() const { return (int) m_NSet.size(); }
 
 	//! return a node set
 	FENodeSet& NodeSet(int i) { return *m_NSet[i]; }
@@ -136,8 +146,13 @@ public:
 		return r/(float)N;
 	}
 
+	vec3f EdgeCenter(FEEdge& e)
+	{
+		return (m_Node[e.node[0]].m_rt + m_Node[e.node[1]].m_rt)*0.5f;
+	}
+
 	// face area
-	float FaceArea(FEFace& f);
+	double FaceArea(FEFace& f);
 
 	// element volume
 	float ElementVolume(int iel);
@@ -150,16 +165,21 @@ public:
 	float IntegrateHex (vec3f* r, float* v);
 
 	// --- S E L E C T I O N ---
+	//TODO: Move selection stuff out of here and into a "FESelection" class.
 	//! clear selection
 	void ClearSelection();
 
 	//! count the nr of selected items
-	int CountSelectedNodes();
-	int CountSelectedElems();
-	int CountSelectedFaces();
+	int CountSelectedNodes() const;
+	int CountSelectedEdges() const;
+	int CountSelectedElems() const;
+	int CountSelectedFaces() const;
 
 	//! select nodes in list
 	void SelectNodes(vector<int>& item, bool bclear = true);
+
+	//! select edges in list
+	void SelectEdges(vector<int>& item, bool bclear = true);
 
 	//! select faces in list
 	void SelectFaces(vector<int>& item, bool bclear = true);
@@ -175,6 +195,9 @@ public:
 
 	//! select connected faces
 	void SelectConnectedFaces(FEFace& f);
+
+	//! select connected edges
+	void SelectConnectedEdges(FEEdge& e);
 
 	//! select connected nodes on surface
 	void SelectConnectedSurfaceNodes(int n);
@@ -203,6 +226,9 @@ public:
 	//! hide selected faces
 	void HideSelectedFaces();
 
+	//! hide selected edges
+	void HideSelectedEdges();
+
 	//! hide selected nodes
 	void HideSelectedNodes();
 
@@ -213,9 +239,11 @@ public:
 
 protected:
 	void BuildFaces();
+	void FindFaceNeighbors();
 	void FindNeighbours();
 	void AutoSmooth();
 	void UpdateNodes();
+	void BuildEdges();
 	void UpdateDomains();
 
 	void ClearDomains();
@@ -229,6 +257,7 @@ protected:
 
 	// --- G E O M E T R Y ---
 	vector<FENode>		m_Node;	// nodal array
+	vector<FEEdge>		m_Edge;	// edge array
 	vector<FEFace>		m_Face;	// face array
 	vector<FEElement>	m_Elem;	// element array
 	vector<FEDomain*>	m_Dom;	// domains

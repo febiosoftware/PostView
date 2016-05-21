@@ -2318,6 +2318,56 @@ void CGLModel::RenderFeatureEdges(FEModel* ps)
 */
 
 //-----------------------------------------------------------------------------
+// Render the edges of the model.
+void CGLModel::RenderEdges(FEModel* ps, CGLContext& rc)
+{
+	// store attributes
+	glPushAttrib(GL_ENABLE_BIT);
+	glDisable(GL_LIGHTING);
+
+	vec3f r[3];
+
+	FEMesh& mesh = *ps->GetMesh();
+	int NE = mesh.Edges();
+	for (int i=0; i<NE; ++i)
+	{
+		FEEdge& edge = mesh.Edge(i);
+		if (edge.IsVisible())
+		{
+			if (edge.IsSelected()) glColor3ub(255, 0, 0);
+			else glColor3ub(0,0,255);
+
+			glLoadName(i+1);
+			glBegin(GL_LINES);
+			{
+				switch (edge.Type())
+				{
+				case EDGE_LINE2:
+					r[0] = mesh.Node(edge.node[0]).m_rt;
+					r[1] = mesh.Node(edge.node[1]).m_rt;
+					glVertex3d(r[0].x, r[0].y, r[0].z);
+					glVertex3d(r[1].x, r[1].y, r[1].z);
+					break;
+				case EDGE_LINE3:
+					r[0] = mesh.Node(edge.node[0]).m_rt;
+					r[1] = mesh.Node(edge.node[1]).m_rt;
+					r[2] = mesh.Node(edge.node[2]).m_rt;
+					glVertex3d(r[0].x, r[0].y, r[0].z);
+					glVertex3d(r[1].x, r[1].y, r[1].z);
+					glVertex3d(r[1].x, r[1].y, r[1].z);
+					glVertex3d(r[2].x, r[2].y, r[2].z);
+					break;
+				}
+			}
+			glEnd();
+		}
+	}
+
+	// restore attributes
+	glPopAttrib();
+}
+
+//-----------------------------------------------------------------------------
 // Render all the visible faces (used for selection)
 void CGLModel::RenderFaces(FEModel *ps, CGLContext &rc)
 {
