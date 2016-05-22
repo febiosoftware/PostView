@@ -703,46 +703,77 @@ void CGLView::RenderTags()
 	m_fnear = 0.01*radius;
 	m_ffar  = 100*radius;
 
-	FEMesh* pfe = pdoc->GetFEModel()->GetMesh();
+	// get the mesh
+	FEMesh& mesh = *pdoc->GetFEModel()->GetMesh();
 
 	// create the tag array.
 	// We add a tag for each selected item
 	GLTAG tag;
 	vector<GLTAG> vtag;
 
+	// clear the node tags
+	int NN = mesh.Nodes(); 
+	for (int i=0; i<NN; ++i) mesh.Node(i).m_ntag = 0;
+
 	// process elements
-	for (int i=0; i<pfe->Elements(); i++)
+	int NE = mesh.Elements();
+	for (int i=0; i<NE; i++)
 	{
-		FEElement& el = pfe->Element(i);
+		FEElement& el = mesh.Element(i);
 		if (el.IsSelected())
 		{
-			tag.r = pfe->ElementCenter(el);
+			tag.r = mesh.ElementCenter(el);
 			tag.bvis = false;
 			tag.ntag = 0;
 			sprintf(tag.sztag, "E%d", el.m_nId);
 			vtag.push_back(tag);
+
+			int ne = el.Nodes();
+			for (int j=0; j<ne; ++j) mesh.Node(el.m_node[j]).m_ntag = 1;
 		}
 	}
 
 	// process faces
-	for (int i=0; i<pfe->Faces(); ++i)
+	int NF = mesh.Faces();
+	for (int i=0; i<NF; ++i)
 	{
-		FEFace& f = pfe->Face(i);
+		FEFace& f = mesh.Face(i);
 		if (f.IsSelected())
 		{
-			tag.r = pfe->FaceCenter(f);
+			tag.r = mesh.FaceCenter(f);
 			tag.bvis = false;
 			tag.ntag = 0;
 			sprintf(tag.sztag, "F%d", i+1);
 			vtag.push_back(tag);
+
+			int nf = f.Nodes();
+			for (int j=0; j<nf; ++j) mesh.Node(f.node[j]).m_ntag = 1;
+		}
+	}
+
+	// process edges
+	int NL = mesh.Edges();
+	for (int i=0; i<NL; i++)
+	{
+		FEEdge& edge = mesh.Edge(i);
+		if (edge.IsSelected())
+		{
+			tag.r = mesh.EdgeCenter(edge);
+			tag.bvis = false;
+			tag.ntag = 0;
+			sprintf(tag.sztag, "L%d", i+1);
+			vtag.push_back(tag);
+
+			int ne = edge.Nodes();
+			for (int j=0; j<ne; ++j) mesh.Node(edge.node[j]).m_ntag = 1;
 		}
 	}
 
 	// process nodes
-	for (int i=0; i<pfe->Nodes(); i++)
+	for (int i=0; i<NN; i++)
 	{
-		FENode& node = pfe->Node(i);
-		if (node.IsSelected())
+		FENode& node = mesh.Node(i);
+		if (node.IsSelected() || (node.m_ntag == 1))
 		{
 			tag.r = node.m_rt;
 			tag.bvis = false;
@@ -751,21 +782,6 @@ void CGLView::RenderTags()
 			vtag.push_back(tag);
 		}
 	}
-
-	// process edges
-	for (int i=0; i<pfe->Edges(); i++)
-	{
-		FEEdge& edge = pfe->Edge(i);
-		if (edge.IsSelected())
-		{
-			tag.r = pfe->EdgeCenter(edge);
-			tag.bvis = false;
-			tag.ntag = 0;
-			sprintf(tag.sztag, "L%d", i+1);
-			vtag.push_back(tag);
-		}
-	}
-
 
 	// if we don't have any tags, just return
 	if (vtag.empty()) return;
@@ -776,7 +792,9 @@ void CGLView::RenderTags()
 	// of the tags.
 
 	// set the feedback buffer
+	const int MAX_TAGS = 100;
 	int nsel = (int) vtag.size();
+	if (nsel > MAX_TAGS) nsel = MAX_TAGS;
 	int size = nsel*5;
 	GLfloat *pbuf = new GLfloat[size];
 	GLfloat* pb = pbuf;
