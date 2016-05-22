@@ -282,6 +282,76 @@ private:
 };
 
 //-----------------------------------------------------------------------------
+class CCameraTransformProps : public CPropertyList
+{
+public:
+	CCameraTransformProps(GLCameraTransform& cam) : m_cam(cam)
+	{
+		addProperty("X-angle", CProperty::Float);
+		addProperty("Y-angle", CProperty::Float);
+		addProperty("Z-angle", CProperty::Float);
+		addProperty("X-target", CProperty::Float);
+		addProperty("Y-target", CProperty::Float);
+		addProperty("Z-target", CProperty::Float);
+		addProperty("Target distance", CProperty::Float);
+	}
+
+	QVariant GetPropertyValue(int i)
+	{
+		quat4f q = m_cam.rot;
+		float w = q.GetAngle()*180.f/PI;
+		vec3f v = q.GetVector()*w;
+
+		vec3f r = m_cam.pos;
+		float d = m_cam.trg.z;
+
+		switch (i)
+		{
+		case 0: return v.x; break;
+		case 1: return v.y; break;
+		case 2: return v.z; break;
+		case 3: return r.x; break;
+		case 4: return r.y; break;
+		case 5: return r.z; break;
+		case 6: return d; break;
+		}
+
+		return QVariant();
+	}
+
+	void SetPropertyValue(int i, const QVariant& val)
+	{
+		quat4f q = m_cam.rot;
+		float w = q.GetAngle()*180.f/PI;
+		vec3f v = q.GetVector()*w;
+
+		vec3f r = m_cam.pos;
+		float d = m_cam.trg.z;
+
+		switch (i)
+		{
+		case 0: v.x = val.toFloat(); break;
+		case 1: v.y = val.toFloat(); break;
+		case 2: v.z = val.toFloat(); break;
+		case 3: r.x = val.toFloat(); break;
+		case 4: r.y = val.toFloat(); break;
+		case 5: r.z = val.toFloat(); break;
+		case 6: d = val.toFloat(); break;
+		}
+
+		w = PI*v.Length()/180.f; v.Normalize();
+		q = quat4f(w, v);
+		m_cam.rot = q;
+
+		m_cam.pos = r;
+		m_cam.trg.z = d;
+	}
+
+private:
+	GLCameraTransform&	m_cam;
+};
+
+//-----------------------------------------------------------------------------
 class Ui::CModelViewer
 {
 public:
@@ -439,12 +509,25 @@ void CModelViewer::Update(bool breset)
 				m_obj.push_back(&plot);
 			}
 	
-			pi2 = new QTreeWidgetItem(ui->m_tree);
-			pi2->setText(0, "View");
-			pi2->setIcon(0, QIcon(QString(":/icons/view.png")));
-			ui->m_list.push_back(new CViewProps(*pdoc->GetView()));
-			pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size() - 1));
+			CGView& view = *pdoc->GetView();
+			pi1 = new QTreeWidgetItem(ui->m_tree);
+			pi1->setText(0, "View");
+			pi1->setIcon(0, QIcon(QString(":/icons/view.png")));
+			ui->m_list.push_back(new CViewProps(view));
+			pi1->setData(0, Qt::UserRole, (int) (ui->m_list.size() - 1));
+			pi1->setExpanded(true);
 			m_obj.push_back(0);
+
+			for (int i=0; i<view.CameraKeys(); ++i)
+			{
+				GLCameraTransform& key = view.GetKey(i);
+				pi2 = new QTreeWidgetItem(pi1);
+				pi2->setText(0, key.GetName());
+				pi2->setIcon(0, QIcon(QString(":/icons/view.png")));
+				ui->m_list.push_back(new CCameraTransformProps(key));
+				pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size() - 1));
+				m_obj.push_back(&key);
+			}
 		}
 	}
 	else
@@ -462,6 +545,18 @@ void CModelViewer::on_modelTree_currentItemChanged(QTreeWidgetItem* current, QTr
 		ui->m_props->Update(ui->m_list[v.toInt()]);
 	}
 	else ui->m_props->Update(0);
+}
+
+void CModelViewer::on_modelTree_itemDoubleClicked(QTreeWidgetItem* item, int column)
+{
+	int n = item->data(0, Qt::UserRole).toInt();
+	GLCameraTransform* pkey = dynamic_cast<GLCameraTransform*>(m_obj[n]);
+	if (pkey)
+	{
+		CGView* view = m_wnd->GetDocument()->GetView();
+		view->SetCurrentKey(pkey);
+		m_wnd->repaint();
+	}
 }
 
 void CModelViewer::on_nameEdit_editingFinished()
