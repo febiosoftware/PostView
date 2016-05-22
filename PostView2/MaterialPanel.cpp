@@ -209,6 +209,7 @@ void CMaterialPanel::on_hideButton_clicked()
 	if (doc.IsValid() == false) return;
 
 	FEModel& fem = *doc.GetFEModel();
+	FEMesh& mesh = *fem.GetMesh();
 
 	QItemSelectionModel* pselect = ui->m_list->selectionModel();
 	QModelIndexList selection = pselect->selectedRows();
@@ -220,7 +221,7 @@ void CMaterialPanel::on_hideButton_clicked()
 
 		FEMaterial& mat = *fem.GetMaterial(nmat);
 		mat.hide();
-
+		mesh.HideElements(nmat);
 	}
 
 	UpdateStates();
@@ -233,6 +234,7 @@ void CMaterialPanel::on_showButton_clicked()
 	if (doc.IsValid() == false) return;
 
 	FEModel& fem = *doc.GetFEModel();
+	FEMesh& mesh = *fem.GetMesh();
 
 	QItemSelectionModel* pselect = ui->m_list->selectionModel();
 	QModelIndexList selection = pselect->selectedRows();
@@ -244,6 +246,7 @@ void CMaterialPanel::on_showButton_clicked()
 
 		FEMaterial& mat = *fem.GetMaterial(nmat);
 		mat.show();
+		mesh.ShowElements(nmat);
 	}
 
 	UpdateStates();

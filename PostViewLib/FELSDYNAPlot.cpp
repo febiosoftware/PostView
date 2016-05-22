@@ -233,8 +233,6 @@ bool FELSDYNAPlotImport::ReadMesh(FEModel &fem)
 		n.m_r0.z = xyz[2];
 
 		n.m_rt = n.m_r0;
-
-		n.m_state = FE_VISIBLE | FE_ENABLED;
 	}
 
 	int nread;
@@ -294,8 +292,6 @@ bool FELSDYNAPlotImport::ReadMesh(FEModel &fem)
 		}
 
 		el.m_MatID = n[8] - 1;
-
-		el.m_state = FE_VISIBLE | FE_ENABLED;
 	}
 
 	// read beam elements
@@ -311,8 +307,6 @@ bool FELSDYNAPlotImport::ReadMesh(FEModel &fem)
 		el.m_MatID = n[5]-1;
 		el.m_node[0] = n[0]-1;
 		el.m_node[1] = n[1]-1;
-
-		el.m_state = FE_VISIBLE | FE_ENABLED;
 	}
 
 	// read shells
@@ -328,8 +322,6 @@ bool FELSDYNAPlotImport::ReadMesh(FEModel &fem)
 
 		el.m_MatID = n[4] - 1;
 		for (j=0; j<4; j++) el.m_node[j] = n[j] - 1;
-
-		el.m_state = FE_VISIBLE | FE_ENABLED;
 	}
 
 	// set the enabled-ness of the elements and the nodes

@@ -1433,49 +1433,11 @@ void CGLModel::RenderNodes(FEModel* ps, CGLContext& rc)
 
 	glDisable(GL_LIGHTING);
 
-
-	// reset tags and check visibility
-/*	for (i=0; i<pm->Nodes(); ++i)
-	{
-		FENode& n = pm->Node(i);
-		if (n.IsVisible() && n.m_bext) n.m_ntag = 1;
-		else n.m_ntag = 0;
-	}
-*/
-
 	// reset tags and check visibility
 	for (i=0; i<pm->Nodes(); ++i)
 	{
 		FENode& n = pm->Node(i);
-		n.m_ntag = 0;
-	}
-
-	for (i=0; i<pm->Elements(); ++i)
-	{
-		FEElement& e = pm->Element(i);
-		if (e.IsVisible())
-		{
-			// solid elements
-			int nf = e.Faces();
-			for (int j=0; j<nf; ++j)
-			{
-				FEElement* pe = e.m_pElem[j];
-				if ((pe == 0) || (pe->IsVisible() == false))
-				{
-					FEFace f = e.GetFace(j);
-					int n = f.Nodes();
-					for (int k=0; k<n; ++k) pm->Node(f.node[k]).m_ntag = 1;
-				}
-			}
-
-			// shell elements
-			int ne = e.Edges();
-			if (ne > 0)
-			{
-				int nn = e.Nodes();
-				for (int j=0; j<nn; ++j) pm->Node(e.m_node[j]).m_ntag = 1;
-			}
-		}
+		n.m_ntag = (n.IsVisible() ? 1 : 0);
 	}
 
 	// see if backface-culling is enabled or not
@@ -2429,12 +2391,10 @@ void CGLModel::RenderAllElements()
 {
 	// get the mesh
 	FEMesh* pm = m_ps->GetMesh();
-
 	for (int i=0; i<pm->Elements(); ++i)
 	{
 		FEElement& el = pm->Element(i);
-		FEMaterial* pmat = m_ps->GetMaterial(el.m_MatID);
-		if (el.IsVisible() && ((pmat == 0) || (pmat->bvisible)))
+		if (el.IsVisible())
 		{
 			// solid elements
 			int NF = el.Faces();

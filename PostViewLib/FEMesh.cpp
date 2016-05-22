@@ -781,30 +781,38 @@ void FEMesh::UpdateNormals(bool bsmooth)
 // Hide elements with a particular material ID
 void FEMesh::HideElements(int nmat)
 {
-	int i;
 	// Hide the elements with the material ID
-	for (i=0; i<Elements(); ++i) if (Element(i).m_MatID == nmat) Element(i).Hide();
+	for (int i=0; i<Elements(); ++i) if (Element(i).m_MatID == nmat) Element(i).Show(false);
 
 	// hide faces
 	int NF = Faces();
-	for (i=0; i<NF; ++i)
+	for (int i=0; i<NF; ++i)
 	{
 		FEFace& f = m_Face[i];
-		if (m_Elem[f.m_elem[0]].IsVisible() == false) f.Hide();
+		if (m_Elem[f.m_elem[0]].IsInvisible()) f.Show(false);
 	}
 
 	// hide nodes: nodes will be hidden if all elements they attach to are hidden
 	int NN = Nodes();
-	for (i=0; i<NN; ++i)
+	for (int i=0; i<NN; ++i)
 	{
 		vector<NodeElemRef>& nel = m_NEL.ElemList(i);
 		int ne = nel.size();
 		bool bhide = true;
 		for (int j=0; j<ne; ++j)
 		{
-			if (m_Elem[nel[j].first].IsVisible()) { bhide = false; break; }
+			if (m_Elem[nel[j].first].IsInvisible() == false) { bhide = false; break; }
 		}
-		if (bhide) m_Node[i].Hide();
+		if (bhide) m_Node[i].Show(false);
+	}
+
+	// hide edges
+	int NL = Edges();
+	for (int i=0; i<NL; ++i)
+	{
+		FEEdge& edge = Edge(i);
+		if ((Node(edge.node[0]).IsInvisible()) &&
+			(Node(edge.node[1]).IsInvisible())) edge.Show(false);
 	}
 }
 
@@ -812,38 +820,43 @@ void FEMesh::HideElements(int nmat)
 // Show elements with a certain material ID
 void FEMesh::ShowElements(int nmat)
 {
-	int i;
-
 	// unhide the elements with mat ID nmat
 	int NE = Elements();
-	for (i=0; i<NE; ++i) 
+	for (int i=0; i<NE; ++i) 
 	{
 		FEElement& e = m_Elem[i];
-		if (e.m_MatID == nmat) m_Elem[i].Show();
+		if (e.m_MatID == nmat) m_Elem[i].Show(true);
 	}
 
 	// show faces
 	int NF = Faces();
-	for (i=0; i<NF; ++i)
+	for (int i=0; i<NF; ++i)
 	{
 		FEFace& f = m_Face[i];
-		f.Show();
-		if (m_Elem[f.m_elem[0]].IsVisible() == false) f.Hide();
+		if (m_Elem[f.m_elem[0]].IsInvisible() == false) f.Show(true);
 	}
 
-	// hide nodes: nodes will be hidden if all elements they attach to are hidden
+	// show nodes
 	int NN = Nodes();
-	for (i=0; i<NN; ++i)
+	for (int i=0; i<NN; ++i)
 	{
-		m_Node[i].Show();
 		vector<NodeElemRef>& nel = m_NEL.ElemList(i);
 		int ne = nel.size();
-		bool bhide = true;
+		bool bshow = false;
 		for (int j=0; j<ne; ++j)
 		{
-			if (m_Elem[nel[j].first].IsVisible()) { bhide = false; break; }
+			if (m_Elem[nel[j].first].IsInvisible() == false) { bshow = true; break; }
 		}
-		if (bhide) m_Node[i].Hide();
+		if (bshow) m_Node[i].Show(true);
+	}
+
+	// show edges
+	int NL = Edges();
+	for (int i=0; i<NL; ++i)
+	{
+		FEEdge& edge = Edge(i);
+		if ((Node(edge.node[0]).IsInvisible() == false) &&
+			(Node(edge.node[1]).IsInvisible()) == false) edge.Show(true);
 	}
 }
 
@@ -1711,7 +1724,7 @@ void FEMesh::HideSelectedElements()
 		bool bhide = true;
 		for (int j=0; j<ne; ++j)
 		{
-			if (m_Elem[nel[j].first].IsVisible()) { bhide = false; break; }
+			if (m_Elem[nel[j].first].IsHidden() == false) { bhide = false; break; }
 		}
 		if (bhide) m_Node[i].Hide();
 	}
@@ -1721,7 +1734,17 @@ void FEMesh::HideSelectedElements()
 	for (i=0; i<NF; ++i)
 	{
 		FEFace& f = m_Face[i];
-		if (m_Elem[f.m_elem[0]].IsVisible() == false) f.Hide();
+		if (m_Elem[f.m_elem[0]].IsHidden()) f.Hide();
+	}
+
+	// hide edges
+	int NL = Edges();
+	for (int i=0; i<NL; ++i)
+	{
+		FEEdge& edge = Edge(i);
+		FENode& node0 = Node(edge.node[0]);
+		FENode& node1 = Node(edge.node[1]);
+		if (node0.IsHidden() || node1.IsHidden()) edge.Hide();
 	}
 }
 
@@ -1748,7 +1771,7 @@ void FEMesh::HideUnselectedElements()
 		bool bhide = true;
 		for (int j=0; j<ne; ++j)
 		{
-			if (m_Elem[nel[j].first].IsVisible()) { bhide = false; break; }
+			if (m_Elem[nel[j].first].IsHidden() == false) { bhide = false; break; }
 		}
 		if (bhide) m_Node[i].Hide();
 	}
@@ -1758,7 +1781,17 @@ void FEMesh::HideUnselectedElements()
 	for (i=0; i<NF; ++i)
 	{
 		FEFace& f = m_Face[i];
-		if (m_Elem[f.m_elem[0]].IsVisible() == false) f.Hide();
+		if (m_Elem[f.m_elem[0]].IsHidden()) f.Hide();
+	}
+
+	// hide edges
+	int NL = Edges();
+	for (int i=0; i<NL; ++i)
+	{
+		FEEdge& edge = Edge(i);
+		FENode& node0 = Node(edge.node[0]);
+		FENode& node1 = Node(edge.node[1]);
+		if (node0.IsHidden() || node1.IsHidden()) edge.Hide();
 	}
 }
 

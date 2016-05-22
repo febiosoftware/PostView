@@ -47,6 +47,15 @@ FEState::FEState(float time, FEModel* pfem)
 }
 
 //-----------------------------------------------------------------------------
+// helper function for copying data
+template <class T> void copyData(FEMeshData* dest, FEMeshData* src) 
+{ 
+	T* pd = dynamic_cast<T*>(dest);
+	T* ps = dynamic_cast<T*>(src);
+	if (pd && ps) pd->copy(*ps); else assert(false);
+}
+
+//-----------------------------------------------------------------------------
 // Constructor
 FEState::FEState(float time, FEModel* pfem, FEState* pstate)
 {
@@ -97,144 +106,45 @@ FEState::FEState(float time, FEModel* pfem, FEState* pstate)
 		{
 			switch (md.GetType())
 			{
-			case DATA_FLOAT: 
-				{
-					FENodeData<float>* pn = dynamic_cast<FENodeData<float>*>(&md);
-					if (pn) pn->copy(dynamic_cast<FENodeData<float>&>(pstate->m_Data[i]));
-				}
-				break;
-			case DATA_VEC3F:
-				{
-					FENodeData<vec3f>* pn = dynamic_cast<FENodeData<vec3f>*>(&md);
-					if (pn) pn->copy(dynamic_cast<FENodeData<vec3f>&>(pstate->m_Data[i]));
-				}
-				break;
-			case DATA_MAT3F:
-				{
-					FENodeData<mat3f>* pn = dynamic_cast<FENodeData<mat3f>*>(&md);
-					if (pn) pn->copy(dynamic_cast<FENodeData<mat3f>&>(pstate->m_Data[i]));
-				}
-				break;
-			case DATA_MAT3D:
-				{
-					FENodeData<mat3d>* pn = dynamic_cast<FENodeData<mat3d>*>(&md);
-					if (pn) pn->copy(dynamic_cast<FENodeData<mat3d>&>(pstate->m_Data[i]));
-				}
-				break;
-			case DATA_MAT3FS:
-				{
-					FENodeData<mat3fs>* pn = dynamic_cast<FENodeData<mat3fs>*>(&md);
-					if (pn) pn->copy(dynamic_cast<FENodeData<mat3fs>&>(pstate->m_Data[i]));
-				}
-				break;
-			case DATA_MAT3FD:
-				{
-					FENodeData<mat3fd>* pn = dynamic_cast<FENodeData<mat3fd>*>(&md);
-					if (pn) pn->copy(dynamic_cast<FENodeData<mat3fd>&>(pstate->m_Data[i]));
-				}
-				break;
-			case DATA_TENS4FS:
-				{
-					FENodeData<tens4fs>* pn = dynamic_cast<FENodeData<tens4fs>*>(&md);
-					if (pn) pn->copy(dynamic_cast<FENodeData<tens4fs>&>(pstate->m_Data[i]));
-				}
-				break;
+			case DATA_FLOAT  : copyData< FENodeData<FEDataTypeTraits<DATA_FLOAT  >::dataType> >(&md, &pstate->m_Data[i]); break;
+			case DATA_VEC3F  : copyData< FENodeData<FEDataTypeTraits<DATA_VEC3F  >::dataType> >(&md, &pstate->m_Data[i]); break;
+			case DATA_MAT3F  : copyData< FENodeData<FEDataTypeTraits<DATA_MAT3F  >::dataType> >(&md, &pstate->m_Data[i]); break;
+			case DATA_MAT3D  : copyData< FENodeData<FEDataTypeTraits<DATA_MAT3D  >::dataType> >(&md, &pstate->m_Data[i]); break;
+			case DATA_MAT3FS : copyData< FENodeData<FEDataTypeTraits<DATA_MAT3FS >::dataType> >(&md, &pstate->m_Data[i]); break;
+			case DATA_MAT3FD : copyData< FENodeData<FEDataTypeTraits<DATA_MAT3FD >::dataType> >(&md, &pstate->m_Data[i]); break;
+			case DATA_TENS4FS: copyData< FENodeData<FEDataTypeTraits<DATA_TENS4FS>::dataType> >(&md, &pstate->m_Data[i]); break;
+			default:
+				assert(false);
 			}
 		}
 		else if (d.DataClass() == CLASS_FACE)
 		{
 			switch (md.GetType())
 			{
-			case DATA_FLOAT: 
-				{
-					FEFaceData<float,DATA_ITEM>* pe = dynamic_cast<FEFaceData<float,DATA_ITEM>*>(&md);
-					if (pe) pe->copy(dynamic_cast<FEFaceData<float,DATA_ITEM>&>(pstate->m_Data[i]));
-				}
-				break;
-			case DATA_VEC3F:
-				{
-					FEFaceData<vec3f,DATA_ITEM>* pe = dynamic_cast<FEFaceData<vec3f,DATA_ITEM>*>(&md);
-					if (pe) pe->copy(dynamic_cast<FEFaceData<vec3f,DATA_ITEM>&>(pstate->m_Data[i]));
-				}
-				break;
-			case DATA_MAT3F:
-				{
-					FEFaceData<mat3f,DATA_ITEM>* pe = dynamic_cast<FEFaceData<mat3f,DATA_ITEM>*>(&md);
-					if (pe) pe->copy(dynamic_cast<FEFaceData<mat3f,DATA_ITEM>&>(pstate->m_Data[i]));
-				}
-				break;
-			case DATA_MAT3D:
-				{
-					FEFaceData<mat3d,DATA_ITEM>* pe = dynamic_cast<FEFaceData<mat3d,DATA_ITEM>*>(&md);
-					if (pe) pe->copy(dynamic_cast<FEFaceData<mat3d,DATA_ITEM>&>(pstate->m_Data[i]));
-				}
-				break;
-			case DATA_MAT3FS:
-				{
-					FEFaceData<mat3fs,DATA_ITEM>* pe = dynamic_cast<FEFaceData<mat3fs,DATA_ITEM>*>(&md);
-					if (pe) pe->copy(dynamic_cast<FEFaceData<mat3fs,DATA_ITEM>&>(pstate->m_Data[i]));
-				}
-				break;
-			case DATA_MAT3FD:
-				{
-					FEFaceData<mat3fd,DATA_ITEM>* pe = dynamic_cast<FEFaceData<mat3fd,DATA_ITEM>*>(&md);
-					if (pe) pe->copy(dynamic_cast<FEFaceData<mat3fd,DATA_ITEM>&>(pstate->m_Data[i]));
-				}
-				break;
-			case DATA_TENS4FS:
-				{
-					FEFaceData<tens4fs,DATA_ITEM>* pe = dynamic_cast<FEFaceData<tens4fs,DATA_ITEM>*>(&md);
-					if (pe) pe->copy(dynamic_cast<FEFaceData<tens4fs,DATA_ITEM>&>(pstate->m_Data[i]));
-				}
-				break;
+			case DATA_FLOAT  : copyData< FEFaceData<FEDataTypeTraits<DATA_FLOAT  >::dataType, DATA_ITEM> >(&md, &pstate->m_Data[i]); break;
+			case DATA_VEC3F  : copyData< FEFaceData<FEDataTypeTraits<DATA_VEC3F  >::dataType, DATA_ITEM> >(&md, &pstate->m_Data[i]); break;
+			case DATA_MAT3F  : copyData< FEFaceData<FEDataTypeTraits<DATA_MAT3F  >::dataType, DATA_ITEM> >(&md, &pstate->m_Data[i]); break;
+			case DATA_MAT3D  : copyData< FEFaceData<FEDataTypeTraits<DATA_MAT3D  >::dataType, DATA_ITEM> >(&md, &pstate->m_Data[i]); break;
+			case DATA_MAT3FS : copyData< FEFaceData<FEDataTypeTraits<DATA_MAT3FS >::dataType, DATA_ITEM> >(&md, &pstate->m_Data[i]); break;
+			case DATA_MAT3FD : copyData< FEFaceData<FEDataTypeTraits<DATA_MAT3FD >::dataType, DATA_ITEM> >(&md, &pstate->m_Data[i]); break;
+			case DATA_TENS4FS: copyData< FEFaceData<FEDataTypeTraits<DATA_TENS4FS>::dataType, DATA_ITEM> >(&md, &pstate->m_Data[i]); break;
+			default:
+				assert(false);
 			}
 		}
 		else if (d.DataClass() == CLASS_ELEM)
 		{
 			switch (md.GetType())
 			{
-			case DATA_FLOAT: 
-				{
-					FEElementData<float,DATA_ITEM>* pe = dynamic_cast<FEElementData<float,DATA_ITEM>*>(&md);
-					if (pe) pe->copy(dynamic_cast<FEElementData<float,DATA_ITEM>&>(pstate->m_Data[i]));
-				}
-				break;
-			case DATA_VEC3F:
-				{
-					FEElementData<vec3f,DATA_ITEM>* pe = dynamic_cast<FEElementData<vec3f,DATA_ITEM>*>(&md);
-					if (pe) pe->copy(dynamic_cast<FEElementData<vec3f,DATA_ITEM>&>(pstate->m_Data[i]));
-				}
-				break;
-			case DATA_MAT3F:
-				{
-					FEElementData<mat3f,DATA_ITEM>* pe = dynamic_cast<FEElementData<mat3f,DATA_ITEM>*>(&md);
-					if (pe) pe->copy(dynamic_cast<FEElementData<mat3f,DATA_ITEM>&>(pstate->m_Data[i]));
-				}
-				break;
-			case DATA_MAT3D:
-				{
-					FEElementData<mat3d,DATA_ITEM>* pe = dynamic_cast<FEElementData<mat3d,DATA_ITEM>*>(&md);
-					if (pe) pe->copy(dynamic_cast<FEElementData<mat3d,DATA_ITEM>&>(pstate->m_Data[i]));
-				}
-				break;
-			case DATA_MAT3FS:
-				{
-					FEElementData<mat3fs,DATA_ITEM>* pe = dynamic_cast<FEElementData<mat3fs,DATA_ITEM>*>(&md);
-					if (pe) pe->copy(dynamic_cast<FEElementData<mat3fs,DATA_ITEM>&>(pstate->m_Data[i]));
-				}
-				break;
-			case DATA_MAT3FD:
-				{
-					FEElementData<mat3fd,DATA_ITEM>* pe = dynamic_cast<FEElementData<mat3fd,DATA_ITEM>*>(&md);
-					if (pe) pe->copy(dynamic_cast<FEElementData<mat3fd,DATA_ITEM>&>(pstate->m_Data[i]));
-				}
-				break;
-			case DATA_TENS4FS:
-				{
-					FEElementData<tens4fs,DATA_ITEM>* pe = dynamic_cast<FEElementData<tens4fs,DATA_ITEM>*>(&md);
-					if (pe) pe->copy(dynamic_cast<FEElementData<tens4fs,DATA_ITEM>&>(pstate->m_Data[i]));
-				}
-				break;
+			case DATA_FLOAT  : copyData< FEElementData<FEDataTypeTraits<DATA_FLOAT  >::dataType, DATA_ITEM> >(&md, &pstate->m_Data[i]); break;
+			case DATA_VEC3F  : copyData< FEElementData<FEDataTypeTraits<DATA_VEC3F  >::dataType, DATA_ITEM> >(&md, &pstate->m_Data[i]); break;
+			case DATA_MAT3F  : copyData< FEElementData<FEDataTypeTraits<DATA_MAT3F  >::dataType, DATA_ITEM> >(&md, &pstate->m_Data[i]); break;
+			case DATA_MAT3D  : copyData< FEElementData<FEDataTypeTraits<DATA_MAT3D  >::dataType, DATA_ITEM> >(&md, &pstate->m_Data[i]); break;
+			case DATA_MAT3FS : copyData< FEElementData<FEDataTypeTraits<DATA_MAT3FS >::dataType, DATA_ITEM> >(&md, &pstate->m_Data[i]); break;
+			case DATA_MAT3FD : copyData< FEElementData<FEDataTypeTraits<DATA_MAT3FD >::dataType, DATA_ITEM> >(&md, &pstate->m_Data[i]); break;
+			case DATA_TENS4FS: copyData< FEElementData<FEDataTypeTraits<DATA_TENS4FS>::dataType, DATA_ITEM> >(&md, &pstate->m_Data[i]); break;
+			default:
+				assert(false);
 			}
 		}
 	}

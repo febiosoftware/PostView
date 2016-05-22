@@ -545,15 +545,15 @@ void CMainWindow::on_actionInvertSelection_triggered()
 void CMainWindow::on_actionUnhideAll_triggered()
 {
 	CDocument* pdoc = GetDocument();
-	FEMesh* pfe = pdoc->GetFEModel()->GetMesh();
-	FEModel* ps = pdoc->GetFEModel();
+	if (pdoc->IsValid() == false) return;
 
-	// only unhide the visible materials
-	for (int i=0; i<ps->Materials(); i++) 
-	{
-		FEMaterial* pm = ps->GetMaterial(i);
-		if (pm->bvisible) pfe->ShowElements(i);
-	}
+	FEModel& fem = *pdoc->GetFEModel();
+	FEMesh& mesh = *fem.GetMesh();
+
+	for (int i=0; i<mesh.Elements(); ++i) mesh.Element(i).Unhide();
+	for (int i=0; i<mesh.Faces   (); ++i) mesh.Face   (i).Unhide();
+	for (int i=0; i<mesh.Edges   (); ++i) mesh.Edge   (i).Unhide();
+	for (int i=0; i<mesh.Nodes   (); ++i) mesh.Node   (i).Unhide();
 
 	pdoc->UpdateFEModel();
 	ui->glview->repaint();

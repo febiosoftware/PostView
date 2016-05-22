@@ -95,46 +95,25 @@ protected:
 };
 
 //-----------------------------------------------------------------------------
+// traits class for converting from type to Data_Type
 template <class T> class FEMeshDataTraits {};
 
-template <> class FEMeshDataTraits<float> 
-{
-public:
-	static Data_Type Type() { return DATA_FLOAT; }
-};
+template <> class FEMeshDataTraits<float>  { public: static Data_Type Type() { return DATA_FLOAT;   }};
+template <> class FEMeshDataTraits<vec3f>  { public: static Data_Type Type() { return DATA_VEC3F;   }};
+template <> class FEMeshDataTraits<mat3d>  { public: static Data_Type Type() { return DATA_MAT3D;   }};
+template <> class FEMeshDataTraits<mat3f>  { public: static Data_Type Type() { return DATA_MAT3F;   }};
+template <> class FEMeshDataTraits<mat3fs> { public: static Data_Type Type() { return DATA_MAT3FS;  }};
+template <> class FEMeshDataTraits<mat3fd> { public: static Data_Type Type() { return DATA_MAT3FD;  }};
+template <> class FEMeshDataTraits<tens4fs>{ public: static Data_Type Type() { return DATA_TENS4FS; }};
 
-template <> class FEMeshDataTraits<vec3f>
-{
-public:
-	static Data_Type Type() { return DATA_VEC3F; }
-};
+//-----------------------------------------------------------------------------
+// traits class for converting from Data_Type to type
+template <Data_Type t> class FEDataTypeTraits {};
 
-template <> class FEMeshDataTraits<mat3d>
-{
-public:
-	static Data_Type Type() { return DATA_MAT3D; }
-};
-
-template <> class FEMeshDataTraits<mat3f>
-{
-public:
-	static Data_Type Type() { return DATA_MAT3F; }
-};
-
-template <> class FEMeshDataTraits<mat3fs>
-{
-public:
-	static Data_Type Type() { return DATA_MAT3FS; }
-};
-
-template <> class FEMeshDataTraits<mat3fd>
-{
-public:
-	static Data_Type Type() { return DATA_MAT3FD; }
-};
-
-template <> class FEMeshDataTraits<tens4fs>
-{
-public:
-	static Data_Type Type() { return DATA_TENS4FS; }
-};
+template <> class FEDataTypeTraits<DATA_FLOAT > { public: typedef float dataType; };
+template <> class FEDataTypeTraits<DATA_VEC3F > { public: typedef vec3f dataType; };
+template <> class FEDataTypeTraits<DATA_MAT3D > { public: typedef mat3d dataType; };
+template <> class FEDataTypeTraits<DATA_MAT3F > { public: typedef mat3f dataType; };
+template <> class FEDataTypeTraits<DATA_MAT3FS> { public: typedef mat3fs dataType; };
+template <> class FEDataTypeTraits<DATA_MAT3FD> { public: typedef mat3fd dataType; };
+template <> class FEDataTypeTraits<DATA_TENS4FS>{ public: typedef tens4fs dataType; };

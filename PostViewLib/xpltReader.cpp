@@ -918,9 +918,7 @@ bool XpltReader::BuildMesh(FEModel &fem)
 
 		// assign coordinates
 		n.m_r0 = N.r;
-
 		n.m_rt = n.m_r0;
-		n.m_state = FE_VISIBLE | FE_ENABLED;
 	}
 
 	// read the element connectivity
@@ -954,8 +952,6 @@ bool XpltReader::BuildMesh(FEModel &fem)
 			}
 
 			for (k=0; k<ne; ++k) el.m_node[k] = E.node[k];
-
-			el.m_state = FE_VISIBLE | FE_ENABLED;
 		}
 	}
 

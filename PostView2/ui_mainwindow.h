@@ -201,7 +201,7 @@ public:
 		QAction* selectFaces = addAction("Select Faces"   , "selectFaces", ":/icons/face.png"   ); selectFaces->setCheckable(true);
 		QAction* selectElems = addAction("Select Elements", "selectElems", ":/icons/element.png"); selectElems->setCheckable(true);
 
-		QAction* actionHideSelected    = addAction("Hide selected"   , "actionHideSelected"   );
+		QAction* actionHideSelected    = addAction("Hide selected"   , "actionHideSelected"   ); actionHideSelected->setShortcut(Qt::Key_H);
 		QAction* actionHideUnselected  = addAction("Hide unselected" , "actionHideUnselected" );
 		QAction* actionInvertSelection = addAction("Invert selection", "actionInvertSelection");
 		QAction* actionUnhideAll       = addAction("Unhide all      ", "actionUnhideAll"      );

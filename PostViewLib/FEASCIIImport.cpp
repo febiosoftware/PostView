@@ -410,7 +410,6 @@ bool FEASCIIImport::BuildMesh(FEModel &fem)
 		FENode& n = pm->Node(i);
 		float* v = zone.m_Node[i].v;
 		n.m_r0 = n.m_rt = vec3f(v[0], v[1], v[2]);
-		n.m_state = FE_VISIBLE | FE_ENABLED;
 	}
 
 	FEElemType etype;
@@ -439,7 +438,6 @@ bool FEASCIIImport::BuildMesh(FEModel &fem)
 		e.m_node[6] = n[6]-1;
 		e.m_node[7] = n[7]-1;
 		e.m_MatID = 0;
-		e.m_state = FE_VISIBLE | FE_ENABLED;
 	}
 	pm->Update();
 	fem.UpdateBoundingBox();
