@@ -8,6 +8,7 @@ class BOUNDINGBOX
 public:
 	float x0, y0, z0;
 	float x1, y1, z1;
+	bool	bvalid;
 
 public:
 	// default constructor
@@ -19,19 +20,22 @@ public:
 	// constructor from vectors
 	BOUNDINGBOX(const vec3f& r0, const vec3f& r1);
 
+	// is the bounding box valid
+	bool IsValid() const { return bvalid; }
+
 	// size of box
-	float Width () { return x1 - x0; }
-	float Height() { return y1 - y0; }
-	float Depth () { return z1 - z0; }
+	float Width () const { return x1 - x0; }
+	float Height() const { return y1 - y0; }
+	float Depth () const { return z1 - z0; }
 
 	// return largest dimension of box
-	float GetMaxExtent();
+	float GetMaxExtent() const ;
 
 	// return the center of the box
-	vec3f Center();
+	vec3f Center() const ;
 
 	// return the radius of the box
-	float Radius();
+	float Radius() const ;
 
 	// range of box
 	void Range(vec3f& n, float& min, float& max);

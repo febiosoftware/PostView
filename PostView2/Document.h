@@ -45,6 +45,12 @@ class FEDataField;
 #define SELECT_ADD		16
 #define SELECT_SUB		32
 
+//-----------------------------------------------------------------------------
+// Selection Styles
+#define SELECT_RECT		1
+#define SELECT_CIRCLE	2
+#define SELECT_FREE		3
+
 // render styles
 #define RENDER_DEFAULT	1
 #define RENDER_CAD		2
@@ -77,7 +83,6 @@ struct VIEWSETTINGS
 	float	m_diffuse;		// scene light diffuse inentisty
 
 	bool	m_bTriad;		// show triad or not
-	bool	m_bTags;		// show tags or not
 	bool	m_bTitle;		// show title or not
 	bool	m_bconn;		// select connected
 	bool	m_bext;			// ignore interior flag
@@ -87,6 +92,10 @@ struct VIEWSETTINGS
 	int		m_nproj;		// projection mode or not
 	bool	m_bLighting;	// use lighting or not
 	bool	m_bcull;		// use backface culling or not
+
+	// selections
+	bool	m_bTags;		// show tags or not
+	int		m_ntagInfo;		// tag info level
 
 	// OpenGL settings
 	bool	m_blinesmooth;	// line smoothing
@@ -198,6 +207,10 @@ public:
 	// get the selection bounding box
 	BOUNDINGBOX GetSelectionBox();
 
+	// get the extents bounding box
+	// (i.e. only visible parts contribute)
+	BOUNDINGBOX GetExtentsBox();
+
 	// --- T I M E   M A N A G M E N T ---
 
 	// get the index of the active state
@@ -286,6 +299,13 @@ public:
 	// get a list of selected items
 	void GetSelectionList(vector<int>& L);
 
+	// get selection style
+	int GetSelectionStyle() const { return m_selectStyle; }
+
+	// set selection style
+	void SetSelectionStyle(int n) { m_selectStyle = n; }
+
+
 	// --- O B J E C T   M A N A G M E N T ---
 
 	// get the GL model
@@ -346,4 +366,5 @@ protected:
 	// miscellenaeous
 	bool	m_bValid;	// the document is loaded and valid
 	int		m_mode;		// current selection mode
+	int		m_selectStyle;	// selection style
 };

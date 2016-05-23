@@ -200,6 +200,13 @@ public:
 		QAction* selectEdges = addAction("Select Edges"   , "selectEdges", ":/icons/edge.png"   ); selectEdges->setCheckable(true);
 		QAction* selectFaces = addAction("Select Faces"   , "selectFaces", ":/icons/face.png"   ); selectFaces->setCheckable(true);
 		QAction* selectElems = addAction("Select Elements", "selectElems", ":/icons/element.png"); selectElems->setCheckable(true);
+		
+		QAction* actionZoomSelected = addAction("Zoom selected", "actionZoomSelected", ":/icons/zoom_selected.png"); 
+		QAction* actionZoomExtents  = addAction("Zoom extents" , "actionZoomExtents" , ":/icons/zoom_extents.png");
+
+		QAction* actionSelectRect   = addAction("Select Rectangle", "actionSelectRect"  , ":/icons/select_rect.png"  ); actionSelectRect->setCheckable(true);
+		QAction* actionSelectCircle = addAction("Select Circle"   , "actionSelectCircle", ":/icons/select_circle.png"); actionSelectCircle->setCheckable(true);
+		QAction* actionSelectFree   = addAction("Select Free"     , "actionSelectFree"  , ":/icons/select_free.png"  ); actionSelectFree->setCheckable(true);
 
 		QAction* actionHideSelected    = addAction("Hide selected"   , "actionHideSelected"   ); actionHideSelected->setShortcut(Qt::Key_H);
 		QAction* actionHideUnselected  = addAction("Hide unselected" , "actionHideUnselected" );
@@ -269,6 +276,12 @@ public:
 		pag->addAction(selectFaces);
 		pag->addAction(selectElems);
 		selectElems->setChecked(true);
+
+		pag = new QActionGroup(MainWindow);
+		pag->addAction(actionSelectRect);
+		pag->addAction(actionSelectCircle);
+		pag->addAction(actionSelectFree);
+		actionSelectRect->setChecked(true);
 
 		// build the menu
 		menuBar->addAction(menuFile->menuAction());
@@ -371,7 +384,16 @@ public:
 		mainToolBar->addAction(selectElems);
 		mainToolBar->addSeparator();
 
+		mainToolBar->addAction(actionSelectRect  );
+		mainToolBar->addAction(actionSelectCircle);
+		mainToolBar->addAction(actionSelectFree  );
+
+		mainToolBar->addSeparator();
+		mainToolBar->addAction(actionZoomSelected);
+		mainToolBar->addAction(actionZoomExtents);
+
 		// create the data field selector
+		mainToolBar->addSeparator();
 		selectData = new CDataFieldSelector;
 		selectData->setMinimumWidth(200);
 		selectData->setFixedHeight(23);

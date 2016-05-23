@@ -9,6 +9,7 @@
 // forward declarations
 class CMainWindow;
 class CDocument;
+class CGLModel;
 class CGLContext;
 class FEMesh;
 
@@ -63,9 +64,53 @@ struct GLNODE_PICK
 	int		m_node;
 };
 
+//-----------------------------------------------------------------------------
+class SelectRegion
+{
+public:
+	SelectRegion(){}
+	virtual ~SelectRegion(){}
+
+	virtual bool IsInside(int x, int y) const = 0;
+};
+
+class BoxRegion : public SelectRegion
+{
+public:
+	BoxRegion(int x0, int x1, int y0, int y1);
+	bool IsInside(int x, int y) const;
+private:
+	int	m_x0, m_x1;
+	int	m_y0, m_y1;
+};
+
+class CircleRegion : public SelectRegion
+{
+public:
+	CircleRegion(int x0, int x1, int y0, int y1);
+	bool IsInside(int x, int y) const;
+private:
+	int	m_xc, m_yc;
+	int	m_R;
+};
+
+class FreeRegion : public SelectRegion
+{
+public:
+	FreeRegion(vector<pair<int, int> >& pl);
+	bool IsInside(int x, int y) const;
+private:
+	vector<pair<int, int> >& m_pl;
+	int m_x0, m_x1;
+	int m_y0, m_y1;
+};
+
 class CGLView : public QOpenGLWidget
 {
 	Q_OBJECT
+
+
+	enum {MAX_FEEDBACK_BUFFER_SIZE = 10000000};
 
 public:
 	CGLView(CMainWindow* pwnd, QWidget* parent = 0);
@@ -82,6 +127,9 @@ public:
 	void showSafeFrame(bool b);
 
 	void SetView(View_Mode nview);
+
+	void OnZoomExtents();
+	void OnZoomSelect ();
 
 protected:
 	void initializeGL();
@@ -122,6 +170,13 @@ protected:
 	void SelectNodes   (int x0, int y0, int x1, int y1, int mode);
 	void SelectEdges   (int x0, int y0, int x1, int y1, int mode);
 
+	void RegionSelectElements(const SelectRegion& region, int mode);
+	void RegionSelectFaces   (const SelectRegion& region, int mode);
+	void RegionSelectNodes   (const SelectRegion& region, int mode);
+	void RegionSelectEdges   (const SelectRegion& region, int mode);
+
+	void AddRegionPoint(int x, int y);
+
 	FEElement* PickElement(int x, int y);
 	GLNODE_PICK PickNode(int x, int y, bool bselect = false);
 
@@ -129,10 +184,8 @@ protected:
 	void RenderTags();
 
 	void ZoomRect(MyPoint p0, MyPoint p1);
-/*
-	void OnZoomExtents(Fl_Widget* pw, void* pd);
-	void OnZoomSelect (Fl_Widget* pw, void* pd);
-	void OnZoomRect   (Fl_Widget* pw, void* pd);
+
+/*	void OnZoomRect   (Fl_Widget* pw, void* pd);
 	void OnPopup(Fl_Widget* pw, void* pd);
 */
 
@@ -169,6 +222,12 @@ protected:
 	void SetVideoFormat(GLenum fmt) { m_video_fmt = fmt; }
 
 protected:
+	void setupProjectionMatrix();
+
+	int getFeedback(GLfloat* feedbackBuffer, int bufferSize, void (CGLModel::*renderFunc)(void));
+	void parseFeedbackBuffer(GLfloat* feedbackBuffer, int hits, const SelectRegion& region, vector<int>& list, GLfloat token);
+
+protected:
 	int OnPush   (int nevent);
 	int OnKeyDown(int nevent);
 	int OnDrag   (int nevent);
@@ -203,6 +262,7 @@ private:
 	CGLWidgetManager*	m_Widget;
 
 	// used for selection
+	vector<pair<int,int> >		m_pl;
 	bool	m_bdrag;	// a selection box is being dragged
 	MyPoint	m_p0;		// first point of selection
 	MyPoint	m_p1;		// second point of selection

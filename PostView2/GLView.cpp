@@ -12,6 +12,83 @@
 #include <QtCore/QTimer>
 #include <QMenu>
 
+//=============================================================================
+BoxRegion::BoxRegion(int x0, int x1, int y0, int y1)
+{
+	m_x0 = (x0<x1?x0:x1); m_x1 = (x0<x1?x1:x0);
+	m_y0 = (y0<y1?y0:y1); m_y1 = (y0<y1?y1:y0);
+}
+
+bool BoxRegion::IsInside(int x, int y) const
+{
+	return ((x>=m_x0)&&(x<=m_x1)&&(y>=m_y0)&&(y<=m_y1));
+}
+
+CircleRegion::CircleRegion(int x0, int x1, int y0, int y1)
+{
+	m_xc = x0;
+	m_yc = y0;
+
+	double dx = (x1 - x0);
+	double dy = (y1 - y0);
+	m_R = (int) sqrt(dx*dx+dy*dy);
+}
+
+bool CircleRegion::IsInside(int x, int y) const
+{
+	double rx = x - m_xc;
+	double ry = y - m_yc;
+	int r = (int) sqrt(rx*rx+ry*ry);
+	return (r <= m_R);
+}
+
+FreeRegion::FreeRegion(vector<pair<int, int> >& pl) : m_pl(pl)
+{
+	if (m_pl.empty() == false)
+	{
+		vector<pair<int, int> >::iterator pi = m_pl.begin();
+		m_x0 = m_x1 = pi->first;
+		m_y0 = m_y1 = pi->second;
+		for (pi=m_pl.begin(); pi != m_pl.end(); ++pi)
+		{
+			int x = pi->first;
+			int y = pi->second;
+			if (x < m_x0) m_x0 = x; if (x > m_x1) m_x1 = x;
+			if (y < m_y0) m_y0 = y; if (y > m_y1) m_y1 = y;
+		}
+	}
+}
+
+bool FreeRegion::IsInside(int x, int y) const
+{
+	if (m_pl.empty()) return false;
+	if ((x < m_x0) || (x > m_x1) || (y < m_y0) || (y > m_y1)) 
+	{
+		return false;
+	}
+
+	int nint = 0;
+	int N = (int) m_pl.size();
+	for (int i=0; i<N; ++i)
+	{
+		int ip1 = (i+1)%N;
+		double x0 = (double) m_pl[i].first;
+		double y0 = (double) m_pl[i].second;
+		double x1 = (double) m_pl[ip1].first;
+		double y1 = (double) m_pl[ip1].second;
+
+		double yc = (double) y + 0.0001;
+
+		if (((y1>yc)&&(y0<yc))||((y0>yc)&&(y1<yc)))
+		{
+			double xi = x1 + ((x0 - x1)*(y1 - yc))/(y1-y0);
+			if (xi > (double)x) nint++;
+		}
+	}
+	return ((nint>0) && (nint%2));
+}
+
+
 CGLView::CGLView(CMainWindow* pwnd, QWidget* parent) : QOpenGLWidget(parent), m_wnd(pwnd)
 {
 	m_panim = 0;
@@ -151,6 +228,38 @@ void CGLView::resizeGL(int w, int h)
 	}
 }
 
+void CGLView::setupProjectionMatrix()
+{
+	// get the scene's bounding box
+	CDocument* doc = GetDocument();
+	BOUNDINGBOX box = doc->GetBoundingBox();
+
+	// set up the projection matrix
+	double radius = box.Radius();
+	vec3f rc = box.Center();
+
+	m_fnear = 0.01*radius;
+	m_ffar  = 100*radius;
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	if (height() == 0) m_ar = 1; else m_ar = (GLfloat) width() / (GLfloat) height();
+
+	VIEWSETTINGS& view = doc->GetViewSettings();
+	if (view.m_nproj == RENDER_ORTHO)
+	{
+		double z = GetCamera().GetTargetDistance();
+		double dx = z*tan(0.5*m_fov*PI/180.0)*m_ar;
+		double dy = z*tan(0.5*m_fov*PI/180.0);
+		glOrtho(-dx, dx, -dy, dy, m_fnear, m_ffar);
+	}
+	else
+	{
+		gluPerspective(m_fov, m_ar, m_fnear, m_ffar);
+	}
+}
+
 void CGLView::paintGL()
 {
 /*	if (m_nanim == ANIM_RECORDING)
@@ -185,32 +294,8 @@ void CGLView::paintGL()
 	else
 		glDisable(GL_LIGHTING);
 
-	// get the scene's bounding box
-	BOUNDINGBOX box = pdoc->GetBoundingBox();
-
-	// set up the projection matrix
-	double radius = box.Radius();
-	vec3f rc = box.Center();
-
-	m_fnear = 0.01*radius;
-	m_ffar  = 100*radius;
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	if (height() == 0) m_ar = 1; else m_ar = (GLfloat) width() / (GLfloat) height();
-
-	if (view.m_nproj == RENDER_ORTHO)
-	{
-		double z = GetCamera().GetTargetDistance();
-		double dx = z*tan(0.5*m_fov*PI/180.0)*m_ar;
-		double dy = z*tan(0.5*m_fov*PI/180.0);
-		glOrtho(-dx, dx, -dy, dy, m_fnear, m_ffar);
-	}
-	else
-	{
-		gluPerspective(m_fov, m_ar, m_fnear, m_ffar);
-	}
+	// setup the projection matrix
+	setupProjectionMatrix();
 
 	// set the model_view matrix mode
 	glMatrixMode(GL_MODELVIEW);
@@ -305,8 +390,21 @@ void CGLView::mousePressEvent(QMouseEvent* ev)
 	m_p1.x = m_p0.x = m_xp = x;
 	m_p1.y = m_p0.y = m_yp = y;
 	if (mode != 0) m_bdrag = true;
+	m_pl.clear();
+	m_pl.push_back(pair<int,int>(m_p0.x, m_p0.y));
 
 	ev->accept();
+}
+
+//-----------------------------------------------------------------------------
+void CGLView::AddRegionPoint(int x, int y)
+{
+	if (m_pl.empty()) m_pl.push_back(pair<int,int>(x, y));
+	else
+	{
+		pair<int, int>& p = m_pl[m_pl.size()-1];
+		if ((p.first!=x) || (p.second!=y)) m_pl.push_back(pair<int,int>(x, y));
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -337,6 +435,7 @@ void CGLView::mouseMoveEvent(QMouseEvent* ev)
 	// store mouse position
 	m_p1.x = x;
 	m_p1.y = y;
+	AddRegionPoint(x, y);
 
 	// let the widget manager handle it first
 	if (m_Widget->handle(x, y, CGLWidgetManager::DRAG) == 1)
@@ -516,17 +615,42 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 				// select items
 				if ((mode != 0) || (m_p0 == m_p1))
 				{
-					switch (view_mode)
+					if ((m_p0.x==m_p1.x) && (m_p0.y==m_p1.y)) 
 					{
-					case SELECT_ELEMS: SelectElements(m_p0.x, m_p0.y, m_p1.x, m_p1.y, mode); break;
-					case SELECT_FACES: SelectFaces   (m_p0.x, m_p0.y, m_p1.x, m_p1.y, mode); break;
-					case SELECT_NODES: SelectNodes   (m_p0.x, m_p0.y, m_p1.x, m_p1.y, mode); break;
-					case SELECT_EDGES: SelectEdges   (m_p0.x, m_p0.y, m_p1.x, m_p1.y, mode); break;
+						switch (view_mode)
+						{
+						case SELECT_ELEMS: SelectElements(m_p0.x, m_p0.y, m_p1.x, m_p1.y, mode); break;
+						case SELECT_FACES: SelectFaces   (m_p0.x, m_p0.y, m_p1.x, m_p1.y, mode); break;
+						case SELECT_NODES: SelectNodes   (m_p0.x, m_p0.y, m_p1.x, m_p1.y, mode); break;
+						case SELECT_EDGES: SelectEdges   (m_p0.x, m_p0.y, m_p1.x, m_p1.y, mode); break;
+						}
 					}
-					m_wnd->UpdateTools();
+					else
+					{
+						// allocate selection region
+						int nsel = pdoc->GetSelectionStyle();
+						SelectRegion* preg = 0;
+						switch (nsel)
+						{
+						case SELECT_RECT  : preg = new BoxRegion   (m_p0.x, m_p1.x, m_p0.y, m_p1.y); break;
+						case SELECT_CIRCLE: preg = new CircleRegion(m_p0.x, m_p1.x, m_p0.y, m_p1.y); break;
+						case SELECT_FREE  : preg = new FreeRegion  (m_pl); break;
+						default:
+							assert(false);
+						}
 
-					// update the TrackView
-//					m_pParent->UpdateTrackWnd();
+						// do a region selection
+						switch (view_mode)
+						{
+						case SELECT_ELEMS: RegionSelectElements(*preg, mode); break;
+						case SELECT_FACES: RegionSelectFaces   (*preg, mode); break;
+						case SELECT_NODES: RegionSelectNodes   (*preg, mode); break;
+						case SELECT_EDGES: RegionSelectEdges   (*preg, mode); break;
+						}
+						delete preg;
+					}
+
+					m_wnd->UpdateTools();
 				}
 			}
 		}
@@ -773,7 +897,7 @@ void CGLView::RenderTags()
 	for (int i=0; i<NN; i++)
 	{
 		FENode& node = mesh.Node(i);
-		if (node.IsSelected() || (node.m_ntag == 1))
+		if (node.IsSelected() || ((node.m_ntag == 1)&&(view.m_ntagInfo==1)))
 		{
 			tag.r = node.m_rt;
 			tag.bvis = false;
@@ -1076,7 +1200,7 @@ void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
 	if (view.m_bcull) glEnable(GL_CULL_FACE);
 	else glDisable(GL_CULL_FACE);
 
-	pdoc->GetGLModel()->RenderFaces(ps, grc);
+	pdoc->GetGLModel()->RenderAllFaces();
 
 	glPopMatrix();
 
@@ -1425,6 +1549,217 @@ FEElement* CGLView::PickElement(int x, int y)
 	delete [] pbuf;
 
 	return pel;
+}
+
+//-----------------------------------------------------------------------------
+int CGLView::getFeedback(GLfloat* feedbackBuffer, int bufferSize, void (CGLModel::*renderFunc)(void))
+{
+	CDocument* pdoc = GetDocument();
+	CGLModel* glModel = pdoc->GetGLModel();
+	VIEWSETTINGS& view = pdoc->GetViewSettings();
+
+	// set the feedback buffer
+	glFeedbackBuffer(bufferSize, GL_2D, feedbackBuffer);
+
+	// clear buffers
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// setup projection matrix
+	setupProjectionMatrix();
+
+	// position camera
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	PositionCam();
+
+	// setup state
+	GLint hits = 0;
+	glPushAttrib(GL_ENABLE_BIT);
+	{
+		glDisable(GL_LIGHTING);
+		glEnable(GL_DEPTH_TEST);
+		if (view.m_bcull) glEnable(GL_CULL_FACE);
+		else glDisable(GL_CULL_FACE);
+
+		// render all elements
+		glRenderMode(GL_FEEDBACK);
+		{
+			(glModel->*renderFunc)();
+		}
+		// collect the hits
+		hits = glRenderMode(GL_RENDER);
+	}
+	// restore attributes
+	glPopAttrib();
+
+	return hits;
+}
+
+//-----------------------------------------------------------------------------
+void CGLView::parseFeedbackBuffer(GLfloat* feedbackBuffer, int hits, const SelectRegion& region, vector<int>& list, GLfloat token)
+{
+	// parse the buffer
+	int i=0;
+	int nid = -1, lid = -1; // last id
+	while (i<hits)
+	{
+		if (feedbackBuffer[i] == GL_PASS_THROUGH_TOKEN)
+		{
+			nid = (int) feedbackBuffer[i+1];
+			i+=2;
+		}
+		else if (feedbackBuffer[i] == token)
+		{
+			int nv = 0;
+			if      (token == GL_POLYGON_TOKEN   ) nv = (int) feedbackBuffer[++i];
+			else if (token == GL_LINE_TOKEN      ) nv = 2;
+			else if (token == GL_LINE_RESET_TOKEN) nv = 2;
+			else if (token == GL_POINT_TOKEN     ) nv = 1;
+
+			bool binside = false;
+			for (int n=0; n<nv; ++n)
+			{
+				int x = (int)(feedbackBuffer[++i]);
+				int y = (int)(height()-feedbackBuffer[++i]);
+				if ((binside == false) && region.IsInside(x, y)) binside = true;
+			}
+			i++;
+			if (binside && (nid != lid)) { list.push_back(nid); lid = nid; }
+		}
+		else ++i;
+	}
+}
+
+//-----------------------------------------------------------------------------
+void CGLView::RegionSelectElements(const SelectRegion& region, int mode)
+{
+	// get the model and mesh
+	CDocument* pdoc = GetDocument();
+	FEModel& fem = *pdoc->GetFEModel();
+	FEMesh& mesh = *fem.GetMesh();
+
+	// activate the gl rendercontext
+	makeCurrent();
+
+	// set up feedback buffer
+	int nbufsize = mesh.Elements()*512;
+	if (nbufsize > MAX_FEEDBACK_BUFFER_SIZE) nbufsize = MAX_FEEDBACK_BUFFER_SIZE;
+	GLfloat *fb = new GLfloat[nbufsize];
+
+	// get feedback data
+	int hits = getFeedback(fb, nbufsize, &CGLModel::RenderAllElements);
+
+	// get the selected item list
+	vector<int> item;
+	parseFeedbackBuffer(fb, hits, region, item, GL_POLYGON_TOKEN);
+
+	// select the elements
+	if (mode == SELECT_ADD)
+		for (int i=0; i<(int) item.size(); ++i) mesh.Element(item[i]).Select();
+	else
+		for (int i=0; i<(int) item.size(); ++i) mesh.Element(item[i]).Unselect();
+
+	// clean up
+	delete [] fb;
+}
+
+//-----------------------------------------------------------------------------
+void CGLView::RegionSelectFaces(const SelectRegion& region, int mode)
+{
+	// get the model and mesh
+	CDocument* pdoc = GetDocument();
+	FEModel& fem = *pdoc->GetFEModel();
+	FEMesh& mesh = *fem.GetMesh();
+
+	// activate the gl rendercontext
+	makeCurrent();
+
+	// set up feedback buffer
+	int nbufsize = mesh.Faces()*512;
+	if (nbufsize > MAX_FEEDBACK_BUFFER_SIZE) nbufsize = MAX_FEEDBACK_BUFFER_SIZE;
+	GLfloat *fb = new GLfloat[nbufsize];
+
+	// get feedback data
+	int hits = getFeedback(fb, nbufsize, &CGLModel::RenderAllFaces);
+
+	// get the selected item list
+	vector<int> item;
+	parseFeedbackBuffer(fb, hits, region, item, GL_POLYGON_TOKEN);
+
+	// select the faces
+	if (mode == SELECT_ADD)
+		for (int i=0; i<(int) item.size(); ++i) mesh.Face(item[i]).Select();
+	else
+		for (int i=0; i<(int) item.size(); ++i) mesh.Face(item[i]).Unselect();
+
+	// clean up
+	delete [] fb;
+}
+
+//-----------------------------------------------------------------------------
+void CGLView::RegionSelectNodes(const SelectRegion& region, int mode)
+{
+	// get the model and mesh
+	CDocument* pdoc = GetDocument();
+	FEModel& fem = *pdoc->GetFEModel();
+	FEMesh& mesh = *fem.GetMesh();
+
+	// activate the gl rendercontext
+	makeCurrent();
+
+	// set up feedback buffer
+	int nbufsize = mesh.Nodes()*5;
+	if (nbufsize > MAX_FEEDBACK_BUFFER_SIZE) nbufsize = MAX_FEEDBACK_BUFFER_SIZE;
+	GLfloat *fb = new GLfloat[nbufsize];
+
+	// get feedback data
+	int hits = getFeedback(fb, nbufsize, &CGLModel::RenderAllNodes);
+
+	// get the selected item list
+	vector<int> item;
+	parseFeedbackBuffer(fb, hits, region, item, GL_POINT_TOKEN);
+
+	// select the nodes
+	if (mode == SELECT_ADD)
+		for (int i=0; i<(int) item.size(); ++i) mesh.Node(item[i]).Select();
+	else
+		for (int i=0; i<(int) item.size(); ++i) mesh.Node(item[i]).Unselect();
+
+	// clean up
+	delete [] fb;
+}
+
+//-----------------------------------------------------------------------------
+void CGLView::RegionSelectEdges(const SelectRegion& region, int mode)
+{
+	// get the model and mesh
+	CDocument* pdoc = GetDocument();
+	FEModel& fem = *pdoc->GetFEModel();
+	FEMesh& mesh = *fem.GetMesh();
+
+	// activate the gl rendercontext
+	makeCurrent();
+
+	// set up feedback buffer
+	int nbufsize = mesh.Edges()*12;
+	if (nbufsize > MAX_FEEDBACK_BUFFER_SIZE) nbufsize = MAX_FEEDBACK_BUFFER_SIZE;
+	GLfloat *fb = new GLfloat[nbufsize];
+
+	// get feedback data
+	int hits = getFeedback(fb, nbufsize, &CGLModel::RenderAllEdges);
+
+	// get the selected item list
+	vector<int> item;
+	parseFeedbackBuffer(fb, hits, region, item, GL_LINE_RESET_TOKEN);
+
+	// select the edges
+	if (mode == SELECT_ADD)
+		for (int i=0; i<(int) item.size(); ++i) mesh.Edge(item[i]).Select();
+	else
+		for (int i=0; i<(int) item.size(); ++i) mesh.Edge(item[i]).Unselect();
+
+	// clean up
+	delete [] fb;
 }
 
 //-----------------------------------------------------------------------------
@@ -2021,6 +2356,22 @@ QImage CGLView::CaptureScreen()
 	return grabFramebuffer();
 }
 
+//-----------------------------------------------------------------------------
+void glxCircle(const vec3f& c, double R, int N)
+{
+	double x, y;
+	glBegin(GL_LINE_LOOP);
+	{
+		for (int i=0; i<N; ++i)
+		{
+			x = c.x + R*cos(i*2*PI/N);
+			y = c.y + R*sin(i*2*PI/N);
+			glVertex3d(x,y,c.z);
+		}
+	}
+	glEnd();
+}
+
 void CGLView::RenderRubberBand()
 {
 	glMatrixMode(GL_PROJECTION);
@@ -2042,7 +2393,41 @@ void CGLView::RenderRubberBand()
 	glLineStipple(1, (GLushort) 0xF0F0);
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_LINE_STIPPLE);
-	glRecti(m_p0.x, height() - m_p0.y, m_p1.x, height() - m_p1.y);
+
+	int x0 = m_p0.x;
+	int y0 = height() - m_p0.y;
+	int x1 = m_p1.x;
+	int y1 = height() - m_p1.y;
+
+	CDocument* pdoc = GetDocument();
+	int nstyle = pdoc->GetSelectionStyle();
+	switch (nstyle)
+	{
+	case SELECT_RECT: glRecti(x0, y0, x1, y1); break;
+	case SELECT_CIRCLE: 
+		{
+			double dx = (x1 - x0);
+			double dy = (y1 - y0);
+			double R = sqrt(dx*dx+dy*dy);
+			glxCircle(vec3f(x0, y0, 0), R, 24);
+		}
+		break;
+	case SELECT_FREE: 
+		{
+			glBegin(GL_LINE_STRIP);
+			{
+				for (int i=0; i<(int) m_pl.size(); ++i)
+				{
+					int x = m_pl[i].first;
+					int y = height()-m_pl[i].second;
+					glVertex2i(x, y);
+				}
+			}
+			glEnd();
+		}
+		break;
+	}
+
 	glEnable(GL_CULL_FACE);
 	glDisable(GL_LINE_STIPPLE);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -2369,34 +2754,40 @@ void CGLView::PositionCam()
 		glTranslatef(-r1.x, -r1.y, -r1.z);
 	}
 }
-/*
-void CGLView::OnZoomExtents(Fl_Widget* pw, void* pd)
+
+void CGLView::OnZoomExtents()
 {
-	CDocument* pdoc = m_pParent->GetDocument();
-	BOUNDINGBOX box = pdoc->GetBoundingBox();
+	CDocument* pdoc = GetDocument();
+	BOUNDINGBOX box = pdoc->GetExtentsBox();
+	if (box.IsValid())
+	{
+		CGLCamera* pcam = &GetCamera();
+		pcam->SetTarget(box.Center());
+		pcam->SetTargetDistance(3.f*box.Radius());
 
-	CGLCamera* pcam = &GetCamera();
-	pcam->SetTarget(box.Center());
-	pcam->SetTargetDistance(3.f*box.Radius());
-
-	Redraw();
+		repaint();
+	}
 }
 
+void CGLView::OnZoomSelect()
+{
+	CDocument* pdoc = GetDocument();
+	BOUNDINGBOX box = pdoc->GetSelectionBox();
+
+	if (box.IsValid())
+	{
+		CGLCamera* pcam = &GetCamera();
+		pcam->SetTarget(box.Center());
+		pcam->SetTargetDistance(3.f*box.Radius());
+
+		repaint();
+	}
+}
+
+/*
 void CGLView::OnZoomRect(Fl_Widget* pw, void* pd)
 {
 	m_bZoomRect = !m_bZoomRect;
-}
-
-void CGLView::OnZoomSelect(Fl_Widget* pw, void* pd)
-{
-	CDocument* pdoc = m_pParent->GetDocument();
-	BOUNDINGBOX box = pdoc->GetSelectionBox();
-
-	CGLCamera* pcam = &GetCamera();
-	pcam->SetTarget(box.Center());
-	pcam->SetTargetDistance(3.f*box.Radius());
-
-	Redraw();
 }
 */
 

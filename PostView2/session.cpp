@@ -239,6 +239,7 @@ bool CDocument::SaveSession(const char* szfile)
 			xml.add_leaf("diffuse", v.m_diffuse);
 			xml.add_leaf("triad", v.m_bTriad);
 			xml.add_leaf("tags", v.m_bTags);
+			xml.add_leaf("taginfo", v.m_ntagInfo);
 			xml.add_leaf("title", v.m_bTitle);
 			xml.add_leaf("select_connected", v.m_bconn);
 			xml.add_leaf("ignore_interior", v.m_bext);
@@ -519,6 +520,7 @@ bool CDocument::OpenSession(const char* szfile)
 				else if (tag == "diffuse") tag.value(v.m_diffuse);
 				else if (tag == "triad") tag.value(v.m_bTriad);
 				else if (tag == "tags") tag.value(v.m_bTags);
+				else if (tag == "taginfo") tag.value(v.m_ntagInfo);
 				else if (tag == "title") tag.value(v.m_bTitle);
 				else if (tag == "select_connected") tag.value(v.m_bconn);
 				else if (tag == "ignore_interior") tag.value(v.m_bext);

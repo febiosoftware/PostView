@@ -496,6 +496,31 @@ void CMainWindow::on_selectElems_triggered()
 	ui->glview->repaint();
 }
 
+void CMainWindow::on_actionSelectRect_triggered()
+{
+	GetDocument()->SetSelectionStyle(SELECT_RECT);
+}
+
+void CMainWindow::on_actionSelectCircle_triggered()
+{
+	GetDocument()->SetSelectionStyle(SELECT_CIRCLE);
+}
+
+void CMainWindow::on_actionSelectFree_triggered()
+{
+	GetDocument()->SetSelectionStyle(SELECT_FREE);
+}
+
+void CMainWindow::on_actionZoomSelected_triggered()
+{
+	ui->glview->OnZoomSelect();
+}
+
+void CMainWindow::on_actionZoomExtents_triggered()
+{
+	ui->glview->OnZoomExtents();
+}
+
 void CMainWindow::on_actionHideSelected_triggered()
 {
 	CDocument* pdoc = GetDocument();
@@ -1267,6 +1292,8 @@ void CMainWindow::writeSettings()
 	settings.setValue("m_ambient"         , view.m_ambient);
 	settings.setValue("m_diffuse"         , view.m_diffuse);
 	settings.setValue("m_bTriad"          , view.m_bTriad);
+	settings.setValue("m_bTags"           , view.m_bTags);
+	settings.setValue("m_ntagInfo"        , view.m_ntagInfo);
 	settings.setValue("m_bTitle"          , view.m_bTitle);
 	settings.setValue("m_bconn"           , view.m_bconn);
 	settings.setValue("m_bext"            , view.m_bext);
@@ -1302,6 +1329,7 @@ void CMainWindow::readSettings()
 	view.m_diffuse          = settings.value("m_diffuse"    , view.m_diffuse).toFloat();
 	view.m_bTriad           = settings.value("m_bTriad"     , view.m_bTriad).toBool();
 	view.m_bTags            = settings.value("m_bTags"      , view.m_bTags ).toBool();
+	view.m_ntagInfo         = settings.value("m_ntagInfo"   , view.m_ntagInfo).toInt();
 	view.m_bTitle           = settings.value("m_bTitle"     , view.m_bTitle).toBool();
 	view.m_bconn            = settings.value("m_bconn"      , view.m_bconn).toBool();
 	view.m_bext             = settings.value("m_bext"       , view.m_bext).toBool();

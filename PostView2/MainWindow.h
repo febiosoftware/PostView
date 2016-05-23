@@ -76,6 +76,13 @@ public slots:
 	void on_selectFaces_triggered();
 	void on_selectElems_triggered();
 
+	void on_actionSelectRect_triggered();
+	void on_actionSelectCircle_triggered();
+	void on_actionSelectFree_triggered();
+
+	void on_actionZoomSelected_triggered();
+	void on_actionZoomExtents_triggered();
+
 	void on_actionPlaneCut_triggered();
 	void on_actionVectorPlot_triggered();
 	void on_actionIsosurfacePlot_triggered();

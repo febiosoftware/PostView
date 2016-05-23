@@ -212,8 +212,9 @@ public:
 	CSelectionProps()
 	{
 		addProperty("Select connected" , CProperty::Bool);
-
+		addProperty("Tag info", CProperty::Enum)->setEnumValues(QStringList() << "Item numbers" << "Item numbers and connecting nodes");
 		m_bconnect = false;
+		m_ntagInfo = 0;
 	}
 
 	QVariant GetPropertyValue(int i)
@@ -222,6 +223,7 @@ public:
 		switch (i)
 		{
 		case 0: return m_bconnect; break;
+		case 1: return m_ntagInfo; break;
 		}
 		return v;
 	}
@@ -231,11 +233,13 @@ public:
 		switch (i)
 		{
 		case 0: m_bconnect = v.toBool(); break;
+		case 1: m_ntagInfo = v.toInt(); break;
 		}
 	}
 
 public:
 	bool	m_bconnect;
+	int		m_ntagInfo;
 };
 
 
@@ -316,6 +320,7 @@ CDlgViewSettings::CDlgViewSettings(CMainWindow* pwnd) : ui(new Ui::CDlgViewSetti
 	ui->m_cam->m_bias  = cam.GetCameraBias();
 
 	ui->m_select->m_bconnect = view.m_bconn;
+	ui->m_select->m_ntagInfo = view.m_ntagInfo;
 
 	ui->setupUi(this);
 	resize(400, 300);
@@ -351,6 +356,7 @@ void CDlgViewSettings::apply()
 	cam.SetCameraBias(ui->m_cam->m_bias);
 
 	view.m_bconn = ui->m_select->m_bconnect;
+	view.m_ntagInfo = ui->m_select->m_ntagInfo;
 
 	m_pwnd->repaint();
 }

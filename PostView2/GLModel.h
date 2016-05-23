@@ -62,9 +62,12 @@ public:
 	void RenderShadows(FEModel* ps, vec3f lp, float inf);
 	void RenderNodes(FEModel* ps, CGLContext& rc);
 	void RenderEdges(FEModel* ps, CGLContext& rc);
-	void RenderFaces(FEModel* ps, CGLContext& rc);
 
-	void RenderAllElements();	// used for element selection
+	// more efficien rendering functions for selection
+	void RenderAllElements();
+	void RenderAllFaces();
+	void RenderAllEdges();
+	void RenderAllNodes();
 
 	void AddDecoration(GDecoration* pd);
 	void RemoveDecoration(GDecoration* pd);

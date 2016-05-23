@@ -33,6 +33,7 @@ void VIEWSETTINGS::Defaults()
 	m_bShadows    = false;
 	m_bTriad      = true;
 	m_bTags       = true;
+	m_ntagInfo    = 0;
 	m_bTitle      = true;
 	m_bconn		 = false;
 	m_bext       = true;
@@ -216,6 +217,7 @@ CDocument::CDocument(CMainWindow* pwnd) : m_wnd(pwnd)
 	m_szfile[0] = 0;
 
 	m_mode = SELECT_ELEMS;
+	m_selectStyle = SELECT_RECT;
 
 	m_pImg = 0;
 	m_pVR = 0;
@@ -1087,6 +1089,42 @@ BOUNDINGBOX CDocument::GetBoundingBox()
 }
 
 //-----------------------------------------------------------------------------
+BOUNDINGBOX CDocument::GetExtentsBox()
+{
+	BOUNDINGBOX box;
+	if (IsValid() == false)
+	{
+		box.x0 = box.y0 = box.z0 = -1.f;
+		box.x1 = box.y1 = box.z1 =  1.f;
+		return box;
+	}
+
+	FEMesh& mesh = *m_fem->GetMesh();
+	int NE = mesh.Elements(), nvis = 0;
+	for (int i=0; i<NE; ++i)
+	{
+		FEElement& el = mesh.Element(i);
+		if (el.IsVisible())
+		{
+			int ne = el.Nodes();
+			for (int j=0; j<ne; ++j) box += mesh.Node(el.m_node[j]).m_rt;
+			nvis++;
+		}
+	}
+
+	if (box.IsValid())
+	{
+		if ((box.Width() < 1e-5) || (box.Height() < 1e-4) || (box.Depth() < 1e-4))
+		{
+			float R = box.Radius();
+			box.InflateTo(R, R, R);
+		}
+	}
+
+	return box;
+}
+
+//-----------------------------------------------------------------------------
 // Get the box around the selection
 BOUNDINGBOX CDocument::GetSelectionBox()
 {
@@ -1099,45 +1137,54 @@ BOUNDINGBOX CDocument::GetSelectionBox()
 		return box;
 	}
 
-	int i;
-	box.x0 = 1e20f; box.x1 = -1e20f;
-	box.y0 = 1e20f; box.y1 = -1e20f;
-	box.z0 = 1e20f; box.z1 = -1e20f;
-
-	FEMesh* pm = m_fem->GetMesh();
-
-	int nsel = 0;
-
-	for (i=0; i<pm->Elements(); ++i)
+	FEMesh& mesh = *m_fem->GetMesh();
+	int NE = mesh.Elements();
+	for (int i=0; i<NE; ++i)
 	{
-		FEElement& el = pm->Element(i);
+		FEElement& el = mesh.Element(i);
 		if (el.IsSelected())
 		{
 			int nel = el.Nodes();
-			for (int j=0; j<nel; ++j)
-			{
-				box += pm->Node(el.m_node[j]).m_rt;
-			}
-			++nsel;
+			for (int j=0; j<nel; ++j) box += mesh.Node(el.m_node[j]).m_rt;
 		}
 	}
 
-	for (i=0; i<pm->Nodes(); ++i)
+	int NF = mesh.Faces();
+	for (int i=0; i<NF; ++i)
 	{
-		FENode& node = pm->Node(i);
-		if (node.IsSelected()) 
+		FEFace& face = mesh.Face(i);
+		if (face.IsSelected())
 		{
-			box += node.m_rt;
-			++nsel;
+			int nel = face.Nodes();
+			for (int j=0; j<nel; ++j) box += mesh.Node(face.node[j]).m_rt;
 		}
 	}
 
-	if (nsel == 0) return GetBoundingBox();
-
-	if ((box.Width() < 1e-5) || (box.Height() < 1e-4) || (box.Depth() < 1e-4))
+	int NL = mesh.Edges();
+	for (int i=0; i<NL; ++i)
 	{
-		float R = box.Radius();
-		box.InflateTo(R, R, R);
+		FEEdge& edge = mesh.Edge(i);
+		if (edge.IsSelected())
+		{
+			int nel = edge.Nodes();
+			for (int j=0; j<nel; ++j) box += mesh.Node(edge.node[j]).m_rt;
+		}
+	}
+
+	int NN = mesh.Nodes();
+	for (int i=0; i<NN; ++i)
+	{
+		FENode& node = mesh.Node(i);
+		if (node.IsSelected()) box += node.m_rt;
+	}
+
+	if (box.IsValid())
+	{
+		if ((box.Width() < 1e-5) || (box.Height() < 1e-4) || (box.Depth() < 1e-4))
+		{
+			float R = box.Radius();
+			box.InflateTo(R, R, R);
+		}
 	}
 
 	return box;

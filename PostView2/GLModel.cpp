@@ -272,9 +272,7 @@ void CGLModel::RenderSelection(CGLContext &rc)
 	{
 		FEFace& face = pm->Face(i);
 		FEElement& el = pm->Element(face.m_elem[0]);
-		FEMaterial* pmat = ps->GetMaterial(el.m_MatID);
-
-		if (pmat->bvisible && face.IsVisible() && (el.IsSelected() || face.IsSelected()))
+		if (el.IsSelected() || face.IsSelected())
 		{
 			// okay, we got one, so let's render it
 			glLoadName(face.m_elem[0]+1);
@@ -2329,12 +2327,77 @@ void CGLModel::RenderEdges(FEModel* ps, CGLContext& rc)
 	glPopAttrib();
 }
 
+void CGLModel::RenderAllNodes()
+{
+	FEMesh* pm = GetMesh();
+
+	// reset tags and check visibility
+	for (int i=0; i<pm->Nodes(); ++i)
+	{
+		FENode& node = pm->Node(i);
+		if (node.IsVisible() && (node.m_bext))
+		{
+			// get the nodal coordinate
+			vec3f& r = node.m_rt;
+
+			// render the point
+			glLoadName(i+1);
+			glPassThrough((GLfloat) i);
+			glBegin(GL_POINTS);
+			{
+				glVertex3f(r.x, r.y, r.z);
+			}
+			glEnd();
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Render the edges of the model.
+void CGLModel::RenderAllEdges()
+{
+	vec3f r[3];
+	FEMesh& mesh = *GetMesh();
+	int NE = mesh.Edges();
+	for (int i=0; i<NE; ++i)
+	{
+		FEEdge& edge = mesh.Edge(i);
+		if (edge.IsVisible())
+		{
+			glLoadName(i+1);
+			glPassThrough((GLfloat) i);
+			glBegin(GL_LINES);
+			{
+				switch (edge.Type())
+				{
+				case EDGE_LINE2:
+					r[0] = mesh.Node(edge.node[0]).m_rt;
+					r[1] = mesh.Node(edge.node[1]).m_rt;
+					glVertex3d(r[0].x, r[0].y, r[0].z);
+					glVertex3d(r[1].x, r[1].y, r[1].z);
+					break;
+				case EDGE_LINE3:
+					r[0] = mesh.Node(edge.node[0]).m_rt;
+					r[1] = mesh.Node(edge.node[1]).m_rt;
+					r[2] = mesh.Node(edge.node[2]).m_rt;
+					glVertex3d(r[0].x, r[0].y, r[0].z);
+					glVertex3d(r[1].x, r[1].y, r[1].z);
+					glVertex3d(r[1].x, r[1].y, r[1].z);
+					glVertex3d(r[2].x, r[2].y, r[2].z);
+					break;
+				}
+			}
+			glEnd();
+		}
+	}
+}
+
 //-----------------------------------------------------------------------------
 // Render all the visible faces (used for selection)
-void CGLModel::RenderFaces(FEModel *ps, CGLContext &rc)
+void CGLModel::RenderAllFaces()
 {
 	// get the mesh
-	FEMesh* pm = ps->GetMesh();
+	FEMesh* pm = GetMesh();
 
 	vec3f r0, r1, r2, r3;
 
@@ -2344,6 +2407,7 @@ void CGLModel::RenderFaces(FEModel *ps, CGLContext &rc)
 		if (face.IsVisible())
 		{
 			glLoadName(i+1);
+			glPassThrough((GLfloat) i);
 
 			r0 = pm->Node(face.node[0]).m_rt;
 			r1 = pm->Node(face.node[1]).m_rt;
@@ -2396,6 +2460,8 @@ void CGLModel::RenderAllElements()
 		FEElement& el = pm->Element(i);
 		if (el.IsVisible())
 		{
+			glPassThrough((GLfloat)i);
+
 			// solid elements
 			int NF = el.Faces();
 			for (int j=0; j<NF; ++j)
