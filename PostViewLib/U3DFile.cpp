@@ -3,100 +3,12 @@
 #include <assert.h>
 
 //-----------------------------------------------------------------------------
-// A helper class for reading blocks
-class BlockDataStream
-{
-public:
-	BlockDataStream(U3DFile::BLOCK& block) : m_block(block)
-	{
-		m_pd = block.data;
-		m_dataRead = 0;
-	}
-
-	template <typename T> BlockDataStream& operator >> (T& v)
-	{
-		v = *((T*)m_pd);
-		advance(sizeof(T));
-		assert(m_dataRead <= m_block.dataSize);
-		return *this;
-	}
-
-	void readPadding()
-	{
-		int npad = m_dataRead % 4;
-		if (npad) advance(4 - npad);
-	}
-
-	void read(void* buffer, int bytes)
-	{
-		memcpy(buffer, m_pd, bytes);
-		advance(bytes);
-	}
-
-	bool read(U3DFile::BLOCK& block);
-
-	void advance(int n)
-	{
-		m_pd += n;
-		m_dataRead += n;
-	}
-
-private:
-	U3DFile::BLOCK&	m_block;
-	byte*				m_pd;
-	uint32				m_dataRead;
-};
-
-template <> BlockDataStream& BlockDataStream::operator >> <string>(string& s)
-{
-	uint16 size;
-	this->operator>> <uint16>(size);
-	char* buf = new char[size+1];
-	if (size != 0) strncpy(buf, (const char*) m_pd, size);
-	buf[size] = 0;
-	s = string(buf);
-	delete [] buf;
-	advance(size);
-	return *this;
-}
-
-bool BlockDataStream::read(U3DFile::BLOCK& block)
-{
-	BlockDataStream& ar = *this;
-
-	ar >> block.blockType;
-	ar >> block.dataSize;
-	ar >> block.metaDataSize;
-
-	if (block.dataSize > 0)
-	{
-		block.data = new byte[block.dataSize];
-		ar.read(block.data, block.dataSize);
-		ar.readPadding();
-	}
-	else block.data = 0;
-
-	if (block.metaDataSize > 0)
-	{
-		block.metaData = new byte[block.metaDataSize];
-		ar.read(block.metaData, block.metaDataSize);
-		ar.readPadding();
-	}
-
-	return true;
-}
-
-//-----------------------------------------------------------------------------
 U3DFile::BLOCK::BLOCK() 
 { 
-	data = 0; 
-	metaData = 0; 
 }
 
 U3DFile::BLOCK::~BLOCK()
 { 
-	if (data) delete data; 
-	if (metaData) delete metaData;
 }
 
 //-----------------------------------------------------------------------------
@@ -139,12 +51,14 @@ bool U3DFile::readFileHeader(FILE_HEADER& fileHeader)
 	BLOCK block;
 	if (readBlock(block, 0x00443355) == false) return false;
 
-	BlockDataStream ar(block);
-	ar >> fileHeader.version;
-	ar >> fileHeader.profile;
-	ar >> fileHeader.declarationSize;
-	ar >> fileHeader.fileSize;
-	ar >> fileHeader.encoding;
+	U3DBitStreamRead ar;
+	ar.SetDataBlock(block);
+	
+	ar.ReadI32(fileHeader.version);
+	ar.ReadU32(fileHeader.profile);
+	ar.ReadU32(fileHeader.declarationSize);
+	ar.ReadU64(fileHeader.fileSize);
+	ar.ReadU32(fileHeader.encoding);
 
 	return true;
 }
@@ -153,9 +67,11 @@ bool U3DFile::readPriorityUpdateBlock(BLOCK& block)
 {
 	if (block.blockType != PriorityUpdate) return false;
 
-	BlockDataStream ar(block);
+	U3DBitStreamRead ar;
+	ar.SetDataBlock(block);
+	
 	uint32 newPriority;
-	ar >> newPriority; 
+	ar.ReadU32(newPriority); 
 
 	// The new priority value shall not be less than previous priority value
 	if (newPriority < m_priority) return false;
@@ -166,39 +82,41 @@ bool U3DFile::readPriorityUpdateBlock(BLOCK& block)
 bool U3DFile::readModifierChainBlock(BLOCK& block)
 {
 	if (block.blockType != ModifierChain) return false;
-	BlockDataStream ar(block);
+	
+	U3DBitStreamRead ar;
+	ar.SetDataBlock(block);
 
 	MODIFIER_CHAIN modChain;
-	ar >> modChain.name;
-	ar >> modChain.type;
-	ar >> modChain.attributes;
+	ar.ReadString(modChain.name);
+	ar.ReadU32(modChain.type);
+	ar.ReadU32(modChain.attributes);
 
 	if (modChain.attributes & BoundingSphere)
 	{
-		ar >> modChain.boundSphere.x;
-		ar >> modChain.boundSphere.y;
-		ar >> modChain.boundSphere.z;
-		ar >> modChain.boundSphere.radius;
+		ar.ReadF32(modChain.boundSphere.x);
+		ar.ReadF32(modChain.boundSphere.y);
+		ar.ReadF32(modChain.boundSphere.z);
+		ar.ReadF32(modChain.boundSphere.radius);
 	}
 
 	if (modChain.attributes & BoundingBox)
 	{
-		ar >> modChain.boundBox.xmin;
-		ar >> modChain.boundBox.ymin;
-		ar >> modChain.boundBox.zmin;
-		ar >> modChain.boundBox.xmax;
-		ar >> modChain.boundBox.ymax;
-		ar >> modChain.boundBox.zmax;
+		ar.ReadF32(modChain.boundBox.xmin);
+		ar.ReadF32(modChain.boundBox.ymin);
+		ar.ReadF32(modChain.boundBox.zmin);
+		ar.ReadF32(modChain.boundBox.xmax);
+		ar.ReadF32(modChain.boundBox.ymax);
+		ar.ReadF32(modChain.boundBox.zmax);
 	}
 
-	ar.readPadding();
+	ar.AlignTo4Byte();
 
-	ar >> modChain.modifierCount;
-
+	ar.ReadU32(modChain.modifierCount);
+	
 	for (int i=0; i<(int)modChain.modifierCount; ++i)
 	{
 		BLOCK subBlock;
-		ar.read(subBlock);
+		ar.ReadBlock(subBlock);
 		switch (subBlock.blockType)
 		{
 		case ViewNode : if (readViewNodeBlock (subBlock) == false) return false;
@@ -207,22 +125,24 @@ bool U3DFile::readModifierChainBlock(BLOCK& block)
 		case ModelNode: readModelNodeBlock(subBlock); break;
 		case CLODMeshDeclaration: readCLODMeshDeclaration(subBlock); break;
 		}
+
 	}
 
 	return true;
 }
 
-void readParentNodeData(BlockDataStream& ar)
+void readParentNodeData(U3DBitStreamRead& ar)
 {
 	int parents;
-	ar >> parents;
+	ar.ReadI32(parents);
 	for (int i=0; i<parents; ++i)
 	{
 		string parentName;
-		ar >> parentName;
+		ar.ReadString(parentName);
 
-		U3DFile::TRANSFORM_MATRIX m;
-		ar >> m;
+		// read the transformation matrix
+		float m;
+		for (int i=0; i<16; ++i) ar.ReadF32(m);
 	}
 }
 
@@ -230,50 +150,64 @@ bool U3DFile::readCLODBaseMeshBlock(BLOCK& block)
 {
 	if (block.blockType != CLODBaseMesh) return false;
 
-	BlockDataStream ar(block);
+	U3DBitStreamRead ar;
+	ar.SetDataBlock(block);
 
 	string meshName;
-	ar >> meshName;
+	ar.ReadString(meshName);
 
 	uint32 chainIndex;
-	ar >> chainIndex;
+	ar.ReadU32(chainIndex);
 
 	BASE_MESH_DESCRIPTION mesh;
-	ar >> mesh.faceCount;
-	ar >> mesh.positionCount;
-	ar >> mesh.normalCount;
-	ar >> mesh.diffuseColorCount;
-	ar >> mesh.specularColorCount;
-	ar >> mesh.textureCoordCount;
+	ar.ReadU32(mesh.faceCount);
+	ar.ReadU32(mesh.positionCount);
+	ar.ReadU32(mesh.normalCount);
+	ar.ReadU32(mesh.diffuseColorCount);
+	ar.ReadU32(mesh.specularColorCount);
+	ar.ReadU32(mesh.textureCoordCount);
 
 	for (int i=0; i<(int)mesh.positionCount; ++i)
 	{
 		float x, y, z;
-		ar >> x >> y >> z;
+		ar.ReadF32(x);
+		ar.ReadF32(y);
+		ar.ReadF32(z);
 	}
 
 	for (int i=0; i<(int)mesh.normalCount; ++i)
 	{
 		float x, y, z;
-		ar >> x >> y >> z;
+		ar.ReadF32(x);
+		ar.ReadF32(y);
+		ar.ReadF32(z);
 	}
 
 	for (int i=0; i<(int)mesh.diffuseColorCount; ++i)
 	{
 		float r,g,b,a;
-		ar >> r >> g >> b >> a;
+		ar.ReadF32(r);
+		ar.ReadF32(g);
+		ar.ReadF32(b);
+		ar.ReadF32(a);
 	}
 
 	for (int i=0; i<(int)mesh.specularColorCount; ++i)
 	{
 		float r,g,b,a;
-		ar >> r >> g >> b >> a;
+		ar.ReadF32(r);
+		ar.ReadF32(g);
+		ar.ReadF32(b);
+		ar.ReadF32(a);
 	}
 
 	for (int i=0; i<(int)mesh.textureCoordCount; ++i)
 	{
 		float u, v, s, t;
-		ar >> u >> v >> s >> t;
+		ar.ReadF32(u);
+		ar.ReadF32(v);
+		ar.ReadF32(s);
+		ar.ReadF32(t);
 	}
 
 	for (int i=0; i<(int)mesh.faceCount; ++i)
@@ -288,70 +222,72 @@ bool U3DFile::readCLODBaseMeshBlock(BLOCK& block)
 
 void U3DFile::readCLODMeshDeclaration(BLOCK& block)
 {
-	BlockDataStream ar(block);
+	U3DBitStreamRead ar;
+	ar.SetDataBlock(block);
 
 	string meshName;
-	ar >> meshName;
+	ar.ReadString(meshName);
 
 	uint32 chainIndex;
-	ar >> chainIndex;
+	ar.ReadU32(chainIndex);
 
 	// Max mesh description
 	MAX_MESH_DESCRIPTION mesh;
-	ar >> mesh.attributes;
-	ar >> mesh.faceCount;
-	ar >> mesh.positionCount;
-	ar >> mesh.normalCount;
-	ar >> mesh.diffuseColorCount;
-	ar >> mesh.specularColorCount;
-	ar >> mesh.textureCoordCount;
-	ar >> mesh.shadingCount;
+	ar.ReadU32(mesh.attributes);
+	ar.ReadU32(mesh.faceCount);
+	ar.ReadU32(mesh.positionCount);
+	ar.ReadU32(mesh.normalCount);
+	ar.ReadU32(mesh.diffuseColorCount);
+	ar.ReadU32(mesh.specularColorCount);
+	ar.ReadU32(mesh.textureCoordCount);
+	ar.ReadU32(mesh.shadingCount);
 
 	for (int i=0; i<(int)mesh.shadingCount; ++i)
 	{
 		SHADING_DESCRIPTION shade;
-		ar >> shade.attributes;
-		ar >> shade.textureLayerCount;
+		ar.ReadU32(shade.attributes);
+		ar.ReadU32(shade.textureLayerCount);
 		for (int j=0; j<(int)shade.textureLayerCount; ++j)
 		{
 			assert(j < MAX_TEXTURE_LAYERS);
-			ar >> shade.textureCoordDimensions[j];
+			ar.ReadU32(shade.textureCoordDimensions[j]);
 		}
-		ar >> shade.originalShadingId;
+		ar.ReadU32(shade.originalShadingId);
 	}
 
 	// CLOD Description
-	ar >> mesh.minResolution;
-	ar >> mesh.maxResolution;
+	ar.ReadU32(mesh.minResolution);
+	ar.ReadU32(mesh.maxResolution);
 
 	// Resource description
 
 	// Skeleton description
 
-
 }
 
 bool U3DFile::readLightNodeBlock(BLOCK& block)
 {
-	BlockDataStream ar(block);
+	U3DBitStreamRead ar;
+	ar.SetDataBlock(block);
 
 	LIGHT_NODE lightNode;
-	ar >> lightNode.name;
+	ar.ReadString(lightNode.name);
 
 	// read parent node data
 	readParentNodeData(ar);
 
-	ar >> lightNode.resource;
+	ar.ReadString(lightNode.resource);
 
 	return true;
 }
 
 bool U3DFile::readGroupNodeBlock(BLOCK& block)
 {
-	BlockDataStream ar(block);
+	U3DBitStreamRead ar;
+	ar.SetDataBlock(block);
 
 	string groupName;
-	ar >> groupName;
+	ar.ReadString(groupName);
 
 	readParentNodeData(ar);
 
@@ -360,44 +296,46 @@ bool U3DFile::readGroupNodeBlock(BLOCK& block)
 
 void U3DFile::readModelNodeBlock(BLOCK& block)
 {
-	BlockDataStream ar(block);
+	U3DBitStreamRead ar;
+	ar.SetDataBlock(block);
 
 	string modelName;
-	ar >> modelName;
+	ar.ReadString(modelName);
 
 	readParentNodeData(ar);
 
 	string resourceName;
-	ar >> resourceName;
+	ar.ReadString(resourceName);
 
 	uint32 visibility;
-	ar >> visibility;
+	ar.ReadU32(visibility);
 }
 
 bool U3DFile::readViewNodeBlock(BLOCK& block)
 {
-	BlockDataStream ar(block);
+	U3DBitStreamRead ar;
+	ar.SetDataBlock(block);
 
 	VIEW_NODE view;
-	ar >> view.name;
+	ar.ReadString(view.name);
 
 	// parent noda data
 	readParentNodeData(ar);
 
 	// continue reading view node data
-	ar >> view.resourceName;
-	ar >> view.attributes;
-	ar >> view.nearClip;
-	ar >> view.farClip;
+	ar.ReadString(view.resourceName);
+	ar.ReadU32(view.attributes);
+	ar.ReadF32(view.nearClip);
+	ar.ReadF32(view.farClip);
 
 	// TODO: This can also be a vector.
 	float viewProjection;
-	ar >> viewProjection;
+	ar.ReadF32(viewProjection);
 
-	ar >> view.viewPort.width;
-	ar >> view.viewPort.height;
-	ar >> view.viewPort.horizontalPosition;
-	ar >> view.viewPort.verticalPosition;
+	ar.ReadF32(view.viewPort.width);
+	ar.ReadF32(view.viewPort.height);
+	ar.ReadF32(view.viewPort.horizontalPosition);
+	ar.ReadF32(view.viewPort.verticalPosition);
 
 	return true;
 }
@@ -417,37 +355,25 @@ bool U3DFile::readBlock(BLOCK& block, int ntype)
 	// read the block data
 	if (block.dataSize > 0)
 	{
-		block.data = new unsigned char[block.dataSize];
-		readBytes(block.data, block.dataSize);
-		
-		// read padding
-		int padding = block.dataSize % 4;
-		if (padding > 0)
-		{
-			int dummy;
-			readBytes(&dummy, 4 - padding);
-		}
-	} else block.data = 0;
+		int nsize = (block.dataSize % 4 == 0 ? block.dataSize >> 2 : (block.dataSize >> 2) + 1);
+		block.data.resize(nsize);
+		readBytes(&block.data[0], 4*nsize);
+	} 
+	else block.data.clear();
 
 	// read the meta data
 	if (block.metaDataSize)
 	{
-		block.metaData = new unsigned char[block.metaDataSize];
-		readBytes(block.metaData, block.metaDataSize);
-		
-		// read padding
-		int padding = block.metaDataSize % 4;
-		if (padding > 0)
-		{
-			int dummy;
-			readBytes(&dummy, 4 - padding);
-		}
-	} else block.metaData = 0;
+		int nsize = (block.metaDataSize % 4 == 0 ? block.metaDataSize >> 2 : (block.metaDataSize >> 2) + 1);
+		readBytes(&block.metaData[0], 4*nsize);
+	} 
+	else block.metaData.clear();
 
 	return true;
 }
 
 //=============================================================================
+// Swaps the order of bits in a 4-bit code
 uint32 U3DConstants::Swap8[] = {0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15};
 
 //=============================================================================
@@ -678,7 +604,7 @@ void U3DBitStreamWrite::WriteSymbol(uint32 context, uint32 symbol, bool& escape)
 	uint32 bit = m_low >> 15;
 
 	uint32 highmask = m_high & U3DConstants::HalfMask;
-	uint32 lowmask  = m_low & U3DConstants::HalfMask;
+	uint32 lowmask  = m_low  & U3DConstants::HalfMask;
 
 	while ((m_high & U3DConstants::HalfMask) == (m_low & U3DConstants::HalfMask))
 	{
@@ -811,10 +737,43 @@ U3DBitStreamRead::U3DBitStreamRead()
 {
 	m_contextManager = new U3DContextManager;
 	m_high = 0x0000FFFF;
+
+	m_low = 0;
+	m_underflow = 0;
+	m_code = 0;
+	m_dataLength = 0;
+	m_dataPosition = 0;
+	m_dataLocal = 0;
+	m_dataLocalNext = 0;
+	m_dataBitOffset = 0;
 }
 
 U3DBitStreamRead::~U3DBitStreamRead()
 {
+}
+
+//-----------------------------------------------------------------------------
+void U3DBitStreamRead::ReadBlock(U3DFile::BLOCK& block)
+{
+	ReadU32(block.blockType);
+	ReadU32(block.dataSize);
+	ReadU32(block.metaDataSize);
+
+	if (block.dataSize > 0)
+	{
+		int nsize = ((block.dataSize % 4) == 0 ? (block.dataSize >> 2) : (block.dataSize >> 2) + 1);
+		block.data.resize(nsize);
+		for (int i=0; i<nsize; ++i) block.data[i] = m_data[i];
+		m_dataPosition += nsize;
+	}
+
+	if (block.metaDataSize > 0)
+	{
+		int nsize = ((block.metaDataSize% 4) == 0 ? (block.metaDataSize >> 2) : (block.metaDataSize >> 2) + 1);
+		block.metaData.resize(nsize);
+		for (int i=0; i<nsize; ++i) block.metaData[i] = m_data[i];
+		m_dataPosition += nsize;
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -880,6 +839,25 @@ void U3DBitStreamRead::ReadF32(float& rValue)
 	uint32 uValue = 0;
 	ReadU32(uValue);
 	rValue = *((float*)(&uValue));
+}
+
+//-----------------------------------------------------------------------------
+// Reads a string from the data block
+void U3DBitStreamRead::ReadString(std::string& s)
+{
+	uint16 stringSize;
+	ReadU16(stringSize);
+	if (stringSize > 0)
+	{
+		s.resize(stringSize);
+		for (int i=0; i<stringSize; ++i) 
+		{
+			byte b;
+			ReadU8(b);
+			s[i] = (char) b;
+		}
+	}
+	else s.clear();
 }
 
 //-----------------------------------------------------------------------------
@@ -971,7 +949,8 @@ void U3DBitStreamRead::ReadCompressedU8(uint32 context, byte& rValue)
 // into local variables.
 void U3DBitStreamRead::SetDataBlock(U3DFile::BLOCK& dataBlock)
 {
-	m_data = (uint32*) dataBlock.data;
+	m_data = &dataBlock.data[0];
+	m_dataLength = dataBlock.data.size();
 
 	m_dataPosition = 0;
 	m_dataBitOffset = 0;
@@ -979,9 +958,8 @@ void U3DBitStreamRead::SetDataBlock(U3DFile::BLOCK& dataBlock)
 }
 
 //-----------------------------------------------------------------------------
-// Changes the ordering of an 8 bit value so that the first 4 bits become the last
-// 4 bits and last 4 bits become the first 4 bits.
-void U3DBitStreamRead::SwapBits8(uint32 rValue)
+// Reverses the bit order of an 8-bit value.
+void U3DBitStreamRead::SwapBits8(uint32& rValue)
 {
 	rValue = (U3DConstants::Swap8[(rValue) & 0xF] << 4) | (U3DConstants::Swap8[(rValue) >> 4]);
 }
@@ -994,9 +972,11 @@ void U3DBitStreamRead::ReadSymbol(uint32 context, uint32& rSymbol)
 {
 	uint32 uValue = 0;
 
-	// fill in the code word
+	// get the current bit position
 	uint32 position = 0;
 	GetBitCount(position);
+
+	// read the next bit
 	ReadBit(m_code);
 	m_dataBitOffset += (int32) m_underflow;
 
@@ -1006,10 +986,20 @@ void U3DBitStreamRead::ReadSymbol(uint32 context, uint32& rSymbol)
 		IncrementPosition();
 	}
 
+	// read the next 15 bits
+	// Note that this reverse the bit order
 	uint32 temp = 0;
 	Read15Bits(temp);
+
+	// add them to m_code
+	// Since Read15Bits reversed the bit order,
+	// the first bit we just read now becomes bit 16;
 	m_code <<= 15;
 	m_code |= temp;
+
+	// reset the last bit position
+	// This is because the actual number of bits to read
+	// is determined below (in bitcount)
 	SeekToBit(position);
 
 	// get the total count to calculate probabilities
@@ -1123,6 +1113,7 @@ void U3DBitStreamRead::ReadSymbol(uint32 context, uint32& rSymbol)
 
 //-----------------------------------------------------------------------------
 // returns the number of bits read in rCount
+// This returns 32*m_dataPosition + m_dataBitOffset
 void U3DBitStreamRead::GetBitCount(uint32& rCount)
 {
 	rCount = (uint32) ((m_dataPosition << 5) + m_dataBitOffset);
@@ -1150,21 +1141,33 @@ void U3DBitStreamRead::ReadBit(uint32& rValue)
 // read the next 15 bits from the datablock
 void U3DBitStreamRead::Read15Bits(uint32& rValue)
 {
+	// read the next 15 bits
+	// (This actually reads up to 32 bits, but we only care about the first 15)
 	uint32 uValue = m_dataLocal >> m_dataBitOffset;
 
+	// if we fell off the current position, get the 
+	// rest from dataLocalNext
 	if (m_dataBitOffset > 17)
 	{
 		uValue |= (m_dataLocalNext << (32 - m_dataBitOffset));
 	}
 
+	// this effectively multiplies the value by two
+	// or shifts the bits one position to the left
+	// (I suspect to make room for the one bit we already read before).
 	uValue += uValue;
 
+	// flips the bit order
+	// (The 0-bit that was just added now becomes bit 16, which thus should be zero)
 	uValue = (U3DConstants::Swap8[(uValue >> 12) & 0xF])
 		  | ((U3DConstants::Swap8[(uValue >>  8) & 0xF]) <<  4)
 		  | ((U3DConstants::Swap8[(uValue >>  4) & 0xF]) <<  8)
 		  | ((U3DConstants::Swap8[ uValue        & 0xF]) << 12);
 
+	// store the (bit reversed) value
 	rValue = uValue;
+
+	// increment bit-offset
 	m_dataBitOffset += 15;
 	if (m_dataBitOffset >= 32)
 	{
@@ -1196,9 +1199,21 @@ void U3DBitStreamRead::IncrementPosition()
 // occur at position in the data block
 void U3DBitStreamRead::SeekToBit(uint32 position)
 {
-	m_dataPosition = position >> 5;
-	m_dataBitOffset = (int32) (position & 0x0000001F);
+	m_dataPosition = position >> 5; // i.e. divide by 32
+	m_dataBitOffset = (int32) (position & 0x0000001F); // i.e. modulo 32
 	GetLocal();
+}
+
+//-----------------------------------------------------------------------------
+// This skips the rest of the dataLocal and moves to the next byte aligned value
+// TODO: Do I need to do anything with m_underflow?
+void U3DBitStreamRead::AlignTo4Byte()
+{
+	if (m_dataBitOffset != 0)
+	{
+		IncrementPosition();
+		m_dataBitOffset = 0;
+	}
 }
 
 //-----------------------------------------------------------------------------

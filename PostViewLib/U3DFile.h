@@ -69,8 +69,8 @@ public:
 		uint32	blockType;		// identifies the object type
 		uint32	dataSize;		// size of the data section in bytes (does not include padding)
 		uint32	metaDataSize;	// size of meta data section in bytes (does not include padding)
-		byte*	data;			// pointer to data block
-		byte*	metaData;		// pointer to meta data block (or zero)
+		vector<uint32>	data;			// pointer to data block
+		vector<uint32>	metaData;		// pointer to meta data block (or zero)
 
 	public:
 		BLOCK();
@@ -292,11 +292,16 @@ public:
 	void ReadCompressedU32(uint32 context, uint32& rValue);
 	void ReadCompressedU16(uint32 context, uint16& rValue);
 	void ReadCompressedU8 (uint32 context, byte& rValue);
+	void ReadString(std::string& s);
 
 	void SetDataBlock(U3DFile::BLOCK& dataBlock);
 
+	void AlignTo4Byte();
+
+	void ReadBlock(U3DFile::BLOCK& block);
+
 private:
-	void SwapBits8(uint32 rValue);
+	void SwapBits8(uint32& rValue);
 	void ReadSymbol(uint32 context, uint32& rSymbol);
 	void GetBitCount(uint32& rCount);
 	void ReadBit(uint32& rValue);
@@ -373,7 +378,7 @@ private:
 	// the value is the number of occurences of a symbol and every symbol with a large value
 	vector< vector<uint16> >	m_cumulativeCount;
 
-	// The Elephant is a vlue that determines the number of symbol occurences that are stored in each
+	// The Elephant is a value that determines the number of symbol occurences that are stored in each
 	// dynamic histogram. Limiting the number of occurrences avoids overflow of the uin16 array elements
 	// and allows the histogram to adapt to changing symbol distributions in files.
 	static const uint32 Elephant = 0x00001FFF;
