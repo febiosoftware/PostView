@@ -132,6 +132,7 @@
     <ClInclude Include="..\..\PostViewLib\PltArchive.h" />
     <ClInclude Include="..\..\PostViewLib\SphereFit.h" />
     <ClInclude Include="..\..\PostViewLib\stdafx.h" />
+    <ClInclude Include="..\..\PostViewLib\U3DFile.h" />
     <ClInclude Include="..\..\PostViewLib\VolRender.h" />
     <ClInclude Include="..\..\PostViewLib\VRMLExporter.h" />
     <ClInclude Include="..\..\PostViewLib\XMLReader.h" />
@@ -192,6 +193,7 @@
     <ClCompile Include="..\..\PostViewLib\math3d.cpp" />
     <ClCompile Include="..\..\PostViewLib\PltArchive.cpp" />
     <ClCompile Include="..\..\PostViewLib\SphereFit.cpp" />
+    <ClCompile Include="..\..\PostViewLib\U3DFile.cpp" />
     <ClCompile Include="..\..\PostViewLib\VolRender.cpp" />
     <ClCompile Include="..\..\PostViewLib\VRMLExporter.cpp" />
     <ClCompile Include="..\..\PostViewLib\XMLReader.cpp" />
