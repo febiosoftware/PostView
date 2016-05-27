@@ -2596,6 +2596,7 @@ int CGLModel::GetSubDivisions()
 	{
 		FEMesh& mesh = *GetMesh();
 		int NE = mesh.Elements();
+		if (NE == 0) return 1;
 
 		const int max_elem = 50000;
 		int ndivs = max_elem / NE;

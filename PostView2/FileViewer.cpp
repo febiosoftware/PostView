@@ -53,6 +53,7 @@ CFileViewer::CFileViewer(CMainWindow* pwnd, QWidget* parent) : QWidget(parent), 
 	m_filters.push_back(pair<QString, QString>("STL ASCII (*.stl)"     , "*.stl" ));
 	m_filters.push_back(pair<QString, QString>("RAW image data (*.raw)", "*.raw" ));
 	m_filters.push_back(pair<QString, QString>("VTK files (*.vtk)"     , "*.vtk" ));
+	m_filters.push_back(pair<QString, QString>("U3D files (*.u3d)"     , "*.u3d" ));
 
 	// add filters to drop down
 	int nflts = m_filters.size();

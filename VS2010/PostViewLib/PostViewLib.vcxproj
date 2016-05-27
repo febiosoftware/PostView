@@ -116,6 +116,7 @@
     <ClInclude Include="..\..\PostViewLib\FERAWImageReader.h" />
     <ClInclude Include="..\..\PostViewLib\FEState.h" />
     <ClInclude Include="..\..\PostViewLib\FESTLimport.h" />
+    <ClInclude Include="..\..\PostViewLib\FEU3DImport.h" />
     <ClInclude Include="..\..\PostViewLib\FEVTKExport.h" />
     <ClInclude Include="..\..\PostViewLib\FEVTKImport.h" />
     <ClInclude Include="..\..\PostViewLib\GDecoration.h" />
@@ -175,6 +176,7 @@
     <ClCompile Include="..\..\PostViewLib\FERAWImageReader.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEState.cpp" />
     <ClCompile Include="..\..\PostViewLib\FESTLimport.cpp" />
+    <ClCompile Include="..\..\PostViewLib\FEU3DImport.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEVTKExport.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEVTKImport.cpp" />
     <ClCompile Include="..\..\PostViewLib\GDecoration.cpp" />

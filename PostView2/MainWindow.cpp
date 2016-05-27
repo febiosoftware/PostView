@@ -15,6 +15,7 @@
 #include <PostViewLib/FELSDYNAPlot.h>
 #include <PostViewLib/FEBioPlotExport.h>
 #include <PostViewLib/FEBioImport.h>
+#include <PostViewLib/FEU3DImport.h>
 #include <PostViewLib/FELSDYNAimport.h>
 #include <PostViewLib/FELSDYNAPlot.h>
 #include <PostViewLib/FEVTKImport.h>
@@ -142,6 +143,7 @@ bool CMainWindow::OpenFile(const QString& fileName, int nfilter)
 			else if (ext.compare("stl" ) == 0) nfilter =  6;
 			else if (ext.compare("raw" ) == 0) nfilter =  7;
 			else if (ext.compare("vtk" ) == 0) nfilter =  8;
+			else if (ext.compare("u3d" ) == 0) nfilter =  9;
 			else
 			{
 				return false;
@@ -174,6 +176,7 @@ bool CMainWindow::OpenFile(const QString& fileName, int nfilter)
 	case 6: reader = new FESTLimport; break;
 	case 7: reader = new FERAWImageReader; break;
 	case 8: reader = new FEVTKimport; break;
+	case 9: reader = new FEU3DImport; break;
 	default:
 		QMessageBox::critical(this, "PostView2", "Don't know how to read this file");
 		return false;
@@ -321,7 +324,8 @@ void CMainWindow::on_actionOpen_triggered()
 			<< "ASCII data (*.txt)"
 			<< "STL ASCII (*.stl)"
 			<< "RAW image data (*.raw)"
-			<< "VTK files (*.vtk)";
+			<< "VTK files (*.vtk)"
+			<< "U3D files (*.u3d)";
 
 	QFileDialog dlg(this, "Open");
 	dlg.setNameFilters(filters);

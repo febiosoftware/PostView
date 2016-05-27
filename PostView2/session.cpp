@@ -11,6 +11,7 @@
 #include "PostViewLib/FESTLimport.h"
 #include "PostViewLib/FEASCIIImport.h"
 #include "PostViewLib/FEVTKImport.h"
+#include "PostViewLib/FEU3DImport.h"
 #include "GLModel.h"
 #include "GLPlaneCutPlot.h"
 
@@ -33,6 +34,7 @@ FEFileReader* GetFileReader(const char* szfile)
 	else if (szext && (strcmp(szext, ".stl" ) == 0)) pimp = new FESTLimport;
 	else if (szext && (strcmp(szext, ".txt" ) == 0)) pimp = new FEASCIIImport;
 	else if (szext && (strcmp(szext, ".vtk" ) == 0)) pimp = new FEVTKimport;
+	else if (szext && (strcmp(szext, ".u3d" ) == 0)) pimp = new FEU3DImport;
 	else if (szext == 0                            ) pimp = new FELSDYNAPlotImport;
 	else assert(false);
 
