@@ -212,7 +212,40 @@ bool U3DFile::readCLODBaseMeshBlock(BLOCK& block)
 
 	for (int i=0; i<(int)mesh.faceCount; ++i)
 	{
+		uint32 shadingId;
+		ar.ReadCompressedU32(1, shadingId);
 
+		SHADING_DESCRIPTION& shade = m_shading[shadingId];
+
+		for (int j=0; j<3; ++j)
+		{
+			uint32 positionIndex;
+			ar.ReadCompressedU32(U3DConstants::StaticFull + mesh.positionCount, positionIndex);
+
+			if ((m_maxMeshDescription.attributes & ExcludeNormals) == 0)
+			{
+				uint32 normalIndex;
+				ar.ReadCompressedU32(U3DConstants::StaticFull + mesh.normalCount, normalIndex);
+			}
+
+			if (shade.attributes & UsePerVertexDiffuse)
+			{
+				uint32 diffuseIndex;
+				ar.ReadCompressedU32(U3DConstants::StaticFull + mesh.diffuseColorCount, diffuseIndex);
+			}
+
+			if (shade.attributes & UsePerVertexSpecular)
+			{
+				uint32 specularIndex;
+				ar.ReadCompressedU32(U3DConstants::StaticFull + mesh.specularColorCount, specularIndex);
+			}
+
+			for (int k=0; k<shade.textureLayerCount; ++k)
+			{
+				uint32 textureIndex;
+				ar.ReadCompressedU32(U3DConstants::StaticFull + mesh.textureCoordCount, textureIndex);
+			}
+		}
 	}
 
 
@@ -232,19 +265,19 @@ void U3DFile::readCLODMeshDeclaration(BLOCK& block)
 	ar.ReadU32(chainIndex);
 
 	// Max mesh description
-	MAX_MESH_DESCRIPTION mesh;
-	ar.ReadU32(mesh.attributes);
-	ar.ReadU32(mesh.faceCount);
-	ar.ReadU32(mesh.positionCount);
-	ar.ReadU32(mesh.normalCount);
-	ar.ReadU32(mesh.diffuseColorCount);
-	ar.ReadU32(mesh.specularColorCount);
-	ar.ReadU32(mesh.textureCoordCount);
-	ar.ReadU32(mesh.shadingCount);
+	ar.ReadU32(m_maxMeshDescription.attributes);
+	ar.ReadU32(m_maxMeshDescription.faceCount);
+	ar.ReadU32(m_maxMeshDescription.positionCount);
+	ar.ReadU32(m_maxMeshDescription.normalCount);
+	ar.ReadU32(m_maxMeshDescription.diffuseColorCount);
+	ar.ReadU32(m_maxMeshDescription.specularColorCount);
+	ar.ReadU32(m_maxMeshDescription.textureCoordCount);
+	ar.ReadU32(m_maxMeshDescription.shadingCount);
 
-	for (int i=0; i<(int)mesh.shadingCount; ++i)
+	m_shading.resize(m_maxMeshDescription.shadingCount);
+	for (int i=0; i<(int)m_maxMeshDescription.shadingCount; ++i)
 	{
-		SHADING_DESCRIPTION shade;
+		SHADING_DESCRIPTION& shade = m_shading[i];
 		ar.ReadU32(shade.attributes);
 		ar.ReadU32(shade.textureLayerCount);
 		for (int j=0; j<(int)shade.textureLayerCount; ++j)
@@ -256,13 +289,12 @@ void U3DFile::readCLODMeshDeclaration(BLOCK& block)
 	}
 
 	// CLOD Description
-	ar.ReadU32(mesh.minResolution);
-	ar.ReadU32(mesh.maxResolution);
+	ar.ReadU32(m_maxMeshDescription.minResolution);
+	ar.ReadU32(m_maxMeshDescription.maxResolution);
 
 	// Resource description
 
 	// Skeleton description
-
 }
 
 bool U3DFile::readLightNodeBlock(BLOCK& block)

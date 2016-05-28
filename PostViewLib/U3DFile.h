@@ -62,6 +62,18 @@ public:
 		OnePointPerspective    = 8	// doc says 6 but I think that's a typo
 	};
 
+	enum MaxMeshAttributes
+	{
+		ExcludeNormals = 1
+	};
+
+	enum ShadingAttributes
+	{
+		UsePerVertexDiffuse = 1,
+		UsePerVertexSpecular = 2,
+		UsePerVertexDiffuseAndSpecular = 3
+	};
+
 public:
 	class BLOCK
 	{
@@ -199,6 +211,9 @@ public:
 private:
 	uint32	m_priority;
 	FILE*	m_fp;
+
+	MAX_MESH_DESCRIPTION			m_maxMeshDescription;
+	vector<SHADING_DESCRIPTION>		m_shading;
 };
 
 class U3DContextManager;
@@ -399,7 +414,7 @@ public:
 	static const uint32 Context8 = 0;
 
 	// contexts >= StaticFull are static contexts
-	static const uint32 StaticFull = 0x00000400;
+	static const uint32 StaticFull = 0x00004000;
 
 	// the largest allowable static context.
 	// values written to contexts > MaxRange are written as uncompressed
