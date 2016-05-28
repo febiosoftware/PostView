@@ -15,5 +15,5 @@ bool FEU3DImport::Load(FEModel& fem, const char* szfile)
 
 	Close();
 
-	return false;
+	return true;
 }

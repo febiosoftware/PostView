@@ -24,21 +24,21 @@ bool U3DFile::Load(FILE* fp)
 
 	// read the file header block
 	FILE_HEADER fileHeader;
-	if (readFileHeader(fileHeader) == false) return false;
+	if (readFileHeader(fileHeader) == false) { assert(false); return false; }
 
 	// read the blocks
 	while (!feof(m_fp) && !ferror(m_fp))
 	{
 		// read the next block
 		BLOCK block;
-		if (readBlock(block) == false) return false;
+		if (readBlock(block) == false) { assert(false); return false; }
 
 		// process the file structure blocks
 		switch (block.blockType)
 		{
-		case PriorityUpdate: if (readPriorityUpdateBlock(block) == false) false;
-		case ModifierChain : if (readModifierChainBlock (block) == false) false;
-		case CLODBaseMesh  : if (readCLODBaseMeshBlock  (block) == false) false;
+		case PriorityUpdate: if (readPriorityUpdateBlock(block) == false) { assert(false); return false; } break;
+		case ModifierChain : if (readModifierChainBlock (block) == false) { assert(false); return false; } break;
+		case CLODBaseMesh  : if (readCLODBaseMeshBlock  (block) == false) { assert(false); return false; } break;
 		}
 	}
 
@@ -49,7 +49,7 @@ bool U3DFile::Load(FILE* fp)
 bool U3DFile::readFileHeader(FILE_HEADER& fileHeader)
 {
 	BLOCK block;
-	if (readBlock(block, 0x00443355) == false) return false;
+	if (readBlock(block, 0x00443355) == false) { assert(false); return false; }
 
 	U3DBitStreamRead ar;
 	ar.SetDataBlock(block);
@@ -65,7 +65,7 @@ bool U3DFile::readFileHeader(FILE_HEADER& fileHeader)
 
 bool U3DFile::readPriorityUpdateBlock(BLOCK& block)
 {
-	if (block.blockType != PriorityUpdate) return false;
+	if (block.blockType != PriorityUpdate) { assert(false); return false; }
 
 	U3DBitStreamRead ar;
 	ar.SetDataBlock(block);
@@ -74,14 +74,14 @@ bool U3DFile::readPriorityUpdateBlock(BLOCK& block)
 	ar.ReadU32(newPriority); 
 
 	// The new priority value shall not be less than previous priority value
-	if (newPriority < m_priority) return false;
+	if (newPriority < m_priority) { assert(false); return false; }
 	m_priority = newPriority;
 	return true;
 }
 
 bool U3DFile::readModifierChainBlock(BLOCK& block)
 {
-	if (block.blockType != ModifierChain) return false;
+	if (block.blockType != ModifierChain) { assert(false); return false; }
 	
 	U3DBitStreamRead ar;
 	ar.SetDataBlock(block);
@@ -119,9 +119,9 @@ bool U3DFile::readModifierChainBlock(BLOCK& block)
 		ar.ReadBlock(subBlock);
 		switch (subBlock.blockType)
 		{
-		case ViewNode : if (readViewNodeBlock (subBlock) == false) return false;
-		case LightNode: if (readLightNodeBlock(subBlock) == false) return false;
-		case GroupNode: if (readGroupNodeBlock(subBlock) == false) return false;
+		case ViewNode : if (readViewNodeBlock (subBlock) == false) { assert(false); return false; } break;
+		case LightNode: if (readLightNodeBlock(subBlock) == false) { assert(false); return false; } break;
+		case GroupNode: if (readGroupNodeBlock(subBlock) == false) { assert(false); return false; } break;
 		case ModelNode: readModelNodeBlock(subBlock); break;
 		case CLODMeshDeclaration: readCLODMeshDeclaration(subBlock); break;
 		}
@@ -148,7 +148,7 @@ void readParentNodeData(U3DBitStreamRead& ar)
 
 bool U3DFile::readCLODBaseMeshBlock(BLOCK& block)
 {
-	if (block.blockType != CLODBaseMesh) return false;
+	if (block.blockType != CLODBaseMesh) { assert(false); return false; }
 
 	U3DBitStreamRead ar;
 	ar.SetDataBlock(block);
@@ -344,7 +344,7 @@ bool U3DFile::readBlock(BLOCK& block, int ntype)
 {
 	// read block type
 	readBytes(&block.blockType, sizeof(int));
-	if ((ntype != -1) && (block.blockType != ntype)) return false;
+	if ((ntype != -1) && (block.blockType != ntype)) { assert(false); return false; }
 
 	// read data size
 	readBytes(&block.dataSize, sizeof(int));
@@ -763,7 +763,7 @@ void U3DBitStreamRead::ReadBlock(U3DFile::BLOCK& block)
 	{
 		int nsize = ((block.dataSize % 4) == 0 ? (block.dataSize >> 2) : (block.dataSize >> 2) + 1);
 		block.data.resize(nsize);
-		for (int i=0; i<nsize; ++i) block.data[i] = m_data[i];
+		for (int i=0; i<nsize; ++i) block.data[i] = m_data[m_dataPosition + i];
 		m_dataPosition += nsize;
 	}
 
@@ -771,7 +771,7 @@ void U3DBitStreamRead::ReadBlock(U3DFile::BLOCK& block)
 	{
 		int nsize = ((block.metaDataSize% 4) == 0 ? (block.metaDataSize >> 2) : (block.metaDataSize >> 2) + 1);
 		block.metaData.resize(nsize);
-		for (int i=0; i<nsize; ++i) block.metaData[i] = m_data[i];
+		for (int i=0; i<nsize; ++i) block.metaData[i] = m_data[m_dataPosition + i];
 		m_dataPosition += nsize;
 	}
 }
