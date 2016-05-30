@@ -2,7 +2,7 @@
 #include "FEDataManager.h"
 #include "FEModel.h"
 #include "constants.h"
-#include <string.h>
+#include <string>
 
 void FEDataField::SetName(const char* szname) { strcpy(m_szname, szname); }
 

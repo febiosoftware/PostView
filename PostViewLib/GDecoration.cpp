@@ -1,6 +1,11 @@
 #include "GDecoration.h"
+#ifdef WIN32
 #include <Windows.h>
 #include <gl/gl.h>
+#endif
+#ifdef __APPLE__
+#include <OpenGL/gl.h>
+#endif
 
 void GPointDecoration::render()
 {

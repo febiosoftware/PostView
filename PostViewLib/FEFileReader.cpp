@@ -43,7 +43,12 @@ bool FEFileReader::errf(const char* szerr, ...)
 	// copy to string
 	va_start(args, szerr);
 	char sz[512] = {0};
+#ifdef WIN32
 	vsprintf_s(sz, 511, szerr, args);
+#endif
+#ifdef __APPLE__
+    vsnprintf(sz, 511, szerr, args);
+#endif
 	va_end(args);
 
 	// append to the error string

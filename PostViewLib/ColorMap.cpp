@@ -1,7 +1,12 @@
 #include "stdafx.h"
 #include "ColorMap.h"
+#ifdef WIN32
 #include <Windows.h>
 #include <gl/GL.h>
+#endif
+#ifdef __APPLE__
+#include <OpenGL/gl.h>
+#endif
 
 GLCOLOR pal[MAX_PAL_COLORS] = {
 	GLCOLOR(128,255,  0),
