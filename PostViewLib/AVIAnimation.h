@@ -1,6 +1,7 @@
 #pragma once
 #include "Animation.h"
 #ifdef WIN32
+#include <Windows.h>
 #include <vfw.h>
 //-----------------------------------------------------------------------------
 //! Base class for creating animation

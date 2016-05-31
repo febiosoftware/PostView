@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "AVIAnimation.h"
 #ifdef WIN32
-#include <Windows.h>
 
 CAVIAnimation::CAVIAnimation()
 {
