@@ -2,8 +2,23 @@
 #include <stdio.h>
 #include <string>
 
+#ifdef WIN32
+typedef __int64 off_type;
+#endif
+
+#ifdef LINUX // same for Linux and Mac OS X
+typedef off_t off_type;
+#endif
+
+#ifdef __APPLE__ // same for Linux and Mac OS X
+typedef off_t off_type;
+#endif
+
+//-----------------------------------------------------------------------------
+// forward declaration of model class
 class FEModel;
 
+//-----------------------------------------------------------------------------
 class FEFileReader
 {
 public:
@@ -30,6 +45,10 @@ protected:
 	// helper function that sets the error string
 	bool errf(const char* szerr, ...);
 
+	// get the amount of the file read so far
+	// expressed in percentage of total file size
+	float GetFileProgress() const;
+
 protected:
 	FILE*			m_fp;
 	std::string		m_fileName;	//!< file name
@@ -38,4 +57,5 @@ private:
 	const char*		m_sztype;	//!< type identifier
 	std::string		m_err;		//!< error messages (separated by \n)
 	int				m_nerrors;	//!< number of errors
+	off_type		m_nfilesize;	// size of file
 };

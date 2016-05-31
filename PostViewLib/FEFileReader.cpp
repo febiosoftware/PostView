@@ -2,9 +2,25 @@
 #include <stdarg.h>
 using namespace std;
 
+#ifdef WIN32
+#define ftell64(a)     _ftelli64(a)
+#define fseek64(a,b,c) _fseeki64(a,b,c)
+#endif
+
+#ifdef LINUX // same for Linux and Mac OS X
+#define ftell64(a)     ftello(a)
+#define fseek64(a,b,c) fseeko(a,b,c)
+#endif
+
+#ifdef __APPLE__ // same for Linux and Mac OS X
+#define ftell64(a)     ftello(a)
+#define fseek64(a,b,c) fseeko(a,b,c)
+#endif
+
 FEFileReader::FEFileReader(const char* sztype) : m_sztype(sztype)
 {
 	m_fp = 0;
+	m_nfilesize = 0;
 }
 
 FEFileReader::~FEFileReader()
@@ -16,6 +32,12 @@ bool FEFileReader::Open(const char* szfile, const char* szmode)
 	if (m_fp) Close();
 	m_fp = fopen(szfile, szmode);
 	m_fileName = szfile;
+
+	// get the filesize
+	fseek(m_fp, 0, SEEK_END);
+	m_nfilesize = ftell64(m_fp);
+	fseek64(m_fp, 0, SEEK_SET);
+
 	return (m_fp != 0);
 }
 
@@ -23,6 +45,7 @@ void FEFileReader::Close()
 {
 	if (m_fp) fclose(m_fp);
 	m_fp = 0;
+	m_nfilesize = 0;
 }
 
 const std::string& FEFileReader::GetErrorMessage()
@@ -64,4 +87,11 @@ bool FEFileReader::errf(const char* szerr, ...)
 	Close();
 
 	return false;
+}
+
+float FEFileReader::GetFileProgress() const
+{
+	off_type npos = ftell64(m_fp);
+	float pct = (float) npos / (float) m_nfilesize;
+	return pct;
 }

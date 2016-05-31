@@ -37,6 +37,25 @@
 #include "DlgTimeSettings.h"
 #include <string>
 
+CFileThread::CFileThread(CMainWindow* wnd, FEFileReader* file, const QString& fileName) : m_wnd(wnd), m_fileReader(file), m_fileName(fileName)
+{
+	QObject::connect(this, SIGNAL(resultReady(bool,const QString&)), wnd, SLOT(finishedReadingFile(bool, const QString&)));
+	QObject::connect(this, SIGNAL(finished)   , this, SLOT(deleteLater));
+}
+
+void CFileThread::run()
+{
+	if (m_fileReader)
+	{
+		std::string sfile = m_fileName.toStdString();
+		CDocument& doc = *m_wnd->GetDocument();
+		bool ret = doc.LoadFEModel(m_fileReader, sfile.c_str());
+		std::string err = m_fileReader->GetErrorMessage();
+		emit resultReady(ret, QString(err.c_str()));
+	}
+	else emit resultReady(false, "No file reader");
+}
+
 CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMainWindow)
 {
 	m_doc = new CDocument(this);
@@ -112,7 +131,7 @@ QMenu* CMainWindow::BuildContextMenu()
 	return menu;
 }
 
-bool CMainWindow::OpenFile(const QString& fileName, int nfilter)
+void CMainWindow::OpenFile(const QString& fileName, int nfilter)
 {
 	std::string sfile = fileName.toStdString();
 
@@ -147,7 +166,7 @@ bool CMainWindow::OpenFile(const QString& fileName, int nfilter)
 			else if (ext.compare("u3d" ) == 0) nfilter = 10;
 			else
 			{
-				return false;
+				return;
 			}
 		}
 	}
@@ -166,7 +185,7 @@ bool CMainWindow::OpenFile(const QString& fileName, int nfilter)
 				xplt->SetReadStateFlag(dlg.m_nop);
 				xplt->SetReadStatesList(dlg.m_item);
 			}
-			else return false;
+			else return;
 		}
 		break;
 	case  1: reader = new FEBioImport; break;
@@ -181,26 +200,35 @@ bool CMainWindow::OpenFile(const QString& fileName, int nfilter)
 	case 10: reader = new FEU3DImport; break;
 	default:
 		QMessageBox::critical(this, "PostView2", "Don't know how to read this file");
-		return false;
+		return;
 	}
 
-	if (m_doc->LoadFEModel(reader, sfile.c_str()) == false)
+	// copy just the file title
+	std::string stitle = sfile;
+	int npos = sfile.rfind('/');
+	if (npos == std::string::npos) npos = sfile.rfind('\\');
+	if (npos != std::string::npos)
+	{
+		stitle = sfile.substr(npos+1);
+	}
+
+	// set the window title
+	setWindowTitle(QString("PostView2 - %1").arg(QString(stitle.c_str())));
+
+	// create the file reading thread and run it
+	CFileThread* fileThread = new CFileThread(this, reader, fileName);
+	fileThread->start();
+	ui->statusBar->showMessage(QString("Reading file %1 ...").arg(fileName));
+}
+
+void CMainWindow::finishedReadingFile(bool success, const QString& errorString)
+{
+	ui->statusBar->clearMessage();
+
+	if (success == false)
 	{
 		QMessageBox::critical(this, "PostView2", "Failed reading file");
-	}
-	else
-	{
-		// copy just the file title
-		std::string stitle = sfile;
-		int npos = sfile.rfind('/');
-		if (npos == std::string::npos) npos = sfile.rfind('\\');
-		if (npos != std::string::npos)
-		{
-			stitle = sfile.substr(npos+1);
-		}
-
-		// set the window title
-		setWindowTitle(QString("PostView2 - %1").arg(QString(stitle.c_str())));
+		return;
 	}
 
 	UpdateMainToolbar();
@@ -218,8 +246,6 @@ bool CMainWindow::OpenFile(const QString& fileName, int nfilter)
 
 	// update all Ui components
 	UpdateUi(true);
-
-	return true;
 }
 
 bool CMainWindow::SaveFile(const QString& fileName, int nfilter)

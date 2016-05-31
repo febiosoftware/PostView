@@ -90,6 +90,8 @@ public:
 	CIntegrateWindow*		integrateWindow;
 	CStatsWindow*			statsWindow;
 
+	QStatusBar*	statusBar;
+
 public:
 	// build the UI
 	void setupUi(CMainWindow* MainWindow)
@@ -115,7 +117,7 @@ public:
 		buildDockWidgets(MainWindow);
 
 		// build status bar
-		QStatusBar* statusBar = new QStatusBar(MainWindow);
+		statusBar = new QStatusBar(MainWindow);
 		MainWindow->setStatusBar(statusBar);
 
 		// connect all the slots

@@ -2,9 +2,11 @@
 #include <QMainWindow>
 #include <QtCore/QBasicTimer>
 #include <QCloseEvent>
+#include <QtCore/QThread>
 
 class CDocument;
 class CGLView;
+class FEFileReader;
 
 namespace Ui {
 	class CMainWindow;
@@ -18,7 +20,7 @@ public:
 	explicit CMainWindow(QWidget* parent = 0);
 	~CMainWindow();
 
-	bool OpenFile(const QString& fileName, int nfilter);
+	void OpenFile(const QString& fileName, int nfilter);
 	bool SaveFile(const QString& fileName, int nfilter);
 
 	CDocument*	GetDocument() { return m_doc; }
@@ -138,10 +140,13 @@ public slots:
 
 	void on_selectTime_valueChanged(int i);
 
+	void finishedReadingFile(bool success, const QString& errorString);
+
 private:
 	void timerEvent(QTimerEvent* ev);
 	void closeEvent(QCloseEvent* ev);
 	void StopAnimation();
+
 
 private:
 	void writeSettings();
@@ -151,4 +156,22 @@ private:
 	Ui::CMainWindow*	ui;
 	CDocument*			m_doc;
 	QBasicTimer			m_timer;
+};
+
+class CFileThread : public QThread
+{
+	Q_OBJECT
+
+	void run() Q_DECL_OVERRIDE;
+
+public:
+	CFileThread(CMainWindow* wnd, FEFileReader* file, const QString& fileName);
+
+signals:
+	void resultReady(bool, const QString&);
+
+private:
+	CMainWindow*	m_wnd;
+	FEFileReader*	m_fileReader;
+	QString			m_fileName;
 };

@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_CMainWindow_t {
-    QByteArrayData data[71];
-    char stringdata0[1877];
+    QByteArrayData data[74];
+    char stringdata0[1917];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -99,7 +99,10 @@ QT_MOC_LITERAL(66, 1775, 24), // "on_fontSize_valueChanged"
 QT_MOC_LITERAL(67, 1800, 19), // "on_fontBold_toggled"
 QT_MOC_LITERAL(68, 1820, 7), // "checked"
 QT_MOC_LITERAL(69, 1828, 21), // "on_fontItalic_toggled"
-QT_MOC_LITERAL(70, 1850, 26) // "on_selectTime_valueChanged"
+QT_MOC_LITERAL(70, 1850, 26), // "on_selectTime_valueChanged"
+QT_MOC_LITERAL(71, 1877, 19), // "finishedReadingFile"
+QT_MOC_LITERAL(72, 1897, 7), // "success"
+QT_MOC_LITERAL(73, 1905, 11) // "errorString"
 
     },
     "CMainWindow\0on_actionOpen_triggered\0"
@@ -163,7 +166,8 @@ QT_MOC_LITERAL(70, 1850, 26) // "on_selectTime_valueChanged"
     "on_fontStyle_currentFontChanged\0font\0"
     "on_fontSize_valueChanged\0on_fontBold_toggled\0"
     "checked\0on_fontItalic_toggled\0"
-    "on_selectTime_valueChanged"
+    "on_selectTime_valueChanged\0"
+    "finishedReadingFile\0success\0errorString"
 };
 #undef QT_MOC_LITERAL
 
@@ -173,7 +177,7 @@ static const uint qt_meta_data_CMainWindow[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      65,   14, // methods
+      66,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -181,71 +185,72 @@ static const uint qt_meta_data_CMainWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,  339,    2, 0x0a /* Public */,
-       3,    0,  340,    2, 0x0a /* Public */,
-       4,    0,  341,    2, 0x0a /* Public */,
-       5,    0,  342,    2, 0x0a /* Public */,
-       6,    0,  343,    2, 0x0a /* Public */,
-       7,    0,  344,    2, 0x0a /* Public */,
-       8,    0,  345,    2, 0x0a /* Public */,
-       9,    0,  346,    2, 0x0a /* Public */,
-      10,    0,  347,    2, 0x0a /* Public */,
-      11,    0,  348,    2, 0x0a /* Public */,
-      12,    0,  349,    2, 0x0a /* Public */,
-      13,    0,  350,    2, 0x0a /* Public */,
-      14,    0,  351,    2, 0x0a /* Public */,
-      15,    0,  352,    2, 0x0a /* Public */,
-      16,    0,  353,    2, 0x0a /* Public */,
-      17,    0,  354,    2, 0x0a /* Public */,
-      18,    0,  355,    2, 0x0a /* Public */,
-      19,    0,  356,    2, 0x0a /* Public */,
-      20,    0,  357,    2, 0x0a /* Public */,
-      21,    0,  358,    2, 0x0a /* Public */,
-      22,    0,  359,    2, 0x0a /* Public */,
-      23,    0,  360,    2, 0x0a /* Public */,
-      24,    0,  361,    2, 0x0a /* Public */,
-      25,    0,  362,    2, 0x0a /* Public */,
-      26,    0,  363,    2, 0x0a /* Public */,
-      27,    0,  364,    2, 0x0a /* Public */,
-      28,    0,  365,    2, 0x0a /* Public */,
-      29,    0,  366,    2, 0x0a /* Public */,
-      30,    0,  367,    2, 0x0a /* Public */,
-      31,    0,  368,    2, 0x0a /* Public */,
-      32,    0,  369,    2, 0x0a /* Public */,
-      33,    0,  370,    2, 0x0a /* Public */,
-      34,    0,  371,    2, 0x0a /* Public */,
-      35,    0,  372,    2, 0x0a /* Public */,
-      36,    0,  373,    2, 0x0a /* Public */,
-      37,    1,  374,    2, 0x0a /* Public */,
-      39,    1,  377,    2, 0x0a /* Public */,
-      41,    1,  380,    2, 0x0a /* Public */,
-      42,    0,  383,    2, 0x0a /* Public */,
-      43,    0,  384,    2, 0x0a /* Public */,
-      44,    0,  385,    2, 0x0a /* Public */,
-      45,    0,  386,    2, 0x0a /* Public */,
-      46,    0,  387,    2, 0x0a /* Public */,
-      47,    0,  388,    2, 0x0a /* Public */,
-      48,    1,  389,    2, 0x0a /* Public */,
-      49,    1,  392,    2, 0x0a /* Public */,
-      50,    0,  395,    2, 0x0a /* Public */,
-      51,    0,  396,    2, 0x0a /* Public */,
-      52,    0,  397,    2, 0x0a /* Public */,
-      53,    0,  398,    2, 0x0a /* Public */,
-      54,    0,  399,    2, 0x0a /* Public */,
-      55,    0,  400,    2, 0x0a /* Public */,
-      56,    1,  401,    2, 0x0a /* Public */,
-      57,    1,  404,    2, 0x0a /* Public */,
-      58,    1,  407,    2, 0x0a /* Public */,
-      59,    1,  410,    2, 0x0a /* Public */,
-      60,    1,  413,    2, 0x0a /* Public */,
-      61,    0,  416,    2, 0x0a /* Public */,
-      62,    0,  417,    2, 0x0a /* Public */,
-      63,    0,  418,    2, 0x0a /* Public */,
-      64,    1,  419,    2, 0x0a /* Public */,
-      66,    1,  422,    2, 0x0a /* Public */,
-      67,    1,  425,    2, 0x0a /* Public */,
-      69,    1,  428,    2, 0x0a /* Public */,
-      70,    1,  431,    2, 0x0a /* Public */,
+       1,    0,  344,    2, 0x0a /* Public */,
+       3,    0,  345,    2, 0x0a /* Public */,
+       4,    0,  346,    2, 0x0a /* Public */,
+       5,    0,  347,    2, 0x0a /* Public */,
+       6,    0,  348,    2, 0x0a /* Public */,
+       7,    0,  349,    2, 0x0a /* Public */,
+       8,    0,  350,    2, 0x0a /* Public */,
+       9,    0,  351,    2, 0x0a /* Public */,
+      10,    0,  352,    2, 0x0a /* Public */,
+      11,    0,  353,    2, 0x0a /* Public */,
+      12,    0,  354,    2, 0x0a /* Public */,
+      13,    0,  355,    2, 0x0a /* Public */,
+      14,    0,  356,    2, 0x0a /* Public */,
+      15,    0,  357,    2, 0x0a /* Public */,
+      16,    0,  358,    2, 0x0a /* Public */,
+      17,    0,  359,    2, 0x0a /* Public */,
+      18,    0,  360,    2, 0x0a /* Public */,
+      19,    0,  361,    2, 0x0a /* Public */,
+      20,    0,  362,    2, 0x0a /* Public */,
+      21,    0,  363,    2, 0x0a /* Public */,
+      22,    0,  364,    2, 0x0a /* Public */,
+      23,    0,  365,    2, 0x0a /* Public */,
+      24,    0,  366,    2, 0x0a /* Public */,
+      25,    0,  367,    2, 0x0a /* Public */,
+      26,    0,  368,    2, 0x0a /* Public */,
+      27,    0,  369,    2, 0x0a /* Public */,
+      28,    0,  370,    2, 0x0a /* Public */,
+      29,    0,  371,    2, 0x0a /* Public */,
+      30,    0,  372,    2, 0x0a /* Public */,
+      31,    0,  373,    2, 0x0a /* Public */,
+      32,    0,  374,    2, 0x0a /* Public */,
+      33,    0,  375,    2, 0x0a /* Public */,
+      34,    0,  376,    2, 0x0a /* Public */,
+      35,    0,  377,    2, 0x0a /* Public */,
+      36,    0,  378,    2, 0x0a /* Public */,
+      37,    1,  379,    2, 0x0a /* Public */,
+      39,    1,  382,    2, 0x0a /* Public */,
+      41,    1,  385,    2, 0x0a /* Public */,
+      42,    0,  388,    2, 0x0a /* Public */,
+      43,    0,  389,    2, 0x0a /* Public */,
+      44,    0,  390,    2, 0x0a /* Public */,
+      45,    0,  391,    2, 0x0a /* Public */,
+      46,    0,  392,    2, 0x0a /* Public */,
+      47,    0,  393,    2, 0x0a /* Public */,
+      48,    1,  394,    2, 0x0a /* Public */,
+      49,    1,  397,    2, 0x0a /* Public */,
+      50,    0,  400,    2, 0x0a /* Public */,
+      51,    0,  401,    2, 0x0a /* Public */,
+      52,    0,  402,    2, 0x0a /* Public */,
+      53,    0,  403,    2, 0x0a /* Public */,
+      54,    0,  404,    2, 0x0a /* Public */,
+      55,    0,  405,    2, 0x0a /* Public */,
+      56,    1,  406,    2, 0x0a /* Public */,
+      57,    1,  409,    2, 0x0a /* Public */,
+      58,    1,  412,    2, 0x0a /* Public */,
+      59,    1,  415,    2, 0x0a /* Public */,
+      60,    1,  418,    2, 0x0a /* Public */,
+      61,    0,  421,    2, 0x0a /* Public */,
+      62,    0,  422,    2, 0x0a /* Public */,
+      63,    0,  423,    2, 0x0a /* Public */,
+      64,    1,  424,    2, 0x0a /* Public */,
+      66,    1,  427,    2, 0x0a /* Public */,
+      67,    1,  430,    2, 0x0a /* Public */,
+      69,    1,  433,    2, 0x0a /* Public */,
+      70,    1,  436,    2, 0x0a /* Public */,
+      71,    2,  439,    2, 0x0a /* Public */,
 
  // slots: parameters
     QMetaType::Void,
@@ -313,6 +318,7 @@ static const uint qt_meta_data_CMainWindow[] = {
     QMetaType::Void, QMetaType::Bool,   68,
     QMetaType::Void, QMetaType::Bool,   38,
     QMetaType::Void, QMetaType::Int,   40,
+    QMetaType::Void, QMetaType::Bool, QMetaType::QString,   72,   73,
 
        0        // eod
 };
@@ -388,6 +394,7 @@ void CMainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         case 62: _t->on_fontBold_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 63: _t->on_fontItalic_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 64: _t->on_selectTime_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 65: _t->finishedReadingFile((*reinterpret_cast< bool(*)>(_a[1])),(*reinterpret_cast< const QString(*)>(_a[2]))); break;
         default: ;
         }
     }
@@ -418,14 +425,119 @@ int CMainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 65)
+        if (_id < 66)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 65;
+        _id -= 66;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 65)
+        if (_id < 66)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 65;
+        _id -= 66;
     }
     return _id;
+}
+struct qt_meta_stringdata_CFileThread_t {
+    QByteArrayData data[3];
+    char stringdata0[25];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_CFileThread_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
+static const qt_meta_stringdata_CFileThread_t qt_meta_stringdata_CFileThread = {
+    {
+QT_MOC_LITERAL(0, 0, 11), // "CFileThread"
+QT_MOC_LITERAL(1, 12, 11), // "resultReady"
+QT_MOC_LITERAL(2, 24, 0) // ""
+
+    },
+    "CFileThread\0resultReady\0"
+};
+#undef QT_MOC_LITERAL
+
+static const uint qt_meta_data_CFileThread[] = {
+
+ // content:
+       7,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       1,   14, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       1,       // signalCount
+
+ // signals: name, argc, parameters, tag, flags
+       1,    2,   19,    2, 0x06 /* Public */,
+
+ // signals: parameters
+    QMetaType::Void, QMetaType::Bool, QMetaType::QString,    2,    2,
+
+       0        // eod
+};
+
+void CFileThread::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        CFileThread *_t = static_cast<CFileThread *>(_o);
+        Q_UNUSED(_t)
+        switch (_id) {
+        case 0: _t->resultReady((*reinterpret_cast< bool(*)>(_a[1])),(*reinterpret_cast< const QString(*)>(_a[2]))); break;
+        default: ;
+        }
+    } else if (_c == QMetaObject::IndexOfMethod) {
+        int *result = reinterpret_cast<int *>(_a[0]);
+        void **func = reinterpret_cast<void **>(_a[1]);
+        {
+            typedef void (CFileThread::*_t)(bool , const QString & );
+            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&CFileThread::resultReady)) {
+                *result = 0;
+            }
+        }
+    }
+}
+
+const QMetaObject CFileThread::staticMetaObject = {
+    { &QThread::staticMetaObject, qt_meta_stringdata_CFileThread.data,
+      qt_meta_data_CFileThread,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
+};
+
+
+const QMetaObject *CFileThread::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *CFileThread::qt_metacast(const char *_clname)
+{
+    if (!_clname) return Q_NULLPTR;
+    if (!strcmp(_clname, qt_meta_stringdata_CFileThread.stringdata0))
+        return static_cast<void*>(const_cast< CFileThread*>(this));
+    return QThread::qt_metacast(_clname);
+}
+
+int CFileThread::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = QThread::qt_metacall(_c, _id, _a);
+    if (_id < 0)
+        return _id;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        if (_id < 1)
+            qt_static_metacall(this, _c, _id, _a);
+        _id -= 1;
+    } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
+        if (_id < 1)
+            *reinterpret_cast<int*>(_a[0]) = -1;
+        _id -= 1;
+    }
+    return _id;
+}
+
+// SIGNAL 0
+void CFileThread::resultReady(bool _t1, const QString & _t2)
+{
+    void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
+    QMetaObject::activate(this, &staticMetaObject, 0, _a);
 }
 QT_END_MOC_NAMESPACE
