@@ -137,13 +137,14 @@ bool CMainWindow::OpenFile(const QString& fileName, int nfilter)
 			std::string ext = sfile.substr(npos+1);
 			if      (ext.compare("xplt") == 0) nfilter = -1;
 			else if (ext.compare("feb" ) == 0) nfilter =  1;
-			else if (ext.compare("msh" ) == 0) nfilter =  3;
-			else if (ext.compare("n  " ) == 0) nfilter =  4;
-			else if (ext.compare("txt" ) == 0) nfilter =  5;
-			else if (ext.compare("stl" ) == 0) nfilter =  6;
-			else if (ext.compare("raw" ) == 0) nfilter =  7;
-			else if (ext.compare("vtk" ) == 0) nfilter =  8;
-			else if (ext.compare("u3d" ) == 0) nfilter =  9;
+			else if (ext.compare("k"   ) == 0) nfilter =  3;
+			else if (ext.compare("msh" ) == 0) nfilter =  4;
+			else if (ext.compare("n  " ) == 0) nfilter =  5;
+			else if (ext.compare("txt" ) == 0) nfilter =  6;
+			else if (ext.compare("stl" ) == 0) nfilter =  7;
+			else if (ext.compare("raw" ) == 0) nfilter =  8;
+			else if (ext.compare("vtk" ) == 0) nfilter =  9;
+			else if (ext.compare("u3d" ) == 0) nfilter = 10;
 			else
 			{
 				return false;
@@ -168,15 +169,16 @@ bool CMainWindow::OpenFile(const QString& fileName, int nfilter)
 			else return false;
 		}
 		break;
-	case 1: reader = new FEBioImport; break;
-	case 2: reader = new FELSDYNAPlotImport; break;
-	case 3: reader = new GMeshImport; break;
-	case 4: reader = new FENikeImport; break;
-	case 5: reader = new FEASCIIImport; break;
-	case 6: reader = new FESTLimport; break;
-	case 7: reader = new FERAWImageReader; break;
-	case 8: reader = new FEVTKimport; break;
-	case 9: reader = new FEU3DImport; break;
+	case  1: reader = new FEBioImport; break;
+	case  2: reader = new FELSDYNAPlotImport; break;
+	case  3: reader = new FELSDYNAimport; break;
+	case  4: reader = new GMeshImport; break;
+	case  5: reader = new FENikeImport; break;
+	case  6: reader = new FEASCIIImport; break;
+	case  7: reader = new FESTLimport; break;
+	case  8: reader = new FERAWImageReader; break;
+	case  9: reader = new FEVTKimport; break;
+	case 10: reader = new FEU3DImport; break;
 	default:
 		QMessageBox::critical(this, "PostView2", "Don't know how to read this file");
 		return false;
@@ -319,6 +321,7 @@ void CMainWindow::on_actionOpen_triggered()
 	filters << "FEBio plot files (*.xplt)"
 			<< "FEBio files (*.feb)"
 			<< "LSDYNA database (*)"
+			<< "LSDYNA keyword (*.k)"
 			<< "GMesh (*.msh)"
 			<< "NIKE3D (*.n)"
 			<< "ASCII data (*.txt)"

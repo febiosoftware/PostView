@@ -47,6 +47,7 @@ CFileViewer::CFileViewer(CMainWindow* pwnd, QWidget* parent) : QWidget(parent), 
 	m_filters.push_back(pair<QString, QString>("XPLT files (*.xplt)"   , "*.xplt"));
 	m_filters.push_back(pair<QString, QString>("FEBio files (*.feb)"   , "*.feb" ));
 	m_filters.push_back(pair<QString, QString>("LSDYNA database (*)"   , "*"     ));
+	m_filters.push_back(pair<QString, QString>("LSDYNA keyword (*.k)"  , "*.k"   ));
 	m_filters.push_back(pair<QString, QString>("GMesh (*.msh)"         , "*.msh" ));
 	m_filters.push_back(pair<QString, QString>("NIKE3D (*.n)"          , "*.n"   ));
 	m_filters.push_back(pair<QString, QString>("ASCII data (*.txt)"    , "*.txt" ));
