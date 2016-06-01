@@ -65,6 +65,12 @@ public:
 		case 1: m_fem->m_nrender  = v.toInt(); break;
 		case 2: m_fem->m_boutline = v.toBool(); break;
 		case 3: m_fem->m_bghost   = v.toBool(); break;
+		case 4: m_fem->m_line_col = toGLColor(v.value<QColor>());
+		case 5: m_fem->m_node_col = toGLColor(v.value<QColor>());
+		case 6: m_fem->m_sel_col  = toGLColor(v.value<QColor>());
+		case 7: m_fem->m_bsmooth  = v.toBool(); break;
+		case 8: m_fem->m_bShell2Hex = v.toBool(); break;
+		case 9: m_fem->m_nshellref = v.toInt(); break;
 		}
 	}
 	

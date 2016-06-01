@@ -48,7 +48,7 @@ CGLModel::CGLModel(FEModel* ps)
 	sprintf(m_szname, "Model");
 
 	m_bnorm   = false;
-	m_bsmooth = (pm->Elements() > 100000 ? false : true);
+	m_bsmooth = true;
 	m_boutline = false;
 	m_bghost = false;
 	m_nDivs = 0; // this means "auto"

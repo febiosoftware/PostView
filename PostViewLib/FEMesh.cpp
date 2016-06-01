@@ -189,7 +189,7 @@ void FEMesh::FindNeighbours()
 				for (int k=0; k < (int) nel.size(); k++)
 				{
 					pne = &m_Elem[nel[k].first];
-					if ((pne != &e) && ( *pne != e))
+					if (pne != &e)
 					{
 						for (int l=0; l<pne->Faces(); l++) 
 						{
