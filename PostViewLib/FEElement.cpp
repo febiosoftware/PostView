@@ -298,7 +298,14 @@ FEElement::FEElement()
 FEFace FEElement::GetFace(int i) const
 {
 	FEFace f;
-	
+	GetFace(i, f);
+	return f;
+}
+
+//-----------------------------------------------------------------------------
+// Return a face of the element
+void FEElement::GetFace(int i, FEFace& f) const
+{
 	switch (m_ntype)
 	{
 	case FE_HEX8:
@@ -374,8 +381,6 @@ FEFace FEElement::GetFace(int i) const
 		break;
 
 	};
-
-	return f;
 }
 
 //-----------------------------------------------------------------------------

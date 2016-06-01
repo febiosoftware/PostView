@@ -35,6 +35,10 @@ public:
 	// get the number of errors
 	int Errors();
 
+	// get the amount of the file read so far
+	// expressed in percentage of total file size
+	float GetFileProgress() const;
+
 protected:
 	// open the file
 	bool Open(const char* szfile, const char* szmode);
@@ -44,10 +48,6 @@ protected:
 
 	// helper function that sets the error string
 	bool errf(const char* szerr, ...);
-
-	// get the amount of the file read so far
-	// expressed in percentage of total file size
-	float GetFileProgress() const;
 
 protected:
 	FILE*			m_fp;

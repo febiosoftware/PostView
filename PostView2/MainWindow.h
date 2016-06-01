@@ -7,6 +7,7 @@
 class CDocument;
 class CGLView;
 class FEFileReader;
+class CFileThread;
 
 namespace Ui {
 	class CMainWindow;
@@ -142,6 +143,8 @@ public slots:
 
 	void finishedReadingFile(bool success, const QString& errorString);
 
+	void checkFileProgress();
+
 private:
 	void timerEvent(QTimerEvent* ev);
 	void closeEvent(QCloseEvent* ev);
@@ -156,6 +159,7 @@ private:
 	Ui::CMainWindow*	ui;
 	CDocument*			m_doc;
 	QBasicTimer			m_timer;
+	CFileThread*		m_fileThread;
 };
 
 class CFileThread : public QThread
@@ -166,6 +170,8 @@ class CFileThread : public QThread
 
 public:
 	CFileThread(CMainWindow* wnd, FEFileReader* file, const QString& fileName);
+
+	float getFileProgress() const;
 
 signals:
 	void resultReady(bool, const QString&);

@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_CMainWindow_t {
-    QByteArrayData data[74];
-    char stringdata0[1917];
+    QByteArrayData data[75];
+    char stringdata0[1935];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -102,7 +102,8 @@ QT_MOC_LITERAL(69, 1828, 21), // "on_fontItalic_toggled"
 QT_MOC_LITERAL(70, 1850, 26), // "on_selectTime_valueChanged"
 QT_MOC_LITERAL(71, 1877, 19), // "finishedReadingFile"
 QT_MOC_LITERAL(72, 1897, 7), // "success"
-QT_MOC_LITERAL(73, 1905, 11) // "errorString"
+QT_MOC_LITERAL(73, 1905, 11), // "errorString"
+QT_MOC_LITERAL(74, 1917, 17) // "checkFileProgress"
 
     },
     "CMainWindow\0on_actionOpen_triggered\0"
@@ -167,7 +168,8 @@ QT_MOC_LITERAL(73, 1905, 11) // "errorString"
     "on_fontSize_valueChanged\0on_fontBold_toggled\0"
     "checked\0on_fontItalic_toggled\0"
     "on_selectTime_valueChanged\0"
-    "finishedReadingFile\0success\0errorString"
+    "finishedReadingFile\0success\0errorString\0"
+    "checkFileProgress"
 };
 #undef QT_MOC_LITERAL
 
@@ -177,7 +179,7 @@ static const uint qt_meta_data_CMainWindow[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      66,   14, // methods
+      67,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -185,72 +187,73 @@ static const uint qt_meta_data_CMainWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,  344,    2, 0x0a /* Public */,
-       3,    0,  345,    2, 0x0a /* Public */,
-       4,    0,  346,    2, 0x0a /* Public */,
-       5,    0,  347,    2, 0x0a /* Public */,
-       6,    0,  348,    2, 0x0a /* Public */,
-       7,    0,  349,    2, 0x0a /* Public */,
-       8,    0,  350,    2, 0x0a /* Public */,
-       9,    0,  351,    2, 0x0a /* Public */,
-      10,    0,  352,    2, 0x0a /* Public */,
-      11,    0,  353,    2, 0x0a /* Public */,
-      12,    0,  354,    2, 0x0a /* Public */,
-      13,    0,  355,    2, 0x0a /* Public */,
-      14,    0,  356,    2, 0x0a /* Public */,
-      15,    0,  357,    2, 0x0a /* Public */,
-      16,    0,  358,    2, 0x0a /* Public */,
-      17,    0,  359,    2, 0x0a /* Public */,
-      18,    0,  360,    2, 0x0a /* Public */,
-      19,    0,  361,    2, 0x0a /* Public */,
-      20,    0,  362,    2, 0x0a /* Public */,
-      21,    0,  363,    2, 0x0a /* Public */,
-      22,    0,  364,    2, 0x0a /* Public */,
-      23,    0,  365,    2, 0x0a /* Public */,
-      24,    0,  366,    2, 0x0a /* Public */,
-      25,    0,  367,    2, 0x0a /* Public */,
-      26,    0,  368,    2, 0x0a /* Public */,
-      27,    0,  369,    2, 0x0a /* Public */,
-      28,    0,  370,    2, 0x0a /* Public */,
-      29,    0,  371,    2, 0x0a /* Public */,
-      30,    0,  372,    2, 0x0a /* Public */,
-      31,    0,  373,    2, 0x0a /* Public */,
-      32,    0,  374,    2, 0x0a /* Public */,
-      33,    0,  375,    2, 0x0a /* Public */,
-      34,    0,  376,    2, 0x0a /* Public */,
-      35,    0,  377,    2, 0x0a /* Public */,
-      36,    0,  378,    2, 0x0a /* Public */,
-      37,    1,  379,    2, 0x0a /* Public */,
-      39,    1,  382,    2, 0x0a /* Public */,
-      41,    1,  385,    2, 0x0a /* Public */,
-      42,    0,  388,    2, 0x0a /* Public */,
-      43,    0,  389,    2, 0x0a /* Public */,
-      44,    0,  390,    2, 0x0a /* Public */,
-      45,    0,  391,    2, 0x0a /* Public */,
-      46,    0,  392,    2, 0x0a /* Public */,
-      47,    0,  393,    2, 0x0a /* Public */,
-      48,    1,  394,    2, 0x0a /* Public */,
-      49,    1,  397,    2, 0x0a /* Public */,
-      50,    0,  400,    2, 0x0a /* Public */,
-      51,    0,  401,    2, 0x0a /* Public */,
-      52,    0,  402,    2, 0x0a /* Public */,
-      53,    0,  403,    2, 0x0a /* Public */,
-      54,    0,  404,    2, 0x0a /* Public */,
-      55,    0,  405,    2, 0x0a /* Public */,
-      56,    1,  406,    2, 0x0a /* Public */,
-      57,    1,  409,    2, 0x0a /* Public */,
-      58,    1,  412,    2, 0x0a /* Public */,
-      59,    1,  415,    2, 0x0a /* Public */,
-      60,    1,  418,    2, 0x0a /* Public */,
-      61,    0,  421,    2, 0x0a /* Public */,
-      62,    0,  422,    2, 0x0a /* Public */,
-      63,    0,  423,    2, 0x0a /* Public */,
-      64,    1,  424,    2, 0x0a /* Public */,
-      66,    1,  427,    2, 0x0a /* Public */,
-      67,    1,  430,    2, 0x0a /* Public */,
-      69,    1,  433,    2, 0x0a /* Public */,
-      70,    1,  436,    2, 0x0a /* Public */,
-      71,    2,  439,    2, 0x0a /* Public */,
+       1,    0,  349,    2, 0x0a /* Public */,
+       3,    0,  350,    2, 0x0a /* Public */,
+       4,    0,  351,    2, 0x0a /* Public */,
+       5,    0,  352,    2, 0x0a /* Public */,
+       6,    0,  353,    2, 0x0a /* Public */,
+       7,    0,  354,    2, 0x0a /* Public */,
+       8,    0,  355,    2, 0x0a /* Public */,
+       9,    0,  356,    2, 0x0a /* Public */,
+      10,    0,  357,    2, 0x0a /* Public */,
+      11,    0,  358,    2, 0x0a /* Public */,
+      12,    0,  359,    2, 0x0a /* Public */,
+      13,    0,  360,    2, 0x0a /* Public */,
+      14,    0,  361,    2, 0x0a /* Public */,
+      15,    0,  362,    2, 0x0a /* Public */,
+      16,    0,  363,    2, 0x0a /* Public */,
+      17,    0,  364,    2, 0x0a /* Public */,
+      18,    0,  365,    2, 0x0a /* Public */,
+      19,    0,  366,    2, 0x0a /* Public */,
+      20,    0,  367,    2, 0x0a /* Public */,
+      21,    0,  368,    2, 0x0a /* Public */,
+      22,    0,  369,    2, 0x0a /* Public */,
+      23,    0,  370,    2, 0x0a /* Public */,
+      24,    0,  371,    2, 0x0a /* Public */,
+      25,    0,  372,    2, 0x0a /* Public */,
+      26,    0,  373,    2, 0x0a /* Public */,
+      27,    0,  374,    2, 0x0a /* Public */,
+      28,    0,  375,    2, 0x0a /* Public */,
+      29,    0,  376,    2, 0x0a /* Public */,
+      30,    0,  377,    2, 0x0a /* Public */,
+      31,    0,  378,    2, 0x0a /* Public */,
+      32,    0,  379,    2, 0x0a /* Public */,
+      33,    0,  380,    2, 0x0a /* Public */,
+      34,    0,  381,    2, 0x0a /* Public */,
+      35,    0,  382,    2, 0x0a /* Public */,
+      36,    0,  383,    2, 0x0a /* Public */,
+      37,    1,  384,    2, 0x0a /* Public */,
+      39,    1,  387,    2, 0x0a /* Public */,
+      41,    1,  390,    2, 0x0a /* Public */,
+      42,    0,  393,    2, 0x0a /* Public */,
+      43,    0,  394,    2, 0x0a /* Public */,
+      44,    0,  395,    2, 0x0a /* Public */,
+      45,    0,  396,    2, 0x0a /* Public */,
+      46,    0,  397,    2, 0x0a /* Public */,
+      47,    0,  398,    2, 0x0a /* Public */,
+      48,    1,  399,    2, 0x0a /* Public */,
+      49,    1,  402,    2, 0x0a /* Public */,
+      50,    0,  405,    2, 0x0a /* Public */,
+      51,    0,  406,    2, 0x0a /* Public */,
+      52,    0,  407,    2, 0x0a /* Public */,
+      53,    0,  408,    2, 0x0a /* Public */,
+      54,    0,  409,    2, 0x0a /* Public */,
+      55,    0,  410,    2, 0x0a /* Public */,
+      56,    1,  411,    2, 0x0a /* Public */,
+      57,    1,  414,    2, 0x0a /* Public */,
+      58,    1,  417,    2, 0x0a /* Public */,
+      59,    1,  420,    2, 0x0a /* Public */,
+      60,    1,  423,    2, 0x0a /* Public */,
+      61,    0,  426,    2, 0x0a /* Public */,
+      62,    0,  427,    2, 0x0a /* Public */,
+      63,    0,  428,    2, 0x0a /* Public */,
+      64,    1,  429,    2, 0x0a /* Public */,
+      66,    1,  432,    2, 0x0a /* Public */,
+      67,    1,  435,    2, 0x0a /* Public */,
+      69,    1,  438,    2, 0x0a /* Public */,
+      70,    1,  441,    2, 0x0a /* Public */,
+      71,    2,  444,    2, 0x0a /* Public */,
+      74,    0,  449,    2, 0x0a /* Public */,
 
  // slots: parameters
     QMetaType::Void,
@@ -319,6 +322,7 @@ static const uint qt_meta_data_CMainWindow[] = {
     QMetaType::Void, QMetaType::Bool,   38,
     QMetaType::Void, QMetaType::Int,   40,
     QMetaType::Void, QMetaType::Bool, QMetaType::QString,   72,   73,
+    QMetaType::Void,
 
        0        // eod
 };
@@ -395,6 +399,7 @@ void CMainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         case 63: _t->on_fontItalic_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 64: _t->on_selectTime_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 65: _t->finishedReadingFile((*reinterpret_cast< bool(*)>(_a[1])),(*reinterpret_cast< const QString(*)>(_a[2]))); break;
+        case 66: _t->checkFileProgress(); break;
         default: ;
         }
     }
@@ -425,13 +430,13 @@ int CMainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 66)
+        if (_id < 67)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 66;
+        _id -= 67;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 66)
+        if (_id < 67)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 66;
+        _id -= 67;
     }
     return _id;
 }

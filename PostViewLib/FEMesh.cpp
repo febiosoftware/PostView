@@ -152,47 +152,60 @@ bool FEMesh::Create(int nodes, int elems)
 // Find the element neighbours
 void FEMesh::FindNeighbours()
 {
-	int i, j, k, l;
-
 	// Build the node-element list
 	m_NEL.Build(this);
 
+	// reset all neighbors
+	for (int i=0; i<Elements(); i++)
+	{
+		FEElement& e = m_Elem[i];
+
+		// solid elements
+		for (int  j=0; j<e.Faces(); j++) e.m_pElem[j] = 0;
+
+		// shells
+		for (int j=0; j<e.Edges(); ++j) e.m_pElem[j] = 0;
+	}
+
 	// set up the element's neighbour pointers
-	FEFace face;
+	FEFace face, f2;
 	FEEdge edge;
 	FEElement* pne;
 	bool bfound;
-	for (i=0; i<Elements(); i++)
+	for (int i=0; i<Elements(); i++)
 	{
 		FEElement& e = m_Elem[i];
 
 		// first, do the solid elements
-		for (j=0; j<e.Faces(); j++)
+		for (int j=0; j<e.Faces(); j++)
 		{
-			e.m_pElem[j] = 0;
-			face = e.GetFace(j);
-
-			// find the neighbour element
-			vector<NodeElemRef>& nel = m_NEL.ElemList(face.node[0]);
-			bfound = false;
-			for (k=0; k < (int) nel.size(); k++)
+			if (e.m_pElem[j] == 0)
 			{
-				pne = &m_Elem[nel[k].first];
-				if ((pne != &e) && ( *pne != e))
+				e.GetFace(j, face);
+
+				// find the neighbour element
+				vector<NodeElemRef>& nel = m_NEL.ElemList(face.node[0]);
+				bfound = false;
+				for (int k=0; k < (int) nel.size(); k++)
 				{
-					for (l=0; l<pne->Faces(); l++) 
+					pne = &m_Elem[nel[k].first];
+					if ((pne != &e) && ( *pne != e))
 					{
-						FEFace f2 = pne->GetFace(l);
-						if (face == f2)
+						for (int l=0; l<pne->Faces(); l++) 
 						{
-							bfound = true;
-							break;
+							pne->GetFace(l, f2);
+							if (face == f2)
+							{
+								e.m_pElem[j] = pne;
+								pne->m_pElem[l] = &e;
+								bfound = true;
+								break;
+							}
 						}
 					}
 
 					if (bfound)
 					{
-						e.m_pElem[j] = pne;
 						break;
 					}
 				}
@@ -200,7 +213,7 @@ void FEMesh::FindNeighbours()
 		}
 
 		// next, do the shell elements
-		for (j=0; j<e.Edges(); ++j)
+		for (int j=0; j<e.Edges(); ++j)
 		{
 			e.m_pElem[j] = 0;
 			edge = e.GetEdge(j);
@@ -208,12 +221,12 @@ void FEMesh::FindNeighbours()
 			// find the neighbour element
 			vector<NodeElemRef>& nel = m_NEL.ElemList(edge.node[0]);
 			bfound = false;
-			for (k=0; k < (int) nel.size(); k++)
+			for (int k=0; k < (int) nel.size(); k++)
 			{
 				pne = &m_Elem[nel[k].first];
 				if ((pne != &e) && (*pne != e))
 				{
-					for (l=0; l<pne->Edges(); l++) 
+					for (int l=0; l<pne->Edges(); l++) 
 						if (edge == pne->GetEdge(l))
 						{
 							bfound = true;
@@ -310,7 +323,7 @@ void FEMesh::BuildFaces()
 			if (e.m_pElem[j] == 0)
 			{
 				FEFace& f = m_Face[NF++];
-				f = e.GetFace(j);
+				e.GetFace(j, f);
 				f.m_elem[0] = i;
 				f.m_elem[1] = j;
 				f.m_mat = e.m_MatID;

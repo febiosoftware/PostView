@@ -306,6 +306,7 @@ public:
 	}
 
 	FEFace GetFace(int i) const;
+	void GetFace(int i, FEFace& face) const;
 	FEEdge GetEdge(int i) const;
 
 	bool IsSolid() { return ((m_ntype == FE_HEX8  ) || (m_ntype == FE_HEX20 ) || (m_ntype == FE_TET4) || (m_ntype == FE_PENTA6) || (m_ntype == FE_TET10) || (m_ntype == FE_TET15) || (m_ntype == FE_HEX27)); }

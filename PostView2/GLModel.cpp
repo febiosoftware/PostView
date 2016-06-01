@@ -1027,11 +1027,12 @@ void CGLModel::RenderElement(FEElement& el, FEMesh* pm)
 	}
     else
 	{
+		FEFace face;
 		for (int i=0; i<el.Faces(); ++i)
 		{
 			if (el.m_pElem[i] && (el.m_pElem[i]->IsSelected() || !el.m_pElem[i]->IsVisible()))
 			{
-				FEFace face = el.GetFace(i);
+				el.GetFace(i, face);
 
 				switch (face.m_ntype)
 				{
@@ -1257,6 +1258,7 @@ void CGLModel::RenderMeshLines(FEModel* ps, int nmat)
 	}
 
 	// draw elements
+	FEFace f;
 	for (int i=0; i<pm->Elements(); ++i)
 	{
 		FEElement& el = pm->Element(i);
@@ -1267,7 +1269,7 @@ void CGLModel::RenderMeshLines(FEModel* ps, int nmat)
 			{
 				if (el.m_pElem[j] && !el.m_pElem[j]->IsVisible())
 				{
-					FEFace f = el.GetFace(j);
+					el.GetFace(j, f);
 					RenderFaceOutline(f, pm, ndivs);
 				}
 			}
@@ -2454,6 +2456,7 @@ void CGLModel::RenderAllFaces()
 void CGLModel::RenderAllElements()
 {
 	// get the mesh
+	FEFace f;
 	FEMesh* pm = m_ps->GetMesh();
 	for (int i=0; i<pm->Elements(); ++i)
 	{
@@ -2466,7 +2469,7 @@ void CGLModel::RenderAllElements()
 			int NF = el.Faces();
 			for (int j=0; j<NF; ++j)
 			{
-				FEFace f = el.GetFace(j);
+				el.GetFace(j, f);
 				switch (f.m_ntype)
 				{
 				case FACE_QUAD4:

@@ -91,7 +91,11 @@ bool FEFileReader::errf(const char* szerr, ...)
 
 float FEFileReader::GetFileProgress() const
 {
-	off_type npos = ftell64(m_fp);
-	float pct = (float) npos / (float) m_nfilesize;
-	return pct;
+	if (m_fp)
+	{
+		off_type npos = ftell64(m_fp);
+		float pct = (float) npos / (float) m_nfilesize;
+		return pct;
+	}
+	else return 1.0f;
 }

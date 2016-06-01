@@ -4,6 +4,7 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QtCore/QSettings>
+#include <QtCore/QTimer>
 #include "Document.h"
 #include <PostViewLib/xpltReader.h>
 #include "Document.h"
@@ -40,7 +41,7 @@
 CFileThread::CFileThread(CMainWindow* wnd, FEFileReader* file, const QString& fileName) : m_wnd(wnd), m_fileReader(file), m_fileName(fileName)
 {
 	QObject::connect(this, SIGNAL(resultReady(bool,const QString&)), wnd, SLOT(finishedReadingFile(bool, const QString&)));
-	QObject::connect(this, SIGNAL(finished)   , this, SLOT(deleteLater));
+	QObject::connect(this, SIGNAL(finished())   , this, SLOT(deleteLater()));
 }
 
 void CFileThread::run()
@@ -56,10 +57,17 @@ void CFileThread::run()
 	else emit resultReady(false, "No file reader");
 }
 
+float CFileThread::getFileProgress() const
+{
+	if (m_fileReader) return m_fileReader->GetFileProgress();
+	return 0.f;
+}
+
 CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMainWindow)
 {
 	m_doc = new CDocument(this);
 	ui->setupUi(this);
+	m_fileThread = 0;
 	readSettings();
 }
 
@@ -216,14 +224,31 @@ void CMainWindow::OpenFile(const QString& fileName, int nfilter)
 	setWindowTitle(QString("PostView2 - %1").arg(QString(stitle.c_str())));
 
 	// create the file reading thread and run it
-	CFileThread* fileThread = new CFileThread(this, reader, fileName);
-	fileThread->start();
+	m_fileThread = new CFileThread(this, reader, fileName);
+	m_fileThread->start();
 	ui->statusBar->showMessage(QString("Reading file %1 ...").arg(fileName));
+	ui->fileProgress->setValue(0);
+	ui->statusBar->addPermanentWidget(ui->fileProgress);
+	ui->fileProgress->show();
+	QTimer::singleShot(100, this, SLOT(checkFileProgress()));
+}
+
+void CMainWindow::checkFileProgress()
+{
+	if (m_fileThread)
+	{
+		float f = m_fileThread->getFileProgress();
+		int n = (int) (100.f*f);
+		ui->fileProgress->setValue(n);
+		if (f < 1.0f) QTimer::singleShot(100, this, SLOT(checkFileProgress()));
+	}
 }
 
 void CMainWindow::finishedReadingFile(bool success, const QString& errorString)
 {
+	m_fileThread = 0;
 	ui->statusBar->clearMessage();
+	ui->statusBar->removeWidget(ui->fileProgress);
 
 	if (success == false)
 	{

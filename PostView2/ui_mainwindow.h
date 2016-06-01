@@ -22,6 +22,7 @@
 #include "StatsWindow.h"
 #include <QFontComboBox>
 #include <QSpinBox>
+#include <QProgressBar>
 
 QT_BEGIN_NAMESPACE
 
@@ -90,7 +91,8 @@ public:
 	CIntegrateWindow*		integrateWindow;
 	CStatsWindow*			statsWindow;
 
-	QStatusBar*	statusBar;
+	QStatusBar*		statusBar;
+	QProgressBar*	fileProgress;
 
 public:
 	// build the UI
@@ -119,6 +121,12 @@ public:
 		// build status bar
 		statusBar = new QStatusBar(MainWindow);
 		MainWindow->setStatusBar(statusBar);
+
+		fileProgress = new QProgressBar;
+		fileProgress->setRange(0, 100);
+		fileProgress->setMaximumWidth(200);
+		fileProgress->setMaximumHeight(15);
+
 
 		// connect all the slots
 		QMetaObject::connectSlotsByName(MainWindow);
