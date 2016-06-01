@@ -12,7 +12,7 @@ FEVTKExport::~FEVTKExport(void)
 
 bool FEVTKExport::Save(FEModel& fem, int ntime, const char* szfile)
 {
-	int i, j, k;
+	int j, k;
 	bool  isPOLYDATA = false, isUnstructuredGrid = false, isTriShell = false, isQuadShell = false, isHex8 = false;
 	FILE* fp = fopen(szfile, "wt");
 	if (fp == 0) return false;

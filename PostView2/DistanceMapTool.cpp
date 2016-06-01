@@ -75,20 +75,10 @@ void CDistanceMapTool::deactivate()
 	m_doc = 0;
 }
 
-void CDistanceMapTool::get_selection(vector<int>& sel)
-{
-	FEMesh* pm = m_doc->GetFEModel()->GetMesh();
-	for (int i=0; i<pm->Faces(); ++i)
-	{
-		FEFace& f = pm->Face(i);
-		if (f.IsSelected()) sel.push_back(i);
-	}
-}
-
 void CDistanceMapTool::OnAssign1()
 {
 	vector<int> sel;
-	get_selection(sel);
+	m_doc->GetSelectionList(sel, SELECT_FACES);
 	ui->m_map.SetSelection1(sel);
 	int n = (int) sel.size();
 	ui->p1->setText(QString("Assign to surface 1 (%1 faces)").arg(n));
@@ -97,7 +87,7 @@ void CDistanceMapTool::OnAssign1()
 void CDistanceMapTool::OnAssign2()
 {
 	vector<int> sel;
-	get_selection(sel);
+	m_doc->GetSelectionList(sel, SELECT_FACES);
 	ui->m_map.SetSelection2(sel);
 	int n = (int) sel.size();
 	ui->p2->setText(QString("Assign to surface 2 (%1 faces)").arg(n));
@@ -170,20 +160,10 @@ void CCurvatureMapTool::deactivate()
 	m_doc = 0;
 }
 
-void CCurvatureMapTool::get_selection(vector<int>& sel)
-{
-	FEMesh* pm = m_doc->GetFEModel()->GetMesh();
-	for (int i=0; i<pm->Faces(); ++i)
-	{
-		FEFace& f = pm->Face(i);
-		if (f.IsSelected()) sel.push_back(i);
-	}
-}
-
 void CCurvatureMapTool::OnAssign1()
 {
 	vector<int> sel;
-	get_selection(sel);
+	m_doc->GetSelectionList(sel, SELECT_FACES);
 	ui->m_map.SetSelection1(sel);
 	int n = (int) sel.size();
 	ui->p1->setText(QString("Assign to surface 1 (%1 faces)").arg(n));
@@ -192,7 +172,7 @@ void CCurvatureMapTool::OnAssign1()
 void CCurvatureMapTool::OnAssign2()
 {
 	vector<int> sel;
-	get_selection(sel);
+	m_doc->GetSelectionList(sel, SELECT_FACES);
 	ui->m_map.SetSelection2(sel);
 	int n = (int) sel.size();
 	ui->p2->setText(QString("Assign to surface 2 (%1 faces)").arg(n));

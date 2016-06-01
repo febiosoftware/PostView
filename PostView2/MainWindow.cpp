@@ -584,14 +584,14 @@ void CMainWindow::on_actionHideSelected_triggered()
 	CDocument* pdoc = GetDocument();
 	if (pdoc->IsValid() == false) return;
 
-	FEMesh* pm = pdoc->GetFEModel()->GetMesh();
+	CGLModel& mdl = *pdoc->GetGLModel();
 
 	switch (pdoc->GetSelectionMode())
 	{
-	case SELECT_NODES: pm->HideSelectedNodes(); break;
-	case SELECT_EDGES: pm->HideSelectedEdges(); break;
-	case SELECT_FACES: pm->HideSelectedFaces(); break;
-	case SELECT_ELEMS: pm->HideSelectedElements(); break;
+	case SELECT_NODES: mdl.HideSelectedNodes(); break;
+	case SELECT_EDGES: mdl.HideSelectedEdges(); break;
+	case SELECT_FACES: mdl.HideSelectedFaces(); break;
+	case SELECT_ELEMS: mdl.HideSelectedElements(); break;
 	}
 
 	pdoc->UpdateFEModel();
@@ -601,9 +601,9 @@ void CMainWindow::on_actionHideSelected_triggered()
 void CMainWindow::on_actionHideUnselected_triggered()
 {
 	CDocument* pdoc = GetDocument();
-	FEMesh* pm = pdoc->GetFEModel()->GetMesh();
+	CGLModel& mdl = *pdoc->GetGLModel();
 
-	pm->HideUnselectedElements();
+	mdl.HideUnselectedElements();
 
 	pdoc->UpdateFEModel();
 	ui->glview->repaint();
@@ -692,7 +692,8 @@ void CMainWindow::on_actionClearSelection_triggered()
 	CDocument* pdoc = GetDocument();
 	if (pdoc->IsValid())
 	{
-		pdoc->GetFEModel()->GetMesh()->ClearSelection(); 
+		CGLModel& mdl = *pdoc->GetGLModel();
+		mdl.ClearSelection(); 
 		pdoc->UpdateFEModel();
 		ui->glview->repaint();
 	}
@@ -714,7 +715,7 @@ void CMainWindow::on_actionFind_triggered()
 
 	if (dlg.exec())
 	{
-		FEMesh* pm = doc.GetFEModel()->GetMesh();
+		CGLModel* pm = doc.GetGLModel();
 
 		if (dlg.m_bsel[0]) nview = SELECT_NODES;
 		if (dlg.m_bsel[1]) nview = SELECT_EDGES;

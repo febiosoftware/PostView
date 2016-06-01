@@ -310,7 +310,7 @@ void FEBioImport::ParseGeometrySection2(FEModel &fem, XMLTag &tag)
 			{
 				FEElement& el = m_pm->Element(NE + i);
 				int nid = tag.AttributeValue<int>("id", 0);
-				el.m_nId = nid;
+				el.SetID(nid);
 				el.m_ntype = etype;
 
 				tag.value(n,el.Nodes());

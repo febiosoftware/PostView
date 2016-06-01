@@ -27,9 +27,6 @@ public:
 	// deactive the tool
 	void deactivate();
 
-private:
-	void get_selection(vector<int>& sel);
-
 private slots:
 	void OnAssign1();
 	void OnAssign2();
@@ -58,9 +55,6 @@ public:
 
 	// deactive the tool
 	void deactivate();
-
-private:
-	void get_selection(vector<int>& sel);
 
 private slots:
 	void OnAssign1();

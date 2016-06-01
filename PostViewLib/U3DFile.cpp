@@ -1277,40 +1277,24 @@ void U3DContextManager::AddSymbol(uint32 context, uint32 symbol)
 		// check if dynamic. Nothing to do if static or if the symbol
 		// is larger than the maximum symbol allowed in the histogram
 
-		vector<uint16> cumulativeCount = m_cumulativeCount[context];
-		vector<uint16> symbolCount = m_symbolCount[context];
+		vector<uint16>& cumulativeCount = m_cumulativeCount[context];
+		vector<uint16>& symbolCount = m_symbolCount[context];
 
-		if (cumulativeCount.empty() || cumulativeCount.size() <= symbol)
+		if (cumulativeCount.empty())
 		{
-			// allocate new arrays if they do not exist yet or if too small
+			// allocate new arrays if they do not exist
 			cumulativeCount.resize(symbol + ArraySizeIncr);
 			symbolCount.resize(symbol + ArraySizeIncr);
 
-			// check that the arrays were allocated successfully
-			if ((cumulativeCount.empty() == false) && (symbolCount.empty() == false))
-			{
-				// if this is a new context, set up the histogram
-				if (m_cumulativeCount[context].empty())
-				{
-					m_cumulativeCount[context] = cumulativeCount;
-					m_cumulativeCount[context][0] = 1;
-					m_symbolCount[context] = symbolCount;
-					m_symbolCount[context][0] = 1;
-				}
-				else
-				{ 
-					// if this is an old context, copy over the values in the histogram
-					// to the new arrays
-					for (int i=0; i<(int)m_cumulativeCount[context].size(); ++i)
-					{
-						cumulativeCount[i] = m_cumulativeCount[context][i];
-						symbolCount[i] = m_symbolCount[context][i];
-					}
-				}
-			}
-
-			m_cumulativeCount[context] = cumulativeCount;
-			m_symbolCount[context] = symbolCount;
+			// initialize histogram
+			m_cumulativeCount[context][0] = 1;
+			m_symbolCount[context][0] = 1;
+		}
+		else if (cumulativeCount.size() <= symbol)
+		{ 
+			// allocate new arrays if too small
+			cumulativeCount.resize(symbol + ArraySizeIncr);
+			symbolCount.resize(symbol + ArraySizeIncr);
 		}
 
 		if (cumulativeCount[0] >= Elephant)

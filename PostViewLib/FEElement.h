@@ -69,7 +69,7 @@ class FEElement;
 class FEItem
 {
 public:
-	FEItem() { m_state = 0; }
+	FEItem() { m_state = 0; m_nId = -1; }
 	virtual ~FEItem() {}
 
 	bool IsHidden   () const { return ((m_state & FE_HIDDEN   ) != 0); }
@@ -103,10 +103,13 @@ public:
 	unsigned int GetFEState() const { return m_state; }
 	void SetFEState(unsigned int state) { m_state = state; }
 
-public:
-	int	m_ntag;
+	int GetID() const { return m_nId; }
+	void SetID(int nid) { m_nId = nid; }
 
 public:
+	int	m_ntag;
+	int	m_nId;
+
 	unsigned int m_state;	// the state flag of the mesh(-item)
 };
 
@@ -332,7 +335,6 @@ public:
 
 public:
 	FEElemType	m_ntype;			// type of element
-	int			m_nId;				// id of this element
 	int			m_lid;				// local ID (zero-based index into element array)
 	int			m_MatID;			// material id
 	int			m_node[MAX_NODES];	// array of nodes ID

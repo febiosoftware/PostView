@@ -5,6 +5,29 @@
 #include <PostViewLib/GDecoration.h>
 #include <list>
 
+// the selection modes
+#define SELECT_NODES	1
+#define SELECT_EDGES	2
+#define SELECT_FACES	4
+#define SELECT_ELEMS	8
+#define SELECT_ADD		16
+#define SELECT_SUB		32
+
+class GLSurface
+{
+public:
+	GLSurface(){}
+
+	void add(const FEFace& f) { m_Face.push_back(f); }
+
+	int Faces() const { return (int) m_Face.size(); }
+
+	FEFace& Face(int i) { return m_Face[i]; }
+
+private:
+	vector<FEFace>	m_Face;
+};
+
 class CGLModel : public CGLVisual
 {
 public:
@@ -75,7 +98,7 @@ public:
 protected:
 	void RenderFace(FEFace& face, FEMesh* pm, int ndivs, bool bnode);
 	void RenderFace(FEFace& face, FEMesh* pm, GLCOLOR c[4], int ndivs, bool bnode);
-	void RenderElement(FEElement& el, FEMesh* pm);
+	void RenderFEFace(FEFace& el, FEMesh* pm);
 	void RenderElementOutline(FEElement& el, FEMesh* pm);
 	void RenderFaceOutline(FEFace& face, FEMesh* pm, int ndivs);
 	void RenderMaterial(FEModel* ps, int m);
@@ -118,6 +141,71 @@ public:
 	// get the currently active state
 	FEState* currentState();
 
+public: // Selection
+	const vector<FENode*>&		GetNodeSelection   () const { return m_nodeSelection; }
+	const vector<FEEdge*>&		GetEdgeSelection   () const { return m_edgeSelection; }
+	const vector<FEFace*>&		GetFaceSelection   () const { return m_faceSelection; }
+	const vector<FEElement*>&	GetElementSelection() const { return m_elemSelection; }
+	void UpdateSelectionLists(int mode = -1);
+	void ClearSelectionLists();
+
+	void SelectNodes(vector<int>& items, bool bclear);
+	void SelectEdges(vector<int>& items, bool bclear);
+	void SelectFaces(vector<int>& items, bool bclear);
+	void SelectElements(vector<int>& items, bool bclear);
+
+	//! clear selection
+	void ClearSelection();
+
+	//! select connected elements (connected via surface)
+	void SelectConnectedSurfaceElements(FEElement& el);
+
+	//! select connected elements (connected via volume)
+	void SelectConnectedVolumeElements(FEElement& el);
+
+	//! select connected faces
+	void SelectConnectedFaces(FEFace& f);
+
+	//! select connected edges
+	void SelectConnectedEdges(FEEdge& e);
+
+	//! select connected nodes on surface
+	void SelectConnectedSurfaceNodes(int n);
+
+	//! select connected nodes in volume
+	void SelectConnectedVolumeNodes(int n);
+
+
+	// --- V I S I B I L I T Y ---
+	//! hide elements by material ID
+	void HideElements(int nmat);
+
+	//! show elements by material ID
+	void ShowElements(int nmat);
+
+	//! enable elements by material ID
+	void EnableElements(int nmat);
+
+	//! disable elements by material ID
+	void DisableElements(int nmat);
+
+	//! hide selected elements
+	void HideSelectedElements();
+	void HideUnselectedElements();
+
+	//! hide selected faces
+	void HideSelectedFaces();
+
+	//! hide selected edges
+	void HideSelectedEdges();
+
+	//! hide selected nodes
+	void HideSelectedNodes();
+
+protected:
+	void UpdateInternalSurfaces();
+	void ClearInternalSurfaces();
+
 public:
 	bool		m_bnorm;		//!< calculate normals or not
 	bool		m_bsmooth;		//!< render smooth or not
@@ -135,11 +223,17 @@ public:
 	int		m_nTime;		// active time step
 
 protected:
-	FEModel*	m_ps;
-
+	FEModel*			m_ps;
+	vector<GLSurface*>	m_surf;
 
 	CGLDisplacementMap*		m_pdis;
 	CGLColorMap*			m_pcol;
+
+	// selected items
+	vector<FENode*>		m_nodeSelection;
+	vector<FEEdge*>		m_edgeSelection;
+	vector<FEFace*>		m_faceSelection;
+	vector<FEElement*>	m_elemSelection;
 
 	// TODO: move to document?
 	std::list<GDecoration*>	m_decor;

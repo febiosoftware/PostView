@@ -414,7 +414,7 @@ bool FEBioPlotExport::WritePart(FEPart& part)
 		for (int i=0; i<NE; ++i)
 		{
 			FEElement& el = mesh.Element(part.m_Elem[i]);
-			n[0] = el.m_nId;
+			n[0] = el.GetID();
 			for (int j=0; j<ne; ++j) n[j+1] = el.m_node[j];
 			m_ar.WriteChunk(PLT_ELEMENT, n, ne+1);
 		}

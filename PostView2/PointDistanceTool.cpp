@@ -91,19 +91,17 @@ void CPointDistanceTool::activate(CDocument* pdoc)
 	if (pdoc && pdoc->IsValid())
 	{
 		FEMesh& mesh = *m_doc->GetFEModel()->GetMesh();
-		int N = mesh.Nodes();
+		const vector<FENode*> selectedNodes = m_doc->GetGLModel()->GetNodeSelection();
+		int N = selectedNodes.size();
 		for (int i=0; i<N; ++i)
 		{
-			FENode& ni = mesh.Node(i);
-			if (ni.IsSelected())
+			int nid = selectedNodes[i]->GetID();
+			if (m_node1 == 0) m_node1 = nid;
+			else if (m_node2 == 0) m_node2 = nid;
+			else
 			{
-				if (m_node1 == 0) m_node1 = i+1;
-				else if (m_node2 == 0) m_node2 = i+1;
-				else
-				{
-					m_node1 = m_node2;
-					m_node2 = i+1;
-				}
+				m_node1 = m_node2;
+				m_node2 = nid;
 			}
 		}
 

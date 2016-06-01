@@ -64,13 +64,11 @@ void CTransformTool::OnApply()
 {
 	if (m_doc && m_doc->IsValid())
 	{
-		FEModel& fem = *m_doc->GetFEModel();
-		FEMesh& mesh = *fem.GetMesh();
-
-		for (int i=0; i<mesh.Nodes(); ++i)
+		const vector<FENode*> selNodes = m_doc->GetGLModel()->GetNodeSelection();
+		for (int i=0; i<(int)selNodes.size(); ++i)
 		{
-			FENode& node = mesh.Node(i);
-			if (node.IsSelected()) node.m_r0 += m_dr;
+			FENode& node = *selNodes[i];
+			node.m_r0 += m_dr;
 		}
 		m_doc->UpdateFEModel(true);
 	}

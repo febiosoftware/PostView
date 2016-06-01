@@ -208,6 +208,7 @@ void CMaterialPanel::on_hideButton_clicked()
 	CDocument& doc = *m_wnd->GetDocument();
 	if (doc.IsValid() == false) return;
 
+	CGLModel& mdl = *doc.GetGLModel();
 	FEModel& fem = *doc.GetFEModel();
 	FEMesh& mesh = *fem.GetMesh();
 
@@ -221,7 +222,7 @@ void CMaterialPanel::on_hideButton_clicked()
 
 		FEMaterial& mat = *fem.GetMaterial(nmat);
 		mat.hide();
-		mesh.HideElements(nmat);
+		mdl.HideElements(nmat);
 	}
 
 	UpdateStates();
@@ -233,6 +234,7 @@ void CMaterialPanel::on_showButton_clicked()
 	CDocument& doc = *m_wnd->GetDocument();
 	if (doc.IsValid() == false) return;
 
+	CGLModel& mdl = *doc.GetGLModel();
 	FEModel& fem = *doc.GetFEModel();
 	FEMesh& mesh = *fem.GetMesh();
 
@@ -246,7 +248,7 @@ void CMaterialPanel::on_showButton_clicked()
 
 		FEMaterial& mat = *fem.GetMaterial(nmat);
 		mat.show();
-		mesh.ShowElements(nmat);
+		mdl.ShowElements(nmat);
 	}
 
 	UpdateStates();
@@ -258,6 +260,7 @@ void CMaterialPanel::on_enableButton_clicked()
 	CDocument& doc = *m_wnd->GetDocument();
 	if (doc.IsValid() == false) return;
 
+	CGLModel& mdl = *doc.GetGLModel();
 	FEModel& fem = *doc.GetFEModel();
 	FEMesh& mesh = *fem.GetMesh();
 
@@ -272,7 +275,7 @@ void CMaterialPanel::on_enableButton_clicked()
 		FEMaterial& mat = *fem.GetMaterial(nmat);
 		mat.enable();
 
-		mesh.EnableElements(nmat);
+		mdl.EnableElements(nmat);
 	}
 
 	UpdateStates();
@@ -284,6 +287,7 @@ void CMaterialPanel::on_disableButton_clicked()
 	CDocument& doc = *m_wnd->GetDocument();
 	if (doc.IsValid() == false) return;
 
+	CGLModel& mdl = *doc.GetGLModel();
 	FEModel& fem = *doc.GetFEModel();
 	FEMesh& mesh = *fem.GetMesh();
 
@@ -298,7 +302,7 @@ void CMaterialPanel::on_disableButton_clicked()
 		FEMaterial& mat = *fem.GetMaterial(nmat);
 		mat.disable();
 
-		mesh.DisableElements(nmat);
+		mdl.DisableElements(nmat);
 	}
 
 	UpdateStates();

@@ -7,6 +7,8 @@
 #include "GLView.h"
 #include "GLContext.h"
 #include <PostViewLib/GLCamera.h>
+#include <stack>
+using namespace std;
 
 //-----------------------------------------------------------------------------
 extern int ET_HEX[12][2];
@@ -22,6 +24,7 @@ CGLModel::CGLModel(FEModel* ps)
 	m_nTime = 0;
 	m_fTime = 0.f;
 
+	m_ps = ps;
 	FEMesh* pm = ps->GetMesh();
 
 	// see if the mesh has any vector fields
@@ -43,7 +46,6 @@ CGLModel::CGLModel(FEModel* ps)
 	}
 
 	m_pcol = new CGLColorMap(this);
-	m_ps = ps;
 
 	sprintf(m_szname, "Model");
 
@@ -61,6 +63,8 @@ CGLModel::CGLModel(FEModel* ps)
 	m_sel_col  = GLCOLOR(255,0,0);
 
 	m_nrender = RENDER_MODE_SOLID;
+
+	UpdateInternalSurfaces();
 }
 
 //-----------------------------------------------------------------------------
@@ -69,6 +73,7 @@ CGLModel::~CGLModel(void)
 {
 	delete m_pdis;
 	delete m_pcol;
+	ClearInternalSurfaces();
 }
 
 //-----------------------------------------------------------------------------
@@ -194,9 +199,7 @@ void CGLModel::Render(CGLContext& rc)
 	RenderFaces(rc);
 
 	// render the outline
-	glDepthRange(0, 0.99998);
 	if (m_boutline) RenderOutline(rc);
-	glDepthRange(0, 1);
 
 	// render the selected elements and faces
 	RenderSelection(rc);
@@ -286,95 +289,99 @@ void CGLModel::RenderSelection(CGLContext &rc)
 	glDisable(GL_DEPTH_TEST);
 	glColor3ub(255,255,0);
 	glLineWidth(1.5f);
-	for (i=0; i<pm->Elements(); ++i)
+
+	// do the selected elements first
+	const vector<FEElement*> elemSelection = GetElementSelection();
+	for (i=0; i<(int)elemSelection.size(); ++i)
 	{
-		FEElement& el = pm->Element(i);
-		if (el.IsSelected()) RenderElementOutline(el, pm);
+		FEElement& el = *elemSelection[i]; assert(el.IsSelected());
+		RenderElementOutline(el, pm);
 	}
+
+	// now do the selected faces
 	vec3f r[FEFace::MAX_NODES];
-	for (i=0; i<pm->Faces(); ++i)
+	const vector<FEFace*> faceSelection = GetFaceSelection();
+	for (i=0; i<(int)faceSelection.size(); ++i)
 	{
-		FEFace& f = pm->Face(i);
-		if (f.IsSelected())
+		FEFace& f = *faceSelection[i]; assert(f.IsSelected());
+
+		int n = f.Nodes();
+		for (int j=0; j<n; ++j) r[j] = pm->Node(f.node[j]).m_rt;
+		switch (f.m_ntype)
 		{
-			int n = f.Nodes();
-			for (int j=0; j<n; ++j) r[j] = pm->Node(f.node[j]).m_rt;
-			switch (f.m_ntype)
+		case FACE_TRI3:
+			glBegin(GL_LINE_LOOP);
 			{
-			case FACE_TRI3:
-				glBegin(GL_LINE_LOOP);
-				{
-					glVertex3f(r[0].x, r[0].y, r[0].z);
-					glVertex3f(r[1].x, r[1].y, r[1].z);
-					glVertex3f(r[2].x, r[2].y, r[2].z);
-				}
-				glEnd();
-				break;
-			case FACE_QUAD4:
-				glBegin(GL_LINE_LOOP);
-				{
-					glVertex3f(r[0].x, r[0].y, r[0].z);
-					glVertex3f(r[1].x, r[1].y, r[1].z);
-					glVertex3f(r[2].x, r[2].y, r[2].z);
-					glVertex3f(r[3].x, r[3].y, r[3].z);
-				}
-				glEnd();
-				break;
-			case FACE_TRI6:
-				glBegin(GL_LINE_LOOP);
-				{
-					glVertex3f(r[0].x, r[0].y, r[0].z);
-					glVertex3f(r[3].x, r[3].y, r[3].z);
-					glVertex3f(r[1].x, r[1].y, r[1].z);
-					glVertex3f(r[4].x, r[4].y, r[4].z);
-					glVertex3f(r[2].x, r[2].y, r[2].z);
-					glVertex3f(r[5].x, r[5].y, r[5].z);
-				}
-				glEnd();
-				break;
-			case FACE_TRI7:
-				glBegin(GL_LINE_LOOP);
-				{
-					glVertex3f(r[0].x, r[0].y, r[0].z);
-					glVertex3f(r[3].x, r[3].y, r[3].z);
-					glVertex3f(r[1].x, r[1].y, r[1].z);
-					glVertex3f(r[4].x, r[4].y, r[4].z);
-					glVertex3f(r[2].x, r[2].y, r[2].z);
-					glVertex3f(r[5].x, r[5].y, r[5].z);
-				}
-				glEnd();
-				break;
-			case FACE_QUAD8:
-				glBegin(GL_LINE_LOOP);
-				{
-					glVertex3f(r[0].x, r[0].y, r[0].z);
-					glVertex3f(r[4].x, r[4].y, r[4].z);
-					glVertex3f(r[1].x, r[1].y, r[1].z);
-					glVertex3f(r[5].x, r[5].y, r[5].z);
-					glVertex3f(r[2].x, r[2].y, r[2].z);
-					glVertex3f(r[6].x, r[6].y, r[6].z);
-					glVertex3f(r[3].x, r[3].y, r[3].z);
-					glVertex3f(r[7].x, r[7].y, r[7].z);
-				}
-				glEnd();
-				break;
-			case FACE_QUAD9:
-				glBegin(GL_LINE_LOOP);
-				{
-					glVertex3f(r[0].x, r[0].y, r[0].z);
-					glVertex3f(r[4].x, r[4].y, r[4].z);
-					glVertex3f(r[1].x, r[1].y, r[1].z);
-					glVertex3f(r[5].x, r[5].y, r[5].z);
-					glVertex3f(r[2].x, r[2].y, r[2].z);
-					glVertex3f(r[6].x, r[6].y, r[6].z);
-					glVertex3f(r[3].x, r[3].y, r[3].z);
-					glVertex3f(r[7].x, r[7].y, r[7].z);
-				}
-				glEnd();
-				break;
-			default:
-				assert(false);
+				glVertex3f(r[0].x, r[0].y, r[0].z);
+				glVertex3f(r[1].x, r[1].y, r[1].z);
+				glVertex3f(r[2].x, r[2].y, r[2].z);
 			}
+			glEnd();
+			break;
+		case FACE_QUAD4:
+			glBegin(GL_LINE_LOOP);
+			{
+				glVertex3f(r[0].x, r[0].y, r[0].z);
+				glVertex3f(r[1].x, r[1].y, r[1].z);
+				glVertex3f(r[2].x, r[2].y, r[2].z);
+				glVertex3f(r[3].x, r[3].y, r[3].z);
+			}
+			glEnd();
+			break;
+		case FACE_TRI6:
+			glBegin(GL_LINE_LOOP);
+			{
+				glVertex3f(r[0].x, r[0].y, r[0].z);
+				glVertex3f(r[3].x, r[3].y, r[3].z);
+				glVertex3f(r[1].x, r[1].y, r[1].z);
+				glVertex3f(r[4].x, r[4].y, r[4].z);
+				glVertex3f(r[2].x, r[2].y, r[2].z);
+				glVertex3f(r[5].x, r[5].y, r[5].z);
+			}
+			glEnd();
+			break;
+		case FACE_TRI7:
+			glBegin(GL_LINE_LOOP);
+			{
+				glVertex3f(r[0].x, r[0].y, r[0].z);
+				glVertex3f(r[3].x, r[3].y, r[3].z);
+				glVertex3f(r[1].x, r[1].y, r[1].z);
+				glVertex3f(r[4].x, r[4].y, r[4].z);
+				glVertex3f(r[2].x, r[2].y, r[2].z);
+				glVertex3f(r[5].x, r[5].y, r[5].z);
+			}
+			glEnd();
+			break;
+		case FACE_QUAD8:
+			glBegin(GL_LINE_LOOP);
+			{
+				glVertex3f(r[0].x, r[0].y, r[0].z);
+				glVertex3f(r[4].x, r[4].y, r[4].z);
+				glVertex3f(r[1].x, r[1].y, r[1].z);
+				glVertex3f(r[5].x, r[5].y, r[5].z);
+				glVertex3f(r[2].x, r[2].y, r[2].z);
+				glVertex3f(r[6].x, r[6].y, r[6].z);
+				glVertex3f(r[3].x, r[3].y, r[3].z);
+				glVertex3f(r[7].x, r[7].y, r[7].z);
+			}
+			glEnd();
+			break;
+		case FACE_QUAD9:
+			glBegin(GL_LINE_LOOP);
+			{
+				glVertex3f(r[0].x, r[0].y, r[0].z);
+				glVertex3f(r[4].x, r[4].y, r[4].z);
+				glVertex3f(r[1].x, r[1].y, r[1].z);
+				glVertex3f(r[5].x, r[5].y, r[5].z);
+				glVertex3f(r[2].x, r[2].y, r[2].z);
+				glVertex3f(r[6].x, r[6].y, r[6].z);
+				glVertex3f(r[3].x, r[3].y, r[3].z);
+				glVertex3f(r[7].x, r[7].y, r[7].z);
+			}
+			glEnd();
+			break;
+		default:
+			assert(false);
 		}
 	}
 
@@ -538,16 +545,14 @@ void CGLModel::RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m)
 	// reset the polygon mode
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-	// render the selected elements
-	int NE = dom.Elements();
-	for (i=0; i<NE; ++i)
+	// render the internal surfaces
+	GLSurface& surf = *m_surf[m];
+	int nid = -1;
+	for (i=0; i<surf.Faces(); ++i)
 	{
-		FEElement& el = dom.Element(i);
-		if (el.IsVisible() && !el.IsSelected())
-		{
-			glLoadName(i+1);
-			RenderElement(el, pm);
-		}
+		FEFace& face = surf.Face(i);
+		if (face.m_nId != nid) { glLoadName(face.m_nId + 1); nid = face.m_nId; }
+		RenderFEFace(face, pm);
 	}
 
 	if (pmat->benable && m_pcol->IsActive())
@@ -676,17 +681,15 @@ void CGLModel::RenderMaterial(FEModel* ps, int m)
 	// reset the polygon mode
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-	// render the unselected elements
-	int NE = dom.Elements();
+	// render the internal surfaces
 	if (btex) glColor3ub(255,255,255);
-	for (i=0; i<NE; ++i)
+	GLSurface& surf = *m_surf[m];
+	int nid = -1;
+	for (i=0; i<surf.Faces(); ++i)
 	{
-		FEElement& el = dom.Element(i);
-		if (el.IsVisible() && !el.IsSelected())
-		{
-			glLoadName(i+1);
-			RenderElement(el, pm);
-		}
+		FEFace& face = surf.Face(i);
+		if (face.m_nId != nid) { glLoadName(face.m_nId + 1); nid = face.m_nId; }
+		RenderFEFace(face, pm);
 	}
 
 	if (pmat->benable && m_pcol->IsActive())
@@ -793,6 +796,8 @@ void CGLModel::RenderOutline(CGLContext& rc)
 	int i, j, n;
 	int a, b;
 	vec3f r1, r2, r3;
+
+	glDepthRange(0, 0.99998);
 
 	FEModel* ps = m_ps;
 	FEMesh* pm = ps->GetMesh();
@@ -944,6 +949,8 @@ void CGLModel::RenderOutline(CGLContext& rc)
 	}
 
 	glPopAttrib();
+
+	glDepthRange(0, 1);
 }
 
 
@@ -1007,227 +1014,200 @@ void CGLModel::RenderNormals(CGLContext& rc)
 // Render an element. This function will only render a face of an element
 // whose neighbor is not visible. That is, it only renders interior faces.
 // 
-void CGLModel::RenderElement(FEElement& el, FEMesh* pm)
+void CGLModel::RenderFEFace(FEFace& face, FEMesh* pm)
 {
-	if ((el.m_ntype == FE_TRUSS2) || (el.m_ntype == FE_TRUSS3))
+	switch (face.m_ntype)
 	{
-		vec3f r1 = pm->Node(el.m_node[0]).m_rt;
-		vec3f r2 = pm->Node(el.m_node[1]).m_rt;
-
-		float t1 = pm->Node(el.m_node[0]).m_tex;
-		float t2 = pm->Node(el.m_node[1]).m_tex;
-
-		glNormal3f(1,1,1);
-		glBegin(GL_LINES);
+	case FACE_QUAD4:
+		glBegin(GL_QUADS);
 		{
+			vec3f r1 = pm->Node( face.node[0] ).m_rt;
+			vec3f r2 = pm->Node( face.node[1] ).m_rt;
+			vec3f r3 = pm->Node( face.node[2] ).m_rt;
+			vec3f r4 = pm->Node( face.node[3] ).m_rt;
+
+			vec3f nf = (r2-r1)^(r3-r1);
+			nf.Normalize();
+			glNormal3f(nf.x, nf.y, nf.z);
+
+			float t1 = pm->Node(face.node[0]).m_tex;
+			float t2 = pm->Node(face.node[1]).m_tex;
+			float t3 = pm->Node(face.node[2]).m_tex;
+			float t4 = pm->Node(face.node[3]).m_tex;
+
 			glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
 			glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
+			glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
+			glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
 		}
 		glEnd();
-	}
-    else
-	{
-		FEFace face;
-		for (int i=0; i<el.Faces(); ++i)
+		break;
+	case FACE_QUAD8:
+	case FACE_QUAD9:
+		glBegin(GL_TRIANGLES);
 		{
-			if (el.m_pElem[i] && (el.m_pElem[i]->IsSelected() || !el.m_pElem[i]->IsVisible()))
-			{
-				el.GetFace(i, face);
+			vec3f r1 = pm->Node( face.node[0] ).m_rt;
+			vec3f r2 = pm->Node( face.node[1] ).m_rt;
+			vec3f r3 = pm->Node( face.node[2] ).m_rt;
+			vec3f r4 = pm->Node( face.node[3] ).m_rt;
+			vec3f r5 = pm->Node( face.node[4] ).m_rt;
+			vec3f r6 = pm->Node( face.node[5] ).m_rt;
+			vec3f r7 = pm->Node( face.node[6] ).m_rt;
+			vec3f r8 = pm->Node( face.node[7] ).m_rt;
 
-				switch (face.m_ntype)
-				{
-				case FACE_QUAD4:
-					glBegin(GL_QUADS);
-					{
-						vec3f r1 = pm->Node( face.node[0] ).m_rt;
-						vec3f r2 = pm->Node( face.node[1] ).m_rt;
-						vec3f r3 = pm->Node( face.node[2] ).m_rt;
-						vec3f r4 = pm->Node( face.node[3] ).m_rt;
+			vec3f nf = (r2-r1)^(r3-r1);
+			nf.Normalize();
+			glNormal3f(nf.x, nf.y, nf.z);
 
-						vec3f nf = (r2-r1)^(r3-r1);
-						nf.Normalize();
-						glNormal3f(nf.x, nf.y, nf.z);
+			float t1 = pm->Node(face.node[0]).m_tex;
+			float t2 = pm->Node(face.node[1]).m_tex;
+			float t3 = pm->Node(face.node[2]).m_tex;
+			float t4 = pm->Node(face.node[3]).m_tex;
+			float t5 = pm->Node(face.node[4]).m_tex;
+			float t6 = pm->Node(face.node[5]).m_tex;
+			float t7 = pm->Node(face.node[6]).m_tex;
+			float t8 = pm->Node(face.node[7]).m_tex;
 
-						float t1 = pm->Node(face.node[0]).m_tex;
-						float t2 = pm->Node(face.node[1]).m_tex;
-						float t3 = pm->Node(face.node[2]).m_tex;
-						float t4 = pm->Node(face.node[3]).m_tex;
+			glTexCoord1f(t8); glVertex3f(r8.x, r8.y, r8.z);
+			glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
+			glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
 
-						glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
-						glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
-						glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
-						glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
-					}
-					glEnd();
-					break;
-				case FACE_QUAD8:
-				case FACE_QUAD9:
-					glBegin(GL_TRIANGLES);
-					{
-						vec3f r1 = pm->Node( face.node[0] ).m_rt;
-						vec3f r2 = pm->Node( face.node[1] ).m_rt;
-						vec3f r3 = pm->Node( face.node[2] ).m_rt;
-						vec3f r4 = pm->Node( face.node[3] ).m_rt;
-						vec3f r5 = pm->Node( face.node[4] ).m_rt;
-						vec3f r6 = pm->Node( face.node[5] ).m_rt;
-						vec3f r7 = pm->Node( face.node[6] ).m_rt;
-						vec3f r8 = pm->Node( face.node[7] ).m_rt;
+			glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
+			glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
+			glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
 
-						vec3f nf = (r2-r1)^(r3-r1);
-						nf.Normalize();
-						glNormal3f(nf.x, nf.y, nf.z);
+			glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
+			glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
+			glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
 
-						float t1 = pm->Node(face.node[0]).m_tex;
-						float t2 = pm->Node(face.node[1]).m_tex;
-						float t3 = pm->Node(face.node[2]).m_tex;
-						float t4 = pm->Node(face.node[3]).m_tex;
-						float t5 = pm->Node(face.node[4]).m_tex;
-						float t6 = pm->Node(face.node[5]).m_tex;
-						float t7 = pm->Node(face.node[6]).m_tex;
-						float t8 = pm->Node(face.node[7]).m_tex;
+			glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
+			glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
+			glTexCoord1f(t8); glVertex3f(r8.x, r8.y, r8.z);
 
-						glTexCoord1f(t8); glVertex3f(r8.x, r8.y, r8.z);
-						glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
-						glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
+			glTexCoord1f(t8); glVertex3f(r8.x, r8.y, r8.z);
+			glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
+			glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
 
-						glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
-						glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
-						glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
-
-						glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
-						glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
-						glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
-
-						glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
-						glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
-						glTexCoord1f(t8); glVertex3f(r8.x, r8.y, r8.z);
-
-						glTexCoord1f(t8); glVertex3f(r8.x, r8.y, r8.z);
-						glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
-						glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
-
-						glTexCoord1f(t8); glVertex3f(r8.x, r8.y, r8.z);
-						glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
-						glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
-					}
-					glEnd();
-					break;
-				case FACE_TRI3:
-					glBegin(GL_TRIANGLES);
-					{
-						vec3f r1 = pm->Node( face.node[0] ).m_rt;
-						vec3f r2 = pm->Node( face.node[1] ).m_rt;
-						vec3f r3 = pm->Node( face.node[2] ).m_rt;
-
-						vec3f nf = (r2-r1)^(r3-r1);
-						nf.Normalize();
-						glNormal3f(nf.x, nf.y, nf.z);
-
-						float t1 = pm->Node(face.node[0]).m_tex;
-						float t2 = pm->Node(face.node[1]).m_tex;
-						float t3 = pm->Node(face.node[2]).m_tex;
-
-						glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
-						glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
-						glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
-					}
-					glEnd();
-					break;
-				case FACE_TRI6:
-					glBegin(GL_TRIANGLES);
-					{
-						vec3f r1 = pm->Node( face.node[0] ).m_rt;
-						vec3f r2 = pm->Node( face.node[1] ).m_rt;
-						vec3f r3 = pm->Node( face.node[2] ).m_rt;
-						vec3f r4 = pm->Node( face.node[3] ).m_rt;
-						vec3f r5 = pm->Node( face.node[4] ).m_rt;
-						vec3f r6 = pm->Node( face.node[5] ).m_rt;
-
-						vec3f nf = (r2-r1)^(r3-r1);
-						nf.Normalize();
-						glNormal3f(nf.x, nf.y, nf.z);
-
-						float t1 = pm->Node(face.node[0]).m_tex;
-						float t2 = pm->Node(face.node[1]).m_tex;
-						float t3 = pm->Node(face.node[2]).m_tex;
-						float t4 = pm->Node(face.node[3]).m_tex;
-						float t5 = pm->Node(face.node[4]).m_tex;
-						float t6 = pm->Node(face.node[5]).m_tex;
-
-						glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
-						glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
-						glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
-
-						glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
-						glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
-						glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
-
-						glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
-						glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
-						glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
-
-						glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
-						glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
-						glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
-					}
-					glEnd();
-					break;
-				case FACE_TRI7:
-					glBegin(GL_TRIANGLES);
-					{
-						vec3f r1 = pm->Node( face.node[0] ).m_rt;
-						vec3f r2 = pm->Node( face.node[1] ).m_rt;
-						vec3f r3 = pm->Node( face.node[2] ).m_rt;
-						vec3f r4 = pm->Node( face.node[3] ).m_rt;
-						vec3f r5 = pm->Node( face.node[4] ).m_rt;
-						vec3f r6 = pm->Node( face.node[5] ).m_rt;
-						vec3f r7 = pm->Node( face.node[6] ).m_rt;
-
-						vec3f nf = (r2-r1)^(r3-r1);
-						nf.Normalize();
-						glNormal3f(nf.x, nf.y, nf.z);
-
-						float t1 = pm->Node(face.node[0]).m_tex;
-						float t2 = pm->Node(face.node[1]).m_tex;
-						float t3 = pm->Node(face.node[2]).m_tex;
-						float t4 = pm->Node(face.node[3]).m_tex;
-						float t5 = pm->Node(face.node[4]).m_tex;
-						float t6 = pm->Node(face.node[5]).m_tex;
-						float t7 = pm->Node(face.node[6]).m_tex;
-
-						glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
-						glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
-						glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
-
-						glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
-						glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
-						glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
-
-						glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
-						glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
-						glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
-
-						glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
-						glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
-						glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
-
-						glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
-						glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
-						glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
-
-						glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
-						glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
-						glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
-					}
-					glEnd();
-					break;				
-				default:
-					assert(false);
-				}
-			}
+			glTexCoord1f(t8); glVertex3f(r8.x, r8.y, r8.z);
+			glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
+			glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
 		}
+		glEnd();
+		break;
+	case FACE_TRI3:
+		glBegin(GL_TRIANGLES);
+		{
+			vec3f r1 = pm->Node( face.node[0] ).m_rt;
+			vec3f r2 = pm->Node( face.node[1] ).m_rt;
+			vec3f r3 = pm->Node( face.node[2] ).m_rt;
+
+			vec3f nf = (r2-r1)^(r3-r1);
+			nf.Normalize();
+			glNormal3f(nf.x, nf.y, nf.z);
+
+			float t1 = pm->Node(face.node[0]).m_tex;
+			float t2 = pm->Node(face.node[1]).m_tex;
+			float t3 = pm->Node(face.node[2]).m_tex;
+
+			glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
+			glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
+			glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
+		}
+		glEnd();
+		break;
+	case FACE_TRI6:
+		glBegin(GL_TRIANGLES);
+		{
+			vec3f r1 = pm->Node( face.node[0] ).m_rt;
+			vec3f r2 = pm->Node( face.node[1] ).m_rt;
+			vec3f r3 = pm->Node( face.node[2] ).m_rt;
+			vec3f r4 = pm->Node( face.node[3] ).m_rt;
+			vec3f r5 = pm->Node( face.node[4] ).m_rt;
+			vec3f r6 = pm->Node( face.node[5] ).m_rt;
+
+			vec3f nf = (r2-r1)^(r3-r1);
+			nf.Normalize();
+			glNormal3f(nf.x, nf.y, nf.z);
+
+			float t1 = pm->Node(face.node[0]).m_tex;
+			float t2 = pm->Node(face.node[1]).m_tex;
+			float t3 = pm->Node(face.node[2]).m_tex;
+			float t4 = pm->Node(face.node[3]).m_tex;
+			float t5 = pm->Node(face.node[4]).m_tex;
+			float t6 = pm->Node(face.node[5]).m_tex;
+
+			glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
+			glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
+			glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
+
+			glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
+			glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
+			glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
+
+			glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
+			glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
+			glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
+
+			glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
+			glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
+			glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
+		}
+		glEnd();
+		break;
+	case FACE_TRI7:
+		glBegin(GL_TRIANGLES);
+		{
+			vec3f r1 = pm->Node( face.node[0] ).m_rt;
+			vec3f r2 = pm->Node( face.node[1] ).m_rt;
+			vec3f r3 = pm->Node( face.node[2] ).m_rt;
+			vec3f r4 = pm->Node( face.node[3] ).m_rt;
+			vec3f r5 = pm->Node( face.node[4] ).m_rt;
+			vec3f r6 = pm->Node( face.node[5] ).m_rt;
+			vec3f r7 = pm->Node( face.node[6] ).m_rt;
+
+			vec3f nf = (r2-r1)^(r3-r1);
+			nf.Normalize();
+			glNormal3f(nf.x, nf.y, nf.z);
+
+			float t1 = pm->Node(face.node[0]).m_tex;
+			float t2 = pm->Node(face.node[1]).m_tex;
+			float t3 = pm->Node(face.node[2]).m_tex;
+			float t4 = pm->Node(face.node[3]).m_tex;
+			float t5 = pm->Node(face.node[4]).m_tex;
+			float t6 = pm->Node(face.node[5]).m_tex;
+			float t7 = pm->Node(face.node[6]).m_tex;
+
+			glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
+			glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
+			glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
+
+			glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
+			glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
+			glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
+
+			glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
+			glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
+			glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
+
+			glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
+			glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
+			glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
+
+			glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
+			glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
+			glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
+
+			glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
+			glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
+			glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
+		}
+		glEnd();
+		break;				
+	default:
+		assert(false);
 	}
 }
+
 
 //-----------------------------------------------------------------------------
 // Render the mesh lines for a specific material
@@ -2609,4 +2589,700 @@ int CGLModel::GetSubDivisions()
 		return ndivs;
 	}
 	else return m_nDivs;
+}
+
+//-----------------------------------------------------------------------------
+void CGLModel::ClearSelectionLists()
+{
+	m_nodeSelection.clear();
+	m_edgeSelection.clear();
+	m_faceSelection.clear();
+	m_elemSelection.clear();
+}
+
+//-----------------------------------------------------------------------------
+void CGLModel::UpdateSelectionLists(int mode)
+{
+	FEMesh& m = *GetMesh();
+	if ((mode == -1) || (mode == SELECT_NODES))
+	{
+		m_nodeSelection.clear();
+		for (int i=0; i<m.Nodes(); ++i) if (m.Node(i).IsSelected()) m_nodeSelection.push_back(&m.Node(i));
+	}
+
+	if ((mode == -1) || (mode == SELECT_EDGES))
+	{
+		m_edgeSelection.clear();
+		for (int i=0; i<m.Edges(); ++i) if (m.Edge(i).IsSelected()) m_edgeSelection.push_back(&m.Edge(i));
+	}
+	
+	if ((mode == -1) || (mode == SELECT_FACES))
+	{
+		m_faceSelection.clear();
+		for (int i=0; i<m.Faces(); ++i) if (m.Face(i).IsSelected()) m_faceSelection.push_back(&m.Face(i));
+	}
+
+	if ((mode == -1) || (mode == SELECT_ELEMS))
+	{
+		m_elemSelection.clear();
+		for (int i=0; i<m.Elements(); ++i) if (m.Element(i).IsSelected()) m_elemSelection.push_back(&m.Element(i));
+		UpdateInternalSurfaces();
+	}
+}
+
+//-----------------------------------------------------------------------------
+void CGLModel::SelectNodes(vector<int>& items, bool bclear)
+{
+	FEMesh& m = *GetMesh();
+	if (bclear) for (int i=0; i<m.Nodes(); ++i) m.Node(i).Unselect();
+	for (int i=0; i<(int) items.size(); ++i) m.Node(items[i]).Select();
+	UpdateSelectionLists(SELECT_NODES);
+}
+
+//-----------------------------------------------------------------------------
+void CGLModel::SelectEdges(vector<int>& items, bool bclear)
+{
+	FEMesh& m = *GetMesh();
+	if (bclear) for (int i=0; i<m.Edges(); ++i) m.Edge(i).Unselect();
+	for (int i=0; i<(int) items.size(); ++i) m.Edge(items[i]).Select();
+	UpdateSelectionLists(SELECT_EDGES);
+}
+
+//-----------------------------------------------------------------------------
+void CGLModel::SelectFaces(vector<int>& items, bool bclear)
+{
+	FEMesh& m = *GetMesh();
+	if (bclear) for (int i=0; i<m.Faces(); ++i) m.Face(i).Unselect();
+	for (int i=0; i<(int) items.size(); ++i) m.Face(items[i]).Select();
+	UpdateSelectionLists(SELECT_FACES);
+}
+
+//-----------------------------------------------------------------------------
+void CGLModel::SelectElements(vector<int>& items, bool bclear)
+{
+	FEMesh& m = *GetMesh();
+	if (bclear) for (int i=0; i<m.Elements(); ++i) m.Element(i).Unselect();
+	for (int i=0; i<(int) items.size(); ++i) m.Element(items[i]).Select();
+	UpdateSelectionLists(SELECT_ELEMS);
+}
+
+//-----------------------------------------------------------------------------
+// Clear all selection
+void CGLModel::ClearSelection()
+{
+	FEMesh& mesh = *GetMesh();
+	for (int i=0; i<mesh.Elements(); i++) mesh.Element(i).Unselect();
+	for (int i=0; i<mesh.Faces   (); i++) mesh.Face(i).Unselect();
+	for (int i=0; i<mesh.Edges   (); i++) mesh.Edge(i).Unselect();
+	for (int i=0; i<mesh.Nodes   (); i++) mesh.Node(i).Unselect();
+	UpdateSelectionLists();
+}
+
+//-----------------------------------------------------------------------------
+// Hide elements with a particular material ID
+void CGLModel::HideElements(int nmat)
+{
+	FEMesh& mesh = *GetMesh();
+
+	// Hide the elements with the material ID
+	for (int i=0; i<mesh.Elements(); ++i) if (mesh.Element(i).m_MatID == nmat) mesh.Element(i).Show(false);
+
+	// hide faces
+	int NF = mesh.Faces();
+	for (int i=0; i<NF; ++i)
+	{
+		FEFace& f = mesh.Face(i);
+		if (mesh.Element(f.m_elem[0]).IsInvisible()) f.Show(false);
+	}
+
+	// hide nodes: nodes will be hidden if all elements they attach to are hidden
+	int NN = mesh.Nodes();
+	for (int i=0; i<NN; ++i) mesh.Node(i).m_ntag = 0;
+	for (int i=0; i<mesh.Elements(); ++i)
+	{
+		FEElement& el = mesh.Element(i);
+		if (el.IsInvisible() == false)
+		{
+			int ne = el.Nodes();
+			for (int j=0; j<ne; ++j) mesh.Node(el.m_node[j]).m_ntag = 1;
+		}
+	}
+	for (int i=0; i<NN; ++i) if (mesh.Node(i).m_ntag == 0) mesh.Node(i).Show(false);
+
+	// hide edges
+	int NL = mesh.Edges();
+	for (int i=0; i<NL; ++i)
+	{
+		FEEdge& edge = mesh.Edge(i);
+		if ((mesh.Node(edge.node[0]).IsInvisible()) &&
+			(mesh.Node(edge.node[1]).IsInvisible())) edge.Show(false);
+	}
+
+	// selected items are unselected when hidden so
+	// we need to update the selection lists
+	UpdateSelectionLists();
+}
+
+//-----------------------------------------------------------------------------
+// Show elements with a certain material ID
+void CGLModel::ShowElements(int nmat)
+{
+	FEMesh& mesh = *GetMesh();
+
+	// unhide the elements with mat ID nmat
+	int NE = mesh.Elements();
+	for (int i=0; i<NE; ++i) 
+	{
+		FEElement& e = mesh.Element(i);
+		if (e.m_MatID == nmat) mesh.Element(i).Show(true);
+	}
+
+	// show faces
+	int NF = mesh.Faces();
+	for (int i=0; i<NF; ++i)
+	{
+		FEFace& f = mesh.Face(i);
+		if (mesh.Element(f.m_elem[0]).IsInvisible() == false) f.Show(true);
+	}
+
+	// show nodes
+	int NN = mesh.Nodes();
+	for (int i=0; i<NN; ++i) mesh.Node(i).m_ntag = 0;
+	for (int i=0; i<mesh.Elements(); ++i)
+	{
+		FEElement& el = mesh.Element(i);
+		if (el.IsInvisible() == false)
+		{
+			int ne = el.Nodes();
+			for (int j=0; j<ne; ++j) mesh.Node(el.m_node[j]).m_ntag = 1;
+		}
+	}
+	for (int i=0; i<NN; ++i) if (mesh.Node(i).m_ntag == 1) mesh.Node(i).Show(true);
+
+	// show edges
+	int NL = mesh.Edges();
+	for (int i=0; i<NL; ++i)
+	{
+		FEEdge& edge = mesh.Edge(i);
+		if ((mesh.Node(edge.node[0]).IsInvisible() == false) &&
+			(mesh.Node(edge.node[1]).IsInvisible()) == false) edge.Show(true);
+	}
+
+	UpdateSelectionLists();
+}
+
+//-----------------------------------------------------------------------------
+// Enable elements with a certain mat ID
+void CGLModel::EnableElements(int nmat)
+{
+	FEMesh& mesh = *GetMesh();
+
+	// update the elements
+	for (int i=0; i<mesh.Elements(); ++i) if (mesh.Element(i).m_MatID == nmat) mesh.Element(i).Enable();
+
+	// now we update the nodes
+	for (int i=0; i<mesh.Nodes(); ++i) mesh.Node(i).Disable();
+	for (int i=0; i<mesh.Elements(); ++i)
+	{
+		FEElement& el = mesh.Element(i);
+		if (el.IsEnabled())
+		{
+			int n = el.Nodes();
+			for (int j=0; j<n; ++j) mesh.Node(el.m_node[j]).Enable();
+		}
+	}
+
+	// enable the faces
+	for (int i=0; i<mesh.Faces(); ++i) 
+	{
+		FEFace& f = mesh.Face(i);
+		f.Disable();
+		if (mesh.Element(f.m_elem[0]).IsEnabled()) f.Enable();
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Disable elements with a certain mat ID
+void CGLModel::DisableElements(int nmat)
+{
+	FEMesh& mesh = *GetMesh();
+
+	// update the elements
+	for (int i=0; i<mesh.Elements(); ++i) if (mesh.Element(i).m_MatID == nmat) mesh.Element(i).Disable();
+
+	// now we update the nodes
+	for (int i=0; i<mesh.Nodes(); ++i) mesh.Node(i).Disable();
+	for (int i=0; i<mesh.Elements(); ++i)
+	{
+		FEElement& el = mesh.Element(i);
+		if (el.IsEnabled())
+		{
+			int n = el.Nodes();
+			for (int j=0; j<n; ++j) mesh.Node(el.m_node[j]).Enable();
+		}
+	}
+
+	// enable the faces
+	for (int i=0; i<mesh.Faces(); ++i) 
+	{
+		FEFace& f = mesh.Face(i);
+		f.Disable();
+		if (mesh.Element(f.m_elem[0]).IsEnabled()) f.Enable();
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Select elements that are connected through the surface
+void CGLModel::SelectConnectedSurfaceElements(FEElement &el)
+{
+	if (!el.IsVisible()) return;
+
+	FEMesh& mesh = *GetMesh();
+	// tag all faces
+	for (int i=0; i<mesh.Faces(); ++i) mesh.Face(i).m_ntag = 0;
+
+	// find the face that this element belongs to
+	for (int i=0; i<mesh.Faces(); ++i)
+	{
+		FEFace& f = mesh.Face(i);
+		if (f.m_elem[0] == el.m_lid)
+		{
+			// propagate through all neighbors
+			stack<FEFace*> S;
+			S.push(&f);
+			while (!S.empty())
+			{
+				FEFace* pf = S.top(); S.pop();
+				pf->m_ntag = 1;
+				FEElement& e2 = mesh.Element(pf->m_elem[0]);
+				if (e2.IsVisible())
+				{
+					e2.Select();
+					for (int j=0; j<pf->Edges(); ++j)
+					{
+						FEFace* pf2 = (pf->m_nbr[j] >= 0? &mesh.Face(pf->m_nbr[j]) : 0);
+						if (pf2 && (pf2->m_ntag == 0)) S.push(pf2);
+					}
+				}
+			}
+		}
+	}
+	UpdateSelectionLists();
+}
+
+//-----------------------------------------------------------------------------
+// Select elements that are connected through the volume
+void CGLModel::SelectConnectedVolumeElements(FEElement &el)
+{
+	if (!el.IsVisible()) return;
+
+	FEMesh& mesh = *GetMesh();
+	// tag all elements
+	for (int i=0; i<mesh.Elements(); ++i) mesh.Element(i).m_ntag = 0;
+
+	// propagate through all neighbors
+	stack<FEElement*> S;
+	S.push(&el);
+	while (!S.empty())
+	{
+		FEElement* pe = S.top(); S.pop();
+		pe->m_ntag = 1;
+		pe->Select();
+		for (int j=0; j<pe->Faces(); ++j)
+		{
+			FEElement* pe2 = pe->m_pElem[j];
+			if (pe2 && pe2->IsVisible() && (pe2->m_ntag == 0)) S.push(pe2);
+		}
+	}
+
+	UpdateSelectionLists(SELECT_ELEMS);
+}
+
+//-----------------------------------------------------------------------------
+// Select faces that are connected
+void CGLModel::SelectConnectedEdges(FEEdge& e)
+{
+	assert(false);
+}
+
+//-----------------------------------------------------------------------------
+// Select faces that are connected
+void CGLModel::SelectConnectedFaces(FEFace &f)
+{
+	FEMesh& mesh = *GetMesh();
+
+	// clear tags on all faces
+	for (int i=0; i<mesh.Faces(); ++i) mesh.Face(i).m_ntag = 0;
+
+	// propagate through all neighbors
+	stack<FEFace*> S;
+	f.m_ntag = 1;
+	S.push(&f);
+	while (!S.empty())
+	{
+		FEFace* pf = S.top(); S.pop();
+		FEElement& el = mesh.Element(pf->m_elem[0]);
+		if (el.IsVisible())
+		{
+			pf->Select();
+			for (int j=0; j<pf->Edges(); ++j)
+			{
+				FEFace* pf2 = (pf->m_nbr[j] >= 0? &mesh.Face(pf->m_nbr[j]) : 0);
+				if (pf2 && (pf2->m_ntag == 0)) 
+				{
+					pf2->m_ntag = 1;
+					S.push(pf2);
+				}
+			}
+		}
+	}
+
+	UpdateSelectionLists(SELECT_FACES);
+}
+
+//-----------------------------------------------------------------------------
+// Select nodes that are connected on a surface
+void CGLModel::SelectConnectedSurfaceNodes(int n)
+{
+	FEMesh& mesh = *GetMesh();
+
+	// clear tags on all faces
+	int NF = mesh.Faces();
+	for (int i=0; i<NF; ++i) mesh.Face(i).m_ntag = 0;
+
+	// find a face that has this node connects to
+	FEFace* pf = 0;
+	for (int i=0; i<mesh.Faces(); ++i)
+	{
+		FEFace& f = mesh.Face(i);
+		if (f.IsVisible() && f.HasNode(n))
+		{
+			pf = &f;
+			break;
+		}
+	}
+	if (pf == 0) return;
+
+	// propagate through all neighbors
+	stack<FEFace*> S;
+	pf->m_ntag = 1;
+	S.push(pf);
+	while (!S.empty())
+	{
+		FEFace* pf = S.top(); S.pop();
+		if (pf->IsVisible())
+		{
+			for (int j=0; j<pf->Edges(); ++j)
+			{
+				FEFace* pf2 = (pf->m_nbr[j] >= 0? &mesh.Face(pf->m_nbr[j]) : 0);
+				if (pf2 && (pf2->m_ntag == 0)) 
+				{
+					pf2->m_ntag = 1;
+					S.push(pf2);
+				}
+			}
+		}
+	}
+
+	// select all the nodes of tagged faces
+	for (int i=0; i<NF; ++i)
+	{
+		FEFace& f = mesh.Face(i);
+		if (f.m_ntag == 1)
+		{
+			int nf = f.Nodes();
+			for (int j=0; j<nf; ++j) mesh.Node(f.node[j]).Select();
+		}
+	}
+
+	UpdateSelectionLists(SELECT_NODES);
+}
+
+//-----------------------------------------------------------------------------
+// Select nodes that are connected on a volume
+void CGLModel::SelectConnectedVolumeNodes(int n)
+{
+	FEMesh& mesh = *GetMesh();
+
+	// clear tags on all elements
+	int NE = mesh.Elements();
+	for (int i=0; i<NE; ++i) mesh.Element(i).m_ntag = 0;
+
+	// find a visible element that has this node connects to
+	FEElement* pe = 0;
+	for (int i=0; i<mesh.Elements(); ++i)
+	{
+		FEElement& e = mesh.Element(i);
+		if (e.IsVisible() && e.HasNode(n))
+		{
+			pe = &e;
+			break;
+		}
+	}
+	if (pe == 0) return;
+
+	// propagate through all neighbors
+	stack<FEElement*> S;
+	pe->m_ntag = 1;
+	S.push(pe);
+	while (!S.empty())
+	{
+		FEElement* pe = S.top(); S.pop();
+		if (pe->IsVisible())
+		{
+			for (int j=0; j<pe->Faces(); ++j)
+			{
+				FEElement* pe2 = pe->m_pElem[j];
+				if (pe2 && (pe2->m_ntag == 0)) 
+				{
+					pe2->m_ntag = 1;
+					S.push(pe2);
+				}
+			}
+		}
+	}
+
+	// select all the nodes of tagged elements
+	for (int i=0; i<NE; ++i)
+	{
+		FEElement& e = mesh.Element(i);
+		if (e.m_ntag == 1)
+		{
+			int nf = e.Nodes();
+			for (int j=0; j<nf; ++j) mesh.Node(e.m_node[j]).Select();
+		}
+	}
+
+	UpdateSelectionLists(SELECT_NODES);
+}
+
+//-----------------------------------------------------------------------------
+// Hide selected elements
+void CGLModel::HideSelectedElements()
+{
+	FEMesh& mesh = *GetMesh();
+
+	// hide selected elements
+	int NE = mesh.Elements();
+	for (int i=0; i<NE; i++)
+	{
+		FEElement& e = mesh.Element(i);
+		if (e.IsSelected()) e.Hide();
+	}
+
+	// hide nodes: nodes will be hidden if all elements they attach to are hidden
+	int NN = mesh.Nodes();
+	for (int i=0; i<NN; ++i) mesh.Node(i).m_ntag = 0;
+	for (int i=0; i<mesh.Elements(); ++i)
+	{
+		FEElement& el = mesh.Element(i);
+		if (el.IsHidden() == false)
+		{
+			int ne = el.Nodes();
+			for (int j=0; j<ne; ++j) mesh.Node(el.m_node[j]).m_ntag = 1;
+		}
+	}
+	for (int i=0; i<NN; ++i) if (mesh.Node(i).m_ntag == 0) mesh.Node(i).Hide();
+
+	// hide faces
+	int NF = mesh.Faces();
+	for (int i=0; i<NF; ++i)
+	{
+		FEFace& f = mesh.Face(i);
+		if (mesh.Element(f.m_elem[0]).IsHidden()) f.Hide();
+	}
+
+	// hide edges
+	int NL = mesh.Edges();
+	for (int i=0; i<NL; ++i)
+	{
+		FEEdge& edge = mesh.Edge(i);
+		FENode& node0 = mesh.Node(edge.node[0]);
+		FENode& node1 = mesh.Node(edge.node[1]);
+		if (node0.IsHidden() || node1.IsHidden()) edge.Hide();
+	}
+
+	UpdateSelectionLists();
+}
+
+//-----------------------------------------------------------------------------
+// Hide selected elements
+void CGLModel::HideUnselectedElements()
+{
+	FEMesh& mesh = *GetMesh();
+
+	// hide unselected elements
+	int NE = mesh.Elements();
+	for (int i=0; i<NE; i++)
+	{
+		FEElement& e = mesh.Element(i);
+		if (!e.IsSelected()) e.Hide();
+	}
+
+	// hide nodes: nodes will be hidden if all elements they attach to are hidden
+	int NN = mesh.Nodes();
+	for (int i=0; i<NN; ++i) mesh.Node(i).m_ntag = 0;
+	for (int i=0; i<mesh.Elements(); ++i)
+	{
+		FEElement& el = mesh.Element(i);
+		if (el.IsHidden() == false)
+		{
+			int ne = el.Nodes();
+			for (int j=0; j<ne; ++j) mesh.Node(el.m_node[j]).m_ntag = 1;
+		}
+	}
+	for (int i=0; i<NN; ++i) if (mesh.Node(i).m_ntag == 0) mesh.Node(i).Hide();
+
+	// hide faces
+	int NF = mesh.Faces();
+	for (int i=0; i<NF; ++i)
+	{
+		FEFace& f = mesh.Face(i);
+		if (mesh.Element(f.m_elem[0]).IsHidden()) f.Hide();
+	}
+
+	// hide edges
+	int NL = mesh.Edges();
+	for (int i=0; i<NL; ++i)
+	{
+		FEEdge& edge = mesh.Edge(i);
+		FENode& node0 = mesh.Node(edge.node[0]);
+		FENode& node1 = mesh.Node(edge.node[1]);
+		if (node0.IsHidden() || node1.IsHidden()) edge.Hide();
+	}
+
+	UpdateSelectionLists();
+}
+
+//-----------------------------------------------------------------------------
+// Hide selected faces
+void CGLModel::HideSelectedFaces()
+{
+	FEMesh& mesh = *GetMesh();
+	// hide the faces and the elements that they are attached to
+	int NF = mesh.Faces();
+	for (int i=0; i<NF; ++i) 
+	{
+		FEFace& f = mesh.Face(i);
+		if (f.IsSelected())
+		{
+			f.Hide();
+			mesh.Element(f.m_elem[0]).Hide();
+		}
+	}
+
+	// hide nodes: nodes will be hidden if all elements they attach to are hidden
+	int NN = mesh.Nodes();
+	for (int i=0; i<NN; ++i) mesh.Node(i).m_ntag = 0;
+	for (int i=0; i<mesh.Elements(); ++i)
+	{
+		FEElement& el = mesh.Element(i);
+		if (el.IsHidden() == false)
+		{
+			int ne = el.Nodes();
+			for (int j=0; j<ne; ++j) mesh.Node(el.m_node[j]).m_ntag = 1;
+		}
+	}
+	for (int i=0; i<NN; ++i) if (mesh.Node(i).m_ntag == 0) mesh.Node(i).Hide();
+
+	// hide faces that were hidden by hiding the elements
+	for (int i=0; i<NF; ++i)
+	{
+		FEFace& f = mesh.Face(i);
+		if (mesh.Element(f.m_elem[0]).IsVisible() == false) f.Hide();
+	}
+
+	UpdateSelectionLists();
+}
+
+//-----------------------------------------------------------------------------
+// hide selected edges
+void CGLModel::HideSelectedEdges()
+{
+	assert(false);
+}
+
+//-----------------------------------------------------------------------------
+// hide selected nodes
+void CGLModel::HideSelectedNodes()
+{
+	FEMesh& mesh = *GetMesh();
+
+	// hide nodes and all elements they attach to
+	int NN = mesh.Nodes();
+	for (int i=0; i<NN; ++i)
+	{
+		FENode& n = mesh.Node(i);
+		if (n.IsSelected()) n.Hide();
+	}
+
+	int NE = mesh.Elements();
+	for (int i=0; i<NE; ++i)
+	{
+		FEElement& el = mesh.Element(i);
+		int ne = el.Nodes();
+		for (int j=0; j<ne; ++j) 
+			if (mesh.Node(el.m_node[i]).IsHidden()) el.Hide();
+	}
+
+	// hide nodes that were hidden by hiding elements
+	for (int i=0; i<NE; ++i)
+	{
+		FEElement& el = mesh.Element(i);
+		if (el.IsHidden())
+		{
+			int ne = el.Nodes();
+			for (int j=0; j<ne; ++j) mesh.Node(el.m_node[j]).Hide();
+		}
+	}
+
+	// hide faces that were hidden by hiding the elements
+	int NF = mesh.Faces();
+	for (int i=0; i<NF; ++i)
+	{
+		FEFace& f = mesh.Face(i);
+		if (mesh.Element(f.m_elem[0]).IsVisible() == false) f.Hide();
+	}
+
+	UpdateSelectionLists();
+}
+
+//-----------------------------------------------------------------------------
+void CGLModel::ClearInternalSurfaces()
+{
+	for (int i=0; i<(int)m_surf.size(); ++i) delete m_surf[i];
+	m_surf.clear();
+}
+
+//-----------------------------------------------------------------------------
+void CGLModel::UpdateInternalSurfaces()
+{
+	ClearInternalSurfaces();
+
+	int nmat = m_ps->Materials();
+	for (int i=0; i<nmat; ++i) m_surf.push_back(new GLSurface);
+
+	FEMesh& mesh = *GetMesh();
+	FEFace face;
+	for (int m = 0; m<nmat; ++m)
+	{
+		FEDomain& dom = mesh.Domain(m);
+		int NE = dom.Elements();
+		for (int i=0; i<NE; ++i)
+		{
+			FEElement& el = dom.Element(i);
+			if (el.IsVisible() && !el.IsSelected())
+			{
+				for (int j=0; j<el.Faces(); ++j)
+				{
+					if (el.m_pElem[j] && (el.m_pElem[j]->IsSelected() || !el.m_pElem[j]->IsVisible()))
+					{
+						el.GetFace(j, face);
+						face.m_ntag = i; // store the element ID. This is used for selection ???
+						m_surf[m]->add(face);
+					}
+				}
+			}
+		}
+	}
 }

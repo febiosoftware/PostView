@@ -840,57 +840,51 @@ void CGLView::RenderTags()
 	for (int i=0; i<NN; ++i) mesh.Node(i).m_ntag = 0;
 
 	// process elements
-	int NE = mesh.Elements();
-	for (int i=0; i<NE; i++)
+	const vector<FEElement*> selectedElements = pdoc->GetGLModel()->GetElementSelection();
+	for (int i=0; i<(int)selectedElements.size(); i++)
 	{
-		FEElement& el = mesh.Element(i);
-		if (el.IsSelected())
-		{
-			tag.r = mesh.ElementCenter(el);
-			tag.bvis = false;
-			tag.ntag = 0;
-			sprintf(tag.sztag, "E%d", el.m_nId);
-			vtag.push_back(tag);
+		FEElement& el = *selectedElements[i]; assert(el.IsSelected());
 
-			int ne = el.Nodes();
-			for (int j=0; j<ne; ++j) mesh.Node(el.m_node[j]).m_ntag = 1;
-		}
+		tag.r = mesh.ElementCenter(el);
+		tag.bvis = false;
+		tag.ntag = 0;
+		sprintf(tag.sztag, "E%d", el.GetID());
+		vtag.push_back(tag);
+
+		int ne = el.Nodes();
+		for (int j=0; j<ne; ++j) mesh.Node(el.m_node[j]).m_ntag = 1;
 	}
 
 	// process faces
-	int NF = mesh.Faces();
-	for (int i=0; i<NF; ++i)
+	const vector<FEFace*> selectedFaces = pdoc->GetGLModel()->GetFaceSelection();
+	for (int i=0; i<(int)selectedFaces.size(); ++i)
 	{
-		FEFace& f = mesh.Face(i);
-		if (f.IsSelected())
-		{
-			tag.r = mesh.FaceCenter(f);
-			tag.bvis = false;
-			tag.ntag = 0;
-			sprintf(tag.sztag, "F%d", i+1);
-			vtag.push_back(tag);
+		FEFace& f = *selectedFaces[i]; assert(f.IsSelected());
 
-			int nf = f.Nodes();
-			for (int j=0; j<nf; ++j) mesh.Node(f.node[j]).m_ntag = 1;
-		}
+		tag.r = mesh.FaceCenter(f);
+		tag.bvis = false;
+		tag.ntag = 0;
+		sprintf(tag.sztag, "F%d", i+1);
+		vtag.push_back(tag);
+
+		int nf = f.Nodes();
+		for (int j=0; j<nf; ++j) mesh.Node(f.node[j]).m_ntag = 1;
 	}
 
 	// process edges
-	int NL = mesh.Edges();
-	for (int i=0; i<NL; i++)
+	const vector<FEEdge*> selectedEdges = pdoc->GetGLModel()->GetEdgeSelection();
+	for (int i=0; i<(int)selectedEdges.size(); i++)
 	{
-		FEEdge& edge = mesh.Edge(i);
-		if (edge.IsSelected())
-		{
-			tag.r = mesh.EdgeCenter(edge);
-			tag.bvis = false;
-			tag.ntag = 0;
-			sprintf(tag.sztag, "L%d", i+1);
-			vtag.push_back(tag);
+		FEEdge& edge = *selectedEdges[i]; assert(edge.IsSelected());
 
-			int ne = edge.Nodes();
-			for (int j=0; j<ne; ++j) mesh.Node(edge.node[j]).m_ntag = 1;
-		}
+		tag.r = mesh.EdgeCenter(edge);
+		tag.bvis = false;
+		tag.ntag = 0;
+		sprintf(tag.sztag, "L%d", i+1);
+		vtag.push_back(tag);
+
+		int ne = edge.Nodes();
+		for (int j=0; j<ne; ++j) mesh.Node(edge.node[j]).m_ntag = 1;
 	}
 
 	// process nodes
@@ -902,7 +896,7 @@ void CGLView::RenderTags()
 			tag.r = node.m_rt;
 			tag.bvis = false;
 			tag.ntag = (node.m_bext?0:1);
-			sprintf(tag.sztag, "N%d", i+1);
+			sprintf(tag.sztag, "N%d", node.GetID());
 			vtag.push_back(tag);
 		}
 	}
@@ -1124,6 +1118,7 @@ void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
 	BOUNDINGBOX box = pdoc->GetBoundingBox();
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
 
+	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
 	FEMesh* pm = ps->GetMesh();
 
@@ -1241,7 +1236,7 @@ void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
 				if (mode == SELECT_ADD) 
 				{
 					if (view.m_bconn == false) f.Select();
-					else pm->SelectConnectedFaces(f);
+					else mdl.SelectConnectedFaces(f);
 				}
 				else f.Unselect();
 			}
@@ -1289,6 +1284,8 @@ void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
 
 	// clean up
 	delete [] pbuf;
+
+	mdl.UpdateSelectionLists(SELECT_FACES);
 }
 
 //-----------------------------------------------------------------------------
@@ -1305,6 +1302,7 @@ GLNODE_PICK CGLView::PickNode(int x, int y, bool bselect)
 	BOUNDINGBOX box = pdoc->GetBoundingBox();
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
 
+	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
 	FEMesh* pm = ps->GetMesh();
 
@@ -1424,8 +1422,9 @@ GLNODE_PICK CGLView::PickNode(int x, int y, bool bselect)
 		int N = mesh.Nodes();
 		if ((index > 0) && (index <= N))
 		{
-			mesh.ClearSelection();
+			mdl.ClearSelection();
 			mesh.Node(index-1).Select();
+			mdl.UpdateSelectionLists();
 		}
 	}
 
@@ -1661,6 +1660,8 @@ void CGLView::RegionSelectElements(const SelectRegion& region, int mode)
 
 	// clean up
 	delete [] fb;
+	pdoc->GetGLModel()->UpdateSelectionLists(SELECT_ELEMS);
+
 }
 
 //-----------------------------------------------------------------------------
@@ -1694,6 +1695,8 @@ void CGLView::RegionSelectFaces(const SelectRegion& region, int mode)
 
 	// clean up
 	delete [] fb;
+
+	pdoc->GetGLModel()->UpdateSelectionLists(SELECT_FACES);
 }
 
 //-----------------------------------------------------------------------------
@@ -1727,6 +1730,8 @@ void CGLView::RegionSelectNodes(const SelectRegion& region, int mode)
 
 	// clean up
 	delete [] fb;
+
+	pdoc->GetGLModel()->UpdateSelectionLists(SELECT_NODES);
 }
 
 //-----------------------------------------------------------------------------
@@ -1752,14 +1757,16 @@ void CGLView::RegionSelectEdges(const SelectRegion& region, int mode)
 	vector<int> item;
 	parseFeedbackBuffer(fb, hits, region, item, GL_LINE_RESET_TOKEN);
 
+	// clean up
+	delete [] fb;
+
 	// select the edges
 	if (mode == SELECT_ADD)
 		for (int i=0; i<(int) item.size(); ++i) mesh.Edge(item[i]).Select();
 	else
 		for (int i=0; i<(int) item.size(); ++i) mesh.Edge(item[i]).Unselect();
 
-	// clean up
-	delete [] fb;
+	pdoc->GetGLModel()->UpdateSelectionLists(SELECT_EDGES);
 }
 
 //-----------------------------------------------------------------------------
@@ -1785,6 +1792,7 @@ void CGLView::SelectElements(int x0, int y0, int x1, int y1, int mode)
 	BOUNDINGBOX box = pdoc->GetBoundingBox();
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
 
+	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
 	FEMesh* pm = ps->GetMesh();
 
@@ -1905,9 +1913,9 @@ void CGLView::SelectElements(int x0, int y0, int x1, int y1, int mode)
 					else
 					{
 						if (v.m_bext) 
-							pm->SelectConnectedSurfaceElements(e);
+							mdl.SelectConnectedSurfaceElements(e);
 						else
-							pm->SelectConnectedVolumeElements(e);
+							mdl.SelectConnectedVolumeElements(e);
 					}
 				}
 				else 
@@ -1959,6 +1967,7 @@ void CGLView::SelectElements(int x0, int y0, int x1, int y1, int mode)
 
 	// clean up
 	delete [] pbuf;
+	mdl.UpdateSelectionLists(SELECT_ELEMS);
 }
 
 void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
@@ -1982,6 +1991,7 @@ void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 	BOUNDINGBOX box = pdoc->GetBoundingBox();
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
 
+	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
 	FEMesh* pm = ps->GetMesh();
 
@@ -2102,9 +2112,9 @@ void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 					else 
 					{
 						if (view.m_bext)
-							pm->SelectConnectedSurfaceNodes(index-1);
+							mdl.SelectConnectedSurfaceNodes(index-1);
 						else
-							pm->SelectConnectedVolumeNodes(index-1);
+							mdl.SelectConnectedVolumeNodes(index-1);
 					}
 				}
 				else n.Unselect();
@@ -2156,6 +2166,8 @@ void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 
 	// clean up
 	delete [] pbuf;
+
+	pdoc->GetGLModel()->UpdateSelectionLists(SELECT_NODES);
 }
 
 void CGLView::SelectEdges(int x0, int y0, int x1, int y1, int mode)
@@ -2179,6 +2191,7 @@ void CGLView::SelectEdges(int x0, int y0, int x1, int y1, int mode)
 	BOUNDINGBOX box = pdoc->GetBoundingBox();
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
 
+	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
 	FEMesh* pm = ps->GetMesh();
 
@@ -2298,7 +2311,7 @@ void CGLView::SelectEdges(int x0, int y0, int x1, int y1, int mode)
 					if (view.m_bconn == false) edge.Select();
 					else 
 					{
-						pm->SelectConnectedEdges(edge);
+						mdl.SelectConnectedEdges(edge);
 					}
 				}
 				else edge.Unselect();
@@ -2349,6 +2362,8 @@ void CGLView::SelectEdges(int x0, int y0, int x1, int y1, int mode)
 
 	// clean up
 	delete [] pbuf;
+
+	pdoc->GetGLModel()->UpdateSelectionLists(SELECT_EDGES);
 }
 
 QImage CGLView::CaptureScreen()
@@ -3012,16 +3027,17 @@ void CGLView::TrackSelection(bool b)
 			FEMesh* pm = pdoc->GetFEModel()->GetMesh();
 			if (nmode == SELECT_ELEMS)
 			{
-				for (int i=0; i<pm->Elements(); ++i) 
-					if (pm->Element(i).IsSelected()) 
-					{
-						int* n = pm->Element(i).m_node;
-						m_ntrack[0] = n[0];
-						m_ntrack[1] = n[1];
-						m_ntrack[2] = n[2];
-						m_btrack = true; 
-						break; 
-					}
+				const vector<FEElement*> selElems = pdoc->GetGLModel()->GetElementSelection();
+				for (int i=0; i<(int) selElems.size(); ++i) 
+				{
+					FEElement& el = *selElems[i];
+					int* n = el.m_node;
+					m_ntrack[0] = n[0];
+					m_ntrack[1] = n[1];
+					m_ntrack[2] = n[2];
+					m_btrack = true; 
+					break; 
+				}
 			}
 			else if (nmode == SELECT_NODES)
 			{

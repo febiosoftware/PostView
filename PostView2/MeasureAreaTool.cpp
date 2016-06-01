@@ -61,15 +61,13 @@ void CMeasureAreaTool::OnApply()
 	{
 		FEModel& fem = *m_doc->GetFEModel();
 		FEMesh& mesh = *fem.GetMesh();
-
-		for (int i=0; i<mesh.Faces(); ++i)
+		const vector<FEFace*> selectedFaces = m_doc->GetGLModel()->GetFaceSelection();
+		int N = selectedFaces.size();
+		for (int i=0; i<N; ++i)
 		{
-			FEFace& f = mesh.Face(i);
-			if (f.IsSelected())
-			{
-				++m_nsel;
-				m_area += mesh.FaceArea(f);
-			}
+			FEFace& f = *selectedFaces[i];
+			m_area += mesh.FaceArea(f);
+			++m_nsel;
 		}
 	}
 	updateUi();

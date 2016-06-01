@@ -146,7 +146,7 @@ void CStatsWindow::Update(bool breset)
 	{
 		CPlotData data;
 		data.setLabel("data");
-		for (int i=0; i<bin.size(); ++i)
+		for (int i=0; i<(int)bin.size(); ++i)
 		{
 			double x = minv + i*(maxv - minv)/(bin.size() - 1);
 			double y = bin[i];
@@ -194,6 +194,7 @@ void CStatsWindow::UpdateSelection(bool breset)
 	else
 	{
 		pdoc->GetFEModel()->GetMesh()->ClearSelection();
+		pdoc->ClearSelectionLists();
 	}
 
 	m_pWnd->RedrawGL();

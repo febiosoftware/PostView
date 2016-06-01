@@ -154,7 +154,7 @@ void ModelData::SetData(CGLModel* po)
 		for (int i=0; i<N; ++i)
 		{
 			FEMaterial* pm = ps->GetMaterial(i);
-			if (pm->bvisible == false) pmesh->HideElements(i);
+			if (pm->bvisible == false) po->HideElements(i);
 		}
 	}
 
@@ -216,7 +216,7 @@ CDocument::CDocument(CMainWindow* pwnd) : m_wnd(pwnd)
 
 	m_szfile[0] = 0;
 
-	m_mode = SELECT_ELEMS;
+	m_selectMode  = SELECT_ELEMS;
 	m_selectStyle = SELECT_RECT;
 
 	m_pImg = 0;
@@ -715,7 +715,7 @@ bool CDocument::AddStandardDataField(int ndata, bool bselection_only)
 	if (bselection_only && (GetSelectionMode() == SELECT_FACES))
 	{
 		vector<int> L;
-		GetSelectionList(L);
+		GetSelectionList(L, GetSelectionMode());
 		if (L.empty() == false) fem.AddDataField(pdf, L);
 		else fem.AddDataField(pdf);
 	}
@@ -1138,44 +1138,35 @@ BOUNDINGBOX CDocument::GetSelectionBox()
 	}
 
 	FEMesh& mesh = *m_fem->GetMesh();
-	int NE = mesh.Elements();
-	for (int i=0; i<NE; ++i)
+	const vector<FEElement*> selElems = GetGLModel()->GetElementSelection();
+	for (int i=0; i<(int)selElems.size(); ++i)
 	{
-		FEElement& el = mesh.Element(i);
-		if (el.IsSelected())
-		{
-			int nel = el.Nodes();
-			for (int j=0; j<nel; ++j) box += mesh.Node(el.m_node[j]).m_rt;
-		}
+		FEElement& el = *selElems[i];
+		int nel = el.Nodes();
+		for (int j=0; j<nel; ++j) box += mesh.Node(el.m_node[j]).m_rt;
 	}
 
-	int NF = mesh.Faces();
-	for (int i=0; i<NF; ++i)
+	const vector<FEFace*> selFaces = GetGLModel()->GetFaceSelection();
+	for (int i=0; i<(int)selFaces.size(); ++i)
 	{
-		FEFace& face = mesh.Face(i);
-		if (face.IsSelected())
-		{
-			int nel = face.Nodes();
-			for (int j=0; j<nel; ++j) box += mesh.Node(face.node[j]).m_rt;
-		}
+		FEFace& face = *selFaces[i];
+		int nel = face.Nodes();
+		for (int j=0; j<nel; ++j) box += mesh.Node(face.node[j]).m_rt;
 	}
 
-	int NL = mesh.Edges();
-	for (int i=0; i<NL; ++i)
+	const vector<FEEdge*> selEdges = GetGLModel()->GetEdgeSelection();
+	for (int i=0; i<(int)selEdges.size(); ++i)
 	{
-		FEEdge& edge = mesh.Edge(i);
-		if (edge.IsSelected())
-		{
-			int nel = edge.Nodes();
-			for (int j=0; j<nel; ++j) box += mesh.Node(edge.node[j]).m_rt;
-		}
+		FEEdge& edge = *selEdges[i];
+		int nel = edge.Nodes();
+		for (int j=0; j<nel; ++j) box += mesh.Node(edge.node[j]).m_rt;
 	}
 
-	int NN = mesh.Nodes();
-	for (int i=0; i<NN; ++i)
+	const vector<FENode*> selNodes = GetGLModel()->GetNodeSelection();
+	for (int i=0; i<(int)selNodes.size(); ++i)
 	{
-		FENode& node = mesh.Node(i);
-		if (node.IsSelected()) box += node.m_rt;
+		FENode& node = *selNodes[i];
+		box += node.m_rt;
 	}
 
 	if (box.IsValid())
@@ -1471,11 +1462,11 @@ void CDocument::UpdateAllStates()
 }
 
 //-----------------------------------------------------------------------------
-void CDocument::GetSelectionList(vector<int>& L)
+void CDocument::GetSelectionList(vector<int>& L, int mode)
 {
 	L.clear();
 	FEMesh& m = *m_fem->GetMesh();
-	switch (GetSelectionMode())
+	switch (mode)
 	{
 	case SELECT_NODES:
 		{

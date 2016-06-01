@@ -5,11 +5,12 @@
 #include <PostViewLib/FEMaterial.h>
 #include <PostViewLib/bbox.h>
 #include <PostViewLib/GView.h>
+#include <PostViewLib/FEMesh.h>
+#include "GLModel.h"
 
 //-----------------------------------------------------------------------------
 // Forward declarations
 class CMainWindow;
-class CGLModel;
 class CGLPlot;
 class CGLObject;
 class CGLVisual;
@@ -36,14 +37,6 @@ class FEDataField;
 #define BG_FADE_HORZ	2
 #define BG_FADE_VERT	3
 #define BG_FADE_DIAG	4
-
-// the selection modes
-#define SELECT_NODES	1
-#define SELECT_EDGES	2
-#define SELECT_FACES	4
-#define SELECT_ELEMS	8
-#define SELECT_ADD		16
-#define SELECT_SUB		32
 
 //-----------------------------------------------------------------------------
 // Selection Styles
@@ -291,13 +284,13 @@ public:
 	// --- S E L E C T I O N ---
 
 	// get selection mode
-	int GetSelectionMode() { return m_mode; }
+	int GetSelectionMode() const { return m_selectMode; }
 
 	// set selection mode
-	void SetSelectionMode(int mode) { m_mode = mode; }
+	void SetSelectionMode(int mode) { m_selectMode = mode; }
 
 	// get a list of selected items
-	void GetSelectionList(vector<int>& L);
+	void GetSelectionList(vector<int>& L, int mode);
 
 	// get selection style
 	int GetSelectionStyle() const { return m_selectStyle; }
@@ -365,6 +358,8 @@ protected:
 
 	// miscellenaeous
 	bool	m_bValid;	// the document is loaded and valid
-	int		m_mode;		// current selection mode
-	int		m_selectStyle;	// selection style
+
+	// --- Selection ---
+	int		m_selectMode;		//!< current selection mode (node, edge, face, elem)
+	int		m_selectStyle;		//!< selection style (box, circle, rect)
 };

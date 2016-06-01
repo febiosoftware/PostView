@@ -111,16 +111,13 @@ void C4PointAngleTool::activate(CDocument* pdoc)
 	if (pdoc && pdoc->IsValid())
 	{
 		FEMesh& mesh = *m_doc->GetFEModel()->GetMesh();
-		int N = mesh.Nodes();
+		const vector<FENode*> selectedNodes = m_doc->GetGLModel()->GetNodeSelection();
+		int N = selectedNodes.size();
 		int nsel = 0;
 		for (int i=0; i<N; ++i)
 		{
-			FENode& ni = mesh.Node(i);
-			if (ni.IsSelected())
-			{
-				m_node[nsel++] = i + 1;
-				if (nsel >= 4) break;
-			}
+			m_node[nsel++] = selectedNodes[i]->GetID();
+			if (nsel >= 4) break;
 		}
 
 		if (m_deco)

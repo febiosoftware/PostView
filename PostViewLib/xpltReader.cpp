@@ -931,7 +931,7 @@ bool XpltReader::BuildMesh(FEModel &fem)
 			ELEM& E = D.elem[j];
 			FEElement& el = mesh.Element(E.index);
 			el.m_MatID = D.mid - 1;
-			el.m_nId = E.eid;
+			el.SetID(E.eid);
 			int ne = 0;
 
 			switch (D.etype)
