@@ -5,6 +5,8 @@
 #include "stdafx.h"
 #include "GLPlaneCutPlot.h"
 #include "Document.h"
+#include "GLContext.h"
+#include "GLView.h"
 #include "PropertyList.h"
 
 extern int LUT[256][15];
@@ -130,6 +132,11 @@ void CGLPlaneCutPlot::InitClipPlanes()
 	}
 }
 
+void CGLPlaneCutPlot::Update(int ntime, float dt, bool breset)
+{
+	UpdateSlice();
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 void CGLPlaneCutPlot::GetNormalizedEquations(double a[4])
@@ -167,15 +174,7 @@ void CGLPlaneCutPlot::Render(CGLContext& rc)
 	GLdouble a[4];
 	GetNormalizedEquations(a);
 
-	// set the plane normal
-	vec3f n((float) a[0], (float) a[1], (float) a[2]);
-
 	// calculate the plane offset
-	m_box = m_pObj->GetFEModel()->GetBoundingBox();
-	float s = m_box.Radius();
-	vec3f r = m_box.Center();
-
-	m_ref = (float) a[3]*s + r*n;
 	a[3] = -m_ref;
 
 	// set the clip plane coefficients
@@ -194,8 +193,14 @@ void CGLPlaneCutPlot::Render(CGLContext& rc)
 	{
 		glDepthRange(0, 0.9999);
 		RenderMesh();
-		if (m_pObj->m_boutline) RenderOutline();
+		RenderOutline();
 		glDepthRange(0, 1);
+	}
+
+	VIEWSETTINGS& view = rc.m_pview->GetDocument()->GetViewSettings();
+	if (view.m_boutline)
+	{
+		RenderOutline();
 	}
 
 	// render the plane
@@ -219,26 +224,13 @@ void CGLPlaneCutPlot::Render(CGLContext& rc)
 // Render the plane cut slice 
 void CGLPlaneCutPlot::RenderSlice()
 {
-	int i, k, l;
-	int ncase;
-	int *pf;
-	float ev[8];
-	vec3f ex[8];
-
 	FEModel* ps = m_pObj->GetFEModel();
 	FEMesh* pm = m_pObj->GetMesh();
-
-	GLdouble a[4];
-	GetNormalizedEquations(a);
-	vec3f norm((float) a[0], (float) a[1], (float) a[2]);
-
-	const int QUAD_NT[4] = {0, 1, 2, 3};
-	const int TRI_NT[4] = {0,1,2,2};
-	const int *nt;
 
 	CGLColorMap* pcol = m_pObj->GetColorMap();
 
 	GLTexture1D& tex = pcol->GetColorMap()->GetTexture();
+	glDisable(GL_CULL_FACE);
 
 	// loop over all enabled materials
 	for (int n=0; n<ps->Materials(); ++n)
@@ -259,158 +251,26 @@ void CGLPlaneCutPlot::RenderSlice()
 				m_pObj->SetMaterialParams(pmat);
 			}
 
-			// repeat over all elements
-			for (i=0; i<pm->Elements(); ++i)
+			// repeat over all faces
+			int NF = m_slice.Faces();
+			for (int i=0; i<NF; ++i)
 			{
-				// render only when visible
-				FEElement& el = pm->Element(i);
-				if ((el.IsVisible() || m_bcut_hidden) && (pmat == ps->GetMaterial(el.m_MatID)))
+				GLSlice::FACE& face = m_slice.Face(i);
+				if (face.mat == n)
 				{
-					glLoadName(i+1);
-	
-					if (el.IsSolid())
+					vec3f& norm = face.norm;
+					glNormal3f(norm.x,norm.y,norm.z);
+
+					// render the face
+					vec3f* r = face.r;
+					float* tex = face.tex;
+					glBegin(GL_TRIANGLES);
 					{
-						switch (el.m_ntype)
-						{
-						case FE_HEX8  : nt = HEX_NT; break;
-						case FE_HEX20 : nt = HEX_NT; break;
-						case FE_HEX27 : nt = HEX_NT; break;
-						case FE_PENTA6: nt = PEN_NT; break;
-						case FE_TET4  : nt = TET_NT; break;
-						case FE_TET10 : nt = TET_NT; break;
-						case FE_TET15 : nt = TET_NT; break;
-						}
-	
-						// get the nodal values
-						for (k=0; k<8; ++k)
-						{
-							FENode& node = pm->Node(el.m_node[nt[k]]);
-	
-							ex[k] = node.m_rt;
-							ev[k] = node.m_tex;
-						}
-
-						// calculate the case of the element
-						ncase = 0;
-						for (k=0; k<8; ++k) 
-						if (norm*ex[k] >= m_ref) ncase |= (1 << k);
-
-						// store the case for this element
-						// so we don't have to calculate it again when
-						// we draw the mesh
-						el.m_ntag = 0;
-						if ((ncase > 0) && (ncase < 255)) el.m_ntag = ncase;
-
-						// loop over faces
-						pf = LUT[ncase];
-						for (l=0; l<5; l++)
-						{
-							if (*pf == -1) break;
-
-							// calculate nodal positions
-							vec3f r[3];
-							float tex[3], w1, w2, w;
-							for (k=0; k<3; k++)
-							{
-								int n1 = ET_HEX[pf[k]][0];
-								int n2 = ET_HEX[pf[k]][1];
-
-								w1 = norm*ex[n1];
-								w2 = norm*ex[n2];
-			
-								if (w2 != w1)
-									w = (m_ref - w1)/(w2 - w1);
-								else 
-									w = 0.f;
-
-								r[k] = ex[n1]*(1-w) + ex[n2]*w;
-								tex[k] = ev[n1]*(1-w) + ev[n2]*w;
-							}
-
-							glNormal3f(norm.x,norm.y,norm.z);
-
-							// render the face
-							glBegin(GL_TRIANGLES);
-							{
-								glTexCoord1f(tex[0]); glVertex3f(r[0].x, r[0].y, r[0].z);
-								glTexCoord1f(tex[1]); glVertex3f(r[1].x, r[1].y, r[1].z);
-								glTexCoord1f(tex[2]); glVertex3f(r[2].x, r[2].y, r[2].z);
-							}
-							glEnd();
-
-							pf+=3;
-						}
+						glTexCoord1f(tex[0]); glVertex3f(r[0].x, r[0].y, r[0].z);
+						glTexCoord1f(tex[1]); glVertex3f(r[1].x, r[1].y, r[1].z);
+						glTexCoord1f(tex[2]); glVertex3f(r[2].x, r[2].y, r[2].z);
 					}
-					else
-					{
-						switch (el.m_ntype)
-						{
-						case FE_QUAD4  : nt = QUAD_NT; break;
-                        case FE_QUAD8  : nt = QUAD_NT; break;
-                        case FE_QUAD9  : nt = QUAD_NT; break;
-						case FE_TRI3   : nt = TRI_NT; break;
-                        case FE_TRI6   : nt = TRI_NT; break;
-						default:
-							nt = 0;
-						}
-
-						el.m_ntag = 0;
-						if (nt)
-						{
-							// get the nodal values
-							for (k=0; k<4; ++k)
-							{
-								FENode& node = pm->Node(el.m_node[nt[k]]);
-
-								ex[k] = node.m_rt;
-								ev[k] = node.m_tex;
-							}
-
-							// calculate the case of the element
-							ncase = 0;
-							for (k=0; k<4; ++k) 
-								if (norm*ex[k] >= m_ref) ncase |= (1 << k);
-
-							// loop over faces
-							pf = LUT2D[ncase];
-							for (l=0; l<2; l++)
-							{
-								if (*pf == -1) break;
-
-								// calculate nodal positions
-								vec3f r[3];
-								float tex[3], w1, w2, w;
-								for (k=0; k<2; k++)
-								{
-									int n1 = ET2D[pf[k]][0];
-									int n2 = ET2D[pf[k]][1];
-
-									w1 = norm*ex[n1];
-									w2 = norm*ex[n2];
-			
-									if (w2 != w1)
-										w = (m_ref - w1)/(w2 - w1);
-									else 
-										w = 0.f;
-
-									r[k] = ex[n1]*(1-w) + ex[n2]*w;
-									tex[k] = ev[n1]*(1-w) + ev[n2]*w;
-								}
-
-								glNormal3f(norm.x,norm.y,norm.z);
-
-								// render the face
-								glBegin(GL_LINES);
-								{
-									glTexCoord1f(tex[0]); glVertex3f(r[0].x, r[0].y, r[0].z);
-									glTexCoord1f(tex[1]); glVertex3f(r[1].x, r[1].y, r[1].z);
-								}
-								glEnd();
-
-								pf+=2;
-							}
-						}
-					}
+					glEnd();
 				}
 			}
 		}
@@ -591,140 +451,203 @@ void CGLPlaneCutPlot::RenderOutline()
 
 	glColor3ub(0,0,0);
 
-	EDGE edge[15];
-	int en[8];
-	int nf[8];	// node flag
-	int ne;
-
-	const int* nt;
-
-	vec3f ex[8];
-
-	vec3f r[3];
-	int	rf[3];
-	float w1, w2, w;
-	int n1, n2, m1, m2;
-	bool badd;
-
 	// calculate plane normal
 	vec3f norm = GetPlaneNormal();
 
 	// repeat over all elements
-	for (int i=0; i<pm->Elements(); ++i)
+	for (int i=0; i<m_slice.Edges(); ++i)
 	{
 		// render only when visible
-		FEElement& el = pm->Element(i);
-		FEMaterial* pmat = ps->GetMaterial(el.m_MatID);
-		if ((el.m_ntag > 0) && (pmat->bvisible) && (pmat->bclip))
+		GLSlice::EDGE& edge = m_slice.Edge(i);
+
+		// loop over faces
+		glBegin(GL_LINES);
 		{
-			glLoadName(i+1);
-
-			switch (el.m_ntype)
-			{
-			case FE_HEX8  : nt = HEX_NT; break;
-			case FE_HEX20 : nt = HEX_NT; break;
-			case FE_HEX27 : nt = HEX_NT; break;
-			case FE_PENTA6: nt = PEN_NT; break;
-			case FE_TET4  : nt = TET_NT; break;
-			case FE_TET10 : nt = TET_NT; break;
-			case FE_TET15 : nt = TET_NT; break;
-			}
-
-			// calculate the case of the element
-			int ncase = el.m_ntag;
-
-			// get the nodal values
-			for (int k=0; k<8; ++k)
-			{
-				FENode& node = pm->Node(el.m_node[nt[k]]);
-				nf[k] = (node.m_bext?1:0);
-				en[k] = el.m_node[k];
-				ex[k] = node.m_rt;
-			}
-
-			// loop over faces
-			int* pf = LUT[ncase];
-			ne = 0;
-			for (int l=0; l<5; l++)
-			{
-				if (*pf == -1) break;
-
-				// calculate nodal positions
-				for (int k=0; k<3; k++)
-				{
-					n1 = ET_HEX[pf[k]][0];
-					n2 = ET_HEX[pf[k]][1];
-
-					w1 = norm*ex[n1];
-					w2 = norm*ex[n2];
-	
-					if (w2 != w1)
-						w = (m_ref - w1)/(w2 - w1);
-					else 
-						w = 0.f;
-
-					r[k] = ex[n1]*(1-w) + ex[n2]*w;
-					rf[k] = ((nf[n1]==1)&&(nf[n2]==1)?1:0);
-				}
-
-				// add all edges to the list
-				for (int k=0; k<3; ++k)
-				{
-					n1 = pf[k];
-					n2 = pf[(k+1)%3];
-
-					badd = true;
-					// make sure this edge is on the surface
-					if ((rf[k] != 1) || (rf[(k+1)%3] != 1)) badd = false;
-					else
-					{
-						// make sure we don't have this edge yet
-						for (int m=0; m<ne; ++m)
-						{
-							m1 = edge[m].m_n[0];
-							m2 = edge[m].m_n[1];
-							if (((n1 == m1) && (n2 == m2)) ||
-								((n1 == m2) && (n2 == m1)))
-							{
-								badd = false;
-								edge[m].m_ntag++;
-								break;
-							}
-						}
-					}
-
-					if (badd)
-					{
-						edge[ne].m_n[0] = n1;
-						edge[ne].m_n[1] = n2;
-						edge[ne].m_r[0] = r[k];
-						edge[ne].m_r[1] = r[(k+1)%3];
-						edge[ne].m_ntag = 0;
-						++ne;
-					}
-				}
-	
-				pf+=3;
-			}
-
-			// render the lines
-			glBegin(GL_LINES);
-			{
-				for (int k=0; k<ne; ++k)
-					if (edge[k].m_ntag == 0)
-					{
-						vec3f& r0 = edge[k].m_r[0];
-						vec3f& r1 = edge[k].m_r[1];
-						glVertex3f(r0.x, r0.y, r0.z);
-						glVertex3f(r1.x, r1.y, r1.z);
-					}
-			}
-			glEnd();
+			vec3f& r0 = edge.r[0];
+			vec3f& r1 = edge.r[1];
+			glVertex3f(r0.x, r0.y, r0.z);
+			glVertex3f(r1.x, r1.y, r1.z);
 		}
+		glEnd();
 	}
 
 	// restore attributes
 	glPopAttrib();
+}
+
+//-----------------------------------------------------------------------------
+void CGLPlaneCutPlot::UpdateSlice()
+{
+	float ev[8];
+	vec3f ex[8];
+	int	nf[8];
+	EDGE edge[15];
+	int en[8];
+	int	rf[3];
+
+	// get the plane equations
+	GLdouble a[4];
+	GetNormalizedEquations(a);
+
+	// set the plane normal
+	vec3f norm((float) a[0], (float) a[1], (float) a[2]);
+
+	// calculate the plane offset
+	m_box = m_pObj->GetFEModel()->GetBoundingBox();
+	float s = m_box.Radius();
+	vec3f r = m_box.Center();
+
+	m_ref = (float) a[3]*s + r*norm;
+	a[3] = -m_ref;
+
+	FEModel* ps = m_pObj->GetFEModel();
+	FEMesh* pm = m_pObj->GetMesh();
+
+	m_slice.Clear();
+
+	// loop over all enabled materials
+	for (int n=0; n<ps->Materials(); ++n)
+	{
+		FEMaterial* pmat = ps->GetMaterial(n);
+		if ((pmat->bvisible || m_bcut_hidden) && pmat->bclip)
+		{
+			// repeat over all elements
+			FEDomain& dom = pm->Domain(n);
+			for (int i=0; i<dom.Elements(); ++i)
+			{
+				// render only when visible
+				FEElement& el = dom.Element(i);
+				if (el.IsVisible() || m_bcut_hidden)
+				{
+					if (el.IsSolid())
+					{
+						const int *nt;
+						switch (el.m_ntype)
+						{
+						case FE_HEX8  : nt = HEX_NT; break;
+						case FE_HEX20 : nt = HEX_NT; break;
+						case FE_HEX27 : nt = HEX_NT; break;
+						case FE_PENTA6: nt = PEN_NT; break;
+						case FE_TET4  : nt = TET_NT; break;
+						case FE_TET10 : nt = TET_NT; break;
+						case FE_TET15 : nt = TET_NT; break;
+						}
+	
+						// get the nodal values
+						for (int k=0; k<8; ++k)
+						{
+							FENode& node = pm->Node(el.m_node[nt[k]]);
+							nf[k] = (node.m_bext?1:0);
+							ex[k] = node.m_rt;
+							en[k] = el.m_node[k];
+							ev[k] = node.m_tex;
+						}
+
+						// calculate the case of the element
+						int ncase = 0;
+						for (int k=0; k<8; ++k) 
+						if (norm*ex[k] >= m_ref) ncase |= (1 << k);
+
+						// store the case for this element
+						// so we don't have to calculate it again when
+						// we draw the mesh
+						el.m_ntag = 0;
+						if ((ncase > 0) && (ncase < 255)) el.m_ntag = ncase;
+
+						// loop over faces
+						int* pf = LUT[ncase];
+						int ne = 0;
+						for (int l=0; l<5; l++)
+						{
+							if (*pf == -1) break;
+
+							// calculate nodal positions
+							vec3f r[3];
+							float tex[3], w1, w2, w;
+							for (int k=0; k<3; k++)
+							{
+								int n1 = ET_HEX[pf[k]][0];
+								int n2 = ET_HEX[pf[k]][1];
+
+								w1 = norm*ex[n1];
+								w2 = norm*ex[n2];
+			
+								if (w2 != w1)
+									w = (m_ref - w1)/(w2 - w1);
+								else 
+									w = 0.f;
+
+								r[k] = ex[n1]*(1-w) + ex[n2]*w;
+								tex[k] = ev[n1]*(1-w) + ev[n2]*w;
+								rf[k] = ((nf[n1]==1)&&(nf[n2]==1)?1:0);
+							}
+
+							GLSlice::FACE face;
+							face.mat = n;
+							face.norm = norm;
+							face.r[0] = r[0];
+							face.r[1] = r[1];
+							face.r[2] = r[2];
+							face.tex[0] = tex[0];
+							face.tex[1] = tex[1];
+							face.tex[2] = tex[2];
+
+							m_slice.AddFace(face);
+
+							// add all edges to the list
+							for (int k=0; k<3; ++k)
+							{
+								int n1 = pf[k];
+								int n2 = pf[(k+1)%3];
+
+								bool badd = true;
+								// make sure this edge is on the surface
+								if ((rf[k] != 1) || (rf[(k+1)%3] != 1)) badd = false;
+								else
+								{
+									// make sure we don't have this edge yet
+									for (int m=0; m<ne; ++m)
+									{
+										int m1 = edge[m].m_n[0];
+										int m2 = edge[m].m_n[1];
+										if (((n1 == m1) && (n2 == m2)) ||
+											((n1 == m2) && (n2 == m1)))
+										{
+											badd = false;
+											edge[m].m_ntag++;
+											break;
+										}
+									}
+								}
+
+								if (badd)
+								{
+									edge[ne].m_n[0] = n1;
+									edge[ne].m_n[1] = n2;
+									edge[ne].m_r[0] = r[k];
+									edge[ne].m_r[1] = r[(k+1)%3];
+									edge[ne].m_ntag = 0;
+									++ne;
+								}
+							}
+
+							pf+=3;
+						}
+
+						// add the lines
+						GLSlice::EDGE e;
+						for (int k=0; k<ne; ++k)
+							if (edge[k].m_ntag == 0)
+							{
+								e.r[0] = edge[k].m_r[0];
+								e.r[1] = edge[k].m_r[1];
+								m_slice.AddEdge(e);
+							}
+					}
+				}
+			}
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------

@@ -30,6 +30,7 @@ void VIEWSETTINGS::Defaults()
 	bgstyle = BG_FADE_VERT;
 	m_shadow_intensity = 0.5f;
 	m_bmesh		 = false;
+	m_boutline   = true;
 	m_bShadows    = false;
 	m_bTriad      = true;
 	m_bTags       = true;
@@ -68,7 +69,6 @@ ModelData::ModelData(CGLModel *po)
 	// set model props
 	m_mdl.m_bnorm      = po->m_bnorm;
 	m_mdl.m_bsmooth    = po->m_bsmooth;
-	m_mdl.m_boutline   = po->m_boutline;
 	m_mdl.m_bghost     = po->m_bghost;
 	m_mdl.m_bShell2Hex = po->m_bShell2Hex;
 	m_mdl.m_nshellref  = po->m_nshellref;
@@ -113,7 +113,6 @@ void ModelData::SetData(CGLModel* po)
 	// set model data
 	po->m_bnorm      = m_mdl.m_bnorm;
 	po->m_bsmooth    = m_mdl.m_bsmooth;
-	po->m_boutline   = m_mdl.m_boutline;
 	po->m_bghost     = m_mdl.m_bghost;
 	po->m_bShell2Hex = m_mdl.m_bShell2Hex;
 	po->m_nshellref  = m_mdl.m_nshellref;
@@ -154,7 +153,7 @@ void ModelData::SetData(CGLModel* po)
 		for (int i=0; i<N; ++i)
 		{
 			FEMaterial* pm = ps->GetMaterial(i);
-			if (pm->bvisible == false) po->HideElements(i);
+			if (pm->bvisible == false) po->HideMaterial(i);
 		}
 	}
 
@@ -1395,6 +1394,12 @@ int CDocument::GetDocTitle(char* sztitle)
 	}
 
 	return n;
+}
+
+void CDocument::AddPlot(CGLPlot* pplot)
+{ 
+	m_pPlot.push_back(pplot); 
+	pplot->Update(currentTime(), 0.f, true); 
 }
 
 void CDocument::DeleteObject(CGLObject *po)

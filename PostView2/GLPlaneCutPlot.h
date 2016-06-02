@@ -15,6 +15,41 @@ using namespace std;
 
 class CGLPlaneCutPlot : public CGLPlot  
 {
+	class GLSlice
+	{
+	public:
+		struct FACE
+		{
+			int		mat;
+			vec3f	norm;
+			vec3f	r[3];
+			float	tex[3];
+		};
+
+		struct EDGE
+		{
+			vec3f r[2];
+		};
+
+	public:
+		GLSlice(){}
+
+		int Faces() const { return (int) m_Face.size(); }
+		FACE& Face(int i) { return m_Face[i]; }
+
+		void AddFace(FACE& f) { m_Face.push_back(f); }
+
+		int Edges() const { return (int) m_Edge.size(); }
+		EDGE& Edge(int i) { return m_Edge[i]; }
+		void AddEdge(EDGE& e) { m_Edge.push_back(e); }
+
+		void Clear() { m_Face.clear(); m_Edge.clear(); }
+
+	private:
+		vector<FACE>	m_Face;
+		vector<EDGE>	m_Edge;
+	};
+
 public:
 	CGLPlaneCutPlot(CGLModel* po);
 	virtual ~CGLPlaneCutPlot();
@@ -56,6 +91,8 @@ public:
 
 	CPropertyList* propertyList();
 
+	void Update(int ntime, float dt, bool breset);
+
 protected:
 	void RenderSlice();
 	void RenderMesh();
@@ -64,6 +101,8 @@ protected:
 
 	void ReleasePlane();
 	static int GetFreePlane();
+
+	void UpdateSlice();
 
 public:
 	bool	m_bshowplane;	// show the plane or not
@@ -84,6 +123,8 @@ protected:
 		int		m_n[2];	// node numbers
 		int		m_ntag;
 	};
+
+	GLSlice	m_slice;
 
 	int		m_nclip;			// clip plane number
 	static	vector<int>	m_clip;	// avaialbe clip planes

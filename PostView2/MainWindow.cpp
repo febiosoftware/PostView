@@ -1093,8 +1093,8 @@ void CMainWindow::on_actionViewMesh_toggled(bool bchecked)
 
 void CMainWindow::on_actionViewOutline_toggled(bool bchecked)
 {
-	CGLModel* po = GetDocument()->GetGLModel();
-	po->m_boutline = !po->m_boutline;
+	VIEWSETTINGS& view = GetDocument()->GetViewSettings();
+	view.m_boutline = !view.m_boutline;
 	ui->glview->repaint();
 }
 
@@ -1357,6 +1357,7 @@ void CMainWindow::writeSettings()
 	settings.setValue("m_bconn"           , view.m_bconn);
 	settings.setValue("m_bext"            , view.m_bext);
 	settings.setValue("m_bmesh"           , view.m_bmesh);
+	settings.setValue("m_boutline"        , view.m_boutline);
 	settings.setValue("m_bBox"            , view.m_bBox);
 	settings.setValue("m_nproj"           , view.m_nproj);
 	settings.setValue("m_bLighting"       , view.m_bLighting);
@@ -1393,6 +1394,7 @@ void CMainWindow::readSettings()
 	view.m_bconn            = settings.value("m_bconn"      , view.m_bconn).toBool();
 	view.m_bext             = settings.value("m_bext"       , view.m_bext).toBool();
 	view.m_bmesh            = settings.value("m_bmesh"      , view.m_bmesh).toBool();
+	view.m_boutline         = settings.value("m_boutline"   , view.m_boutline).toBool();
 	view.m_bBox             = settings.value("m_bBox"       , view.m_bBox).toBool();
 	view.m_nproj            = settings.value("m_nproj"      , view.m_nproj).toInt();
 	view.m_bLighting        = settings.value("m_bLighting"  , view.m_bLighting).toBool();

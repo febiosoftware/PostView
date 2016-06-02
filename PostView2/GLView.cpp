@@ -2601,6 +2601,11 @@ void CGLView::RenderDoc()
 				glDepthRange(0, 1);
 			}
 
+			if (view.m_boutline)
+			{
+				po->RenderOutline(rc);
+			}
+
 			// render the edges
 			if (mode == SELECT_EDGES)
 			{
@@ -2820,7 +2825,7 @@ void CGLView::SetRenderStyle(int nstyle)
 	case RENDER_DEFAULT:
 		{
 			for (i=0; i<m_Widget->Widgets(); ++i) (*m_Widget)[i]->set_fg_color(c.r,c.g,c.b);
-			po->m_boutline = false;
+			view.m_boutline = false;
 			po->m_bghost = false;
 			view.m_nproj = RENDER_PERSP;
 		}
@@ -2828,7 +2833,7 @@ void CGLView::SetRenderStyle(int nstyle)
 	case RENDER_CAD:
 		{
 			for (i=0; i<m_Widget->Widgets(); ++i) (*m_Widget)[i]->set_fg_color(c.r,c.g,c.b);
-			po->m_boutline = true;
+			view.m_boutline = true;
 			po->m_bghost = false;
 			view.m_nproj = RENDER_ORTHO;
 		}

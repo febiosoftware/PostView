@@ -222,7 +222,7 @@ void CMaterialPanel::on_hideButton_clicked()
 
 		FEMaterial& mat = *fem.GetMaterial(nmat);
 		mat.hide();
-		mdl.HideElements(nmat);
+		mdl.HideMaterial(nmat);
 	}
 
 	UpdateStates();
@@ -248,7 +248,7 @@ void CMaterialPanel::on_showButton_clicked()
 
 		FEMaterial& mat = *fem.GetMaterial(nmat);
 		mat.show();
-		mdl.ShowElements(nmat);
+		mdl.ShowMaterial(nmat);
 	}
 
 	UpdateStates();
@@ -275,7 +275,7 @@ void CMaterialPanel::on_enableButton_clicked()
 		FEMaterial& mat = *fem.GetMaterial(nmat);
 		mat.enable();
 
-		mdl.EnableElements(nmat);
+		mdl.EnableMaterial(nmat);
 	}
 
 	UpdateStates();
@@ -302,7 +302,7 @@ void CMaterialPanel::on_disableButton_clicked()
 		FEMaterial& mat = *fem.GetMaterial(nmat);
 		mat.disable();
 
-		mdl.DisableElements(nmat);
+		mdl.DisableMaterial(nmat);
 	}
 
 	UpdateStates();

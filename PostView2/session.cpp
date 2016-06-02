@@ -69,7 +69,6 @@ bool CDocument::SaveSession(const char* szfile)
 			int ntime = GetCurrentTime();
 			xml.add_leaf("state", ntime);
 
-			xml.add_leaf("show_outline", pmdl->m_boutline);
 			xml.add_leaf("show_ghost", pmdl->m_bghost);
 			xml.add_leaf("line_color", pmdl->m_line_col);
 			xml.add_leaf("node_color", pmdl->m_node_col);
@@ -324,8 +323,7 @@ bool CDocument::OpenSession(const char* szfile)
 			xml.NextTag(tag);
 			do
 			{
-				if      (tag == "show_outline") tag.value(pmdl->m_boutline);
-				else if (tag == "show_ghost"  ) tag.value(pmdl->m_bghost);
+				if      (tag == "show_ghost"  ) tag.value(pmdl->m_bghost);
 				else if (tag == "line_color"  ) tag.value(pmdl->m_line_col);
 				else if (tag == "node_color"  ) tag.value(pmdl->m_node_col);
 				else if (tag == "selection_color") tag.value(pmdl->m_sel_col);

@@ -51,7 +51,6 @@ CGLModel::CGLModel(FEModel* ps)
 
 	m_bnorm   = false;
 	m_bsmooth = true;
-	m_boutline = false;
 	m_bghost = false;
 	m_nDivs = 0; // this means "auto"
 
@@ -193,13 +192,11 @@ bool CGLModel::AddDisplacementMap()
 	return true;
 }
 
+//-----------------------------------------------------------------------------
 void CGLModel::Render(CGLContext& rc)
 {
 	// render the faces
 	RenderFaces(rc);
-
-	// render the outline
-	if (m_boutline) RenderOutline(rc);
 
 	// render the selected elements and faces
 	RenderSelection(rc);
@@ -212,7 +209,6 @@ void CGLModel::Render(CGLContext& rc)
 }
 
 //-----------------------------------------------------------------------------
-
 void CGLModel::RenderFaces(CGLContext& rc)
 {
 	glPushAttrib(GL_ENABLE_BIT);
@@ -229,7 +225,22 @@ void CGLModel::RenderFaces(CGLContext& rc)
 		FEMaterial* pmat = ps->GetMaterial(m);
 
 		// make sure the material is visible
-		if (pmat->bvisible && (pmat->transparency>.99f)) RenderMaterial(ps, m);
+		if (pmat->bvisible && (pmat->transparency>.99f)) 
+		{
+
+			// set the rendering mode
+			int nmode = m_nrender;
+			if (pmat->m_nrender != RENDER_MODE_DEFAULT) nmode = pmat->m_nrender;
+
+			if (nmode == RENDER_MODE_SOLID)
+			{
+				RenderSolidMaterial(ps, m);
+			}
+			else 
+			{
+				RenderOutline(rc, m);
+			}
+		}
 	}
 
 	// next, we render the transparent meshes
@@ -241,8 +252,19 @@ void CGLModel::RenderFaces(CGLContext& rc)
 		// make sure the material is visible
 		if (pmat->bvisible && (pmat->transparency<=.99f) && (pmat->transparency>0.001f)) 
 		{
-			if (pmat->m_ntransmode == RENDER_TRANS_CONSTANT) RenderMaterial(ps, m);
-			else RenderTransparentMaterial(rc, ps, m);
+			// set the rendering mode
+			int nmode = m_nrender;
+			if (pmat->m_nrender != RENDER_MODE_DEFAULT) nmode = pmat->m_nrender;
+
+			if (nmode == RENDER_MODE_SOLID)
+			{
+				if (pmat->m_ntransmode == RENDER_TRANS_CONSTANT) RenderSolidMaterial(ps, m);
+				else RenderTransparentMaterial(rc, ps, m);
+			}
+			else
+			{
+				RenderOutline(rc, m);
+			}
 		}
 	}
 
@@ -424,11 +446,6 @@ void CGLModel::RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m)
 
 	bool bnode = m_pcol->DisplayNodalValues();
 
-	// set the rendering mode
-	int nmode = m_nrender;
-	if (pmat->m_nrender != RENDER_MODE_DEFAULT) nmode = pmat->m_nrender;
-	if (nmode == RENDER_MODE_WIRE) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
 	// render the unselected faces
 	int i;
 	FEDomain& dom = pm->Domain(m);
@@ -565,7 +582,7 @@ void CGLModel::RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m)
 
 //-----------------------------------------------------------------------------
 
-void CGLModel::RenderMaterial(FEModel* ps, int m)
+void CGLModel::RenderSolidMaterial(FEModel* ps, int m)
 {
 	FEMaterial* pmat = ps->GetMaterial(m);
 	FEMesh* pm = ps->GetMesh();
@@ -594,11 +611,6 @@ void CGLModel::RenderMaterial(FEModel* ps, int m)
 	if (pmat->bclip == false) CGLPlaneCutPlot::DisableClipPlanes();
 
 	bool bnode = m_pcol->DisplayNodalValues();
-
-	// set the rendering mode
-	int nmode = m_nrender;
-	if (pmat->m_nrender != RENDER_MODE_DEFAULT) nmode = pmat->m_nrender;
-	if (nmode == RENDER_MODE_WIRE) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	// render the unselected faces
 	int i;
@@ -786,17 +798,106 @@ void CGLModel::RenderGhost(CGLContext &rc)
 }
 
 //-----------------------------------------------------------------------------
+void CGLModel::RenderFaceEdge(FEFace& f, int j, FEMesh* pm, int ndivs)
+{
+	int n = f.Edges();
+	int a = f.node[j];
+	int b = f.node[(j+1) % n];
+	if (a > b) { a ^= b; b ^= a; a ^= b; }
+
+	switch (f.m_ntype)
+	{
+	case FACE_TRI3:
+	case FACE_QUAD4:
+		{
+			vec3f r1 = pm->Node(a).m_rt;
+			vec3f r2 = pm->Node(b).m_rt;
+
+			glBegin(GL_LINES);
+			{
+				glVertex3f(r1.x, r1.y, r1.z);
+				glVertex3f(r2.x, r2.y, r2.z);
+			}
+			glEnd();
+		}
+		break;
+	case FACE_QUAD8:
+	case FACE_QUAD9:
+		{
+			vec3f r1 = pm->Node(a).m_rt;
+			vec3f r2 = pm->Node(b).m_rt;
+			vec3f r3 = pm->Node(f.node[j+4]).m_rt;
+
+			glBegin(GL_LINES);
+			{
+				float r, H[3];
+				vec3f p;
+				int n = (ndivs<=1?2:ndivs);
+				for (int i=0; i<n; ++i)
+				{
+					r = -1.f + 2.f*i/n;
+					H[0] = 0.5f*r*(r - 1.f);
+					H[1] = 0.5f*r*(r + 1.f);
+					H[2] = 1.f - r*r;
+					p = r1*H[0] + r2*H[1] + r3*H[2];
+					glVertex3f(p.x, p.y, p.z); 
+
+					r = -1.f + 2.f*(i+1)/n;
+					H[0] = 0.5f*r*(r - 1.f);
+					H[1] = 0.5f*r*(r + 1.f);
+					H[2] = 1.f - r*r;
+					p = r1*H[0] + r2*H[1] + r3*H[2];
+					glVertex3f(p.x, p.y, p.z); 
+				}
+			}
+			glEnd();						
+		}
+		break;
+	case FACE_TRI6:
+	case FACE_TRI7:
+		{
+			vec3f r1 = pm->Node(a).m_rt;
+			vec3f r2 = pm->Node(b).m_rt;
+			vec3f r3 = pm->Node(f.node[j+3]).m_rt;
+
+			glBegin(GL_LINES);
+			{
+				float r, H[3];
+				vec3f p;
+				int n = (ndivs<=1?2:ndivs);
+				for (int i=0; i<n; ++i)
+				{
+					r = -1.f + 2.f*i/n;
+					H[0] = 0.5f*r*(r - 1.f);
+					H[1] = 0.5f*r*(r + 1.f);
+					H[2] = 1.f - r*r;
+					p = r1*H[0] + r2*H[1] + r3*H[2];
+					glVertex3f(p.x, p.y, p.z); 
+
+					r = -1.f + 2.f*(i+1)/n;
+					H[0] = 0.5f*r*(r - 1.f);
+					H[1] = 0.5f*r*(r + 1.f);
+					H[2] = 1.f - r*r;
+					p = r1*H[0] + r2*H[1] + r3*H[2];
+					glVertex3f(p.x, p.y, p.z); 
+				}
+			}
+			glEnd();
+		}
+		break;
+	default:
+		assert(false);
+	}
+}
+
+//-----------------------------------------------------------------------------
 // NOTE: This algorithm does not always give satisfactory results. 
 // In the case of perspective projection, the normal product should 
 // be less than some value depending on the location of the edge, 
 // in stead of zero (which is the correct value for ortho projection).
 
-void CGLModel::RenderOutline(CGLContext& rc)
+void CGLModel::RenderOutline(CGLContext& rc, int nmat)
 {
-	int i, j, n;
-	int a, b;
-	vec3f r1, r2, r3;
-
 	glDepthRange(0, 0.99998);
 
 	FEModel* ps = m_ps;
@@ -811,17 +912,16 @@ void CGLModel::RenderOutline(CGLContext& rc)
 
 	quat4f q = rc.m_pview->GetCamera().GetOrientation();
 
-	double eps = cos(pm->GetSmoothingAngleRadians());
-
 	int ndivs = GetSubDivisions();
 
-	for (i=0; i<pm->Faces(); ++i)
+	for (int i=0; i<pm->Faces(); ++i)
 	{
 		FEFace& f = pm->Face(i);
-		if (f.IsVisible())
+		FEElement& el = pm->Element(f.m_elem[0]);
+		if (f.IsVisible() && ((nmat == -1) || (el.m_MatID == nmat)))
 		{
-			n = f.Edges();
-			for (j=0; j<n; ++j)
+			int n = f.Edges();
+			for (int j=0; j<n; ++j)
 			{
 				bool bdraw = false;
 
@@ -836,11 +936,11 @@ void CGLModel::RenderOutline(CGLContext& rc)
 					{
 						bdraw = true;
 					}
-					else if (f.m_fn*f2.m_fn <= eps)
+					else if (f.m_nsg != f2.m_nsg)
 					{
 						bdraw = true;
 					}
-/*					else
+					else
 					{
 						vec3f n1 = f.m_fn;
 						vec3f n2 = f2.m_fn;
@@ -851,99 +951,9 @@ void CGLModel::RenderOutline(CGLContext& rc)
 							bdraw = true;
 						}
 					}
-*/				}
-
-				if (bdraw)
-				{
-					a = f.node[j];
-					b = f.node[(j+1)%n];
-
-					if (a > b) { a ^= b; b ^= a; a ^= b; }
-
-					switch (f.m_ntype)
-					{
-					case FACE_TRI3:
-					case FACE_QUAD4:
-						{
-							r1 = pm->Node(a).m_rt;
-							r2 = pm->Node(b).m_rt;
-
-							glBegin(GL_LINES);
-							{
-								glVertex3f(r1.x, r1.y, r1.z);
-								glVertex3f(r2.x, r2.y, r2.z);
-							}
-							glEnd();
-						}
-						break;
-					case FACE_QUAD8:
-					case FACE_QUAD9:
-						{
-							r1 = pm->Node(a).m_rt;
-							r2 = pm->Node(b).m_rt;
-							r3 = pm->Node(f.node[j+4]).m_rt;
-
-							glBegin(GL_LINES);
-							{
-								float r, H[3];
-								vec3f p;
-								int n = (ndivs<=1?2:ndivs);
-								for (int i=0; i<n; ++i)
-								{
-									r = -1.f + 2.f*i/n;
-									H[0] = 0.5f*r*(r - 1.f);
-									H[1] = 0.5f*r*(r + 1.f);
-									H[2] = 1.f - r*r;
-									p = r1*H[0] + r2*H[1] + r3*H[2];
-									glVertex3f(p.x, p.y, p.z); 
-
-									r = -1.f + 2.f*(i+1)/n;
-									H[0] = 0.5f*r*(r - 1.f);
-									H[1] = 0.5f*r*(r + 1.f);
-									H[2] = 1.f - r*r;
-									p = r1*H[0] + r2*H[1] + r3*H[2];
-									glVertex3f(p.x, p.y, p.z); 
-								}
-							}
-							glEnd();						
-						}
-						break;
-					case FACE_TRI6:
-					case FACE_TRI7:
-						{
-							r1 = pm->Node(a).m_rt;
-							r2 = pm->Node(b).m_rt;
-							r3 = pm->Node(f.node[j+3]).m_rt;
-
-							glBegin(GL_LINES);
-							{
-								float r, H[3];
-								vec3f p;
-								int n = (ndivs<=1?2:ndivs);
-								for (int i=0; i<n; ++i)
-								{
-									r = -1.f + 2.f*i/n;
-									H[0] = 0.5f*r*(r - 1.f);
-									H[1] = 0.5f*r*(r + 1.f);
-									H[2] = 1.f - r*r;
-									p = r1*H[0] + r2*H[1] + r3*H[2];
-									glVertex3f(p.x, p.y, p.z); 
-
-									r = -1.f + 2.f*(i+1)/n;
-									H[0] = 0.5f*r*(r - 1.f);
-									H[1] = 0.5f*r*(r + 1.f);
-									H[2] = 1.f - r*r;
-									p = r1*H[0] + r2*H[1] + r3*H[2];
-									glVertex3f(p.x, p.y, p.z); 
-								}
-							}
-							glEnd();
-						}
-						break;
-					default:
-						assert(false);
-					}
 				}
+
+				if (bdraw) RenderFaceEdge(f, j, pm, ndivs);
 			}
 		}
 	}
@@ -2680,7 +2690,7 @@ void CGLModel::ClearSelection()
 
 //-----------------------------------------------------------------------------
 // Hide elements with a particular material ID
-void CGLModel::HideElements(int nmat)
+void CGLModel::HideMaterial(int nmat)
 {
 	FEMesh& mesh = *GetMesh();
 
@@ -2688,6 +2698,7 @@ void CGLModel::HideElements(int nmat)
 	for (int i=0; i<mesh.Elements(); ++i) if (mesh.Element(i).m_MatID == nmat) mesh.Element(i).Show(false);
 
 	// hide faces
+	// Faces are hidden if the adjacent element is hidden
 	int NF = mesh.Faces();
 	for (int i=0; i<NF; ++i)
 	{
@@ -2710,6 +2721,7 @@ void CGLModel::HideElements(int nmat)
 	for (int i=0; i<NN; ++i) if (mesh.Node(i).m_ntag == 0) mesh.Node(i).Show(false);
 
 	// hide edges
+	// edges are hidden if both nodes are hidden
 	int NL = mesh.Edges();
 	for (int i=0; i<NL; ++i)
 	{
@@ -2719,13 +2731,14 @@ void CGLModel::HideElements(int nmat)
 	}
 
 	// selected items are unselected when hidden so
-	// we need to update the selection lists
+	// we need to update the selection lists.
+	// This also updates the internal surfaces
 	UpdateSelectionLists();
 }
 
 //-----------------------------------------------------------------------------
 // Show elements with a certain material ID
-void CGLModel::ShowElements(int nmat)
+void CGLModel::ShowMaterial(int nmat)
 {
 	FEMesh& mesh = *GetMesh();
 
@@ -2773,7 +2786,7 @@ void CGLModel::ShowElements(int nmat)
 
 //-----------------------------------------------------------------------------
 // Enable elements with a certain mat ID
-void CGLModel::EnableElements(int nmat)
+void CGLModel::EnableMaterial(int nmat)
 {
 	FEMesh& mesh = *GetMesh();
 
@@ -2803,7 +2816,7 @@ void CGLModel::EnableElements(int nmat)
 
 //-----------------------------------------------------------------------------
 // Disable elements with a certain mat ID
-void CGLModel::DisableElements(int nmat)
+void CGLModel::DisableMaterial(int nmat)
 {
 	FEMesh& mesh = *GetMesh();
 
@@ -3171,6 +3184,13 @@ void CGLModel::HideSelectedFaces()
 		}
 	}
 
+	// hide faces that were hidden by hiding the elements
+	for (int i=0; i<NF; ++i)
+	{
+		FEFace& f = mesh.Face(i);
+		if (mesh.Element(f.m_elem[0]).IsVisible() == false) f.Hide();
+	}
+
 	// hide nodes: nodes will be hidden if all elements they attach to are hidden
 	int NN = mesh.Nodes();
 	for (int i=0; i<NN; ++i) mesh.Node(i).m_ntag = 0;
@@ -3185,11 +3205,14 @@ void CGLModel::HideSelectedFaces()
 	}
 	for (int i=0; i<NN; ++i) if (mesh.Node(i).m_ntag == 0) mesh.Node(i).Hide();
 
-	// hide faces that were hidden by hiding the elements
-	for (int i=0; i<NF; ++i)
+	// hide edges
+	int NL = mesh.Edges();
+	for (int i=0; i<NL; ++i)
 	{
-		FEFace& f = mesh.Face(i);
-		if (mesh.Element(f.m_elem[0]).IsVisible() == false) f.Hide();
+		FEEdge& edge = mesh.Edge(i);
+		FENode& node0 = mesh.Node(edge.node[0]);
+		FENode& node1 = mesh.Node(edge.node[1]);
+		if (node0.IsHidden() || node1.IsHidden()) edge.Hide();
 	}
 
 	UpdateSelectionLists();
@@ -3199,7 +3222,79 @@ void CGLModel::HideSelectedFaces()
 // hide selected edges
 void CGLModel::HideSelectedEdges()
 {
-	assert(false);
+	FEMesh& mesh = *GetMesh();
+
+	int NN = mesh.Nodes();
+	for (int i=0; i<NN; ++i) mesh.Node(i).m_ntag = -1;
+
+	// hide edges
+	int NL = mesh.Edges();
+	for (int i=0; i<NL; ++i)
+	{
+		FEEdge& edge = mesh.Edge(i);
+		if (edge.IsSelected()) 
+		{
+			edge.Hide();
+			mesh.Node(edge.node[0]).m_ntag = 1;
+			mesh.Node(edge.node[1]).m_ntag = 1;
+		}
+	}
+
+	// hide surfaces
+	FEEdge edge;
+	int NF = mesh.Faces();
+	for (int i=0; i<NF; ++i)
+	{
+		FEFace& face = mesh.Face(i);
+		int ne = face.Edges();
+		for (int j=0; j<ne; ++j)
+		{
+			edge = face.Edge(j);
+			if ((mesh.Node(edge.node[0]).m_ntag == 1)&&
+				(mesh.Node(edge.node[1]).m_ntag == 1)) 
+			{
+				// hide the face
+				face.Hide();
+
+				// hide the adjacent element
+				mesh.Element(face.m_elem[0]).Hide();
+				break;
+			}
+		}
+	}
+
+	// hide faces that were hidden by hiding the elements
+	for (int i=0; i<NF; ++i)
+	{
+		FEFace& f = mesh.Face(i);
+		if (mesh.Element(f.m_elem[0]).IsVisible() == false) f.Hide();
+	}
+
+	// hide nodes that were hidden by hiding elements
+	for (int i=0; i<NN; ++i) mesh.Node(i).m_ntag = 0;
+	int NE = mesh.Elements();
+	for (int i=0; i<NE; ++i)
+	{
+		FEElement& el = mesh.Element(i);
+		if (el.IsHidden() == false)
+		{
+			int ne = el.Nodes();
+			for (int j=0; j<ne; ++j) mesh.Node(el.m_node[j]).m_ntag = 1;
+		}
+	}
+	for (int i=0; i<NN; ++i)
+		if (mesh.Node(i).m_ntag == 0) mesh.Node(i).Hide();
+
+	// hide edges
+	for (int i=0; i<NL; ++i)
+	{
+		FEEdge& edge = mesh.Edge(i);
+		FENode& node0 = mesh.Node(edge.node[0]);
+		FENode& node1 = mesh.Node(edge.node[1]);
+		if (node0.IsHidden() || node1.IsHidden()) edge.Hide();
+	}
+
+	UpdateSelectionLists();
 }
 
 //-----------------------------------------------------------------------------
@@ -3213,7 +3308,8 @@ void CGLModel::HideSelectedNodes()
 	for (int i=0; i<NN; ++i)
 	{
 		FENode& n = mesh.Node(i);
-		if (n.IsSelected()) n.Hide();
+		n.m_ntag = 0;
+		if (n.IsSelected()) { n.Hide(); n.m_ntag = 1; }
 	}
 
 	int NE = mesh.Elements();
@@ -3222,7 +3318,10 @@ void CGLModel::HideSelectedNodes()
 		FEElement& el = mesh.Element(i);
 		int ne = el.Nodes();
 		for (int j=0; j<ne; ++j) 
-			if (mesh.Node(el.m_node[i]).IsHidden()) el.Hide();
+		{
+			FENode& node = mesh.Node(el.m_node[j]);
+			if (node.IsHidden() && (node.m_ntag == 1)) el.Hide();
+		}
 	}
 
 	// hide nodes that were hidden by hiding elements
@@ -3242,6 +3341,16 @@ void CGLModel::HideSelectedNodes()
 	{
 		FEFace& f = mesh.Face(i);
 		if (mesh.Element(f.m_elem[0]).IsVisible() == false) f.Hide();
+	}
+
+	// hide edges
+	int NL = mesh.Edges();
+	for (int i=0; i<NL; ++i)
+	{
+		FEEdge& edge = mesh.Edge(i);
+		FENode& node0 = mesh.Node(edge.node[0]);
+		FENode& node1 = mesh.Node(edge.node[1]);
+		if (node0.IsHidden() || node1.IsHidden()) edge.Hide();
 	}
 
 	UpdateSelectionLists();

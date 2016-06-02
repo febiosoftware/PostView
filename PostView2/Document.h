@@ -81,6 +81,7 @@ struct VIEWSETTINGS
 	bool	m_bext;			// ignore interior flag
 
 	bool	m_bmesh;		// show mesh or not
+	bool	m_boutline;		// show outline or not
 	bool	m_bBox;			// show bounding box or not
 	int		m_nproj;		// projection mode or not
 	bool	m_bLighting;	// use lighting or not
@@ -305,7 +306,7 @@ public:
 	CGLModel* GetGLModel() { return m_pGLModel; }
 
 	// edits plots
-	void AddPlot(CGLPlot* pplot) { m_pPlot.push_back(pplot); }
+	void AddPlot(CGLPlot* pplot);
 	GPlotList& GetPlotList() { return m_pPlot; }
 	void DeleteObject(CGLObject* po);
 

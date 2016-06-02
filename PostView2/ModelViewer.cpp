@@ -26,7 +26,6 @@ public:
 	{
 		addProperty("Element subdivions"       , CProperty::Int)->setIntRange(0, 100).setAutoValue(true);
 		addProperty("Render mode"              , CProperty::Enum, "Render mode")->setEnumValues(QStringList() << "default" << "wireframe" << "solid");
-		addProperty("Render outline"           , CProperty::Bool);
 		addProperty("Render undeformed outline", CProperty::Bool);
 		addProperty("Outline color"            , CProperty::Color);
 		addProperty("Node color"               , CProperty::Color);
@@ -44,15 +43,14 @@ public:
 		{
 		case 0: v = m_fem->m_nDivs; break;
 		case 1: v = m_fem->m_nrender; break;
-		case 2: v = m_fem->m_boutline; break;
-		case 3: v = m_fem->m_bghost; break;
-		case 4: v = toQColor(m_fem->m_line_col); break;
-		case 5: v = toQColor(m_fem->m_node_col); break;
-		case 6: v = toQColor(m_fem->m_sel_col); break;
-		case 7: v = m_fem->m_bsmooth; break;
-		case 8: v = m_fem->m_bShell2Hex; break;
-		case 9: v = m_fem->m_nshellref; break;
-//		case 10: v = m_fem->m_
+		case 2: v = m_fem->m_bghost; break;
+		case 3: v = toQColor(m_fem->m_line_col); break;
+		case 4: v = toQColor(m_fem->m_node_col); break;
+		case 5: v = toQColor(m_fem->m_sel_col); break;
+		case 6: v = m_fem->m_bsmooth; break;
+		case 7: v = m_fem->m_bShell2Hex; break;
+		case 8: v = m_fem->m_nshellref; break;
+//		case 9: v = m_fem->m_
 		}
 		return v;
 	}
@@ -63,14 +61,13 @@ public:
 		{
 		case 0: m_fem->m_nDivs    = v.toInt(); break;
 		case 1: m_fem->m_nrender  = v.toInt(); break;
-		case 2: m_fem->m_boutline = v.toBool(); break;
-		case 3: m_fem->m_bghost   = v.toBool(); break;
-		case 4: m_fem->m_line_col = toGLColor(v.value<QColor>());
-		case 5: m_fem->m_node_col = toGLColor(v.value<QColor>());
-		case 6: m_fem->m_sel_col  = toGLColor(v.value<QColor>());
-		case 7: m_fem->m_bsmooth  = v.toBool(); break;
-		case 8: m_fem->m_bShell2Hex = v.toBool(); break;
-		case 9: m_fem->m_nshellref = v.toInt(); break;
+		case 2: m_fem->m_bghost   = v.toBool(); break;
+		case 3: m_fem->m_line_col = toGLColor(v.value<QColor>());
+		case 4: m_fem->m_node_col = toGLColor(v.value<QColor>());
+		case 5: m_fem->m_sel_col  = toGLColor(v.value<QColor>());
+		case 6: m_fem->m_bsmooth  = v.toBool(); break;
+		case 7: m_fem->m_bShell2Hex = v.toBool(); break;
+		case 8: m_fem->m_nshellref = v.toInt(); break;
 		}
 	}
 	

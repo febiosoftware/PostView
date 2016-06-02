@@ -67,7 +67,7 @@ public:
 
 public:
 	void RenderFaces  (CGLContext& rc);
-	void RenderOutline(CGLContext& rc);
+	void RenderOutline(CGLContext& rc, int nmat = -1);
 	void RenderNormals(CGLContext& rc);
 	void RenderGhost  (CGLContext& rc);
 
@@ -101,8 +101,9 @@ protected:
 	void RenderFEFace(FEFace& el, FEMesh* pm);
 	void RenderElementOutline(FEElement& el, FEMesh* pm);
 	void RenderFaceOutline(FEFace& face, FEMesh* pm, int ndivs);
-	void RenderMaterial(FEModel* ps, int m);
+	void RenderSolidMaterial(FEModel* ps, int m);
 	void RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m);
+	void RenderFaceEdge(FEFace& face, int j, FEMesh* pm, int ndivs);
 
 	void RenderSmoothQUAD4(FEFace& f, FEMesh* pm, int ndivs, bool bnode);
 	void RenderSmoothQUAD4(vec3f r[4], vec3f n[4], float t[4], int ndivs);
@@ -178,16 +179,16 @@ public: // Selection
 
 	// --- V I S I B I L I T Y ---
 	//! hide elements by material ID
-	void HideElements(int nmat);
+	void HideMaterial(int nmat);
 
 	//! show elements by material ID
-	void ShowElements(int nmat);
+	void ShowMaterial(int nmat);
 
 	//! enable elements by material ID
-	void EnableElements(int nmat);
+	void EnableMaterial(int nmat);
 
 	//! disable elements by material ID
-	void DisableElements(int nmat);
+	void DisableMaterial(int nmat);
 
 	//! hide selected elements
 	void HideSelectedElements();
@@ -209,7 +210,6 @@ protected:
 public:
 	bool		m_bnorm;		//!< calculate normals or not
 	bool		m_bsmooth;		//!< render smooth or not
-	bool		m_boutline;		//!< render as outline
 	bool		m_bghost;		//!< render the ghost (undeformed outline)
 	bool		m_bShell2Hex;	//!< render shells as hexes
 	int			m_nshellref;	//!< shell reference surface

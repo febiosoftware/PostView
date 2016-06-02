@@ -131,6 +131,8 @@ public:
 	void OnZoomExtents();
 	void OnZoomSelect ();
 
+	CDocument* GetDocument();
+
 protected:
 	void initializeGL();
 	void resizeGL(int w, int h);
@@ -238,7 +240,6 @@ protected:
 
 	void PanView(vec3f r);
 
-	CDocument* GetDocument();
 
 private:
 	CMainWindow*	m_wnd;
