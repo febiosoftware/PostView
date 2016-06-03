@@ -44,7 +44,7 @@ bool FERAWImageReader::Load(FEModel& fem, const char* szfile)
 	else { dim = 3; NE = (m_ops.nx-1)*(m_ops.ny-1)*(m_ops.nz - 1); }
 
 	// create a new mesh
-	FEMesh* pm = fem.GetMesh();
+	FEMeshBase* pm = new FEMesh;
 	try
 	{
 		pm->Create(NN, NE);
@@ -57,6 +57,7 @@ bool FERAWImageReader::Load(FEModel& fem, const char* szfile)
 	{
 		return errf("Unkwown exception in FERAWImageReader::Load");
 	}
+	fem.SetMesh(pm);
 
 	// scale parameters
 	double dx = m_ops.wx / (float) m_ops.nx;
@@ -83,8 +84,8 @@ bool FERAWImageReader::Load(FEModel& fem, const char* szfile)
 		for (int j=0; j<m_ops.ny-1; ++j)
 			for (int i=0; i<m_ops.nx-1; ++i)
 			{
-				FEElement& e = pm->Element(n++);
-				e.m_ntype = FE_QUAD4;
+				FEGenericElement& e = static_cast<FEGenericElement&>(pm->Element(n++));
+				e.SetType(FE_QUAD4);
 				e.m_MatID = 0;
 				e.m_node[0] = j*(m_ops.nx) + i;
 				e.m_node[1] = j*(m_ops.nx) + i+1;
@@ -100,8 +101,8 @@ bool FERAWImageReader::Load(FEModel& fem, const char* szfile)
 			for (int j=0; j<m_ops.ny-1; ++j)
 				for (int i=0; i<m_ops.nx-1; ++i)
 				{
-					FEElement& e = pm->Element(n++);
-					e.m_ntype = FE_HEX8;
+					FEGenericElement& e = static_cast<FEGenericElement&>(pm->Element(n++));
+					e.SetType(FE_HEX8);
 					e.m_MatID = 0;
 					e.m_node[0] = k*(m_ops.nx*m_ops.ny) + j*(m_ops.nx) + i;
 					e.m_node[1] = k*(m_ops.nx*m_ops.ny) + j*(m_ops.nx) + i+1;

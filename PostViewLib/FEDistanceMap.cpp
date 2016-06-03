@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 //-----------------------------------------------------------------------------
-void FEDistanceMap::Surface::BuildNodeList(FEMesh& mesh)
+void FEDistanceMap::Surface::BuildNodeList(FEMeshBase& mesh)
 {
 	// tag all nodes that belong to this surface
 	int N = mesh.Nodes();
@@ -69,7 +69,7 @@ void FEDistanceMap::Surface::BuildNodeList(FEMesh& mesh)
 void FEDistanceMap::BuildNormalList(FEDistanceMap::Surface& s)
 {
 	// get the mesh
-	FEMesh& mesh = *m_pfem->GetMesh();
+	FEMeshBase& mesh = *m_pfem->GetMesh();
 
 	int NF = s.Faces();
 	int NN = s.Nodes();
@@ -105,7 +105,7 @@ void FEDistanceMap::Apply(FEModel& fem)
 	int NDATA = fem.GetDataManager()->DataFields()-1;
 
 	// get the mesh
-	FEMesh& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetMesh();
 
 	// build the node lists
 	m_surf1.BuildNodeList(mesh);
@@ -164,7 +164,7 @@ void FEDistanceMap::Apply(FEModel& fem)
 //-----------------------------------------------------------------------------
 vec3f FEDistanceMap::project(FEDistanceMap::Surface& surf, vec3f& r, int ntime)
 {
-	FEMesh& mesh = *m_pfem->GetMesh();
+	FEMeshBase& mesh = *m_pfem->GetMesh();
 
 	// find the closest surface node
 	vec3f q = m_pfem->NodePosition(surf.m_node[0], ntime);
@@ -210,7 +210,7 @@ vec3f FEDistanceMap::project(FEDistanceMap::Surface& surf, vec3f& r, int ntime)
 bool FEDistanceMap::ProjectToFacet(FEFace& f, vec3f& x, int ntime, vec3f& q)
 {
 	// get the mesh to which this surface belongs
-	FEMesh& mesh = *m_pfem->GetMesh();
+	FEMeshBase& mesh = *m_pfem->GetMesh();
 	
 	// number of element nodes
 	int ne = f.Nodes();

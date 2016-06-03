@@ -6,7 +6,7 @@ bool FEFEBioExport::Save(FEModel& fem, const char* szfile)
 {
 	int nmat = fem.Materials();
 
-	FEMesh* pm = fem.GetMesh();
+	FEMeshBase* pm = fem.GetMesh();
 	FEState* pst = fem.GetActiveState();
 
 	XMLWriter xml;
@@ -55,14 +55,14 @@ bool FEFEBioExport::Save(FEModel& fem, const char* szfile)
 
 			xml.add_branch("Elements");
 			{
-				int n[FEElement::MAX_NODES];
+				int n[FEGenericElement::MAX_NODES];
 				el.clear();
 				int n1 = el.add_attribute("id", "");
 				int n2 = el.add_attribute("mat", "");
 				for (int i=0; i<pm->Elements(); ++i)
 				{
 					FEElement& elm = pm->Element(i);
-					switch (elm.m_ntype)
+					switch (elm.Type())
 					{
 					case FE_HEX8  : el.name("hex8"  ); break;
 					case FE_HEX20 : el.name("hex20" ); break;

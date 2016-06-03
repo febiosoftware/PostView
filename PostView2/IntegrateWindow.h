@@ -4,7 +4,7 @@
 
 class CMainWindow;
 class CGLPlaneCutPlot;
-class FEMesh;
+class FEMeshBase;
 class FEState;
 
 namespace Ui {
@@ -24,10 +24,10 @@ public:
 	void Update(bool breset = true);
 
 private:
-	double IntegrateNodes(FEMesh& mesh, FEState* ps);
-	double IntegrateEdges(FEMesh& mesh, FEState* ps);
-	double IntegrateFaces(FEMesh& mesh, FEState* ps);
-	double IntegrateElems(FEMesh& mesh, FEState* ps);
+	double IntegrateNodes(FEMeshBase& mesh, FEState* ps);
+	double IntegrateEdges(FEMeshBase& mesh, FEState* ps);
+	double IntegrateFaces(FEMeshBase& mesh, FEState* ps);
+	double IntegrateElems(FEMeshBase& mesh, FEState* ps);
 
 	void UpdateSourceOptions();
 

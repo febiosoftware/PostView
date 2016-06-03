@@ -84,7 +84,7 @@ const float G8t[8][8] = {
 
 //-----------------------------------------------------------------------------
 // Calculate integral over face
-float FEMesh::IntegrateQuad(vec3f* r, float* v)
+float FEMeshBase::IntegrateQuad(vec3f* r, float* v)
 {
 	int i, j;
 
@@ -114,7 +114,7 @@ float FEMesh::IntegrateQuad(vec3f* r, float* v)
 
 //-----------------------------------------------------------------------------
 // Calculate integral over element
-float FEMesh::IntegrateHex(vec3f* r, float *v)
+float FEMeshBase::IntegrateHex(vec3f* r, float *v)
 {
 	int i, j;
 	float I = 0.f;

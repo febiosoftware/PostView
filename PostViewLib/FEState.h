@@ -28,7 +28,7 @@ struct ELEMDATA
 {
 	float	m_val;		// current element value
 	int		m_ntag;		// active flag
-	float	m_nv[FEElement::MAX_NODES];	// nodal values
+	float	m_nv[FEGenericElement::MAX_NODES];	// nodal values
 	float	m_h[4];	// shell thickness (TODO: Can we move this to the face data?)
 };
 

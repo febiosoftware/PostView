@@ -62,7 +62,7 @@ bool CDocument::SaveSession(const char* szfile)
 
 		// store model data
 		CGLModel* pmdl = m_pGLModel;
-		FEMesh* pm = pmdl->GetMesh();
+		FEMeshBase* pm = pmdl->GetMesh();
 		FEModel* pfem = pmdl->GetFEModel();
 		xml.add_branch(e);
 		{
@@ -312,7 +312,7 @@ bool CDocument::OpenSession(const char* szfile)
 			int ntime = GetCurrentTime();
 
 			CGLModel* pmdl = m_pGLModel;
-			FEMesh* pm = pmdl->GetMesh();
+			FEMeshBase* pm = pmdl->GetMesh();
 			FEModel* pfem = pmdl->GetFEModel();
 
 			float f;

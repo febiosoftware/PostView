@@ -282,8 +282,9 @@ bool FELSDYNAimport::BuildMesh(FEModel& fem)
 	BuildMaterials(fem);
 
 	// build the mesh
-	FEMesh* pm = m_pm = fem.GetMesh();
+	FEMeshBase* pm = m_pm = new FEMesh;
 	pm->Create(nodes, elems);
+	fem.SetMesh(pm);
 
 	// create nodes
 	list<NODE>::iterator in = m_node.begin();
@@ -304,11 +305,11 @@ bool FELSDYNAimport::BuildMesh(FEModel& fem)
 		list<ELEMENT_SOLID>::iterator ih = m_solid.begin();
 		for (i=0; i<solids; ++i, ++ih)
 		{
-			FEElement& el = pm->Element(ne++);
+			FEGenericElement& el = static_cast<FEGenericElement&>(pm->Element(ne++));
 			int* n = ih->n;
-			if ((n[7] == n[6]) && (n[7]==n[5]) && (n[7]==n[4]) && (n[7]==n[3])) el.m_ntype = FE_TET4;
-			else if ((n[7] == n[6]) && (n[7]==n[5])) el.m_ntype = FE_PENTA6;
-			else el.m_ntype = FE_HEX8;
+			if ((n[7] == n[6]) && (n[7]==n[5]) && (n[7]==n[4]) && (n[7]==n[3])) el.SetType(FE_TET4);
+			else if ((n[7] == n[6]) && (n[7]==n[5])) el.SetType(FE_PENTA6);
+			else el.SetType(FE_HEX8);
 
 			el.m_MatID = ih->mid;
 
@@ -330,7 +331,7 @@ bool FELSDYNAimport::BuildMesh(FEModel& fem)
 		list<ELEMENT_SHELL>::iterator is = m_shell.begin();
 		for (i=0; i<shells; ++i, ++is)
 		{
-			FEElement& el = pm->Element(ne++);
+			FEGenericElement& el = static_cast<FEGenericElement&>(pm->Element(ne++));
 			el.m_node[0] = FindNode(is->n[0], in); if (el.m_node[0] < 0) return false;
 			el.m_node[1] = FindNode(is->n[1], in); if (el.m_node[1] < 0) return false;
 			el.m_node[2] = FindNode(is->n[2], in); if (el.m_node[2] < 0) return false;
@@ -339,12 +340,12 @@ bool FELSDYNAimport::BuildMesh(FEModel& fem)
 
 			if (is->n[3] == is->n[2])
 			{
-				el.m_ntype = FE_TRI3;
+				el.SetType(FE_TRI3);
 				el.m_node[3] = el.m_node[2];
 			}
 			else
 			{
-				el.m_ntype = FE_QUAD4;
+				el.SetType(FE_QUAD4);
 				el.m_node[3] = FindNode(is->n[3], in); if (el.m_node[3] < 0) return false;
 			}
 		}

@@ -149,7 +149,7 @@ bool FEModel::IsValidFieldCode(int nfield, int nstate)
 // Evaluate a data field at a particular time
 bool FEModel::Evaluate(int nfield, int ntime, bool breset)
 {
-	if (m_mesh.Nodes() == 0) return false;
+	if (m_mesh->Nodes() == 0) return false;
 
 	// get the state data 
 	FEState& state = *m_State[ntime];
@@ -182,9 +182,9 @@ void FEModel::EvalNodeField(int ntime, int nfield)
 
 	// first, we evaluate all the nodes
 	int i, j;
-	for (i=0; i<m_mesh.Nodes(); ++i)
+	for (i=0; i<m_mesh->Nodes(); ++i)
 	{
-		FENode& node = m_mesh.Node(i);
+		FENode& node = m_mesh->Node(i);
 		NODEDATA& d = state.m_NODE[i];
 		d.m_val = 0;
 		d.m_ntag = 0;
@@ -192,9 +192,9 @@ void FEModel::EvalNodeField(int ntime, int nfield)
 	}
 
 	// Next, we project the nodal data onto the faces
-	for (i=0; i<m_mesh.Faces(); ++i)
+	for (i=0; i<m_mesh->Faces(); ++i)
 	{
-		FEFace& f = m_mesh.Face(i);
+		FEFace& f = m_mesh->Face(i);
 		FACEDATA& d = state.m_FACE[i];
 		d.m_val = 0.f;
 		d.m_ntag = 0;
@@ -207,9 +207,9 @@ void FEModel::EvalNodeField(int ntime, int nfield)
 	}
 
 	// Finally, we project the nodal data onto the elements
-	for (i=0; i<m_mesh.Elements(); ++i)
+	for (i=0; i<m_mesh->Elements(); ++i)
 	{
-		FEElement& e = m_mesh.Element(i);
+		FEElement& e = m_mesh->Element(i);
 		ELEMDATA& d = state.m_ELEM[i];
 		d.m_val = 0.f;
 		d.m_ntag = 0;
@@ -235,19 +235,19 @@ void FEModel::EvalFaceField(int ntime, int nfield)
 
 	// first evaluate all faces
 	int i, j;
-	for (i=0; i<m_mesh.Faces(); ++i)
+	for (i=0; i<m_mesh->Faces(); ++i)
 	{
-		FEFace& f = m_mesh.Face(i);
+		FEFace& f = m_mesh->Face(i);
 		state.m_FACE[i].m_val = 0.f;
 		state.m_FACE[i].m_ntag = 0;
 		if (f.IsEnabled()) EvaluateFace(i, ntime, nfield, state.m_FACE[i]);
 	}
 
 	// now evaluate the nodes
-	for (i=0; i<m_mesh.Nodes(); ++i)
+	for (i=0; i<m_mesh->Nodes(); ++i)
 	{
 		NODEDATA& node = state.m_NODE[i];
-		vector<NodeFaceRef>& nfl = m_mesh.NodeFaceList(i);
+		vector<NodeFaceRef>& nfl = m_mesh->NodeFaceList(i);
 		node.m_val = 0.f; 
 		node.m_ntag = 0;
 		int n = 0;
@@ -269,7 +269,7 @@ void FEModel::EvalFaceField(int ntime, int nfield)
 
 	// evaluate the elements (to zero)
 	// Face data is not projected onto the elements
-	for (i=0; i<m_mesh.Elements(); ++i) 
+	for (i=0; i<m_mesh->Elements(); ++i) 
 	{
 		state.m_ELEM[i].m_val = 0.f;
 		state.m_ELEM[i].m_ntag = 0;
@@ -289,23 +289,23 @@ void FEModel::EvalElemField(int ntime, int nfield)
 
 	// first evaluate all elements
 	int i, j;
-	for (i=0; i<m_mesh.Elements(); ++i)
+	for (i=0; i<m_mesh->Elements(); ++i)
 	{
-		FEElement& el = m_mesh.Element(i);
+		FEElement& el = m_mesh->Element(i);
 		state.m_ELEM[i].m_val = 0.f;
 		state.m_ELEM[i].m_ntag = 0;
 		if (el.IsEnabled()) EvaluateElement(i, ntime, nfield, state.m_ELEM[i]);
 	}
 
 	// now evaluate the nodes
-	for (i=0; i<m_mesh.Nodes(); ++i)
+	for (i=0; i<m_mesh->Nodes(); ++i)
 	{
-		FENode& node = m_mesh.Node(i);
+		FENode& node = m_mesh->Node(i);
 		state.m_NODE[i].m_val = 0.f;
 		state.m_NODE[i].m_ntag = 0;
 		if (node.IsEnabled())
 		{
-			vector<NodeElemRef>& nel = m_mesh.NodeElemList(i);
+			vector<NodeElemRef>& nel = m_mesh->NodeElemList(i);
 			int m = (int) nel.size(), n=0;
 			float val = 0.f;
 			for (j=0; j<m; ++j)
@@ -326,16 +326,16 @@ void FEModel::EvalElemField(int ntime, int nfield)
 	}
 
 	// evaluate faces
-	for (i=0; i<m_mesh.Faces(); ++i)
+	for (i=0; i<m_mesh->Faces(); ++i)
 	{
-		FEFace& f = m_mesh.Face(i);
+		FEFace& f = m_mesh->Face(i);
 		FACEDATA& d = state.m_FACE[i];
 		d.m_ntag = 0;
 		if (state.m_ELEM[f.m_elem[0]].m_ntag > 0)
 		{
 			d.m_ntag = 1;
 			ELEMDATA& e = state.m_ELEM[f.m_elem[0]];
-			switch (m_mesh.Element(f.m_elem[0]).m_ntype)
+			switch (m_mesh->Element(f.m_elem[0]).Type())
 			{
 			case FE_TET4:
 				{
@@ -580,7 +580,7 @@ void FEModel::EvaluateNode(int n, int ntime, int nfield, NODEDATA& d)
 	else if (IS_FACE_FIELD(nfield))
 	{
 		// we take the average of the adjacent face values
-		vector<NodeFaceRef>& nfl = m_mesh.NodeFaceList(n);
+		vector<NodeFaceRef>& nfl = m_mesh->NodeFaceList(n);
 		if (!nfl.empty())
 		{
 			int nf = nfl.size(), n=0;
@@ -600,7 +600,7 @@ void FEModel::EvaluateNode(int n, int ntime, int nfield, NODEDATA& d)
 	else if (IS_ELEM_FIELD(nfield))
 	{
 		// we take the average of the elements that contain this element
-		vector<NodeElemRef>& nel = m_mesh.NodeElemList(n);
+		vector<NodeElemRef>& nel = m_mesh->NodeElemList(n);
 		ELEMDATA e;
 		int ne = nel.size(),n=0;
 		if (!nel.empty())
@@ -644,7 +644,7 @@ void FEModel::EvaluateFace(int n, int ntime, int nfield, FACEDATA& d)
 	FEState& s = *m_State[ntime];
 
 	// get the face
-	FEFace& f = m_mesh.Face(n);
+	FEFace& f = m_mesh->Face(n);
 
 	if (IS_FACE_FIELD(nfield))
 	{
@@ -1080,10 +1080,10 @@ void FEModel::EvaluateFace(int n, int ntime, int nfield, FACEDATA& d)
 	}
 	else if (IS_ELEM_FIELD(nfield))
 	{
-		assert((f.m_elem[0] >= 0) && (f.m_elem[0] < m_mesh.Elements()));
+		assert((f.m_elem[0] >= 0) && (f.m_elem[0] < m_mesh->Elements()));
 		ELEMDATA e;
 		EvaluateElement(f.m_elem[0], ntime, nfield, e);
-		switch (m_mesh.Element(f.m_elem[0]).m_ntype)
+		switch (m_mesh->Element(f.m_elem[0]).Type())
 		{
 		case FE_TET4:
 			{
@@ -1211,7 +1211,7 @@ void FEModel::EvaluateElement(int n, int ntime, int nfield, ELEMDATA& d)
 	m_ntime = ntime;
 
 	// get the element
-	FEElement& el = m_mesh.Element(n);
+	FEElement& el = m_mesh->Element(n);
 	int ne = el.Nodes();
 
 	// the return value
@@ -1303,7 +1303,7 @@ void FEModel::EvaluateElement(int n, int ntime, int nfield, ELEMDATA& d)
 					FEElemData_T<vec3f,DATA_COMP>& df = dynamic_cast<FEElemData_T<vec3f,DATA_COMP>&>(rd);
 					if (df.active(n))
 					{
-						vec3f v[FEElement::MAX_NODES];
+						vec3f v[FEGenericElement::MAX_NODES];
 						df.eval(n, v);
 						d.m_val = 0;
 						for (int j=0; j<ne; ++j) 
@@ -1320,7 +1320,7 @@ void FEModel::EvaluateElement(int n, int ntime, int nfield, ELEMDATA& d)
 					FEElemData_T<vec3f,DATA_NODE>& dm = dynamic_cast<FEElemData_T<vec3f,DATA_NODE>&>(rd);
 					if (dm.active(n))
 					{
-						vec3f v[FEElement::MAX_NODES];
+						vec3f v[FEGenericElement::MAX_NODES];
 						dm.eval(n, v);
 						d.m_val = 0;
 						for (int j=0; j<ne; ++j)
@@ -1369,7 +1369,7 @@ void FEModel::EvaluateElement(int n, int ntime, int nfield, ELEMDATA& d)
 					FEElemData_T<mat3d,DATA_NODE>& dm = dynamic_cast<FEElemData_T<mat3d,DATA_NODE>&>(rd);
 					if (dm.active(n))
 					{
-						mat3d m[FEElement::MAX_NODES];
+						mat3d m[FEGenericElement::MAX_NODES];
 						dm.eval(n, m);
 						d.m_val = 0;
 						for (int j=0; j<ne; ++j)
@@ -1386,7 +1386,7 @@ void FEModel::EvaluateElement(int n, int ntime, int nfield, ELEMDATA& d)
 					FEElemData_T<mat3d,DATA_COMP>& df = dynamic_cast<FEElemData_T<mat3d,DATA_COMP>&>(rd);
 					if (df.active(n))
 					{
-						mat3d v[FEElement::MAX_NODES];
+						mat3d v[FEGenericElement::MAX_NODES];
 						df.eval(n, v);
 						d.m_val = 0;
 						for (int j=0; j<ne; ++j) 
@@ -1435,7 +1435,7 @@ void FEModel::EvaluateElement(int n, int ntime, int nfield, ELEMDATA& d)
 					FEElemData_T<mat3f,DATA_NODE>& dm = dynamic_cast<FEElemData_T<mat3f,DATA_NODE>&>(rd);
 					if (dm.active(n))
 					{
-						mat3f m[FEElement::MAX_NODES];
+						mat3f m[FEGenericElement::MAX_NODES];
 						dm.eval(n, m);
 						d.m_val = 0;
 						for (int j=0; j<ne; ++j)
@@ -1452,7 +1452,7 @@ void FEModel::EvaluateElement(int n, int ntime, int nfield, ELEMDATA& d)
 					FEElemData_T<mat3f,DATA_COMP>& df = dynamic_cast<FEElemData_T<mat3f,DATA_COMP>&>(rd);
 					if (df.active(n))
 					{
-						mat3f v[FEElement::MAX_NODES];
+						mat3f v[FEGenericElement::MAX_NODES];
 						df.eval(n, v);
 						d.m_val = 0;
 						for (int j=0; j<ne; ++j) 
@@ -1501,7 +1501,7 @@ void FEModel::EvaluateElement(int n, int ntime, int nfield, ELEMDATA& d)
 					FEElemData_T<mat3fs,DATA_NODE>& dm = dynamic_cast<FEElemData_T<mat3fs,DATA_NODE>&>(rd);
 					if (dm.active(n))
 					{
-						mat3fs m[FEElement::MAX_NODES];
+						mat3fs m[FEGenericElement::MAX_NODES];
 						dm.eval(n, m);
 						d.m_val = 0;
 						for (int j=0; j<ne; ++j)
@@ -1518,7 +1518,7 @@ void FEModel::EvaluateElement(int n, int ntime, int nfield, ELEMDATA& d)
 					FEElemData_T<mat3fs,DATA_COMP>& df = dynamic_cast<FEElemData_T<mat3fs,DATA_COMP>&>(rd);
 					if (df.active(n))
 					{
-						mat3fs v[FEElement::MAX_NODES];
+						mat3fs v[FEGenericElement::MAX_NODES];
 						df.eval(n, v);
 						d.m_val = 0;
 						for (int j=0; j<ne; ++j) 
@@ -1567,7 +1567,7 @@ void FEModel::EvaluateElement(int n, int ntime, int nfield, ELEMDATA& d)
 					FEElemData_T<mat3fd,DATA_NODE>& dm = dynamic_cast<FEElemData_T<mat3fd,DATA_NODE>&>(rd);
 					if (dm.active(n))
 					{
-						mat3fd m[FEElement::MAX_NODES];
+						mat3fd m[FEGenericElement::MAX_NODES];
 						dm.eval(n, m);
 						d.m_val = 0;
 						for (int j=0; j<ne; ++j)
@@ -1584,7 +1584,7 @@ void FEModel::EvaluateElement(int n, int ntime, int nfield, ELEMDATA& d)
 					FEElemData_T<mat3fd,DATA_COMP>& df = dynamic_cast<FEElemData_T<mat3fd,DATA_COMP>&>(rd);
 					if (df.active(n))
 					{
-						mat3fd v[FEElement::MAX_NODES];
+						mat3fd v[FEGenericElement::MAX_NODES];
 						df.eval(n, v);
 						d.m_val = 0;
 						for (int j=0; j<ne; ++j) 
@@ -1633,7 +1633,7 @@ void FEModel::EvaluateElement(int n, int ntime, int nfield, ELEMDATA& d)
 					FEElemData_T<tens4fs,DATA_NODE>& dm = dynamic_cast<FEElemData_T<tens4fs,DATA_NODE>&>(rd);
 					if (dm.active(n))
 					{
-						tens4fs m[FEElement::MAX_NODES];
+						tens4fs m[FEGenericElement::MAX_NODES];
 						dm.eval(n, m);
 						d.m_val = 0;
 						for (int j=0; j<ne; ++j)
@@ -1650,7 +1650,7 @@ void FEModel::EvaluateElement(int n, int ntime, int nfield, ELEMDATA& d)
 					FEElemData_T<tens4fs,DATA_COMP>& df = dynamic_cast<FEElemData_T<tens4fs,DATA_COMP>&>(rd);
 					if (df.active(n))
 					{
-						tens4fs v[FEElement::MAX_NODES];
+						tens4fs v[FEGenericElement::MAX_NODES];
 						df.eval(n, v);
 						d.m_val = 0;
 						for (int j=0; j<ne; ++j)
@@ -1748,7 +1748,7 @@ vec3f FEModel::EvaluateNodeVector(int n, int ntime, int nvec)
 	else if (IS_ELEM_FIELD(nvec))
 	{
 		// we take the average of the elements that contain this element
-		vector<NodeElemRef>& nel = m_mesh.NodeElemList(n);
+		vector<NodeElemRef>& nel = m_mesh->NodeElemList(n);
 		if (!nel.empty())
 		{
 			for (int i=0; i<(int) nel.size(); ++i) r += EvaluateElemVector(nel[i].first, ntime, nvec);
@@ -1758,7 +1758,7 @@ vec3f FEModel::EvaluateNodeVector(int n, int ntime, int nvec)
 	else if (IS_FACE_FIELD(nvec))
 	{
 		// we take the average of the elements that contain this element
-		vector<NodeFaceRef>& nfl = m_mesh.NodeFaceList(n);
+		vector<NodeFaceRef>& nfl = m_mesh->NodeFaceList(n);
 		if (!nfl.empty())
 		{
 			int n = 0;
@@ -1788,7 +1788,7 @@ bool FEModel::EvaluateFaceVector(int n, int ntime, int nvec, vec3f& r)
 
 	FEState& state = *m_State[ntime];
 
-	FEFace& f = m_mesh.Face(n);
+	FEFace& f = m_mesh->Face(n);
 
 	if (IS_FACE_FIELD(nvec))
 	{
@@ -1838,7 +1838,7 @@ bool FEModel::EvaluateFaceVector(int n, int ntime, int nvec, vec3f& r)
 						if (dv.active(n))
 						{
 							dv.eval(n, rn);
-							int ne = m_mesh.Face(n).Nodes();
+							int ne = m_mesh->Face(n).Nodes();
 							for (int i=0; i<ne; ++i) r += rn[i];
 							r /= (float) ne;
 							return true;
@@ -1864,7 +1864,7 @@ bool FEModel::EvaluateFaceVector(int n, int ntime, int nvec, vec3f& r)
 	}
 	else if (IS_NODE_FIELD(nvec))
 	{
-		FEFace& f = m_mesh.Face(n);
+		FEFace& f = m_mesh->Face(n);
 		// take the average of the nodal values
 		for (int i=0; i<f.Nodes(); ++i) r += EvaluateNodeVector(f.node[i], ntime, nvec);
 		r /= f.Nodes();
@@ -1921,7 +1921,7 @@ vec3f FEModel::EvaluateElemVector(int n, int ntime, int nvec)
 					if (dv.active(n))
 					{
 						dv.eval(n, v);
-						int ne = m_mesh.Element(n).Nodes();
+						int ne = m_mesh->Element(n).Nodes();
 						for (int i=0; i<ne; ++i) r += v[i];
 						r /= (float) ne;
 					}
@@ -1948,7 +1948,7 @@ vec3f FEModel::EvaluateElemVector(int n, int ntime, int nvec)
 					if (dm.active(n))
 					{
 						dm.eval(n, m);
-						int ne = m_mesh.Element(n).Nodes();
+						int ne = m_mesh->Element(n).Nodes();
 						for (int i=0; i<ne; ++i) r += m[i].PrincDirection(ncomp + 1);
 						r /= (float) ne;
 					}
@@ -1961,7 +1961,7 @@ vec3f FEModel::EvaluateElemVector(int n, int ntime, int nvec)
 	}
 	else if (IS_NODE_FIELD(nvec))
 	{
-		FEElement& el = m_mesh.Element(n);
+		FEElement& el = m_mesh->Element(n);
 		// take the average of the nodal values
 		for (int i=0; i<el.Nodes(); ++i) r += EvaluateNodeVector(el.m_node[i], ntime, nvec);
 		r /= el.Nodes();
@@ -2003,7 +2003,7 @@ mat3fs FEModel::EvaluateNodeTensor(int n, int ntime, int nten)
 	else 
 	{
 		// we take the average of the elements that contain this element
-		vector<NodeElemRef>& nel = m_mesh.NodeElemList(n);
+		vector<NodeElemRef>& nel = m_mesh->NodeElemList(n);
 		if (!nel.empty())
 		{
 			for (int i=0; i<(int) nel.size(); ++i) m += EvaluateElemTensor(nel[i].first, ntime, nten);
@@ -2037,7 +2037,7 @@ mat3fs FEModel::EvaluateFaceTensor(int n, int ntime, int nten)
 	}
 	else if (IS_NODE_FIELD(nten))
 	{
-		FEFace& f = m_mesh.Face(n);
+		FEFace& f = m_mesh->Face(n);
 		// take the average of the nodal values
 		for (int i=0; i<f.Nodes(); ++i) m += EvaluateNodeTensor(f.node[i], ntime, nten);
 		m /= (float) f.Nodes();
@@ -2084,11 +2084,11 @@ mat3fs FEModel::EvaluateElemTensor(int n, int ntime, int nten)
 		case DATA_COMP:
 			{
 				FEElemData_T<mat3fs,DATA_COMP>& dm = dynamic_cast<FEElemData_T<mat3fs,DATA_COMP>&>(rd);
-				mat3fs mi[FEElement::MAX_NODES];
+				mat3fs mi[FEGenericElement::MAX_NODES];
 				if (dm.active(n))
 				{
 					dm.eval(n, mi);
-					int ne = m_mesh.Element(n).Nodes();
+					int ne = m_mesh->Element(n).Nodes();
 					m = mi[0];
 					for (int i=1; i<ne; ++i) m += mi[i];
 					m /= (float) ne;
@@ -2099,7 +2099,7 @@ mat3fs FEModel::EvaluateElemTensor(int n, int ntime, int nten)
 	}
 	else if (IS_NODE_FIELD(nten))
 	{
-		FEElement& el = m_mesh.Element(n);
+		FEElement& el = m_mesh->Element(n);
 		// take the average of the nodal values
 		for (int i=0; i<el.Nodes(); ++i) m += EvaluateNodeTensor(el.m_node[i], ntime, nten);
 		m /= (float) el.Nodes();

@@ -14,7 +14,7 @@
 #include <list>
 using namespace std;
 
-class FEMesh;
+class FEMeshBase;
 
 class FELSDYNAimport : public FEFileReader  
 {
@@ -71,7 +71,7 @@ protected:
 	list<ELEMENT_SHELL>		m_shell;
 	list<NODE>				m_node;
 
-	FEMesh*			m_pm;
+	FEMeshBase*			m_pm;
 
 	bool	m_bnresults;	// nodal results included?
 	bool	m_bshellthick;	// shell thicknesses included?

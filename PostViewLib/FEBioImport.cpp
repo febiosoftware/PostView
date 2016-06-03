@@ -42,7 +42,8 @@ bool FEBioImport::Load(FEModel& fem, const char* szfile)
 
 	fem.Clear();
 	m_pfem = &fem;
-	m_pm = fem.GetMesh();
+	m_pm = new FEMesh;
+	fem.SetMesh(m_pm);
 
 	// Attach the XML reader to the stream
 	if (m_xml.Attach(m_fp) == false) return false;
@@ -203,25 +204,27 @@ void FEBioImport::ParseGeometrySection(FEModel &fem, XMLTag &tag)
 
 			// read element data
 			m_xml.NextTag(tag);
-			int n[FEElement::MAX_NODES];
+			int n[FEGenericElement::MAX_NODES];
 			int nbel = 0;
 			int nsel = 0;
 			for (i=0; i<elems; ++i)
 			{
-				FEElement& el = m_pm->Element(i);
-				if      (tag == "hex8"  ) { el.m_ntype = FE_HEX8;   ++nbel; }
-				else if (tag == "hex20" ) { el.m_ntype = FE_HEX20;  ++nbel; }
-				else if (tag == "hex27" ) { el.m_ntype = FE_HEX27;  ++nbel; }
-				else if (tag == "penta6") { el.m_ntype = FE_PENTA6; ++nbel; }
-				else if (tag == "tet4"  ) { el.m_ntype = FE_TET4;   ++nbel; }
-				else if (tag == "tet10" ) { el.m_ntype = FE_TET10;  ++nbel; }
-				else if (tag == "tet15" ) { el.m_ntype = FE_TET15;  ++nbel; }
-				else if (tag == "quad4" ) { el.m_ntype = FE_QUAD4;  ++nsel; }
-                else if (tag == "quad8" ) { el.m_ntype = FE_QUAD8;  ++nsel; }
-                else if (tag == "quad9" ) { el.m_ntype = FE_QUAD9;  ++nsel; }
-				else if (tag == "tri3"  ) { el.m_ntype = FE_TRI3;   ++nsel; }
-                else if (tag == "tri6"  ) { el.m_ntype = FE_TRI6;   ++nsel; }
+				FEElemType etype;
+				FEGenericElement& el = static_cast<FEGenericElement&>(m_pm->Element(i));
+				if      (tag == "hex8"  ) { etype = FE_HEX8;   ++nbel; }
+				else if (tag == "hex20" ) { etype = FE_HEX20;  ++nbel; }
+				else if (tag == "hex27" ) { etype = FE_HEX27;  ++nbel; }
+				else if (tag == "penta6") { etype = FE_PENTA6; ++nbel; }
+				else if (tag == "tet4"  ) { etype = FE_TET4;   ++nbel; }
+				else if (tag == "tet10" ) { etype = FE_TET10;  ++nbel; }
+				else if (tag == "tet15" ) { etype = FE_TET15;  ++nbel; }
+				else if (tag == "quad4" ) { etype = FE_QUAD4;  ++nsel; }
+                else if (tag == "quad8" ) { etype = FE_QUAD8;  ++nsel; }
+                else if (tag == "quad9" ) { etype = FE_QUAD9;  ++nsel; }
+				else if (tag == "tri3"  ) { etype = FE_TRI3;   ++nsel; }
+                else if (tag == "tri6"  ) { etype = FE_TRI6;   ++nsel; }
 				else throw XMLReader::InvalidTag(tag);
+				el.SetType(etype);
 
 				tag.value(n,el.Nodes());
 				for (j=0; j<el.Nodes(); ++j) el.m_node[j] = n[j]-1;
@@ -303,16 +306,16 @@ void FEBioImport::ParseGeometrySection2(FEModel &fem, XMLTag &tag)
 
 			// read element data
 			m_xml.NextTag(tag);
-			int n[FEElement::MAX_NODES];
+			int n[FEGenericElement::MAX_NODES];
 			int nbel = 0;
 			int nsel = 0;
 			for (int i=0; i<ne; ++i)
 			{
-				FEElement& el = m_pm->Element(NE + i);
+				FEGenericElement& el = static_cast<FEGenericElement&>(m_pm->Element(NE + i));
 				int nid = tag.AttributeValue<int>("id", 0);
 				el.SetID(nid);
-				el.m_ntype = etype;
-
+				el.SetType(etype);
+				
 				tag.value(n,el.Nodes());
 				for (int j=0; j<el.Nodes(); ++j) el.m_node[j] = n[j]-1;
 				el.m_MatID = nmat;

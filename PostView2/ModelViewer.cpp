@@ -81,7 +81,7 @@ class CMeshProps : public CPropertyList
 public:
 	CMeshProps(FEModel* fem) : m_fem(fem) 
 	{
-		FEMesh& mesh = *fem->GetMesh();
+		FEMeshBase& mesh = *fem->GetMesh();
 		addProperty("Nodes"         , CProperty::Int, "Number of nodes"         )->setFlags(CProperty::Visible);
 		addProperty("Faces"         , CProperty::Int, "Number of faces"         )->setFlags(CProperty::Visible);
 		addProperty("Solid Elements", CProperty::Int, "Number of solid elements")->setFlags(CProperty::Visible);
@@ -93,7 +93,7 @@ public:
 		QVariant v;
 		if (m_fem)
 		{
-			FEMesh& mesh = *m_fem->GetMesh();
+			FEMeshBase& mesh = *m_fem->GetMesh();
 			switch (i)
 			{
 			case 0: v = mesh.Nodes(); break;

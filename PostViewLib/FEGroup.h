@@ -5,23 +5,23 @@ using namespace std;
 
 //-----------------------------------------------------------------------------
 // forward declaration of the mesh class
-class FEMesh;
+class FEMeshBase;
 
 //-----------------------------------------------------------------------------
 // Base class that describes a group of mesh items. 
 class FEGroup
 {
 public:
-	FEGroup(FEMesh* pm) { m_pm = pm; m_szname[0] = 0; }
+	FEGroup(FEMeshBase* pm) { m_pm = pm; m_szname[0] = 0; }
 	virtual ~FEGroup(void) {}
 
 	const char* GetName();
 	void SetName(const char* szname);
 
-	FEMesh* GetMesh() const { return m_pm; }
+	FEMeshBase* GetMesh() const { return m_pm; }
 
 protected:
-	FEMesh*	m_pm;	// pointer to the parent mesh
+	FEMeshBase*	m_pm;	// pointer to the parent mesh
 	char	m_szname[64];
 };
 
@@ -30,7 +30,7 @@ protected:
 class FEDomain
 {
 public:
-	FEDomain(FEMesh* pm, int nmat);
+	FEDomain(FEMeshBase* pm, int nmat);
 
 	int Faces() { return (int) m_Face.size(); }
 	FEFace& Face(int n);
@@ -39,7 +39,7 @@ public:
 	FEElement& Element(int n);
 
 protected:
-	FEMesh*	m_pm;
+	FEMeshBase*	m_pm;
 	int			m_nmat;	// material index
 	vector<int>	m_Face;	// face indices 
 	vector<int>	m_Elem;	// element indices
@@ -50,7 +50,7 @@ protected:
 class FEPart : public FEGroup
 {
 public:
-	FEPart(FEMesh* pm) : FEGroup(pm) {}
+	FEPart(FEMeshBase* pm) : FEGroup(pm) {}
 
 	int Size() const { return (int) m_Elem.size(); }
 
@@ -65,7 +65,7 @@ public:
 class FESurface : public FEGroup
 {
 public:
-	FESurface(FEMesh* pm) : FEGroup(pm) {}
+	FESurface(FEMeshBase* pm) : FEGroup(pm) {}
 
 	int Size() const { return (int) m_Face.size(); }
 
@@ -80,7 +80,7 @@ public:
 class FENodeSet : public FEGroup
 {
 public:
-	FENodeSet(FEMesh* pm) : FEGroup(pm){}
+	FENodeSet(FEMeshBase* pm) : FEGroup(pm){}
 
 public:
 	vector<int>	m_Node;

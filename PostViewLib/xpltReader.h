@@ -4,7 +4,7 @@
 #include "FEElement.h"
 
 class FEState;
-class FEMesh;
+class FEMeshBase;
 class FEMeshData;
 
 class XpltReader :	public FEFileReader
@@ -144,7 +144,7 @@ protected:
 	{
 		int		eid;
 		int		index;
-		int		node[FEElement::MAX_NODES];
+		int		node[FEGenericElement::MAX_NODES];
 	};
 
 	struct FACE
@@ -237,15 +237,15 @@ protected:
 	bool ReadElemData    (FEModel& fem, FEState* pstate);
 	bool ReadFaceData    (FEModel& fem, FEState* pstate);
 
-	bool ReadElemData_NODE(FEMesh& m, Domain& d, FEMeshData& s, int ntype);
+	bool ReadElemData_NODE(FEMeshBase& m, Domain& d, FEMeshData& s, int ntype);
 	bool ReadElemData_ITEM(Domain& d, FEMeshData& s, int ntype);
 	bool ReadElemData_MULT(Domain& d, FEMeshData& s, int ntype);
 	bool ReadElemData_REGION(Domain& d, FEMeshData& s, int ntype);
 
-	bool ReadFaceData_NODE(FEMesh& m, Surface& s, FEMeshData& data, int ntype);
+	bool ReadFaceData_NODE(FEMeshBase& m, Surface& s, FEMeshData& data, int ntype);
 	bool ReadFaceData_ITEM(Surface& s, FEMeshData& data, int ntype);
-	bool ReadFaceData_MULT(FEMesh& m, Surface& s, FEMeshData& data, int ntype);
-	bool ReadFaceData_REGION(FEMesh& m, Surface& s, FEMeshData& data, int ntype);
+	bool ReadFaceData_MULT(FEMeshBase& m, Surface& s, FEMeshData& data, int ntype);
+	bool ReadFaceData_REGION(FEMeshBase& m, Surface& s, FEMeshData& data, int ntype);
 
 	void Clear();
 

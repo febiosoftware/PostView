@@ -85,7 +85,7 @@ bool FEKinemat::ReadKine(const char* szfile)
 bool FEKinemat::BuildStates()
 {
 	FEModel& fem = *m_pDoc->GetFEModel();
-	FEMesh& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetMesh();
 	int NMAT = fem.Materials();
 	int NN = mesh.Nodes();
 	int NE = mesh.Elements();

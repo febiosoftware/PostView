@@ -14,7 +14,7 @@ void VectorMap::Gradient(int ntime, std::vector<float> &v)
 	assert(m_pmesh);
 	if (m_pmesh == 0) return;
 	vector<vec3f>& G = m_Data[ntime];
-	FEMesh& mesh = *m_pmesh;
+	FEMeshBase& mesh = *m_pmesh;
 
 	int i, k;
 
@@ -52,7 +52,7 @@ void VectorMap::Gradient(int ntime, std::vector<float> &v)
 			// get the nodal positions and values
 			int ne = e.Nodes();
 			int NE[8];
-			switch (e.m_ntype)
+			switch (e.Type())
 			{
 			case FE_HEX8:
 			case FE_HEX20:

@@ -4,7 +4,7 @@
 #include <vector>
 using namespace std;
 
-class FEMesh;
+class FEMeshBase;
 
 //-----------------------------------------------------------------------------
 template <typename T>
@@ -28,12 +28,12 @@ public:
 
 	void Clear() { m_Data.clear(); m_tag.clear(); }
 
-	void SetFEMesh(FEMesh* pm) { m_pmesh = pm; }
+	void SetFEMesh(FEMeshBase* pm) { m_pmesh = pm; }
 
 protected:
 	vector<int>	m_tag;
 	vector< vector<T> >	m_Data;
-	FEMesh*	m_pmesh;
+	FEMeshBase*	m_pmesh;
 };
 
 //-----------------------------------------------------------------------------

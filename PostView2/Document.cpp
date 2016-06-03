@@ -149,7 +149,7 @@ void ModelData::SetData(CGLModel* po)
 		for (int i=0; i<N; ++i) *ps->GetMaterial(i) = m_mat[i];
 
 		// update the mesh state
-		FEMesh* pmesh = ps->GetMesh();
+		FEMeshBase* pmesh = ps->GetMesh();
 		for (int i=0; i<N; ++i)
 		{
 			FEMaterial* pm = ps->GetMaterial(i);
@@ -630,7 +630,7 @@ bool CDocument::ExportASE(const char* szfile)
 	FILE* fp = fopen(szfile, "wt");
 	if (fp == 0) return false;
 
-	FEMesh& fem = *m_FEScene.GetMesh();
+	FEMeshBase& fem = *m_FEScene.GetMesh();
 	int nodes = fem.Nodes();
 	int elems = fem.Elements();
 
@@ -731,7 +731,7 @@ bool CDocument::AddNodeDataFromFile(const char* szfile, const char* szname, int 
 
 	// get the mesh
 	FEModel* pm = GetFEModel();
-	FEMesh& m = *pm->GetMesh();
+	FEMeshBase& m = *pm->GetMesh();
 
 	// create a new data field
 	int ND = 0;
@@ -853,7 +853,7 @@ bool CDocument::AddElemDataFromFile(const char* szfile, const char* szname, int 
 
 	// get the mesh
 	FEModel* pm = GetFEModel();
-	FEMesh& m = *pm->GetMesh();
+	FEMeshBase& m = *pm->GetMesh();
 
 	// create a new data field
 	int ND = 0;
@@ -975,7 +975,7 @@ bool CDocument::ExportDataField(const FEDataField& df, const char* szfile)
 
 	// get the mesh
 	FEModel& fem = *GetFEModel();
-	FEMesh& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetMesh();
 
 	int nstates = fem.GetStates();
 
@@ -1098,7 +1098,7 @@ BOUNDINGBOX CDocument::GetExtentsBox()
 		return box;
 	}
 
-	FEMesh& mesh = *m_fem->GetMesh();
+	FEMeshBase& mesh = *m_fem->GetMesh();
 	int NE = mesh.Elements(), nvis = 0;
 	for (int i=0; i<NE; ++i)
 	{
@@ -1136,7 +1136,7 @@ BOUNDINGBOX CDocument::GetSelectionBox()
 		return box;
 	}
 
-	FEMesh& mesh = *m_fem->GetMesh();
+	FEMeshBase& mesh = *m_fem->GetMesh();
 	const vector<FEElement*> selElems = GetGLModel()->GetElementSelection();
 	for (int i=0; i<(int)selElems.size(); ++i)
 	{
@@ -1197,7 +1197,7 @@ bool CDocument::ExportBYU(const char* szfile)
 	if (fp == 0) return false;
 
 	// get the selected mesh
-	FEMesh& mesh = *m_fem->GetMesh();
+	FEMeshBase& mesh = *m_fem->GetMesh();
 
 	// for now we put everything in one part
 	int parts = 1;
@@ -1262,7 +1262,7 @@ bool CDocument::ExportBYU(const char* szfile)
 //-----------------------------------------------------------------------------
 void CDocument::SelectElemsInRange(float fmin, float fmax, bool bsel)
 {
-	FEMesh* pm = m_fem->GetMesh();
+	FEMeshBase* pm = m_fem->GetMesh();
 	int N = pm->Elements();
 	FEState* ps = m_pGLModel->currentState();
 	for (int i=0; i<N; ++i)
@@ -1280,7 +1280,7 @@ void CDocument::SelectElemsInRange(float fmin, float fmax, bool bsel)
 //-----------------------------------------------------------------------------
 void CDocument::SelectNodesInRange(float fmin, float fmax, bool bsel)
 {
-	FEMesh* pm = m_fem->GetMesh();
+	FEMeshBase* pm = m_fem->GetMesh();
 	int N = pm->Nodes();
 	FEState* ps = m_pGLModel->currentState();
 	for (int i=0; i<N; ++i)
@@ -1298,7 +1298,7 @@ void CDocument::SelectNodesInRange(float fmin, float fmax, bool bsel)
 //-----------------------------------------------------------------------------
 void CDocument::SelectEdgesInRange(float fmin, float fmax, bool bsel)
 {
-	FEMesh* pm = m_fem->GetMesh();
+	FEMeshBase* pm = m_fem->GetMesh();
 	int N = pm->Edges();
 	FEState* ps = m_pGLModel->currentState();
 	for (int i=0; i<N; ++i)
@@ -1316,7 +1316,7 @@ void CDocument::SelectEdgesInRange(float fmin, float fmax, bool bsel)
 //-----------------------------------------------------------------------------
 void CDocument::SelectFacesInRange(float fmin, float fmax, bool bsel)
 {
-	FEMesh* pm = m_fem->GetMesh();
+	FEMeshBase* pm = m_fem->GetMesh();
 	FEState* ps = m_pGLModel->currentState();
 	int N = pm->Faces();
 	for (int i=0; i<N; ++i)
@@ -1470,7 +1470,7 @@ void CDocument::UpdateAllStates()
 void CDocument::GetSelectionList(vector<int>& L, int mode)
 {
 	L.clear();
-	FEMesh& m = *m_fem->GetMesh();
+	FEMeshBase& m = *m_fem->GetMesh();
 	switch (mode)
 	{
 	case SELECT_NODES:

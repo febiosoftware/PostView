@@ -3,7 +3,7 @@
 #include "FEMesh.h"
 
 //-----------------------------------------------------------------------------
-void FENodeFaceList::Build(FEMesh* pm)
+void FENodeFaceList::Build(FEMeshBase* pm)
 {
 	int N = pm->Nodes();
 	m_NFL.resize(N);

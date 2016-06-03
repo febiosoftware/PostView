@@ -17,10 +17,10 @@ bool FEVTKExport::Save(FEModel& fem, int ntime, const char* szfile)
 	FILE* fp = fopen(szfile, "wt");
 	if (fp == 0) return false;
 
-	FEMesh* pm = fem.GetMesh();
+	FEMeshBase* pm = fem.GetMesh();
 	if (pm == 0) return false;
 		
-	FEMesh& m = *pm;
+	FEMeshBase& m = *pm;
 	
 	//tags all nodes as 0
 	for (j=0; j<m.Nodes(); ++j) 
@@ -35,7 +35,7 @@ bool FEVTKExport::Save(FEModel& fem, int ntime, const char* szfile)
 		//check element type
 		if (j==0)
 		{
-			int elType = el.m_ntype;
+			int elType = el.Type();
 			switch(elType)
 			{
 			case FE_TRI3:
@@ -87,7 +87,7 @@ bool FEVTKExport::Save(FEModel& fem, int ntime, const char* szfile)
 	fprintf(fp, "%s\n" ,"");
 
 	// --- E L E M E N T S ---	
-	int nn[FEElement::MAX_NODES];
+	int nn[FEGenericElement::MAX_NODES];
 	for (j=0; j<m.Elements(); ++j)
 	{
 		FEElement& el = m.Element(j);
@@ -102,7 +102,7 @@ bool FEVTKExport::Save(FEModel& fem, int ntime, const char* szfile)
 				fprintf(fp, "%s %d %d\n" ,"CELLS", m.Elements(), m.Elements() * (el.Nodes()+1));
 		}
 
-		switch (el.m_ntype)
+		switch (el.Type())
 		{
 		case FE_TRI3:
 			fprintf(fp, "%d %d %d %d\n", el.Nodes(), nn[0], nn[1], nn[2]);
@@ -149,7 +149,7 @@ bool FEVTKExport::Save(FEModel& fem, int ntime, const char* szfile)
 			}
 			for (i=0; i<model.Objects(); ++i)
 			{
-				FEMesh& m = *model.Object(i)->GetFEMesh();
+				FEMeshBase& m = *model.Object(i)->GetFEMesh();
 				for (j=0; j<m.Nodes();)
 				{
 					for (int k =0; k<9 && j+k<m.Nodes();k++)
@@ -170,7 +170,7 @@ bool FEVTKExport::Save(FEModel& fem, int ntime, const char* szfile)
 		fprintf(fp,"%s\n","LOOKUP_TABLE default");
 		for (i=0; i<model.Objects(); ++i)
 		{
-			FEMesh& m = *model.Object(i)->GetFEMesh();
+			FEMeshBase& m = *model.Object(i)->GetFEMesh();
 			for (j=0; j<m.Nodes();)
 			{
 				for (int k =0; k<9 && j+k<m.Nodes();k++)
@@ -190,7 +190,7 @@ bool FEVTKExport::Save(FEModel& fem, int ntime, const char* szfile)
 		fprintf(fp, "%s\n" ,"");		
 		for (i=0; i<model.Objects(); ++i)
 		{
-			FEMesh& m = *model.Object(i)->GetFEMesh();
+			FEMeshBase& m = *model.Object(i)->GetFEMesh();
 			for (j=0; j<m.Elements(); ++j)
 			{
 				if(j == 0)

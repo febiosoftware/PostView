@@ -37,7 +37,7 @@ public:
 	void Render(CGLContext& rc);
 	CGLDisplacementMap* GetDisplacementMap() { return m_pdis; }
 	CGLColorMap* GetColorMap() { return m_pcol; }
-	FEMesh* GetMesh() { return m_ps->GetMesh(); }
+	FEMeshBase* GetMesh() { return m_ps->GetMesh(); }
 	FEModel* GetFEModel() { return m_ps; }
 
 	void Update(bool breset);
@@ -78,10 +78,10 @@ public:
 //	void RenderFeatureEdges(FEModel* ps);
 	void RenderMeshLines(FEModel* ps);
 	void RenderMeshLines(FEModel* ps, int nmat);
-	void RenderThickShell(FEFace& face, FEMesh* pm);
-	void RenderThickQuad(FEFace& face, FEMesh* pm);
-	void RenderThickTri(FEFace& face, FEMesh* pm);
-	void RenderThickShellOutline(FEFace& face, FEMesh* pm);
+	void RenderThickShell(FEFace& face, FEMeshBase* pm);
+	void RenderThickQuad(FEFace& face, FEMeshBase* pm);
+	void RenderThickTri(FEFace& face, FEMeshBase* pm);
+	void RenderThickShellOutline(FEFace& face, FEMeshBase* pm);
 	void RenderShadows(FEModel* ps, vec3f lp, float inf);
 	void RenderNodes(FEModel* ps, CGLContext& rc);
 	void RenderEdges(FEModel* ps, CGLContext& rc);
@@ -96,25 +96,25 @@ public:
 	void RemoveDecoration(GDecoration* pd);
 
 protected:
-	void RenderFace(FEFace& face, FEMesh* pm, int ndivs, bool bnode);
-	void RenderFace(FEFace& face, FEMesh* pm, GLCOLOR c[4], int ndivs, bool bnode);
-	void RenderFEFace(FEFace& el, FEMesh* pm);
-	void RenderElementOutline(FEElement& el, FEMesh* pm);
-	void RenderFaceOutline(FEFace& face, FEMesh* pm, int ndivs);
+	void RenderFace(FEFace& face, FEMeshBase* pm, int ndivs, bool bnode);
+	void RenderFace(FEFace& face, FEMeshBase* pm, GLCOLOR c[4], int ndivs, bool bnode);
+	void RenderFEFace(FEFace& el, FEMeshBase* pm);
+	void RenderElementOutline(FEElement& el, FEMeshBase* pm);
+	void RenderFaceOutline(FEFace& face, FEMeshBase* pm, int ndivs);
 	void RenderSolidMaterial(FEModel* ps, int m);
 	void RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m);
-	void RenderFaceEdge(FEFace& face, int j, FEMesh* pm, int ndivs);
+	void RenderFaceEdge(FEFace& face, int j, FEMeshBase* pm, int ndivs);
 
-	void RenderSmoothQUAD4(FEFace& f, FEMesh* pm, int ndivs, bool bnode);
+	void RenderSmoothQUAD4(FEFace& f, FEMeshBase* pm, int ndivs, bool bnode);
 	void RenderSmoothQUAD4(vec3f r[4], vec3f n[4], float t[4], int ndivs);
 
-	void RenderSmoothQUAD8(FEFace& face, FEMesh* pm, int ndivs, bool bnode);
+	void RenderSmoothQUAD8(FEFace& face, FEMeshBase* pm, int ndivs, bool bnode);
 	void RenderSmoothQUAD8(vec3f r[8], vec3f n[8], float t[8], int ndivs);
-	void RenderSmoothQUAD9(FEFace& face, FEMesh* pm, int ndivs, bool bnode);
+	void RenderSmoothQUAD9(FEFace& face, FEMeshBase* pm, int ndivs, bool bnode);
 	void RenderSmoothQUAD9(vec3f r[9], vec3f n[9], float t[9], int ndivs);
-	void RenderSmoothTRI6(FEFace& face, FEMesh* pm, int ndivs, bool bnode);
+	void RenderSmoothTRI6(FEFace& face, FEMeshBase* pm, int ndivs, bool bnode);
 	void RenderSmoothTRI6(vec3f r[6], vec3f n[8], float t[6], int ndivs);
-	void RenderSmoothTRI7(FEFace& face, FEMesh* pm, int ndivs, bool bnode);
+	void RenderSmoothTRI7(FEFace& face, FEMeshBase* pm, int ndivs, bool bnode);
 	void RenderSmoothTRI7(vec3f r[7], vec3f n[7], float t[7], int ndivs);
 
 	void RenderQUAD4(FEFace& f, bool bsmooth, bool bnode);

@@ -178,7 +178,7 @@ void CGraphWindow::Update(bool breset)
 	CGLModel* po = doc->GetGLModel();
 	FEModel& fem = *doc->GetFEModel();
 
-	FEMesh& mesh = *doc->GetFEModel()->GetMesh();
+	FEMeshBase& mesh = *doc->GetFEModel()->GetMesh();
 
 	// get the title
 	if (ntype == 0)
@@ -220,7 +220,7 @@ void CGraphWindow::addSelectedNodes()
 {
 	CDocument* pdoc = m_wnd->GetDocument();
 	FEModel& fem = *pdoc->GetFEModel();
-	FEMesh& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetMesh();
 
 	int nsteps = m_lastState - m_firstState + 1;
 	vector<float> xdata(nsteps);
@@ -262,7 +262,7 @@ void CGraphWindow::addSelectedEdges()
 {
 	CDocument* pdoc = m_wnd->GetDocument();
 	FEModel& fem = *pdoc->GetFEModel();
-	FEMesh& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetMesh();
 
 	int nsteps = m_lastState - m_firstState + 1;
 	vector<float> xdata(nsteps);
@@ -304,7 +304,7 @@ void CGraphWindow::addSelectedFaces()
 {
 	CDocument* pdoc = m_wnd->GetDocument();
 	FEModel& fem = *pdoc->GetFEModel();
-	FEMesh& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetMesh();
 
 	int nsteps = m_lastState - m_firstState + 1;
 	vector<float> xdata(nsteps);
@@ -346,7 +346,7 @@ void CGraphWindow::addSelectedElems()
 {
 	CDocument* pdoc = m_wnd->GetDocument();
 	FEModel& fem = *pdoc->GetFEModel();
-	FEMesh& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetMesh();
 
 	int nsteps = m_lastState - m_firstState + 1;
 	vector<float> xdata(nsteps);

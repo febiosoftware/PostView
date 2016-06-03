@@ -3,7 +3,7 @@
 #include "FEMesh.h"
 
 //-----------------------------------------------------------------------------
-void FENodeElemList::Build(FEMesh* pm)
+void FENodeElemList::Build(FEMeshBase* pm)
 {
 	int N = pm->Nodes();
 	m_NEL.resize(N);

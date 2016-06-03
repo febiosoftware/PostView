@@ -1,7 +1,7 @@
 #pragma once
 #include "FEFileReader.h"
 
-class FEMesh;
+class FEMeshBase;
 
 class FENikeImport : public FEFileReader
 {
@@ -27,5 +27,5 @@ protected:
 
 	FEModel*	m_pfem;
 
-	FEMesh*	m_pm;
+	FEMeshBase*	m_pm;
 };

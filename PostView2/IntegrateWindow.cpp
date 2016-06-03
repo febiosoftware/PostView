@@ -154,7 +154,7 @@ void CIntegrateWindow::IntegrateSelection(CPlotData& data)
 	// get the document
 	CDocument* pdoc = m_wnd->GetDocument();
 	FEModel& fem = *pdoc->GetFEModel();
-	FEMesh& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetMesh();
 	CGLModel* po = pdoc->GetGLModel();
 
 	data.clear();
@@ -190,7 +190,7 @@ void CIntegrateWindow::IntegrateSelection(CPlotData& data)
 }
 
 //-----------------------------------------------------------------------------
-double CIntegrateWindow::IntegrateNodes(FEMesh& mesh, FEState* ps)
+double CIntegrateWindow::IntegrateNodes(FEMeshBase& mesh, FEState* ps)
 {
 	double res = 0.0;
 	int N = mesh.Nodes();
@@ -206,7 +206,7 @@ double CIntegrateWindow::IntegrateNodes(FEMesh& mesh, FEState* ps)
 }
 
 //-----------------------------------------------------------------------------
-double CIntegrateWindow::IntegrateEdges(FEMesh& mesh, FEState* ps)
+double CIntegrateWindow::IntegrateEdges(FEMeshBase& mesh, FEState* ps)
 {
 	assert(false);
 	return 0.0;
@@ -215,7 +215,7 @@ double CIntegrateWindow::IntegrateEdges(FEMesh& mesh, FEState* ps)
 //-----------------------------------------------------------------------------
 // This function calculates the integral over a surface. Note that if the surface
 // is triangular, then we calculate the integral from a degenerate quad.
-double CIntegrateWindow::IntegrateFaces(FEMesh& mesh, FEState* ps)
+double CIntegrateWindow::IntegrateFaces(FEMeshBase& mesh, FEState* ps)
 {
 	double res = 0.0;
 	float v[4];
@@ -245,7 +245,7 @@ double CIntegrateWindow::IntegrateFaces(FEMesh& mesh, FEState* ps)
 //-----------------------------------------------------------------------------
 // This function calculates the integral over a volume. Note that if the volume
 // is not hexahedral, then we calculate the integral from a degenerate hex.
-double CIntegrateWindow::IntegrateElems(FEMesh& mesh, FEState* ps)
+double CIntegrateWindow::IntegrateElems(FEMeshBase& mesh, FEState* ps)
 {
 	double res = 0.0;
 	float v[8];
@@ -260,7 +260,7 @@ double CIntegrateWindow::IntegrateElems(FEMesh& mesh, FEState* ps)
 			// get the nodal values and coordinates
 			for (int j=0; j<nn; ++j) v[j] = ps->m_NODE[e.m_node[j]].m_val;
 			for (int j=0; j<nn; ++j) r[j] = ps->m_NODE[e.m_node[j]].m_rt;
-			switch (e.m_ntype)
+			switch (e.Type())
 			{
 			case FE_PENTA6:
 				v[7] = v[5]; r[7] = r[5];

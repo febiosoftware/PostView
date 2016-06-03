@@ -2,7 +2,7 @@
 #include "FENodeFaceTable.h"
 #include "FEMesh.h"
 
-FENodeFaceTable::FENodeFaceTable(FEMesh* pm)
+FENodeFaceTable::FENodeFaceTable(FEMeshBase* pm)
 {
 	m_pm = pm;
 	Build();
@@ -10,7 +10,7 @@ FENodeFaceTable::FENodeFaceTable(FEMesh* pm)
 
 void FENodeFaceTable::Build()
 {
-	FEMesh& m = *m_pm;
+	FEMeshBase& m = *m_pm;
 
 	int NF = m.Faces();
 	int NN = m.Nodes();

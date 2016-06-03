@@ -6,7 +6,7 @@ using namespace std;
 
 //-----------------------------------------------------------------------------
 // Forward declaration of the mesh class
-class FEMesh;
+class FEMeshBase;
 
 //-----------------------------------------------------------------------------
 // Defintion of the NodeFaceRef
@@ -21,7 +21,7 @@ class FENodeFaceList
 public:
 	FENodeFaceList(void) { m_pm = 0; }
 
-	void Build(FEMesh* pm);
+	void Build(FEMeshBase* pm);
 
 	void Clear() { m_NFL.clear(); }
 
@@ -30,6 +30,6 @@ public:
 	bool Empty() { return m_NFL.empty(); }
 
 protected:
-	FEMesh*	m_pm;
+	FEMeshBase*	m_pm;
 	vector<vector<NodeFaceRef> >	m_NFL;
 };

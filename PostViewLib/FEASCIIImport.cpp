@@ -401,8 +401,9 @@ bool FEASCIIImport::BuildMesh(FEModel &fem)
 
 	// create the mesh
 	ZONE& zone = m_Zone[0];
-	FEMesh* pm = fem.GetMesh();
+	FEMeshBase* pm = new FEMesh;
 	pm->Create(zone.m_nn, zone.m_ne);
+	fem.SetMesh(pm);
 
 	// assign nodes
 	for (int i=0; i<zone.m_nn; ++i)
@@ -426,9 +427,9 @@ bool FEASCIIImport::BuildMesh(FEModel &fem)
 	// assign elements
 	for (int i=0; i<zone.m_ne; ++i)
 	{
-		FEElement& e = pm->Element(i);
+		FEGenericElement& e = static_cast<FEGenericElement&>(pm->Element(i));
 		int* n = zone.m_Elem[i].node;
-		e.m_ntype = etype;
+		e.SetType(etype);
 		e.m_node[0] = n[0]-1;
 		e.m_node[1] = n[1]-1;
 		e.m_node[2] = n[2]-1;

@@ -2,7 +2,7 @@
 #include "PltArchive.h"
 
 //-----------------------------------------------------------------------------
-class FEMesh;
+class FEMeshBase;
 class FEModel;
 class FEDataField;
 class FEPart;
@@ -117,9 +117,9 @@ private:
 	bool WriteGeometry  (FEModel& fem);
 	bool WriteDataField (FEDataField& data);
 
-	bool WriteNodeSection   (FEMesh& m);
-	bool WritePartSection   (FEMesh& m);
-	bool WriteSurfaceSection(FEMesh& m);
+	bool WriteNodeSection   (FEMeshBase& m);
+	bool WritePartSection   (FEMeshBase& m);
+	bool WriteSurfaceSection(FEMeshBase& m);
 
 	bool WritePart(FEPart& part);
 

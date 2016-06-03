@@ -8,7 +8,7 @@
 // Constructor
 FEState::FEState(float time, FEModel* pfem)
 {
-	FEMesh& mesh = *pfem->GetMesh();
+	FEMeshBase& mesh = *pfem->GetMesh();
 	int nodes = mesh.Nodes();
 	int edges = mesh.Edges();
 	int elems = mesh.Elements();
@@ -59,7 +59,7 @@ template <class T> void copyData(FEMeshData* dest, FEMeshData* src)
 // Constructor
 FEState::FEState(float time, FEModel* pfem, FEState* pstate)
 {
-	FEMesh& mesh = *pfem->GetMesh();
+	FEMeshBase& mesh = *pfem->GetMesh();
 
 	int nodes = mesh.Nodes();
 	int edges = mesh.Edges();

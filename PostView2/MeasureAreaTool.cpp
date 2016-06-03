@@ -60,7 +60,7 @@ void CMeasureAreaTool::OnApply()
 	if (m_doc && m_doc->IsValid())
 	{
 		FEModel& fem = *m_doc->GetFEModel();
-		FEMesh& mesh = *fem.GetMesh();
+		FEMeshBase& mesh = *fem.GetMesh();
 		const vector<FEFace*> selectedFaces = m_doc->GetGLModel()->GetFaceSelection();
 		int N = selectedFaces.size();
 		for (int i=0; i<N; ++i)

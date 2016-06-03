@@ -276,11 +276,7 @@ public:
 class FEElement : public FEItem
 {
 public:
-	enum {MAX_NODES = 27};
-
-public:
 	FEElement();
-	virtual ~FEElement() {}
 		
 	bool HasNode(int node) 
 	{ 
@@ -333,13 +329,67 @@ public:
 	// get iso-param coordinates of the nodes
 	void iso_coord(int n, double q[3]);
 
+	FEElemType Type() const { return m_ntype; }
+
 public:
-	FEElemType	m_ntype;			// type of element
 	int			m_lid;				// local ID (zero-based index into element array)
 	int			m_MatID;			// material id
-	int			m_node[MAX_NODES];	// array of nodes ID
+	int*		m_node;			// array of nodes ID
 
 	FEElement*	m_pElem[6];		// array of pointers to neighbour elements
+
+protected:
+	FEElemType	m_ntype;			// type of element
 };
+
+class FEGenericElement : public FEElement
+{
+public:
+	enum {MAX_NODES = 27};
+
+public:
+	FEGenericElement();
+	FEGenericElement(const FEGenericElement& e);
+	void operator = (const FEGenericElement& e);
+
+	void SetType(FEElemType type) { m_ntype = type; }
+
+public:
+	int		_node[MAX_NODES];	// array of nodes ID
+};
+
+class FETri3 : public FEElement
+{
+public:
+	FETri3();
+	FETri3(const FETri3& e);
+	void operator = (const FETri3& e);
+
+public:
+	int		_node[3];	// array of nodes ID
+};
+
+class FETet4 : public FEElement
+{
+public:
+	FETet4();
+	FETet4(const FETet4& e);
+	void operator = (const FETet4& e);
+
+public:
+	int		_node[4];	// array of nodes ID
+};
+
+class FEHex8: public FEElement
+{
+public:
+	FEHex8();
+	FEHex8(const FEHex8& e);
+	void operator = (const FEHex8& e);
+
+public:
+	int		_node[8];	// array of nodes ID
+};
+
 
 #endif // !defined(AFX_FEELEMENT_H__F82D0D55_F582_4ABE_9D02_C9FC5FC72C6C__INCLUDED_)

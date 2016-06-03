@@ -1,4 +1,4 @@
-// FEMesh.cpp: implementation of the FEMesh class.
+// FEMeshBase.cpp: implementation of the FEMeshBase class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -10,7 +10,7 @@
 
 //-----------------------------------------------------------------------------
 // Constructor
-FEMesh::FEMesh()
+FEMeshBase::FEMeshBase()
 {
 	// TODO: store this elsewhere
 	m_stol = 60.*PI/180.0;
@@ -18,14 +18,14 @@ FEMesh::FEMesh()
 
 //-----------------------------------------------------------------------------
 // Destructor
-FEMesh::~FEMesh()
+FEMeshBase::~FEMeshBase()
 {
 	CleanUp();
 }
 
 //-----------------------------------------------------------------------------
 // clean all depdendant structures
-void FEMesh::CleanUp()
+void FEMeshBase::CleanUp()
 {
 	m_NEL.Clear();
 	m_NFL.Clear();
@@ -38,18 +38,18 @@ void FEMesh::CleanUp()
 
 //-----------------------------------------------------------------------------
 // clear everything
-void FEMesh::ClearAll()
+void FEMeshBase::ClearAll()
 {
 	CleanUp();
 	m_Node.clear();
 	m_Edge.clear();
 	m_Face.clear();
-	m_Elem.clear();
+	ClearElements();
 }
 
 //-----------------------------------------------------------------------------
 // Clear all the domains
-void FEMesh::ClearDomains()
+void FEMeshBase::ClearDomains()
 {
 	for (int i=0; i<(int) m_Dom.size(); ++i) delete m_Dom[i];
 	m_Dom.clear();
@@ -57,7 +57,7 @@ void FEMesh::ClearDomains()
 
 //-----------------------------------------------------------------------------
 // Clear all the parts
-void FEMesh::ClearParts()
+void FEMeshBase::ClearParts()
 {
 	for (int i=0; i<(int) m_Part.size(); ++i) delete m_Part[i];
 	m_Part.clear();
@@ -65,7 +65,7 @@ void FEMesh::ClearParts()
 
 //-----------------------------------------------------------------------------
 // Clear all the surfaces
-void FEMesh::ClearSurfaces()
+void FEMeshBase::ClearSurfaces()
 {
 	for (int i=0; i<(int) m_Surf.size(); ++i) delete m_Surf[i];
 	m_Surf.clear();
@@ -73,7 +73,7 @@ void FEMesh::ClearSurfaces()
 
 //-----------------------------------------------------------------------------
 // Clear all the node sets
-void FEMesh::ClearNodeSets()
+void FEMeshBase::ClearNodeSets()
 {
 	for (int i=0; i<(int) m_NSet.size(); ++i) delete m_NSet[i];
 	m_NSet.clear();
@@ -81,12 +81,12 @@ void FEMesh::ClearNodeSets()
 
 //-----------------------------------------------------------------------------
 // Count nr of beam elements
-int FEMesh::BeamElements()
+int FEMeshBase::BeamElements()
 {
 	int n = 0;
 	for (int i=0; i<Elements(); ++i)
 	{
-		if (m_Elem[i].IsBeam()) n++;
+		if (Element(i).IsBeam()) n++;
 	}
 
 	return n;
@@ -94,12 +94,12 @@ int FEMesh::BeamElements()
 
 //-----------------------------------------------------------------------------
 // Count nr of shell elements
-int FEMesh::ShellElements()
+int FEMeshBase::ShellElements()
 {
 	int n = 0;
 	for (int i=0; i<Elements(); ++i)
 	{
-		if (m_Elem[i].IsShell()) n++;
+		if (Element(i).IsShell()) n++;
 	}
 
 	return n;
@@ -107,59 +107,20 @@ int FEMesh::ShellElements()
 
 //-----------------------------------------------------------------------------
 // Count nr of solid elements
-int FEMesh::SolidElements()
+int FEMeshBase::SolidElements()
 {
 	int n = 0;
 	for (int i=0; i<Elements(); ++i)
 	{
-		if (m_Elem[i].IsSolid()) n++;
+		if (Element(i).IsSolid()) n++;
 	}
 
 	return n;
 }
 
 //-----------------------------------------------------------------------------
-// Create a mesh
-bool FEMesh::Create(int nodes, int elems)
-{
-	// clean up the old mesh
-	CleanUp();
-
-	// allocate storage for nodal data
-	if (nodes) 
-	{
-		m_Node.resize(nodes);
-
-		// assign default IDs
-		for (int i=0; i<nodes; ++i) m_Node[i].SetID(i+1);
-	}
-
-	// allocate storage for element data
-	if (elems)
-	{
-		m_Elem.resize(elems);
-
-		// make sure everything got allocated
-		if ((m_Node.size() == 0) || (m_Elem.size() == 0))
-		{
-			CleanUp();
-			return false;
-		}
-
-		// set default element ID's
-		for (int i=0; i<elems; i++) 
-		{
-			m_Elem[i].SetID(i+1); 
-			m_Elem[i].m_lid = i;	
-		}
-	}
-
-	return true;
-}
-
-//-----------------------------------------------------------------------------
 // Find the element neighbours
-void FEMesh::FindNeighbours()
+void FEMeshBase::FindNeighbours()
 {
 	// Build the node-element list
 	m_NEL.Build(this);
@@ -167,7 +128,7 @@ void FEMesh::FindNeighbours()
 	// reset all neighbors
 	for (int i=0; i<Elements(); i++)
 	{
-		FEElement& e = m_Elem[i];
+		FEElement& e = Element(i);
 
 		// solid elements
 		for (int  j=0; j<e.Faces(); j++) e.m_pElem[j] = 0;
@@ -183,7 +144,7 @@ void FEMesh::FindNeighbours()
 	bool bfound;
 	for (int i=0; i<Elements(); i++)
 	{
-		FEElement& e = m_Elem[i];
+		FEElement& e = Element(i);
 
 		// first, do the solid elements
 		for (int j=0; j<e.Faces(); j++)
@@ -197,7 +158,7 @@ void FEMesh::FindNeighbours()
 				bfound = false;
 				for (int k=0; k < (int) nel.size(); k++)
 				{
-					pne = &m_Elem[nel[k].first];
+					pne = &Element(nel[k].first);
 					if (pne != &e)
 					{
 						for (int l=0; l<pne->Faces(); l++) 
@@ -232,7 +193,7 @@ void FEMesh::FindNeighbours()
 			bfound = false;
 			for (int k=0; k < (int) nel.size(); k++)
 			{
-				pne = &m_Elem[nel[k].first];
+				pne = &Element(nel[k].first);
 				if ((pne != &e) && (*pne != e))
 				{
 					for (int l=0; l<pne->Edges(); l++) 
@@ -255,13 +216,14 @@ void FEMesh::FindNeighbours()
 
 //-----------------------------------------------------------------------------
 // Build the parts
-void FEMesh::UpdateDomains()
+void FEMeshBase::UpdateDomains()
 {
 	ClearDomains();
 
 	// figure out how many domains there are
 	int ndom = 0, i;
-	for (i=0; i<(int) m_Elem.size(); ++i) if (m_Elem[i].m_MatID > ndom) ndom = m_Elem[i].m_MatID;
+	int NE = Elements();
+	for (i=0; i<NE; ++i) if (Element(i).m_MatID > ndom) ndom = Element(i).m_MatID;
 	++ndom;
 
 	m_Dom.resize(ndom);
@@ -271,7 +233,7 @@ void FEMesh::UpdateDomains()
 //-----------------------------------------------------------------------------
 // Build the edges. 
 // Currently, only edges from outside facets are created
-void FEMesh::BuildEdges()
+void FEMeshBase::BuildEdges()
 {
 	int NF = Faces();
 	for (int i=0; i<NF; ++i) Face(i).m_ntag = i;
@@ -297,7 +259,7 @@ void FEMesh::BuildEdges()
 
 //-----------------------------------------------------------------------------
 // Build the FE faces. Note that we only create exterior faces
-void FEMesh::BuildFaces()
+void FEMeshBase::BuildFaces()
 {
 	// make sure we only call this once
 	assert(m_Face.empty());
@@ -305,10 +267,10 @@ void FEMesh::BuildFaces()
 
 	// let's count the faces
 	int NF = 0;
-	int NE = m_Elem.size();
+	int NE = Elements();
 	for (i=0; i<NE; ++i)
 	{
-		FEElement& e = m_Elem[i];
+		FEElement& e = Element(i);
 
 		// solid elements
 		int nf = e.Faces();
@@ -326,7 +288,7 @@ void FEMesh::BuildFaces()
 	NF = 0;
 	for (i=0; i<NE; ++i)
 	{
-		FEElement& e = m_Elem[i];
+		FEElement& e = Element(i);
 		
 		// solid elements
 		int nf = e.Faces();
@@ -348,12 +310,12 @@ void FEMesh::BuildFaces()
 			f.node[0] = e.m_node[0];
 			f.node[1] = e.m_node[1];
 			f.node[2] = e.m_node[2];
-			if (e.m_ntype == FE_QUAD4) 
+			if (e.Type() == FE_QUAD4) 
 			{
 				f.node[3] = e.m_node[3];
 				f.m_ntype = FACE_QUAD4;
 			}
-            else if (e.m_ntype == FE_QUAD8)
+            else if (e.Type() == FE_QUAD8)
             {
                 f.node[3] = e.m_node[3];
                 f.node[4] = e.m_node[4];
@@ -362,7 +324,7 @@ void FEMesh::BuildFaces()
                 f.node[7] = e.m_node[7];
                 f.m_ntype = FACE_QUAD8;
             }
-            else if (e.m_ntype == FE_QUAD9)
+            else if (e.Type() == FE_QUAD9)
             {
                 f.node[3] = e.m_node[3];
                 f.node[4] = e.m_node[4];
@@ -372,12 +334,12 @@ void FEMesh::BuildFaces()
                 f.node[8] = e.m_node[8];
                 f.m_ntype = FACE_QUAD9;
             }
-			else if (e.m_ntype == FE_TRI3)
+			else if (e.Type() == FE_TRI3)
 			{
 				f.node[3] = e.m_node[2];
 				f.m_ntype = FACE_TRI3;
 			}
-            else if (e.m_ntype == FE_TRI6)
+            else if (e.Type() == FE_TRI6)
             {
                 f.node[3] = e.m_node[3];
                 f.node[4] = e.m_node[4];
@@ -397,7 +359,7 @@ void FEMesh::BuildFaces()
 }
 
 //-----------------------------------------------------------------------------
-void FEMesh::FindFaceNeighbors()
+void FEMeshBase::FindFaceNeighbors()
 {
 	int nodes = Nodes();
 	int faces = Faces();
@@ -483,7 +445,7 @@ void FEMesh::FindFaceNeighbors()
 
 //-----------------------------------------------------------------------------
 // Update the FE data
-void FEMesh::Update()
+void FEMeshBase::Update()
 {
 	// find the element's neighbours
 	if (m_NEL.Empty()) FindNeighbours();
@@ -510,7 +472,7 @@ void FEMesh::Update()
 
 //-----------------------------------------------------------------------------
 // Find the interior and exterior nodes
-void FEMesh::UpdateNodes()
+void FEMeshBase::UpdateNodes()
 {
 	int i, j;
 
@@ -535,7 +497,7 @@ void FEMesh::UpdateNodes()
 //-----------------------------------------------------------------------------
 // Partition the surface depending on a smoothing tolerance. Face neighbours
 // are only set when the faces belong to the same smoothing group.
-void FEMesh::AutoSmooth()
+void FEMeshBase::AutoSmooth()
 {
 	int faces = Faces();
 	for (int i=0; i<faces; ++i)
@@ -654,7 +616,7 @@ void FEMesh::AutoSmooth()
 //-----------------------------------------------------------------------------
 // Update the face normals. If bsmooth, the smoothing groups are used
 // to create a smoothed surface representation.
-void FEMesh::UpdateNormals(bool bsmooth)
+void FEMeshBase::UpdateNormals(bool bsmooth)
 {
 	int faces = Faces();
 	int nodes = Nodes();
@@ -762,7 +724,7 @@ double triangle_area(vec3f& r0, vec3f& r1, vec3f& r2)
 
 //-----------------------------------------------------------------------------
 // Calculate the area of a FEFace
-double FEMesh::FaceArea(FEFace &f)
+double FEMeshBase::FaceArea(FEFace &f)
 {
 	switch (f.Nodes())
 	{
@@ -881,10 +843,10 @@ double FEMesh::FaceArea(FEFace &f)
 
 //-----------------------------------------------------------------------------
 // Calculate the volume of an element
-float FEMesh::ElementVolume(int iel)
+float FEMeshBase::ElementVolume(int iel)
 {
 	FEElement& el = Element(iel);
-	switch (el.m_ntype)
+	switch (el.Type())
 	{
 	case FE_HEX8  : return HexVolume(el); break;
 	case FE_HEX20 : return HexVolume(el); break;
@@ -898,9 +860,9 @@ float FEMesh::ElementVolume(int iel)
 
 //-----------------------------------------------------------------------------
 // Calculate the volume of a hex element
-float FEMesh::HexVolume(FEElement& el)
+float FEMeshBase::HexVolume(const FEElement& el)
 {
-	assert((el.m_ntype == FE_HEX8) || (el.m_ntype == FE_HEX20) || (el.m_ntype == FE_HEX27));
+	assert((el.Type() == FE_HEX8) || (el.Type() == FE_HEX20) || (el.Type() == FE_HEX27));
 
 	// gauss-point data
 	const float a = 1.f / (float) sqrt(3.0);
@@ -1013,9 +975,9 @@ float FEMesh::HexVolume(FEElement& el)
 
 //-----------------------------------------------------------------------------
 // Calculate the volume of a pentahedral element
-float FEMesh::PentaVolume(FEElement& el)
+float FEMeshBase::PentaVolume(const FEElement& el)
 {
-	assert(el.m_ntype == FE_PENTA6);
+	assert(el.Type() == FE_PENTA6);
 
 	// gauss-point data
 	//gauss intergration points
@@ -1126,9 +1088,9 @@ float FEMesh::PentaVolume(FEElement& el)
 
 //-----------------------------------------------------------------------------
 // Calculate the volume of a tetrahedral element
-float FEMesh::TetVolume(FEElement& el)
+float FEMeshBase::TetVolume(const FEElement& el)
 {
-	assert(el.m_ntype == FE_TET4);
+	assert(el.Type() == FE_TET4);
 
 	// gauss-point data
 	const float a = 0.58541020f;
@@ -1228,7 +1190,7 @@ float FEMesh::TetVolume(FEElement& el)
 }
 
 //-----------------------------------------------------------------------------
-void FEMesh::FaceNodePosition(FEFace& f, vec3f* r)
+void FEMeshBase::FaceNodePosition(FEFace& f, vec3f* r)
 {
 	switch (f.m_ntype)
 	{
@@ -1254,7 +1216,7 @@ void FEMesh::FaceNodePosition(FEFace& f, vec3f* r)
 }
 
 //-----------------------------------------------------------------------------
-void FEMesh::FaceNodeNormals(FEFace& f, vec3f* n)
+void FEMeshBase::FaceNodeNormals(FEFace& f, vec3f* n)
 {
 	switch (f.m_ntype)
 	{
@@ -1280,7 +1242,7 @@ void FEMesh::FaceNodeNormals(FEFace& f, vec3f* n)
 }
 
 //-----------------------------------------------------------------------------
-void FEMesh::FaceNodeTexCoords(FEFace& f, float* t, bool bnode)
+void FEMeshBase::FaceNodeTexCoords(FEFace& f, float* t, bool bnode)
 {
 	if (bnode)
 	{
@@ -1295,7 +1257,7 @@ void FEMesh::FaceNodeTexCoords(FEFace& f, float* t, bool bnode)
 //-----------------------------------------------------------------------------
 bool IsInsideElement(FEElement& el, double r[3], const double tol)
 {
-	switch (el.m_ntype)
+	switch (el.Type())
 	{
 	case FE_TET4:
 	case FE_TET10:
@@ -1312,17 +1274,17 @@ bool IsInsideElement(FEElement& el, double r[3], const double tol)
 }
 
 //-----------------------------------------------------------------------------
-bool ProjectInsideElement(FEMesh& m, FEElement& el, const vec3f& p, double r[3])
+bool ProjectInsideElement(FEMeshBase& m, FEElement& el, const vec3f& p, double r[3])
 {
 	const double tol = 0.0001;
 	const int nmax = 10;
 	r[0] = r[1] = r[2] = 0.f;
 	double dr[3], R[3];
 	int ne = el.Nodes();
-	vec3f x[FEElement::MAX_NODES];
+	vec3f x[FEGenericElement::MAX_NODES];
 	for (int i=0; i<ne; ++i) x[i] = m.Node(el.m_node[i]).m_rt;
 	mat3d K, Ki;
-	double u2, N[FEElement::MAX_NODES], G[3][FEElement::MAX_NODES];
+	double u2, N[FEGenericElement::MAX_NODES], G[3][FEGenericElement::MAX_NODES];
 	int n = 0;
 	do
 	{
@@ -1367,9 +1329,9 @@ bool ProjectInsideElement(FEMesh& m, FEElement& el, const vec3f& p, double r[3])
 }
 
 //-----------------------------------------------------------------------------
-bool FindElementRef(FEMesh& m, const vec3f& p, int& nelem, double r[3])
+bool FindElementRef(FEMeshBase& m, const vec3f& p, int& nelem, double r[3])
 {
-	vec3f y[FEElement::MAX_NODES];
+	vec3f y[FEGenericElement::MAX_NODES];
 	int NE = m.Elements();
 	for (int i=0; i<NE; ++i)
 	{
@@ -1417,4 +1379,160 @@ bool FindElementRef(FEMesh& m, const vec3f& p, int& nelem, double r[3])
 	}
 
 	return false;
+}
+
+//-----------------------------------------------------------------------------
+// Create a mesh
+bool FEMesh::Create(int nodes, int elems)
+{
+	// clean up the old mesh
+	CleanUp();
+
+	// allocate storage for nodal data
+	if (nodes) 
+	{
+		m_Node.resize(nodes);
+
+		// assign default IDs
+		for (int i=0; i<nodes; ++i) m_Node[i].SetID(i+1);
+	}
+
+	// allocate storage for element data
+	if (elems)
+	{
+		m_Elem.resize(elems);
+
+		// make sure everything got allocated
+		if ((m_Node.size() == 0) || (m_Elem.size() == 0))
+		{
+			CleanUp();
+			return false;
+		}
+
+		// set default element ID's
+		for (int i=0; i<elems; i++) 
+		{
+			m_Elem[i].SetID(i+1); 
+			m_Elem[i].m_lid = i;	
+		}
+	}
+
+	return true;
+}
+
+//-----------------------------------------------------------------------------
+// Create a mesh
+bool FEMeshTet4::Create(int nodes, int elems)
+{
+	// clean up the old mesh
+	CleanUp();
+
+	// allocate storage for nodal data
+	if (nodes) 
+	{
+		m_Node.resize(nodes);
+
+		// assign default IDs
+		for (int i=0; i<nodes; ++i) m_Node[i].SetID(i+1);
+	}
+
+	// allocate storage for element data
+	if (elems)
+	{
+		m_Elem.resize(elems);
+
+		// make sure everything got allocated
+		if ((m_Node.size() == 0) || (m_Elem.size() == 0))
+		{
+			CleanUp();
+			return false;
+		}
+
+		// set default element ID's
+		for (int i=0; i<elems; i++) 
+		{
+			m_Elem[i].SetID(i+1); 
+			m_Elem[i].m_lid = i;	
+		}
+	}
+
+	return true;
+}
+
+//-----------------------------------------------------------------------------
+// Create a mesh
+bool FEMeshHex8::Create(int nodes, int elems)
+{
+	// clean up the old mesh
+	CleanUp();
+
+	// allocate storage for nodal data
+	if (nodes) 
+	{
+		m_Node.resize(nodes);
+
+		// assign default IDs
+		for (int i=0; i<nodes; ++i) m_Node[i].SetID(i+1);
+	}
+
+	// allocate storage for element data
+	if (elems)
+	{
+		m_Elem.resize(elems);
+
+		// make sure everything got allocated
+		if ((m_Node.size() == 0) || (m_Elem.size() == 0))
+		{
+			CleanUp();
+			return false;
+		}
+
+		// set default element ID's
+		for (int i=0; i<elems; i++) 
+		{
+			m_Elem[i].SetID(i+1); 
+			m_Elem[i].m_lid = i;	
+		}
+	}
+
+	return true;
+}
+
+//-----------------------------------------------------------------------------
+// Create a mesh
+bool FETriMesh::Create(int nodes, int elems)
+{
+	// clean up the old mesh
+	CleanUp();
+
+	// allocate storage for nodal data
+	if (nodes) 
+	{
+		m_Node.resize(nodes);
+
+		// assign default IDs
+		for (int i=0; i<nodes; ++i) m_Node[i].SetID(i+1);
+	}
+
+	// allocate storage for element data
+	if (elems)
+	{
+		m_Elem.resize(elems);
+
+		// make sure everything got allocated
+		if ((m_Node.size() == 0) || (m_Elem.size() == 0))
+		{
+			CleanUp();
+			return false;
+		}
+
+		// set default element ID's
+		for (int i=0; i<elems; i++) 
+		{
+			m_Elem[i].SetID(i+1); 
+			m_Elem[i].m_lid = i;	
+		}
+	}
+
+	return true;
 }

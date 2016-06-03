@@ -210,7 +210,7 @@ void CMaterialPanel::on_hideButton_clicked()
 
 	CGLModel& mdl = *doc.GetGLModel();
 	FEModel& fem = *doc.GetFEModel();
-	FEMesh& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetMesh();
 
 	QItemSelectionModel* pselect = ui->m_list->selectionModel();
 	QModelIndexList selection = pselect->selectedRows();
@@ -236,7 +236,7 @@ void CMaterialPanel::on_showButton_clicked()
 
 	CGLModel& mdl = *doc.GetGLModel();
 	FEModel& fem = *doc.GetFEModel();
-	FEMesh& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetMesh();
 
 	QItemSelectionModel* pselect = ui->m_list->selectionModel();
 	QModelIndexList selection = pselect->selectedRows();
@@ -262,7 +262,7 @@ void CMaterialPanel::on_enableButton_clicked()
 
 	CGLModel& mdl = *doc.GetGLModel();
 	FEModel& fem = *doc.GetFEModel();
-	FEMesh& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetMesh();
 
 	QItemSelectionModel* pselect = ui->m_list->selectionModel();
 	QModelIndexList selection = pselect->selectedRows();
@@ -289,7 +289,7 @@ void CMaterialPanel::on_disableButton_clicked()
 
 	CGLModel& mdl = *doc.GetGLModel();
 	FEModel& fem = *doc.GetFEModel();
-	FEMesh& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetMesh();
 
 	QItemSelectionModel* pselect = ui->m_list->selectionModel();
 	QModelIndexList selection = pselect->selectedRows();

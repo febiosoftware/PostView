@@ -3,7 +3,7 @@
 #include "XMLReader.h"
 
 class FEModel;
-class FEMesh;
+class FEMeshBase;
 
 class FEBioImport :	public FEFileReader
 {
@@ -21,7 +21,7 @@ protected:
 
 protected:
 	FEModel*	m_pfem;
-	FEMesh*		m_pm;
+	FEMeshBase*		m_pm;
 
 	int		m_nmat;
 	int		m_nversion;

@@ -688,8 +688,8 @@ bool XpltReader::ReadDomainSection(FEModel &fem)
 						assert(false);
 						return errf("Error while reading Domain section");
 					}
-					assert((ne > 0)&&(ne <= FEElement::MAX_NODES));
-					int n[FEElement::MAX_NODES + 1];
+					assert((ne > 0)&&(ne <= FEGenericElement::MAX_NODES));
+					int n[FEGenericElement::MAX_NODES + 1];
 					while (m_ar.OpenChunk() == IO_OK)
 					{
 						if (m_ar.GetChunkID() == PLT_ELEMENT)
@@ -891,11 +891,6 @@ bool XpltReader::ReadNodeSetSection(FEModel& fem)
 //-----------------------------------------------------------------------------
 bool XpltReader::BuildMesh(FEModel &fem)
 {
-	int i, j, k, n;
-
-	// get the mesh
-	FEMesh& mesh = *fem.GetMesh();
-
 	// clear the state data
 	fem.ClearStates();
 
@@ -905,15 +900,105 @@ bool XpltReader::BuildMesh(FEModel &fem)
 	// count all elements
 	int ND = m_Dom.size();
 	int NE = 0;
-	for (i=0; i<ND; ++i) NE += m_Dom[i].ne;
+	for (int i=0; i<ND; ++i) NE += m_Dom[i].ne;
 
-	// allocate storage
-	mesh.Create(NN, NE);
+	// find the element type
+	int ntype = m_Dom[0].etype;
+	for (int i=0; i<ND; ++i)
+	{
+		int domType = m_Dom[i].etype;
+		if (domType != ntype) ntype = -1;
+	}
+
+	FEMeshBase* pmesh = 0;
+
+	if (ntype == PLT_ELEM_TET)
+	{
+		pmesh = new FEMeshTet4;
+		pmesh->Create(NN, NE);
+
+		// read the element connectivity
+		int nmat = fem.Materials();
+		for (int i=0; i<ND; i++)
+		{
+			Domain& D = m_Dom[i];
+			for (int j=0; j<D.ne; ++j)
+			{
+				ELEM& E = D.elem[j];
+				FEElement& el = pmesh->Element(E.index);
+				el.m_MatID = D.mid - 1;
+				el.SetID(E.eid);
+				for (int k=0; k<4; ++k) el.m_node[k] = E.node[k];
+			}
+		}
+	}
+	else if (ntype == PLT_ELEM_HEX8)
+	{
+		pmesh = new FEMeshHex8;
+		pmesh->Create(NN, NE);
+
+		// read the element connectivity
+		int nmat = fem.Materials();
+		for (int i=0; i<ND; i++)
+		{
+			Domain& D = m_Dom[i];
+			for (int j=0; j<D.ne; ++j)
+			{
+				ELEM& E = D.elem[j];
+				FEElement& el = pmesh->Element(E.index);
+				el.m_MatID = D.mid - 1;
+				el.SetID(E.eid);
+				for (int k=0; k<8; ++k) el.m_node[k] = E.node[k];
+			}
+		}
+	}
+	else
+	{
+		pmesh = new FEMesh;
+		pmesh->Create(NN, NE);
+
+		// read the element connectivity
+		int nmat = fem.Materials();
+		for (int i=0; i<ND; i++)
+		{
+			Domain& D = m_Dom[i];
+			for (int j=0; j<D.ne; ++j)
+			{
+				ELEM& E = D.elem[j];
+				FEGenericElement& el = static_cast<FEGenericElement&>(pmesh->Element(E.index));
+				el.m_MatID = D.mid - 1;
+				el.SetID(E.eid);
+
+				FEElemType etype;
+				switch (D.etype)
+				{
+				case PLT_ELEM_HEX8 : etype = FE_HEX8  ; break;
+				case PLT_ELEM_PENTA: etype = FE_PENTA6; break;
+				case PLT_ELEM_TET  : etype = FE_TET4  ; break;
+				case PLT_ELEM_QUAD : etype = FE_QUAD4 ; break;
+				case PLT_ELEM_TRI  : etype = FE_TRI3  ; break;
+				case PLT_ELEM_TRUSS: etype = FE_TRUSS2; break;
+				case PLT_ELEM_HEX20: etype = FE_HEX20 ; break;
+				case PLT_ELEM_HEX27: etype = FE_HEX27 ; break;
+				case PLT_ELEM_TET10: etype = FE_TET10 ; break;
+				case PLT_ELEM_TET15: etype = FE_TET15 ; break;
+				case PLT_ELEM_TRI6 : etype = FE_TRI6  ; break;
+				case PLT_ELEM_QUAD8: etype = FE_QUAD8 ; break;
+				case PLT_ELEM_QUAD9: etype = FE_QUAD9 ; break;
+				}
+				el.SetType(etype);
+				int ne = el.Nodes();
+				for (int k=0; k<ne; ++k) el.m_node[k] = E.node[k];
+			}
+		}
+	}
+
+	fem.SetMesh(pmesh);
 
 	// read the nodal coordinates
-	for (i=0; i<m_hdr.nn; i++)
+	for (int i=0; i<m_hdr.nn; i++)
 	{
-		FENode& n = mesh.Node(i);
+		FENode& n = pmesh->Node(i);
 		NODE& N = m_Node[i];
 
 		// assign coordinates
@@ -921,71 +1006,37 @@ bool XpltReader::BuildMesh(FEModel &fem)
 		n.m_rt = n.m_r0;
 	}
 
-	// read the element connectivity
-	int nmat = fem.Materials();
-	for (i=0; i<ND; i++)
-	{
-		Domain& D = m_Dom[i];
-		for (j=0; j<D.ne; ++j)
-		{
-			ELEM& E = D.elem[j];
-			FEElement& el = mesh.Element(E.index);
-			el.m_MatID = D.mid - 1;
-			el.SetID(E.eid);
-			int ne = 0;
-
-			switch (D.etype)
-			{
-			case PLT_ELEM_HEX8 : el.m_ntype = FE_HEX8  ; ne =  8; break;
-			case PLT_ELEM_PENTA: el.m_ntype = FE_PENTA6; ne =  6; break;
-			case PLT_ELEM_TET  : el.m_ntype = FE_TET4  ; ne =  4; break;
-			case PLT_ELEM_QUAD : el.m_ntype = FE_QUAD4 ; ne =  4; break;
-			case PLT_ELEM_TRI  : el.m_ntype = FE_TRI3  ; ne =  3; break;
-			case PLT_ELEM_TRUSS: el.m_ntype = FE_TRUSS2; ne =  2; break;
-			case PLT_ELEM_HEX20: el.m_ntype = FE_HEX20 ; ne = 20; break;
-			case PLT_ELEM_HEX27: el.m_ntype = FE_HEX27 ; ne = 27; break;
-			case PLT_ELEM_TET10: el.m_ntype = FE_TET10 ; ne = 10; break;
-			case PLT_ELEM_TET15: el.m_ntype = FE_TET15 ; ne = 15; break;
-            case PLT_ELEM_TRI6 : el.m_ntype = FE_TRI6  ; ne =  6; break;
-            case PLT_ELEM_QUAD8: el.m_ntype = FE_QUAD8 ; ne =  8; break;
-            case PLT_ELEM_QUAD9: el.m_ntype = FE_QUAD9 ; ne =  9; break;
-			}
-
-			for (k=0; k<ne; ++k) el.m_node[k] = E.node[k];
-		}
-	}
-
 	// set the enabled-ness of the elements and the nodes
-	for (i=0; i<mesh.Elements(); ++i)
+	for (int i=0; i<NE; ++i)
 	{
-		FEElement& el = mesh.Element(i);
+		FEElement& el = pmesh->Element(i);
 		FEMaterial* pm = fem.GetMaterial(el.m_MatID);
 		if (pm->benable) el.Enable(); else el.Disable();
 	}
 
-	for (i=0; i<mesh.Nodes(); ++i) mesh.Node(i).Disable();
-	for (i=0; i<mesh.Elements(); ++i)
+	for (int i=0; i<NN; ++i) pmesh->Node(i).Disable();
+	for (int i=0; i<NE; ++i)
 	{
-		FEElement& el = mesh.Element(i);
+		FEElement& el = pmesh->Element(i);
 		if (el.IsEnabled())
 		{
 			int n = el.Nodes();
-			for (j=0; j<n; ++j) mesh.Node(el.m_node[j]).Enable();
+			for (int j=0; j<n; ++j) pmesh->Node(el.m_node[j]).Enable();
 		}
 	}
 
 	// Update the mesh
 	// This will also build the faces
-	mesh.Update();
+	pmesh->Update();
 
 	// Next, we'll build a Node-Face lookup table
-	FENodeFaceTable NFT(&mesh);
+	FENodeFaceTable NFT(pmesh);
 
 	// next, we reindex the surfaces
-	for (n=0; n<(int) m_Surf.size(); ++n)
+	for (int n=0; n<(int) m_Surf.size(); ++n)
 	{
 		Surface& s = m_Surf[n];
-		for (i=0; i<s.nf; ++i)
+		for (int i=0; i<s.nf; ++i)
 		{
 			FACE& f = s.face[i];
 			f.nid = NFT.FindFace(f.node[0], f.node, f.nn);
@@ -995,38 +1046,38 @@ bool XpltReader::BuildMesh(FEModel &fem)
 
 	// let's create the nodesets
 	char szname[128]={0};
-	for (n=0; n<(int)m_NodeSet.size(); ++n)
+	for (int n=0; n<(int)m_NodeSet.size(); ++n)
 	{
 		NodeSet& s = m_NodeSet[n];
-		FENodeSet* ps = new FENodeSet(&mesh);
+		FENodeSet* ps = new FENodeSet(pmesh);
 		if (s.szname[0]==0) { sprintf(szname, "nodeset%02d",n+1); ps->SetName(szname); }
 		else ps->SetName(s.szname);
 		ps->m_Node = s.node;
-		mesh.AddNodeSet(ps);
+		pmesh->AddNodeSet(ps);
 	}
 
 	// let's create the FE surfaces
-	for (n=0; n<(int) m_Surf.size(); ++n)
+	for (int n=0; n<(int) m_Surf.size(); ++n)
 	{
 		Surface& s = m_Surf[n];
-		FESurface* ps = new FESurface(&mesh);
+		FESurface* ps = new FESurface(pmesh);
 		if (s.szname[0]==0) { sprintf(szname, "surface%02d",n+1); ps->SetName(szname); }
 		else ps->SetName(s.szname);
 		ps->m_Face.reserve(s.nf);
-		for (i=0; i<s.nf; ++i) ps->m_Face.push_back(s.face[i].nid);
-		mesh.AddSurface(ps);
+		for (int i=0; i<s.nf; ++i) ps->m_Face.push_back(s.face[i].nid);
+		pmesh->AddSurface(ps);
 	}
 
 	// let's create the parts
-	for (n=0; n<(int) m_Dom.size(); ++n)
+	for (int n=0; n<(int) m_Dom.size(); ++n)
 	{
 		Domain& s = m_Dom[n];
-		FEPart* pg = new FEPart(&mesh);
+		FEPart* pg = new FEPart(pmesh);
 		if (s.szname[0]==0) { sprintf(szname, "part%02d",n+1); pg->SetName(szname); }
 		else pg->SetName(s.szname);
 		pg->m_Elem.resize(s.ne);
 		pg->m_Elem = s.elist;
-		mesh.AddPart(pg);
+		pmesh->AddPart(pg);
 	}
 
 	fem.UpdateBoundingBox();
@@ -1038,7 +1089,7 @@ bool XpltReader::BuildMesh(FEModel &fem)
 bool XpltReader::ReadStateSection(FEModel& fem)
 {
 	// get the mesh
-	FEMesh& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetMesh();
 
 	// add a state
 	FEState* ps = 0;
@@ -1092,9 +1143,9 @@ bool XpltReader::ReadStateSection(FEModel& fem)
 		FEDataManager& dm = *fem.GetDataManager();
 		int n = dm.FindDataField("shell thickness");
 		FEElementData<float,DATA_COMP>& df = dynamic_cast<FEElementData<float,DATA_COMP>&>(ps->m_Data[n]);
-		FEMesh& mesh = *fem.GetMesh();
+		FEMeshBase& mesh = *fem.GetMesh();
 		int NE = mesh.Elements();
-		float h[FEElement::MAX_NODES] = {0.f};
+		float h[FEGenericElement::MAX_NODES] = {0.f};
 		for (int i=0; i<NE; ++i)
 		{
 			ELEMDATA& d = ps->m_ELEM[i];
@@ -1216,7 +1267,7 @@ bool XpltReader::ReadNodeData(FEModel& fem, FEState* pstate)
 //-----------------------------------------------------------------------------
 bool XpltReader::ReadElemData(FEModel &fem, FEState* pstate)
 {
-	FEMesh& m = *fem.GetMesh();
+	FEMeshBase& m = *fem.GetMesh();
 	FEDataManager& dm = *fem.GetDataManager();
 	while (m_ar.OpenChunk() == IO_OK)
 	{
@@ -1276,7 +1327,7 @@ bool XpltReader::ReadElemData(FEModel &fem, FEState* pstate)
 
 
 //-----------------------------------------------------------------------------
-bool XpltReader::ReadElemData_NODE(FEMesh& m, XpltReader::Domain &d, FEMeshData &data, int ntype)
+bool XpltReader::ReadElemData_NODE(FEMeshBase& m, XpltReader::Domain &d, FEMeshData &data, int ntype)
 {
 	int ne = 0;
 	switch (d.etype)
@@ -1602,7 +1653,7 @@ bool XpltReader::ReadElemData_REGION(XpltReader::Domain& dom, FEMeshData& s, int
 //-----------------------------------------------------------------------------
 bool XpltReader::ReadFaceData(FEModel& fem, FEState* pstate)
 {
-	FEMesh& m = *fem.GetMesh();
+	FEMeshBase& m = *fem.GetMesh();
 	FEDataManager& dm = *fem.GetDataManager();
 	while (m_ar.OpenChunk() == IO_OK)
 	{
@@ -1657,7 +1708,7 @@ bool XpltReader::ReadFaceData(FEModel& fem, FEState* pstate)
 }
 
 //-----------------------------------------------------------------------------
-bool XpltReader::ReadFaceData_MULT(FEMesh& m, XpltReader::Surface &s, FEMeshData &data, int ntype)
+bool XpltReader::ReadFaceData_MULT(FEMeshBase& m, XpltReader::Surface &s, FEMeshData &data, int ntype)
 {
 	// It is possible that the node ordering of the FACE's are different than the FEFace's
 	// so we setup up an array to unscramble the nodal values
@@ -1774,7 +1825,7 @@ bool XpltReader::ReadFaceData_MULT(FEMesh& m, XpltReader::Surface &s, FEMeshData
 }
 
 //-----------------------------------------------------------------------------
-bool XpltReader::ReadFaceData_REGION(FEMesh& m, XpltReader::Surface &s, FEMeshData &data, int ntype)
+bool XpltReader::ReadFaceData_REGION(FEMeshBase& m, XpltReader::Surface &s, FEMeshData &data, int ntype)
 {
 	int NF = s.nf;
 	switch (ntype)
@@ -1920,7 +1971,7 @@ bool XpltReader::ReadFaceData_ITEM(XpltReader::Surface &s, FEMeshData &data, int
 }
 
 //-----------------------------------------------------------------------------
-bool XpltReader::ReadFaceData_NODE(FEMesh& m, XpltReader::Surface &s, FEMeshData &data, int ntype)
+bool XpltReader::ReadFaceData_NODE(FEMeshBase& m, XpltReader::Surface &s, FEMeshData &data, int ntype)
 {
 	// set nodal tags to local node number
 	int NN = m.Nodes();

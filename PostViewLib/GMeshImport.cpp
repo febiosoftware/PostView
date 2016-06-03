@@ -153,8 +153,9 @@ bool GMeshImport::BuildMesh(FEModel& fem)
 	fem.AddMaterial(mat);
 
 	// build the mesh
-	FEMesh* pm = fem.GetMesh();
+	FEMesh* pm = new FEMesh;
 	pm->Create(nodes, elems);
+	fem.SetMesh(pm);
 
 	// create nodes
 	for (i=0; i<nodes; ++i)
@@ -169,15 +170,15 @@ bool GMeshImport::BuildMesh(FEModel& fem)
 	// create elements
 	for (i=0; i<elems; ++i)
 	{
-		FEElement& el = pm->Element(i);
+		FEGenericElement& el = static_cast<FEGenericElement&>(pm->Element(i));
 		ELEM& E = m_Elem[i];
 
 		el.m_MatID = 0;
 		switch (E.ntype)
 		{
-		case FE_TET4  : el.m_ntype = FE_TET4; break;
-		case FE_HEX8  : el.m_ntype = FE_HEX8; break;
-		case FE_PENTA6: el.m_ntype = FE_PENTA6; break;
+		case FE_TET4  : el.SetType(FE_TET4); break;
+		case FE_HEX8  : el.SetType(FE_HEX8); break;
+		case FE_PENTA6: el.SetType(FE_PENTA6); break;
 		default:
 			assert(false);
 			return false;

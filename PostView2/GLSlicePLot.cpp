@@ -145,7 +145,7 @@ void CGLSlicePlot::RenderSlice(float ref)
 
 	// get the mesh
 	FEModel* ps = m_pObj->GetFEModel();
-	FEMesh* pm = m_pObj->GetMesh();
+	FEMeshBase* pm = m_pObj->GetMesh();
 
 	vec3f norm = m_norm;
 	norm.Normalize();
@@ -163,7 +163,7 @@ void CGLSlicePlot::RenderSlice(float ref)
 		FEMaterial* pmat = ps->GetMaterial(el.m_MatID);
 		if (pmat->benable && el.IsVisible() && el.IsSolid())
 		{
-			switch (el.m_ntype)
+			switch (el.Type())
 			{
 			case FE_HEX8  : nt = HEX_NT; break;
 			case FE_HEX20 : nt = HEX_NT; break;
@@ -242,7 +242,7 @@ void CGLSlicePlot::SetEvalField(int n)
 //-----------------------------------------------------------------------------
 void CGLSlicePlot::Update(int ntime, float dt, bool breset)
 {
-	FEMesh* pm = m_pObj->GetMesh();
+	FEMeshBase* pm = m_pObj->GetMesh();
 	FEModel* pfem = m_pObj->GetFEModel();
 
 	int NN = pm->Nodes();

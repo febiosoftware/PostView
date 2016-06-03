@@ -225,7 +225,7 @@ void CGLPlaneCutPlot::Render(CGLContext& rc)
 void CGLPlaneCutPlot::RenderSlice()
 {
 	FEModel* ps = m_pObj->GetFEModel();
-	FEMesh* pm = m_pObj->GetMesh();
+	FEMeshBase* pm = m_pObj->GetMesh();
 
 	CGLColorMap* pcol = m_pObj->GetColorMap();
 
@@ -288,7 +288,7 @@ void CGLPlaneCutPlot::RenderMesh()
 	int *pf;
 
 	FEModel* ps = m_pObj->GetFEModel();
-	FEMesh* pm = m_pObj->GetMesh();
+	FEMeshBase* pm = m_pObj->GetMesh();
 
 	glColor3ub(0,0,0);
 
@@ -326,7 +326,7 @@ void CGLPlaneCutPlot::RenderMesh()
 		{
 			glLoadName(i+1);
 
-			switch (el.m_ntype)
+			switch (el.Type())
 			{
 			case FE_HEX8  : nt = HEX_NT; break;
 			case FE_HEX20 : nt = HEX_NT; break;
@@ -435,7 +435,7 @@ void CGLPlaneCutPlot::RenderMesh()
 void CGLPlaneCutPlot::RenderOutline()
 {
 	FEModel* ps = m_pObj->GetFEModel();
-	FEMesh* pm = m_pObj->GetMesh();
+	FEMeshBase* pm = m_pObj->GetMesh();
 
 	// store attributes
 	glPushAttrib(GL_ENABLE_BIT);
@@ -501,7 +501,7 @@ void CGLPlaneCutPlot::UpdateSlice()
 	a[3] = -m_ref;
 
 	FEModel* ps = m_pObj->GetFEModel();
-	FEMesh* pm = m_pObj->GetMesh();
+	FEMeshBase* pm = m_pObj->GetMesh();
 
 	m_slice.Clear();
 
@@ -522,7 +522,7 @@ void CGLPlaneCutPlot::UpdateSlice()
 					if (el.IsSolid())
 					{
 						const int *nt;
-						switch (el.m_ntype)
+						switch (el.Type())
 						{
 						case FE_HEX8  : nt = HEX_NT; break;
 						case FE_HEX20 : nt = HEX_NT; break;
@@ -657,7 +657,7 @@ float CGLPlaneCutPlot::Integrate(FEState* ps)
 	int k, l;
 
 	FEModel* pfem = m_pObj->GetFEModel();
-	FEMesh* pm = m_pObj->GetMesh();
+	FEMeshBase* pm = m_pObj->GetMesh();
 
 	float ev[8];
 	vec3f ex[8];
@@ -683,7 +683,7 @@ float CGLPlaneCutPlot::Integrate(FEState* ps)
 			// we consider all elements degenerate hexes
 			// so get the equivalent hex' node numbering
 			const int* nt;
-			switch (el.m_ntype)
+			switch (el.Type())
 			{
 			case FE_HEX8  : nt = HEX_NT; break;
 			case FE_HEX20 : nt = HEX_NT; break;

@@ -2,7 +2,7 @@
 #include "FECurvatureMap.h"
 
 //-----------------------------------------------------------------------------
-void FECongruencyMap::Surface::BuildNodeList(FEMesh& mesh)
+void FECongruencyMap::Surface::BuildNodeList(FEMeshBase& mesh)
 {
 	// tag all nodes that belong to this surface
 	int N = mesh.Nodes();
@@ -77,7 +77,7 @@ void FECongruencyMap::Apply(FEModel& fem)
 	int NDATA = fem.GetDataManager()->DataFields()-1;
 
 	// get the mesh
-	FEMesh& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetMesh();
 
 	// build the node lists
 	m_surf1.BuildNodeList(mesh);
@@ -113,7 +113,7 @@ void FECongruencyMap::Apply(FEModel& fem)
 //-----------------------------------------------------------------------------
 void FECongruencyMap::EvalSurface(FECongruencyMap::Surface& s, FEState* ps)
 {
-	FEMesh& mesh = *m_pfem->GetMesh();
+	FEMeshBase& mesh = *m_pfem->GetMesh();
 
 	// init values and tags
 	int NN = s.Nodes();
@@ -145,7 +145,7 @@ void FECongruencyMap::EvalSurface(FECongruencyMap::Surface& s, FEState* ps)
 //-----------------------------------------------------------------------------
 float FECongruencyMap::project(FECongruencyMap::Surface& surf, vec3f& r, int ntime)
 {
-	FEMesh& mesh = *m_pfem->GetMesh();
+	FEMeshBase& mesh = *m_pfem->GetMesh();
 
 	// find the closest surface node
 	vec3f q = m_pfem->NodePosition(surf.m_node[0].node, ntime);
@@ -195,7 +195,7 @@ float FECongruencyMap::project(FECongruencyMap::Surface& surf, vec3f& r, int nti
 bool FECongruencyMap::ProjectToFacet(FECongruencyMap::Surface& surf, int iface, vec3f& x, int ntime, vec3f& q, float& val)
 {
 	// get the mesh to which this surface belongs
-	FEMesh& mesh = *m_pfem->GetMesh();
+	FEMeshBase& mesh = *m_pfem->GetMesh();
 
 	// get the face
 	FEFace& f = mesh.Face(surf.m_face[iface]);
@@ -220,7 +220,7 @@ bool FECongruencyMap::ProjectToFacet(FECongruencyMap::Surface& surf, int iface, 
 bool FECongruencyMap::ProjectToTriangle(FECongruencyMap::Surface& surf, int iface, vec3f& x, int ntime, vec3f& q, float& val)
 {
 	// get the mesh to which this surface belongs
-	FEMesh& mesh = *m_pfem->GetMesh();
+	FEMeshBase& mesh = *m_pfem->GetMesh();
 
 	// get the face
 	FEFace& face = mesh.Face(surf.m_face[iface]);
@@ -289,7 +289,7 @@ bool FECongruencyMap::ProjectToQuad(FECongruencyMap::Surface& surf, int iface, v
 	int NMAX = 50, n=0;
 
 	// get the mesh to which this surface belongs
-	FEMesh& mesh = *m_pfem->GetMesh();
+	FEMeshBase& mesh = *m_pfem->GetMesh();
 
 	// get the face
 	FEFace& face = mesh.Face(surf.m_face[iface]);

@@ -17,7 +17,7 @@ const char* FEGroup::GetName()
 
 //-----------------------------------------------------------------------------
 // FEDomain constructor
-FEDomain::FEDomain(FEMesh *pm, int nmat)
+FEDomain::FEDomain(FEMeshBase *pm, int nmat)
 {
 	m_pm = pm;
 	m_nmat = nmat;
@@ -53,7 +53,7 @@ FEElement& FEDomain::Element(int n)
 
 void FEPart::GetNodeList(vector<int>& node, vector<int>& lnode)
 {
-	FEMesh& mesh = *GetMesh();
+	FEMeshBase& mesh = *GetMesh();
 	int NN = mesh.Nodes();
 	int NE = Size();
 
@@ -91,7 +91,7 @@ void FEPart::GetNodeList(vector<int>& node, vector<int>& lnode)
 
 void FESurface::GetNodeList(vector<int>& node, vector<int>& lnode)
 {
-	FEMesh& mesh = *GetMesh();
+	FEMeshBase& mesh = *GetMesh();
 	int NN = mesh.Nodes();
 	int NF = Size();
 

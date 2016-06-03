@@ -1,4 +1,4 @@
-// FEMesh.h: interface for the FEMesh class.
+// FEMesh.h: interface for the FEMeshBase class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -18,18 +18,18 @@
 using namespace std;
 
 //-----------------------------------------------------------------------------
-class FEMesh
+class FEMeshBase
 {
 public:
 	// --- M E M O R Y   M A N A G M E N T ---
 	//! constructor
-	FEMesh();
+	FEMeshBase();
 
 	//! destructor
-	virtual ~FEMesh();
+	virtual ~FEMeshBase();
 
 	//! allocate storage for mesh
-	bool Create(int nodes, int elems);
+	virtual bool Create(int nodes, int elems) = 0;
 
 	//! Clean up all data
 	void CleanUp();
@@ -51,7 +51,9 @@ public:
 	int Faces() const { return (int) m_Face.size(); }
 
 	//! return nr of elements
-	int Elements() const { return (int) m_Elem.size(); }
+	virtual int Elements() const = 0;
+
+	virtual void ClearElements() = 0;
 
 	//! return nr of shell elements
 	int ShellElements();
@@ -75,8 +77,8 @@ public:
 	const FEFace& Face(int i) const { return m_Face[i]; }
 
 	//! return an element
-	FEElement& Element(int i) { return m_Elem[i]; }
-	const FEElement& Element(int i) const { return m_Elem[i]; }
+	virtual FEElement& Element(int i) = 0;
+	virtual const FEElement& Element(int i) const = 0;
 
 	//! return domains
 	int Domains() const { return (int) m_Dom.size(); }
@@ -156,9 +158,9 @@ public:
 
 	// element volume
 	float ElementVolume(int iel);
-	float HexVolume  (FEElement& el);
-	float PentaVolume(FEElement& el);
-	float TetVolume  (FEElement& el);
+	float HexVolume  (const FEElement& el);
+	float PentaVolume(const FEElement& el);
+	float TetVolume  (const FEElement& el);
 
 	// --- I N T E G R A T E ---
 	float IntegrateQuad(vec3f* r, float* v);
@@ -191,7 +193,6 @@ protected:
 	vector<FENode>		m_Node;	// nodal array
 	vector<FEEdge>		m_Edge;	// edge array
 	vector<FEFace>		m_Face;	// face array
-	vector<FEElement>	m_Elem;	// element array
 	vector<FEDomain*>	m_Dom;	// domains
 
 	// user-defined partitions
@@ -205,7 +206,91 @@ protected:
 	int		m_nID;
 };
 
+class FEMesh : public FEMeshBase
+{
+public:
+	FEMesh(){}
+
+public:
+	// number of elements
+	int Elements() const { return (int) m_Elem.size(); }
+
+	//! return an element
+	FEElement& Element(int i) { return m_Elem[i]; }
+	const FEElement& Element(int i) const { return m_Elem[i]; }
+
+	void ClearElements() { m_Elem.clear(); }
+
+	bool Create(int nodes, int elems);
+
+protected:
+	vector<FEElement>	m_Elem;	// element array
+};
+
+class FEMeshTet4 : public FEMeshBase
+{
+public:
+	FEMeshTet4(){}
+
+public:
+	// number of elements
+	int Elements() const { return (int) m_Elem.size(); }
+
+	//! return an element
+	FEElement& Element(int i) { return m_Elem[i]; }
+	const FEElement& Element(int i) const { return m_Elem[i]; }
+
+	void ClearElements() { m_Elem.clear(); }
+
+	bool Create(int nodes, int elems);
+
+protected:
+	vector<FETet4>	m_Elem;	// element array
+};
+
+class FEMeshHex8: public FEMeshBase
+{
+public:
+	FEMeshHex8(){}
+
+public:
+	// number of elements
+	int Elements() const { return (int) m_Elem.size(); }
+
+	//! return an element
+	FEElement& Element(int i) { return m_Elem[i]; }
+	const FEElement& Element(int i) const { return m_Elem[i]; }
+
+	void ClearElements() { m_Elem.clear(); }
+
+	bool Create(int nodes, int elems);
+
+protected:
+	vector<FEHex8>	m_Elem;	// element array
+};
+
+class FETriMesh : public FEMeshBase
+{
+public:
+	FETriMesh(){}
+
+public:
+	// number of elements
+	int Elements() const { return (int) m_Elem.size(); }
+
+	//! return an element
+	FEElement& Element(int i) { return m_Elem[i]; }
+	const FEElement& Element(int i) const { return m_Elem[i]; }
+
+	void ClearElements() { m_Elem.clear(); }
+
+	bool Create(int nodes, int elems);
+
+protected:
+	vector<FETri3>	m_Elem;	// element array
+};
+
 // find the element and the iso-parametric coordinates of a point inside the mesh
-bool FindElementRef(FEMesh& m, const vec3f& x, int& nelem, double r[3]);
+bool FindElementRef(FEMeshBase& m, const vec3f& x, int& nelem, double r[3]);
 
 #endif // !defined(AFX_FEMESH_H__4E540300_07D8_4732_BB8D_6570BB162180__INCLUDED_)

@@ -16,7 +16,7 @@ CGLPlane::~CGLPlane(void)
 
 void CGLPlane::Create(int n[3])
 {
-	FEMesh* pm = m_pfem->GetMesh();
+	FEMeshBase* pm = m_pfem->GetMesh();
 	if (pm && (n[0] > 0) && (n[1] > 0) && (n[2] > 0))
 	{
 		FENode& n1 = pm->Node(n[0]-1);
@@ -45,7 +45,7 @@ void CGLPlane::Create(int n[3])
 
 void CGLPlane::Render(CGLContext& rc)
 {
-	FEMesh* pm = m_pfem->GetMesh();
+	FEMeshBase* pm = m_pfem->GetMesh();
 
 	glPushAttrib(GL_ENABLE_BIT | GL_LIGHTING_BIT);
 	glEnable(GL_COLOR_MATERIAL);

@@ -300,7 +300,7 @@ protected:
 public:
 	FEElementData(FEModel* pm) : FEElemData_T<T,DATA_NODE>(pm)
 	{
-		FEMesh& m = *pm->GetMesh();
+		FEMeshBase& m = *pm->GetMesh();
 		int N = m.Elements();
 		m_elem.resize(N);
 		for (int i=0; i<N; ++i) { m_elem[i].first = -1; m_elem[i].second = 0; }

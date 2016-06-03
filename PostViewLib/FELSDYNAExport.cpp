@@ -28,7 +28,7 @@ bool FELSDYNAExport::ExportSurface(FEModel &fem, int ntime, const char *szfile)
 	int i, j, n;
 
 	// get the mesh
-	FEMesh& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetMesh();
 
 	// count total nr of faces
 	int faces = mesh.Faces();
@@ -97,7 +97,7 @@ bool FELSDYNAExport::ExportSelectedSurface(FEModel &fem, int ntime, const char *
 	if (fp == 0) return false;
 	fprintf(fp, "*KEYWORD\n");
 
-	FEMesh& m = *fem.GetMesh();
+	FEMeshBase& m = *fem.GetMesh();
 	int NN = m.Nodes();
 	int NF = m.Faces();
 	int i;
@@ -178,7 +178,7 @@ bool FELSDYNAExport::ExportMesh(FEModel& fem, int ntime, const char* szfile)
 	fprintf(fp, "*KEYWORD\n");
 	
 	// tag all nodes that will be exported
-	FEMesh& m = *fem.GetMesh();
+	FEMeshBase& m = *fem.GetMesh();
 	int NN = m.Nodes();
 	int NE = m.Elements();
 	for (i=0; i<NN; ++i) m.Node(i).m_ntag = -1;
@@ -220,7 +220,7 @@ bool FELSDYNAExport::ExportMesh(FEModel& fem, int ntime, const char* szfile)
 				{
 					int ne = e.Nodes();
 					int n[8];
-					switch (e.m_ntype)
+					switch (e.Type())
 					{
 					case FE_TET4:
 						n[0] = e.m_node[0];
@@ -269,7 +269,7 @@ bool FELSDYNAExport::ExportMesh(FEModel& fem, int ntime, const char* szfile)
 				{
 					int ne = e.Nodes();
 					int n[4];
-					switch (e.m_ntype)
+					switch (e.Type())
 					{
 					case FE_TRI3:
 						n[0] = e.m_node[0];
@@ -301,7 +301,7 @@ bool FELSDYNAExport::ExportMesh(FEModel& fem, int ntime, const char* szfile)
 //-----------------------------------------------------------------------------
 void FELSDYNAExport::NodalResults(FEModel &fem, int ntime, FILE* fp)
 {
-	FEMesh& m = *fem.GetMesh();
+	FEMeshBase& m = *fem.GetMesh();
 	int NN = m.Nodes();
 	FEState* ps = fem.GetState(ntime);
 

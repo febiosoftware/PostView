@@ -22,7 +22,7 @@ void FEMeshDataList::clear()
 mat3d deform_grad(FEModel& fem, int n, double r, double s, double t, int nstate, int nref = 0)
 {
 	// get the mesh
-	FEMesh& m = *fem.GetMesh();
+	FEMeshBase& m = *fem.GetMesh();
 
 	// get the element
 	FEElement& el = m.Element(n);
@@ -36,7 +36,7 @@ mat3d deform_grad(FEModel& fem, int n, double r, double s, double t, int nstate,
 	}
 
 	// get the nodal positions
-	const int MN = FEElement::MAX_NODES;
+	const int MN = FEGenericElement::MAX_NODES;
 	vec3f X[MN], x[MN];
 	for (int i=0; i<N; i++) 
 	{ 
@@ -681,17 +681,17 @@ void FEVolRatio::eval(int n, float* pv)
 
 	int i;
 
-	FEMesh& m = *m_pm->GetMesh();
+	FEMeshBase& m = *m_pm->GetMesh();
 	FEElement* pe = &m.Element(n);
 
 	int N = pe->Nodes();
-	if (pe->m_ntype == FE_HEX20) N = 8;
-	if (pe->m_ntype == FE_HEX27) N = 8;
+	if (pe->Type() == FE_HEX20) N = 8;
+	if (pe->Type() == FE_HEX27) N = 8;
 	int node;
 
 	double *dN1, *dN2, *dN3;
 
-	switch (pe->m_ntype)
+	switch (pe->Type())
 	{
 	case FE_HEX8:
 	case FE_HEX20:
@@ -801,15 +801,15 @@ void FEElementVolume::eval(int n, float* pv)
 //
 void FEAspectRatio::eval(int iel, float* pv)
 {
-	FEMesh& m = *m_pm->GetMesh();
+	FEMeshBase& m = *m_pm->GetMesh();
 	FEElement& el = m.Element(iel);
 	int nn = el.Nodes();
-	if (el.m_ntype == FE_HEX20) nn = 8;
-	if (el.m_ntype == FE_HEX27) nn = 8;
+	if (el.Type() == FE_HEX20) nn = 8;
+	if (el.Type() == FE_HEX27) nn = 8;
 
 	int nd = -1;
 	int (*pd)[2];
-	switch (el.m_ntype)
+	switch (el.Type())
 	{
 	case FE_HEX8 : nd = 16; pd = DIAG_HEX; break;
 	case FE_HEX20: nd = 16; pd = DIAG_HEX; break;
@@ -845,7 +845,7 @@ void FEAspectRatio::eval(int iel, float* pv)
 // Calculate the max edge angle of an element
 void FEMaxEdgeAngle::eval(int iel, float* pv)
 {
-	FEMesh& m = *m_pm->GetMesh();
+	FEMeshBase& m = *m_pm->GetMesh();
 	FEElement& el = m.Element(iel);
 
 	if (el.Nodes() != 8) { *pv = 90.f; return; }
@@ -909,7 +909,7 @@ void FEMaxEdgeAngle::eval(int iel, float* pv)
 //-----------------------------------------------------------------------------
 void FEMinEdgeAngle::eval(int iel, float* pv)
 {
-	FEMesh& m = *m_pm->GetMesh();
+	FEMeshBase& m = *m_pm->GetMesh();
 	FEElement& el = m.Element(iel);
 	if (el.Nodes() != 8) { *pv = 90.f; return; }
 
@@ -992,7 +992,7 @@ void FECurvature::level(int n, int l, set<int>& nl1)
 {
 	// get the model's surface
 	FEModel* pfem = GetFEModel();
-	FEMesh* pmesh = pfem->GetMesh();
+	FEMeshBase* pmesh = pfem->GetMesh();
 
 	// add the first node
 	nl1.insert(n);
@@ -1061,7 +1061,7 @@ void FECurvature::eval_curvature(int n, float* f, int m)
 {
 	// get the model's surface
 	FEModel* pfem = GetFEModel();
-	FEMesh* pmesh = pfem->GetMesh();
+	FEMeshBase* pmesh = pfem->GetMesh();
 
 	// get the face
 	FEFace& face = pmesh->Face(n);
@@ -1077,7 +1077,7 @@ float FECurvature::nodal_curvature(int n, int m)
 {
 	// get the model's surface
 	FEModel* pfem = GetFEModel();
-	FEMesh* pmesh = pfem->GetMesh();
+	FEMeshBase* pmesh = pfem->GetMesh();
 	int ntime = pfem->currentTime();
 
 	// get the reference nodal position
@@ -1325,7 +1325,7 @@ void FEPrincCurvatureVector::level(int n, int l, set<int>& nl1)
 {
 	// get the model's surface
 	FEModel* pfem = GetFEModel();
-	FEMesh* pmesh = pfem->GetMesh();
+	FEMeshBase* pmesh = pfem->GetMesh();
 
 	// add the first node
 	nl1.insert(n);
@@ -1394,7 +1394,7 @@ void FEPrincCurvatureVector::eval(int n, vec3f* fv, int m)
 {
 	// get the model's surface
 	FEModel* pfem = GetFEModel();
-	FEMesh* pmesh = pfem->GetMesh();
+	FEMeshBase* pmesh = pfem->GetMesh();
 
 	// get the face
 	FEFace& face = pmesh->Face(n);
@@ -1410,7 +1410,7 @@ vec3f FEPrincCurvatureVector::nodal_curvature(int n, int m)
 {
 	// get the model's surface
 	FEModel* pfem = GetFEModel();
-	FEMesh* pmesh = pfem->GetMesh();
+	FEMeshBase* pmesh = pfem->GetMesh();
 	int ntime = pfem->currentTime();
 
 	// get the reference nodal position
@@ -1621,7 +1621,7 @@ void FECongruency::eval(int n, float* f)
 
 	// get the model's surface
 	FEModel* pfem = GetFEModel();
-	FEMesh* pmesh = pfem->GetMesh();
+	FEMeshBase* pmesh = pfem->GetMesh();
 
 	// get the face
 	FEFace& face = pmesh->Face(n);
@@ -1657,13 +1657,13 @@ void FEVolStrain::eval(int n, float* pv)
 	FEElement* pe = &m_pm->GetMesh()->Element(n);
 
 	int N = pe->Nodes();
-	if (pe->m_ntype == FE_HEX20) N = 8;
-	if (pe->m_ntype == FE_HEX27) N = 8;
+	if (pe->Type() == FE_HEX20) N = 8;
+	if (pe->Type() == FE_HEX27) N = 8;
 	int node;
 
 	double *dN1, *dN2, *dN3;
 
-	switch (pe->m_ntype)
+	switch (pe->Type())
 	{
 	case FE_HEX8:
 	case FE_HEX20:
@@ -1822,7 +1822,7 @@ void FEElemNodalPressure::eval(int n, float* pv)
 	// evaluate pressure
 	if (dm.active(n))
 	{
-		mat3fs m[FEElement::MAX_NODES];
+		mat3fs m[FEGenericElement::MAX_NODES];
 		dm.eval(n, m);
 
 		for (int i=0; i<neln; ++i) pv[i] = -m[i].tr() / 3.f;

@@ -78,7 +78,7 @@ void CSphereFitTool::OnFit()
 		bool bsel = ui->pc->isChecked();
 
 		FEModel& fem = *m_doc->GetFEModel();
-		FEMesh& mesh = *fem.GetMesh();
+		FEMeshBase& mesh = *fem.GetMesh();
 		int N = mesh.Nodes();
 		int F = mesh.Faces();
 		for (int i=0; i<N; ++i) mesh.Node(i).m_ntag = 0;

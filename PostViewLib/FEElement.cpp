@@ -109,7 +109,7 @@ void FEEdge::shape(double* H, double r)
 //-----------------------------------------------------------------------------
 double FEEdge::eval(double* d, double r)
 {
-	double H[FEElement::MAX_NODES];
+	double H[FEEdge::MAX_NODES];
 	shape(H, r);
 	double a = 0.0;
 	for (int i=0; i<Nodes(); ++i) a += H[i]*d[i];
@@ -119,7 +119,7 @@ double FEEdge::eval(double* d, double r)
 //-----------------------------------------------------------------------------
 vec3f FEEdge::eval(vec3f* d, double r)
 {
-	double H[FEElement::MAX_NODES];
+	double H[FEEdge::MAX_NODES];
 	shape(H, r);
 	vec3f a(0,0,0);
 	for (int i=0; i<Nodes(); ++i) a += d[i]*((float)H[i]);
@@ -266,7 +266,7 @@ void FEFace::shape(double* H, double r, double s)
 //-----------------------------------------------------------------------------
 double FEFace::eval(double* d, double r, double s)
 {
-	double H[FEElement::MAX_NODES];
+	double H[FEFace::MAX_NODES];
 	shape(H, r, s);
 	double a = 0.0;
 	for (int i=0; i<Nodes(); ++i) a += H[i]*d[i];
@@ -276,7 +276,7 @@ double FEFace::eval(double* d, double r, double s)
 //-----------------------------------------------------------------------------
 vec3f FEFace::eval(vec3f* d, double r, double s)
 {
-	double H[FEElement::MAX_NODES];
+	double H[FEFace::MAX_NODES];
 	shape(H, r, s);
 	vec3f a(0,0,0);
 	for (int i=0; i<Nodes(); ++i) a += d[i]*((float)H[i]);
@@ -284,13 +284,94 @@ vec3f FEFace::eval(vec3f* d, double r, double s)
 }
 
 //=============================================================================
+FEGenericElement::FEGenericElement()
+{
+	m_node = _node;
+	for (int i=0; i<MAX_NODES; ++i) m_node[i] = -1; 
+}
+
+FEGenericElement::FEGenericElement(const FEGenericElement& e) : FEElement(e)
+{
+	m_node = _node;
+	for (int i=0; i<MAX_NODES; ++i) m_node[i] = e.m_node[i]; 
+}
+
+void FEGenericElement::operator = (const FEGenericElement& e)
+{
+	FEElement::operator = (e);
+	m_node = _node;
+	for (int i=0; i<MAX_NODES; ++i) m_node[i] = e.m_node[i]; 
+}
+
+//=============================================================================
+FETri3::FETri3()
+{
+	m_ntype = FE_TRI3;
+	m_node = _node;
+	for (int i=0; i<3; ++i) m_node[i] = -1; 
+}
+
+FETri3::FETri3(const FETri3& e) : FEElement(e)
+{
+	m_node = _node;
+	for (int i=0; i<3; ++i) m_node[i] = e.m_node[i]; 
+}
+
+void FETri3::operator=(const FETri3& e)
+{
+	FEElement::operator = (e);
+	m_node = _node;
+	for (int i=0; i<3; ++i) m_node[i] = e.m_node[i]; 
+}
+
+//=============================================================================
+FETet4::FETet4()
+{
+	m_ntype = FE_TET4;
+	m_node = _node;
+	for (int i=0; i<4; ++i) m_node[i] = -1; 
+}
+
+FETet4::FETet4(const FETet4& e) : FEElement(e)
+{
+	m_node = _node;
+	for (int i=0; i<4; ++i) m_node[i] = e.m_node[i]; 
+}
+
+void FETet4::operator=(const FETet4& e)
+{
+	FEElement::operator = (e);
+	m_node = _node;
+	for (int i=0; i<4; ++i) m_node[i] = e.m_node[i]; 
+}
+
+//=============================================================================
+FEHex8::FEHex8()
+{
+	m_ntype = FE_HEX8;
+	m_node = _node;
+	for (int i=0; i<8; ++i) m_node[i] = -1; 
+}
+
+FEHex8::FEHex8(const FEHex8& e) : FEElement(e)
+{
+	m_node = _node;
+	for (int i=0; i<8; ++i) m_node[i] = e.m_node[i]; 
+}
+
+void FEHex8::operator=(const FEHex8& e)
+{
+	FEElement::operator = (e);
+	m_node = _node;
+	for (int i=0; i<8; ++i) m_node[i] = e.m_node[i]; 
+}
+
+//=============================================================================
 // FEElement
 //-----------------------------------------------------------------------------
 FEElement::FEElement()
 {
-	int i;
-	for (i=0; i<MAX_NODES; ++i) m_node[i] = -1; 
-	for (i=0; i<6; ++i) m_pElem[i] = 0; m_MatID = 0; 
+	for (int i=0; i<6; ++i) m_pElem[i] = 0; m_MatID = 0; 
 }
 
 //-----------------------------------------------------------------------------
@@ -615,7 +696,7 @@ void FEElement::shape(double *H, double r, double s, double t)
 //-----------------------------------------------------------------------------
 double FEElement::eval(double* d, double r, double s, double t)
 {
-	double H[FEElement::MAX_NODES];
+	double H[FEGenericElement::MAX_NODES];
 	shape(H, r, s, t);
 	double a = 0.0;
 	for (int i=0; i<Nodes(); ++i) a += H[i]*d[i];
@@ -625,7 +706,7 @@ double FEElement::eval(double* d, double r, double s, double t)
 //-----------------------------------------------------------------------------
 vec3f FEElement::eval(vec3f* d, double r, double s, double t)
 {
-	double H[FEElement::MAX_NODES];
+	double H[FEGenericElement::MAX_NODES];
 	shape(H, r, s, t);
 	vec3f a(0,0,0);
 	for (int i=0; i<Nodes(); ++i) a += d[i]*((float)H[i]);

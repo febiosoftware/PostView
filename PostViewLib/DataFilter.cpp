@@ -7,7 +7,7 @@
 // TODO: Find a way to return errors
 void DataScale(FEModel& fem, int nfield, double scale)
 {
-	FEMesh& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetMesh();
 
 	// loop over all states
 	int NN = mesh.Nodes();
@@ -186,7 +186,7 @@ void DataScale(FEModel& fem, int nfield, double scale)
 // Apply a smoothing step operation on data
 bool DataSmoothStep(FEModel& fem, int nfield, double theta)
 {
-	FEMesh& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetMesh();
 
 	// loop over all states
 	int ndata = FIELD_CODE(nfield);

@@ -11,7 +11,7 @@ private:
 	{
 	public:
 		int Faces() { return (int) m_face.size(); }
-		void BuildNodeList(FEMesh& m);
+		void BuildNodeList(FEMeshBase& m);
 
 		int Nodes() { return (int) m_node.size(); }
 

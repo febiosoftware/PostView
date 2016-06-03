@@ -17,7 +17,7 @@ bool FENikeExport::Save(FEModel &fem, const char *szfile)
 
 	int i;
 
-	FEMesh* pm = fem.GetMesh();
+	FEMeshBase* pm = fem.GetMesh();
 
 	FEState& s = *fem.GetActiveState();
 

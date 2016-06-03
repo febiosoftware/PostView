@@ -58,7 +58,7 @@ void CStatsWindow::Update(bool breset)
 	CDocument* doc = m_wnd->GetDocument();
 	if (doc->IsValid() == false) return;
 
-	FEMesh* pm = doc->GetFEModel()->GetMesh();
+	FEMeshBase* pm = doc->GetFEModel()->GetMesh();
 	int N, i, n;
 
 	bool belemfield = IS_ELEM_FIELD(doc->GetEvalField());

@@ -62,7 +62,8 @@ bool FEVTKimport::Load(FEModel& fem, const char* szfile)
 	
 
 	// create a new mesh
-	FEMesh* pm = fem.GetMesh();
+	FEMesh* pm = new FEMesh;
+	fem.SetMesh(pm);
 	pm->Create(nodes, 0);
 	
 	// read the nodes
@@ -75,7 +76,7 @@ bool FEVTKimport::Load(FEModel& fem, const char* szfile)
 		return errf("An error occured while reading the nodal coordinates.");
 	int nodes_each_row = nread/3;
 	double temp2 = double(nodes)/nodes_each_row;
-	int rows = ceil(temp2);
+	int rows = (int)ceil(temp2);
 	for (i=0; i<rows; ++i)
 	{	
 		for (j=0,k=0;j<nodes_each_row && i*nodes_each_row+j <nodes;j++)
@@ -119,7 +120,7 @@ bool FEVTKimport::Load(FEModel& fem, const char* szfile)
 	int n[9];
 	for (i=0; i<elems; ++i)
 	{	
-		FEElement& el = pm->Element(i);
+		FEGenericElement& el = static_cast<FEGenericElement&>(pm->Element(i));
 		ch = fgets(szline, 255, m_fp);
 		if (ch == 0) return errf("An unexpected error occured while reading the file data.");
 		nread = sscanf(szline, "%d%d%d%d%d%d%d%d%d", &n[0], &n[1], &n[2], &n[3], &n[4],&n[5],&n[6],&n[7],&n[8]);
@@ -127,23 +128,23 @@ bool FEVTKimport::Load(FEModel& fem, const char* szfile)
 		switch (n[0])
 		{
 		case 3: 
-			el.m_ntype = FE_TRI3;
+			el.SetType(FE_TRI3);
 			el.m_node[0] = n[1]-min;
 			el.m_node[1] = n[2]-min;
 			el.m_node[2] = n[3]-min;
 			break;
 		case 4:			
 			if(isPOLYDATA)
-				el.m_ntype = FE_QUAD4;
+				el.SetType(FE_QUAD4);
 			if(isUnstructuredGrid)
-				el.m_ntype = FE_TET4;
+				el.SetType(FE_TET4);
 			el.m_node[0] = n[1]-min;
 			el.m_node[1] = n[2]-min;
 			el.m_node[2] = n[3]-min;
 			el.m_node[3] = n[4]-min;
 			break;
 		case 8:
-			el.m_ntype = FE_HEX8;
+			el.SetType(FE_HEX8);
 			el.m_node[0] = n[1]-min;
 			el.m_node[1] = n[2]-min;
 			el.m_node[2] = n[3]-min;

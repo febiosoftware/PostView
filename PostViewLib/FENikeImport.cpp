@@ -24,7 +24,6 @@ bool FENikeImport::Load(FEModel &fem, const char *szfile)
 
 	fem.Clear();
 	m_pfem = &fem;
-	m_pm = fem.GetMesh();
 
 	// read control section
 	if (ReadControlSection() == false) return false;
@@ -39,7 +38,7 @@ bool FENikeImport::Load(FEModel &fem, const char *szfile)
 	Close();
 
 	// update the mesh
-	m_pm->Update();
+	if (m_pm) m_pm->Update(); else return false;
 	fem.UpdateBoundingBox();
 
 	// we need a single state
@@ -131,7 +130,9 @@ bool FENikeImport::ReadGeometrySection()
 	char szline[256];
 
 	// create the geometry
+	m_pm = new FEMesh;
 	m_pm->Create(m_nn, m_nhel+m_nsel);	
+	m_pfem->SetMesh(m_pm);
 
 	// read the nodes
 	float x, y, z;
@@ -148,7 +149,7 @@ bool FENikeImport::ReadGeometrySection()
 	int ne = 0;
 	for (i=0; i<m_nhel; ++i)
 	{
-		FEElement& el = m_pm->Element(ne++);
+		FEGenericElement& el = static_cast<FEGenericElement&>(m_pm->Element(ne++));
 
 		if (get_line(szline) == 0) return errf("failed data for node", i+1);
 		sscanf(szline, "%*8d%5d%8d%8d%8d%8d%8d%8d%8d%8d", &nm, n,n+1,n+2,n+3,n+4,n+5,n+6,n+7);
@@ -156,7 +157,7 @@ bool FENikeImport::ReadGeometrySection()
 		// since arrays in C are zero-based we need do decrease the nodes and material number
 		if ((n[7]==n[3]) && (n[6]==n[3]) && (n[5]==n[3]) && (n[4]==n[3]))
 		{
-			el.m_ntype = FE_TET4;
+			el.SetType(FE_TET4);
 			el.m_node[0] = n[0] - 1;
 			el.m_node[1] = n[1] - 1;
 			el.m_node[2] = n[2] - 1;
@@ -166,7 +167,7 @@ bool FENikeImport::ReadGeometrySection()
 		{
 			// note the strange mapping. This is because NIKE's wedge elements use a
 			// different node numbering.
-			el.m_ntype = FE_PENTA6;
+			el.SetType(FE_PENTA6);
 			el.m_node[0] = n[0]-1;
 			el.m_node[1] = n[4]-1;
 			el.m_node[2] = n[1]-1;
@@ -176,7 +177,7 @@ bool FENikeImport::ReadGeometrySection()
 		}
 		else
 		{
-			el.m_ntype = FE_HEX8;
+			el.SetType(FE_HEX8);
 			for (j=0; j<8; j++) el.m_node[j] = n[j] - 1;
 		}
 		el.m_MatID = nm-1;
@@ -189,7 +190,7 @@ bool FENikeImport::ReadGeometrySection()
 	// read shell elemets
 	for (i=0; i<m_nsel; ++i)
 	{
-		FEElement& el = m_pm->Element(ne++);
+		FEGenericElement& el = static_cast<FEGenericElement&>(m_pm->Element(ne++));
 
 		if (get_line(szline) == 0) return errf("failed data for shell element", i+1);
 		sscanf(szline, "%*8d%5d%8d%8d%8d%8d", &nm, n,n+1,n+2,n+3);
@@ -200,9 +201,9 @@ bool FENikeImport::ReadGeometrySection()
 		el.m_MatID = nm-1;
 
 		if (n[3] == n[2])
-			el.m_ntype = FE_TRI3;
+			el.SetType(FE_TRI3);
 		else
-			el.m_ntype = FE_QUAD4;
+			el.SetType(FE_QUAD4);
 
 		if (get_line(szline) == 0) return errf("failed data for shell element", i+1);
 	}

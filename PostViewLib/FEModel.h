@@ -48,7 +48,10 @@ public:
 	const char* GetTitle() { return m_szTitle; }
 
 	// get the FE mesh for this model
-	FEMesh* GetMesh() { return &m_mesh; }
+	FEMeshBase* GetMesh() { return m_mesh; }
+
+	// set the FE mesh
+	void SetMesh(FEMeshBase* mesh);
 
 	// get the current active state
 	int currentTime() { return m_ntime; }
@@ -165,8 +168,8 @@ protected:
 	int			m_ntime;		// time step that is being evaluated
 
 	// --- M E S H ---
-	FEMesh		m_mesh;	// the one and only mesh
-	BOUNDINGBOX	m_bbox;		// bounding box of mesh
+	FEMeshBase*		m_mesh;		// the one and only mesh
+	BOUNDINGBOX		m_bbox;		// bounding box of mesh
 
 	// --- M A T E R I A L S ---
 	vector<FEMaterial>	m_Mat;		// array of materials

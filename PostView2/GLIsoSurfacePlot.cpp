@@ -136,7 +136,7 @@ void CGLIsoSurfacePlot::RenderSlice(float ref)
 	FEModel* ps = m_pObj->GetFEModel();
 
 	// get the mesh
-	FEMesh* pm = m_pObj->GetMesh();
+	FEMeshBase* pm = m_pObj->GetMesh();
 
 	const int* nt;
 
@@ -152,7 +152,7 @@ void CGLIsoSurfacePlot::RenderSlice(float ref)
 		FEMaterial* pmat = ps->GetMaterial(el.m_MatID);
 		if (pmat->benable && (el.IsVisible() || m_bcut_hidden) && el.IsSolid())
 		{
-			switch (el.m_ntype)
+			switch (el.Type())
 			{
 			case FE_HEX8  : nt = HEX_NT; break;
 			case FE_HEX20 : nt = HEX_NT; break;
@@ -244,7 +244,7 @@ void CGLIsoSurfacePlot::SetEvalField(int n)
 //-----------------------------------------------------------------------------
 void CGLIsoSurfacePlot::Update(int ntime, float dt, bool breset)
 {
-	FEMesh* pm = m_pObj->GetMesh();
+	FEMeshBase* pm = m_pObj->GetMesh();
 	FEModel* pfem = m_pObj->GetFEModel();
 
 	int NN = pm->Nodes();

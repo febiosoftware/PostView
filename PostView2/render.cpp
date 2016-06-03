@@ -8,7 +8,7 @@ void CGLModel::RenderQUAD4(FEFace& f, bool bsmooth, bool bnode)
 	assert(f.m_ntype == FACE_QUAD4);
 
 	// get the mesh
-	FEMesh* pm = m_ps->GetMesh();
+	FEMeshBase* pm = m_ps->GetMesh();
 
 	// get the nodal data
 	vec3f r[4]; pm->FaceNodePosition(f, r);
@@ -38,7 +38,7 @@ void CGLModel::RenderQUAD8(FEFace& f, bool bsmooth, bool bnode)
 	assert(f.m_ntype == FACE_QUAD8);
 
 	// get the mesh
-	FEMesh* pm = m_ps->GetMesh();
+	FEMeshBase* pm = m_ps->GetMesh();
 
 	// get the nodal data
 	vec3f r[8]; pm->FaceNodePosition(f, r);
@@ -86,7 +86,7 @@ void CGLModel::RenderQUAD9(FEFace& f, bool bsmooth, bool bnode)
 	assert(f.m_ntype == FACE_QUAD9);
 
 	// get the mesh
-	FEMesh* pm = m_ps->GetMesh();
+	FEMeshBase* pm = m_ps->GetMesh();
 
 	// get the nodal data
 	vec3f r[9]; pm->FaceNodePosition(f, r);
@@ -146,7 +146,7 @@ void CGLModel::RenderTRI3(FEFace& f, bool bsmooth, bool bnode)
 	assert(f.m_ntype == FACE_TRI3);
 
 	// get the mesh
-	FEMesh* pm = m_ps->GetMesh();
+	FEMeshBase* pm = m_ps->GetMesh();
 
 	// get the nodal data
 	vec3f r[3]; pm->FaceNodePosition(f, r);
@@ -174,7 +174,7 @@ void CGLModel::RenderTRI6(FEFace& f, bool bsmooth, bool bnode)
 	assert(f.m_ntype == FACE_TRI6);
 
 	// get the mesh
-	FEMesh* pm = m_ps->GetMesh();
+	FEMeshBase* pm = m_ps->GetMesh();
 
 	// get the nodal data
 	vec3f r[6]; pm->FaceNodePosition(f, r);
@@ -214,7 +214,7 @@ void CGLModel::RenderTRI7(FEFace& f, bool bsmooth, bool bnode)
 	assert(f.m_ntype == FACE_TRI7);
 
 	// get the mesh
-	FEMesh* pm = m_ps->GetMesh();
+	FEMeshBase* pm = m_ps->GetMesh();
 
 	// get the nodal data
 	vec3f r[7]; pm->FaceNodePosition(f, r);
@@ -257,7 +257,7 @@ void CGLModel::RenderTRI7(FEFace& f, bool bsmooth, bool bnode)
 
 //-----------------------------------------------------------------------------
 // Render a sub-divided 4-noded quadrilateral
-void CGLModel::RenderSmoothQUAD4(FEFace& face, FEMesh* pm, int ndivs, bool bnode)
+void CGLModel::RenderSmoothQUAD4(FEFace& face, FEMeshBase* pm, int ndivs, bool bnode)
 {
 	vec3f r[4] = {
 		pm->Node(face.node[0]).m_rt,
@@ -319,7 +319,7 @@ void CGLModel::RenderSmoothQUAD4(vec3f r[4], vec3f n[4], float q[4], int ndivs)
 
 //-----------------------------------------------------------------------------
 // Render a sub-divided 8-noded quadrilateral
-void CGLModel::RenderSmoothQUAD8(FEFace& face, FEMesh* pm, int ndivs, bool bnode)
+void CGLModel::RenderSmoothQUAD8(FEFace& face, FEMeshBase* pm, int ndivs, bool bnode)
 {
 	assert(face.m_ntype == FACE_QUAD8);
 
@@ -403,7 +403,7 @@ void CGLModel::RenderSmoothQUAD8(vec3f r[8], vec3f n[8], float q[8], int ndivs)
 
 //-----------------------------------------------------------------------------
 // Render a sub-divided 9-noded quadrilateral
-void CGLModel::RenderSmoothQUAD9(FEFace& face, FEMesh* pm, int ndivs, bool bnode)
+void CGLModel::RenderSmoothQUAD9(FEFace& face, FEMeshBase* pm, int ndivs, bool bnode)
 {
 	assert(face.m_ntype == FACE_QUAD9);
 
@@ -498,7 +498,7 @@ void CGLModel::RenderSmoothQUAD9(vec3f r[9], vec3f n[9], float q[9], int ndivs)
 
 //-----------------------------------------------------------------------------
 // Render a sub-divided 6-noded triangle
-void CGLModel::RenderSmoothTRI6(FEFace& face, FEMesh* pm, int ndivs, bool bnode)
+void CGLModel::RenderSmoothTRI6(FEFace& face, FEMeshBase* pm, int ndivs, bool bnode)
 {
 	assert(face.m_ntype == FACE_TRI6);
 
@@ -604,7 +604,7 @@ void CGLModel::RenderSmoothTRI6(vec3f x[6], vec3f n[6], float q[6], int ndivs)
 
 //-----------------------------------------------------------------------------
 // Render a sub-divided 7-noded triangle
-void CGLModel::RenderSmoothTRI7(FEFace& face, FEMesh* pm, int ndivs, bool bnode)
+void CGLModel::RenderSmoothTRI7(FEFace& face, FEMeshBase* pm, int ndivs, bool bnode)
 {
 	assert(face.m_ntype == FACE_TRI7);
 

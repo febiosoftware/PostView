@@ -138,7 +138,7 @@ bool FELSDYNAPlotImport::ReadHeader(FEModel& fem)
 		fem.SetTitle("(No title)");
 
 	// set the data fields we are going to read
-	FEMesh* pm = fem.GetMesh();
+	FEMeshBase* pm = fem.GetMesh();
 	FEDataManager* pdm = fem.GetDataManager();
 	pdm->Clear();
 
@@ -212,7 +212,9 @@ bool FELSDYNAPlotImport::ReadMesh(FEModel &fem)
 	int i, j;
 
 	// get the mesh
-	FEMesh& mesh = *fem.GetMesh();
+	FEMeshBase* pm = new FEMesh;
+	fem.SetMesh(pm);
+	FEMeshBase& mesh = *pm;
 
 	// clear the state data
 	fem.ClearStates();
@@ -242,7 +244,7 @@ bool FELSDYNAPlotImport::ReadMesh(FEModel &fem)
 	int nmat = fem.Materials();
 	for (i=0; i<m_hdr.nel8; i++)
 	{
-		FEElement& el = mesh.Element(ne++);
+		FEGenericElement& el = static_cast<FEGenericElement&>(mesh.Element(ne++));
 
 		nread = ReadData(n, sizeof(int), 9);
 		if (nread != 9)
@@ -254,7 +256,7 @@ bool FELSDYNAPlotImport::ReadMesh(FEModel &fem)
 
 		if ((n[7]==n[4])&&(n[6]==n[4])&&(n[5]==n[4])) 
 		{
-			el.m_ntype = FE_TET4; 
+			el.SetType(FE_TET4) ;
 			el.m_node[0] = n[0]-1;
 			el.m_node[1] = n[1]-1;
 			el.m_node[2] = n[2]-1;
@@ -262,7 +264,7 @@ bool FELSDYNAPlotImport::ReadMesh(FEModel &fem)
 		}
 		else if (n[7]==n[6]) 
 		{
-			el.m_ntype = FE_PENTA6;
+			el.SetType(FE_PENTA6);
 			el.m_node[0] = n[4]-1;
 			el.m_node[1] = n[1]-1;
 			el.m_node[2] = n[0]-1;
@@ -272,7 +274,7 @@ bool FELSDYNAPlotImport::ReadMesh(FEModel &fem)
 		}
 		else if ((n[0]==n[4]) && (n[1]==n[5]) && (n[2]==n[6]) && (n[3]==n[7]))
 		{
-			el.m_ntype = FE_QUAD4;
+			el.SetType(FE_QUAD4);
 			el.m_node[0] = n[0]-1;
 			el.m_node[1] = n[1]-1;
 			el.m_node[2] = n[2]-1;
@@ -280,7 +282,7 @@ bool FELSDYNAPlotImport::ReadMesh(FEModel &fem)
 		}
 		else 
 		{
-			el.m_ntype = FE_HEX8;
+			el.SetType(FE_HEX8);
 			for (j=0; j<8; j++) el.m_node[j] = n[j] - 1;
 		}
 
@@ -297,11 +299,11 @@ bool FELSDYNAPlotImport::ReadMesh(FEModel &fem)
 	// read beam elements
 	for (i=0; i<m_hdr.nel2; ++i)
 	{
-		FEElement& el = mesh.Element(ne++);
+		FEGenericElement& el = static_cast<FEGenericElement&>(mesh.Element(ne++));
 
 		ReadData(n, sizeof(int), 6);
 
-		el.m_ntype = FE_TRUSS2;
+		el.SetType(FE_TRUSS2);
 		assert(n[5] > 0);
 
 		el.m_MatID = n[5]-1;
@@ -312,11 +314,11 @@ bool FELSDYNAPlotImport::ReadMesh(FEModel &fem)
 	// read shells
 	for (i=0; i<m_hdr.nel4; ++i)
 	{
-		FEElement& el = mesh.Element(ne++);
+		FEGenericElement& el = static_cast<FEGenericElement&>(mesh.Element(ne++));
 
 		ReadData(n, sizeof(int), 5);
 
-		el.m_ntype = FE_QUAD4;
+		el.SetType(FE_QUAD4);
 
 		assert(n[4] > 0);
 
@@ -352,7 +354,6 @@ bool FELSDYNAPlotImport::ReadMesh(FEModel &fem)
 		FEFace& f = mesh.Face(i);
 		assert(f.m_elem >= 0);
 		FEElement& el = mesh.Element(f.m_elem[0]);
-		assert(el.m_ntype >= 0);
 	}
 
 	fem.UpdateBoundingBox();
@@ -379,7 +380,7 @@ bool FELSDYNAPlotImport::ReadStates(FEModel& fem)
 	FEState* pprev = 0;	// previously read state
 	FEState* pstate = 0;
 
-	FEMesh& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetMesh();
 
 	bool bfirst = true;
 
@@ -576,7 +577,7 @@ bool FELSDYNAPlotExport::Save(FEModel& fem, const char* szfile, bool bflag[6], i
 	else
 		strcpy(plh.Title, sztitle);
 
-	FEMesh& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetMesh();
 
 	plh.neips = 2000;
 	plh.flagU = (bflag[2]?1:0);
@@ -628,7 +629,7 @@ bool FELSDYNAPlotExport::Save(FEModel& fem, const char* szfile, bool bflag[6], i
 		if (el.IsSolid())
 		{
 			N = el.Nodes();
-			switch (el.m_ntype)
+			switch (el.Type())
 			{
 			case FE_HEX8:
 				for (j=0; j<N; ++j) n[j] = el.m_node[j]+1;
@@ -680,7 +681,7 @@ bool FELSDYNAPlotExport::Save(FEModel& fem, const char* szfile, bool bflag[6], i
 		if (el.IsShell())
 		{
 			N = el.Nodes();
-			switch (el.m_ntype)
+			switch (el.Type())
 			{
 			case FE_QUAD4:
 				n[0] = el.m_node[0]+1;

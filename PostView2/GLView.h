@@ -11,7 +11,7 @@ class CMainWindow;
 class CDocument;
 class CGLModel;
 class CGLContext;
-class FEMesh;
+class FEMeshBase;
 
 //-----------------------------------------------------------------------------
 // Animation modes
@@ -60,7 +60,7 @@ inline bool operator == (const MyPoint& p1, const MyPoint& p2)
 // helper structur for picking nodes
 struct GLNODE_PICK
 {
-	FEMesh*	m_pm;
+	FEMeshBase*	m_pm;
 	int		m_node;
 };
 
