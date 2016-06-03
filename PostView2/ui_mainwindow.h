@@ -218,6 +218,9 @@ public:
 		QAction* actionSelectCircle = addAction("Select Circle"   , "actionSelectCircle", ":/icons/select_circle.png"); actionSelectCircle->setCheckable(true);
 		QAction* actionSelectFree   = addAction("Select Free"     , "actionSelectFree"  , ":/icons/select_free.png"  ); actionSelectFree->setCheckable(true);
 
+		QAction* actionSelectItem = addAction("Select item"     , "actionSelectItem", ":/icons/select_item.png"   ); actionSelectItem->setCheckable(true);
+		QAction* actionSelectConn = addAction("Select connected", "actionSelectConn", ":/icons/select_connected.png"); actionSelectConn->setCheckable(true);
+
 		QAction* actionHideSelected    = addAction("Hide selected"   , "actionHideSelected"   ); actionHideSelected->setShortcut(Qt::Key_H);
 		QAction* actionHideUnselected  = addAction("Hide unselected" , "actionHideUnselected" );
 		QAction* actionInvertSelection = addAction("Invert selection", "actionInvertSelection");
@@ -292,6 +295,11 @@ public:
 		pag->addAction(actionSelectCircle);
 		pag->addAction(actionSelectFree);
 		actionSelectRect->setChecked(true);
+
+		pag = new QActionGroup(MainWindow);
+		pag->addAction(actionSelectItem);
+		pag->addAction(actionSelectConn);
+		actionSelectItem->setChecked(true);
 
 		// build the menu
 		menuBar->addAction(menuFile->menuAction());
@@ -393,6 +401,9 @@ public:
 		mainToolBar->addAction(selectFaces);
 		mainToolBar->addAction(selectElems);
 		mainToolBar->addSeparator();
+
+		mainToolBar->addAction(actionSelectItem);
+		mainToolBar->addAction(actionSelectConn);
 
 		mainToolBar->addAction(actionSelectRect  );
 		mainToolBar->addAction(actionSelectCircle);

@@ -277,6 +277,7 @@ void FEMesh::BuildEdges()
 	for (int i=0; i<NF; ++i) Face(i).m_ntag = i;
 
 	m_Edge.reserve(NF);
+	int nid = 1;
 	for (int i=0; i<NF; ++i)
 	{
 		FEFace& fi = Face(i);
@@ -287,6 +288,7 @@ void FEMesh::BuildEdges()
 			if ((pfj == 0) || (pfj->m_ntag > fi.m_ntag))
 			{
 				FEEdge e = fi.Edge(j);
+				e.SetID(nid++);
 				m_Edge.push_back(e);
 			}
 		}
@@ -336,6 +338,7 @@ void FEMesh::BuildFaces()
 				f.m_elem[0] = i;
 				f.m_elem[1] = j;
 				f.m_mat = e.m_MatID;
+				f.SetID(NF);
 			}
 
 		// shell elements
@@ -385,6 +388,7 @@ void FEMesh::BuildFaces()
 			f.m_elem[0] = i;
 			f.m_elem[1] = 0;
 			f.m_mat = e.m_MatID;
+			f.SetID(NF);
 		}
 	}
 

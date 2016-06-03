@@ -43,5 +43,7 @@
 		<file>icons/select_rect.png</file>
 		<file>icons/select_circle.png</file>
 		<file>icons/select_free.png</file>
+		<file>icons/select_item.png</file>
+		<file>icons/select_connected.png</file>
     </qresource>
 </RCC>

@@ -579,6 +579,16 @@ void CMainWindow::on_actionZoomExtents_triggered()
 	ui->glview->OnZoomExtents();
 }
 
+void CMainWindow::on_actionSelectItem_triggered()
+{
+	GetDocument()->GetViewSettings().m_bconn = false;
+}
+
+void CMainWindow::on_actionSelectConn_triggered()
+{
+	GetDocument()->GetViewSettings().m_bconn = true;
+}
+
 void CMainWindow::on_actionHideSelected_triggered()
 {
 	CDocument* pdoc = GetDocument();
@@ -1354,7 +1364,7 @@ void CMainWindow::writeSettings()
 	settings.setValue("m_bTags"           , view.m_bTags);
 	settings.setValue("m_ntagInfo"        , view.m_ntagInfo);
 	settings.setValue("m_bTitle"          , view.m_bTitle);
-	settings.setValue("m_bconn"           , view.m_bconn);
+//	settings.setValue("m_bconn"           , view.m_bconn);
 	settings.setValue("m_bext"            , view.m_bext);
 	settings.setValue("m_bmesh"           , view.m_bmesh);
 	settings.setValue("m_boutline"        , view.m_boutline);
@@ -1391,7 +1401,7 @@ void CMainWindow::readSettings()
 	view.m_bTags            = settings.value("m_bTags"      , view.m_bTags ).toBool();
 	view.m_ntagInfo         = settings.value("m_ntagInfo"   , view.m_ntagInfo).toInt();
 	view.m_bTitle           = settings.value("m_bTitle"     , view.m_bTitle).toBool();
-	view.m_bconn            = settings.value("m_bconn"      , view.m_bconn).toBool();
+//	view.m_bconn            = settings.value("m_bconn"      , view.m_bconn).toBool();
 	view.m_bext             = settings.value("m_bext"       , view.m_bext).toBool();
 	view.m_bmesh            = settings.value("m_bmesh"      , view.m_bmesh).toBool();
 	view.m_boutline         = settings.value("m_boutline"   , view.m_boutline).toBool();

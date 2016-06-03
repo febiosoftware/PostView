@@ -864,7 +864,7 @@ void CGLView::RenderTags()
 		tag.r = mesh.FaceCenter(f);
 		tag.bvis = false;
 		tag.ntag = 0;
-		sprintf(tag.sztag, "F%d", i+1);
+		sprintf(tag.sztag, "F%d", f.GetID());
 		vtag.push_back(tag);
 
 		int nf = f.Nodes();
@@ -880,7 +880,7 @@ void CGLView::RenderTags()
 		tag.r = mesh.EdgeCenter(edge);
 		tag.bvis = false;
 		tag.ntag = 0;
-		sprintf(tag.sztag, "L%d", i+1);
+		sprintf(tag.sztag, "L%d", edge.GetID());
 		vtag.push_back(tag);
 
 		int ne = edge.Nodes();
