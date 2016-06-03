@@ -211,7 +211,7 @@ void CKinematTool::deactivate()
 
 void CKinematTool::OnBrowse1()
 {
-	QString filename = QFileDialog::getOpenFileName(0, "Open file", 0, "XPLT files(*.xplt)");
+	QString filename = QFileDialog::getOpenFileName(0, "Open file", 0, "LSDYNA Keyword (*.k)");
 	if (filename.isEmpty() == false)
 	{
 		ui->modelFile->setText(filename);

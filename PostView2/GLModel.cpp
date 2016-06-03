@@ -2915,7 +2915,74 @@ void CGLModel::SelectConnectedVolumeElements(FEElement &el)
 // Select faces that are connected
 void CGLModel::SelectConnectedEdges(FEEdge& e)
 {
-	assert(false);
+	FEMesh& mesh = *GetMesh();
+
+	// clear tags on all faces
+	int NF = mesh.Faces();
+	for (int i=0; i<NF; ++i) mesh.Face(i).m_ntag = 0;
+
+	// find a face that has both nodes connects to
+	int n0 = e.node[0];
+	int n1 = e.node[1];
+	FEFace* pf = 0;
+	for (int i=0; i<mesh.Faces(); ++i)
+	{
+		FEFace& f = mesh.Face(i);
+		if (f.IsVisible() && f.HasNode(n0) && f.HasNode(n1))
+		{
+			pf = &f;
+			break;
+		}
+	}
+	if (pf == 0) return;
+
+	// propagate through all neighbors
+	stack<FEFace*> S;
+	pf->m_ntag = 1;
+	S.push(pf);
+	while (!S.empty())
+	{
+		FEFace* pf = S.top(); S.pop();
+		if (pf->IsVisible())
+		{
+			for (int j=0; j<pf->Edges(); ++j)
+			{
+				FEFace* pf2 = (pf->m_nbr[j] >= 0? &mesh.Face(pf->m_nbr[j]) : 0);
+				if (pf2 && pf2->IsVisible() && (pf2->m_ntag == 0) && (pf2->m_nsg == pf->m_nsg)) 
+				{
+					pf2->m_ntag = 1;
+					S.push(pf2);
+				}
+			}
+		}
+	}
+
+	// tag all nodes
+	int NN = mesh.Nodes();
+	for (int i=0; i<NN; ++i) mesh.Node(i).m_ntag = 0;
+	for (int i=0; i<NF; ++i)
+	{
+		FEFace& face = mesh.Face(i);
+		if (face.m_ntag == 1)
+		{
+			int nf = face.Nodes();
+			for (int j=0; j<nf; ++j) mesh.Node(face.node[j]).m_ntag = 1;
+		}
+	}
+
+	// select all the edges of tagged nodes
+	int NL = mesh.Edges();
+	for (int i=0; i<NL; ++i)
+	{
+		FEEdge& edge = mesh.Edge(i);
+		if (edge.IsVisible())
+		{
+			if ((mesh.Node(edge.node[0]).m_ntag == 1) && 
+				(mesh.Node(edge.node[1]).m_ntag == 1)) edge.Select();
+		}
+	}
+
+	UpdateSelectionLists(SELECT_EDGES);
 }
 
 //-----------------------------------------------------------------------------
@@ -2941,7 +3008,7 @@ void CGLModel::SelectConnectedFaces(FEFace &f)
 			for (int j=0; j<pf->Edges(); ++j)
 			{
 				FEFace* pf2 = (pf->m_nbr[j] >= 0? &mesh.Face(pf->m_nbr[j]) : 0);
-				if (pf2 && (pf2->m_ntag == 0)) 
+				if (pf2 && (pf2->m_ntag == 0) && (pf2->m_nsg == pf->m_nsg) )
 				{
 					pf2->m_ntag = 1;
 					S.push(pf2);
@@ -2988,7 +3055,7 @@ void CGLModel::SelectConnectedSurfaceNodes(int n)
 			for (int j=0; j<pf->Edges(); ++j)
 			{
 				FEFace* pf2 = (pf->m_nbr[j] >= 0? &mesh.Face(pf->m_nbr[j]) : 0);
-				if (pf2 && (pf2->m_ntag == 0)) 
+				if (pf2 && (pf2->m_ntag == 0) && (pf2->m_nsg == pf->m_nsg)) 
 				{
 					pf2->m_ntag = 1;
 					S.push(pf2);
