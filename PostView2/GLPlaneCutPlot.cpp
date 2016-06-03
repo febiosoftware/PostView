@@ -163,6 +163,15 @@ float CGLPlaneCutPlot::GetPlaneOffset()
 	return m_eq[3];
 }
 
+void CGLPlaneCutPlot::SetPlaneEqn(GLdouble a[4])
+{
+	m_eq[0] = a[0];
+	m_eq[1] = a[1];
+	m_eq[2] = a[2];
+	m_eq[3] = a[3];
+	UpdateSlice();
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 void CGLPlaneCutPlot::Render(CGLContext& rc)

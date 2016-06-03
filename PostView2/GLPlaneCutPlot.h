@@ -67,13 +67,7 @@ public:
 		eqn[3] = m_eq[3];
 	}
 
-	void SetPlaneEqn(GLdouble a[4])
-	{
-		m_eq[0] = a[0];
-		m_eq[1] = a[1];
-		m_eq[2] = a[2];
-		m_eq[3] = a[3];
-	}
+	void SetPlaneEqn(GLdouble a[4]);
 
 	void GetNormalizedEquations(double a[4]);
 	vec3f GetPlaneNormal();
