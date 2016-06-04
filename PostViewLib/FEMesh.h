@@ -29,7 +29,7 @@ public:
 	virtual ~FEMeshBase();
 
 	//! allocate storage for mesh
-	virtual bool Create(int nodes, int elems) = 0;
+	void Create(int nodes, int elems);
 
 	//! Clean up all data
 	void CleanUp();
@@ -172,6 +172,9 @@ public:
 	void FaceNodeTexCoords(FEFace& f, float* t, bool bnode);
 
 protected:
+	virtual void CreateElements(int elems) = 0;
+
+protected:
 	void BuildFaces();
 	void FindFaceNeighbors();
 	void FindNeighbours();
@@ -206,10 +209,10 @@ protected:
 	int		m_nID;
 };
 
-class FEMesh : public FEMeshBase
+template <class T> class FEMesh_ : public FEMeshBase
 {
 public:
-	FEMesh(){}
+	FEMesh_(){}
 
 public:
 	// number of elements
@@ -221,74 +224,18 @@ public:
 
 	void ClearElements() { m_Elem.clear(); }
 
-	bool Create(int nodes, int elems);
+protected:
+	void CreateElements(int elems) { m_Elem.resize(elems); }
 
 protected:
-	vector<FEElement>	m_Elem;	// element array
+	vector<T>	m_Elem;	// element array
 };
 
-class FEMeshTet4 : public FEMeshBase
-{
-public:
-	FEMeshTet4(){}
-
-public:
-	// number of elements
-	int Elements() const { return (int) m_Elem.size(); }
-
-	//! return an element
-	FEElement& Element(int i) { return m_Elem[i]; }
-	const FEElement& Element(int i) const { return m_Elem[i]; }
-
-	void ClearElements() { m_Elem.clear(); }
-
-	bool Create(int nodes, int elems);
-
-protected:
-	vector<FETet4>	m_Elem;	// element array
-};
-
-class FEMeshHex8: public FEMeshBase
-{
-public:
-	FEMeshHex8(){}
-
-public:
-	// number of elements
-	int Elements() const { return (int) m_Elem.size(); }
-
-	//! return an element
-	FEElement& Element(int i) { return m_Elem[i]; }
-	const FEElement& Element(int i) const { return m_Elem[i]; }
-
-	void ClearElements() { m_Elem.clear(); }
-
-	bool Create(int nodes, int elems);
-
-protected:
-	vector<FEHex8>	m_Elem;	// element array
-};
-
-class FETriMesh : public FEMeshBase
-{
-public:
-	FETriMesh(){}
-
-public:
-	// number of elements
-	int Elements() const { return (int) m_Elem.size(); }
-
-	//! return an element
-	FEElement& Element(int i) { return m_Elem[i]; }
-	const FEElement& Element(int i) const { return m_Elem[i]; }
-
-	void ClearElements() { m_Elem.clear(); }
-
-	bool Create(int nodes, int elems);
-
-protected:
-	vector<FETri3>	m_Elem;	// element array
-};
+typedef FEMesh_<FETri3> FETriMesh;
+typedef FEMesh_<FEQuad4> FEQuadMesh;
+typedef FEMesh_<FETet4> FEMeshTet4;
+typedef FEMesh_<FEHex8> FEMeshHex8;
+typedef FEMesh_<FEElement> FEMesh;
 
 // find the element and the iso-parametric coordinates of a point inside the mesh
 bool FindElementRef(FEMeshBase& m, const vec3f& x, int& nelem, double r[3]);

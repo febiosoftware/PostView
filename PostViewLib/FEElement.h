@@ -369,6 +369,17 @@ public:
 	int		_node[3];	// array of nodes ID
 };
 
+class FEQuad4 : public FEElement
+{
+public:
+	FEQuad4();
+	FEQuad4(const FEQuad4& e);
+	void operator = (const FEQuad4& e);
+
+public:
+	int		_node[4];	// array of nodes ID
+};
+
 class FETet4 : public FEElement
 {
 public:

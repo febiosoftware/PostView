@@ -325,6 +325,27 @@ void FETri3::operator=(const FETri3& e)
 }
 
 //=============================================================================
+FEQuad4::FEQuad4()
+{
+	m_ntype = FE_QUAD4;
+	m_node = _node;
+	for (int i=0; i<4; ++i) m_node[i] = -1; 
+}
+
+FEQuad4::FEQuad4(const FEQuad4& e) : FEElement(e)
+{
+	m_node = _node;
+	for (int i=0; i<4; ++i) m_node[i] = e.m_node[i]; 
+}
+
+void FEQuad4::operator=(const FEQuad4& e)
+{
+	FEElement::operator = (e);
+	m_node = _node;
+	for (int i=0; i<4; ++i) m_node[i] = e.m_node[i]; 
+}
+
+//=============================================================================
 FETet4::FETet4()
 {
 	m_ntype = FE_TET4;
@@ -371,7 +392,8 @@ void FEHex8::operator=(const FEHex8& e)
 //-----------------------------------------------------------------------------
 FEElement::FEElement()
 {
-	for (int i=0; i<6; ++i) m_pElem[i] = 0; m_MatID = 0; 
+	for (int i=0; i<6; ++i) m_pElem[i] = 0; 
+	m_MatID = 0; 
 }
 
 //-----------------------------------------------------------------------------

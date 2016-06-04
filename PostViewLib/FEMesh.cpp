@@ -79,6 +79,34 @@ void FEMeshBase::ClearNodeSets()
 	m_NSet.clear();
 }
 
+
+//-----------------------------------------------------------------------------
+void FEMeshBase::Create(int nodes, int elems)
+{
+	if (nodes)
+	{
+		CleanUp();
+
+		m_Node.resize(nodes);
+
+		// assign default IDs
+		for (int i=0; i<nodes; ++i) m_Node[i].SetID(i+1);
+	}
+
+	if (elems)
+	{
+		CreateElements(elems);
+
+		// set default element ID's
+		for (int i=0; i<elems; i++) 
+		{
+			FEElement& el = Element(i);
+			el.SetID(i+1); 
+			el.m_lid = i;	
+		}
+	}
+}
+
 //-----------------------------------------------------------------------------
 // Count nr of beam elements
 int FEMeshBase::BeamElements()
@@ -1379,160 +1407,4 @@ bool FindElementRef(FEMeshBase& m, const vec3f& p, int& nelem, double r[3])
 	}
 
 	return false;
-}
-
-//-----------------------------------------------------------------------------
-// Create a mesh
-bool FEMesh::Create(int nodes, int elems)
-{
-	// clean up the old mesh
-	CleanUp();
-
-	// allocate storage for nodal data
-	if (nodes) 
-	{
-		m_Node.resize(nodes);
-
-		// assign default IDs
-		for (int i=0; i<nodes; ++i) m_Node[i].SetID(i+1);
-	}
-
-	// allocate storage for element data
-	if (elems)
-	{
-		m_Elem.resize(elems);
-
-		// make sure everything got allocated
-		if ((m_Node.size() == 0) || (m_Elem.size() == 0))
-		{
-			CleanUp();
-			return false;
-		}
-
-		// set default element ID's
-		for (int i=0; i<elems; i++) 
-		{
-			m_Elem[i].SetID(i+1); 
-			m_Elem[i].m_lid = i;	
-		}
-	}
-
-	return true;
-}
-
-//-----------------------------------------------------------------------------
-// Create a mesh
-bool FEMeshTet4::Create(int nodes, int elems)
-{
-	// clean up the old mesh
-	CleanUp();
-
-	// allocate storage for nodal data
-	if (nodes) 
-	{
-		m_Node.resize(nodes);
-
-		// assign default IDs
-		for (int i=0; i<nodes; ++i) m_Node[i].SetID(i+1);
-	}
-
-	// allocate storage for element data
-	if (elems)
-	{
-		m_Elem.resize(elems);
-
-		// make sure everything got allocated
-		if ((m_Node.size() == 0) || (m_Elem.size() == 0))
-		{
-			CleanUp();
-			return false;
-		}
-
-		// set default element ID's
-		for (int i=0; i<elems; i++) 
-		{
-			m_Elem[i].SetID(i+1); 
-			m_Elem[i].m_lid = i;	
-		}
-	}
-
-	return true;
-}
-
-//-----------------------------------------------------------------------------
-// Create a mesh
-bool FEMeshHex8::Create(int nodes, int elems)
-{
-	// clean up the old mesh
-	CleanUp();
-
-	// allocate storage for nodal data
-	if (nodes) 
-	{
-		m_Node.resize(nodes);
-
-		// assign default IDs
-		for (int i=0; i<nodes; ++i) m_Node[i].SetID(i+1);
-	}
-
-	// allocate storage for element data
-	if (elems)
-	{
-		m_Elem.resize(elems);
-
-		// make sure everything got allocated
-		if ((m_Node.size() == 0) || (m_Elem.size() == 0))
-		{
-			CleanUp();
-			return false;
-		}
-
-		// set default element ID's
-		for (int i=0; i<elems; i++) 
-		{
-			m_Elem[i].SetID(i+1); 
-			m_Elem[i].m_lid = i;	
-		}
-	}
-
-	return true;
-}
-
-//-----------------------------------------------------------------------------
-// Create a mesh
-bool FETriMesh::Create(int nodes, int elems)
-{
-	// clean up the old mesh
-	CleanUp();
-
-	// allocate storage for nodal data
-	if (nodes) 
-	{
-		m_Node.resize(nodes);
-
-		// assign default IDs
-		for (int i=0; i<nodes; ++i) m_Node[i].SetID(i+1);
-	}
-
-	// allocate storage for element data
-	if (elems)
-	{
-		m_Elem.resize(elems);
-
-		// make sure everything got allocated
-		if ((m_Node.size() == 0) || (m_Elem.size() == 0))
-		{
-			CleanUp();
-			return false;
-		}
-
-		// set default element ID's
-		for (int i=0; i<elems; i++) 
-		{
-			m_Elem[i].SetID(i+1); 
-			m_Elem[i].m_lid = i;	
-		}
-	}
-
-	return true;
 }

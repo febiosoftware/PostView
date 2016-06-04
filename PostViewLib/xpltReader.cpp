@@ -112,6 +112,7 @@ bool XpltReader::Load(FEModel& fem, const char* szfile)
 
 	m_ar.Close();
 	Close();
+	Clear();
 
 	return true;
 }
