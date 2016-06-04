@@ -5,6 +5,14 @@
 #include "FEMeshData_T.h"
 
 //-----------------------------------------------------------------------------
+void ValArray::append(int items)
+{
+	if (m_index.empty()) m_index.push_back(0);
+	m_index.push_back(m_data.size() + items);
+	for (int i=0; i<items; ++i) m_data.push_back(0.f);
+}
+
+//-----------------------------------------------------------------------------
 // Constructor
 FEState::FEState(float time, FEModel* pfem)
 {
@@ -19,6 +27,22 @@ FEState::FEState(float time, FEModel* pfem)
 	m_EDGE.resize(edges);
 	m_ELEM.resize(elems);
 	m_FACE.resize(faces);
+
+	// allocate element data
+	for (int i=0; i<elems; ++i)
+	{
+		FEElement& el = mesh.Element(i);
+		int ne = el.Nodes();
+		m_ElemData.append(ne);
+	}
+
+	// allocate face data
+	for (int i=0; i<faces; ++i)
+	{
+		FEFace& face = mesh.Face(i);
+		int nf = face.Nodes();
+		m_FaceData.append(nf);
+	}
 
 	// initialize data
 	for (int i=0; i<nodes; ++i) m_NODE[i].m_rt = mesh.Node(i).m_r0;
@@ -71,6 +95,22 @@ FEState::FEState(float time, FEModel* pfem, FEState* pstate)
 	m_EDGE.resize(edges);
 	m_ELEM.resize(elems);
 	m_FACE.resize(faces);
+
+	// allocate element data
+	for (int i=0; i<elems; ++i)
+	{
+		FEElement& el = mesh.Element(i);
+		int ne = el.Nodes();
+		m_ElemData.append(ne);
+	}
+
+	// allocate face data
+	for (int i=0; i<faces; ++i)
+	{
+		FEFace& face = mesh.Face(i);
+		int nf = face.Nodes();
+		m_FaceData.append(nf);
+	}
 
 	// initialize data
 	for (int i=0; i<nodes; ++i) m_NODE[i].m_rt = mesh.Node(i).m_r0;

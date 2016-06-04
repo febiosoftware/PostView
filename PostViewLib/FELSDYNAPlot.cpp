@@ -778,7 +778,7 @@ bool FELSDYNAPlotExport::Save(FEModel& fem, const char* szfile, bool bflag[6], i
 
 		// write solid element data
 		float s[32] = {0};
-		ELEMDATA e;
+		float data[FEGenericElement::MAX_NODES] = {0.f}, val;
 		for (i=0; i<mesh.Elements(); ++i)
 		{
 			FEElement& el = mesh.Element(i);
@@ -796,8 +796,8 @@ bool FELSDYNAPlotExport::Save(FEModel& fem, const char* szfile, bool bflag[6], i
 				}
 				if (bflag[1]) 
 				{
-					fem.EvaluateElement(i, l, ncode[1], e);
-					s[6] = e.m_val;
+					fem.EvaluateElement(i, l, ncode[1], data, val);
+					s[6] = val;
 				}
 
 				fwrite(s, sizeof(float), 7, fp);

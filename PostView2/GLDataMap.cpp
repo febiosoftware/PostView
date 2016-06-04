@@ -199,6 +199,7 @@ void CGLColorMap::Update(int ntime, float dt, bool breset)
  
 	// update the range
 	float fmin = 1e29f, fmax = -1e29f;
+	ValArray& faceData = s.m_FaceData;
 	if (IS_ELEM_FIELD(m_nfield) && (m_bDispNodeVals==false))
 	{
 		int NF = pm->Faces();
@@ -211,8 +212,9 @@ void CGLColorMap::Update(int ntime, float dt, bool breset)
 				int nf = face.Nodes();
 				for (int j=0; j<nf; ++j)
 				{
-					if (fd.m_nv[j] > fmax) fmax = fd.m_nv[j];
-					if (fd.m_nv[j] < fmin) fmin = fd.m_nv[j];
+					float f = faceData.value(i, j);
+					if (f > fmax) fmax = f;
+					if (f < fmin) fmin = f;
 				}
 			}
 		}
@@ -277,7 +279,7 @@ void CGLColorMap::Update(int ntime, float dt, bool breset)
 		if (face.IsEnabled())
 		{
 //			for (int j=0; j<face.Nodes(); ++j) face.m_tex[j] = (s.m_NODE[face.node[j]].m_val - min)*dti;
-			for (int j=0; j<face.Nodes(); ++j) face.m_tex[j] = (s.m_FACE[i].m_nv[j] - min)*dti;
+			for (int j=0; j<face.Nodes(); ++j) face.m_tex[j] = (s.m_FaceData.value(i, j) - min)*dti;
 			if (s.m_FACE[i].m_ntag > 0) face.Activate(); else face.Deactivate();
 			face.m_texe = 0;
 	//		face.m_texe  = (pm->Element(face.m_elem).m_val - min )*dti;

@@ -438,11 +438,11 @@ void CGraphWindow::TrackFaceHistory(int nface, float* pval, int nfield, int nmin
 	if (nmax <    nmin) nmax = nmin;
 	int nn = nmax - nmin + 1;
 
-	FACEDATA f;
+	float data[FEFace::MAX_NODES], val;
 	for (int n=0; n<nn; n++)
 	{
-		fem.EvaluateFace(nface, n + nmin, nfield, f);
-		pval[n] = f.m_val;
+		fem.EvaluateFace(nface, n + nmin, nfield, data, val);
+		pval[n] = val;
 	}
 }
 
@@ -459,11 +459,11 @@ void CGraphWindow::TrackElementHistory(int nelem, float* pval, int nfield, int n
 	if (nmax <    nmin) nmax = nmin;
 	int nn = nmax - nmin + 1;
 
-	ELEMDATA e;
+	float data[FEGenericElement::MAX_NODES] = {0.f}, val;
 	for (int n=0; n<nn; n++)
 	{
-		fem.EvaluateElement(nelem, n + nmin, nfield, e);
-		pval[n] = e.m_val;
+		fem.EvaluateElement(nelem, n + nmin, nfield, data, val);
+		pval[n] = val;
 	}
 }
 

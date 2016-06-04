@@ -120,17 +120,15 @@ void FECongruencyMap::EvalSurface(FECongruencyMap::Surface& s, FEState* ps)
 	for (int i=0; i<NN; ++i) { s.m_node[i].ntag = 0; s.m_node[i].val = 0.f; }
 
 	// evaluate the surface data
+	ValArray& d = ps->m_FaceData;
 	int NF = s.Faces();
 	for (int i=0; i<NF; ++i)
 	{
 		FEFace& f = mesh.Face(s.m_face[i]);
-
-		FACEDATA& d = ps->m_FACE[s.m_face[i]];
-
 		int nf = f.Nodes();
 		for (int j=0; j<nf; ++j)
 		{
-			s.m_node[s.m_lnode[4*i+j]].val += d.m_nv[j];
+			s.m_node[s.m_lnode[4*i+j]].val += d.value(i, j);
 			s.m_node[s.m_lnode[4*i+j]].ntag++;
 		}
 	}

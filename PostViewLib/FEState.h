@@ -9,6 +9,25 @@ using namespace std;
 class FEModel;
 
 //-----------------------------------------------------------------------------
+class ValArray
+{
+public:
+	ValArray(){}
+
+	int itemSize(int n) const { return m_index[n+1] - m_index[n]; }
+
+	// append an item with n values
+	void append(int n);
+
+	float value(int item, int index) const { return m_data[m_index[item] + index]; }
+	float& value(int item, int index) { return m_data[m_index[item] + index]; }
+
+protected:
+	vector<int>		m_index;
+	vector<float>	m_data;
+};
+
+//-----------------------------------------------------------------------------
 // Data classes for mesh items
 struct NODEDATA
 {
@@ -28,7 +47,6 @@ struct ELEMDATA
 {
 	float	m_val;		// current element value
 	int		m_ntag;		// active flag
-	float	m_nv[FEGenericElement::MAX_NODES];	// nodal values
 	float	m_h[4];	// shell thickness (TODO: Can we move this to the face data?)
 };
 
@@ -36,7 +54,6 @@ struct FACEDATA
 {
 	int		m_ntag;		// active flag
 	float	m_val;		// current face value
-	float	m_nv[FEFace::MAX_NODES];	// nodal values
 };
 
 struct LINEDATA
@@ -81,6 +98,9 @@ public:
 	vector<ELEMDATA>	m_ELEM;		// element data
 	vector<LINEDATA>	m_Line;		// line data
 	vector<POINTDATA>	m_Point;	// point data
+
+	ValArray	m_ElemData;	// element data
+	ValArray	m_FaceData;	// face data
 
 	// Data
 	FEMeshDataList	m_Data;	// data
