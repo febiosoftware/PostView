@@ -391,7 +391,7 @@ bool FEBioPlotExport::WritePart(FEPart& part)
 	case FE_QUAD9 : ne =  9; dtype = PLT_ELEM_QUAD9; break;
 	case FE_TRI3  : ne =  3; dtype = PLT_ELEM_TRI; break;
 	case FE_TRI6  : ne =  6; dtype = PLT_ELEM_TRI6; break;
-	case FE_TRUSS2: ne =  2; dtype = PLT_ELEM_TRUSS; break;
+	case FE_LINE2 : ne =  2; dtype = PLT_ELEM_TRUSS; break;
 	default:
 		assert(false);
 		return error("Unknown element type in WritePart");

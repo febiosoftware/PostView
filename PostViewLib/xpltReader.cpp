@@ -978,7 +978,7 @@ bool XpltReader::BuildMesh(FEModel &fem)
 				case PLT_ELEM_TET  : etype = FE_TET4  ; break;
 				case PLT_ELEM_QUAD : etype = FE_QUAD4 ; break;
 				case PLT_ELEM_TRI  : etype = FE_TRI3  ; break;
-				case PLT_ELEM_TRUSS: etype = FE_TRUSS2; break;
+				case PLT_ELEM_TRUSS: etype = FE_LINE2 ; break;
 				case PLT_ELEM_HEX20: etype = FE_HEX20 ; break;
 				case PLT_ELEM_HEX27: etype = FE_HEX27 ; break;
 				case PLT_ELEM_TET10: etype = FE_TET10 ; break;

@@ -286,114 +286,74 @@ vec3f FEFace::eval(vec3f* d, double r, double s)
 //=============================================================================
 FEGenericElement::FEGenericElement()
 {
+	m_nodes = 0;
 	m_node = _node;
 	for (int i=0; i<MAX_NODES; ++i) m_node[i] = -1; 
 }
 
 FEGenericElement::FEGenericElement(const FEGenericElement& e) : FEElement(e)
 {
+	m_nodes = e.m_nodes;
 	m_node = _node;
 	for (int i=0; i<MAX_NODES; ++i) m_node[i] = e.m_node[i]; 
 }
 
 void FEGenericElement::operator = (const FEGenericElement& e)
 {
+	m_nodes = e.m_nodes;
 	FEElement::operator = (e);
 	m_node = _node;
 	for (int i=0; i<MAX_NODES; ++i) m_node[i] = e.m_node[i]; 
 }
 
-//=============================================================================
-FETri3::FETri3()
-{
-	m_ntype = FE_TRI3;
-	m_node = _node;
-	for (int i=0; i<3; ++i) m_node[i] = -1; 
+void FEGenericElement::SetType(FEElemType type) 
+{ 
+	m_ntype = type; 
+	switch (type)
+	{
+	case FE_LINE2 : m_nodes = FEElementTraits<FE_LINE2 >::Nodes; m_faces = FEElementTraits<FE_LINE2 >::Faces; m_edges = FEElementTraits<FE_LINE2 >::Edges; break;
+	case FE_LINE3 : m_nodes = FEElementTraits<FE_LINE3 >::Nodes; m_faces = FEElementTraits<FE_LINE3 >::Faces; m_edges = FEElementTraits<FE_LINE3 >::Edges; break;
+	case FE_TRI3  : m_nodes = FEElementTraits<FE_TRI3  >::Nodes; m_faces = FEElementTraits<FE_TRI3  >::Faces; m_edges = FEElementTraits<FE_TRI3  >::Edges; break;
+	case FE_TRI6  : m_nodes = FEElementTraits<FE_TRI6  >::Nodes; m_faces = FEElementTraits<FE_TRI6  >::Faces; m_edges = FEElementTraits<FE_TRI6  >::Edges; break;
+	case FE_QUAD4 : m_nodes = FEElementTraits<FE_QUAD4 >::Nodes; m_faces = FEElementTraits<FE_QUAD4 >::Faces; m_edges = FEElementTraits<FE_QUAD4 >::Edges; break;
+	case FE_QUAD8 : m_nodes = FEElementTraits<FE_QUAD8 >::Nodes; m_faces = FEElementTraits<FE_QUAD8 >::Faces; m_edges = FEElementTraits<FE_QUAD8 >::Edges; break;
+	case FE_QUAD9 : m_nodes = FEElementTraits<FE_QUAD9 >::Nodes; m_faces = FEElementTraits<FE_QUAD9 >::Faces; m_edges = FEElementTraits<FE_QUAD9 >::Edges; break;
+	case FE_TET4  : m_nodes = FEElementTraits<FE_TET4  >::Nodes; m_faces = FEElementTraits<FE_TET4  >::Faces; m_edges = FEElementTraits<FE_TET4  >::Edges; break;
+	case FE_TET10 : m_nodes = FEElementTraits<FE_TET10 >::Nodes; m_faces = FEElementTraits<FE_TET10 >::Faces; m_edges = FEElementTraits<FE_TET10 >::Edges; break;
+	case FE_TET15 : m_nodes = FEElementTraits<FE_TET15 >::Nodes; m_faces = FEElementTraits<FE_TET15 >::Faces; m_edges = FEElementTraits<FE_TET15 >::Edges; break;
+	case FE_PENTA6: m_nodes = FEElementTraits<FE_PENTA6>::Nodes; m_faces = FEElementTraits<FE_PENTA6>::Faces; m_edges = FEElementTraits<FE_PENTA6>::Edges; break;
+	case FE_HEX8  : m_nodes = FEElementTraits<FE_HEX8  >::Nodes; m_faces = FEElementTraits<FE_HEX8  >::Faces; m_edges = FEElementTraits<FE_HEX8  >::Edges; break;
+	case FE_HEX20 : m_nodes = FEElementTraits<FE_HEX20 >::Nodes; m_faces = FEElementTraits<FE_HEX20 >::Faces; m_edges = FEElementTraits<FE_HEX20 >::Edges; break;
+	case FE_HEX27 : m_nodes = FEElementTraits<FE_HEX27 >::Nodes; m_faces = FEElementTraits<FE_HEX27 >::Faces; m_edges = FEElementTraits<FE_HEX27 >::Edges; break;
+	default:
+		assert(false);
+		m_nodes = 0;
+		m_faces = 0;
+	}
 }
 
-FETri3::FETri3(const FETri3& e) : FEElement(e)
-{
-	m_node = _node;
-	for (int i=0; i<3; ++i) m_node[i] = e.m_node[i]; 
-}
-
-void FETri3::operator=(const FETri3& e)
-{
-	FEElement::operator = (e);
-	m_node = _node;
-	for (int i=0; i<3; ++i) m_node[i] = e.m_node[i]; 
-}
-
-//=============================================================================
-FEQuad4::FEQuad4()
-{
-	m_ntype = FE_QUAD4;
-	m_node = _node;
-	for (int i=0; i<4; ++i) m_node[i] = -1; 
-}
-
-FEQuad4::FEQuad4(const FEQuad4& e) : FEElement(e)
-{
-	m_node = _node;
-	for (int i=0; i<4; ++i) m_node[i] = e.m_node[i]; 
-}
-
-void FEQuad4::operator=(const FEQuad4& e)
-{
-	FEElement::operator = (e);
-	m_node = _node;
-	for (int i=0; i<4; ++i) m_node[i] = e.m_node[i]; 
-}
-
-//=============================================================================
-FETet4::FETet4()
-{
-	m_ntype = FE_TET4;
-	m_node = _node;
-	for (int i=0; i<4; ++i) m_node[i] = -1; 
-}
-
-FETet4::FETet4(const FETet4& e) : FEElement(e)
-{
-	m_node = _node;
-	for (int i=0; i<4; ++i) m_node[i] = e.m_node[i]; 
-}
-
-void FETet4::operator=(const FETet4& e)
-{
-	FEElement::operator = (e);
-	m_node = _node;
-	for (int i=0; i<4; ++i) m_node[i] = e.m_node[i]; 
-}
-
-//=============================================================================
-FEHex8::FEHex8()
-{
-	m_ntype = FE_HEX8;
-	m_node = _node;
-	for (int i=0; i<8; ++i) m_node[i] = -1; 
-}
-
-FEHex8::FEHex8(const FEHex8& e) : FEElement(e)
-{
-	m_node = _node;
-	for (int i=0; i<8; ++i) m_node[i] = e.m_node[i]; 
-}
-
-void FEHex8::operator=(const FEHex8& e)
-{
-	FEElement::operator = (e);
-	m_node = _node;
-	for (int i=0; i<8; ++i) m_node[i] = e.m_node[i]; 
-}
 
 //=============================================================================
 // FEElement
 //-----------------------------------------------------------------------------
 FEElement::FEElement()
 {
-	for (int i=0; i<6; ++i) m_pElem[i] = 0; 
+	m_pElem[0] = 0; 
+	m_pElem[1] = 0; 
+	m_pElem[2] = 0; 
+	m_pElem[3] = 0; 
+	m_pElem[4] = 0; 
+	m_pElem[5] = 0; 
 	m_MatID = 0; 
+}
+
+//-----------------------------------------------------------------------------
+bool FEElement::HasNode(int node) const
+{ 
+	bool ret = false;
+	const int n = Nodes();
+	for (int i=0; i<n; i++) ret |= !(m_node[i] ^ node);
+	return ret;
 }
 
 //-----------------------------------------------------------------------------

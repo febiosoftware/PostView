@@ -13,23 +13,22 @@
 #include <assert.h>
 
 //-----------------------------------------------------------------------------
-// Different element types (do not change the order of these types since the
-// type is used as an index in some of the element functions.)
+// Different element types
 enum FEElemType {
-	FE_HEX8,
-	FE_TET4,
-	FE_PENTA6,
-	FE_QUAD4,
+	FE_LINE2,
+	FE_LINE3,
 	FE_TRI3,
-	FE_TRUSS2,
-	FE_HEX20,
+    FE_TRI6,
+	FE_QUAD4,
 	FE_QUAD8,
-	FE_TRUSS3,
+    FE_QUAD9,
+	FE_TET4,
 	FE_TET10,
 	FE_TET15,
-	FE_HEX27,
-    FE_TRI6,
-    FE_QUAD9
+	FE_PENTA6,
+	FE_HEX8,
+	FE_HEX20,
+	FE_HEX27
 };
 
 //-----------------------------------------------------------------------------
@@ -278,39 +277,22 @@ class FEElement : public FEItem
 public:
 	FEElement();
 		
-	bool HasNode(int node) 
-	{ 
-		bool ret = false;
-		for (int i=0; i<Nodes(); i++) ret |= !(m_node[i] ^ node);
-				
-		return ret;
-	}
+	bool HasNode(int node) const;
 
-	int Faces() const
-	{
-		const int fc[14] = {6, 4, 5, 0, 0, 0, 6, 0, 0, 4, 4, 6, 0, 0};
-		return fc[m_ntype];
-	}
+public:
+	// derived classes must implement these
+	virtual int Faces() const = 0;
+	virtual int Edges() const = 0;
+	virtual int Nodes() const = 0;
 
-	int Edges() const
-	{
-		const int ec[14] = {0, 0, 0, 4, 3, 0, 0, 4, 0, 0, 0, 0, 3, 4};
-		return ec[m_ntype];
-	}
-
-	int Nodes() const
-	{
-		const int nc[14] = {8, 4, 6, 4, 3, 2, 20, 8, 3, 10, 15, 27, 6, 9};
-		return nc[m_ntype];
-	}
-
+public:
 	FEFace GetFace(int i) const;
 	void GetFace(int i, FEFace& face) const;
 	FEEdge GetEdge(int i) const;
 
 	bool IsSolid() { return ((m_ntype == FE_HEX8  ) || (m_ntype == FE_HEX20 ) || (m_ntype == FE_TET4) || (m_ntype == FE_PENTA6) || (m_ntype == FE_TET10) || (m_ntype == FE_TET15) || (m_ntype == FE_HEX27)); }
 	bool IsShell() { return ((m_ntype == FE_QUAD4 ) || (m_ntype == FE_QUAD8 ) || (m_ntype == FE_QUAD9 ) || (m_ntype == FE_TRI3) || (m_ntype == FE_TRI6)); }
-	bool IsBeam () { return ((m_ntype == FE_TRUSS2) || (m_ntype == FE_TRUSS3)); }
+	bool IsBeam () { return ((m_ntype == FE_LINE2) || (m_ntype == FE_LINE3)); }
 
 	bool operator != (FEElement& el);
 
@@ -332,9 +314,9 @@ public:
 	FEElemType Type() const { return m_ntype; }
 
 public:
-	int			m_lid;				// local ID (zero-based index into element array)
-	int			m_MatID;			// material id
-	int*		m_node;			// array of nodes ID
+	int			m_lid;		// local ID (zero-based index into element array)
+	int			m_MatID;	// material id
+	int*		m_node;		// array of nodes ID
 
 	FEElement*	m_pElem[6];		// array of pointers to neighbour elements
 
@@ -342,6 +324,77 @@ protected:
 	FEElemType	m_ntype;			// type of element
 };
 
+//=============================================================================
+// Element traits classes
+template <int Type> class FEElementTraits {};
+// Each of these classes defines:
+// Nodes: number of nodes
+// Faces: number of faces. Only solid elements define faces
+// Edges: number of edges. Only surface elements define edges
+
+template <> class FEElementTraits<FE_LINE2 >{ public: enum {Nodes =  2}; enum {Faces = 0}; enum {Edges = 0}; static FEElemType Type() { return FE_LINE2 ; }};
+template <> class FEElementTraits<FE_LINE3 >{ public: enum {Nodes =  3}; enum {Faces = 0}; enum {Edges = 0}; static FEElemType Type() { return FE_LINE3 ; }};
+template <> class FEElementTraits<FE_TRI3  >{ public: enum {Nodes =  3}; enum {Faces = 0}; enum {Edges = 3}; static FEElemType Type() { return FE_TRI3  ; }};
+template <> class FEElementTraits<FE_TRI6  >{ public: enum {Nodes =  6}; enum {Faces = 0}; enum {Edges = 3}; static FEElemType Type() { return FE_TRI6  ; }};
+template <> class FEElementTraits<FE_QUAD4 >{ public: enum {Nodes =  4}; enum {Faces = 0}; enum {Edges = 4}; static FEElemType Type() { return FE_QUAD4 ; }};
+template <> class FEElementTraits<FE_QUAD8 >{ public: enum {Nodes =  8}; enum {Faces = 0}; enum {Edges = 4}; static FEElemType Type() { return FE_QUAD8 ; }};
+template <> class FEElementTraits<FE_QUAD9 >{ public: enum {Nodes =  9}; enum {Faces = 0}; enum {Edges = 4}; static FEElemType Type() { return FE_QUAD9 ; }};
+template <> class FEElementTraits<FE_TET4  >{ public: enum {Nodes =  4}; enum {Faces = 4}; enum {Edges = 0}; static FEElemType Type() { return FE_TET4  ; }};
+template <> class FEElementTraits<FE_TET10 >{ public: enum {Nodes = 10}; enum {Faces = 4}; enum {Edges = 0}; static FEElemType Type() { return FE_TET10 ; }};
+template <> class FEElementTraits<FE_TET15 >{ public: enum {Nodes = 15}; enum {Faces = 4}; enum {Edges = 0}; static FEElemType Type() { return FE_TET15 ; }};
+template <> class FEElementTraits<FE_PENTA6>{ public: enum {Nodes =  6}; enum {Faces = 5}; enum {Edges = 0}; static FEElemType Type() { return FE_PENTA6; }};
+template <> class FEElementTraits<FE_HEX8  >{ public: enum {Nodes =  8}; enum {Faces = 6}; enum {Edges = 0}; static FEElemType Type() { return FE_HEX8  ; }};
+template <> class FEElementTraits<FE_HEX20 >{ public: enum {Nodes = 20}; enum {Faces = 6}; enum {Edges = 0}; static FEElemType Type() { return FE_HEX20 ; }};
+template <> class FEElementTraits<FE_HEX27 >{ public: enum {Nodes = 27}; enum {Faces = 6}; enum {Edges = 0}; static FEElemType Type() { return FE_HEX27 ; }};
+
+template <class T> class FEElementBase : public FEElement
+{
+public:
+	FEElementBase()
+	{
+		m_ntype = T::Type();
+		m_node = _node;
+		for (int i=0; i<T::Nodes; ++i) m_node[i] = -1;
+	}
+
+	FEElementBase(const FEElementBase& el) : FEElement(el)
+	{
+		m_node = _node;
+		for (int i=0; i<T::Nodes; ++i) m_node[i] = el.m_node[i];
+	}
+
+	void FEElementBase::operator = (const FEElementBase& el)
+	{
+		FEElement::operator = (el);
+		for (int i=0; i<T::Nodes; ++i) m_node[i] = el.m_node[i];
+	}
+
+public:
+	int Nodes() const { return T::Nodes; }
+	int Faces() const { return T::Faces; }
+	int Edges() const { return T::Edges; }
+
+public:
+	int	_node[T::Nodes];
+};
+
+typedef FEElementBase< FEElementTraits<FE_LINE2 > > FELine2;
+typedef FEElementBase< FEElementTraits<FE_LINE3 > > FELine3;
+typedef FEElementBase< FEElementTraits<FE_TRI3  > > FETri3;
+typedef FEElementBase< FEElementTraits<FE_TRI6  > > FETri6;
+typedef FEElementBase< FEElementTraits<FE_QUAD4 > > FEQuad4;
+typedef FEElementBase< FEElementTraits<FE_QUAD8 > > FEQuad8;
+typedef FEElementBase< FEElementTraits<FE_QUAD9 > > FEQuad9;
+typedef FEElementBase< FEElementTraits<FE_TET4  > > FETet4;
+typedef FEElementBase< FEElementTraits<FE_TET10 > > FETet10;
+typedef FEElementBase< FEElementTraits<FE_TET15 > > FETet15;
+typedef FEElementBase< FEElementTraits<FE_PENTA6> > FEPenta6;
+typedef FEElementBase< FEElementTraits<FE_HEX8  > > FEHex8;
+typedef FEElementBase< FEElementTraits<FE_HEX20 > > FEHex20;
+typedef FEElementBase< FEElementTraits<FE_HEX27 > > FEHex27;
+
+//-----------------------------------------------------------------------------
+// Generice element class that can represent any of the supported element classes
 class FEGenericElement : public FEElement
 {
 public:
@@ -352,55 +405,15 @@ public:
 	FEGenericElement(const FEGenericElement& e);
 	void operator = (const FEGenericElement& e);
 
-	void SetType(FEElemType type) { m_ntype = type; }
+	void SetType(FEElemType type);
+
+	int Nodes() const { return m_nodes; }
+	int Faces() const { return m_faces; }
+	int Edges() const { return m_edges; }
 
 public:
 	int		_node[MAX_NODES];	// array of nodes ID
+	int		m_nodes, m_faces, m_edges;
 };
-
-class FETri3 : public FEElement
-{
-public:
-	FETri3();
-	FETri3(const FETri3& e);
-	void operator = (const FETri3& e);
-
-public:
-	int		_node[3];	// array of nodes ID
-};
-
-class FEQuad4 : public FEElement
-{
-public:
-	FEQuad4();
-	FEQuad4(const FEQuad4& e);
-	void operator = (const FEQuad4& e);
-
-public:
-	int		_node[4];	// array of nodes ID
-};
-
-class FETet4 : public FEElement
-{
-public:
-	FETet4();
-	FETet4(const FETet4& e);
-	void operator = (const FETet4& e);
-
-public:
-	int		_node[4];	// array of nodes ID
-};
-
-class FEHex8: public FEElement
-{
-public:
-	FEHex8();
-	FEHex8(const FEHex8& e);
-	void operator = (const FEHex8& e);
-
-public:
-	int		_node[8];	// array of nodes ID
-};
-
 
 #endif // !defined(AFX_FEELEMENT_H__F82D0D55_F582_4ABE_9D02_C9FC5FC72C6C__INCLUDED_)
