@@ -442,6 +442,7 @@ bool CDocument::LoadFEModel(FEFileReader* pimp, const char* szfile, bool bup)
 		cam.Reset();
 		cam.SetTargetDistance(box.Radius()*3);
 		cam.SetTarget(box.Center());
+		cam.Update(true);
 
 		// set the current time
 		// this will also update the scene

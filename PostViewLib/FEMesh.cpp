@@ -249,13 +249,47 @@ void FEMeshBase::UpdateDomains()
 	ClearDomains();
 
 	// figure out how many domains there are
-	int ndom = 0, i;
+	int ndom = 0;
 	int NE = Elements();
-	for (i=0; i<NE; ++i) if (Element(i).m_MatID > ndom) ndom = Element(i).m_MatID;
+	for (int i=0; i<NE; ++i) if (Element(i).m_MatID > ndom) ndom = Element(i).m_MatID;
 	++ndom;
 
+	// figure out the domain sizes
+	vector<int> elemSize(ndom, 0);
+	vector<int> faceSize(ndom, 0);
+
+	for (int i = 0; i<NE; ++i)
+	{
+		FEElement& el = Element(i);
+		elemSize[el.m_MatID]++;
+	}
+
+	int NF = Faces();
+	for (int i=0; i<NF; ++i)
+	{
+		FEFace& face = Face(i);
+		faceSize[face.m_mat]++;
+	}
+
 	m_Dom.resize(ndom);
-	for (i=0; i<ndom; ++i) m_Dom[i] = new FEDomain(this, i);
+	for (int i=0; i<ndom; ++i) 
+	{
+		m_Dom[i] = new FEDomain(this);
+		m_Dom[i]->SetMatID(i);
+		m_Dom[i]->Reserve(elemSize[i], faceSize[i]);
+	}
+
+	for (int i=0; i<NE; ++i)
+	{
+		FEElement& el = Element(i);
+		m_Dom[el.m_MatID]->AddElement(i);
+	}
+
+	for (int i=0; i<NF; ++i)
+	{
+		FEFace& face = Face(i);
+		m_Dom[face.m_mat]->AddFace(i);
+	}
 }
 
 //-----------------------------------------------------------------------------

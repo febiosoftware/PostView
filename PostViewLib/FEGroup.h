@@ -30,13 +30,20 @@ protected:
 class FEDomain
 {
 public:
-	FEDomain(FEMeshBase* pm, int nmat);
+	FEDomain(FEMeshBase* pm);
+
+	void SetMatID(int matid);
 
 	int Faces() { return (int) m_Face.size(); }
 	FEFace& Face(int n);
 
 	int Elements() { return (int) m_Elem.size(); }
 	FEElement& Element(int n);
+
+	void Reserve(int nelems, int nfaces);
+
+	void AddElement(int n) { m_Elem.push_back(n); }
+	void AddFace   (int n) { m_Face.push_back(n); }
 
 protected:
 	FEMeshBase*	m_pm;

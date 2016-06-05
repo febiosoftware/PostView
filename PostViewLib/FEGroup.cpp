@@ -17,26 +17,23 @@ const char* FEGroup::GetName()
 
 //-----------------------------------------------------------------------------
 // FEDomain constructor
-FEDomain::FEDomain(FEMeshBase *pm, int nmat)
+FEDomain::FEDomain(FEMeshBase *pm)
 {
 	m_pm = pm;
-	m_nmat = nmat;
+	m_nmat = -1;
+}
 
-	int i, n;
+//-----------------------------------------------------------------------------
+void FEDomain::Reserve(int nelems, int nfaces)
+{
+	m_Elem.reserve(nelems);
+	m_Face.reserve(nfaces);
+}
 
-	// count faces
-	int N = pm->Faces();
-	for (i=0, n = 0; i<N; ++i) if (pm->Face(i).m_mat == nmat) n++;
-
-	m_Face.resize(n);
-	for (i=0, n = 0; i<N; ++i) if (pm->Face(i).m_mat == nmat) m_Face[n++] = i;
-
-	// count elements
-	N = pm->Elements();
-	for (i=0, n = 0; i<N; ++i) if (pm->Element(i).m_MatID == nmat) ++n;
-
-	m_Elem.resize(n);
-	for (i=0, n = 0; i<N; ++i) if (pm->Element(i).m_MatID == nmat) m_Elem[n++] = i;
+//-----------------------------------------------------------------------------
+void FEDomain::SetMatID(int matid)
+{
+	m_nmat = matid;
 }
 
 //-----------------------------------------------------------------------------

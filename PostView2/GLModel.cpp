@@ -1234,7 +1234,8 @@ void CGLModel::RenderMeshLines(FEModel* ps, int nmat)
 	for (int i=0; i<dom.Faces(); ++i)
 	{
 		FEFace& face = dom.Face(i);
-		if (face.IsVisible())
+		FEElement& el = pm->Element(face.m_elem[0]);
+		if (face.IsVisible() && (el.IsSelected() == false))
 		{
 			// okay, we got one, so let's render it
 			RenderFaceOutline(face, pm, ndivs);
@@ -2997,7 +2998,7 @@ void CGLModel::SelectConnectedFaces(FEFace &f)
 			for (int j=0; j<pf->Edges(); ++j)
 			{
 				FEFace* pf2 = (pf->m_nbr[j] >= 0? &mesh.Face(pf->m_nbr[j]) : 0);
-				if (pf2 && (pf2->m_ntag == 0) && (pf2->m_nsg == pf->m_nsg) )
+				if (pf2 && (pf2->m_ntag == 0) && (pf2->m_nsg == pf->m_nsg) && (pf2->m_mat == pf->m_mat))
 				{
 					pf2->m_ntag = 1;
 					S.push(pf2);
