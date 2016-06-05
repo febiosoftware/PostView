@@ -563,7 +563,7 @@ void CGLModel::RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m)
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	// render the internal surfaces
-	GLSurface& surf = *m_surf[m];
+	GLSurface& surf = *m_innerSurface[m];
 	int nid = -1;
 	for (i=0; i<surf.Faces(); ++i)
 	{
@@ -695,7 +695,7 @@ void CGLModel::RenderSolidMaterial(FEModel* ps, int m)
 
 	// render the internal surfaces
 	if (btex) glColor3ub(255,255,255);
-	GLSurface& surf = *m_surf[m];
+	GLSurface& surf = *m_innerSurface[m];
 	int nid = -1;
 	for (i=0; i<surf.Faces(); ++i)
 	{
@@ -1224,23 +1224,17 @@ void CGLModel::RenderFEFace(FEFace& face, FEMeshBase* pm)
 //
 void CGLModel::RenderMeshLines(FEModel* ps, int nmat)
 {
-	// get the material
-	FEMaterial* pmat = ps->GetMaterial(nmat);
-
-	// set the material properties
-	GLCOLOR c = pmat->meshcol;
-	glColor3ub(c.r, c.g, c.b);
-
 	// get the mesh
 	FEMeshBase* pm = ps->GetMesh();
 
 	int ndivs = GetSubDivisions();
 
 	// now loop over all faces and see which face belongs to this material
-	for (int i=0; i<pm->Faces(); ++i)
+	FEDomain& dom = pm->Domain(nmat);
+	for (int i=0; i<dom.Faces(); ++i)
 	{
-		FEFace& face = pm->Face(i);
-		if ((face.m_mat == nmat) && (face.IsVisible()))
+		FEFace& face = dom.Face(i);
+		if (face.IsVisible())
 		{
 			// okay, we got one, so let's render it
 			RenderFaceOutline(face, pm, ndivs);
@@ -1248,22 +1242,11 @@ void CGLModel::RenderMeshLines(FEModel* ps, int nmat)
 	}
 
 	// draw elements
-	FEFace f;
-	for (int i=0; i<pm->Elements(); ++i)
+	GLSurface& inSurf = *m_innerSurface[nmat];
+	for (int i=0; i<inSurf.Faces(); ++i)
 	{
-		FEElement& el = pm->Element(i);
-		if ((el.m_MatID == nmat) && el.IsVisible())
-		{
-			int nf = el.Faces();
-			for (int j=0; j<nf; ++j)
-			{
-				if (el.m_pElem[j] && !el.m_pElem[j]->IsVisible())
-				{
-					el.GetFace(j, f);
-					RenderFaceOutline(f, pm, ndivs);
-				}
-			}
-		}
+		FEFace& facet = inSurf.Face(i);
+		RenderFaceOutline(facet, pm, ndivs);
 	}
 }
 
@@ -1288,7 +1271,13 @@ void CGLModel::RenderMeshLines(FEModel* ps)
 		if (pmat->bclip == false) CGLPlaneCutPlot::DisableClipPlanes();
 
 		// make sure the material is visible
-		if (pmat->bvisible && pmat->bmesh) RenderMeshLines(ps, m);
+		if (pmat->bvisible && pmat->bmesh) 
+		{ 
+			// set the material properties
+			GLCOLOR c = pmat->meshcol;
+			glColor3ub(c.r, c.g, c.b);
+			RenderMeshLines(ps, m);
+		}
 
 		CGLPlaneCutPlot::EnableClipPlanes();
 	}
@@ -3426,8 +3415,8 @@ void CGLModel::HideSelectedNodes()
 //-----------------------------------------------------------------------------
 void CGLModel::ClearInternalSurfaces()
 {
-	for (int i=0; i<(int)m_surf.size(); ++i) delete m_surf[i];
-	m_surf.clear();
+	for (int i=0; i<(int)m_innerSurface.size(); ++i) delete m_innerSurface[i];
+	m_innerSurface.clear();
 }
 
 //-----------------------------------------------------------------------------
@@ -3436,7 +3425,7 @@ void CGLModel::UpdateInternalSurfaces()
 	ClearInternalSurfaces();
 
 	int nmat = m_ps->Materials();
-	for (int i=0; i<nmat; ++i) m_surf.push_back(new GLSurface);
+	for (int i=0; i<nmat; ++i) m_innerSurface.push_back(new GLSurface);
 
 	FEMeshBase& mesh = *GetMesh();
 	FEFace face;
@@ -3454,8 +3443,9 @@ void CGLModel::UpdateInternalSurfaces()
 					if (el.m_pElem[j] && (el.m_pElem[j]->IsSelected() || !el.m_pElem[j]->IsVisible()))
 					{
 						el.GetFace(j, face);
-						face.m_ntag = i; // store the element ID. This is used for selection ???
-						m_surf[m]->add(face);
+						face.m_elem[0] = i; // store the element ID. This is used for selection ???
+						face.m_elem[1] = el.m_pElem[j]->m_lid;
+						m_innerSurface[m]->add(face);
 					}
 				}
 			}

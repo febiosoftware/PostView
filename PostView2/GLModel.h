@@ -224,7 +224,7 @@ public:
 
 protected:
 	FEModel*			m_ps;
-	vector<GLSurface*>	m_surf;
+	vector<GLSurface*>		m_innerSurface;
 
 	CGLDisplacementMap*		m_pdis;
 	CGLColorMap*			m_pcol;
