@@ -84,7 +84,7 @@ mat3d deform_grad(FEModel& fem, int n, double r, double s, double t, int nstate,
 
 //-----------------------------------------------------------------------------
 // Deformation gradient
-FEDeformationGradient::FEDeformationGradient(FEModel* pm) : FEElemData_T<mat3d, DATA_COMP>(pm)
+FEDeformationGradient::FEDeformationGradient(FEModel* pm, FEDataField* pdf) : FEElemData_T<mat3d, DATA_COMP>(pm, pdf)
 {
 }
 
@@ -122,7 +122,7 @@ void FEDeformationGradient::eval(int n, mat3d* pv)
 // Green-Lagrange strain
 //
 
-FELagrangeStrain::FELagrangeStrain(FEModel* pm) : FEElemData_T<mat3fs, DATA_COMP>(pm)
+FELagrangeStrain::FELagrangeStrain(FEModel* pm, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_COMP>(pm, pdf)
 {
 	
 }
@@ -1761,7 +1761,7 @@ void FEVolStrain::eval(int n, float* pv)
 //=============================================================================
 // Element pressure
 //-----------------------------------------------------------------------------
-FEElemPressure::FEElemPressure(FEModel* pm) : FEElemData_T<float, DATA_ITEM>(pm)
+FEElemPressure::FEElemPressure(FEModel* pm, FEDataField* pdf) : FEElemData_T<float, DATA_ITEM>(pm, pdf)
 {
 	// find the stress field
 	FEDataManager* pdm = pm->GetDataManager();
@@ -1796,7 +1796,7 @@ void FEElemPressure::eval(int n, float* pv)
 //=============================================================================
 // Element nodal pressure
 //-----------------------------------------------------------------------------
-FEElemNodalPressure::FEElemNodalPressure(FEModel* pm) : FEElemData_T<float, DATA_COMP>(pm)
+FEElemNodalPressure::FEElemNodalPressure(FEModel* pm, FEDataField* pdf) : FEElemData_T<float, DATA_COMP>(pm, pdf)
 {
 	// find the stress field
 	FEDataManager* pdm = pm->GetDataManager();
@@ -1836,7 +1836,7 @@ void FEElemNodalPressure::eval(int n, float* pv)
 //=============================================================================
 // Solid stress in a biphasic/multiphasic material
 //-----------------------------------------------------------------------------
-FESolidStress::FESolidStress(FEModel* pm) : FEElemData_T<mat3fs, DATA_ITEM>(pm)
+FESolidStress::FESolidStress(FEModel* pm, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(pm, pdf)
 {
 	// find the stress field
 	FEDataManager* pdm = pm->GetDataManager();

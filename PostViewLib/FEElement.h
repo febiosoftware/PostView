@@ -412,8 +412,31 @@ public:
 	int Edges() const { return m_edges; }
 
 public:
-	int		_node[MAX_NODES];	// array of nodes ID
 	int		m_nodes, m_faces, m_edges;
+	int		_node[MAX_NODES];	// array of nodes ID
+};
+
+//-----------------------------------------------------------------------------
+// This element class can represent any of the linear elements.
+class FELinearElement : public FEElement
+{
+public:
+	enum {MAX_NODES = 8};
+
+public:
+	FELinearElement();
+	FELinearElement(const FELinearElement& e);
+	void operator = (const FELinearElement& e);
+
+	void SetType(FEElemType type);
+
+	int Nodes() const { return m_nodes; }
+	int Faces() const { return m_faces; }
+	int Edges() const { return m_edges; }
+
+public:
+	int		m_nodes, m_faces, m_edges;
+	int		_node[MAX_NODES];	// array of nodes ID
 };
 
 #endif // !defined(AFX_FEELEMENT_H__F82D0D55_F582_4ABE_9D02_C9FC5FC72C6C__INCLUDED_)

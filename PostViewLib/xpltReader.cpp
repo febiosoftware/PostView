@@ -905,10 +905,17 @@ bool XpltReader::BuildMesh(FEModel &fem)
 
 	// find the element type
 	int ntype = m_Dom[0].etype;
+	bool blinear = true;	// all linear elements flag
 	for (int i=0; i<ND; ++i)
 	{
 		int domType = m_Dom[i].etype;
 		if (domType != ntype) ntype = -1;
+		if ((domType != PLT_ELEM_TRUSS) && 
+			(domType != PLT_ELEM_TRI) && 
+			(domType != PLT_ELEM_QUAD) && 
+			(domType != PLT_ELEM_TET) && 
+			(domType != PLT_ELEM_PENTA) && 
+			(domType != PLT_ELEM_HEX8)) blinear = false;
 	}
 
 	FEMeshBase* pmesh = 0;
@@ -955,41 +962,80 @@ bool XpltReader::BuildMesh(FEModel &fem)
 	}
 	else
 	{
-		pmesh = new FEMesh;
-		pmesh->Create(NN, NE);
-
-		// read the element connectivity
-		int nmat = fem.Materials();
-		for (int i=0; i<ND; i++)
+		if (blinear)
 		{
-			Domain& D = m_Dom[i];
-			for (int j=0; j<D.ne; ++j)
-			{
-				ELEM& E = D.elem[j];
-				FEGenericElement& el = static_cast<FEGenericElement&>(pmesh->Element(E.index));
-				el.m_MatID = D.mid - 1;
-				el.SetID(E.eid);
+			pmesh = new FELinearMesh;
+			pmesh->Create(NN, NE);
 
-				FEElemType etype;
-				switch (D.etype)
+			// read the element connectivity
+			int nmat = fem.Materials();
+			for (int i=0; i<ND; i++)
+			{
+				Domain& D = m_Dom[i];
+				for (int j=0; j<D.ne; ++j)
 				{
-				case PLT_ELEM_HEX8 : etype = FE_HEX8  ; break;
-				case PLT_ELEM_PENTA: etype = FE_PENTA6; break;
-				case PLT_ELEM_TET  : etype = FE_TET4  ; break;
-				case PLT_ELEM_QUAD : etype = FE_QUAD4 ; break;
-				case PLT_ELEM_TRI  : etype = FE_TRI3  ; break;
-				case PLT_ELEM_TRUSS: etype = FE_LINE2 ; break;
-				case PLT_ELEM_HEX20: etype = FE_HEX20 ; break;
-				case PLT_ELEM_HEX27: etype = FE_HEX27 ; break;
-				case PLT_ELEM_TET10: etype = FE_TET10 ; break;
-				case PLT_ELEM_TET15: etype = FE_TET15 ; break;
-				case PLT_ELEM_TRI6 : etype = FE_TRI6  ; break;
-				case PLT_ELEM_QUAD8: etype = FE_QUAD8 ; break;
-				case PLT_ELEM_QUAD9: etype = FE_QUAD9 ; break;
+					ELEM& E = D.elem[j];
+					FELinearElement& el = static_cast<FELinearElement&>(pmesh->Element(E.index));
+					el.m_MatID = D.mid - 1;
+					el.SetID(E.eid);
+
+					FEElemType etype;
+					switch (D.etype)
+					{
+					case PLT_ELEM_HEX8 : etype = FE_HEX8  ; break;
+					case PLT_ELEM_PENTA: etype = FE_PENTA6; break;
+					case PLT_ELEM_TET  : etype = FE_TET4  ; break;
+					case PLT_ELEM_QUAD : etype = FE_QUAD4 ; break;
+					case PLT_ELEM_TRI  : etype = FE_TRI3  ; break;
+					case PLT_ELEM_TRUSS: etype = FE_LINE2 ; break;
+					default:
+						assert(false);
+						return false;
+					}
+					el.SetType(etype);
+					int ne = el.Nodes();
+					for (int k=0; k<ne; ++k) el.m_node[k] = E.node[k];
 				}
-				el.SetType(etype);
-				int ne = el.Nodes();
-				for (int k=0; k<ne; ++k) el.m_node[k] = E.node[k];
+			}
+		}
+		else
+		{
+			pmesh = new FEMesh;
+			pmesh->Create(NN, NE);
+
+			// read the element connectivity
+			int nmat = fem.Materials();
+			for (int i=0; i<ND; i++)
+			{
+				Domain& D = m_Dom[i];
+				for (int j=0; j<D.ne; ++j)
+				{
+					ELEM& E = D.elem[j];
+					FEGenericElement& el = static_cast<FEGenericElement&>(pmesh->Element(E.index));
+					el.m_MatID = D.mid - 1;
+					el.SetID(E.eid);
+
+					FEElemType etype;
+					switch (D.etype)
+					{
+					case PLT_ELEM_HEX8 : etype = FE_HEX8  ; break;
+					case PLT_ELEM_PENTA: etype = FE_PENTA6; break;
+					case PLT_ELEM_TET  : etype = FE_TET4  ; break;
+					case PLT_ELEM_QUAD : etype = FE_QUAD4 ; break;
+					case PLT_ELEM_TRI  : etype = FE_TRI3  ; break;
+					case PLT_ELEM_TRUSS: etype = FE_LINE2 ; break;
+					case PLT_ELEM_HEX20: etype = FE_HEX20 ; break;
+					case PLT_ELEM_HEX27: etype = FE_HEX27 ; break;
+					case PLT_ELEM_TET10: etype = FE_TET10 ; break;
+					case PLT_ELEM_TET15: etype = FE_TET15 ; break;
+					case PLT_ELEM_TRI6 : etype = FE_TRI6  ; break;
+					case PLT_ELEM_QUAD8: etype = FE_QUAD8 ; break;
+					case PLT_ELEM_QUAD9: etype = FE_QUAD9 ; break;
+					}
+					el.SetType(etype);
+					int ne = el.Nodes();
+					for (int k=0; k<ne; ++k) el.m_node[k] = E.node[k];
+				}
 			}
 		}
 	}
@@ -1041,7 +1087,7 @@ bool XpltReader::BuildMesh(FEModel &fem)
 		{
 			FACE& f = s.face[i];
 			f.nid = NFT.FindFace(f.node[0], f.node, f.nn);
-			assert(f.nid >= 0);
+//			assert(f.nid >= 0);
 		}
 	}
 

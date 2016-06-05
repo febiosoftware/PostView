@@ -252,8 +252,12 @@ void CMainWindow::finishedReadingFile(bool success, const QString& errorString)
 
 	if (success == false)
 	{
-		QMessageBox::critical(this, "PostView2", "Failed reading file");
+		QMessageBox::critical(this, "PostView2", QString("Failed reading file :\n%1").arg(errorString));
 		return;
+	}
+	else if (errorString.isEmpty() == false)
+	{
+		QMessageBox::information(this, "PostView2", errorString);
 	}
 
 	UpdateMainToolbar();
@@ -1403,7 +1407,7 @@ void CMainWindow::readSettings()
 	view.m_bTitle           = settings.value("m_bTitle"     , view.m_bTitle).toBool();
 //	view.m_bconn            = settings.value("m_bconn"      , view.m_bconn).toBool();
 	view.m_bext             = settings.value("m_bext"       , view.m_bext).toBool();
-	view.m_bmesh            = settings.value("m_bmesh"      , view.m_bmesh).toBool();
+//	view.m_bmesh            = settings.value("m_bmesh"      , view.m_bmesh).toBool();
 	view.m_boutline         = settings.value("m_boutline"   , view.m_boutline).toBool();
 	view.m_bBox             = settings.value("m_bBox"       , view.m_bBox).toBool();
 	view.m_nproj            = settings.value("m_nproj"      , view.m_nproj).toInt();

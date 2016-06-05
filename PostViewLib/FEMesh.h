@@ -236,6 +236,7 @@ typedef FEMesh_<FEQuad4> FEQuadMesh;
 typedef FEMesh_<FETet4> FEMeshTet4;
 typedef FEMesh_<FEHex8> FEMeshHex8;
 typedef FEMesh_<FEGenericElement> FEMesh;
+typedef FEMesh_<FELinearElement> FELinearMesh;
 
 // find the element and the iso-parametric coordinates of a point inside the mesh
 bool FindElementRef(FEMeshBase& m, const vec3f& x, int& nelem, double r[3]);

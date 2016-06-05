@@ -100,6 +100,9 @@ public:
 	// TODO: Add properties list for data fields (e.g. strains and curvature could use this)
 	// strain parameters
 	int		m_nref;	// reference state
+	
+	// used by mesh data to see if an item has been assigned a value
+	vector<int>		m_item;
 };
 
 //-----------------------------------------------------------------------------
@@ -107,7 +110,7 @@ template<typename T> class FEDataField_T : public FEDataField
 {
 public:
 	FEDataField_T(const char* szname, unsigned int flag = 0) : FEDataField(T::Type(), T::Format(), T::Class(), flag) { SetName(szname); }
-	FEMeshData* CreateData(FEModel* pm) { return new T(pm); }
+	FEMeshData* CreateData(FEModel* pm) { return new T(pm, this); }
 
 	virtual FEDataField* Clone() const { return new FEDataField_T<T>(GetName()); }
 

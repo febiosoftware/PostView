@@ -287,6 +287,8 @@ vec3f FEFace::eval(vec3f* d, double r, double s)
 FEGenericElement::FEGenericElement()
 {
 	m_nodes = 0;
+	m_faces = 0;
+	m_edges = 0;
 	m_node = _node;
 	for (int i=0; i<MAX_NODES; ++i) m_node[i] = -1; 
 }
@@ -294,6 +296,8 @@ FEGenericElement::FEGenericElement()
 FEGenericElement::FEGenericElement(const FEGenericElement& e) : FEElement(e)
 {
 	m_nodes = e.m_nodes;
+	m_faces = e.m_faces;
+	m_edges = e.m_edges;
 	m_node = _node;
 	for (int i=0; i<MAX_NODES; ++i) m_node[i] = e.m_node[i]; 
 }
@@ -301,6 +305,8 @@ FEGenericElement::FEGenericElement(const FEGenericElement& e) : FEElement(e)
 void FEGenericElement::operator = (const FEGenericElement& e)
 {
 	m_nodes = e.m_nodes;
+	m_faces = e.m_faces;
+	m_edges = e.m_edges;
 	FEElement::operator = (e);
 	m_node = _node;
 	for (int i=0; i<MAX_NODES; ++i) m_node[i] = e.m_node[i]; 
@@ -332,6 +338,53 @@ void FEGenericElement::SetType(FEElemType type)
 	}
 }
 
+//=============================================================================
+FELinearElement::FELinearElement()
+{
+	m_nodes = 0;
+	m_faces = 0;
+	m_edges = 0;
+	m_node = _node;
+	for (int i=0; i<MAX_NODES; ++i) m_node[i] = -1; 
+}
+
+FELinearElement::FELinearElement(const FELinearElement& e) : FEElement(e)
+{
+	m_nodes = e.m_nodes;
+	m_faces = e.m_faces;
+	m_edges = e.m_edges;
+	m_node = _node;
+	for (int i=0; i<MAX_NODES; ++i) m_node[i] = e.m_node[i]; 
+}
+
+void FELinearElement::operator = (const FELinearElement& e)
+{
+	m_nodes = e.m_nodes;
+	m_faces = e.m_faces;
+	m_edges = e.m_edges;
+	FEElement::operator = (e);
+	m_node = _node;
+	for (int i=0; i<MAX_NODES; ++i) m_node[i] = e.m_node[i]; 
+}
+
+void FELinearElement::SetType(FEElemType type) 
+{ 
+	m_ntype = type; 
+	switch (type)
+	{
+	case FE_LINE2 : m_nodes = FEElementTraits<FE_LINE2 >::Nodes; m_faces = FEElementTraits<FE_LINE2 >::Faces; m_edges = FEElementTraits<FE_LINE2 >::Edges; break;
+	case FE_LINE3 : m_nodes = FEElementTraits<FE_LINE3 >::Nodes; m_faces = FEElementTraits<FE_LINE3 >::Faces; m_edges = FEElementTraits<FE_LINE3 >::Edges; break;
+	case FE_TRI3  : m_nodes = FEElementTraits<FE_TRI3  >::Nodes; m_faces = FEElementTraits<FE_TRI3  >::Faces; m_edges = FEElementTraits<FE_TRI3  >::Edges; break;
+	case FE_QUAD4 : m_nodes = FEElementTraits<FE_QUAD4 >::Nodes; m_faces = FEElementTraits<FE_QUAD4 >::Faces; m_edges = FEElementTraits<FE_QUAD4 >::Edges; break;
+	case FE_TET4  : m_nodes = FEElementTraits<FE_TET4  >::Nodes; m_faces = FEElementTraits<FE_TET4  >::Faces; m_edges = FEElementTraits<FE_TET4  >::Edges; break;
+	case FE_PENTA6: m_nodes = FEElementTraits<FE_PENTA6>::Nodes; m_faces = FEElementTraits<FE_PENTA6>::Faces; m_edges = FEElementTraits<FE_PENTA6>::Edges; break;
+	case FE_HEX8  : m_nodes = FEElementTraits<FE_HEX8  >::Nodes; m_faces = FEElementTraits<FE_HEX8  >::Faces; m_edges = FEElementTraits<FE_HEX8  >::Edges; break;
+	default:
+		assert(false);
+		m_nodes = 0;
+		m_faces = 0;
+	}
+}
 
 //=============================================================================
 // FEElement
