@@ -1230,15 +1230,18 @@ void CGLModel::RenderMeshLines(FEModel* ps, int nmat)
 	int ndivs = GetSubDivisions();
 
 	// now loop over all faces and see which face belongs to this material
-	FEDomain& dom = pm->Domain(nmat);
-	for (int i=0; i<dom.Faces(); ++i)
+	if (nmat < pm->Domains())
 	{
-		FEFace& face = dom.Face(i);
-		FEElement& el = pm->Element(face.m_elem[0]);
-		if (face.IsVisible() && (el.IsSelected() == false))
+		FEDomain& dom = pm->Domain(nmat);
+		for (int i=0; i<dom.Faces(); ++i)
 		{
-			// okay, we got one, so let's render it
-			RenderFaceOutline(face, pm, ndivs);
+			FEFace& face = dom.Face(i);
+			FEElement& el = pm->Element(face.m_elem[0]);
+			if (face.IsVisible() && (el.IsSelected() == false))
+			{
+				// okay, we got one, so let's render it
+				RenderFaceOutline(face, pm, ndivs);
+			}
 		}
 	}
 
@@ -3430,7 +3433,8 @@ void CGLModel::UpdateInternalSurfaces()
 
 	FEMeshBase& mesh = *GetMesh();
 	FEFace face;
-	for (int m = 0; m<nmat; ++m)
+	int ndom = mesh.Domains();
+	for (int m = 0; m<ndom; ++m)
 	{
 		FEDomain& dom = mesh.Domain(m);
 		int NE = dom.Elements();
