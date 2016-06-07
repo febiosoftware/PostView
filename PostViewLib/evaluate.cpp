@@ -163,7 +163,7 @@ bool FEModel::Evaluate(int nfield, int ntime, bool breset)
 		if      (IS_NODE_FIELD(nfield)) EvalNodeField(ntime, nfield);
 		else if (IS_ELEM_FIELD(nfield)) EvalElemField(ntime, nfield);
 		else if (IS_FACE_FIELD(nfield)) EvalFaceField(ntime, nfield);
-		else assert(false);
+//		else assert(false);
 	}
 
 	return true;

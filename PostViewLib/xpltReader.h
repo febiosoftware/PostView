@@ -93,7 +93,7 @@ protected:
 	// size of name variables
 	enum { DI_NAME_SIZE = 64 };
 
-protected:
+public:
 	struct DICT_ITEM
 	{
 		unsigned int	ntype;
@@ -240,12 +240,10 @@ protected:
 	bool ReadElemData_NODE(FEMeshBase& m, Domain& d, FEMeshData& s, int ntype);
 	bool ReadElemData_ITEM(Domain& d, FEMeshData& s, int ntype);
 	bool ReadElemData_MULT(Domain& d, FEMeshData& s, int ntype);
-	bool ReadElemData_REGION(Domain& d, FEMeshData& s, int ntype);
 
 	bool ReadFaceData_NODE(FEMeshBase& m, Surface& s, FEMeshData& data, int ntype);
 	bool ReadFaceData_ITEM(Surface& s, FEMeshData& data, int ntype);
 	bool ReadFaceData_MULT(FEMeshBase& m, Surface& s, FEMeshData& data, int ntype);
-	bool ReadFaceData_REGION(FEMeshBase& m, Surface& s, FEMeshData& data, int ntype);
 
 	void Clear();
 

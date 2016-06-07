@@ -114,14 +114,25 @@ public:
 		if (m_face.empty())
 			m_face.assign(pm->GetMesh()->Faces(), -1); 
 	}
-	void eval(int n, T* pv) { (*pv) = m_data; }
+	void eval(int n, T* pv) { (*pv) = m_data[m_face[n]]; }
 	bool active(int n) { return (m_face[n] >= 0); }
-	void copy(FEFaceData<T,DATA_ITEM>& d) { m_data = d.m_data; m_face = d.m_face; }
-	void add(int n) { m_face[n] = 1; }
-	void set(const T& d) { m_data = d; }
+	void copy(FEFaceData<T,DATA_ITEM>& d) { m_data = d.m_data; }
+	void add(vector<int>& item, const T& v) 
+	{ 
+		int m = m_data.size(); 
+		m_data.push_back(v);
+		for (int i=0; i<(int)item.size(); ++i)
+		{
+			if (m_face[item[i]] == -1) m_face[item[i]] = m;
+			else
+			{
+				assert(m_face[item[i]] == m);
+			}
+		}
+	}
 
 protected:
-	T				m_data;
+	vector<T>		m_data;
 	vector<int>&	m_face;
 };
 
@@ -266,18 +277,25 @@ public:
 		if (m_elem.empty())
 			m_elem.assign(pm->GetMesh()->Elements(), -1); 
 	}
-	void eval(int n, T* pv) { assert(m_elem[n] >= 0); (*pv) = m_data; }
-	void copy(FEElementData<T, DATA_ITEM>& d) { m_data = d.m_data; m_elem = d.m_elem; }
+	void eval(int n, T* pv) { assert(m_elem[n] >= 0); (*pv) = m_data[m_elem[n]]; }
+	void copy(FEElementData<T, DATA_REGION>& d) { m_data = d.m_data; }
 	bool active(int n) { return (m_elem[n] >= 0); }
-	void set(const T& v) { m_data = v; }
-	void add(int n) 
+	void add(vector<int>& item, const T& v) 
 	{ 
-		int m = m_elem[n]; 
-		if (m == -1) { m_elem[n] = 1; } 
+		int m = m_data.size(); 
+		m_data.push_back(v);
+		for (int i=0; i<(int)item.size(); ++i)
+		{
+			if (m_elem[item[i]] == -1) m_elem[item[i]] = m;
+			else
+			{
+				assert(m_elem[item[i]] == m);
+			}
+		}
 	}
 
 protected:
-	T				m_data;
+	vector<T>		m_data;
 	vector<int>&	m_elem;
 };
 

@@ -8,6 +8,32 @@
 
 extern GLCOLOR pal[];
 
+
+template <class Type> void ReadFaceData_REGION(IArchive& ar, FEMeshBase& m, XpltReader::Surface &s, FEMeshData &data)
+{
+	int NF = s.nf;
+	vector<int> face(NF);
+	for (int i=0; i<(int) face.size(); ++i) face[i] = s.face[i].nid;
+
+	FEFaceData<Type,DATA_REGION>& df = dynamic_cast<FEFaceData<Type,DATA_REGION>&>(data);
+	Type a;
+	ar.read(a);
+	df.add(face, a);
+}
+
+template <class Type> void ReadElemData_REGION(IArchive& ar, XpltReader::Domain& dom, FEMeshData& s, int ntype)
+{
+	int NE = dom.ne;
+	vector<int> elem(NE);
+	for (int i=0; i<NE; ++i) elem[i] = dom.elem[i].index;
+
+	Type a;
+	ar.read(a);
+	FEElementData<Type,DATA_REGION>& df = dynamic_cast<FEElementData<Type,DATA_REGION>&>(s);
+	df.add(elem, a);
+}
+
+//-----------------------------------------------------------------------------
 XpltReader::XpltReader() : FEFileReader("FEBio plot")
 {
 	m_pstate = 0;
@@ -294,12 +320,12 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 			{
 				switch (it.ntype)
 				{
-				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEElementData<float  ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
-				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEElementData<vec3f  ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
-				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fs ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
-				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fd ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
-                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEElementData<tens4fs,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
-				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEElementData<mat3f  ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
+				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEElementData<float  ,DATA_REGION> >(it.szname, EXPORT_DATA)); break;
+				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEElementData<vec3f  ,DATA_REGION> >(it.szname, EXPORT_DATA)); break;
+				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fs ,DATA_REGION> >(it.szname, EXPORT_DATA)); break;
+				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fd ,DATA_REGION> >(it.szname, EXPORT_DATA)); break;
+                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEElementData<tens4fs,DATA_REGION> >(it.szname, EXPORT_DATA)); break;
+				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEElementData<mat3f  ,DATA_REGION> >(it.szname, EXPORT_DATA)); break;
 				default:
 					assert(false);
 					return false;
@@ -369,12 +395,12 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 			{
 				switch (it.ntype)
 				{
-				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEFaceData<float  ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
-				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<vec3f  ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
-				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fs ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
-				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fd ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
-                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEFaceData<tens4fs,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
-				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3f  ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
+				case FLOAT  : pdm->AddDataField(new FEDataField_T<FEFaceData<float  ,DATA_REGION> >(it.szname, EXPORT_DATA)); break;
+				case VEC3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<vec3f  ,DATA_REGION> >(it.szname, EXPORT_DATA)); break;
+				case MAT3FS : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fs ,DATA_REGION> >(it.szname, EXPORT_DATA)); break;
+				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3fd ,DATA_REGION> >(it.szname, EXPORT_DATA)); break;
+                case TENS4FS: pdm->AddDataField(new FEDataField_T<FEFaceData<tens4fs,DATA_REGION> >(it.szname, EXPORT_DATA)); break;
+				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEFaceData<mat3f  ,DATA_REGION> >(it.szname, EXPORT_DATA)); break;
 				default:
 					assert(false);
 				}
@@ -1346,7 +1372,20 @@ bool XpltReader::ReadElemData(FEModel &fem, FEState* pstate)
 						case FMT_NODE: ReadElemData_NODE(*fem.GetMesh(), dom, ed, it.ntype); break;
 						case FMT_ITEM: ReadElemData_ITEM(dom, ed, it.ntype); break;
 						case FMT_MULT: ReadElemData_MULT(dom, ed, it.ntype); break;
-						case FMT_REGION: ReadElemData_REGION(dom, ed, it.ntype); break;
+						case FMT_REGION: 
+							switch (it.ntype)
+							{
+							case FLOAT  : ReadElemData_REGION<float  >(m_ar, dom, ed, it.ntype); break;
+							case VEC3F  : ReadElemData_REGION<vec3f  >(m_ar, dom, ed, it.ntype); break;
+							case MAT3FS : ReadElemData_REGION<mat3fs >(m_ar, dom, ed, it.ntype); break;
+							case MAT3FD : ReadElemData_REGION<mat3fd >(m_ar, dom, ed, it.ntype); break;
+							case TENS4FS: ReadElemData_REGION<tens4fs>(m_ar, dom, ed, it.ntype); break;
+							case MAT3F  : ReadElemData_REGION<mat3f  >(m_ar, dom, ed, it.ntype); break;
+							default:
+								assert(false);
+								return errf("Error reading element data");
+							}
+							break;
 						default:
 							assert(false);
 							return errf("Error reading element data");
@@ -1636,68 +1675,6 @@ bool XpltReader::ReadElemData_MULT(XpltReader::Domain& dom, FEMeshData& s, int n
 }
 
 //-----------------------------------------------------------------------------
-bool XpltReader::ReadElemData_REGION(XpltReader::Domain& dom, FEMeshData& s, int ntype)
-{
-	int NE = dom.ne;
-	switch (ntype)
-	{
-	case FLOAT:
-		{
-			float a;
-			m_ar.read(a);
-			FEElementData<float,DATA_ITEM>& df = dynamic_cast<FEElementData<float,DATA_ITEM>&>(s);
-			for (int i=0; i<NE; ++i) df.add(dom.elem[i].index, a);
-		}
-		break;
-	case VEC3F:
-		{
-			vec3f a;
-			m_ar.read(a);
-			FEElementData<vec3f,DATA_ITEM>& df = dynamic_cast<FEElementData<vec3f,DATA_ITEM>&>(s);
-			for (int i=0; i<NE; ++i) df.add(dom.elem[i].index, a);
-		};
-		break;
-	case MAT3FS:
-		{
-			mat3fs a;
-			m_ar.read(a);
-			FEElementData<mat3fs,DATA_ITEM>& df = dynamic_cast<FEElementData<mat3fs,DATA_ITEM>&>(s);
-			for (int i=0; i<NE; ++i) df.add(dom.elem[i].index, a);
-		};
-		break;
-	case MAT3FD:
-		{
-			mat3fd a;
-			m_ar.read(a);
-			FEElementData<mat3fd,DATA_ITEM>& df = dynamic_cast<FEElementData<mat3fd,DATA_ITEM>&>(s);
-			for (int i=0; i<NE; ++i) df.add(dom.elem[i].index, a);
-		};
-		break;
-	case MAT3F:
-		{
-			mat3f a;
-			m_ar.read(a);
-			FEElementData<mat3f,DATA_ITEM>& df = dynamic_cast<FEElementData<mat3f,DATA_ITEM>&>(s);
-			for (int i=0; i<NE; ++i) df.add(dom.elem[i].index, a);
-		};
-		break;
-    case TENS4FS:
-		{
-			tens4fs a;
-			m_ar.read(a);
-			FEElementData<tens4fs,DATA_ITEM>& df = dynamic_cast<FEElementData<tens4fs,DATA_ITEM>&>(s);
-			for (int i=0; i<NE; ++i) df.add(dom.elem[i].index, a);
-		};
-        break;
-	default:
-		assert(false);
-		return errf("Error while reading element data");
-	}
-
-	return true;
-}
-
-//-----------------------------------------------------------------------------
 bool XpltReader::ReadFaceData(FEModel& fem, FEState* pstate)
 {
 	FEMeshBase& m = *fem.GetMesh();
@@ -1731,7 +1708,19 @@ bool XpltReader::ReadFaceData(FEModel& fem, FEState* pstate)
 						case FMT_NODE  : if (ReadFaceData_NODE  (m, s, pstate->m_Data[nfield], it.ntype) == false) return errf("Failed reading face data"); break;
 						case FMT_ITEM  : if (ReadFaceData_ITEM  (s, pstate->m_Data[nfield], it.ntype   ) == false) return errf("Failed reading face data"); break;
 						case FMT_MULT  : if (ReadFaceData_MULT  (m, s, pstate->m_Data[nfield], it.ntype) == false) return errf("Failed reading face data"); break;
-						case FMT_REGION: if (ReadFaceData_REGION(m, s, pstate->m_Data[nfield], it.ntype) == false) return errf("Failed reading face data"); break;
+						case FMT_REGION: 
+							switch (it.ntype)
+							{
+								case FLOAT  : ReadFaceData_REGION<float  >(m_ar, m, s, pstate->m_Data[nfield]); break;
+								case VEC3F  : ReadFaceData_REGION<vec3f  >(m_ar, m, s, pstate->m_Data[nfield]); break;
+								case MAT3FS : ReadFaceData_REGION<mat3fs >(m_ar, m, s, pstate->m_Data[nfield]); break;
+								case MAT3FD : ReadFaceData_REGION<mat3fd >(m_ar, m, s, pstate->m_Data[nfield]); break;
+								case TENS4FS: ReadFaceData_REGION<tens4fs>(m_ar, m, s, pstate->m_Data[nfield]); break;
+								case MAT3F  : ReadFaceData_REGION<mat3f  >(m_ar, m, s, pstate->m_Data[nfield]); break;
+								default:
+									return errf("Failed reading face data");
+							}
+							break;
 						default:
 							return errf("Failed reading face data");
 						}
@@ -1861,91 +1850,6 @@ bool XpltReader::ReadFaceData_MULT(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 				vector<int>& li = l[i];
 				for (int j=0; j<f.nn; ++j) v[j] = a[NFM*i + li[j]];
 				df.add(f.nid, v, f.nn);
-			}
-		}
-        break;
-	default:
-		return errf("Failed reading face data");
-	}
-
-	return true;
-}
-
-//-----------------------------------------------------------------------------
-bool XpltReader::ReadFaceData_REGION(FEMeshBase& m, XpltReader::Surface &s, FEMeshData &data, int ntype)
-{
-	int NF = s.nf;
-	switch (ntype)
-	{
-	case FLOAT:
-		{
-			FEFaceData<float,DATA_ITEM>& df = dynamic_cast<FEFaceData<float,DATA_ITEM>&>(data);
-			float a;
-			m_ar.read(a);
-			for (int i=0; i<NF; ++i)
-			{
-				FACE& f = s.face[i];
-				df.add(f.nid, a);
-			}
-		}
-		break;
-	case VEC3F:
-		{
-			FEFaceData<vec3f,DATA_ITEM>& df = dynamic_cast<FEFaceData<vec3f,DATA_ITEM>&>(data);
-			vec3f a;
-			m_ar.read(a);
-			for (int i=0; i<NF; ++i)
-			{
-				FACE& f = s.face[i];
-				df.add(f.nid, a);
-			}
-		}
-		break;
-	case MAT3FS:
-		{
-			FEFaceData<mat3fs,DATA_ITEM>& df = dynamic_cast<FEFaceData<mat3fs,DATA_ITEM>&>(data);
-			mat3fs a;
-			m_ar.read(a);
-			for (int i=0; i<NF; ++i)
-			{
-				FACE& f = s.face[i];
-				df.add(f.nid, a);
-			}
-		}
-		break;
-	case MAT3F:
-		{
-			FEFaceData<mat3f,DATA_ITEM>& df = dynamic_cast<FEFaceData<mat3f,DATA_ITEM>&>(data);
-			mat3f a;
-			m_ar.read(a);
-			for (int i=0; i<NF; ++i)
-			{
-				FACE& f = s.face[i];
-				df.add(f.nid, a);
-			}
-		}
-		break;
-	case MAT3FD:
-		{
-			FEFaceData<mat3fd,DATA_ITEM>& df = dynamic_cast<FEFaceData<mat3fd,DATA_ITEM>&>(data);
-			mat3fd a;
-			m_ar.read(a);
-			for (int i=0; i<NF; ++i)
-			{
-				FACE& f = s.face[i];
-				df.add(f.nid, a);
-			}
-		}
-		break;	
-    case TENS4FS:
-		{
-			FEFaceData<tens4fs,DATA_ITEM>& df = dynamic_cast<FEFaceData<tens4fs,DATA_ITEM>&>(data);
-			tens4fs a;
-			m_ar.read(a);
-			for (int i=0; i<NF; ++i)
-			{
-				FACE& f = s.face[i];
-				df.add(f.nid, a);
 			}
 		}
         break;

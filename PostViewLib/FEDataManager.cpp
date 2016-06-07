@@ -77,13 +77,13 @@ std::string FEDataField::componentName(int ncomp, Data_Tensor_Type ntype)
 			{
 				if      (ncomp == 0) sprintf(szline, "XX - %s", sz);
 				else if (ncomp == 1) sprintf(szline, "XY - %s", sz);
-				else if (ncomp == 3) sprintf(szline, "XZ - %s", sz);
-				else if (ncomp == 4) sprintf(szline, "YX - %s", sz);
-				else if (ncomp == 5) sprintf(szline, "YY - %s", sz);
-				else if (ncomp == 6) sprintf(szline, "YZ - %s", sz);
-				else if (ncomp == 7) sprintf(szline, "ZX - %s", sz);
-				else if (ncomp == 8) sprintf(szline, "ZY - %s", sz);
-				else if (ncomp == 9) sprintf(szline, "ZZ - %s", sz);
+				else if (ncomp == 2) sprintf(szline, "XZ - %s", sz);
+				else if (ncomp == 3) sprintf(szline, "YX - %s", sz);
+				else if (ncomp == 4) sprintf(szline, "YY - %s", sz);
+				else if (ncomp == 5) sprintf(szline, "YZ - %s", sz);
+				else if (ncomp == 6) sprintf(szline, "ZX - %s", sz);
+				else if (ncomp == 7) sprintf(szline, "ZY - %s", sz);
+				else if (ncomp == 8) sprintf(szline, "ZZ - %s", sz);
 				return szline;
 			}
 			break;
