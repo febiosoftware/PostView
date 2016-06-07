@@ -28,6 +28,25 @@ private:
 	vector<FEFace>	m_Face;
 };
 
+class GLEdge
+{
+public:
+	struct EDGE
+	{
+		int n0, n1;
+		int mat;
+	};
+
+	void AddEdge(const EDGE& e) { m_Edge.push_back(e); }
+	int Edges() const { return (int) m_Edge.size(); }
+	EDGE& Edge(int i) { return m_Edge[i]; }
+
+	void Clear() { m_Edge.clear(); }
+
+protected:
+	vector<EDGE>	m_Edge;
+};
+
 class CGLModel : public CGLVisual
 {
 public:
@@ -70,6 +89,7 @@ public:
 	void RenderOutline(CGLContext& rc, int nmat = -1);
 	void RenderNormals(CGLContext& rc);
 	void RenderGhost  (CGLContext& rc);
+	void RenderDiscrete(CGLContext& rc);
 
 	void RenderSelection(CGLContext& rc);
 
@@ -206,6 +226,7 @@ public: // Selection
 protected:
 	void UpdateInternalSurfaces();
 	void ClearInternalSurfaces();
+	void UpdateEdge();
 
 public:
 	bool		m_bnorm;		//!< calculate normals or not
@@ -225,6 +246,7 @@ public:
 protected:
 	FEModel*			m_ps;
 	vector<GLSurface*>		m_innerSurface;
+	GLEdge					m_edge;	// all line elements from springs
 
 	CGLDisplacementMap*		m_pdis;
 	CGLColorMap*			m_pcol;

@@ -63,6 +63,7 @@ CGLModel::CGLModel(FEModel* ps)
 
 	m_nrender = RENDER_MODE_SOLID;
 
+	UpdateEdge();
 	UpdateInternalSurfaces();
 }
 
@@ -201,11 +202,43 @@ void CGLModel::Render(CGLContext& rc)
 	// render the selected elements and faces
 	RenderSelection(rc);
 
+	// render the springs
+	RenderDiscrete(rc);
+
 	// render the normals
 	if (m_bnorm) RenderNormals(rc);
 
 	// render the ghost
 	if (m_bghost) RenderGhost(rc);
+}
+
+//-----------------------------------------------------------------------------
+void CGLModel::RenderDiscrete(CGLContext& rc)
+{
+	glPushAttrib(GL_ENABLE_BIT);
+	glDisable(GL_LIGHTING);
+	FEMeshBase& mesh = *m_ps->GetMesh();
+	int curMat = -1;
+	glBegin(GL_LINES);
+	for (int i=0; i<m_edge.Edges(); ++i)
+	{
+		GLEdge::EDGE& edge = m_edge.Edge(i);
+		int mat = edge.mat;
+		if (mat != curMat)
+		{
+			GLCOLOR c = m_ps->GetMaterial(mat)->diffuse;
+			curMat = mat;
+			glColor3ub(c.r, c.g, c.b);
+		}
+
+		vec3f r0 = mesh.Node(edge.n0).m_rt;
+		vec3f r1 = mesh.Node(edge.n1).m_rt;
+
+		glVertex3f(r0.x, r0.y, r0.z);
+		glVertex3f(r1.x, r1.y, r1.z);
+	}
+	glEnd();
+	glPopAttrib();
 }
 
 //-----------------------------------------------------------------------------
@@ -3414,6 +3447,25 @@ void CGLModel::HideSelectedNodes()
 	}
 
 	UpdateSelectionLists();
+}
+
+//-----------------------------------------------------------------------------
+void CGLModel::UpdateEdge()
+{
+	m_edge.Clear();
+	FEMeshBase& mesh = *m_ps->GetMesh();
+	for (int i=0; i<mesh.Elements(); ++i)
+	{
+		FEElement& el = mesh.Element(i);
+		if ((el.Type() == FE_LINE2)||(el.Type() == FE_LINE3))
+		{
+			GLEdge::EDGE edge;
+			edge.n0 = el.m_node[0];
+			edge.n1 = el.m_node[1];
+			edge.mat = el.m_MatID;
+			m_edge.AddEdge(edge);
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------

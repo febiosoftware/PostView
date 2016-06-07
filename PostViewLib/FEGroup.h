@@ -33,6 +33,9 @@ public:
 	FEDomain(FEMeshBase* pm);
 
 	void SetMatID(int matid);
+	int GetMatID() const { return m_nmat; }
+
+	int Type() const { m_ntype; }
 
 	int Faces() { return (int) m_Face.size(); }
 	FEFace& Face(int n);
@@ -48,6 +51,7 @@ public:
 protected:
 	FEMeshBase*	m_pm;
 	int			m_nmat;	// material index
+	int			m_ntype;
 	vector<int>	m_Face;	// face indices 
 	vector<int>	m_Elem;	// element indices
 };
