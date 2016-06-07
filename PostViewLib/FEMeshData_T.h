@@ -119,7 +119,7 @@ public:
 	void copy(FEFaceData<T,DATA_ITEM>& d) { m_data = d.m_data; }
 	void add(vector<int>& item, const T& v) 
 	{ 
-		int m = m_data.size(); 
+		int m = (int) m_data.size(); 
 		m_data.push_back(v);
 		for (int i=0; i<(int)item.size(); ++i)
 		{
@@ -189,7 +189,7 @@ public:
 	void copy(FEFaceData<T,DATA_NODE>& d) { m_data = d.m_data; m_face = d.m_face; }
 	void add(vector<T>& d, vector<int>& f, vector<int>& l) 
 	{ 
-		int n0 = m_data.size();
+		int n0 = (int) m_data.size();
 		m_data.insert(m_data.end(), d.begin(), d.end());
 		for (int i=0; i<(int) f.size(); ++i) 
 		{
@@ -255,9 +255,9 @@ public:
 		int m = m_elem[n]; 
 		if (m == -1) 
 		{ 
-			m_elem[n] = m_data.size(); 
+			m_elem[n] = (int) m_data.size(); 
 		} 
-		else assert(m == m_data.size());
+		else assert(m == (int) m_data.size());
 		m_data.push_back(v); 
 	}
 	int size() { return (int) m_data.size(); }
@@ -282,7 +282,7 @@ public:
 	bool active(int n) { return (m_elem[n] >= 0); }
 	void add(vector<int>& item, const T& v) 
 	{ 
-		int m = m_data.size(); 
+		int m = (int) m_data.size(); 
 		m_data.push_back(v);
 		for (int i=0; i<(int)item.size(); ++i)
 		{
@@ -361,7 +361,7 @@ public:
 	void copy(FEElementData<T,DATA_NODE>& d) { m_data = d.m_data; m_indx = d.m_indx; }
 	void add(vector<T>& d, vector<int>& e, vector<int>& l, int ne) 
 	{ 
-		int n0 = m_data.size();
+		int n0 = (int) m_data.size();
 		m_data.insert(m_data.end(), d.begin(), d.end());
 		for (int i=0; i<(int) e.size(); ++i) 
 		{

@@ -181,7 +181,7 @@ class OLeaf<vector<T> > : public OChunk
 public:
 	OLeaf(unsigned int nid, vector<T>& a) : OChunk(nid)
 	{
-		m_nsize = a.size();
+		m_nsize = (int)a.size();
 		assert(m_nsize > 0);
 		m_pd = new T[m_nsize];
 		memcpy(m_pd, &a[0], sizeof(T)*m_nsize);

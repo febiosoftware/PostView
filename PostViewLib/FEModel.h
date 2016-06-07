@@ -62,7 +62,7 @@ public:
 	// --- M A T E R I A L S ---
 
 	// return number of materials
-	int Materials() { return m_Mat.size();  }
+	int Materials() { return (int) m_Mat.size();  }
 
 	// get a particular material
 	FEMaterial* GetMaterial(int i) { return &m_Mat[i]; }

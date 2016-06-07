@@ -178,6 +178,16 @@ FEDataManager::~FEDataManager(void)
 	Clear();
 }
 
+FEDataFieldPtr FEDataManager::FirstDataField() 
+{ 
+	return m_Data.begin(); 
+}
+
+int FEDataManager::DataFields() const
+{ 
+	return (int) m_Data.size(); 
+}
+
 void FEDataManager::Clear()
 {
 	vector<FEDataField*>::iterator pi;
@@ -188,7 +198,7 @@ void FEDataManager::Clear()
 void FEDataManager::AddDataField(FEDataField* pd)
 {
 	m_Data.push_back(pd);
-	pd->SetFieldID(BUILD_FIELD(pd->DataClass(), m_Data.size()-1, 0));
+	pd->SetFieldID(BUILD_FIELD(pd->DataClass(), DataFields()-1, 0));
 }
 
 void FEDataManager::DeleteDataField(FEDataField* pd)

@@ -136,8 +136,8 @@ public:
 	void DeleteDataField(FEDataField* pd);
 
 	//! get the nodal datafield
-	FEDataFieldPtr FirstDataField() { return m_Data.begin(); }
-	int DataFields() { return m_Data.size(); }
+	FEDataFieldPtr FirstDataField();
+	int DataFields() const;
 
 	//! clear data
 	void Clear();
