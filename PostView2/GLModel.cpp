@@ -196,14 +196,14 @@ bool CGLModel::AddDisplacementMap()
 //-----------------------------------------------------------------------------
 void CGLModel::Render(CGLContext& rc)
 {
+	// render the springs
+	RenderDiscrete(rc);
+
 	// render the faces
 	RenderFaces(rc);
 
 	// render the selected elements and faces
 	RenderSelection(rc);
-
-	// render the springs
-	RenderDiscrete(rc);
 
 	// render the normals
 	if (m_bnorm) RenderNormals(rc);
