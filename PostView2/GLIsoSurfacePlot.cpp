@@ -96,23 +96,25 @@ CPropertyList* CGLIsoSurfacePlot::propertyList()
 void CGLIsoSurfacePlot::Render(CGLContext& rc)
 {
 	glPushAttrib(GL_ENABLE_BIT | GL_LIGHTING_BIT);
-	glColor4ub(255,255,255,255);
-	vec2f r = m_crng;
-	glEnable(GL_COLOR_MATERIAL);
-	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-	glDisable(GL_TEXTURE_1D);
-	GLfloat zero[4] = {0.f};
-	GLfloat one[4] = {1.f, 1.f, 1.f, 1.f};
-	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, zero);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, zero);
-//	glLightfv(GL_LIGHT0, GL_AMBIENT, one);
-//	glLightfv(GL_LIGHT0, GL_DIFFUSE, one);
+	{
+		glColor4ub(255,255,255,255);
+		vec2f r = m_crng;
+		glEnable(GL_COLOR_MATERIAL);
+		glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+		glDisable(GL_TEXTURE_1D);
+		GLfloat zero[4] = {0.f};
+		GLfloat one[4] = {1.f, 1.f, 1.f, 1.f};
+		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, zero);
+		glLightfv(GL_LIGHT0, GL_SPECULAR, zero);
+	//	glLightfv(GL_LIGHT0, GL_AMBIENT, one);
+	//	glLightfv(GL_LIGHT0, GL_DIFFUSE, one);
 	
 
-	for (int i=1; i<m_nslices+1; ++i)
-	{
-		float ref = r.x + (float) i / (float) (m_nslices+1) * (r.y - r.x);
-		RenderSlice(ref);
+		for (int i=1; i<m_nslices+1; ++i)
+		{
+			float ref = r.x + (float) i / (float) (m_nslices+1) * (r.y - r.x);
+			RenderSlice(ref);
+		}
 	}
 	glPopAttrib();
 }

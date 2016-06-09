@@ -356,7 +356,6 @@ void GLLegendBar::draw_discrete(QPainter* painter)
 	m_pMap->GetRange(fmin, fmax);
 	int nsteps = m_pMap->GetDivisions();
 
-	glPushAttrib(GL_ENABLE_BIT);
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 	glDisable(GL_LIGHTING);
@@ -528,8 +527,6 @@ void GLTriad::draw(QPainter* painter)
 
 	glClear(GL_DEPTH_BUFFER_BIT);
 
-	// store attributes
-	glPushAttrib(GL_ALL_ATTRIB_BITS);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 	

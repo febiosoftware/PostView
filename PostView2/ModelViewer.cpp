@@ -115,7 +115,7 @@ private:
 class CDisplacementMapProps : public CPropertyList
 {
 public:
-	CDisplacementMapProps(CGLDisplacementMap* map) : m_map(map)
+	CDisplacementMapProps(CMainWindow* wnd, CGLDisplacementMap* map) : m_wnd(wnd), m_map(map)
 	{
 		addProperty("Data field"  , CProperty::DataVec3);
 		addProperty("Scale factor", CProperty::Float   );
@@ -143,10 +143,12 @@ public:
 			pfem->SetDisplacementField(v.toInt());
 		}
 		if (i==1) m_map->m_scl = v.toFloat();
+		m_wnd->GetDocument()->UpdateFEModel();
 	}
 
 private:
 	CGLDisplacementMap*	m_map;
+	CMainWindow*	m_wnd;
 };
 
 //-----------------------------------------------------------------------------
@@ -169,8 +171,8 @@ public:
 	{
 		if (m_map)
 		{
-			float fmin, fmax;
-			m_map->GetColorMap()->GetRange(fmin, fmax);
+			float rng[2];
+			m_map->GetRange(rng);
 			switch (i)
 			{
 			case 0: return m_map->GetEvalField(); break;
@@ -179,8 +181,8 @@ public:
 			case 3: return m_map->GetRangeType(); break;
 			case 4: return m_map->GetColorMap()->GetDivisions(); break;
 			case 5: return m_map->ShowLegend(); break;
-			case 6: return fmax; break;
-			case 7: return fmin; break;
+			case 6: return rng[1]; break;
+			case 7: return rng[0]; break;
 			}
 		}
 		return QVariant();
@@ -189,8 +191,8 @@ public:
 	void SetPropertyValue(int i, const QVariant& v)
 	{
 		if (m_map == 0) return;
-		float fmin, fmax;
-		m_map->GetColorMap()->GetRange(fmin, fmax);
+		float rng[2];
+		m_map->GetRange(rng);
 
 		switch (i)
 		{
@@ -200,9 +202,10 @@ public:
 		case 3: m_map->SetRangeType(v.toInt()); break;
 		case 4: m_map->GetColorMap()->SetDivisions(v.toInt()); break;
 		case 5: m_map->ShowLegend(v.toBool()); break;
-		case 6: m_map->GetColorMap()->SetRange(fmin, v.toFloat()); break;
-		case 7: m_map->GetColorMap()->SetRange(v.toFloat(), fmax); break;
+		case 6: rng[1] = v.toFloat(); m_map->SetRange(rng); break;
+		case 7: rng[0] = v.toFloat(); m_map->SetRange(rng); break;
 		}
+		m_wnd->GetDocument()->UpdateFEModel();
 	}
 
 private:
@@ -483,7 +486,7 @@ void CModelViewer::Update(bool breset)
 			pi2 = new QTreeWidgetItem(pi1);
 			pi2->setText(0, "Displacement map");
 			pi2->setIcon(0, QIcon(QString(":/icons/distort.png")));
-			ui->m_list.push_back(new CDisplacementMapProps(mdl->GetDisplacementMap()));
+			ui->m_list.push_back(new CDisplacementMapProps(m_wnd, mdl->GetDisplacementMap()));
 			pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
 			m_obj.push_back(0);
 
