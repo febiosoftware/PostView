@@ -1049,6 +1049,7 @@ void CMainWindow::timerEvent(QTimerEvent* ev)
 		}
 	}
 	SetCurrentTime(nstep);
+	ui->glview->repaint();
 }
 
 void CMainWindow::on_actionFirst_triggered()
