@@ -273,15 +273,13 @@ public:
 		QAction* actionAbout = new QAction("About ... ", MainWindow); actionAbout->setObjectName(QStringLiteral("actionAbout"));
 
 		// create menu bar
-		QMenuBar* menuBar = new QMenuBar(MainWindow);
-		menuBar->setGeometry(QRect(0, 0, wndWidth, menuHeight));
+		QMenuBar* menuBar = MainWindow->menuBar();
 		menuFile   = new QMenu("File"  , menuBar);
 		menuEdit   = new QMenu("Edit"  , menuBar);
 		menuPost   = new QMenu("Post"  , menuBar);
 		menuRecord = new QMenu("Record", menuBar);
 		menuView   = new QMenu("View"  , menuBar);
 		menuHelp   = new QMenu("Help"  , menuBar);
-		MainWindow->setMenuBar(menuBar);
 
 		QActionGroup* pag = new QActionGroup(MainWindow);
 		pag->addAction(selectNodes);

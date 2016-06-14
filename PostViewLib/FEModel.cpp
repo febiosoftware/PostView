@@ -56,7 +56,7 @@ void FEModel::SetMesh(FEMeshBase* mesh)
 // TODO: This does not delete the mesh. Should I?
 void FEModel::Clear()
 {
-	m_mesh->CleanUp();
+	if (m_mesh) m_mesh->CleanUp();
 	m_Mat.clear();
 	ClearStates();
 	
