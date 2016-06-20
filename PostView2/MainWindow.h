@@ -30,6 +30,9 @@ public:
 
 	void UpdateView();
 
+	// force a redraw of the GLView
+	void RedrawGL();
+
 	// this is called after a new model is loaded 
 	// or an existing model is reloaded
 	// and also after a mouse release event

@@ -593,5 +593,5 @@ void CModelViewer::on_deleteButton_clicked()
 
 void CModelViewer::on_props_dataChanged()
 {
-	m_wnd->repaint();
+	m_wnd->RedrawGL();
 }

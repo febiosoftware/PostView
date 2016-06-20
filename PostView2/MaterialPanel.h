@@ -25,6 +25,7 @@ private slots:
 	void on_enableButton_clicked();
 	void on_disableButton_clicked();
 	void on_editName_editingFinished();
+	void on_props_dataChanged();
 
 private:
 	Ui::CMaterialPanel*	ui;

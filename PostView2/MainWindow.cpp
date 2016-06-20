@@ -69,6 +69,9 @@ CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMai
 	ui->setupUi(this);
 	m_fileThread = 0;
 	readSettings();
+
+	// make sure the file viewer is visible
+	ui->fileViewer->parentWidget()->raise();
 }
 
 CMainWindow::~CMainWindow()
@@ -94,6 +97,11 @@ void CMainWindow::UpdateUi(bool breset)
 
 	// update the gl view
 	ui->glview->GetCamera().Update(true);
+	RedrawGL();
+}
+
+void CMainWindow::RedrawGL()
+{
 	ui->glview->repaint();
 }
 
@@ -537,25 +545,25 @@ void CMainWindow::on_actionQuit_triggered()
 void CMainWindow::on_selectNodes_triggered()
 {
 	m_doc->SetSelectionMode(SELECT_NODES);
-	ui->glview->repaint();
+	RedrawGL();
 }
 
 void CMainWindow::on_selectEdges_triggered()
 {
 	m_doc->SetSelectionMode(SELECT_EDGES);
-	ui->glview->repaint();
+	RedrawGL();
 }
 
 void CMainWindow::on_selectFaces_triggered()
 {
 	m_doc->SetSelectionMode(SELECT_FACES);
-	ui->glview->repaint();
+	RedrawGL();
 }
 
 void CMainWindow::on_selectElems_triggered()
 {
 	m_doc->SetSelectionMode(SELECT_ELEMS);
-	ui->glview->repaint();
+	RedrawGL();
 }
 
 void CMainWindow::on_actionSelectRect_triggered()
@@ -609,7 +617,7 @@ void CMainWindow::on_actionHideSelected_triggered()
 	}
 
 	pdoc->UpdateFEModel();
-	ui->glview->repaint();
+	RedrawGL();
 }
 
 void CMainWindow::on_actionHideUnselected_triggered()
@@ -620,7 +628,7 @@ void CMainWindow::on_actionHideUnselected_triggered()
 	mdl.HideUnselectedElements();
 
 	pdoc->UpdateFEModel();
-	ui->glview->repaint();
+	RedrawGL();
 }
 
 void CMainWindow::on_actionInvertSelection_triggered()
@@ -636,7 +644,7 @@ void CMainWindow::on_actionInvertSelection_triggered()
 	}
 
 	pdoc->UpdateFEModel();
-	ui->glview->repaint();
+	RedrawGL();
 }
 
 void CMainWindow::on_actionUnhideAll_triggered()
@@ -653,7 +661,7 @@ void CMainWindow::on_actionUnhideAll_triggered()
 	for (int i=0; i<mesh.Nodes   (); ++i) mesh.Node   (i).Unhide();
 
 	pdoc->UpdateFEModel();
-	ui->glview->repaint();
+	RedrawGL();
 }
 
 void CMainWindow::on_actionSelectAll_triggered()
@@ -668,7 +676,7 @@ void CMainWindow::on_actionSelectAll_triggered()
 	}
 
 	pdoc->UpdateFEModel();
-	ui->glview->repaint();
+	RedrawGL();
 }
 
 void CMainWindow::on_actionSelectRange_triggered()
@@ -709,7 +717,7 @@ void CMainWindow::on_actionClearSelection_triggered()
 		CGLModel& mdl = *pdoc->GetGLModel();
 		mdl.ClearSelection(); 
 		pdoc->UpdateFEModel();
-		ui->glview->repaint();
+		RedrawGL();
 	}
 }
 
@@ -744,7 +752,7 @@ void CMainWindow::on_actionFind_triggered()
 		case SELECT_ELEMS: on_selectElems_triggered(); pm->SelectElements(dlg.m_item, dlg.m_bclear); break;
 		}
 
-		repaint();
+		RedrawGL();
 	}
 }
 
@@ -755,7 +763,7 @@ void CMainWindow::on_actionDelete_triggered()
 	{
 		CGLWidgetManager* pwm = CGLWidgetManager::GetInstance();
 		pwm->RemoveWidget(pg);
-		repaint();
+		RedrawGL();
 	}
 }
 
@@ -793,7 +801,7 @@ void CMainWindow::on_actionProperties_triggered()
 
 	UpdateFontToolbar();
 
-	repaint();
+	RedrawGL();
 }
 
 void CMainWindow::on_actionPlaneCut_triggered()
@@ -805,7 +813,7 @@ void CMainWindow::on_actionPlaneCut_triggered()
 	ui->modelViewer->Update(true);
 	ui->modelViewer->selectObject(pp);
 	ui->modelViewer->parentWidget()->raise();
-	ui->glview->repaint();
+	RedrawGL();
 }
 
 void CMainWindow::on_actionVectorPlot_triggered()
@@ -819,7 +827,7 @@ void CMainWindow::on_actionVectorPlot_triggered()
 	ui->modelViewer->selectObject(pp);
 	ui->modelViewer->parentWidget()->raise();
 
-	ui->glview->repaint();
+	RedrawGL();
 }
 
 void CMainWindow::on_actionIsosurfacePlot_triggered()
@@ -833,7 +841,7 @@ void CMainWindow::on_actionIsosurfacePlot_triggered()
 	ui->modelViewer->selectObject(pp);
 	ui->modelViewer->parentWidget()->raise();
 
-	ui->glview->repaint();
+	RedrawGL();
 }
 
 void CMainWindow::on_actionSlicePlot_triggered()
@@ -847,7 +855,7 @@ void CMainWindow::on_actionSlicePlot_triggered()
 	ui->modelViewer->selectObject(pp);
 	ui->modelViewer->parentWidget()->raise();
 
-	ui->glview->repaint();
+	RedrawGL();
 }
 
 void CMainWindow::on_actionDisplacementMap_triggered()
@@ -944,7 +952,7 @@ void CMainWindow::on_actionColorMap_toggled(bool bchecked)
 	CGLModel* po = pdoc->GetGLModel();
 	po->GetColorMap()->Activate(bchecked);
 	pdoc->UpdateFEModel();
-	ui->glview->repaint();
+	RedrawGL();
 }
 
 void CMainWindow::SetCurrentDataField(int nfield)
@@ -968,7 +976,7 @@ void CMainWindow::on_selectData_currentIndexChanged(int index)
 
 		pdoc->UpdateFEModel();
 
-		ui->glview->repaint();
+		RedrawGL();
 	}
 
 	if (ui->integrateWindow && ui->integrateWindow->isVisible()) 
@@ -998,7 +1006,7 @@ void CMainWindow::SetCurrentTime(int n)
 {
 	ui->pspin->setValue(n + 1);
 	GetDocument()->SetCurrentTime(n);
-	ui->glview->repaint();
+	RedrawGL();
 }
 
 void CMainWindow::StopAnimation()
@@ -1051,7 +1059,7 @@ void CMainWindow::timerEvent(QTimerEvent* ev)
 		}
 	}
 	SetCurrentTime(nstep);
-	ui->glview->repaint();
+	RedrawGL();
 }
 
 void CMainWindow::on_actionFirst_triggered()
@@ -1091,7 +1099,7 @@ void CMainWindow::on_actionTimeSettings_triggered()
 	CDlgTimeSettings dlg(GetDocument(), this);
 	if (dlg.exec())
 	{
-		repaint();
+		RedrawGL();
 	}
 }
 
@@ -1105,21 +1113,21 @@ void CMainWindow::on_actionViewMesh_toggled(bool bchecked)
 {
 	VIEWSETTINGS& view = GetDocument()->GetViewSettings();
 	view.m_bmesh = bchecked;
-	ui->glview->repaint();
+	RedrawGL();
 }
 
 void CMainWindow::on_actionViewOutline_toggled(bool bchecked)
 {
 	VIEWSETTINGS& view = GetDocument()->GetViewSettings();
 	view.m_boutline = !view.m_boutline;
-	ui->glview->repaint();
+	RedrawGL();
 }
 
 void CMainWindow::on_actionViewShowTags_toggled(bool bchecked)
 {
 	VIEWSETTINGS& view = GetDocument()->GetViewSettings();
 	view.m_bTags = bchecked;
-	ui->glview->repaint();
+	RedrawGL();
 }
 
 void CMainWindow::on_actionViewSmooth_toggled(bool bchecked)
@@ -1134,7 +1142,7 @@ void CMainWindow::on_actionViewSmooth_toggled(bool bchecked)
 			bool b = pc->Smooth();
 			pc->Smooth(!b);
 			m_doc->UpdateFEModel();
-			ui->glview->repaint();
+			RedrawGL();
 		}
 	}
 }
@@ -1142,7 +1150,7 @@ void CMainWindow::on_actionViewSmooth_toggled(bool bchecked)
 void CMainWindow::on_actionViewCapture_toggled(bool bchecked)
 {
 	ui->glview->showSafeFrame(bchecked);
-	ui->glview->repaint();
+	RedrawGL();
 }
 
 void CMainWindow::on_actionViewProjection_toggled(bool bchecked)
@@ -1183,7 +1191,7 @@ void CMainWindow::on_actionViewBottom_triggered()
 void CMainWindow::on_actionViewTrack_toggled(bool bchecked)
 {
 	ui->glview->TrackSelection(bchecked);
-	ui->glview->repaint();
+	RedrawGL();
 }
 
 void CMainWindow::on_actionViewVPSave_triggered()
@@ -1207,7 +1215,7 @@ void CMainWindow::on_actionViewVPPrev_triggered()
 	if (view.CameraKeys() > 0)
 	{
 		view.PrevKey();
-		ui->glview->repaint();
+		RedrawGL();
 	}
 }
 
@@ -1217,7 +1225,7 @@ void CMainWindow::on_actionViewVPNext_triggered()
 	if (view.CameraKeys() > 0)
 	{
 		view.NextKey();
-		ui->glview->repaint();
+		RedrawGL();
 	}
 }
 
@@ -1249,7 +1257,7 @@ void CMainWindow::UpdatePlayToolbar(bool breset)
 void CMainWindow::on_selectTime_valueChanged(int i)
 {
 	GetDocument()->SetCurrentTime(i - 1);
-	repaint();
+	RedrawGL();
 }
 
 void CMainWindow::UpdateFontToolbar()
@@ -1279,7 +1287,7 @@ void CMainWindow::on_fontStyle_currentFontChanged(const QFont& font)
 		new_font.setBold(old_font.bold());
 		new_font.setItalic(old_font.italic());
 		pw->set_font(new_font);
-		repaint();
+		RedrawGL();
 	}
 }
 
@@ -1291,7 +1299,7 @@ void CMainWindow::on_fontSize_valueChanged(int i)
 		QFont font = pw->get_font();
 		font.setPointSize(i);
 		pw->set_font(font);
-		repaint();
+		RedrawGL();
 	}
 }
 
@@ -1303,7 +1311,7 @@ void CMainWindow::on_fontBold_toggled(bool checked)
 		QFont font = pw->get_font();
 		font.setBold(checked);
 		pw->set_font(font);
-		repaint();
+		RedrawGL();
 	}
 }
 
@@ -1315,7 +1323,7 @@ void CMainWindow::on_fontItalic_toggled(bool bchecked)
 		QFont font = pw->get_font();
 		font.setItalic(bchecked);
 		pw->set_font(font);
-		repaint();
+		RedrawGL();
 	}
 }
 

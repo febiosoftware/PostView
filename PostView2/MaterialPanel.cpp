@@ -123,6 +123,7 @@ public:
 		pvl->addLayout(ph);
 
 		m_prop = new ::CPropertyListView;
+		m_prop->setObjectName("props");
 		pvl->addWidget(m_prop);
 
 		psplitter->addWidget(m_list);
@@ -325,4 +326,9 @@ void CMaterialPanel::on_editName_editingFinished()
 		mat.SetName(name.c_str());
 		item->setText(ui->name->text());
 	}
+}
+
+void CMaterialPanel::on_props_dataChanged()
+{
+	m_wnd->RedrawGL();
 }
