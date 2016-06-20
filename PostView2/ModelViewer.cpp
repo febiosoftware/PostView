@@ -394,6 +394,7 @@ public:
 		phl->addStretch();
 		pvl->addLayout(phl);
 		m_props = new ::CPropertyListView;
+		m_props->setObjectName("props");
 		pvl->addWidget(m_props);
 		w->setLayout(pvl);
 
@@ -588,4 +589,9 @@ void CModelViewer::on_deleteButton_clicked()
 		}
 		else QMessageBox::information(this, "PostView2", "Cannot delete this object");
 	}
+}
+
+void CModelViewer::on_props_dataChanged()
+{
+	m_wnd->repaint();
 }

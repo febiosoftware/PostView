@@ -29,6 +29,9 @@ public:
 
 	void Update(CPropertyList* plist);
 
+signals:
+	void dataChanged();
+
 private slots:
 	void on_modelProps_clicked(const QModelIndex& index);
 	void onDataChanged();

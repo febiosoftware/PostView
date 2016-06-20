@@ -997,6 +997,8 @@ void CMainWindow::on_actionPlay_toggled(bool bchecked)
 void CMainWindow::SetCurrentTime(int n)
 {
 	ui->pspin->setValue(n + 1);
+	GetDocument()->SetCurrentTime(n);
+	ui->glview->repaint();
 }
 
 void CMainWindow::StopAnimation()

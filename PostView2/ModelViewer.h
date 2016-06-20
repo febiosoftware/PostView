@@ -32,6 +32,7 @@ private slots:
 	void on_modelTree_itemDoubleClicked(QTreeWidgetItem* item, int column);
 	void on_nameEdit_editingFinished();
 	void on_deleteButton_clicked();
+	void on_props_dataChanged();
 
 private:
 	Ui::CModelViewer*			ui;

@@ -399,6 +399,7 @@ void CPropertyListView::onDataChanged()
 	{
 		QModelIndex index = ui->m_prop->currentIndex();
 		ui->m_delegate->setModelData(pw, ui->m_data, index);
-		QApplication::activeWindow()->repaint();
+
+		emit dataChanged();
 	}
 }
