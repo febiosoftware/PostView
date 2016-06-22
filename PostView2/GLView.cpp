@@ -981,7 +981,9 @@ void CGLView::RenderTags()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
+	glPushAttrib(GL_ENABLE_BIT);
 	glDisable(GL_LIGHTING);
+	glDisable(GL_DEPTH_TEST);
 
 	for (int i=0; i<nsel; i++)
 		if (vtag[i].bvis)
@@ -1016,6 +1018,8 @@ void CGLView::RenderTags()
 		}
 	
 	painter.end();
+
+	glPopAttrib();
 
 	// clean up
 	delete [] pbuf;

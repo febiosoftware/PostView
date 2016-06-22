@@ -13,7 +13,7 @@ public:
 
 public:
 	std::vector<int>	m_item;	// item list
-	bool	m_bsel[3];
+	bool	m_bsel[4];
 	bool	m_bclear;	// clear current selection
 
 	void accept();

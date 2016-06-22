@@ -15,6 +15,7 @@ class Ui::CDlgFind
 {
 public:
 	QRadioButton* pselNodes;
+	QRadioButton* pselEdges;
 	QRadioButton* pselFaces;
 	QRadioButton* pselElems;
 	QLineEdit* pitem;
@@ -27,10 +28,12 @@ public:
 
 		QVBoxLayout* pvg = new QVBoxLayout;
 		pselNodes = new QRadioButton("Select nodes");
+		pselEdges = new QRadioButton("Select edges");
 		pselFaces = new QRadioButton("Select faces");
 		pselElems = new QRadioButton("Select elements");
 		pselNodes->setChecked(true);
 		pvg->addWidget(pselNodes);
+		pvg->addWidget(pselEdges);
 		pvg->addWidget(pselFaces);
 		pvg->addWidget(pselElems);
 		pvb->addLayout(pvg);
@@ -63,15 +66,17 @@ CDlgFind::CDlgFind(QWidget* parent, int nsel) : QDialog(parent), ui(new Ui::CDlg
 	ui->setupUi(this);
 
 	if (nsel == 0) ui->pselNodes->setChecked(true);
-	if (nsel == 1) ui->pselFaces->setChecked(true);
-	if (nsel == 2) ui->pselElems->setChecked(true);
+	if (nsel == 1) ui->pselEdges->setChecked(true);
+	if (nsel == 2) ui->pselFaces->setChecked(true);
+	if (nsel == 3) ui->pselElems->setChecked(true);
 }
 
 void CDlgFind::accept()
 {
 	if (ui->pselNodes->isChecked()) m_bsel[0] = true; else m_bsel[0] = false;
-	if (ui->pselFaces->isChecked()) m_bsel[1] = true; else m_bsel[1] = false;
-	if (ui->pselElems->isChecked()) m_bsel[2] = true; else m_bsel[2] = false;
+	if (ui->pselEdges->isChecked()) m_bsel[1] = true; else m_bsel[1] = false;
+	if (ui->pselFaces->isChecked()) m_bsel[2] = true; else m_bsel[2] = false;
+	if (ui->pselElems->isChecked()) m_bsel[3] = true; else m_bsel[3] = false;
 
 	m_bclear = false;
 	if (ui->pclear->isChecked()) m_bclear = true;
