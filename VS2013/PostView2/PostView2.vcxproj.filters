@@ -48,19 +48,10 @@
     <ClInclude Include="..\..\PostView2\DlgTimeSettings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PostView2\DlgViewSettings.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PostView2\DlgWidgetProps.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\PostView2\Document.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\PostView2\FEKinemat.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PostView2\FileViewer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\PostView2\GLContext.h">
@@ -96,46 +87,13 @@
     <ClInclude Include="..\..\PostView2\GLVectorPlot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PostView2\GLView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\PostView2\GLWidget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\PostView2\GLWidgetManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PostView2\GraphWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PostView2\ImportLinesTool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PostView2\IntegrateWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PostView2\MainWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PostView2\MaterialPanel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\PostView2\MeasureAreaTool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PostView2\ModelViewer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PostView2\PlaneTool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PostView2\PlotMixTool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PostView2\PlotWidget.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PostView2\PointCongruencyTool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\PostView2\PointDistanceTool.h">
@@ -144,37 +102,13 @@
     <ClInclude Include="..\..\PostView2\PropertyList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PostView2\PropertyListForm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PostView2\PropertyListView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\PostView2\ShellThicknessTool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PostView2\SphereFitTool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PostView2\StatePanel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PostView2\StatsWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\PostView2\stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PostView2\SummaryWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\PostView2\targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PostView2\Tool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PostView2\ToolsPanel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\PostView2\TransformTool.h">
@@ -467,6 +401,72 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\PostView2\DlgExportXPLT.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\DlgViewSettings.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\DlgWidgetProps.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\FileViewer.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\GLView.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\GraphWindow.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\ImportLinesTool.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\IntegrateWindow.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\MainWindow.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\MaterialPanel.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\ModelViewer.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\PlaneTool.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\PlotMixTool.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\PlotWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\PointCongruencyTool.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\PropertyListForm.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\PropertyListView.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\SphereFitTool.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\StatePanel.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\StatsWindow.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\SummaryWindow.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\Tool.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\ToolsPanel.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
