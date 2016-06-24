@@ -143,7 +143,7 @@ void ModelData::SetData(CGLModel* po)
 	// materials
 	if (!m_mat.empty())
 	{
-		int N0 = m_mat.size();
+		int N0 = (int)m_mat.size();
 		int N1 = ps->Materials();
 		int N = (N0<N1?N0:N1);
 		for (int i=0; i<N; ++i) *ps->GetMaterial(i) = m_mat[i];
@@ -158,7 +158,7 @@ void ModelData::SetData(CGLModel* po)
 	}
 
 	// reload data fields
-	int ndata = m_data.size();
+	int ndata = (int)m_data.size();
 	FEDataManager* pDM = ps->GetDataManager();
 	FEDataFieldPtr pdf;
 	for (int i=0; i<ndata; ++i)
@@ -1335,7 +1335,7 @@ void CDocument::SelectFacesInRange(float fmin, float fmax, bool bsel)
 //-----------------------------------------------------------------------------
 void CDocument::UpdateViews()
 {
-	m_wnd->repaint();
+	m_wnd->RedrawGL();
 }
 
 //-----------------------------------------------------------------------------

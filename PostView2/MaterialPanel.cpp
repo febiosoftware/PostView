@@ -227,7 +227,7 @@ void CMaterialPanel::on_hideButton_clicked()
 	}
 
 	UpdateStates();
-	m_wnd->repaint();
+	m_wnd->RedrawGL();
 }
 
 void CMaterialPanel::on_showButton_clicked()
@@ -253,7 +253,7 @@ void CMaterialPanel::on_showButton_clicked()
 	}
 
 	UpdateStates();
-	m_wnd->repaint();
+	m_wnd->RedrawGL();
 }
 
 void CMaterialPanel::on_enableButton_clicked()
@@ -280,7 +280,7 @@ void CMaterialPanel::on_enableButton_clicked()
 	}
 
 	UpdateStates();
-	m_wnd->repaint();
+	m_wnd->RedrawGL();
 }
 
 void CMaterialPanel::on_disableButton_clicked()
@@ -307,7 +307,7 @@ void CMaterialPanel::on_disableButton_clicked()
 	}
 
 	UpdateStates();
-	m_wnd->repaint();
+	m_wnd->RedrawGL();
 }
 
 void CMaterialPanel::on_editName_editingFinished()

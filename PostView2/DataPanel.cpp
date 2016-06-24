@@ -492,7 +492,7 @@ void CDataPanel::on_FilterButton_clicked()
 				}
 
 				doc.UpdateFEModel(true);
-				m_wnd->repaint();
+				m_wnd->RedrawGL();
 			}
 		}
 	}

@@ -562,7 +562,7 @@ void CModelViewer::on_modelTree_itemDoubleClicked(QTreeWidgetItem* item, int col
 	{
 		CGView* view = m_wnd->GetDocument()->GetView();
 		view->SetCurrentKey(pkey);
-		m_wnd->repaint();
+		m_wnd->RedrawGL();
 	}
 }
 
@@ -585,7 +585,7 @@ void CModelViewer::on_deleteButton_clicked()
 		{
 			m_wnd->GetDocument()->DeleteObject(po);
 			Update(true);
-			m_wnd->repaint();
+			m_wnd->RedrawGL();
 		}
 		else QMessageBox::information(this, "PostView2", "Cannot delete this object");
 	}

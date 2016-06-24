@@ -358,7 +358,7 @@ void CDlgViewSettings::apply()
 	view.m_bconn = ui->m_select->m_bconnect;
 	view.m_ntagInfo = ui->m_select->m_ntagInfo;
 
-	m_pwnd->repaint();
+	m_pwnd->RedrawGL();
 }
 
 void CDlgViewSettings::accept()
