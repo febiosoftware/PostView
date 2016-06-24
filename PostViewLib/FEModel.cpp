@@ -128,11 +128,26 @@ void FEModel::InsertState(FEState *ps, float f)
 }
 
 //-----------------------------------------------------------------------------
-// NOTE: This will not work since d,s can point to node data and face data as well
-template <typename Type, Data_Format Fmt> void copy_data(FEMeshData& d, FEMeshData& s)
+template <typename Type> void copy_node_data(FEMeshData& d, FEMeshData& s)
+{
+	FENodeData<Type>& dt = dynamic_cast<FENodeData<Type>&>(d);
+	FENodeData<Type>& st = dynamic_cast<FENodeData<Type>&>(s);
+	dt.copy(st);
+}
+
+//-----------------------------------------------------------------------------
+template <typename Type, Data_Format Fmt> void copy_elem_data(FEMeshData& d, FEMeshData& s)
 {
 	FEElementData<Type, Fmt>& dt = dynamic_cast<FEElementData<Type, Fmt>&>(d);
 	FEElementData<Type, Fmt>& st = dynamic_cast<FEElementData<Type, Fmt>&>(s);
+	dt.copy(st);
+}
+
+//-----------------------------------------------------------------------------
+template <typename Type, Data_Format Fmt> void copy_face_data(FEMeshData& d, FEMeshData& s)
+{
+	FEFaceData<Type, Fmt>& dt = dynamic_cast<FEFaceData<Type, Fmt>&>(d);
+	FEFaceData<Type, Fmt>& st = dynamic_cast<FEFaceData<Type, Fmt>&>(s);
 	dt.copy(st);
 }
 
@@ -164,29 +179,69 @@ void FEModel::CopyDataField(FEDataField* pd, const char* sznewname)
 		FEState& state = *GetState(i);
 		FEMeshDataList& DL = state.m_Data;
 
-		switch (pd->Format())
+		if (IS_NODE_FIELD(pd->GetFieldID()))
 		{
-		case DATA_ITEM:
+			assert(pd->Format() == DATA_ITEM);
+			if      (pd->Type() == DATA_FLOAT ) copy_node_data<float >(DL[ndst], DL[nsrc]);
+			else if (pd->Type() == DATA_VEC3F ) copy_node_data<vec3f >(DL[ndst], DL[nsrc]);
+			else if (pd->Type() == DATA_MAT3FS) copy_node_data<mat3fs>(DL[ndst], DL[nsrc]);
+			else if (pd->Type() == DATA_MAT3FD) copy_node_data<mat3fd>(DL[ndst], DL[nsrc]);
+			else if (pd->Type() == DATA_MAT3F ) copy_node_data<mat3f >(DL[ndst], DL[nsrc]);
+			else if (pd->Type() == DATA_MAT3D ) copy_node_data<mat3d >(DL[ndst], DL[nsrc]);
+		}
+		else if (IS_FACE_FIELD(pd->GetFieldID()))
+		{
+			switch (pd->Format())
 			{
-				if      (pd->Type() == DATA_FLOAT ) copy_data<float , DATA_ITEM>(DL[ndst], DL[nsrc]);
-				else if (pd->Type() == DATA_VEC3F ) copy_data<vec3f , DATA_ITEM>(DL[ndst], DL[nsrc]);
-				else if (pd->Type() == DATA_MAT3FS) copy_data<mat3fs, DATA_ITEM>(DL[ndst], DL[nsrc]);
+			case DATA_ITEM:
+				{
+					if      (pd->Type() == DATA_FLOAT ) copy_face_data<float , DATA_ITEM>(DL[ndst], DL[nsrc]);
+					else if (pd->Type() == DATA_VEC3F ) copy_face_data<vec3f , DATA_ITEM>(DL[ndst], DL[nsrc]);
+					else if (pd->Type() == DATA_MAT3FS) copy_face_data<mat3fs, DATA_ITEM>(DL[ndst], DL[nsrc]);
+				}
+				break;
+			case DATA_NODE:
+				{
+					if      (pd->Type() == DATA_FLOAT ) copy_face_data<float , DATA_NODE>(DL[ndst], DL[nsrc]);
+					else if (pd->Type() == DATA_VEC3F ) copy_face_data<vec3f , DATA_NODE>(DL[ndst], DL[nsrc]);
+					else if (pd->Type() == DATA_MAT3FS) copy_face_data<mat3fs, DATA_NODE>(DL[ndst], DL[nsrc]);
+				}
+				break;
+			case DATA_COMP:
+				{
+					if      (pd->Type() == DATA_FLOAT ) copy_face_data<float , DATA_COMP>(DL[ndst], DL[nsrc]);
+					else if (pd->Type() == DATA_VEC3F ) copy_face_data<vec3f , DATA_COMP>(DL[ndst], DL[nsrc]);
+					else if (pd->Type() == DATA_MAT3FS) copy_face_data<mat3fs, DATA_COMP>(DL[ndst], DL[nsrc]);
+				}
+				break;
 			}
-			break;
-		case DATA_NODE:
+		}
+		else if (IS_ELEM_FIELD(pd->GetFieldID()))
+		{
+			switch (pd->Format())
 			{
-				if      (pd->Type() == DATA_FLOAT ) copy_data<float , DATA_NODE>(DL[ndst], DL[nsrc]);
-				else if (pd->Type() == DATA_VEC3F ) copy_data<vec3f , DATA_NODE>(DL[ndst], DL[nsrc]);
-				else if (pd->Type() == DATA_MAT3FS) copy_data<mat3fs, DATA_NODE>(DL[ndst], DL[nsrc]);
+			case DATA_ITEM:
+				{
+					if      (pd->Type() == DATA_FLOAT ) copy_elem_data<float , DATA_ITEM>(DL[ndst], DL[nsrc]);
+					else if (pd->Type() == DATA_VEC3F ) copy_elem_data<vec3f , DATA_ITEM>(DL[ndst], DL[nsrc]);
+					else if (pd->Type() == DATA_MAT3FS) copy_elem_data<mat3fs, DATA_ITEM>(DL[ndst], DL[nsrc]);
+				}
+				break;
+			case DATA_NODE:
+				{
+					if      (pd->Type() == DATA_FLOAT ) copy_elem_data<float , DATA_NODE>(DL[ndst], DL[nsrc]);
+					else if (pd->Type() == DATA_VEC3F ) copy_elem_data<vec3f , DATA_NODE>(DL[ndst], DL[nsrc]);
+					else if (pd->Type() == DATA_MAT3FS) copy_elem_data<mat3fs, DATA_NODE>(DL[ndst], DL[nsrc]);
+				}
+				break;
+			case DATA_COMP:
+				{
+					if      (pd->Type() == DATA_FLOAT ) copy_elem_data<float , DATA_COMP>(DL[ndst], DL[nsrc]);
+					else if (pd->Type() == DATA_VEC3F ) copy_elem_data<vec3f , DATA_COMP>(DL[ndst], DL[nsrc]);
+					else if (pd->Type() == DATA_MAT3FS) copy_elem_data<mat3fs, DATA_COMP>(DL[ndst], DL[nsrc]);
+				}
+				break;
 			}
-			break;
-		case DATA_COMP:
-			{
-				if      (pd->Type() == DATA_FLOAT ) copy_data<float , DATA_COMP>(DL[ndst], DL[nsrc]);
-				else if (pd->Type() == DATA_VEC3F ) copy_data<vec3f , DATA_COMP>(DL[ndst], DL[nsrc]);
-				else if (pd->Type() == DATA_MAT3FS) copy_data<mat3fs, DATA_COMP>(DL[ndst], DL[nsrc]);
-			}
-			break;
 		}
 	}
 }

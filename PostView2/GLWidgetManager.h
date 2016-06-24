@@ -20,7 +20,7 @@ public:
 
 	void AddWidget(GLWidget* pw);
 	void RemoveWidget(GLWidget* pw);
-	int Widgets() { return m_Widget.size(); }
+	int Widgets() { return (int)m_Widget.size(); }
 
 	GLWidget* operator [] (int i) { return m_Widget[i]; }
 

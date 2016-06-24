@@ -2,6 +2,7 @@
 #include "CommandPanel.h"
 #include <QDialog>
 #include <string>
+#include <vector>
 
 class CMainWindow;
 
@@ -58,6 +59,8 @@ class CDlgFilter : public QDialog
 {
 public:
 	CDlgFilter(QWidget* parent);
+
+	void setDataOperands(const std::vector<QString>& opNames);
 
 	void accept();
 

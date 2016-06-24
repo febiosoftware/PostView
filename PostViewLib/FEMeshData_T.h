@@ -43,6 +43,7 @@ public:
 	void eval(int n, T* pv) { (*pv) = m_data[n]; }
 	void copy(FENodeData<T>& d) { m_data = d.m_data; }
 
+	int size() const { return (int) m_data.size(); }
 	T& operator [] (int n) { return m_data[n]; }
 
 protected:

@@ -346,20 +346,48 @@ void DataArithmetic(FEModel& fem, int nfield, int nop, int noperand)
 	for (int n = 0; n<fem.GetStates(); ++n)
 	{
 		FEState& state = *fem.GetState(n);
-		if (IS_ELEM_FIELD(nfield)&&IS_ELEM_FIELD(noperand))
-		{
-			FEMeshData& d= state.m_Data[ndst];
-			FEMeshData& s= state.m_Data[nsrc];
-			Data_Format fmt = d.GetFormat();
-			if (d.GetFormat() != s.GetFormat())
-			{
-				return;
-			}
-			if (d.GetType() != s.GetType())
-			{
-				return;
-			}
+		FEMeshData& d = state.m_Data[ndst];
+		FEMeshData& s = state.m_Data[nsrc];
 
+		Data_Format fmt = d.GetFormat();
+		if (d.GetFormat() != s.GetFormat()) return;
+		if (d.GetType() != s.GetType()) return;
+
+
+		if (IS_NODE_FIELD(nfield) && IS_NODE_FIELD(noperand))
+		{
+			if (d.GetType() == DATA_FLOAT)
+			{
+				double(*f)(double, double) = 0;
+				if      (nop == 0) f = flt_add;
+				else if (nop == 1) f = flt_sub;
+				else if (nop == 2) f = flt_mul;
+				else if (nop == 3) f = flt_div;
+				else if (nop == 4) f = flt_err;
+				else
+				{
+					return;
+				}
+
+				FENodeData<float>* pd = dynamic_cast<FENodeData<float>*>(&d);
+				FENodeData<float>* ps = dynamic_cast<FENodeData<float>*>(&s);
+				int N = pd->size();
+				for (int i = 0; i<N; ++i) (*pd)[i] = f((*pd)[i], (*ps)[i]);
+			}
+			else if (d.GetType() == DATA_VEC3F)
+			{
+				FENodeData<vec3f>* pd = dynamic_cast<FENodeData<vec3f>*>(&d);
+				FENodeData<vec3f>* ps = dynamic_cast<FENodeData<vec3f>*>(&s);
+				int N = pd->size();
+				switch (nop)
+				{
+				case 0: for (int i = 0; i<N; ++i) (*pd)[i] += (*ps)[i]; break;
+				case 1: for (int i = 0; i<N; ++i) (*pd)[i] -= (*ps)[i]; break;
+				}
+			}
+		}
+		else if (IS_ELEM_FIELD(nfield) && IS_ELEM_FIELD(noperand))
+		{
 			switch (d.GetType())
 			{
 			case DATA_FLOAT:

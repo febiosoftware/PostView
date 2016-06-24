@@ -273,6 +273,12 @@ public:
 		pform->addRow("Operand:"  , poperand   = new QComboBox);
 		mathPage->setLayout(pform);
 
+		poperation->addItem("add");
+		poperation->addItem("subtract");
+		poperation->addItem("multiply");
+		poperation->addItem("divide");
+		poperation->addItem("least-square difference");
+
 		QStackedWidget* stack = new QStackedWidget;
 		stack->addWidget(scalePage );
 		stack->addWidget(smoothPage);
@@ -294,6 +300,18 @@ public:
 CDlgFilter::CDlgFilter(QWidget* parent) : QDialog(parent), ui(new Ui::CDlgFilter)
 {
 	ui->setupUi(this);
+
+	ui->pscale->setText(QString::number(1.0));
+	ui->ptheta->setText(QString::number(1.0));
+	ui->piters->setText(QString::number(1));
+}
+
+void CDlgFilter::setDataOperands(const std::vector<QString>& opNames)
+{
+	for (int i = 0; i<(int)opNames.size(); ++i)
+	{
+		ui->poperand->addItem(opNames[i]);
+	}
 }
 
 void CDlgFilter::accept()
@@ -308,7 +326,11 @@ void CDlgFilter::accept()
 	m_nop   = ui->poperation->currentIndex();
 	m_ndata = ui->poperand->currentIndex();
 
-	QDialog::accept();
+	if ((m_nflt == 2) && (m_ndata < 0))
+	{
+		QMessageBox::critical(this, "Data Filter", "Invalid operand selection");
+	}
+	else QDialog::accept();
 }
 
 //=================================================================================================
@@ -465,7 +487,25 @@ void CDataPanel::on_FilterButton_clicked()
 		FEDataField* pdf = *dm.DataField(nsel);
 		if (pdf)
 		{
+			// build a list of compatible data fields
+			vector<QString> dataNames;
+			vector<int> dataIds;
+			for (int i = 0; i<dm.DataFields(); ++i)
+			{
+				FEDataField* pdi = *dm.DataField(i);
+				if ((pdi != pdf)&&
+					(pdi->DataClass() == pdf->DataClass())&&
+					(pdi->Format() == pdf->Format())&&
+					(pdi->Type() == pdf->Type()))
+					{
+						dataNames.push_back(pdi->GetName());
+						dataIds.push_back(i);
+					}
+			}
+
 			CDlgFilter dlg(this);
+			dlg.setDataOperands(dataNames);
+
 			if (dlg.exec())
 			{
 				int nfield = pdf->GetFieldID();
@@ -484,7 +524,7 @@ void CDataPanel::on_FilterButton_clicked()
 				case 2:
 					{
 						FEDataFieldPtr p = fem.GetDataManager()->DataField(dlg.m_ndata);
-						DataArithmetic(fem, nfield, dlg.m_nop, (*p)->GetFieldID());
+						DataArithmetic(fem, nfield, dataIds[dlg.m_nop], (*p)->GetFieldID());
 					}
 					break;
 				default:
