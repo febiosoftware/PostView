@@ -145,7 +145,7 @@ public:
 		menuView->addAction(dock1->toggleViewAction());
 
 		QDockWidget* dock2 = new QDockWidget("Model", MainWindow); dock2->setObjectName("dockModel");
-        dock1->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
+        dock2->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
 		modelViewer = new CModelViewer(MainWindow, dock2);
 		dock2->setWidget(modelViewer);
 		menuView->addAction(dock2->toggleViewAction());
