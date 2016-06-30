@@ -101,6 +101,9 @@ public:
 		m_data.push_back(d); 
 	}
 
+	int size() const { return (int) m_data.size(); }
+	T& operator [] (int n) { return m_data[n]; }
+
 protected:
 	vector<T>		m_data;
 	vector<int>&	m_face;
@@ -132,6 +135,9 @@ public:
 		}
 	}
 
+	int size() const { return (int)m_data.size(); }
+	T& operator [] (int n) { return m_data[n]; }
+
 protected:
 	vector<T>		m_data;
 	vector<int>&	m_face;
@@ -160,6 +166,9 @@ public:
 		else m_face[n] = (int) m_data.size();
 		for (int i=0; i<m; ++i) m_data.push_back(d[i]);
 	}
+
+	int size() const { return (int)m_data.size(); }
+	T& operator [] (int n) { return m_data[n]; }
 
 protected:
 	vector<T>		m_data;
@@ -200,6 +209,9 @@ public:
 			if (m_face[4*f[i]+3] == -1) m_face[4*f[i]+3] = n0 + l[4*i+3]; else assert(m_face[4*f[i]+3] == n0 + l[4*i+3]);
 		}
 	}
+
+	int size() const { return (int)m_data.size(); }
+	T& operator [] (int n) { return m_data[n]; }
 
 protected:
 	vector<T>		m_data;
@@ -294,6 +306,9 @@ public:
 			}
 		}
 	}
+
+	int size() const { return (int) m_data.size(); }
+	T& operator [] (int n) { return m_data[n]; }
 
 protected:
 	vector<T>		m_data;

@@ -8,46 +8,48 @@
 void DataScale(FEModel& fem, int nfield, double scale)
 {
 	FEMeshBase& mesh = *fem.GetMesh();
-
+	float fscale = (float) scale;
 	// loop over all states
 	int NN = mesh.Nodes();
 	int ndata = FIELD_CODE(nfield);
 	for (int i = 0; i<fem.GetStates(); ++i)
 	{
 		FEState& s = *fem.GetState(i);
+		FEMeshData& d = s.m_Data[ndata];
+		Data_Type type = d.GetType();
+		Data_Format fmt = d.GetFormat();
 		if (IS_NODE_FIELD(nfield))
 		{
-			FEMeshData& d = s.m_Data[ndata];
-			switch (d.GetType())
+			switch (type)
 			{
 			case DATA_FLOAT:
 			{
 				FENodeData<float>* pf = dynamic_cast< FENodeData<float>* >(&d);
-				for (int n = 0; n<NN; ++n) { float& v = (*pf)[n]; v *= scale; }
+				for (int n = 0; n<NN; ++n) { float& v = (*pf)[n]; v *= fscale; }
 			}
 			break;
 			case DATA_VEC3F:
 			{
 				FENodeData<vec3f>* pv = dynamic_cast< FENodeData<vec3f>* >(&d);
-				for (int n = 0; n<NN; ++n) { vec3f& v = (*pv)[n]; v *= scale; }
+				for (int n = 0; n<NN; ++n) { vec3f& v = (*pv)[n]; v *= fscale; }
 			}
 			break;
 			case DATA_MAT3FS:
 			{
 				FENodeData<mat3fs>* pv = dynamic_cast< FENodeData<mat3fs>* >(&d);
-				for (int n = 0; n<NN; ++n) { mat3fs& v = (*pv)[n]; v *= scale; }
+				for (int n = 0; n<NN; ++n) { mat3fs& v = (*pv)[n]; v *= fscale; }
 			}
 			break;
 			case DATA_MAT3D:
 			{
 				FENodeData<mat3d>* pv = dynamic_cast< FENodeData<mat3d>* >(&d);
-				for (int n = 0; n<NN; ++n) { mat3d& v = (*pv)[n]; v *= scale; }
+				for (int n = 0; n<NN; ++n) { mat3d& v = (*pv)[n]; v *= fscale; }
 			}
 			break;
 			case DATA_MAT3F:
 			{
 				FENodeData<mat3f>* pv = dynamic_cast< FENodeData<mat3f>* >(&d);
-				for (int n = 0; n<NN; ++n) { mat3f& v = (*pv)[n]; v *= (float) scale; }
+				for (int n = 0; n<NN; ++n) { mat3f& v = (*pv)[n]; v *= fscale; }
 			}
 			break;
 			default:
@@ -56,9 +58,7 @@ void DataScale(FEModel& fem, int nfield, double scale)
 		}
 		else if (IS_ELEM_FIELD(nfield))
 		{
-			FEMeshData& d = s.m_Data[ndata];
-			Data_Format fmt = d.GetFormat();
-			switch (d.GetType())
+			switch (type)
 			{
 			case DATA_FLOAT:
 			{
@@ -66,19 +66,25 @@ void DataScale(FEModel& fem, int nfield, double scale)
 				{
 					FEElementData<float, DATA_NODE>* pf = dynamic_cast<FEElementData<float, DATA_NODE>*>(&d);
 					int N = pf->size();
-					for (int n = 0; n<N; ++n) (*pf)[n] *= (float)scale;
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
 				}
 				else if (fmt == DATA_ITEM)
 				{
 					FEElementData<float, DATA_ITEM>* pf = dynamic_cast<FEElementData<float, DATA_ITEM>*>(&d);
 					int N = pf->size();
-					for (int n = 0; n<N; ++n) (*pf)[n] *= (float)scale;
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
 				}
 				else if (fmt == DATA_COMP)
 				{
 					FEElementData<float, DATA_COMP>* pf = dynamic_cast<FEElementData<float, DATA_COMP>*>(&d);
 					int N = pf->size();
-					for (int n = 0; n<N; ++n) (*pf)[n] *= (float)scale;
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
+				}
+				else if (fmt == DATA_REGION)
+				{
+					FEElementData<float, DATA_REGION>* pf = dynamic_cast<FEElementData<float, DATA_REGION>*>(&d);
+					int N = pf->size();
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
 				}
 			}
 			break;
@@ -88,19 +94,25 @@ void DataScale(FEModel& fem, int nfield, double scale)
 				{
 					FEElementData<vec3f, DATA_NODE>* pf = dynamic_cast<FEElementData<vec3f, DATA_NODE>*>(&d);
 					int N = pf->size();
-					for (int n = 0; n<N; ++n) (*pf)[n] *= (float)scale;
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
 				}
 				else if (fmt == DATA_ITEM)
 				{
 					FEElementData<vec3f, DATA_ITEM>* pf = dynamic_cast<FEElementData<vec3f, DATA_ITEM>*>(&d);
 					int N = pf->size();
-					for (int n = 0; n<N; ++n) (*pf)[n] *= (float)scale;
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
 				}
 				else if (fmt == DATA_COMP)
 				{
 					FEElementData<vec3f, DATA_COMP>* pf = dynamic_cast<FEElementData<vec3f, DATA_COMP>*>(&d);
 					int N = pf->size();
-					for (int n = 0; n<N; ++n) (*pf)[n] *= (float)scale;
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
+				}
+				else if (fmt == DATA_REGION)
+				{
+					FEElementData<vec3f, DATA_REGION>* pf = dynamic_cast<FEElementData<vec3f, DATA_REGION>*>(&d);
+					int N = pf->size();
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
 				}
 			}
 			break;
@@ -110,19 +122,25 @@ void DataScale(FEModel& fem, int nfield, double scale)
 				{
 					FEElementData<mat3fs, DATA_NODE>* pf = dynamic_cast<FEElementData<mat3fs, DATA_NODE>*>(&d);
 					int N = pf->size();
-					for (int n = 0; n<N; ++n) (*pf)[n] *= (float)scale;
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
 				}
 				else if (fmt == DATA_ITEM)
 				{
 					FEElementData<mat3fs, DATA_ITEM>* pf = dynamic_cast<FEElementData<mat3fs, DATA_ITEM>*>(&d);
 					int N = pf->size();
-					for (int n = 0; n<N; ++n) (*pf)[n] *= (float)scale;
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
 				}
 				else if (fmt == DATA_COMP)
 				{
 					FEElementData<mat3fs, DATA_COMP>* pf = dynamic_cast<FEElementData<mat3fs, DATA_COMP>*>(&d);
 					int N = pf->size();
-					for (int n = 0; n<N; ++n) (*pf)[n] *= (float)scale;
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
+				}
+				else if (fmt == DATA_REGION)
+				{
+					FEElementData<mat3fs, DATA_REGION>* pf = dynamic_cast<FEElementData<mat3fs, DATA_REGION>*>(&d);
+					int N = pf->size();
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
 				}
 			}
 			break;
@@ -132,19 +150,25 @@ void DataScale(FEModel& fem, int nfield, double scale)
 				{
 					FEElementData<mat3d, DATA_NODE>* pf = dynamic_cast<FEElementData<mat3d, DATA_NODE>*>(&d);
 					int N = pf->size();
-					for (int n = 0; n<N; ++n) (*pf)[n] *= scale;
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
 				}
 				else if (fmt == DATA_ITEM)
 				{
 					FEElementData<mat3d, DATA_ITEM>* pf = dynamic_cast<FEElementData<mat3d, DATA_ITEM>*>(&d);
 					int N = pf->size();
-					for (int n = 0; n<N; ++n) (*pf)[n] *= scale;
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
 				}
 				else if (fmt == DATA_COMP)
 				{
 					FEElementData<mat3d, DATA_COMP>* pf = dynamic_cast<FEElementData<mat3d, DATA_COMP>*>(&d);
 					int N = pf->size();
-					for (int n = 0; n<N; ++n) (*pf)[n] *= scale;
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
+				}
+				else if (fmt == DATA_REGION)
+				{
+					FEElementData<mat3d, DATA_REGION>* pf = dynamic_cast<FEElementData<mat3d, DATA_REGION>*>(&d);
+					int N = pf->size();
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
 				}
 			}
 			break;
@@ -154,19 +178,174 @@ void DataScale(FEModel& fem, int nfield, double scale)
 				{
 					FEElementData<mat3f, DATA_NODE>* pf = dynamic_cast<FEElementData<mat3f, DATA_NODE>*>(&d);
 					int N = pf->size();
-					for (int n = 0; n<N; ++n) (*pf)[n] *= (float) scale;
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
 				}
 				else if (fmt == DATA_ITEM)
 				{
 					FEElementData<mat3f, DATA_ITEM>* pf = dynamic_cast<FEElementData<mat3f, DATA_ITEM>*>(&d);
 					int N = pf->size();
-					for (int n = 0; n<N; ++n) (*pf)[n] *= (float) scale;
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
 				}
 				else if (fmt == DATA_COMP)
 				{
 					FEElementData<mat3f, DATA_COMP>* pf = dynamic_cast<FEElementData<mat3f, DATA_COMP>*>(&d);
 					int N = pf->size();
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
+				}
+				else if (fmt == DATA_REGION)
+				{
+					FEElementData<mat3f, DATA_REGION>* pf = dynamic_cast<FEElementData<mat3f, DATA_REGION>*>(&d);
+					int N = pf->size();
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
+				}
+			}
+			break;
+			default:
+				return;
+				break;
+			}
+		}
+		else if (IS_FACE_FIELD(nfield))
+		{
+			switch (type)
+			{
+			case DATA_FLOAT:
+			{
+				if (fmt == DATA_NODE)
+				{
+					FEFaceData<float, DATA_NODE>* pf = dynamic_cast<FEFaceData<float, DATA_NODE>*>(&d);
+					int N = pf->size();
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
+				}
+				else if (fmt == DATA_ITEM)
+				{
+					FEFaceData<float, DATA_ITEM>* pf = dynamic_cast<FEFaceData<float, DATA_ITEM>*>(&d);
+					int N = pf->size();
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
+				}
+				else if (fmt == DATA_COMP)
+				{
+					FEFaceData<float, DATA_COMP>* pf = dynamic_cast<FEFaceData<float, DATA_COMP>*>(&d);
+					int N = pf->size();
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
+				}
+				else if (fmt == DATA_REGION)
+				{
+					FEFaceData<float, DATA_REGION>* pf = dynamic_cast<FEFaceData<float, DATA_REGION>*>(&d);
+					int N = pf->size();
+					for (int n=0; n<N; ++n) (*pf)[n] *= fscale;
+				}
+			}
+			break;
+			case DATA_VEC3F:
+			{
+				if (fmt == DATA_NODE)
+				{
+					FEFaceData<vec3f, DATA_NODE>* pf = dynamic_cast<FEFaceData<vec3f, DATA_NODE>*>(&d);
+					int N = pf->size();
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
+				}
+				else if (fmt == DATA_ITEM)
+				{
+					FEFaceData<vec3f, DATA_ITEM>* pf = dynamic_cast<FEFaceData<vec3f, DATA_ITEM>*>(&d);
+					int N = pf->size();
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
+				}
+				else if (fmt == DATA_COMP)
+				{
+					FEFaceData<vec3f, DATA_COMP>* pf = dynamic_cast<FEFaceData<vec3f, DATA_COMP>*>(&d);
+					int N = pf->size();
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
+				}
+				else if (fmt == DATA_REGION)
+				{
+					FEFaceData<vec3f, DATA_REGION>* pf = dynamic_cast<FEFaceData<vec3f, DATA_REGION>*>(&d);
+					int N = pf->size();
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
+				}
+			}
+			break;
+			case DATA_MAT3FS:
+			{
+				if (fmt == DATA_NODE)
+				{
+					FEFaceData<mat3fs, DATA_NODE>* pf = dynamic_cast<FEFaceData<mat3fs, DATA_NODE>*>(&d);
+					int N = pf->size();
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
+				}
+				else if (fmt == DATA_ITEM)
+				{
+					FEFaceData<mat3fs, DATA_ITEM>* pf = dynamic_cast<FEFaceData<mat3fs, DATA_ITEM>*>(&d);
+					int N = pf->size();
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
+				}
+				else if (fmt == DATA_COMP)
+				{
+					FEFaceData<mat3fs, DATA_COMP>* pf = dynamic_cast<FEFaceData<mat3fs, DATA_COMP>*>(&d);
+					int N = pf->size();
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
+				}
+				else if (fmt == DATA_REGION)
+				{
+					FEFaceData<mat3fs, DATA_REGION>* pf = dynamic_cast<FEFaceData<mat3fs, DATA_REGION>*>(&d);
+					int N = pf->size();
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
+				}
+			}
+			break;
+			case DATA_MAT3D:
+			{
+				if (fmt == DATA_NODE)
+				{
+					FEFaceData<mat3d, DATA_NODE>* pf = dynamic_cast<FEFaceData<mat3d, DATA_NODE>*>(&d);
+					int N = pf->size();
+					for (int n = 0; n<N; ++n) (*pf)[n] *= scale;
+				}
+				else if (fmt == DATA_ITEM)
+				{
+					FEFaceData<mat3d, DATA_ITEM>* pf = dynamic_cast<FEFaceData<mat3d, DATA_ITEM>*>(&d);
+					int N = pf->size();
+					for (int n = 0; n<N; ++n) (*pf)[n] *= scale;
+				}
+				else if (fmt == DATA_COMP)
+				{
+					FEFaceData<mat3d, DATA_COMP>* pf = dynamic_cast<FEFaceData<mat3d, DATA_COMP>*>(&d);
+					int N = pf->size();
+					for (int n = 0; n<N; ++n) (*pf)[n] *= scale;
+				}
+				else if (fmt == DATA_REGION)
+				{
+					FEFaceData<mat3d, DATA_REGION>* pf = dynamic_cast<FEFaceData<mat3d, DATA_REGION>*>(&d);
+					int N = pf->size();
+					for (int n = 0; n<N; ++n) (*pf)[n] *= scale;
+				}
+			}
+			break;
+			case DATA_MAT3F:
+			{
+				if (fmt == DATA_NODE)
+				{
+					FEFaceData<mat3f, DATA_NODE>* pf = dynamic_cast<FEFaceData<mat3f, DATA_NODE>*>(&d);
+					int N = pf->size();
 					for (int n = 0; n<N; ++n) (*pf)[n] *= (float) scale;
+				}
+				else if (fmt == DATA_ITEM)
+				{
+					FEFaceData<mat3f, DATA_ITEM>* pf = dynamic_cast<FEFaceData<mat3f, DATA_ITEM>*>(&d);
+					int N = pf->size();
+					for (int n = 0; n<N; ++n) (*pf)[n] *= (float) scale;
+				}
+				else if (fmt == DATA_COMP)
+				{
+					FEFaceData<mat3f, DATA_COMP>* pf = dynamic_cast<FEFaceData<mat3f, DATA_COMP>*>(&d);
+					int N = pf->size();
+					for (int n = 0; n<N; ++n) (*pf)[n] *= (float) scale;
+				}
+				else if (fmt == DATA_REGION)
+				{
+					FEFaceData<mat3f, DATA_REGION>* pf = dynamic_cast<FEFaceData<mat3f, DATA_REGION>*>(&d);
+					int N = pf->size();
+					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
 				}
 			}
 			break;
