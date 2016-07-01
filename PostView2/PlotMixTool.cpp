@@ -11,6 +11,7 @@
 #include "Document.h"
 #include "CIntInput.h"
 #include "FEKinemat.h"
+#include "MainWindow.h"
 
 class CPlotMixToolUI : public QWidget
 {
@@ -202,6 +203,7 @@ QWidget* CKinematTool::createUi()
 // activate the tool
 void CKinematTool::activate(CDocument* pdoc)
 {
+	m_doc = pdoc;
 }
 
 // deactive the tool
@@ -243,5 +245,9 @@ void CKinematTool::OnApply()
 	{
 		QMessageBox::critical(0, "Kinemat", "Failed applying Kinemat tool");
 	}
-	updateUi();
+
+	m_doc->ZoomExtents();
+	CMainWindow* pwnd = m_doc->GetWindow();
+	pwnd->UpdateMainToolbar();
+	pwnd->UpdateUi(true);
 }

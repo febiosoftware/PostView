@@ -282,6 +282,9 @@ public:
 	// reset the view
 	void ResetView();
 
+	// reset camera
+	void ZoomExtents(bool bhit = false);
+
 	// --- S E L E C T I O N ---
 
 	// get selection mode
@@ -329,6 +332,8 @@ public:
 
 	bool AddNodeDataFromFile(const char* szfile, const char* szname, int ntype);
 	bool AddElemDataFromFile(const char* szfile, const char* szname, int ntype);
+
+	CMainWindow* GetWindow() { return m_wnd; }
 
 protected:
 	void ClearPlots();

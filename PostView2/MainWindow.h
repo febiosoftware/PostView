@@ -36,7 +36,7 @@ public:
 	// this is called after a new model is loaded 
 	// or an existing model is reloaded
 	// and also after a mouse release event
-	void UpdateUi(bool breset);
+	void UpdateUi(bool breset, QWidget* psender = 0);
 
 	// Build the context menu
 	// Called when user right-clicks on OpenGL view

@@ -339,6 +339,19 @@ void CDocument::ResetView()
 }
 
 //-----------------------------------------------------------------------------
+void CDocument::ZoomExtents(bool bhit)
+{
+	BOUNDINGBOX box = GetExtentsBox();
+	if (box.IsValid())
+	{
+		CGLCamera& cam = m_view.GetCamera();
+		cam.SetTarget(box.Center());
+		cam.SetTargetDistance(3.f*box.Radius());
+		if (bhit) cam.Update(bhit);
+	}
+}
+
+//-----------------------------------------------------------------------------
 bool CDocument::LoadFEModel(FEFileReader* pimp, const char* szfile, bool bup)
 {
 	const int MAXLINE = 512;

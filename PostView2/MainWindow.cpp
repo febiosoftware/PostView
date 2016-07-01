@@ -83,14 +83,14 @@ CGLView* CMainWindow::GetGLView()
 	return ui->glview;
 }
 
-void CMainWindow::UpdateUi(bool breset)
+void CMainWindow::UpdateUi(bool breset, QWidget* psender)
 {
 	// update the command panels
-	ui->modelViewer->Update(breset);
-	ui->matPanel->Update(breset);
-	ui->dataPanel->Update(breset);
-	ui->statePanel->Update(breset);
-	ui->toolsPanel->Update(breset);
+	if (psender != ui->modelViewer) ui->modelViewer->Update(breset);
+	if (psender != ui->matPanel   ) ui->matPanel->Update(breset);
+	if (psender != ui->dataPanel  ) ui->dataPanel->Update(breset);
+	if (psender != ui->statePanel ) ui->statePanel->Update(breset);
+	if (psender != ui->toolsPanel ) ui->toolsPanel->Update(breset);
 
 	// update all graph windows
 	UpdateGraphs();
@@ -1251,6 +1251,7 @@ void CMainWindow::UpdatePlayToolbar(bool breset)
 		};
 		int n = pfem->currentTime();
 		ui->pspin->setValue(n);
+		ui->playToolBar->setEnabled(true);
 	}
 }
 

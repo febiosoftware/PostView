@@ -2782,15 +2782,8 @@ void CGLView::PositionCam()
 void CGLView::OnZoomExtents()
 {
 	CDocument* pdoc = GetDocument();
-	BOUNDINGBOX box = pdoc->GetExtentsBox();
-	if (box.IsValid())
-	{
-		CGLCamera* pcam = &GetCamera();
-		pcam->SetTarget(box.Center());
-		pcam->SetTargetDistance(3.f*box.Radius());
-
-		repaint();
-	}
+	pdoc->ZoomExtents();
+	repaint();
 }
 
 void CGLView::OnZoomSelect()
