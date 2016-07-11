@@ -171,6 +171,8 @@ public:
 	void FaceNodeNormals  (FEFace& f, vec3f* n);
 	void FaceNodeTexCoords(FEFace& f, float* t, bool bnode);
 
+	void AutoSmooth();
+
 protected:
 	virtual void CreateElements(int elems) = 0;
 
@@ -178,7 +180,6 @@ protected:
 	void BuildFaces();
 	void FindFaceNeighbors();
 	void FindNeighbours();
-	void AutoSmooth();
 	void UpdateNodes();
 	void BuildEdges();
 	void UpdateDomains();

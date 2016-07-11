@@ -50,7 +50,7 @@ public:
 		case 6: v = m_fem->m_bsmooth; break;
 		case 7: v = m_fem->m_bShell2Hex; break;
 		case 8: v = m_fem->m_nshellref; break;
-//		case 9: v = m_fem->m_
+		case 9: v = m_fem->GetMesh()->GetSmoothingAngle(); break;
 		}
 		return v;
 	}
@@ -68,6 +68,10 @@ public:
 		case 6: m_fem->m_bsmooth  = v.toBool(); break;
 		case 7: m_fem->m_bShell2Hex = v.toBool(); break;
 		case 8: m_fem->m_nshellref = v.toInt(); break;
+		case 9: 
+			m_fem->GetMesh()->SetSmoothingAngle(v.toDouble()); 
+			m_fem->GetMesh()->AutoSmooth();
+			break;
 		}
 	}
 	
