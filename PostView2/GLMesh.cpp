@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "GLMesh.h"
 #include <stack>
+#include <cstring>
 using namespace std;
 
 //////////////////////////////////////////////////////////////////////

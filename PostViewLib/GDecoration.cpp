@@ -6,6 +6,9 @@
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
 #endif
+#ifdef LINUX
+#include <GL/gl.h>
+#endif
 
 void GPointDecoration::render()
 {

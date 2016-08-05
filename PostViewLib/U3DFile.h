@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <cstdint>
 using namespace std;
 
 #ifdef WIN32
@@ -12,6 +13,14 @@ typedef __int64 int64;
 typedef unsigned __int64 uint64;
 #endif
 #ifdef __APPLE__
+typedef unsigned char byte;
+typedef uint16_t uint16;
+typedef int32_t int32;
+typedef uint32_t uint32;
+typedef int64_t int64;
+typedef uint64_t uint64;
+#endif
+#ifdef LINUX
 typedef unsigned char byte;
 typedef uint16_t uint16;
 typedef int32_t int32;

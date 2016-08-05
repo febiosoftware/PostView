@@ -7,6 +7,9 @@
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
 #endif
+#ifdef LINUX
+#include <GL/gl.h>
+#endif
 
 GLCOLOR pal[MAX_PAL_COLORS] = {
 	GLCOLOR(128,255,  0),

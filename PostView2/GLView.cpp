@@ -1,5 +1,5 @@
 #include "GLView.h"
-#include <gl/GLU.h>
+#include <GL/glu.h>
 #include "MainWindow.h"
 #include "Document.h"
 #include "GLWidget.h"

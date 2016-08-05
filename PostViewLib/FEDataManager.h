@@ -3,6 +3,7 @@
 #include "FEMeshData.h"
 #include <vector>
 #include <typeinfo>
+#include <string>
 
 using namespace std;
 

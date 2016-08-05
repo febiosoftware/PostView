@@ -1,6 +1,7 @@
 #pragma once
 #include <PostViewLib/ColorMap.h>
 #include <PostViewLib/math3d.h>
+#include <GL/gl.h>
 
 // rendering flags
 #define GLX_FACES	0x01

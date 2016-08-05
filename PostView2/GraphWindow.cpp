@@ -1,8 +1,8 @@
 #include "GraphWindow.h"
 #include "PlotWidget.h"
 #include "DataFieldSelector.h"
-#include <QToolbar>
-#include <QStackedWidget.h>
+#include <QToolBar>
+#include <qstackedwidget.h>
 #include <QLabel>
 #include <QAction>
 #include <QFileDialog>

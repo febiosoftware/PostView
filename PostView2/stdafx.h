@@ -8,10 +8,10 @@
 #include "targetver.h"
 
 #include <stdio.h>
-#include <tchar.h>
 
 #ifdef WIN32
 	#include <Windows.h>
+	#include <tchar.h>
 	#include <gl/GL.h>
 	#include <gl/GLU.h>
 #endif

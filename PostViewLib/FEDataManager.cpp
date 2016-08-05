@@ -3,6 +3,7 @@
 #include "FEModel.h"
 #include "constants.h"
 #include <string>
+#include <cstdio>
 
 void FEDataField::SetName(const char* szname) { strcpy(m_szname, szname); }
 

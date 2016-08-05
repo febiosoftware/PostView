@@ -11,6 +11,9 @@
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
 #endif
+#ifdef LINUX
+#include <GL/gl.h>
+#endif
 
 #ifdef _DEBUG
 #undef THIS_FILE

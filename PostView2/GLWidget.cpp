@@ -1,7 +1,11 @@
 #include "stdafx.h"
+
+#ifdef WIN32
 #include <Windows.h>
-#include <gl/GL.h>
-#include <gl/GLU.h>
+#endif
+
+#include <GL/gl.h>
+#include <GL/glu.h>
 #include "GLWidget.h"
 #include "Document.h"
 #include "PostViewLib/GLObject.h"

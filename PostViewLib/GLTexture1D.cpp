@@ -10,6 +10,9 @@
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
 #endif
+#ifdef LINUX
+#include <GL/gl.h>
+#endif
 #include "GLTexture1D.h"
 
 GLTexture1D::GLTexture1D()
