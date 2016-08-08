@@ -50,6 +50,7 @@ public:
 	void SetPropertyValue(int i, const QVariant& v)
 	{
 		vec3f n = m_slice->GetPlaneNormal();
+		vec3f plane;
 		switch (i)
 		{
 		case 0: m_slice->SetEvalField(v.toInt()); break;
@@ -59,9 +60,12 @@ public:
 		case 4: m_slice->SetRangeType(v.toInt()); break;
 		case 5: m_slice->SetUserRangeMax(v.toFloat()); break;
 		case 6: m_slice->SetUserRangeMin(v.toFloat()); break;
-		case 7: m_slice->SetPlaneNormal(vec3f(v.toFloat(), n.y, n.z)); break;
-		case 8: m_slice->SetPlaneNormal(vec3f(n.x, v.toFloat(), n.z)); break;
-		case 9: m_slice->SetPlaneNormal(vec3f(n.x, n.y, v.toFloat())); break;
+		case 7: plane = vec3f(v.toFloat(), n.y, n.z);
+			m_slice->SetPlaneNormal(plane); break;
+		case 8: plane = vec3f(n.x, v.toFloat(), n.z);
+			m_slice->SetPlaneNormal(plane); break;
+		case 9: plane = vec3f(n.x, n.y, v.toFloat());
+			m_slice->SetPlaneNormal(plane); break;
 		}
 	}
 private:

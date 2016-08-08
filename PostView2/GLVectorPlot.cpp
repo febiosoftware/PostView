@@ -3,9 +3,13 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+
+#ifdef WIN32
 #include <Windows.h>
-#include <gl/GL.h>
-#include <gl/GLU.h>
+#endif
+
+#include <GL/gl.h>
+#include <GL/glu.h>
 #include "GLVectorPlot.h"
 #include "PostViewLib/ColorMap.h"
 #include "PostViewLib/constants.h"

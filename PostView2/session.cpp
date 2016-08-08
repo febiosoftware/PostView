@@ -66,7 +66,7 @@ bool CDocument::SaveSession(const char* szfile)
 		FEModel* pfem = pmdl->GetFEModel();
 		xml.add_branch(e);
 		{
-			int ntime = GetCurrentTime();
+			int ntime = currentTime();
 			xml.add_leaf("state", ntime);
 
 			xml.add_leaf("show_ghost", pmdl->m_bghost);
@@ -309,7 +309,7 @@ bool CDocument::OpenSession(const char* szfile)
 			// try to load the model
 			if (LoadFEModel(pimp, szfilename) == false) { fclose(fp); return false; }
 
-			int ntime = GetCurrentTime();
+			int ntime = currentTime();
 
 			CGLModel* pmdl = m_pGLModel;
 			FEMeshBase* pm = pmdl->GetMesh();
@@ -501,7 +501,7 @@ bool CDocument::OpenSession(const char* szfile)
 			}
 			while (!tag.isend());
 
-			if (ntime != GetCurrentTime()) SetCurrentTime(ntime);
+			if (ntime != currentTime()) SetCurrentTime(ntime);
 		}
 		else if (tag == "Settings")
 		{
