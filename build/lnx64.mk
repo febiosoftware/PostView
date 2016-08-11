@@ -33,4 +33,4 @@ FFMPEG_LIB = -L$(FFMPEG_DIR)/lib64 -lavcodec -lavdevice -lavfilter -lswresample 
 
 
 INC = -I$(PSTDIR) $(TETINC) $(GLEW_INC) $(QT_INC)
-LIBS = $(GLEW_LIB) $(QT_LIB) $(LINKX11) $(TETLIB) -lz -lm -lpthread -Wl,-rpath=XORIGIN/lib
+LIBS = $(GLEW_LIB) $(QT_LIB) $(LINKX11) $(TETLIB) -lz -lm -lpthread -Wl,-rpath='$$ORIGIN/../lib'
