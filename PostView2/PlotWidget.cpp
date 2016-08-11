@@ -849,11 +849,13 @@ bool CPlotWidget::Save(const QString& fileName)
 	CPlotData& plot = getPlotData(0);
 	for (int i=0; i<plot.size(); i++)
 	{
-		fprintf(fp, "%16.9g ", plot.Point(i).x());
+		double fx = plot.Point(i).x();
+		fprintf(fp, "%16.9lg ", fx);
 		for (int j=0; j<plots(); j++)
 		{
 			CPlotData& plotj = getPlotData(j);
-			fprintf(fp,"%16.9g ", plotj.Point(j).y());
+			double fy = plotj.Point(i).y();
+			fprintf(fp,"%16.9lg ", fy);
 		}
 		fprintf(fp,"\n");
 	}
