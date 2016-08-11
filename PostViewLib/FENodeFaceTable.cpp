@@ -27,6 +27,11 @@ void FENodeFaceTable::Build()
 	}
 }
 
+//-----------------------------------------------------------------------------
+// This function will fail if the facet could not be found. 
+// The most likely cause would be if the facet is an interal fact, since PostView does not
+// process internal facets (e.g. facets between two materials).
+// \todo perhaps I should modify PostView so that it stores internal facets as well.
 int FENodeFaceTable::FindFace(int inode, int n[9], int m)
 {
 	FEFace ft;
@@ -39,6 +44,8 @@ int FENodeFaceTable::FindFace(int inode, int n[9], int m)
 	case 7: ft.m_ntype = FACE_TRI7 ; break;
 	case 8: ft.m_ntype = FACE_QUAD8; break;
 	case 9: ft.m_ntype = FACE_QUAD9; break;
+	default:
+		assert(false);
 	};
 	
 	vector<int>& ni = m_NFT[inode];

@@ -1756,9 +1756,12 @@ bool XpltReader::ReadFaceData_MULT(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 	for (int i=0; i<NF; ++i)
 	{
 		FACE& f = s.face[i];
-		FEFace& fm = m.Face(f.nid);
-		for (int j=0; j<f.nn; ++j) tag[f.node[j]] = j;
-		for (int j=0; j<f.nn; ++j) l[i][j] = tag[fm.node[j]];
+		if (f.nid >= 0)
+		{
+			FEFace& fm = m.Face(f.nid);
+			for (int j=0; j<f.nn; ++j) tag[f.node[j]] = j;
+			for (int j=0; j<f.nn; ++j) l[i][j] = tag[fm.node[j]];
+		}
 	}
 
 	switch (ntype)
@@ -1774,7 +1777,7 @@ bool XpltReader::ReadFaceData_MULT(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 				FACE& f = s.face[i];
 				vector<int>& li = l[i];
 				for (int j=0; j<f.nn; ++j) v[j] = a[NFM*i + li[j]];
-				df.add(f.nid, v, f.nn);
+				if (f.nid >= 0) df.add(f.nid, v, f.nn);
 			}
 		}
 		break;
@@ -1789,7 +1792,7 @@ bool XpltReader::ReadFaceData_MULT(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 				FACE& f = s.face[i];
 				vector<int>& li = l[i];
 				for (int j=0; j<f.nn; ++j) v[j] = a[NFM*i + li[j]];
-				df.add(f.nid, v, f.nn);
+				if (f.nid >= 0) df.add(f.nid, v, f.nn);
 			}
 		}
 		break;
@@ -1804,7 +1807,7 @@ bool XpltReader::ReadFaceData_MULT(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 				FACE& f = s.face[i];
 				vector<int>& li = l[i];
 				for (int j=0; j<f.nn; ++j) v[j] = a[NFM*i + li[j]];
-				df.add(f.nid, v, f.nn);
+				if (f.nid >= 0) df.add(f.nid, v, f.nn);
 			}
 		}
 		break;
@@ -1819,7 +1822,7 @@ bool XpltReader::ReadFaceData_MULT(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 				FACE& f = s.face[i];
 				vector<int>& li = l[i];
 				for (int j=0; j<f.nn; ++j) v[j] = a[NFM*i + li[j]];
-				df.add(f.nid, v, f.nn);
+				if (f.nid >= 0) df.add(f.nid, v, f.nn);
 			}
 		}
 		break;
@@ -1834,7 +1837,7 @@ bool XpltReader::ReadFaceData_MULT(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 				FACE& f = s.face[i];
 				vector<int>& li = l[i];
 				for (int j=0; j<f.nn; ++j) v[j] = a[NFM*i + li[j]];
-				df.add(f.nid, v, f.nn);
+				if (f.nid >= 0) df.add(f.nid, v, f.nn);
 			}
 		}
 		break;	
@@ -1849,7 +1852,7 @@ bool XpltReader::ReadFaceData_MULT(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 				FACE& f = s.face[i];
 				vector<int>& li = l[i];
 				for (int j=0; j<f.nn; ++j) v[j] = a[NFM*i + li[j]];
-				df.add(f.nid, v, f.nn);
+				if (f.nid >= 0) df.add(f.nid, v, f.nn);
 			}
 		}
         break;
