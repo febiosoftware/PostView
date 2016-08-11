@@ -17,7 +17,7 @@ GLEW_LIB = -L$(GLEW_DIR)/lib -lGLEW
 
 QT_DIR = /home/sci/rawlins/Applications/Qt/Qt5.6.1/5.6/gcc_64
 QT_INC = -I$(QT_DIR)/include -I$(QT_DIR)/include/QtGui -I$(QT_DIR)/include/QtWidgets
-QT_LIB = -L$(QT_DIR)/lib -lQt5Core -lQt5Gui -lQt5Widgets
+QT_LIB = -Wl,-rpath-link=$(QT_DIR)/lib -lQt5Core -lQt5Gui -lQt5Widgets
 
 #LINKX11 = -L/usr/lib64 -lGLU -lGL -lXext -lX11 -lXft -lfontconfig -lXinerama -lXfixes -lXcursor -lXrender -ldl
 LINKX11 = -L/usr/lib64 -lGLU -lGL
@@ -33,4 +33,4 @@ FFMPEG_LIB = -L$(FFMPEG_DIR)/lib64 -lavcodec -lavdevice -lavfilter -lswresample 
 
 
 INC = -I$(PSTDIR) $(TETINC) $(GLEW_INC) $(QT_INC)
-LIBS = $(LINKX11) $(TETLIB) $(GLEW_LIB) $(QT_LIB) -lz -lm -lpthread
+LIBS = $(GLEW_LIB) $(QT_LIB) $(LINKX11) $(TETLIB) -lz -lm -lpthread -Wl,-rpath=XORIGIN/lib
