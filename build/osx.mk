@@ -1,5 +1,5 @@
 
-CC = clang
+CC = icpc
 
 FLG = -O3 -fPIC
 

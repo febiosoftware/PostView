@@ -1,13 +1,9 @@
 #include "stdafx.h"
 #include "ColorMap.h"
-#ifdef WIN32
-#include <Windows.h>
-#include <gl/GL.h>
-#endif
+
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
-#endif
-#ifdef LINUX
+#else
 #include <GL/gl.h>
 #endif
 

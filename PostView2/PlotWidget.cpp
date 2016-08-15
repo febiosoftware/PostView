@@ -9,6 +9,7 @@
 #include <QApplication>
 #include <QClipboard>
 #include <assert.h>
+#include <math.h>
 
 class CPalette
 {

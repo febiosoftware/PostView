@@ -1,7 +1,12 @@
 #pragma once
 #include <PostViewLib/ColorMap.h>
 #include <PostViewLib/math3d.h>
+
+#ifdef __APPLE__
+#include <OpenGL/gl.h>
+#else
 #include <GL/gl.h>
+#endif
 
 // rendering flags
 #define GLX_FACES	0x01

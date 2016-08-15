@@ -1,5 +1,10 @@
-#include "GLView.h"
+#ifdef __APPLE__
+#include <OpenGL/glu.h>
+#else
 #include <GL/glu.h>
+#endif
+
+#include "GLView.h"
 #include "MainWindow.h"
 #include "Document.h"
 #include "GLWidget.h"

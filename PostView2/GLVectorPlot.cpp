@@ -8,8 +8,14 @@
 #include <Windows.h>
 #endif
 
+#ifdef __APPLE__
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#else
 #include <GL/gl.h>
 #include <GL/glu.h>
+#endif
+
 #include "GLVectorPlot.h"
 #include "PostViewLib/ColorMap.h"
 #include "PostViewLib/constants.h"
