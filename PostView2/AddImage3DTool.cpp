@@ -13,8 +13,9 @@
 class CAddImage3DToolUI : public QWidget
 {
 public:
-	CIntInput *px, *py, *pz;
-	CFloatInput *pw, *ph, *pd;
+	CIntInput *pnx, *pny, *pnz;
+	CFloatInput *pxmin, *pymin, *pzmin;
+	CFloatInput *pxmax, *pymax, *pzmax;
 	QLineEdit* pfile;
 
 public:
@@ -33,13 +34,18 @@ public:
 		pv->addLayout(phbox);
 
 		QGridLayout* grid = new QGridLayout;
-		grid->addWidget(pl = new QLabel("X-pixels"), 0, 0); grid->addWidget(px = new CIntInput, 0, 1); pl->setBuddy(px); px->setFixedWidth(70);
-		grid->addWidget(pl = new QLabel("Y-pixels"), 1, 0); grid->addWidget(py = new CIntInput, 1, 1); pl->setBuddy(py); py->setFixedWidth(70);
-		grid->addWidget(pl = new QLabel("Z-pixels"), 2, 0); grid->addWidget(pz = new CIntInput, 2, 1); pl->setBuddy(pz); pz->setFixedWidth(70);
+		grid->addWidget(pl = new QLabel("X-pixels"), 0, 0); grid->addWidget(pnx = new CIntInput, 0, 1); pl->setBuddy(pnx); pnx->setFixedWidth(70);
+		grid->addWidget(pl = new QLabel("Y-pixels"), 1, 0); grid->addWidget(pny = new CIntInput, 1, 1); pl->setBuddy(pny); pny->setFixedWidth(70);
+		grid->addWidget(pl = new QLabel("Z-pixels"), 2, 0); grid->addWidget(pnz = new CIntInput, 2, 1); pl->setBuddy(pnz); pnz->setFixedWidth(70);
 
-		grid->addWidget(pl = new QLabel("width" ), 0, 2); grid->addWidget(pw = new CFloatInput, 0, 3); pl->setBuddy(pw); pw->setFixedWidth(70);
-		grid->addWidget(pl = new QLabel("height"), 1, 2); grid->addWidget(ph = new CFloatInput, 1, 3); pl->setBuddy(ph); ph->setFixedWidth(70);
-		grid->addWidget(pl = new QLabel("depth" ), 2, 2); grid->addWidget(pd = new CFloatInput, 2, 3); pl->setBuddy(pd); pd->setFixedWidth(70);
+		grid->addWidget(pl = new QLabel("x-min"), 3, 0); grid->addWidget(pxmin = new CFloatInput, 3, 1); pl->setBuddy(pxmin); pxmin->setFixedWidth(70);
+		grid->addWidget(pl = new QLabel("y-min"), 4, 0); grid->addWidget(pymin = new CFloatInput, 4, 1); pl->setBuddy(pymin); pymin->setFixedWidth(70);
+		grid->addWidget(pl = new QLabel("z-min"), 5, 0); grid->addWidget(pzmin = new CFloatInput, 5, 1); pl->setBuddy(pzmin); pzmin->setFixedWidth(70);
+
+		grid->addWidget(pl = new QLabel("x-max"), 3, 2); grid->addWidget(pxmax = new CFloatInput, 3, 3); pl->setBuddy(pxmax); pxmax->setFixedWidth(70);
+		grid->addWidget(pl = new QLabel("y-max"), 4, 2); grid->addWidget(pymax = new CFloatInput, 4, 3); pl->setBuddy(pymax); pymax->setFixedWidth(70);
+		grid->addWidget(pl = new QLabel("z-max"), 5, 2); grid->addWidget(pzmax = new CFloatInput, 5, 3); pl->setBuddy(pzmax); pzmax->setFixedWidth(70);
+
 		pv->addLayout(grid);
 
 		QPushButton* apply = new QPushButton("Load");
@@ -90,9 +96,9 @@ void CAddImage3DTool::OnApply()
 {
 	if (m_doc && m_doc->IsValid())
 	{
-		int nx = ui->px->value();
-		int ny = ui->py->value();
-		int nz = ui->pz->value();
+		int nx = ui->pnx->value();
+		int ny = ui->pny->value();
+		int nz = ui->pnz->value();
 
 		if ((nx <= 0) || (ny <= 0) || (nz <= 0))
 		{
@@ -100,13 +106,21 @@ void CAddImage3DTool::OnApply()
 			return;
 		}
 
-		double w = ui->pw->value();
-		double h = ui->ph->value();
-		double d = ui->pd->value();
+		double xmin = ui->pxmin->value();
+		double ymin = ui->pymin->value();
+		double zmin = ui->pzmin->value();
+
+		double xmax = ui->pxmax->value();
+		double ymax = ui->pymax->value();
+		double zmax = ui->pzmax->value();
+
+		double w = xmax - xmin;
+		double h = ymax - ymin;
+		double d = zmax - zmin;
 
 		if ((w <= 0.0) || (h <= 0.0) || (d <= 0.0))
 		{
-			QMessageBox::critical(0, "Add 3D Image tool", "Invalid image size");
+			QMessageBox::critical(0, "Add 3D Image tool", "Invalid image dimensions");
 			return;
 		}
 
@@ -127,7 +141,7 @@ void CAddImage3DTool::OnApply()
 			return;
 		}
 
-		m_doc->Add3DImage(pimg, w, h, d);
+		m_doc->Add3DImage(pimg, xmin, ymin, zmin, xmax, ymax, zmax);
 		updateUi();
 	}
 }

@@ -17,6 +17,8 @@
 #include "GLSlicePLot.h"
 #include "GLIsoSurfacePlot.h"
 #include "GLLinePlot.h"
+#include <PostViewLib/3DImage.h>
+#include <PostViewLib/VolRender.h>
 
 //-----------------------------------------------------------------------------
 class CModelProps : public CPropertyList
@@ -362,6 +364,73 @@ private:
 };
 
 //-----------------------------------------------------------------------------
+class CVolRenderProps : public CPropertyList
+{
+public:
+	CVolRenderProps(CMainWindow* wnd, CVolRender* vr) : m_wnd(wnd), m_vr(vr)
+	{
+		addProperty("alpha scale", CProperty::Float)->setFloatRange(0.0, 1.0);
+		addProperty("min intensity", CProperty::Int)->setIntRange(0, 255);
+		addProperty("max intensity", CProperty::Int)->setIntRange(0, 255);
+		addProperty("min alpha", CProperty::Int)->setIntRange(0, 255);
+		addProperty("max alpha", CProperty::Int)->setIntRange(0, 255);
+		addProperty("Amin", CProperty::Int)->setIntRange(0, 255);
+		addProperty("Amax", CProperty::Int)->setIntRange(0, 255);
+		addProperty("Color 1", CProperty::Color);
+		addProperty("Color 2", CProperty::Color);
+		addProperty("Ambient color", CProperty::Color);
+		addProperty("Lighting effect", CProperty::Bool);
+//		addProperty("Light direction", CProperty::DataVec3);
+	}
+
+	QVariant GetPropertyValue(int i)
+	{
+		switch (i)
+		{
+		case  0: return m_vr->m_alpha; break;
+		case  1: return m_vr->m_I0; break;
+		case  2: return m_vr->m_I1; break;
+		case  3: return m_vr->m_A0; break;
+		case  4: return m_vr->m_A1; break;
+		case  5: return m_vr->m_Amin; break;
+		case  6: return m_vr->m_Amax; break;
+		case  7: return toQColor(m_vr->m_col1); break;
+		case  8: return toQColor(m_vr->m_col2); break;
+		case  9: return toQColor(m_vr->m_amb); break;
+		case 10: return m_vr->m_blight; break;
+//		case 11: return m_vr->GetLightPosition(); break;
+		}
+		return QVariant();
+	}
+
+	void SetPropertyValue(int i, const QVariant& val)
+	{
+		switch (i)
+		{
+		case  0: m_vr->m_alpha = val.toFloat(); break;
+		case  1: m_vr->m_I0 = val.toInt(); break;
+		case  2: m_vr->m_I1 = val.toInt(); break;
+		case  3: m_vr->m_A0 = val.toInt(); break;
+		case  4: m_vr->m_A1 = val.toInt(); break;
+		case  5: m_vr->m_Amin = val.toInt(); break;
+		case  6: m_vr->m_Amax = val.toInt(); break;
+		case  7: m_vr->m_col1 = toGLColor(val.value<QColor>()); break;
+		case  8: m_vr->m_col2 = toGLColor(val.value<QColor>()); break;
+		case  9: m_vr->m_amb  = toGLColor(val.value<QColor>()); break;
+		case 10: m_vr->m_blight = val.toBool(); break;
+//		case 11: break;
+		}
+
+		m_vr->Update();
+		m_wnd->RedrawGL();
+	}
+
+private:
+	CMainWindow* m_wnd;
+	CVolRender*	m_vr;
+};
+
+//-----------------------------------------------------------------------------
 class Ui::CModelViewer
 {
 public:
@@ -518,6 +587,16 @@ void CModelViewer::Update(bool breset)
 				ui->m_list.push_back(plot.propertyList());
 				pi1->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
 				m_obj.push_back(&plot);
+			}
+
+			CVolRender* volRender = pdoc->GetVolumeRenderer();
+			if (volRender)
+			{
+				QTreeWidgetItem* pi = new QTreeWidgetItem(ui->m_tree);
+				pi->setText(0, "Volume Render");
+				ui->m_list.push_back(new CVolRenderProps(m_wnd, volRender));
+				pi->setData(0, Qt::UserRole, (int) (ui->m_list.size() - 1));
+				m_obj.push_back(volRender);
 			}
 	
 			CGView& view = *pdoc->GetView();

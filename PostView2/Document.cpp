@@ -1457,13 +1457,15 @@ void CDocument::DeleteObject(CGLObject *po)
 }
 
 //------------------------------------------------------------------------------------------
-void CDocument::Add3DImage(C3DImage* pimg, double w, double h, double d)
+void CDocument::Add3DImage(C3DImage* pimg, double x0, double y0, double z0, double x1, double y1, double z1)
 {
 	BOUNDINGBOX box;
-	box.x0 = box.y0 = box.z0 = 0;
-	box.x1 = w;
-	box.y1 = h;
-	box.z1 = d;
+	box.x0 = x0;
+	box.y0 = y0;
+	box.z0 = z0;
+	box.x1 = x1;
+	box.y1 = y1;
+	box.z1 = z1;
 
 	m_pImg = pimg;
 	m_pVR = new CVolRender;
