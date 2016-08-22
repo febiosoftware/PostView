@@ -9,6 +9,7 @@
 #include "CIntInput.h"
 #include "Document.h"
 #include <PostViewLib/3DImage.h>
+#include "MainWindow.h"
 
 class CAddImage3DToolUI : public QWidget
 {
@@ -142,6 +143,7 @@ void CAddImage3DTool::OnApply()
 		}
 
 		m_doc->Add3DImage(pimg, xmin, ymin, zmin, xmax, ymax, zmax);
-		updateUi();
+		CMainWindow* pwnd = m_doc->GetWindow();
+		pwnd->UpdateUi(true);
 	}
 }

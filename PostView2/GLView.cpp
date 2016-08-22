@@ -562,9 +562,14 @@ bool CGLView::event(QEvent* event)
 //-----------------------------------------------------------------------------
 void CGLView::contextMenuEvent(QContextMenuEvent* ev)
 {
-	QMenu* menu = m_wnd->BuildContextMenu();
-	menu->exec(ev->globalPos());
-	ev->accept();
+	int x = ev->x();
+	int y = ev->y();
+	if ((x==m_p0.x)&&(y==m_p0.y))
+	{
+		QMenu* menu = m_wnd->BuildContextMenu();
+		menu->exec(ev->globalPos());
+		ev->accept();
+	}
 }
 
 //-----------------------------------------------------------------------------
