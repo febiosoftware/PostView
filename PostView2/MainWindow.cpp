@@ -421,6 +421,7 @@ void CMainWindow::on_actionUpdate_triggered()
 		ui->selectData->BuildMenu(m_doc->GetFEModel(), DATA_SCALAR);
 
 		// update the UI
+		UpdatePlayToolbar(true);
 		UpdateUi(true);
 	}
 }
