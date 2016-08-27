@@ -35,7 +35,7 @@ public:
 	void SetMatID(int matid);
 	int GetMatID() const { return m_nmat; }
 
-	int Type() const { m_ntype; }
+	int Type() const { return m_ntype; }
 
 	int Faces() { return (int) m_Face.size(); }
 	FEFace& Face(int n);

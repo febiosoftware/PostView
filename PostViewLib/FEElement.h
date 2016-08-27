@@ -363,7 +363,7 @@ public:
 		for (int i=0; i<T::Nodes; ++i) m_node[i] = el.m_node[i];
 	}
 
-	void FEElementBase::operator = (const FEElementBase& el)
+	void operator = (const FEElementBase& el)
 	{
 		FEElement::operator = (el);
 		for (int i=0; i<T::Nodes; ++i) m_node[i] = el.m_node[i];
