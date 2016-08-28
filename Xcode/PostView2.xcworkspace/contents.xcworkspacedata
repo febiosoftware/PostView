@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:PostView2/PostView2.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:PostViewLib/PostViewLib.xcodeproj">
+   </FileRef>
+</Workspace>
