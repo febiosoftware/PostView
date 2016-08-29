@@ -1024,40 +1024,42 @@ void CMainWindow::timerEvent(QTimerEvent* ev)
 	TIMESETTINGS& time = pdoc->GetTimeSettings();
 
 	int N = pdoc->GetFEModel()->GetStates();
+	int N0 = time.m_start;
+	int N1 = time.m_end;
 
 	int nstep = pdoc->currentTime();
 
 	if (time.m_mode == MODE_FORWARD)
 	{
 		nstep++;
-		if (nstep >= N)
+		if (nstep > N1)
 		{
-			if (time.m_bloop) nstep = 0;
-			else { nstep = N - 1; StopAnimation(); }
+			if (time.m_bloop) nstep = N0;
+			else { nstep = N1; StopAnimation(); }
 		}
 	}
 	else if (time.m_mode == MODE_REVERSE)
 	{
 		nstep--;
-		if (nstep < 0) 
+		if (nstep < N0) 
 		{
-			if (time.m_bloop) nstep = N - 1;
-			else { nstep = 0; StopAnimation(); }
+			if (time.m_bloop) nstep = N1;
+			else { nstep = N0; StopAnimation(); }
 		}
 	}
 	else if (time.m_mode == MODE_CYLCE)
 	{
 		nstep += time.m_inc;
-		if (nstep >= N)
+		if (nstep > N1)
 		{
 			time.m_inc = -1;
-			nstep = N - 1;
+			nstep = N1;
 			if (time.m_bloop == false) StopAnimation();
 		}
-		else if (nstep < 0)
+		else if (nstep < N0)
 		{
 			time.m_inc = 1;
-			nstep = 0;
+			nstep = N0;
 			if (time.m_bloop == false) StopAnimation();
 		}
 	}
@@ -1067,34 +1069,36 @@ void CMainWindow::timerEvent(QTimerEvent* ev)
 
 void CMainWindow::on_actionFirst_triggered()
 {
-	SetCurrentTime(0);
+	CDocument* pdoc = GetDocument();
+	TIMESETTINGS& time = pdoc->GetTimeSettings();
+	SetCurrentTime(time.m_start);
 }
 
 void CMainWindow::on_actionPrev_triggered()
 {
 	CDocument* pdoc = GetDocument();
-	int N = pdoc->GetFEModel()->GetStates();
+	TIMESETTINGS& time = pdoc->GetTimeSettings();
 	int nstep = pdoc->currentTime();
 	nstep--;
-	if (nstep < 0) nstep = 0;
+	if (nstep < time.m_start) nstep = time.m_start;
 	SetCurrentTime(nstep);
 }
 
 void CMainWindow::on_actionNext_triggered()
 {
 	CDocument* pdoc = GetDocument();
-	int N = pdoc->GetFEModel()->GetStates();
+	TIMESETTINGS& time = pdoc->GetTimeSettings();
 	int nstep = pdoc->currentTime();
 	nstep++;
-	if (nstep >= N) nstep = N-1;
+	if (nstep > time.m_end) nstep = time.m_end;
 	SetCurrentTime(nstep);
 }
 
 void CMainWindow::on_actionLast_triggered()
 {
 	CDocument* pdoc = GetDocument();
-	int N = pdoc->GetFEModel()->GetStates();
-	SetCurrentTime(N-1);
+	TIMESETTINGS& time = pdoc->GetTimeSettings();
+	SetCurrentTime(time.m_end);
 }
 
 void CMainWindow::on_actionTimeSettings_triggered()
@@ -1102,6 +1106,18 @@ void CMainWindow::on_actionTimeSettings_triggered()
 	CDlgTimeSettings dlg(GetDocument(), this);
 	if (dlg.exec())
 	{
+		TIMESETTINGS& time = m_doc->GetTimeSettings();
+		ui->timePanel->SetRange(time.m_start, time.m_end);
+
+		int ntime = m_doc->currentTime();
+		if ((ntime < time.m_start) || (ntime > time.m_end))
+		{
+			if (ntime < time.m_start) ntime = time.m_start;
+			if (ntime > time.m_end  ) ntime = time.m_end;
+
+			SetCurrentTime(ntime);
+		}
+
 		RedrawGL();
 	}
 }

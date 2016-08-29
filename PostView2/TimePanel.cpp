@@ -22,6 +22,9 @@ void CTimePanel::Update(bool reset)
 			for (int i=0; i<fem.GetStates(); ++i) data[i] = fem.GetState(i)->m_time;
 
 			ui->timer->setTimePoints(data);
+
+			TIMESETTINGS& time = doc->GetTimeSettings();
+			ui->timer->setRange(time.m_start, time.m_end);
 		}
 
 		int ntime = doc->currentTime();
@@ -35,7 +38,33 @@ void CTimePanel::SetCurrentTime(int n)
 	ui->timer->setSelection(n);
 }
 
+void CTimePanel::SetRange(int nmin, int nmax)
+{
+	ui->timer->setRange(nmin, nmax);
+}
+
 void CTimePanel::on_timer_pointClicked(int i)
 {
 	m_wnd->SetCurrentTime(i);
+}
+
+void CTimePanel::on_timer_rangeChanged(int nmin, int nmax)
+{
+	CDocument* doc = m_wnd->GetDocument();
+	if (doc->IsValid())
+	{
+		TIMESETTINGS& time = doc->GetTimeSettings();
+		time.m_start = nmin;
+		time.m_end   = nmax;
+
+		int ntime = doc->currentTime();
+
+		if ((ntime < nmin) || (ntime > nmax))
+		{
+			if (ntime < nmin) ntime = nmin;
+			if (ntime > nmax) ntime = nmax;
+
+			m_wnd->SetCurrentTime(ntime);
+		}
+	}
 }

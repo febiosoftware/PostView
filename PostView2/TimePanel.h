@@ -17,9 +17,11 @@ public:
 	void Update(bool reset = false);
 
 	void SetCurrentTime(int n);
+	void SetRange(int nmin, int nmax);
 
 private slots:
 	void on_timer_pointClicked(int n);
+	void on_timer_rangeChanged(int nmin, int nmax);
 
 private:
 	CMainWindow*	m_wnd;

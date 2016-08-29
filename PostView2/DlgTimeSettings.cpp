@@ -5,6 +5,7 @@
 #include <QCheckBox>
 #include <QSpinBox>
 #include <QDialogButtonBox>
+#include <QMessageBox>
 #include "Document.h"
 
 class Ui::CDlgTimeSettings
@@ -77,13 +78,21 @@ CDlgTimeSettings::CDlgTimeSettings(CDocument* doc, QWidget* parent) : QDialog(pa
 void CDlgTimeSettings::accept()
 {
 	TIMESETTINGS& time = m_doc->GetTimeSettings();
+	int N = m_doc->GetTimeSteps();
+
 	time.m_mode = ui->mode->currentIndex();
 	time.m_fps  = ui->fps->value();
-	time.m_start = ui->start->value();
-	time.m_end   = ui->end->value();
+	time.m_start = ui->start->value() - 1;
+	time.m_end   = ui->end->value() - 1;
 	time.m_bloop = ui->loop->isChecked();
 	time.m_bfix  = ui->fix->isChecked();
 	time.m_dt    = ui->step->value();
+
+	if ((time.m_start < 0) || (time.m_end >= N) || (time.m_start > time.m_end))
+	{
+		QMessageBox::critical(this, "Time Settings", "Invalid time range");
+		return;
+	}
 
 	QDialog::accept();
 }
