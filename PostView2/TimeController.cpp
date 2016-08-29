@@ -64,7 +64,7 @@ void CTimeController::UpdateScale()
 	double d = floor(g) - 1.0;
 	m_inc = pow(10, d);
 
-	int ndiv = (int) dataRange / m_inc;
+	int ndiv = (int) (dataRange / m_inc);
 
 	int W = rect().width(); 
 	int nd = W / ndiv;
