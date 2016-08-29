@@ -120,6 +120,15 @@
     <ClInclude Include="..\..\PostView2\version.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\PostView2\TimePanel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PostView2\ui_timepanel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PostView2\TimeController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\PostView2\3PointAngleTool.cpp">
@@ -384,6 +393,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\PostView2\TransformTool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PostView2\TimePanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PostView2\moc_TimePanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PostView2\TimeController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PostView2\moc_TimeController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -5,6 +5,7 @@
 #include <QStatusBar>
 #include <QDockWidget>
 #include <QToolBar>
+#include <QLabel>
 #include "FileViewer.h"
 #include "ModelViewer.h"
 #include "MaterialPanel.h"
@@ -20,6 +21,7 @@
 #include "SummaryWindow.h"
 #include "IntegrateWindow.h"
 #include "StatsWindow.h"
+#include "TimePanel.h"
 #include <QFontComboBox>
 #include <QSpinBox>
 #include <QProgressBar>
@@ -73,6 +75,7 @@ public:
 	CDataPanel*		dataPanel;
 	CStatePanel*	statePanel;
 	CToolsPanel*	toolsPanel;
+	CTimePanel*		timePanel;
 	CGLView*		glview;
 
 	CDataFieldSelector*	selectData;
@@ -177,8 +180,15 @@ public:
 		toolsPanel = new CToolsPanel(MainWindow, dock6);
 		dock6->setWidget(toolsPanel);
 		menuView->addAction(dock6->toggleViewAction());
-		MainWindow->addDockWidget(Qt::RightDockWidgetArea, dock6);
+		MainWindow->tabifyDockWidget(dock5, dock6);
 		dock6->hide();
+
+		QDockWidget* dock7 = new QDockWidget("State Selector", MainWindow); dock7->setObjectName("dockTime");
+		dock7->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea);
+		timePanel = new CTimePanel(MainWindow, dock7);
+		dock7->setWidget(timePanel);
+		menuView->addAction(dock7->toggleViewAction());
+		MainWindow->addDockWidget(Qt::BottomDockWidgetArea, dock7);
 
 		// make sure the file viewer is the visible tab
 		dock1->raise();

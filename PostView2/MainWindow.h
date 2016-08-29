@@ -8,6 +8,7 @@ class CDocument;
 class CGLView;
 class FEFileReader;
 class CFileThread;
+class CTimePanel;
 
 namespace Ui {
 	class CMainWindow;

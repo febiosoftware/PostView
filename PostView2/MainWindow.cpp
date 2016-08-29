@@ -91,6 +91,7 @@ void CMainWindow::UpdateUi(bool breset, QWidget* psender)
 	if (psender != ui->dataPanel  ) ui->dataPanel->Update(breset);
 	if (psender != ui->statePanel ) ui->statePanel->Update(breset);
 	if (psender != ui->toolsPanel ) ui->toolsPanel->Update(breset);
+	if (psender != ui->timePanel  ) ui->timePanel->Update(breset);
 
 	// update all graph windows
 	UpdateGraphs();
@@ -1006,6 +1007,7 @@ void CMainWindow::on_actionPlay_toggled(bool bchecked)
 void CMainWindow::SetCurrentTime(int n)
 {
 	ui->pspin->setValue(n + 1);
+	ui->timePanel->SetCurrentTime(n);
 	GetDocument()->SetCurrentTime(n);
 	RedrawGL();
 }
