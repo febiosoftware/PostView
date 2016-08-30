@@ -2,6 +2,7 @@
 #include "TimeController.h"
 #include <QPainter>
 #include <QMouseEvent>
+#include <math.h>
 
 CTimeController::CTimeController(QWidget* parent) : QWidget(parent)
 {

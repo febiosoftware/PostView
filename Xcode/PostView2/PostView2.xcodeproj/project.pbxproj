@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D52C6FA21D75DC3400DF804B /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D52C6FA11D75DC3400DF804B /* QtCore.framework */; };
+		D52C6FA41D75DC3F00DF804B /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D52C6FA31D75DC3F00DF804B /* QtGui.framework */; };
+		D52C6FA61D75DC4C00DF804B /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D52C6FA51D75DC4C00DF804B /* QtWidgets.framework */; };
+		D52C6FA81D75DC6300DF804B /* libGLEW.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D52C6FA71D75DC6300DF804B /* libGLEW.a */; };
+		D52C6FB01D75DCA300DF804B /* moc_TimeController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D52C6FA91D75DCA300DF804B /* moc_TimeController.cpp */; };
+		D52C6FB11D75DCA300DF804B /* moc_TimePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D52C6FAA1D75DCA300DF804B /* moc_TimePanel.cpp */; };
+		D52C6FB21D75DCA300DF804B /* TimeController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D52C6FAB1D75DCA300DF804B /* TimeController.cpp */; };
+		D52C6FB31D75DCA300DF804B /* TimePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D52C6FAD1D75DCA300DF804B /* TimePanel.cpp */; };
+		D52C6FB51D75DCE900DF804B /* libPostViewLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D52C6FB41D75DCE900DF804B /* libPostViewLib.a */; };
 		D5FF7A401D72756B003D2CBD /* 3PointAngleTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79AA1D72756B003D2CBD /* 3PointAngleTool.cpp */; };
 		D5FF7A411D72756B003D2CBD /* 4PointAngleTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79AC1D72756B003D2CBD /* 4PointAngleTool.cpp */; };
 		D5FF7A421D72756B003D2CBD /* AddImage3DTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79AE1D72756B003D2CBD /* AddImage3DTool.cpp */; };
@@ -95,15 +104,23 @@
 		D5FF7A951D72756B003D2CBD /* Tool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF7A381D72756B003D2CBD /* Tool.cpp */; };
 		D5FF7A961D72756B003D2CBD /* ToolsPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF7A3A1D72756B003D2CBD /* ToolsPanel.cpp */; };
 		D5FF7A971D72756B003D2CBD /* TransformTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF7A3C1D72756B003D2CBD /* TransformTool.cpp */; };
-		D5FF7A991D727688003D2CBD /* libPostViewLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5FF7A981D727688003D2CBD /* libPostViewLib.a */; };
 		D5FF7A9B1D72768F003D2CBD /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5FF7A9A1D72768F003D2CBD /* OpenGL.framework */; };
-		D5FF7A9D1D7276A1003D2CBD /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5FF7A9C1D7276A1003D2CBD /* QtCore.framework */; };
-		D5FF7A9F1D7276B2003D2CBD /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5FF7A9E1D7276B2003D2CBD /* QtGui.framework */; };
-		D5FF7AA11D7276BF003D2CBD /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5FF7AA01D7276BF003D2CBD /* QtWidgets.framework */; };
 		D5FF7AA31D72778E003D2CBD /* PostView.icns in Resources */ = {isa = PBXBuildFile; fileRef = D5FF7AA21D72778E003D2CBD /* PostView.icns */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D52C6FA11D75DC3400DF804B /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = "../../../../../../../../../../usr/local/Cellar/qt5/5.6.1-1/lib/QtCore.framework"; sourceTree = "<group>"; };
+		D52C6FA31D75DC3F00DF804B /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = "../../../../../../../../../../usr/local/Cellar/qt5/5.6.1-1/lib/QtGui.framework"; sourceTree = "<group>"; };
+		D52C6FA51D75DC4C00DF804B /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = "../../../../../../../../../../usr/local/Cellar/qt5/5.6.1-1/lib/QtWidgets.framework"; sourceTree = "<group>"; };
+		D52C6FA71D75DC6300DF804B /* libGLEW.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGLEW.a; path = ../../../../../../../../../../usr/local/Cellar/glew/2.0.0/lib/libGLEW.a; sourceTree = "<group>"; };
+		D52C6FA91D75DCA300DF804B /* moc_TimeController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_TimeController.cpp; sourceTree = "<group>"; };
+		D52C6FAA1D75DCA300DF804B /* moc_TimePanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_TimePanel.cpp; sourceTree = "<group>"; };
+		D52C6FAB1D75DCA300DF804B /* TimeController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimeController.cpp; sourceTree = "<group>"; };
+		D52C6FAC1D75DCA300DF804B /* TimeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeController.h; sourceTree = "<group>"; };
+		D52C6FAD1D75DCA300DF804B /* TimePanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimePanel.cpp; sourceTree = "<group>"; };
+		D52C6FAE1D75DCA300DF804B /* TimePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimePanel.h; sourceTree = "<group>"; };
+		D52C6FAF1D75DCA300DF804B /* ui_timepanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ui_timepanel.h; sourceTree = "<group>"; };
+		D52C6FB41D75DCE900DF804B /* libPostViewLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPostViewLib.a; path = ../PostViewLib/build/Release/libPostViewLib.a; sourceTree = "<group>"; };
 		D5FF79951D72750E003D2CBD /* PostView2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PostView2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5FF79A31D72750E003D2CBD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D5FF79AA1D72756B003D2CBD /* 3PointAngleTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = 3PointAngleTool.cpp; sourceTree = "<group>"; };
@@ -256,11 +273,7 @@
 		D5FF7A3D1D72756B003D2CBD /* TransformTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformTool.h; sourceTree = "<group>"; };
 		D5FF7A3E1D72756B003D2CBD /* ui_mainwindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ui_mainwindow.h; sourceTree = "<group>"; };
 		D5FF7A3F1D72756B003D2CBD /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
-		D5FF7A981D727688003D2CBD /* libPostViewLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPostViewLib.a; path = ../PostViewLib/build/Debug/libPostViewLib.a; sourceTree = "<group>"; };
 		D5FF7A9A1D72768F003D2CBD /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
-		D5FF7A9C1D7276A1003D2CBD /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = "../../../../../../usr/local/Cellar/qt5/5.6.1-1/lib/QtCore.framework"; sourceTree = "<group>"; };
-		D5FF7A9E1D7276B2003D2CBD /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = "../../../../../../usr/local/Cellar/qt5/5.6.1-1/lib/QtGui.framework"; sourceTree = "<group>"; };
-		D5FF7AA01D7276BF003D2CBD /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = "../../../../../../usr/local/Cellar/qt5/5.6.1-1/lib/QtWidgets.framework"; sourceTree = "<group>"; };
 		D5FF7AA21D72778E003D2CBD /* PostView.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = PostView.icns; path = ../PostView.icns; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -269,11 +282,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D5FF7AA11D7276BF003D2CBD /* QtWidgets.framework in Frameworks */,
-				D5FF7A9F1D7276B2003D2CBD /* QtGui.framework in Frameworks */,
-				D5FF7A9D1D7276A1003D2CBD /* QtCore.framework in Frameworks */,
+				D52C6FB51D75DCE900DF804B /* libPostViewLib.a in Frameworks */,
+				D52C6FA81D75DC6300DF804B /* libGLEW.a in Frameworks */,
+				D52C6FA61D75DC4C00DF804B /* QtWidgets.framework in Frameworks */,
+				D52C6FA41D75DC3F00DF804B /* QtGui.framework in Frameworks */,
+				D52C6FA21D75DC3400DF804B /* QtCore.framework in Frameworks */,
 				D5FF7A9B1D72768F003D2CBD /* OpenGL.framework in Frameworks */,
-				D5FF7A991D727688003D2CBD /* libPostViewLib.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -416,6 +430,8 @@
 				D5FF7A101D72756B003D2CBD /* moc_StatePanel.cpp */,
 				D5FF7A111D72756B003D2CBD /* moc_StatsWindow.cpp */,
 				D5FF7A121D72756B003D2CBD /* moc_SummaryWindow.cpp */,
+				D52C6FA91D75DCA300DF804B /* moc_TimeController.cpp */,
+				D52C6FAA1D75DCA300DF804B /* moc_TimePanel.cpp */,
 				D5FF7A131D72756B003D2CBD /* moc_Tool.cpp */,
 				D5FF7A141D72756B003D2CBD /* moc_ToolsPanel.cpp */,
 				D5FF7A151D72756B003D2CBD /* ModelViewer.cpp */,
@@ -453,6 +469,10 @@
 				D5FF7A351D72756B003D2CBD /* SummaryWindow.cpp */,
 				D5FF7A361D72756B003D2CBD /* SummaryWindow.h */,
 				D5FF7A371D72756B003D2CBD /* targetver.h */,
+				D52C6FAB1D75DCA300DF804B /* TimeController.cpp */,
+				D52C6FAC1D75DCA300DF804B /* TimeController.h */,
+				D52C6FAD1D75DCA300DF804B /* TimePanel.cpp */,
+				D52C6FAE1D75DCA300DF804B /* TimePanel.h */,
 				D5FF7A381D72756B003D2CBD /* Tool.cpp */,
 				D5FF7A391D72756B003D2CBD /* Tool.h */,
 				D5FF7A3A1D72756B003D2CBD /* ToolsPanel.cpp */,
@@ -460,6 +480,7 @@
 				D5FF7A3C1D72756B003D2CBD /* TransformTool.cpp */,
 				D5FF7A3D1D72756B003D2CBD /* TransformTool.h */,
 				D5FF7A3E1D72756B003D2CBD /* ui_mainwindow.h */,
+				D52C6FAF1D75DCA300DF804B /* ui_timepanel.h */,
 				D5FF7A3F1D72756B003D2CBD /* version.h */,
 			);
 			name = PostView2;
@@ -469,11 +490,12 @@
 		D5FF7AA61D727B52003D2CBD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D5FF7AA01D7276BF003D2CBD /* QtWidgets.framework */,
-				D5FF7A9E1D7276B2003D2CBD /* QtGui.framework */,
-				D5FF7A9C1D7276A1003D2CBD /* QtCore.framework */,
+				D52C6FB41D75DCE900DF804B /* libPostViewLib.a */,
+				D52C6FA71D75DC6300DF804B /* libGLEW.a */,
+				D52C6FA51D75DC4C00DF804B /* QtWidgets.framework */,
+				D52C6FA31D75DC3F00DF804B /* QtGui.framework */,
+				D52C6FA11D75DC3400DF804B /* QtCore.framework */,
 				D5FF7A9A1D72768F003D2CBD /* OpenGL.framework */,
-				D5FF7A981D727688003D2CBD /* libPostViewLib.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -567,6 +589,7 @@
 				D5FF7A5E1D72756B003D2CBD /* GLView.cpp in Sources */,
 				D5FF7A971D72756B003D2CBD /* TransformTool.cpp in Sources */,
 				D5FF7A8E1D72756B003D2CBD /* session.cpp in Sources */,
+				D52C6FB01D75DCA300DF804B /* moc_TimeController.cpp in Sources */,
 				D5FF7A6D1D72756B003D2CBD /* moc_DlgWidgetProps.cpp in Sources */,
 				D5FF7A7D1D72756B003D2CBD /* moc_StatePanel.cpp in Sources */,
 				D5FF7A421D72756B003D2CBD /* AddImage3DTool.cpp in Sources */,
@@ -578,11 +601,14 @@
 				D5FF7A821D72756B003D2CBD /* ModelViewer.cpp in Sources */,
 				D5FF7A6F1D72756B003D2CBD /* moc_GLView.cpp in Sources */,
 				D5FF7A7B1D72756B003D2CBD /* moc_PropertyListView.cpp in Sources */,
+				D52C6FB31D75DCA300DF804B /* TimePanel.cpp in Sources */,
+				D52C6FB11D75DCA300DF804B /* moc_TimePanel.cpp in Sources */,
 				D5FF7A601D72756B003D2CBD /* GLWidgetManager.cpp in Sources */,
 				D5FF7A491D72756B003D2CBD /* DistanceMapTool.cpp in Sources */,
 				D5FF7A401D72756B003D2CBD /* 3PointAngleTool.cpp in Sources */,
 				D5FF7A481D72756B003D2CBD /* DataPanel.cpp in Sources */,
 				D5FF7A781D72756B003D2CBD /* moc_PlotWidget.cpp in Sources */,
+				D52C6FB21D75DCA300DF804B /* TimeController.cpp in Sources */,
 				D5FF7A881D72756B003D2CBD /* PostView2.cpp in Sources */,
 				D5FF7A851D72756B003D2CBD /* PlotWidget.cpp in Sources */,
 				D5FF7A861D72756B003D2CBD /* PointCongruencyTool.cpp in Sources */,
@@ -735,6 +761,10 @@
 				);
 				INFOPLIST_FILE = PostView2/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/glew/2.0.0/lib,
+				);
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_BUNDLE_IDENTIFIER = FEB.PostView2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -758,6 +788,10 @@
 				);
 				INFOPLIST_FILE = PostView2/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/glew/2.0.0/lib,
+				);
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_BUNDLE_IDENTIFIER = FEB.PostView2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
