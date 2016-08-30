@@ -7,6 +7,8 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>None</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>raw</string>
@@ -17,6 +19,8 @@
 			<string>Default</string>
 		</dict>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>None</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>k</string>
@@ -27,6 +31,8 @@
 			<string>Default</string>
 		</dict>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>None</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>txt</string>
@@ -37,6 +43,8 @@
 			<string>Default</string>
 		</dict>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>None</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>stl</string>
@@ -47,6 +55,8 @@
 			<string>Default</string>
 		</dict>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>None</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>n</string>
@@ -57,6 +67,8 @@
 			<string>Default</string>
 		</dict>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>None</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>msh</string>
@@ -67,6 +79,8 @@
 			<string>Default</string>
 		</dict>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>None</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>plt</string>
@@ -77,6 +91,8 @@
 			<string>Default</string>
 		</dict>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>None</string>
 			<key>CFBundleTypeName</key>
 			<string>FEBio File</string>
 			<key>CFBundleTypeExtensions</key>
@@ -87,6 +103,8 @@
 			<string>Default</string>
 		</dict>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>None</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>xplt</string>
