@@ -237,12 +237,16 @@ public:
 		}
 		else if ((data.type() == QVariant::Double)||(data.type() == QMetaType::Float))
 		{
-			QDoubleSpinBox* pc = new QDoubleSpinBox(parent);
 			const CProperty& prop = model->getPropertyList().Property(index.row());
+/*			QDoubleSpinBox* pc = new QDoubleSpinBox(parent);
 			pc->setSingleStep(prop.fstep);
 			pc->setRange(prop.fmin, prop.fmax);
 			pc->textFromValue(data.value<double>());
 			pc->setAccelerated(true);
+*/
+			QLineEdit* pc = new QLineEdit(parent);
+			pc->setValidator(new QDoubleValidator(prop.fmin, prop.fmax, 5));
+			pc->setText(QString::number(data.value<double>()));
 			m_view->connect(pc, SIGNAL(valueChanged(double)), m_view, SLOT(onDataChanged()));
 			return pc;
 		}

@@ -1846,6 +1846,16 @@ bool FEModel::EvaluateFaceVector(int n, int ntime, int nvec, vec3f& r)
 			{
 				switch (fmt)
 				{
+				case DATA_REGION:
+					{
+						FEFaceData_T<vec3f, DATA_REGION>& dv = dynamic_cast<FEFaceData_T<vec3f, DATA_REGION>&>(rd);
+						if (dv.active(n))
+						{
+							dv.eval(n, &r);
+							return true;
+						}
+					}
+					break;
 				case DATA_ITEM:
 					{
 						FEFaceData_T<vec3f,DATA_ITEM>& dv = dynamic_cast<FEFaceData_T<vec3f,DATA_ITEM>&>(rd);
