@@ -223,11 +223,21 @@ void CPlotWidget::OnCopyToClipboard()
 		CPlotData& d = m_data[0];
 		if (d.size() > 0)
 		{
-			QString s("x\ty\n");
+			QString s("x");
+			for (int i=0; i<plots(); ++i) s += "\t" + m_data[i].label();
+			s += '\n';
 			for (int i=0; i<d.size(); ++i)
 			{
 				QPointF& pi = d.Point(i);
-				s.append(QString::asprintf("%lg\t%lg\n", pi.x(), pi.y()));
+				s.append(QString::asprintf("%lg", pi.x()));
+
+				for (int j=0; j<plots(); ++j)
+				{
+					QPointF& pi = m_data[j].Point(i);
+					s.append(QString::asprintf("\t%lg", pi.y()));
+				}
+
+				s += '\n';
 			}
 			clipboard->setText(s);
 		}
