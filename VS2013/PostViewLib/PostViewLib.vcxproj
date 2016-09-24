@@ -185,6 +185,7 @@
     <ClInclude Include="..\..\PostViewLib\GMeshImport.h" />
     <ClInclude Include="..\..\PostViewLib\GView.h" />
     <ClInclude Include="..\..\PostViewLib\Image.h" />
+    <ClInclude Include="..\..\PostViewLib\ImageSlicer.h" />
     <ClInclude Include="..\..\PostViewLib\Interpolator.h" />
     <ClInclude Include="..\..\PostViewLib\lusolver.h" />
     <ClInclude Include="..\..\PostViewLib\math3d.h" />
@@ -246,6 +247,7 @@
     <ClCompile Include="..\..\PostViewLib\GMeshImport.cpp" />
     <ClCompile Include="..\..\PostViewLib\GView.cpp" />
     <ClCompile Include="..\..\PostViewLib\Image.cpp" />
+    <ClCompile Include="..\..\PostViewLib\ImageSlicer.cpp" />
     <ClCompile Include="..\..\PostViewLib\integrate.cpp" />
     <ClCompile Include="..\..\PostViewLib\Interpolator.cpp" />
     <ClCompile Include="..\..\PostViewLib\lusolver.cpp" />

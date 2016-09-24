@@ -12,6 +12,7 @@
 #include "GLPlaneCutPlot.h"
 #include "GLContext.h"
 #include <PostViewLib/VolRender.h>
+#include <PostViewLib/ImageSlicer.h>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QtCore/QTimer>
@@ -2664,6 +2665,13 @@ void CGLView::RenderDoc()
 			CGLCamera& cam = GetCamera();
 			quat4f q = cam.GetOrientation();
 			pvr->Render(q);
+		}
+
+		// render the image slicer if present
+		CImageSlicer* pis = pdoc->GetImageSlicer();
+		if (pis)
+		{
+			pis->Render();
 		}
 	}
 	glPopAttrib();

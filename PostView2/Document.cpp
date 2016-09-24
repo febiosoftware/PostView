@@ -5,6 +5,7 @@
 #include <PostViewLib/FEFileReader.h>
 #include <PostViewLib/3DImage.h>
 #include <PostViewLib/VolRender.h>
+#include <PostViewLib/ImageSlicer.h>
 #include <PostViewLib/FEMeshData_T.h>
 #include "GLPlot.h"
 #include "GLModel.h"
@@ -220,6 +221,7 @@ CDocument::CDocument(CMainWindow* pwnd) : m_wnd(pwnd)
 
 	m_pImg = 0;
 	m_pVR = 0;
+	m_pIS = 0;
 
 	m_fem = 0;
 	m_pGLModel = 0;
@@ -272,6 +274,7 @@ void CDocument::Reset()
 
 	if (m_pImg) { delete m_pImg; m_pImg = 0; }
 	if (m_pVR ) { delete m_pVR ; m_pVR  = 0; }
+	if (m_pIS ) { delete m_pIS ; m_pIS  = 0; }
 }
 
 //-----------------------------------------------------------------------------
@@ -1468,8 +1471,11 @@ void CDocument::Add3DImage(C3DImage* pimg, double x0, double y0, double z0, doub
 	box.z1 = z1;
 
 	m_pImg = pimg;
-	m_pVR = new CVolRender;
-	m_pVR->Create(*m_pImg, box);
+//	m_pVR = new CVolRender;
+//	m_pVR->Create(*m_pImg, box);
+
+	m_pIS = new CImageSlicer;
+	m_pIS->Create(*m_pImg, box);
 }
 
 //------------------------------------------------------------------------------------------

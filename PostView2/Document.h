@@ -16,6 +16,7 @@ class CGLObject;
 class CGLVisual;
 class C3DImage;
 class CVolRender;
+class CImageSlicer;
 
 class FEModel;
 class FEState;
@@ -325,6 +326,8 @@ public:
 	C3DImage* Get3DImage() { return m_pImg; }
 	CVolRender* GetVolumeRenderer() { return m_pVR; }
 
+	CImageSlicer* GetImageSlicer() { return m_pIS; }
+
 	// Add a data field
 	// NOTE: the ndata relates to the index in DataPanel::on_AddStandard_triggered
 	// TODO: Find a better mechanism
@@ -350,6 +353,7 @@ protected:
 
 	C3DImage*		m_pImg;	//!< 3D image
 	CVolRender*		m_pVR;	//!< volume renderer
+	CImageSlicer*	m_pIS;	//!< image slicer
 
 	FEFileReader*	m_pImp;			// last used file importer
 	char			m_szfile[1024];	// file name of current model

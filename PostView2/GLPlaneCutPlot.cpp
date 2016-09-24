@@ -37,8 +37,8 @@ public:
 		switch (i)
 		{
 		case 0: return m_planeCut->m_bshowplane; break;
-		case 1: return m_planeCut->m_bshow_mesh; break;
-		case 2: return m_planeCut->m_bcut_hidden; break;
+		case 1: return m_planeCut->m_bcut_hidden; break;
+		case 2: return m_planeCut->m_bshow_mesh; break;
 		case 3: return m_planeCut->GetPlaneNormal().x; break;
 		case 4: return m_planeCut->GetPlaneNormal().y; break;
 		case 5: return m_planeCut->GetPlaneNormal().z; break;

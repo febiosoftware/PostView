@@ -19,6 +19,7 @@
 #include "GLLinePlot.h"
 #include <PostViewLib/3DImage.h>
 #include <PostViewLib/VolRender.h>
+#include <PostViewLib/ImageSlicer.h>
 
 //-----------------------------------------------------------------------------
 class CModelProps : public CPropertyList
@@ -431,6 +432,50 @@ private:
 };
 
 //-----------------------------------------------------------------------------
+class CImageSlicerProps : public CPropertyList
+{
+public:
+	CImageSlicerProps(CMainWindow* wnd, CImageSlicer* is) : m_wnd(wnd), m_is(is)
+	{
+		QStringList ops;
+		ops << "X" << "Y" << "Z";
+		addProperty("Image orientation", CProperty::Int)->setEnumValues(ops);
+		addProperty("Image offset"     , CProperty::Float)->setFloatRange(0.0, 1.0);
+		addProperty("Color 1", CProperty::Color);
+		addProperty("Color 2", CProperty::Color);
+	}
+
+	QVariant GetPropertyValue(int i)
+	{
+		switch (i)
+		{
+		case  0: return m_is->GetOrientation(); break;
+		case  1: return m_is->GetOffset(); break;
+		case  2: return toQColor(m_is->GetColor1()); break;
+		case  3: return toQColor(m_is->GetColor2()); break;
+		}
+		return QVariant();
+	}
+
+	void SetPropertyValue(int i, const QVariant& val)
+	{
+		switch (i)
+		{
+		case  0: m_is->SetOrientation(val.toInt()); break;
+		case  1: m_is->SetOffset(val.toDouble()); break;
+		case  2: m_is->SetColor1(toGLColor(val.value<QColor>())); break;
+		case  3: m_is->SetColor2(toGLColor(val.value<QColor>())); break;
+		}
+		m_is->Update();
+		m_wnd->RedrawGL();
+	}
+
+private:
+	CMainWindow*	m_wnd;
+	CImageSlicer*	m_is;
+};
+
+//-----------------------------------------------------------------------------
 class Ui::CModelViewer
 {
 public:
@@ -597,6 +642,16 @@ void CModelViewer::Update(bool breset)
 				ui->m_list.push_back(new CVolRenderProps(m_wnd, volRender));
 				pi->setData(0, Qt::UserRole, (int) (ui->m_list.size() - 1));
 				m_obj.push_back(volRender);
+			}
+
+			CImageSlicer* imgSlice = pdoc->GetImageSlicer();
+			if (imgSlice)
+			{
+				QTreeWidgetItem* pi = new QTreeWidgetItem(ui->m_tree);
+				pi->setText(0, "Image Slicer");
+				ui->m_list.push_back(new CImageSlicerProps(m_wnd, imgSlice));
+				pi->setData(0, Qt::UserRole, (int)(ui->m_list.size() - 1));
+				m_obj.push_back(imgSlice);
 			}
 	
 			CGView& view = *pdoc->GetView();

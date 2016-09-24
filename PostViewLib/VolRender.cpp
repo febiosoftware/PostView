@@ -63,18 +63,6 @@ void CVolRender::Clear()
 }
 
 //-----------------------------------------------------------------------------
-// find the power of 2 that is closest to n
-int closest_pow2(int n)
-{
-	const int PMIN = 16;
-	const int PMAX = 512;
-	int p = (int)pow(2.0, (int)(0.5 + log((double)n)/log(2.0)));
-	if (p < PMIN) p = PMIN;
-	if (p > PMAX) p = PMAX;
-	return p;
-}
-
-//-----------------------------------------------------------------------------
 // Create new data for volume renderer
 void CVolRender::Create(C3DImage& im3d, BOUNDINGBOX box)
 {

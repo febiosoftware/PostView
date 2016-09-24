@@ -6,6 +6,18 @@
 #include "3DImage.h"
 #include <stdio.h>
 
+//-----------------------------------------------------------------------------
+// find the power of 2 that is closest to n
+int closest_pow2(int n)
+{
+	const int PMIN = 16;
+	const int PMAX = 512;
+	int p = (int)pow(2.0, (int)(0.5 + log((double)n) / log(2.0)));
+	if (p < PMIN) p = PMIN;
+	if (p > PMAX) p = PMAX;
+	return p;
+}
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -266,6 +278,63 @@ void C3DImage::GetSliceZ(CImage& im, int n)
 	byte* ps = m_pb + n*m_cx*m_cy;
 
 	for (int i=0; i<m_cx*m_cy; i++, ps++) *pd++ = *ps;
+}
+
+void C3DImage::GetSampledSliceX(CImage& im, double f)
+{
+	// create image data
+	if ((im.Width() != m_cy) || (im.Height() != m_cz)) im.Create(m_cy, m_cz);
+
+	byte* pd = im.GetBytes();
+
+	// copy image data
+	for (int z = 0; z<m_cz; z++)
+	{
+		double fz = z / (double) (m_cz - 1.0);
+		for (int y = 0; y<m_cy; y++)
+		{
+			double fy = y / (double) (m_cy - 1.0);
+			*pd++ = Peek(f, fy, fz);
+		}
+	}
+}
+
+void C3DImage::GetSampledSliceY(CImage& im, double f)
+{
+	// create image data
+	if ((im.Width() != m_cx) || (im.Height() != m_cz)) im.Create(m_cx, m_cz);
+
+	byte* pd = im.GetBytes();
+
+	// copy image data
+	for (int z = 0; z<m_cz; z++)
+	{
+		double fz = z / (double)(m_cz - 1.0);
+		for (int x = 0; x<m_cx; x++)
+		{
+			double fx = x / (double)(m_cx - 1.0);
+			*pd++ = Peek(fx, f, fz);
+		}
+	}
+}
+
+void C3DImage::GetSampledSliceZ(CImage& im, double f)
+{
+	// create image data
+	if ((im.Width() != m_cx) || (im.Height() != m_cy)) im.Create(m_cx, m_cy);
+
+	// copy image data
+	byte* pd = im.GetBytes();
+
+	for (int y = 0; y<m_cy; y++)
+	{
+		double fy = y / (double)(m_cy - 1.0);
+		for (int x = 0; x<m_cx; x++)
+		{
+			double fx = x / (double)(m_cx - 1.0);
+			*pd++ = Peek(fx, fy, f);
+		}
+	}
 }
 
 void C3DImage::Invert()

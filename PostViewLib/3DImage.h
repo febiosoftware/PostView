@@ -44,6 +44,10 @@ public:
 	void GetSliceY(CImage& im, int n);
 	void GetSliceZ(CImage& im, int n);
 
+	void GetSampledSliceX(CImage& im, double f);
+	void GetSampledSliceY(CImage& im, double f);
+	void GetSampledSliceZ(CImage& im, double f);
+
 	void Invert();
 
 	byte* GetBytes() { return m_pb; }
@@ -72,5 +76,9 @@ private:
 	C3DImage&	m_im;
 	BOUNDINGBOX	m_box;
 };
+
+//-----------------------------------------------------------------------------
+// helper functions
+int closest_pow2(int n);
 
 #endif // !defined(AFX_3DIMAGE_H__E14C7DF6_A4B0_462B_B529_B78ABB82A3A1__INCLUDED_)
