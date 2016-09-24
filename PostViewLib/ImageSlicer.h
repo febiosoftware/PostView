@@ -35,8 +35,11 @@ private:
 	CRGBAImage		m_im;	// 2D image that will be displayed
 	int				m_LUTC[4][256];	// color lookup table
 	BOUNDINGBOX		m_box;
+	bool			m_reloadTexture;
 
 	int		m_op;	// x,y,z
 	double	m_off;	// offset (0 - 1)
 	GLCOLOR	m_col1, m_col2;
+
+	unsigned int m_texID;
 };

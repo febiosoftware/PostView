@@ -1457,6 +1457,16 @@ void CDocument::DeleteObject(CGLObject *po)
 		CGView* pview = GetView();
 		pview->DeleteKey(pt);
 	}
+	else if (dynamic_cast<CImageSlicer*>(po))
+	{
+		delete m_pIS;
+		m_pIS = 0;
+	}
+	else if (dynamic_cast<CVolRender*>(po))
+	{
+		delete m_pVR;
+		m_pVR = 0;
+	}
 }
 
 //------------------------------------------------------------------------------------------
@@ -1471,11 +1481,11 @@ void CDocument::Add3DImage(C3DImage* pimg, double x0, double y0, double z0, doub
 	box.z1 = z1;
 
 	m_pImg = pimg;
-//	m_pVR = new CVolRender;
-//	m_pVR->Create(*m_pImg, box);
+	m_pVR = new CVolRender;
+	m_pVR->Create(*m_pImg, box);
 
-	m_pIS = new CImageSlicer;
-	m_pIS->Create(*m_pImg, box);
+//	m_pIS = new CImageSlicer;
+//	m_pIS->Create(*m_pImg, box);
 }
 
 //------------------------------------------------------------------------------------------

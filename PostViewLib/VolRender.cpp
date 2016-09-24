@@ -28,6 +28,8 @@ CVolRender::CVolRender()
 	m_bcalc_lighting = true;
 	m_light = vec3f(-1.f, -1.f, -1.f);
 
+	m_texID = 0;
+
 	Reset();
 }
 
@@ -262,6 +264,22 @@ void CVolRender::DepthCueZ(CRGBAImage& im, int n)
 //! Render textures
 void CVolRender::Render(quat4f q)
 {
+	if (m_texID == 0)
+	{
+		glGenTextures(1, &m_texID);
+
+		glBindTexture(GL_TEXTURE_2D, m_texID);
+
+		// set texture parameter for 2D textures
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
+	}
+	else glBindTexture(GL_TEXTURE_2D, m_texID);
+
 	glEnable(GL_TEXTURE_2D);
 	glDisable(GL_LIGHTING);
 

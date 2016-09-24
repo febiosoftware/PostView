@@ -18,6 +18,8 @@ CImageSlicer::CImageSlicer()
 	m_off = 0.5;
 	m_col1 = GLCOLOR(  0,   0,   0);
 	m_col2 = GLCOLOR(255, 255, 255);
+	m_texID = 0;
+	m_reloadTexture = true;
 }
 
 CImageSlicer::~CImageSlicer()
@@ -86,6 +88,8 @@ void CImageSlicer::Update()
 		pd[2] = m_LUTC[2][val];
 		pd[3] = m_LUTC[3][val];
 	}
+
+	m_reloadTexture = true;
 }
 
 void CImageSlicer::BuildLUT()
@@ -104,6 +108,30 @@ void CImageSlicer::BuildLUT()
 //! Render textures
 void CImageSlicer::Render()
 {
+	if (m_texID == 0)
+	{
+		glDisable(GL_TEXTURE_2D);
+
+		glGenTextures(1, &m_texID);
+		glBindTexture(GL_TEXTURE_2D, m_texID);
+
+		// set texture parameter for 2D textures
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	}
+	else glBindTexture(GL_TEXTURE_2D, m_texID);
+
+	int nx = m_im.Width();
+	int ny = m_im.Height();
+	if (m_reloadTexture && (nx*ny > 0))
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, 4, nx, ny, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_im.GetBytes());
+		m_reloadTexture = false;
+	}
+
 	glEnable(GL_TEXTURE_2D);
 	glDisable(GL_LIGHTING);
 
@@ -130,22 +158,14 @@ void CImageSlicer::Render()
 		break;
 	}
 
-	int nx = m_im.Width();
-	int ny = m_im.Height();
-
-	if (nx*ny > 0)
+	glBegin(GL_QUADS);
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, 4, nx, ny, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_im.GetBytes());
-
-		glBegin(GL_QUADS);
-		{
-			glTexCoord2d(1, 0); glVertex3d(x[0], y[0], z[0]);
-			glTexCoord2d(0, 0); glVertex3d(x[1], y[1], z[1]);
-			glTexCoord2d(0, 1); glVertex3d(x[2], y[2], z[2]);
-			glTexCoord2d(1, 1); glVertex3d(x[3], y[3], z[3]);
-		}
-		glEnd();
+		glTexCoord2d(1, 0); glVertex3d(x[0], y[0], z[0]);
+		glTexCoord2d(0, 0); glVertex3d(x[1], y[1], z[1]);
+		glTexCoord2d(0, 1); glVertex3d(x[2], y[2], z[2]);
+		glTexCoord2d(1, 1); glVertex3d(x[3], y[3], z[3]);
 	}
+	glEnd();
 
 	glEnable(GL_LIGHTING);
 	glDisable(GL_TEXTURE_2D);

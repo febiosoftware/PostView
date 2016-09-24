@@ -62,6 +62,7 @@ protected:
 	CRGBAImage*	m_pImx;	// Image array in x-direction
 	CRGBAImage*	m_pImy;	// Image array in y-direction
 	CRGBAImage*	m_pImz;	// Image array in x-direction
+	unsigned int m_texID;
 
 	int m_nx;	// nr of images in x-direction
 	int m_ny;	// nr of images in y-direction
