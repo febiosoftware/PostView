@@ -439,7 +439,7 @@ public:
 	{
 		QStringList ops;
 		ops << "X" << "Y" << "Z";
-		addProperty("Image orientation", CProperty::Int)->setEnumValues(ops);
+		addProperty("Image orientation", CProperty::Enum)->setEnumValues(ops);
 		addProperty("Image offset"     , CProperty::Float)->setFloatRange(0.0, 1.0);
 		addProperty("Color 1", CProperty::Color);
 		addProperty("Color 2", CProperty::Color);

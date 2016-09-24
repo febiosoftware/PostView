@@ -238,16 +238,16 @@ public:
 		else if ((data.type() == QVariant::Double)||(data.type() == QMetaType::Float))
 		{
 			const CProperty& prop = model->getPropertyList().Property(index.row());
-/*			QDoubleSpinBox* pc = new QDoubleSpinBox(parent);
+			QDoubleSpinBox* pc = new QDoubleSpinBox(parent);
 			pc->setSingleStep(prop.fstep);
 			pc->setRange(prop.fmin, prop.fmax);
 			pc->textFromValue(data.value<double>());
 			pc->setAccelerated(true);
-*/
-			QLineEdit* pc = new QLineEdit(parent);
+
+/*			QLineEdit* pc = new QLineEdit(parent);
 			pc->setValidator(new QDoubleValidator(prop.fmin, prop.fmax, 5));
 			pc->setText(QString::number(data.value<double>()));
-			m_view->connect(pc, SIGNAL(valueChanged(double)), m_view, SLOT(onDataChanged()));
+*/			m_view->connect(pc, SIGNAL(valueChanged(double)), m_view, SLOT(onDataChanged()));
 			return pc;
 		}
 		else if (data.type() == QVariant::Int)
@@ -282,6 +282,17 @@ public:
 				if (prop.bauto) pc->setSpecialValueText("auto");
 				m_view->connect(pc, SIGNAL(valueChanged(int)), m_view, SLOT(onDataChanged()));
 				return pc;
+			}
+			else if (prop.type == CProperty::Enum)
+			{
+				if (prop.values.isEmpty() == false)
+				{
+					QComboBox* pc = new QComboBox;
+					pc->addItems(prop.values);
+					pc->setCurrentIndex(data.toInt());
+					m_view->connect(pc, SIGNAL(currentIndexChanged(int)), m_view, SLOT(onDataChanged()));
+					return pc;
+				}
 			}
 		}
 		return QStyledItemDelegate::createEditor(parent, option, index);

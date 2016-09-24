@@ -1470,7 +1470,7 @@ void CDocument::DeleteObject(CGLObject *po)
 }
 
 //------------------------------------------------------------------------------------------
-void CDocument::Add3DImage(C3DImage* pimg, double x0, double y0, double z0, double x1, double y1, double z1)
+void CDocument::Add3DImage(C3DImage* pimg, double x0, double y0, double z0, double x1, double y1, double z1, int nvisOption)
 {
 	BOUNDINGBOX box;
 	box.x0 = x0;
@@ -1480,12 +1480,19 @@ void CDocument::Add3DImage(C3DImage* pimg, double x0, double y0, double z0, doub
 	box.y1 = y1;
 	box.z1 = z1;
 
+	if (m_pImg) delete m_pImg;
 	m_pImg = pimg;
-	m_pVR = new CVolRender;
-	m_pVR->Create(*m_pImg, box);
 
-//	m_pIS = new CImageSlicer;
-//	m_pIS->Create(*m_pImg, box);
+	if (nvisOption == 0)
+	{
+		m_pVR = new CVolRender;
+		m_pVR->Create(*m_pImg, box);
+	}
+	else
+	{
+		m_pIS = new CImageSlicer;
+		m_pIS->Create(*m_pImg, box);
+	}
 }
 
 //------------------------------------------------------------------------------------------

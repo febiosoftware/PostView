@@ -3,6 +3,7 @@
 #include <QPushButton>
 #include <QBoxLayout>
 #include <QGridLayout>
+#include <QComboBox>
 #include <QLabel>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -18,6 +19,7 @@ public:
 	CFloatInput *pxmin, *pymin, *pzmin;
 	CFloatInput *pxmax, *pymax, *pzmax;
 	QLineEdit* pfile;
+	QComboBox*	vis;
 
 public:
 	CAddImage3DToolUI(QObject* parent)
@@ -48,6 +50,11 @@ public:
 		grid->addWidget(pl = new QLabel("z-max"), 5, 2); grid->addWidget(pzmax = new CFloatInput, 5, 3); pl->setBuddy(pzmax); pzmax->setFixedWidth(70);
 
 		pv->addLayout(grid);
+
+		vis = new QComboBox;
+		vis->addItem("Volume Rendering");
+		vis->addItem("Image slicer");
+		pv->addWidget(vis);
 
 		QPushButton* apply = new QPushButton("Load");
 		pv->addWidget(apply);
@@ -142,7 +149,9 @@ void CAddImage3DTool::OnApply()
 			return;
 		}
 
-		m_doc->Add3DImage(pimg, xmin, ymin, zmin, xmax, ymax, zmax);
+		int nops = ui->vis->currentIndex();
+
+		m_doc->Add3DImage(pimg, xmin, ymin, zmin, xmax, ymax, zmax, nops);
 		CMainWindow* pwnd = m_doc->GetWindow();
 		pwnd->UpdateUi(true);
 	}

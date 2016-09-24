@@ -321,7 +321,7 @@ public:
 	// ---------------------------------------
 
 	// add a 3D image
-	void Add3DImage(C3DImage* pimg, double x0, double y0, double z0, double x1, double y1, double z1);
+	void Add3DImage(C3DImage* pimg, double x0, double y0, double z0, double x1, double y1, double z1, int nvisOption = 0);
 
 	C3DImage* Get3DImage() { return m_pImg; }
 	CVolRender* GetVolumeRenderer() { return m_pVR; }

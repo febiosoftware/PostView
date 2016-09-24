@@ -2658,6 +2658,13 @@ void CGLView::RenderDoc()
 
 		CGLPlaneCutPlot::DisableClipPlanes();
 
+		// render the image slicer if present
+		CImageSlicer* pis = pdoc->GetImageSlicer();
+		if (pis)
+		{
+			pis->Render();
+		}
+
 		// render the volume image data if present
 		CVolRender* pvr = pdoc->GetVolumeRenderer();
 		if (pvr)
@@ -2665,13 +2672,6 @@ void CGLView::RenderDoc()
 			CGLCamera& cam = GetCamera();
 			quat4f q = cam.GetOrientation();
 			pvr->Render(q);
-		}
-
-		// render the image slicer if present
-		CImageSlicer* pis = pdoc->GetImageSlicer();
-		if (pis)
-		{
-			pis->Render();
 		}
 	}
 	glPopAttrib();
