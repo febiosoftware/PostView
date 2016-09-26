@@ -14,6 +14,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QInputDialog>
+#include <QLabel>
 #include "PropertyList.h"
 #include "PropertyListView.h"
 #include <PostViewLib/Palette.h>
@@ -256,35 +257,33 @@ public:
 public:
 	CPaletteWidget(QWidget* parent = 0) : QWidget(parent)
 	{
-		pal = new QComboBox;
+		QLabel* label = new QLabel("Current palette:");
+		label->setFixedWidth(100);
+		label->setAlignment(Qt::AlignRight | Qt::AlignCenter);
+		pal = new QComboBox; label->setBuddy(label);
+
+		QHBoxLayout* h0 = new QHBoxLayout;
+		h0->addWidget(label);
+		h0->addWidget(pal);
 
 		QPushButton* load   = new QPushButton("Load Palette ..."); load->setObjectName("load");
 		QPushButton* save   = new QPushButton("Save Palette ..."); save->setObjectName("save");
 		QPushButton* create = new QPushButton("Create palette from materials ..."); create->setObjectName("create");
 		QPushButton* apply  = new QPushButton("Apply palette to materials ..."   ); apply ->setObjectName("apply");
 
+		QVBoxLayout* buttons = new QVBoxLayout;
+		buttons->addWidget(load);
+		buttons->addWidget(save);
+		buttons->addWidget(create);
+		buttons->addWidget(apply);
+
 		QHBoxLayout* h1 = new QHBoxLayout;
 		h1->addStretch();
-		h1->addWidget(load);
-
-		QHBoxLayout* h2 = new QHBoxLayout;
-		h2->addStretch();
-		h2->addWidget(save);
-
-		QHBoxLayout* h3 = new QHBoxLayout;
-		h3->addStretch();
-		h3->addWidget(create);
-
-		QHBoxLayout* h4 = new QHBoxLayout;
-		h4->addStretch();
-		h4->addWidget(apply);
+		h1->addLayout(buttons);
 
 		QVBoxLayout* pl = new QVBoxLayout;
-		pl->addWidget(pal);
+		pl->addLayout(h0);
 		pl->addLayout(h1);
-		pl->addLayout(h2);
-		pl->addLayout(h3);
-		pl->addLayout(h4);
 		pl->addStretch();
 
 		setLayout(pl);
@@ -448,7 +447,7 @@ void CDlgViewSettings::onClicked(QAbstractButton* button)
 
 void CDlgViewSettings::on_load_clicked()
 {
-	QString fileName = QFileDialog::getOpenFileName(this, "Load Palette", "", "PostView Palette (*.xp)");
+	QString fileName = QFileDialog::getOpenFileName(this, "Load Palette", "", "PostView Palette (*.xpr)");
 	if (fileName.isEmpty() == false)
 	{
 		CPaletteManager& PM = CPaletteManager::GetInstance();
@@ -456,15 +455,22 @@ void CDlgViewSettings::on_load_clicked()
 		if (PM.Load(sfile) == false)
 		{
 			QMessageBox::critical(this, "Load Palette", "Failed loading palette(s)");
+			return;
 		}
 
-		UpdatePalettes();
+		// make the last palette loaded the active one
+		int N = PM.Palettes();
+		if (N > 0)
+		{
+			PM.SetCurrentIndex(N - 1);
+			UpdatePalettes();
+		}
 	}
 }
 
 void CDlgViewSettings::on_save_clicked()
 {
-	QString fileName = QFileDialog::getSaveFileName(this, "Save Palette", "", "PostView Palette (*.xp)");
+	QString fileName = QFileDialog::getSaveFileName(this, "Save Palette", "", "PostView Palette (*.xpr)");
 	if (fileName.isEmpty() == false)
 	{
 		CPaletteManager& PM = CPaletteManager::GetInstance();
