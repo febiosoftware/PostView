@@ -4,8 +4,6 @@
 #include "constants.h"
 #include "FEMeshData_T.h"
 
-extern GLCOLOR pal[];
-
 // this function performs a big-endian to little endian or vice versa byteswap
 // this is used by the plotfile import routine
 void byteswap(int* pi, int n)
@@ -192,16 +190,6 @@ void FELSDYNAPlotImport::CreateMaterials(FEModel& fem)
 	for (int i=0; i<nmat; i++)
 	{
 		FEMaterial m;
-		m.diffuse = pal[i%32];
-		m.ambient = pal[i%32];
-		m.specular = GLCOLOR(128,128,128);
-		m.emission = GLCOLOR(0,0,0);
-		m.shininess = 0.5f;
-		m.transparency = 1.f;
-		m.benable = true;
-		m.bvisible = true;
-		m.bmesh = true;
-		m.bcast_shadows = true;
 		fem.AddMaterial(m);
 	}
 }

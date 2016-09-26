@@ -143,6 +143,7 @@
     <ClInclude Include="..\..\PostViewLib\bbox.h" />
     <ClInclude Include="..\..\PostViewLib\color.h" />
     <ClInclude Include="..\..\PostViewLib\ColorMap.h" />
+    <ClInclude Include="..\..\PostViewLib\Palette.h" />
     <ClInclude Include="..\..\PostViewLib\constants.h" />
     <ClInclude Include="..\..\PostViewLib\DataFilter.h" />
     <ClInclude Include="..\..\PostViewLib\DataMap.h" />
@@ -253,6 +254,7 @@
     <ClCompile Include="..\..\PostViewLib\lusolver.cpp" />
     <ClCompile Include="..\..\PostViewLib\lut.cpp" />
     <ClCompile Include="..\..\PostViewLib\math3d.cpp" />
+    <ClCompile Include="..\..\PostViewLib\Palette.cpp" />
     <ClCompile Include="..\..\PostViewLib\PltArchive.cpp" />
     <ClCompile Include="..\..\PostViewLib\SphereFit.cpp" />
     <ClCompile Include="..\..\PostViewLib\U3DFile.cpp" />

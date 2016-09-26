@@ -10,34 +10,6 @@
 #include <GL/gL.h>
 #endif
 
-GLCOLOR pal[MAX_PAL_COLORS] = {
-	GLCOLOR(128,255,  0),
-	GLCOLOR(128,  0,255),
-	GLCOLOR(  0,  0,255),
-	GLCOLOR(255,255,  0),
-	GLCOLOR(255,  0,255),
-	GLCOLOR(  0,255,255),
-	GLCOLOR(255,128,  0),
-	GLCOLOR(255,  0,128),
-	GLCOLOR(255,  0,  0),
-	GLCOLOR(  0,255,128),
-	GLCOLOR(  0,255,  0),
-	GLCOLOR(  0,128,255),
-	GLCOLOR(128,  0,  0),
-	GLCOLOR(  0,128,  0),
-	GLCOLOR(  0,  0,128),
-	GLCOLOR(128,128,  0),
-	GLCOLOR(128,  0,128),
-	GLCOLOR(  0,128,128),
-	GLCOLOR(255,255,255),
-	GLCOLOR(192,192,192),
-	GLCOLOR(164,164,164),
-	GLCOLOR(128,128,128),
-	GLCOLOR( 92, 92, 92),
-	GLCOLOR( 64, 64, 64),
-	GLCOLOR( 32, 32, 32)};
-
-
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////

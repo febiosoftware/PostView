@@ -22,6 +22,12 @@ public:
 public slots:
 	void accept();
 	void onClicked(QAbstractButton*);
+	void on_load_clicked();
+	void on_save_clicked();
+	void on_create_clicked();
+
+private:
+	void UpdatePalettes();
 
 protected:
 	CMainWindow*			m_pwnd;

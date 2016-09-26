@@ -204,6 +204,9 @@
     <ClInclude Include="..\..\PostViewLib\ImageSlicer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\PostViewLib\Palette.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\PostViewLib\3DImage.cpp">
@@ -387,6 +390,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\PostViewLib\ImageSlicer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PostViewLib\Palette.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

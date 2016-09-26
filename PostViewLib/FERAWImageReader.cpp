@@ -2,8 +2,6 @@
 #include "FERAWImageReader.h"
 #include "FEMeshData_T.h"
 
-extern GLCOLOR pal[MAX_PAL_COLORS];
-
 //-----------------------------------------------------------------------------
 FERAWImageReader::FERAWImageReader() : FEFileReader("RAW")
 {
@@ -24,16 +22,6 @@ bool FERAWImageReader::Load(FEModel& fem, const char* szfile)
 
 	// add one material to the scene
 	FEMaterial mat;
-	mat.diffuse = pal[0];
-	mat.ambient = mat.diffuse;
-	mat.specular = GLCOLOR(128,128,128);
-	mat.emission = GLCOLOR(0,0,0);
-	mat.shininess = 0.5f;
-	mat.transparency = 1.f;
-	mat.benable = true;
-	mat.bvisible = true;
-	mat.bmesh = true;
-	mat.bcast_shadows = true;
 	fem.AddMaterial(mat);
 
 	// figure out the mesh dimensions

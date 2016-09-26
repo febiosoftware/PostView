@@ -2,8 +2,6 @@
 #include "FEVTKImport.h"
 #include "FEMeshData_T.h"
 
-extern GLCOLOR pal[MAX_PAL_COLORS];
-
 FEVTKimport::FEVTKimport() : FEFileReader("VTK")
 {
 }
@@ -19,16 +17,6 @@ bool FEVTKimport::Load(FEModel& fem, const char* szfile)
 
 	// add one material to the scene
 	FEMaterial mat;
-	mat.diffuse = pal[0];
-	mat.ambient = mat.diffuse;
-	mat.specular = GLCOLOR(128,128,128);
-	mat.emission = GLCOLOR(0,0,0);
-	mat.shininess = 0.5f;
-	mat.transparency = 1.f;
-	mat.benable = true;
-	mat.bvisible = true;
-	mat.bmesh = true;
-	mat.bcast_shadows = true;
 	m_pfem->AddMaterial(mat);
 
 	if (!Open(szfile, "rt")) return errf("Failed opening file %s.", szfile);

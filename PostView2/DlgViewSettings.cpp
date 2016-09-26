@@ -10,8 +10,13 @@
 #include <QPushButton>
 #include <QTabWidget>
 #include <QDialogButtonBox>
+#include <QComboBox>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QInputDialog>
 #include "PropertyList.h"
 #include "PropertyListView.h"
+#include <PostViewLib/Palette.h>
 
 //-----------------------------------------------------------------------------
 class CRenderingProps : public CPropertyList
@@ -242,6 +247,43 @@ public:
 	int		m_ntagInfo;
 };
 
+//-----------------------------------------------------------------------------
+class CPaletteWidget : public QWidget
+{
+public:
+	QComboBox*	pal;
+
+public:
+	CPaletteWidget(QWidget* parent = 0) : QWidget(parent)
+	{
+		pal = new QComboBox;
+
+		QPushButton* load = new QPushButton("Load Palette ..."); load->setObjectName("load");
+		QPushButton* save = new QPushButton("Save Palette ..."); save->setObjectName("save");
+		QPushButton* create = new QPushButton("Create palette from materials ..."); create->setObjectName("create");
+
+		QHBoxLayout* h1 = new QHBoxLayout;
+		h1->addStretch();
+		h1->addWidget(load);
+
+		QHBoxLayout* h2 = new QHBoxLayout;
+		h2->addStretch();
+		h2->addWidget(save);
+
+		QHBoxLayout* h3 = new QHBoxLayout;
+		h3->addStretch();
+		h3->addWidget(create);
+
+		QVBoxLayout* pl = new QVBoxLayout;
+		pl->addWidget(pal);
+		pl->addLayout(h1);
+		pl->addLayout(h2);
+		pl->addLayout(h3);
+		pl->addStretch();
+
+		setLayout(pl);
+	}
+};
 
 //-----------------------------------------------------------------------------
 class Ui::CDlgViewSettings
@@ -252,6 +294,7 @@ public:
 	CLightingProps*		m_light;
 	CCameraProps*		m_cam;
 	CSelectionProps*	m_select;
+	CPaletteWidget*		m_col;
 	QDialogButtonBox*	buttonBox;
 
 public:
@@ -267,11 +310,14 @@ public:
 		::CPropertyListView* pw4 = new ::CPropertyListView; pw4->Update(m_cam   );
 		::CPropertyListView* pw5 = new ::CPropertyListView; pw5->Update(m_select);
 
+		m_col = new CPaletteWidget;
+
 		pt->addTab(pw1, "Rendering");
 		pt->addTab(pw2, "Background");
 		pt->addTab(pw3, "Lighting");
 		pt->addTab(pw4, "Camera");
 		pt->addTab(pw5, "Selection");
+		pt->addTab(m_col, "Palette");
 		pg->addWidget(pt);
 
 		buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Apply); 
@@ -280,6 +326,7 @@ public:
 		QObject::connect(buttonBox, SIGNAL(accepted()), pwnd, SLOT(accept()));
 		QObject::connect(buttonBox, SIGNAL(rejected()), pwnd, SLOT(reject()));
 		QObject::connect(buttonBox, SIGNAL(clicked(QAbstractButton*)), pwnd, SLOT(onClicked(QAbstractButton*)));
+		QMetaObject::connectSlotsByName(pwnd);
 	}
 };
 
@@ -323,7 +370,25 @@ CDlgViewSettings::CDlgViewSettings(CMainWindow* pwnd) : ui(new Ui::CDlgViewSetti
 	ui->m_select->m_ntagInfo = view.m_ntagInfo;
 
 	ui->setupUi(this);
-	resize(400, 300);
+
+	// fill the palette list
+	UpdatePalettes();
+
+	resize(450, 300);
+}
+
+void CDlgViewSettings::UpdatePalettes()
+{
+	ui->m_col->pal->clear();
+
+	CPaletteManager& PM = CPaletteManager::GetInstance();
+	int pals = PM.Palettes();
+	for (int i = 0; i<pals; ++i)
+	{
+		ui->m_col->pal->addItem(QString::fromStdString(PM.Palette(i).Name()));
+	}
+
+	ui->m_col->pal->setCurrentIndex(PM.CurrentIndex());
 }
 
 CDlgViewSettings::~CDlgViewSettings()
@@ -358,6 +423,9 @@ void CDlgViewSettings::apply()
 	view.m_bconn = ui->m_select->m_bconnect;
 	view.m_ntagInfo = ui->m_select->m_ntagInfo;
 
+	CPaletteManager& PM = CPaletteManager::GetInstance();
+	PM.SetCurrentIndex(ui->m_col->pal->currentIndex());
+
 	m_pwnd->RedrawGL();
 }
 
@@ -370,4 +438,72 @@ void CDlgViewSettings::accept()
 void CDlgViewSettings::onClicked(QAbstractButton* button)
 {
 	if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::ApplyRole) apply();
+}
+
+void CDlgViewSettings::on_load_clicked()
+{
+	QString fileName = QFileDialog::getOpenFileName(this, "Load Palette", "", "PostView Palette (*.xp)");
+	if (fileName.isEmpty() == false)
+	{
+		CPaletteManager& PM = CPaletteManager::GetInstance();
+		string sfile = fileName.toStdString();
+		if (PM.Load(sfile) == false)
+		{
+			QMessageBox::critical(this, "Load Palette", "Failed loading palette(s)");
+		}
+
+		UpdatePalettes();
+	}
+}
+
+void CDlgViewSettings::on_save_clicked()
+{
+	QString fileName = QFileDialog::getSaveFileName(this, "Save Palette", "", "PostView Palette (*.xp)");
+	if (fileName.isEmpty() == false)
+	{
+		CPaletteManager& PM = CPaletteManager::GetInstance();
+		int n = ui->m_col->pal->currentIndex();
+		const CPalette& p = PM.Palette(n);
+
+		string sfile = fileName.toStdString();
+		if (PM.Save(sfile, p) == false)
+		{
+			QMessageBox::critical(this, "Save Palette", "Failed saving palette");
+		}
+	}
+}
+
+void CDlgViewSettings::on_create_clicked()
+{
+	CDocument& doc = *m_pwnd->GetDocument();
+	if (doc.IsValid() == false)
+	{
+		QMessageBox::critical(this, "PostView", "No model is loaded");
+		return;
+	}
+
+	FEModel& fem = *doc.GetFEModel();
+	int NMAT = fem.Materials();
+	if (NMAT == 0)
+	{
+		QMessageBox::critical(this, "PostView", "Model does not define materials.");
+		return;
+	}
+
+	QString name = QInputDialog::getText(this, "New Palette", "Name");
+	if (name.isEmpty() == false)
+	{
+		string sname = name.toStdString();
+		CPalette pal(sname);
+		for (int i=0; i<NMAT; ++i)
+		{
+			FEMaterial& m = *fem.GetMaterial(i);
+			pal.AddColor(m.diffuse);
+		}
+
+		CPaletteManager& PM = CPaletteManager::GetInstance();
+		PM.AddPalette(pal);
+
+		UpdatePalettes();
+	}
 }

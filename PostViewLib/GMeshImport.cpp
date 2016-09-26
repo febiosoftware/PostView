@@ -4,8 +4,6 @@
 #include "FEModel.h"
 #include "FEMesh.h"
 
-extern GLCOLOR pal[MAX_PAL_COLORS];
-
 GMeshImport::GMeshImport(void) : FEFileReader("GMesh")
 {
 }
@@ -140,16 +138,6 @@ bool GMeshImport::BuildMesh(FEModel& fem)
 
 	// add a materials
 	FEMaterial mat;
-	mat.ambient = pal[0];
-	mat.diffuse = mat.ambient;
-	mat.specular = GLCOLOR(128,128,128);
-	mat.emission = GLCOLOR(0,0,0);
-	mat.shininess = 0.5f;
-	mat.transparency = 1.f;
-	mat.benable = true;
-	mat.bvisible = true;
-	mat.bmesh = true;
-	mat.bcast_shadows = true;
 	fem.AddMaterial(mat);
 
 	// build the mesh

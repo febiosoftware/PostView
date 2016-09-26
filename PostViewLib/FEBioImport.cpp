@@ -3,8 +3,6 @@
 #include "FEModel.h"
 #include "FEMesh.h"
 
-extern GLCOLOR pal[MAX_PAL_COLORS];
-
 FEBioImport::FEBioImport(void) : FEFileReader("FEBio input")
 {
 	m_pfem = 0;
@@ -147,16 +145,6 @@ void FEBioImport::ParseMaterialSection(FEModel& fem, XMLTag& tag)
 	{
 		// add a material to the scene
 		FEMaterial mat;
-		mat.diffuse = pal[i%MAX_PAL_COLORS];
-		mat.ambient = mat.diffuse;
-		mat.specular = GLCOLOR(128,128,128);
-		mat.emission = GLCOLOR(0,0,0);
-		mat.shininess = 0.5f;
-		mat.transparency = 1.f;
-		mat.benable = true;
-		mat.bvisible = true;
-		mat.bmesh = true;
-		mat.bcast_shadows = true;
 		m_pfem->AddMaterial(mat);
 	}
 }

@@ -111,7 +111,7 @@ bool XMLWriter::open(const char* szfile)
 	m_fp = fopen(szfile, "wt");
 
 	// write the first line
-	fprintf(m_fp, "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n");
+	fprintf(m_fp, "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
 	
 	return (m_fp != 0);
 }

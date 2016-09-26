@@ -10,6 +10,7 @@
 #include "GLPlot.h"
 #include "GLModel.h"
 #include <PostViewLib/constants.h>
+#include <PostViewLib/Palette.h>
 
 #ifdef WIN32
 	#include "direct.h"	// for getcwd, chdir
@@ -422,6 +423,27 @@ bool CDocument::LoadFEModel(FEFileReader* pimp, const char* szfile, bool bup)
 		delete m_fem;
 		m_fem = 0;
 		return false;
+	}
+
+	// assign material attributes
+	const CPalette& pal = CPaletteManager::CurrentPalette();
+	int NCOL = pal.Colors();
+	int nmat = m_fem->Materials();
+	for (int i = 0; i<nmat; i++)
+	{
+		GLCOLOR c = pal.Color(i % NCOL);
+
+		FEMaterial& m = *m_fem->GetMaterial(i);
+		m.diffuse = c;
+		m.ambient = c;
+		m.specular = GLCOLOR(128, 128, 128);
+		m.emission = GLCOLOR(0, 0, 0);
+		m.shininess = 0.5f;
+		m.transparency = 1.f;
+		m.benable = true;
+		m.bvisible = true;
+		m.bmesh = true;
+		m.bcast_shadows = true;
 	}
 
 	// create a new model

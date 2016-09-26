@@ -22,5 +22,3 @@ public:
 
 	operator unsigned int () { return (int)(((((r << 8) | g) << 8) | b) << 8); }
 };
-
-#define MAX_PAL_COLORS 32
