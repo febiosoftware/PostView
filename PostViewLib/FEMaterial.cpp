@@ -7,6 +7,11 @@ FEMaterial::FEMaterial()
 	bclip = true; 
 	m_nrender = RENDER_MODE_DEFAULT; 
 	m_ntransmode = RENDER_TRANS_CONSTANT; 
+
+	benable = true;
+	bvisible = true;
+	bmesh = true;
+	bcast_shadows = true;
 }
 
 const char* FEMaterial::GetName() { return m_szname; }

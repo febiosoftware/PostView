@@ -68,7 +68,7 @@ class FEElement;
 class FEItem
 {
 public:
-	FEItem() { m_state = 0; m_nId = -1; }
+	FEItem() { m_state = 0; m_nId = -1; m_ntag = 0; }
 	virtual ~FEItem() {}
 
 	bool IsHidden   () const { return ((m_state & FE_HIDDEN   ) != 0); }

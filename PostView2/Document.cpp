@@ -371,10 +371,6 @@ void CDocument::ApplyPalette(const CPalette& pal)
 		m.emission = GLCOLOR(0, 0, 0);
 		m.shininess = 0.5f;
 		m.transparency = 1.f;
-		m.benable = true;
-		m.bvisible = true;
-		m.bmesh = true;
-		m.bcast_shadows = true;
 	}
 }
 

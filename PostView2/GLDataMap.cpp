@@ -224,7 +224,7 @@ void CGLColorMap::Update(int ntime, float dt, bool breset)
 		for (int i=0; i<pm->Nodes(); ++i)
 		{
 			NODEDATA& node = s.m_NODE[i];
-			if (pm->Node(i).IsEnabled() && (node.m_ntag > 0))
+			if ((pm->Node(i).IsEnabled()) && (node.m_ntag > 0))
 			{
 				if (node.m_val > fmax) fmax = node.m_val;
 				if (node.m_val < fmin) fmin = node.m_val;
