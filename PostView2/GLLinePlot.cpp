@@ -61,8 +61,9 @@ CPropertyList* CGLLinePlot::propertyList()
 //-----------------------------------------------------------------------------
 void CGLLinePlot::Render(CGLContext& rc)
 {
-	FEModel& fem = *GetModel()->GetFEModel();;
-	int ns = fem.currentTime();
+	CGLModel& glm = *GetModel();
+	FEModel& fem = *glm.GetFEModel();;
+	int ns = glm.currentTimeIndex();
 
 	GLfloat line_old;
 	glGetFloatv(GL_LINE_WIDTH, &line_old);
