@@ -258,9 +258,10 @@ public:
 	{
 		pal = new QComboBox;
 
-		QPushButton* load = new QPushButton("Load Palette ..."); load->setObjectName("load");
-		QPushButton* save = new QPushButton("Save Palette ..."); save->setObjectName("save");
+		QPushButton* load   = new QPushButton("Load Palette ..."); load->setObjectName("load");
+		QPushButton* save   = new QPushButton("Save Palette ..."); save->setObjectName("save");
 		QPushButton* create = new QPushButton("Create palette from materials ..."); create->setObjectName("create");
+		QPushButton* apply  = new QPushButton("Apply palette to materials ..."   ); apply ->setObjectName("apply");
 
 		QHBoxLayout* h1 = new QHBoxLayout;
 		h1->addStretch();
@@ -274,11 +275,16 @@ public:
 		h3->addStretch();
 		h3->addWidget(create);
 
+		QHBoxLayout* h4 = new QHBoxLayout;
+		h4->addStretch();
+		h4->addWidget(apply);
+
 		QVBoxLayout* pl = new QVBoxLayout;
 		pl->addWidget(pal);
 		pl->addLayout(h1);
 		pl->addLayout(h2);
 		pl->addLayout(h3);
+		pl->addLayout(h4);
 		pl->addStretch();
 
 		setLayout(pl);
@@ -506,4 +512,20 @@ void CDlgViewSettings::on_create_clicked()
 
 		UpdatePalettes();
 	}
+}
+
+void CDlgViewSettings::on_apply_clicked()
+{
+	CDocument& doc = *m_pwnd->GetDocument();
+	if (doc.IsValid() == false)
+	{
+		QMessageBox::critical(this, "PostView", "No model is loaded");
+		return;
+	}
+
+	CPaletteManager& PM = CPaletteManager::GetInstance();
+	const CPalette& pal = PM.Palette(ui->m_col->pal->currentIndex());
+	doc.ApplyPalette(pal);
+
+	m_pwnd->UpdateUi(true);
 }

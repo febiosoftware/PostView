@@ -17,6 +17,7 @@ class CGLVisual;
 class C3DImage;
 class CVolRender;
 class CImageSlicer;
+class CPalette;
 
 class FEModel;
 class FEState;
@@ -241,6 +242,8 @@ public:
 	bool ExportRAW   (const char* szfile);
 
 	bool ExportDataField(const FEDataField& df, const char* szfile);
+
+	void ApplyPalette(const CPalette& pal);
 
 	// get the current file name
 	const char* GetFile() { return m_szfile; }

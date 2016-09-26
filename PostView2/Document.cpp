@@ -356,6 +356,29 @@ void CDocument::ZoomExtents(bool bhit)
 }
 
 //-----------------------------------------------------------------------------
+void CDocument::ApplyPalette(const CPalette& pal)
+{
+	int NCOL = pal.Colors();
+	int nmat = m_fem->Materials();
+	for (int i = 0; i<nmat; i++)
+	{
+		GLCOLOR c = pal.Color(i % NCOL);
+
+		FEMaterial& m = *m_fem->GetMaterial(i);
+		m.diffuse = c;
+		m.ambient = c;
+		m.specular = GLCOLOR(128, 128, 128);
+		m.emission = GLCOLOR(0, 0, 0);
+		m.shininess = 0.5f;
+		m.transparency = 1.f;
+		m.benable = true;
+		m.bvisible = true;
+		m.bmesh = true;
+		m.bcast_shadows = true;
+	}
+}
+
+//-----------------------------------------------------------------------------
 bool CDocument::LoadFEModel(FEFileReader* pimp, const char* szfile, bool bup)
 {
 	const int MAXLINE = 512;
@@ -427,24 +450,7 @@ bool CDocument::LoadFEModel(FEFileReader* pimp, const char* szfile, bool bup)
 
 	// assign material attributes
 	const CPalette& pal = CPaletteManager::CurrentPalette();
-	int NCOL = pal.Colors();
-	int nmat = m_fem->Materials();
-	for (int i = 0; i<nmat; i++)
-	{
-		GLCOLOR c = pal.Color(i % NCOL);
-
-		FEMaterial& m = *m_fem->GetMaterial(i);
-		m.diffuse = c;
-		m.ambient = c;
-		m.specular = GLCOLOR(128, 128, 128);
-		m.emission = GLCOLOR(0, 0, 0);
-		m.shininess = 0.5f;
-		m.transparency = 1.f;
-		m.benable = true;
-		m.bvisible = true;
-		m.bmesh = true;
-		m.bcast_shadows = true;
-	}
+	ApplyPalette(pal);
 
 	// create a new model
 	m_pGLModel = new CGLModel(m_fem);

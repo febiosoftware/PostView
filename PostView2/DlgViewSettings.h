@@ -25,6 +25,7 @@ public slots:
 	void on_load_clicked();
 	void on_save_clicked();
 	void on_create_clicked();
+	void on_apply_clicked();
 
 private:
 	void UpdatePalettes();
