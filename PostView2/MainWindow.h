@@ -73,6 +73,7 @@ public slots:
 	void on_actionOpen_triggered();
 	void on_actionSave_triggered();
 	void on_actionUpdate_triggered();
+	void on_actionFileInfo_triggered();
 	void on_actionSnapShot_triggered();
 	void on_actionOpenSession_triggered();
 	void on_actionSaveSession_triggered();

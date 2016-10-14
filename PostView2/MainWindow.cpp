@@ -6,9 +6,10 @@
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 #include "Document.h"
-#include <PostViewLib/xpltReader.h>
 #include "Document.h"
 #include "GLModel.h"
+#include <PostViewLib/xpltReader.h>
+#include <PostViewLib/xpltReader2.h>
 #include <PostViewLib/FEFEBioExport.h>
 #include <PostViewLib/FELSDYNAExport.h>
 #include <PostViewLib/FENikeExport.h>
@@ -36,6 +37,7 @@
 #include "DlgImportXPLT.h"
 #include "DlgSelectRange.h"
 #include "DlgTimeSettings.h"
+#include "DlgFileInfo.h"
 #include <string>
 
 CFileThread::CFileThread(CMainWindow* wnd, FEFileReader* file, const QString& fileName) : m_wnd(wnd), m_fileReader(file), m_fileName(fileName)
@@ -425,6 +427,15 @@ void CMainWindow::on_actionUpdate_triggered()
 		UpdatePlayToolbar(true);
 		UpdateUi(true);
 	}
+}
+
+void CMainWindow::on_actionFileInfo_triggered()
+{
+	CDlgFileInfo dlg;
+	FEModel& fem = *GetDocument()->GetFEModel();
+	MetaData& md = fem.GetMetaData();
+	dlg.setSoftware(QString::fromStdString(md.software));
+	dlg.exec();
 }
 
 void CMainWindow::on_actionSave_triggered()

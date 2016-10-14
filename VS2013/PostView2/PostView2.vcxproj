@@ -178,6 +178,7 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </CustomBuild>
+    <ClInclude Include="..\..\PostView2\DlgFileInfo.h" />
     <ClInclude Include="..\..\PostView2\DlgFind.h" />
     <ClInclude Include="..\..\PostView2\DlgImportXPLT.h" />
     <ClInclude Include="..\..\PostView2\DlgSelectRange.h" />
@@ -411,6 +412,7 @@
     <ClCompile Include="..\..\PostView2\render.cpp" />
     <ClCompile Include="..\..\PostView2\session.cpp" />
     <ClCompile Include="..\..\PostView2\ShellThicknessTool.cpp" />
+    <ClCompile Include="..\..\PostView2\DlgFileInfo.cpp" />
     <ClCompile Include="..\..\PostView2\SphereFitTool.cpp" />
     <ClCompile Include="..\..\PostView2\StatePanel.cpp" />
     <ClCompile Include="..\..\PostView2\StatsWindow.cpp" />

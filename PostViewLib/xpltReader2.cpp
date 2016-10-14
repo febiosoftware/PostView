@@ -81,11 +81,23 @@ bool XpltReader2::Load(FEModel& fem, const char* szfile)
 	}
 	else return errf("Error while reading root section");
 
-	// Build the mesh
-	if (BuildMesh(fem) == false) return false;
+	// Clear the end-flag
+	if (m_ar.OpenChunk() != IO_END) return false;
+
+	// read the first Mesh section
+	if (m_ar.OpenChunk() == IO_OK)
+	{
+		if (m_ar.GetChunkID() != PLT_MESH) return errf("Error while reading mesh section");
+		if (ReadMesh(fem) == false) return false;
+		m_ar.CloseChunk();
+	}
+	else return errf("Error while reading mesh section");
 
 	// Clear the end-flag
 	if (m_ar.OpenChunk() != IO_END) return false;
+
+	// Build the mesh
+	if (BuildMesh(fem) == false) return false;
 
 	// read the state sections (these could be compressed)
 	m_ar.SetCompression(m_hdr.ncompression);
@@ -148,7 +160,7 @@ bool XpltReader2::ReadRootSection(FEModel& fem)
 		int nid = m_ar.GetChunkID();
 		switch (nid)
 		{
-		case PLT_HEADER    : if (ReadHeader    ()    == false) return false; break;
+		case PLT_HEADER    : if (ReadHeader    (fem)    == false) return false; break;
 		case PLT_DICTIONARY: if (ReadDictionary(fem) == false) return false; break;
 		default:
 			return errf("Failed reading Root section");
@@ -159,27 +171,30 @@ bool XpltReader2::ReadRootSection(FEModel& fem)
 }
 
 //-----------------------------------------------------------------------------
-bool XpltReader2::ReadHeader()
+bool XpltReader2::ReadHeader(FEModel& fem)
 {
 	m_hdr.nversion			= 0;
-	m_hdr.nn				= 0;
-	m_hdr.nmax_facet_nodes  = 4;	// default for version 0.1
 	m_hdr.ncompression      = 0;	// default for version < 0.3
+	m_hdr.author[0] = 0;
+	m_hdr.software[0] = 0;
 	while (m_ar.OpenChunk() == IO_OK)
 	{
 		int nid = m_ar.GetChunkID();
 		switch (nid)
 		{
 		case PLT_HDR_VERSION        : m_ar.read(m_hdr.nversion); break;
-		case PLT_HDR_MAX_FACET_NODES: m_ar.read(m_hdr.nmax_facet_nodes); break;
 		case PLT_HDR_COMPRESSION    : m_ar.read(m_hdr.ncompression); break;
+		case PLT_HDR_AUTHOR         : m_ar.read(m_hdr.author); break;
+		case PLT_HDR_SOFTWARE       : m_ar.read(m_hdr.software); break;
 		default:
 			return errf("Error while reading header.");
 		}
 		m_ar.CloseChunk();
 	}
-	if (m_hdr.nversion > 4) return false;
-	if (m_hdr.nn == 0) return false;
+	if (m_hdr.nversion != 8) return false;
+	MetaData& md = fem.GetMetaData();
+	md.author = m_hdr.author;
+	md.software = m_hdr.software;
 	return true;
 }
 
@@ -606,6 +621,7 @@ bool XpltReader2::ReadMesh(FEModel &fem)
 		case PLT_DOMAIN_SECTION : if (ReadDomainSection (fem) == false) return false; break;
 		case PLT_SURFACE_SECTION: if (ReadSurfaceSection(fem) == false) return false; break;
 		case PLT_NODESET_SECTION: if (ReadNodeSetSection(fem) == false) return false; break;
+		case PLT_PARTS_SECTION  : if (ReadPartsSection  (fem) == false) return false; break;
 		default:
 			assert(false);
 			return errf("Error while reading mesh");
@@ -619,25 +635,45 @@ bool XpltReader2::ReadMesh(FEModel &fem)
 //-----------------------------------------------------------------------------
 bool XpltReader2::ReadNodeSection(FEModel &fem)
 {
-	vector<float> a(3*m_hdr.nn);
+	int nodes = 0;
+	int dim = 0;
+	char szname[DI_NAME_SIZE] = {0};
 	while (m_ar.OpenChunk() == IO_OK)
 	{
-		if (m_ar.GetChunkID() == PLT_NODE_COORDS) m_ar.read(a);
-		else
+		switch(m_ar.GetChunkID())
 		{
+		case PLT_NODE_HEADER:
+			{
+				while (m_ar.OpenChunk() == IO_OK)
+				{
+					int nid = m_ar.GetChunkID();
+					if      (nid == PLT_NODE_SIZE) m_ar.read(nodes); 
+					else if (nid == PLT_NODE_DIM ) m_ar.read(dim);
+					else if (nid == PLT_NODE_NAME) m_ar.read(szname);
+					m_ar.CloseChunk();
+				}
+			}
+			break;
+		case PLT_NODE_COORDS:
+			{
+				if (nodes == 0) return errf("Missing or invalid node header section");
+				if (dim   == 0) return errf("Missing or invalid node header section");
+
+				NODE node = {-1, 0.f, 0.f, 0.f};
+				for (int i=0; i<nodes; ++i)
+				{
+					m_ar.read(node.id);
+					m_ar.read(node.x, dim);
+
+					m_Node.push_back(node);
+				}
+			}
+			break;
+		default:
 			assert(false);
 			return errf("Error while reading Node section");
 		}
 		m_ar.CloseChunk();
-	}
-
-	m_Node.resize(m_hdr.nn);
-	for (int i=0; i<m_hdr.nn; ++i)
-	{
-		NODE& n = m_Node[i];
-		n.r.x = a[3*i  ];
-		n.r.y = a[3*i+1];
-		n.r.z = a[3*i+2];
 	}
 
 	return true;
@@ -744,7 +780,7 @@ bool XpltReader2::ReadDomainSection(FEModel &fem)
 //-----------------------------------------------------------------------------
 bool XpltReader2::ReadSurfaceSection(FEModel &fem)
 {
-	int nodes_per_facet = m_hdr.nmax_facet_nodes;
+	int nodes_per_facet = 4;;
 
 	// in previous versions there was a bug in the number
 	// of nodes written so we need to make an adjustment.
@@ -809,7 +845,7 @@ bool XpltReader2::ReadSurfaceSection(FEModel &fem)
 						assert(S.nf > 0);
 						S.face.reserve(S.nf);
 						int n[11];
-						assert(m_hdr.nmax_facet_nodes <= 9);
+						assert(nodes_per_facet <= 9);
 						while (m_ar.OpenChunk() == IO_OK)
 						{
 							if (m_ar.GetChunkID() == PLT_FACE)
@@ -905,7 +941,7 @@ bool XpltReader2::BuildMesh(FEModel &fem)
 	fem.ClearStates();
 
 	// count all nodes
-	int NN = m_hdr.nn;
+	int NN = (int) m_Node.size();
 
 	// count all elements
 	int ND = m_Dom.size();
@@ -1052,13 +1088,14 @@ bool XpltReader2::BuildMesh(FEModel &fem)
 	fem.SetMesh(pmesh);
 
 	// read the nodal coordinates
-	for (int i=0; i<m_hdr.nn; i++)
+	NN = (int) m_Node.size();
+	for (int i=0; i<NN; i++)
 	{
 		FENode& n = pmesh->Node(i);
 		NODE& N = m_Node[i];
 
 		// assign coordinates
-		n.m_r0 = N.r;
+		n.m_r0 = vec3f(N.x[0], N.x[1], N.x[2]);
 		n.m_rt = n.m_r0;
 	}
 
@@ -1733,7 +1770,7 @@ bool XpltReader2::ReadFaceData_MULT(FEMeshBase& m, XpltReader2::Surface &s, FEMe
 	int NF = s.nf;
 	vector<int> tag;
 	tag.assign(m.Nodes(), -1);
-	const int NFM = m_hdr.nmax_facet_nodes;
+	const int NFM = 4;//m_hdr.nmax_facet_nodes;
 	vector<vector<int> > l(NF, vector<int>(NFM));
 	for (int i=0; i<NF; ++i)
 	{

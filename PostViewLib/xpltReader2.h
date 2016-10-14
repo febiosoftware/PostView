@@ -18,7 +18,7 @@ protected:
 		PLT_HEADER						= 0x01010000,
 			PLT_HDR_VERSION				= 0x01010001,
 //			PLT_HDR_NODES				= 0x01010002,
-			PLT_HDR_MAX_FACET_NODES		= 0x01010003,
+//			PLT_HDR_MAX_FACET_NODES		= 0x01010003,	// removed (redefined in seach SURFACE section)
 			PLT_HDR_COMPRESSION			= 0x01010004,
 			PLT_HDR_AUTHOR				= 0x01010005,	// new in 2.0
 			PLT_HDR_SOFTWARE			= 0x01010006,	// new in 2.0
@@ -36,9 +36,13 @@ protected:
 //			PLT_MATERIAL				= 0x01030001,
 //			PLT_MAT_ID					= 0x01030002,
 //			PLT_MAT_NAME				= 0x01030003,
-		PLT_NESH						= 0x01040000,		// this was PLT_GEOMETRY
+		PLT_MESH						= 0x01040000,		// this was PLT_GEOMETRY
 			PLT_NODE_SECTION			= 0x01041000,
-				PLT_NODE_COORDS			= 0x01041001,
+				PLT_NODE_HEADER			= 0x01041100,		// new in 2.0
+					PLT_NODE_SIZE		= 0x01041101,		// new in 2.0
+					PLT_NODE_DIM		= 0x01041102,		// new in 2.0
+					PLT_NODE_NAME		= 0x01041103,		// new in 2.0
+				PLT_NODE_COORDS			= 0x01041200,		// new in 2.0
 			PLT_DOMAIN_SECTION			= 0x01042000,
 				PLT_DOMAIN				= 0x01042100,
 				PLT_DOMAIN_HDR			= 0x01042101,
@@ -54,6 +58,7 @@ protected:
 					PLT_SURFACE_ID		= 0x01043102,
 					PLT_SURFACE_FACES	= 0x01043103,
 					PLT_SURFACE_NAME	= 0x01043104,
+					PLT_SURFACE_MAX_FACET_NODES = 0x01043105,	// new in 2.0 (max number of nodes per facet)
 				PLT_FACE_LIST			= 0x01043200,
 					PLT_FACE			= 0x01043201,
 			PLT_NODESET_SECTION			= 0x01044000,
@@ -132,9 +137,9 @@ public:
 	struct HEADER
 	{
 		int	nversion;
-		int	nn;
-		int	nmax_facet_nodes;	// max nodes per facet (depends on version)
-		int ncompression;		//!< compression method (or level)
+		int ncompression;				//!< compression method (or level)
+		char author[DI_NAME_SIZE];		//!< name of author
+		char software[DI_NAME_SIZE];	//!< name of software that generated the file
 	};
 
 	struct MATERIAL
@@ -145,7 +150,8 @@ public:
 
 	struct NODE
 	{
-		vec3f	r;
+		int		id;
+		float	x[3];
 	};
 
 	struct ELEM
@@ -216,7 +222,7 @@ protected:
 	bool ReadRootSection(FEModel& fem);
 	bool ReadStateSection(FEModel& fem);
 
-	bool ReadHeader();
+	bool ReadHeader(FEModel& fem);
 	bool ReadDictionary(FEModel& fem);
 	bool ReadMesh(FEModel& fem);
 

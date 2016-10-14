@@ -18,6 +18,14 @@
 using namespace std;
 
 //-----------------------------------------------------------------------------
+class MetaData
+{
+public:
+	string	author;	// author of software
+	string	software;	// software that generated the model file
+};
+
+//-----------------------------------------------------------------------------
 // Base class for derived classes that need to be informed when the model changes
 class FEModelDependant
 {
@@ -157,6 +165,8 @@ public:
 public:
 	static FEModel* GetInstance();
 
+	MetaData& GetMetaData() { return m_meta; }
+
 protected:
 	// Helper functions for data evaluation
 	void EvalNodeField(int ntime, int nfield);
@@ -166,6 +176,9 @@ protected:
 protected:
 	char		m_szTitle[256]; // title of project
 	int			m_ntime;		// time step that is being evaluated
+
+	// --- M E T A   D A T A ---
+	MetaData	m_meta;
 
 	// --- M E S H ---
 	FEMeshBase*		m_mesh;		// the one and only mesh
