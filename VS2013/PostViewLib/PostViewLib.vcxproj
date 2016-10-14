@@ -199,6 +199,7 @@
     <ClInclude Include="..\..\PostViewLib\XMLReader.h" />
     <ClInclude Include="..\..\PostViewLib\XMLWriter.h" />
     <ClInclude Include="..\..\PostViewLib\xpltReader.h" />
+    <ClInclude Include="..\..\PostViewLib\xpltReader2.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\PostViewLib\3DImage.cpp" />
@@ -263,6 +264,7 @@
     <ClCompile Include="..\..\PostViewLib\XMLReader.cpp" />
     <ClCompile Include="..\..\PostViewLib\XMLWriter.cpp" />
     <ClCompile Include="..\..\PostViewLib\xpltReader.cpp" />
+    <ClCompile Include="..\..\PostViewLib\xpltReader2.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
