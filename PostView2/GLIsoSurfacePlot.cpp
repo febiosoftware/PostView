@@ -138,7 +138,7 @@ void CGLIsoSurfacePlot::RenderSlice(float ref)
 	FEModel* ps = m_pObj->GetFEModel();
 
 	// get the mesh
-	FEMeshBase* pm = m_pObj->GetMesh();
+	FEMeshBase* pm = m_pObj->GetActiveMesh();
 
 	const int* nt;
 
@@ -246,7 +246,7 @@ void CGLIsoSurfacePlot::SetEvalField(int n)
 //-----------------------------------------------------------------------------
 void CGLIsoSurfacePlot::Update(int ntime, float dt, bool breset)
 {
-	FEMeshBase* pm = m_pObj->GetMesh();
+	FEMeshBase* pm = m_pObj->GetActiveMesh();
 	FEModel* pfem = m_pObj->GetFEModel();
 
 	int NN = pm->Nodes();

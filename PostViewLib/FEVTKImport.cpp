@@ -51,7 +51,7 @@ bool FEVTKimport::Load(FEModel& fem, const char* szfile)
 
 	// create a new mesh
 	FEMesh* pm = new FEMesh;
-	fem.SetMesh(pm);
+	fem.AddMesh(pm);
 	pm->Create(nodes, 0);
 	
 	// read the nodes
@@ -206,7 +206,7 @@ bool FEVTKimport::Load(FEModel& fem, const char* szfile)
 			FEDataManager& dm = *fem.GetDataManager();
 			dm.AddDataField(new FEDataField_T<FENodeData<float> >("data", EXPORT_DATA));
 
-			FEState* ps = new FEState(0.f, m_pfem);
+			FEState* ps = new FEState(0.f, m_pfem, m_pfem->GetFEMesh(0));
 			m_pfem->AddState(ps);
 			FENodeData<float>& df = dynamic_cast<FENodeData<float>&>(ps->m_Data[0]);
 			for (int j=0; j<pm->Nodes(); ++j) df[j] = (float) data[j];
@@ -218,7 +218,7 @@ bool FEVTKimport::Load(FEModel& fem, const char* szfile)
 			FEDataManager& dm = *fem.GetDataManager();
 			dm.AddDataField(new FEDataField_T<FENodeData<float> >("data", EXPORT_DATA));
 
-			FEState* ps = new FEState(0.f, m_pfem);
+			FEState* ps = new FEState(0.f, m_pfem, m_pfem->GetFEMesh(0));
 			m_pfem->AddState(ps);
 			FEElementData<float, DATA_ITEM>& ed = dynamic_cast<FEElementData<float, DATA_ITEM>&>(ps->m_Data[0]);
 

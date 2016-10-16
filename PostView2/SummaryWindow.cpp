@@ -88,7 +88,7 @@ void CSummaryWindow::Update(bool breset)
 
 	CGLModel* po = doc->GetGLModel();
 	FEModel* pfem = doc->GetFEModel();
-	FEMeshBase* pfe = doc->GetFEModel()->GetMesh();
+	FEMeshBase* pfe = po->GetActiveMesh();
 	int nodes = pfe->Nodes();
 
 	// get the current data field
@@ -190,7 +190,7 @@ CSummaryWindow::RANGE CSummaryWindow::EvalNodeRange(FEModel& fem, int nstate, bo
 	RANGE rng = {-1e20f, 1e20f, 0.f};
 
 	FEState& state = *fem.GetState(nstate);
-	FEMeshBase& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *state.GetFEMesh();
 
 	float sum = 0;
 	
@@ -221,7 +221,7 @@ CSummaryWindow::RANGE CSummaryWindow::EvalEdgeRange(FEModel& fem, int nstate, bo
 	RANGE rng = {-1e20f, 1e20f, 0.f};
 
 	FEState& state = *fem.GetState(nstate);
-	FEMeshBase& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *state.GetFEMesh();
 
 	float sum = 0;
 	
@@ -252,7 +252,7 @@ CSummaryWindow::RANGE CSummaryWindow::EvalElemRange(FEModel& fem, int nstate, bo
 	RANGE rng = {-1e20f, 1e20f, 0.f};
 
 	FEState& state = *fem.GetState(nstate);
-	FEMeshBase& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *state.GetFEMesh();
 
 	float sum = 0.f;
 	int NE = mesh.Elements();
@@ -286,7 +286,7 @@ CSummaryWindow::RANGE CSummaryWindow::EvalFaceRange(FEModel& fem, int nstate, bo
 	RANGE rng = {-1e20f, 1e20f, 0.f};
 
 	FEState& state = *fem.GetState(nstate);
-	FEMeshBase& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *state.GetFEMesh();
 
 	float sum = 0.f;
 	int NF = mesh.Faces();

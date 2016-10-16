@@ -53,7 +53,7 @@ public:
 		case 6: v = m_fem->m_bsmooth; break;
 		case 7: v = m_fem->m_bShell2Hex; break;
 		case 8: v = m_fem->m_nshellref; break;
-		case 9: v = m_fem->GetMesh()->GetSmoothingAngle(); break;
+		case 9: v = m_fem->GetSmoothingAngle(); break;
 		}
 		return v;
 	}
@@ -72,8 +72,8 @@ public:
 		case 7: m_fem->m_bShell2Hex = v.toBool(); break;
 		case 8: m_fem->m_nshellref = v.toInt(); break;
 		case 9: 
-			m_fem->GetMesh()->SetSmoothingAngle(v.toDouble()); 
-			m_fem->GetMesh()->AutoSmooth();
+			m_fem->SetSmoothingAngle(v.toDouble()); 
+//			m_fem->GetMesh()->AutoSmooth();
 			break;
 		}
 	}
@@ -88,7 +88,7 @@ class CMeshProps : public CPropertyList
 public:
 	CMeshProps(FEModel* fem) : m_fem(fem) 
 	{
-		FEMeshBase& mesh = *fem->GetMesh();
+		FEMeshBase& mesh = *fem->GetFEMesh(0);
 		addProperty("Nodes"         , CProperty::Int, "Number of nodes"         )->setFlags(CProperty::Visible);
 		addProperty("Faces"         , CProperty::Int, "Number of faces"         )->setFlags(CProperty::Visible);
 		addProperty("Solid Elements", CProperty::Int, "Number of solid elements")->setFlags(CProperty::Visible);
@@ -100,7 +100,7 @@ public:
 		QVariant v;
 		if (m_fem)
 		{
-			FEMeshBase& mesh = *m_fem->GetMesh();
+			FEMeshBase& mesh = *m_fem->GetFEMesh(0);
 			switch (i)
 			{
 			case 0: v = mesh.Nodes(); break;

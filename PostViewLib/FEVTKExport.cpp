@@ -17,7 +17,7 @@ bool FEVTKExport::Save(FEModel& fem, int ntime, const char* szfile)
 	FILE* fp = fopen(szfile, "wt");
 	if (fp == 0) return false;
 
-	FEMeshBase* pm = fem.GetMesh();
+	FEMeshBase* pm = fem.GetFEMesh(0);
 	if (pm == 0) return false;
 		
 	FEMeshBase& m = *pm;

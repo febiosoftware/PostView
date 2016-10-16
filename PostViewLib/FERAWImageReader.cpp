@@ -48,7 +48,7 @@ bool FERAWImageReader::Load(FEModel& fem, const char* szfile)
 	{
 		return errf("Unkwown exception in FERAWImageReader::Load");
 	}
-	fem.SetMesh(pm);
+	fem.AddMesh(pm);
 
 	// scale parameters
 	double dx = m_ops.wx / (float) m_ops.nx;
@@ -110,7 +110,7 @@ bool FERAWImageReader::Load(FEModel& fem, const char* szfile)
 	fem.AddDataField(new FEDataField_T<FENodeData<float> >("Image", EXPORT_DATA));
 
 	// we need a single state
-	FEState* ps = new FEState(0.f, &fem);
+	FEState* ps = new FEState(0.f, &fem, fem.GetFEMesh(0));
 	fem.AddState(ps);
 
 	// add the image data

@@ -272,7 +272,7 @@ bool FELSDYNAimport::BuildMesh(FEModel& fem)
 	// build the mesh
 	FEMeshBase* pm = m_pm = new FEMesh;
 	pm->Create(nodes, elems);
-	fem.SetMesh(pm);
+	fem.AddMesh(pm);
 
 	// create nodes
 	list<NODE>::iterator in = m_node.begin();
@@ -364,7 +364,7 @@ bool FELSDYNAimport::BuildMesh(FEModel& fem)
 	}
 
 	// we need a single state
-	FEState* ps = new FEState(0.f, &fem);
+	FEState* ps = new FEState(0.f, &fem, fem.GetFEMesh(0));
 	fem.AddState(ps);
 
 	// add some data

@@ -85,7 +85,7 @@ bool FEKinemat::ReadKine(const char* szfile)
 bool FEKinemat::BuildStates()
 {
 	FEModel& fem = *m_pDoc->GetFEModel();
-	FEMeshBase& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetFEMesh(0);
 	int NMAT = fem.Materials();
 	int NN = mesh.Nodes();
 	int NE = mesh.Elements();
@@ -118,7 +118,7 @@ bool FEKinemat::BuildStates()
 		if (t == 0.f) ps = fem.GetState(0);
 		else {
 			try {
-				ps = new FEState(t, &fem);
+				ps = new FEState(t, &fem, fem.GetFEMesh(0));
 				fem.AddState(ps);
 			}
 			catch (...)

@@ -56,7 +56,6 @@ public:
 	void Render(CGLContext& rc);
 	CGLDisplacementMap* GetDisplacementMap() { return m_pdis; }
 	CGLColorMap* GetColorMap() { return m_pcol; }
-	FEMeshBase* GetMesh() { return m_ps->GetMesh(); }
 	FEModel* GetFEModel() { return m_ps; }
 
 	void Update(bool breset);
@@ -64,6 +63,18 @@ public:
 	bool AddDisplacementMap();
 
 	void SetMaterialParams(FEMaterial* pm);
+
+	//! set the smoothing angle
+	void SetSmoothingAngle(double w) { m_stol = w*PI / 180.0; }
+
+	//! get the smoothing angle in degrees
+	double GetSmoothingAngle() { return 180 * m_stol / PI; }
+
+	//! get the smoothing angle in radians
+	double GetSmoothingAngleRadians() { return m_stol; }
+
+	//! get the active mesh
+	FEMeshBase* GetActiveMesh();
 
 public:
 	bool ShowNormals() { return m_bnorm; }
@@ -239,6 +250,7 @@ public:
 	GLCOLOR		m_line_col;		//!< line color
 	GLCOLOR		m_node_col;		//!< color for rendering (unselected) nodes
 	GLCOLOR		m_sel_col;		//!< selection color
+	double		m_stol;			//!< smoothing threshold
 
 	float	m_fTime;		// current time value
 	int		m_nTime;		// active time step

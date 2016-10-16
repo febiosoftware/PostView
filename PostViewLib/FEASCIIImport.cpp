@@ -413,7 +413,7 @@ bool FEASCIIImport::BuildMesh(FEModel &fem)
 	}
 
 	pm->Create(zone.m_nn, zone.m_ne);
-	fem.SetMesh(pm);
+	fem.AddMesh(pm);
 
 	// assign nodes
 	for (int i=0; i<zone.m_nn; ++i)
@@ -467,7 +467,7 @@ bool FEASCIIImport::BuildMesh(FEModel &fem)
 		if (zone.m_nn != pm->Nodes()) break;
 
 		// create a state for this zone
-		FEState* ps = new FEState(zone.m_ftime, &fem);
+		FEState* ps = new FEState(zone.m_ftime, &fem, fem.GetFEMesh(0));
 		fem.AddState(ps);
 
 		// set the state data

@@ -32,7 +32,7 @@ void CGLDisplacementMap::Activate(bool b)
 	if (b == false)
 	{
 		CGLModel* po = dynamic_cast<CGLModel*>(m_po);
-		FEMeshBase* pm = po->GetMesh();
+		FEMeshBase* pm = po->GetActiveMesh();
 		for (int i=0; i<pm->Nodes(); ++i) pm->Node(i).m_rt = pm->Node(i).m_r0;
 		pm->UpdateNormals(po->RenderSmooth());
 	}
@@ -43,7 +43,7 @@ void CGLDisplacementMap::Activate(bool b)
 void CGLDisplacementMap::Update(int ntime, float dt, bool breset)
 {
 	CGLModel* po = dynamic_cast<CGLModel*>(m_po);
-	FEMeshBase* pm = po->GetMesh();
+	FEMeshBase* pm = po->GetActiveMesh();
 	FEModel* pfem = po->GetFEModel();
 
 	// get the number of states and make sure we have something
@@ -87,7 +87,7 @@ void CGLDisplacementMap::Update(int ntime, float dt, bool breset)
 void CGLDisplacementMap::UpdateState(int ntime, bool breset)
 {
 	CGLModel* po = dynamic_cast<CGLModel*>(m_po);
-	FEMeshBase* pm = po->GetMesh();
+	FEMeshBase* pm = po->GetActiveMesh();
 	FEModel* pfem = po->GetFEModel();
 
 	int N = pfem->GetStates();
@@ -179,7 +179,7 @@ void CGLColorMap::Update(int ntime, float dt, bool breset)
 	CGLModel* po = GetModel();
 
 	// get the mesh
-	FEMeshBase* pm = po->GetMesh();
+	FEMeshBase* pm = po->GetActiveMesh();
 	FEModel* pfem = po->GetFEModel();
 
 	// make sure the field variable is still valid

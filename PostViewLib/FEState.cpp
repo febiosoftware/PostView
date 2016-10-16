@@ -14,9 +14,10 @@ void ValArray::append(int items)
 
 //-----------------------------------------------------------------------------
 // Constructor
-FEState::FEState(float time, FEModel* pfem)
+FEState::FEState(float time, FEModel* fem, FEMeshBase* pmesh) : m_fem(fem), m_mesh(pmesh)
 {
-	FEMeshBase& mesh = *pfem->GetMesh();
+	FEMeshBase& mesh = *m_mesh;
+
 	int nodes = mesh.Nodes();
 	int edges = mesh.Edges();
 	int elems = mesh.Elements();
@@ -58,7 +59,7 @@ FEState::FEState(float time, FEModel* pfem)
 	m_nField = -1;
 
 	// get the data manager
-	FEDataManager* pdm = pfem->GetDataManager();
+	FEDataManager* pdm = fem->GetDataManager();
 
 	// Nodal data
 	int N = pdm->DataFields();
@@ -66,7 +67,7 @@ FEState::FEState(float time, FEModel* pfem)
 	for (int i=0; i<N; ++i, ++it)
 	{
 		FEDataField& d = *(*it);
-		m_Data.push_back(d.CreateData(pfem));
+		m_Data.push_back(d.CreateData(this));
 	}
 }
 
@@ -81,9 +82,10 @@ template <class T> void copyData(FEMeshData* dest, FEMeshData* src)
 
 //-----------------------------------------------------------------------------
 // Constructor
-FEState::FEState(float time, FEModel* pfem, FEState* pstate)
+FEState::FEState(float time, FEModel* pfem, FEState* pstate) : m_fem(pfem)
 {
-	FEMeshBase& mesh = *pfem->GetMesh();
+	m_mesh = pstate->m_mesh;
+	FEMeshBase& mesh = *m_mesh;
 
 	int nodes = mesh.Nodes();
 	int edges = mesh.Edges();
@@ -133,7 +135,7 @@ FEState::FEState(float time, FEModel* pfem, FEState* pstate)
 	FEDataFieldPtr pn = pdm->FirstDataField();
 	for (int i=0; i<N; ++i, ++pn)
 	{
-		m_Data.push_back((*pn)->CreateData(pfem));
+		m_Data.push_back((*pn)->CreateData(this));
 	}
 
 	// copy data

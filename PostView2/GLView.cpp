@@ -843,7 +843,7 @@ void CGLView::RenderTags()
 	m_ffar  = 100*radius;
 
 	// get the mesh
-	FEMeshBase& mesh = *pdoc->GetFEModel()->GetMesh();
+	FEMeshBase& mesh = *pdoc->GetActiveMesh();
 
 	// create the tag array.
 	// We add a tag for each selected item
@@ -1139,7 +1139,7 @@ void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
-	FEMeshBase* pm = ps->GetMesh();
+	FEMeshBase* pm = pdoc->GetActiveMesh();
 
 	double radius = box.Radius();
 	vec3f rc = box.Center();
@@ -1323,7 +1323,7 @@ GLNODE_PICK CGLView::PickNode(int x, int y, bool bselect)
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
-	FEMeshBase* pm = ps->GetMesh();
+	FEMeshBase* pm = pdoc->GetActiveMesh();
 
 	double radius = box.Radius();
 	vec3f rc = box.Center();
@@ -1437,7 +1437,7 @@ GLNODE_PICK CGLView::PickNode(int x, int y, bool bselect)
 
 	if (bselect)
 	{
-		FEMeshBase& mesh = *pdoc->GetFEModel()->GetMesh();
+		FEMeshBase& mesh = *pdoc->GetActiveMesh();
 		int N = mesh.Nodes();
 		if ((index > 0) && (index <= N))
 		{
@@ -1465,7 +1465,7 @@ FEElement* CGLView::PickElement(int x, int y)
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
 
 	FEModel* ps = pdoc->GetFEModel();
-	FEMeshBase* pm = ps->GetMesh();
+	FEMeshBase* pm = pdoc->GetActiveMesh();
 
 	double radius = box.Radius();
 	vec3f rc = box.Center();
@@ -1481,7 +1481,7 @@ FEElement* CGLView::PickElement(int x, int y)
 	}
 */
 	// set up selection buffer
-	int size = 10*pdoc->GetFEModel()->GetMesh()->Elements();
+	int size = 10*pm->Elements();
 	GLuint *pbuf = new GLuint[4*size];
 
 	glSelectBuffer(4*size, pbuf);
@@ -1654,7 +1654,7 @@ void CGLView::RegionSelectElements(const SelectRegion& region, int mode)
 	// get the model and mesh
 	CDocument* pdoc = GetDocument();
 	FEModel& fem = *pdoc->GetFEModel();
-	FEMeshBase& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *pdoc->GetActiveMesh();
 
 	// activate the gl rendercontext
 	makeCurrent();
@@ -1689,7 +1689,7 @@ void CGLView::RegionSelectFaces(const SelectRegion& region, int mode)
 	// get the model and mesh
 	CDocument* pdoc = GetDocument();
 	FEModel& fem = *pdoc->GetFEModel();
-	FEMeshBase& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *pdoc->GetActiveMesh();
 
 	// activate the gl rendercontext
 	makeCurrent();
@@ -1724,7 +1724,7 @@ void CGLView::RegionSelectNodes(const SelectRegion& region, int mode)
 	// get the model and mesh
 	CDocument* pdoc = GetDocument();
 	FEModel& fem = *pdoc->GetFEModel();
-	FEMeshBase& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *pdoc->GetActiveMesh();
 
 	// activate the gl rendercontext
 	makeCurrent();
@@ -1759,7 +1759,7 @@ void CGLView::RegionSelectEdges(const SelectRegion& region, int mode)
 	// get the model and mesh
 	CDocument* pdoc = GetDocument();
 	FEModel& fem = *pdoc->GetFEModel();
-	FEMeshBase& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *pdoc->GetActiveMesh();
 
 	// activate the gl rendercontext
 	makeCurrent();
@@ -1813,7 +1813,7 @@ void CGLView::SelectElements(int x0, int y0, int x1, int y1, int mode)
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
-	FEMeshBase* pm = ps->GetMesh();
+	FEMeshBase* pm = pdoc->GetActiveMesh();
 
 	double radius = box.Radius();
 	vec3f rc = box.Center();
@@ -1829,7 +1829,7 @@ void CGLView::SelectElements(int x0, int y0, int x1, int y1, int mode)
 	}
 */
 	// set up selection buffer
-	int size = 6*pdoc->GetFEModel()->GetMesh()->Elements();
+	int size = 6*pm->Elements();
 	if (size > 1000000) size = 1000000;
 
 	GLuint *pbuf = new GLuint[4*size];
@@ -2012,7 +2012,7 @@ void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
-	FEMeshBase* pm = ps->GetMesh();
+	FEMeshBase* pm = pdoc->GetActiveMesh();
 
 	double radius = box.Radius();
 	vec3f rc = box.Center();
@@ -2212,7 +2212,7 @@ void CGLView::SelectEdges(int x0, int y0, int x1, int y1, int mode)
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
-	FEMeshBase* pm = ps->GetMesh();
+	FEMeshBase* pm = pdoc->GetActiveMesh();
 
 	double radius = box.Radius();
 	vec3f rc = box.Center();
@@ -2682,7 +2682,7 @@ void CGLView::RenderTrack()
 	if (m_btrack == false) return;
 
 	CDocument* pdoc = GetDocument();
-	FEMeshBase* pm = pdoc->GetFEModel()->GetMesh();
+	FEMeshBase* pm = pdoc->GetActiveMesh();
 	int* nt = m_ntrack;
 
 	glPushAttrib(GL_ENABLE_BIT);
@@ -2736,7 +2736,7 @@ void CGLView::PositionCam()
 	// see if we need to track anything
 	if (pdoc->IsValid() && m_btrack)
 	{
-		FEMeshBase* pm = pdoc->GetFEModel()->GetMesh();
+		FEMeshBase* pm = pdoc->GetActiveMesh();
 		int NN = pm->Nodes();
 		int* nt = m_ntrack;
 		if ((nt[0] >= NN) || (nt[1] >= NN) || (nt[2] >= NN)) { m_btrack = false; return; }
@@ -3048,7 +3048,7 @@ void CGLView::TrackSelection(bool b)
 		if (pdoc->IsValid())
 		{
 			int nmode = pdoc->GetSelectionMode();
-			FEMeshBase* pm = pdoc->GetFEModel()->GetMesh();
+			FEMeshBase* pm = pdoc->GetActiveMesh();
 			if (nmode == SELECT_ELEMS)
 			{
 				const vector<FEElement*> selElems = pdoc->GetGLModel()->GetElementSelection();

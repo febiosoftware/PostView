@@ -646,7 +646,7 @@ void CMainWindow::on_actionHideUnselected_triggered()
 void CMainWindow::on_actionInvertSelection_triggered()
 {
 	CDocument* pdoc = GetDocument();
-	FEMeshBase* pfe = pdoc->GetFEModel()->GetMesh();
+	FEMeshBase* pfe = pdoc->GetActiveMesh();
 
 	for (int i=0; i<pfe->Elements(); i++)
 	{
@@ -665,7 +665,7 @@ void CMainWindow::on_actionUnhideAll_triggered()
 	if (pdoc->IsValid() == false) return;
 
 	FEModel& fem = *pdoc->GetFEModel();
-	FEMeshBase& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *pdoc->GetActiveMesh();
 
 	for (int i=0; i<mesh.Elements(); ++i) mesh.Element(i).Unhide();
 	for (int i=0; i<mesh.Faces   (); ++i) mesh.Face   (i).Unhide();
@@ -679,7 +679,7 @@ void CMainWindow::on_actionUnhideAll_triggered()
 void CMainWindow::on_actionSelectAll_triggered()
 {
 	CDocument* pdoc = GetDocument();
-	FEMeshBase* pfe = pdoc->GetFEModel()->GetMesh();
+	FEMeshBase* pfe = pdoc->GetActiveMesh();
 
 	for (int i=0; i<pfe->Elements(); i++) 
 	{

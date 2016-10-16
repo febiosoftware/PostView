@@ -51,15 +51,11 @@ public:
 	// clear all model data
 	void Clear();
 
+	void DeleteMeshes();
+
 	// get/set title of model
 	void SetTitle(const char* sztitle);
 	const char* GetTitle() { return m_szTitle; }
-
-	// get the FE mesh for this model
-	FEMeshBase* GetMesh() { return m_mesh; }
-
-	// set the FE mesh
-	void SetMesh(FEMeshBase* mesh);
 
 	// get the current active state
 	int currentTime() { return m_ntime; }
@@ -163,6 +159,11 @@ public:
 	void ClearDependants();
 
 public:
+	void AddMesh(FEMeshBase* mesh);
+	int Meshes() const;
+	FEMeshBase* GetFEMesh(int i);
+
+public:
 	static FEModel* GetInstance();
 
 	MetaData& GetMetaData() { return m_meta; }
@@ -181,8 +182,8 @@ protected:
 	MetaData	m_meta;
 
 	// --- M E S H ---
-	FEMeshBase*		m_mesh;		// the one and only mesh
-	BOUNDINGBOX		m_bbox;		// bounding box of mesh
+	vector<FEMeshBase*>		m_mesh;		// the list of meshes
+	BOUNDINGBOX		m_bbox;				// bounding box of mesh
 
 	// --- M A T E R I A L S ---
 	vector<FEMaterial>	m_Mat;		// array of materials

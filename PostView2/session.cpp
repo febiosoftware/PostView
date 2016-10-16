@@ -62,7 +62,6 @@ bool CDocument::SaveSession(const char* szfile)
 
 		// store model data
 		CGLModel* pmdl = m_pGLModel;
-		FEMeshBase* pm = pmdl->GetMesh();
 		FEModel* pfem = pmdl->GetFEModel();
 		xml.add_branch(e);
 		{
@@ -73,7 +72,7 @@ bool CDocument::SaveSession(const char* szfile)
 			xml.add_leaf("line_color", pmdl->m_line_col);
 			xml.add_leaf("node_color", pmdl->m_node_col);
 			xml.add_leaf("selection_color", pmdl->m_sel_col);
-			xml.add_leaf("smooth_angle", pm->GetSmoothingAngle());
+			xml.add_leaf("smooth_angle", pmdl->GetSmoothingAngle());
 			xml.add_leaf("elem_div", pmdl->GetSubDivisions());
 			xml.add_leaf("shell2hex", pmdl->m_bShell2Hex);
 			xml.add_leaf("shellref", pmdl->m_nshellref);
@@ -312,7 +311,6 @@ bool CDocument::OpenSession(const char* szfile)
 			int ntime = currentTime();
 
 			CGLModel* pmdl = m_pGLModel;
-			FEMeshBase* pm = pmdl->GetMesh();
 			FEModel* pfem = pmdl->GetFEModel();
 
 			float f;
@@ -327,7 +325,7 @@ bool CDocument::OpenSession(const char* szfile)
 				else if (tag == "line_color"  ) tag.value(pmdl->m_line_col);
 				else if (tag == "node_color"  ) tag.value(pmdl->m_node_col);
 				else if (tag == "selection_color") tag.value(pmdl->m_sel_col);
-				else if (tag == "smooth_angle") { tag.value(g); pm->SetSmoothingAngle(g); }
+				else if (tag == "smooth_angle") { tag.value(g); pmdl->SetSmoothingAngle(g); }
 				else if (tag == "elem_div"    ) { tag.value(n); pmdl->SetSubDivisions(n); }
 				else if (tag == "shell2hex"   ) tag.value(pmdl->m_bShell2Hex);
 				else if (tag == "smooth"      ) tag.value(pmdl->m_bsmooth); 

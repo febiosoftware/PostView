@@ -24,8 +24,9 @@ CGLModel::CGLModel(FEModel* ps)
 	m_nTime = 0;
 	m_fTime = 0.f;
 
+	m_stol = 60.*PI / 180.0;
+
 	m_ps = ps;
-	FEMeshBase* pm = ps->GetMesh();
 
 	// see if the mesh has any vector fields
 	// which can be used for displacement maps
@@ -74,6 +75,14 @@ CGLModel::~CGLModel(void)
 	delete m_pdis;
 	delete m_pcol;
 	ClearInternalSurfaces();
+}
+
+//-----------------------------------------------------------------------------
+FEMeshBase* CGLModel::GetActiveMesh()
+{
+	FEModel* pfem = GetFEModel();
+	if (pfem && (pfem->GetStates() > 0)) return pfem->GetState(m_nTime)->GetFEMesh();
+	return 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -217,7 +226,7 @@ void CGLModel::RenderDiscrete(CGLContext& rc)
 {
 	glPushAttrib(GL_ENABLE_BIT);
 	glDisable(GL_LIGHTING);
-	FEMeshBase& mesh = *m_ps->GetMesh();
+	FEMeshBase& mesh = *GetActiveMesh();
 	int curMat = -1;
 	glBegin(GL_LINES);
 	for (int i=0; i<m_edge.Edges(); ++i)
@@ -248,7 +257,7 @@ void CGLModel::RenderFaces(CGLContext& rc)
 
 	// get the mesh
 	FEModel* ps = m_ps;
-	FEMeshBase* pm = ps->GetMesh();
+	FEMeshBase* pm = GetActiveMesh();
 
 	// we render the mesh by looping over the materials
 	// first we render the opaque meshes
@@ -313,7 +322,7 @@ void CGLModel::RenderSelection(CGLContext &rc)
 
 	// get the mesh
 	FEModel* ps = m_ps;
-	FEMeshBase* pm = ps->GetMesh();
+	FEMeshBase* pm = GetActiveMesh();
 
 	glPushAttrib(GL_ENABLE_BIT | GL_LINE_BIT);
 
@@ -448,7 +457,7 @@ void CGLModel::RenderSelection(CGLContext &rc)
 void CGLModel::RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m)
 {
 	FEMaterial* pmat = ps->GetMaterial(m);
-	FEMeshBase* pm = ps->GetMesh();
+	FEMeshBase* pm = GetActiveMesh();
 
 	// get the camera's orientation
 	quat4f q = rc.m_pview->GetCamera().GetOrientation();
@@ -618,7 +627,7 @@ void CGLModel::RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m)
 void CGLModel::RenderSolidMaterial(FEModel* ps, int m)
 {
 	FEMaterial* pmat = ps->GetMaterial(m);
-	FEMeshBase* pm = ps->GetMesh();
+	FEMeshBase* pm = GetActiveMesh();
 
 	// make sure a part with this material exists
 	if (m >= pm->Domains()) return;
@@ -755,7 +764,7 @@ void CGLModel::RenderGhost(CGLContext &rc)
 	vec3f r1, r2;
 
 	FEModel* ps = m_ps;
-	FEMeshBase* pm = ps->GetMesh();
+	FEMeshBase* pm = GetActiveMesh();
 
 	glPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT);
 
@@ -766,7 +775,7 @@ void CGLModel::RenderGhost(CGLContext &rc)
 
 	quat4f q = rc.m_pview->GetCamera().GetOrientation();
 
-	double eps = cos(pm->GetSmoothingAngleRadians());
+	double eps = cos(GetSmoothingAngleRadians());
 
 	for (i=0; i<pm->Faces(); ++i)
 	{
@@ -934,7 +943,7 @@ void CGLModel::RenderOutline(CGLContext& rc, int nmat)
 	glDepthRange(0, 0.99998);
 
 	FEModel* ps = m_ps;
-	FEMeshBase* pm = ps->GetMesh();
+	FEMeshBase* pm = GetActiveMesh();
 
 	glPushAttrib(GL_ENABLE_BIT);
 
@@ -1005,7 +1014,7 @@ void CGLModel::RenderNormals(CGLContext& rc)
 
 	// get the mesh
 	FEModel* ps = m_ps;
-	FEMeshBase* pm = ps->GetMesh();
+	FEMeshBase* pm = GetActiveMesh();
 
 	BOUNDINGBOX box = ps->GetBoundingBox();
 
@@ -1258,7 +1267,7 @@ void CGLModel::RenderFEFace(FEFace& face, FEMeshBase* pm)
 void CGLModel::RenderMeshLines(FEModel* ps, int nmat)
 {
 	// get the mesh
-	FEMeshBase* pm = ps->GetMesh();
+	FEMeshBase* pm = GetActiveMesh();
 
 	int ndivs = GetSubDivisions();
 
@@ -1327,7 +1336,7 @@ void CGLModel::RenderMeshLines(FEModel* ps)
 
 void CGLModel::RenderShadows(FEModel* ps, vec3f n, float inf)
 {
-	FEMeshBase* pm = ps->GetMesh();
+	FEMeshBase* pm = GetActiveMesh();
 
 	// find all silhouette edges
 	vec3f fn, fn2;
@@ -1442,7 +1451,7 @@ void CGLModel::RenderNodes(FEModel* ps, CGLContext& rc)
 {
 	int i, j;
 
-	FEMeshBase* pm = ps->GetMesh();
+	FEMeshBase* pm = GetActiveMesh();
 
 	// store attributes
 	glPushAttrib(GL_ENABLE_BIT);
@@ -2305,7 +2314,7 @@ void CGLModel::RenderEdges(FEModel* ps, CGLContext& rc)
 
 	vec3f r[3];
 
-	FEMeshBase& mesh = *ps->GetMesh();
+	FEMeshBase& mesh = *GetActiveMesh();
 	int NE = mesh.Edges();
 	for (int i=0; i<NE; ++i)
 	{
@@ -2347,7 +2356,7 @@ void CGLModel::RenderEdges(FEModel* ps, CGLContext& rc)
 
 void CGLModel::RenderAllNodes()
 {
-	FEMeshBase* pm = GetMesh();
+	FEMeshBase* pm = GetActiveMesh();
 
 	// reset tags and check visibility
 	for (int i=0; i<pm->Nodes(); ++i)
@@ -2375,7 +2384,7 @@ void CGLModel::RenderAllNodes()
 void CGLModel::RenderAllEdges()
 {
 	vec3f r[3];
-	FEMeshBase& mesh = *GetMesh();
+	FEMeshBase& mesh = *GetActiveMesh();
 	int NE = mesh.Edges();
 	for (int i=0; i<NE; ++i)
 	{
@@ -2415,7 +2424,7 @@ void CGLModel::RenderAllEdges()
 void CGLModel::RenderAllFaces()
 {
 	// get the mesh
-	FEMeshBase* pm = GetMesh();
+	FEMeshBase* pm = GetActiveMesh();
 
 	vec3f r0, r1, r2, r3;
 
@@ -2473,7 +2482,7 @@ void CGLModel::RenderAllElements()
 {
 	// get the mesh
 	FEFace f;
-	FEMeshBase* pm = m_ps->GetMesh();
+	FEMeshBase* pm = GetActiveMesh();
 	for (int i=0; i<pm->Elements(); ++i)
 	{
 		FEElement& el = pm->Element(i);
@@ -2613,7 +2622,7 @@ int CGLModel::GetSubDivisions()
 {
 	if (m_nDivs < 1)
 	{
-		FEMeshBase& mesh = *GetMesh();
+		FEMeshBase& mesh = *GetActiveMesh();
 		int NE = mesh.Elements();
 		if (NE == 0) return 1;
 
@@ -2639,7 +2648,7 @@ void CGLModel::ClearSelectionLists()
 //-----------------------------------------------------------------------------
 void CGLModel::UpdateSelectionLists(int mode)
 {
-	FEMeshBase& m = *GetMesh();
+	FEMeshBase& m = *GetActiveMesh();
 	if ((mode == -1) || (mode == SELECT_NODES))
 	{
 		m_nodeSelection.clear();
@@ -2669,7 +2678,7 @@ void CGLModel::UpdateSelectionLists(int mode)
 //-----------------------------------------------------------------------------
 void CGLModel::SelectNodes(vector<int>& items, bool bclear)
 {
-	FEMeshBase& m = *GetMesh();
+	FEMeshBase& m = *GetActiveMesh();
 	if (bclear) for (int i=0; i<m.Nodes(); ++i) m.Node(i).Unselect();
 	for (int i=0; i<(int) items.size(); ++i) m.Node(items[i]).Select();
 	UpdateSelectionLists(SELECT_NODES);
@@ -2678,7 +2687,7 @@ void CGLModel::SelectNodes(vector<int>& items, bool bclear)
 //-----------------------------------------------------------------------------
 void CGLModel::SelectEdges(vector<int>& items, bool bclear)
 {
-	FEMeshBase& m = *GetMesh();
+	FEMeshBase& m = *GetActiveMesh();
 	if (bclear) for (int i=0; i<m.Edges(); ++i) m.Edge(i).Unselect();
 	for (int i=0; i<(int) items.size(); ++i) m.Edge(items[i]).Select();
 	UpdateSelectionLists(SELECT_EDGES);
@@ -2687,7 +2696,7 @@ void CGLModel::SelectEdges(vector<int>& items, bool bclear)
 //-----------------------------------------------------------------------------
 void CGLModel::SelectFaces(vector<int>& items, bool bclear)
 {
-	FEMeshBase& m = *GetMesh();
+	FEMeshBase& m = *GetActiveMesh();
 	if (bclear) for (int i=0; i<m.Faces(); ++i) m.Face(i).Unselect();
 	for (int i=0; i<(int) items.size(); ++i) m.Face(items[i]).Select();
 	UpdateSelectionLists(SELECT_FACES);
@@ -2696,7 +2705,7 @@ void CGLModel::SelectFaces(vector<int>& items, bool bclear)
 //-----------------------------------------------------------------------------
 void CGLModel::SelectElements(vector<int>& items, bool bclear)
 {
-	FEMeshBase& m = *GetMesh();
+	FEMeshBase& m = *GetActiveMesh();
 	if (bclear) for (int i=0; i<m.Elements(); ++i) m.Element(i).Unselect();
 	for (int i=0; i<(int) items.size(); ++i) m.Element(items[i]).Select();
 	UpdateSelectionLists(SELECT_ELEMS);
@@ -2706,7 +2715,7 @@ void CGLModel::SelectElements(vector<int>& items, bool bclear)
 // Clear all selection
 void CGLModel::ClearSelection()
 {
-	FEMeshBase& mesh = *GetMesh();
+	FEMeshBase& mesh = *GetActiveMesh();
 	for (int i=0; i<mesh.Elements(); i++) mesh.Element(i).Unselect();
 	for (int i=0; i<mesh.Faces   (); i++) mesh.Face(i).Unselect();
 	for (int i=0; i<mesh.Edges   (); i++) mesh.Edge(i).Unselect();
@@ -2718,7 +2727,7 @@ void CGLModel::ClearSelection()
 // Hide elements with a particular material ID
 void CGLModel::HideMaterial(int nmat)
 {
-	FEMeshBase& mesh = *GetMesh();
+	FEMeshBase& mesh = *GetActiveMesh();
 
 	// Hide the elements with the material ID
 	for (int i=0; i<mesh.Elements(); ++i) if (mesh.Element(i).m_MatID == nmat) mesh.Element(i).Show(false);
@@ -2766,7 +2775,7 @@ void CGLModel::HideMaterial(int nmat)
 // Show elements with a certain material ID
 void CGLModel::ShowMaterial(int nmat)
 {
-	FEMeshBase& mesh = *GetMesh();
+	FEMeshBase& mesh = *GetActiveMesh();
 
 	// unhide the elements with mat ID nmat
 	int NE = mesh.Elements();
@@ -2814,7 +2823,7 @@ void CGLModel::ShowMaterial(int nmat)
 // Enable elements with a certain mat ID
 void CGLModel::EnableMaterial(int nmat)
 {
-	FEMeshBase& mesh = *GetMesh();
+	FEMeshBase& mesh = *GetActiveMesh();
 
 	// update the elements
 	for (int i=0; i<mesh.Elements(); ++i) if (mesh.Element(i).m_MatID == nmat) mesh.Element(i).Enable();
@@ -2844,7 +2853,7 @@ void CGLModel::EnableMaterial(int nmat)
 // Disable elements with a certain mat ID
 void CGLModel::DisableMaterial(int nmat)
 {
-	FEMeshBase& mesh = *GetMesh();
+	FEMeshBase& mesh = *GetActiveMesh();
 
 	// update the elements
 	for (int i=0; i<mesh.Elements(); ++i) if (mesh.Element(i).m_MatID == nmat) mesh.Element(i).Disable();
@@ -2876,7 +2885,7 @@ void CGLModel::SelectConnectedSurfaceElements(FEElement &el)
 {
 	if (!el.IsVisible()) return;
 
-	FEMeshBase& mesh = *GetMesh();
+	FEMeshBase& mesh = *GetActiveMesh();
 	// tag all faces
 	for (int i=0; i<mesh.Faces(); ++i) mesh.Face(i).m_ntag = 0;
 
@@ -2915,7 +2924,7 @@ void CGLModel::SelectConnectedVolumeElements(FEElement &el)
 {
 	if (!el.IsVisible()) return;
 
-	FEMeshBase& mesh = *GetMesh();
+	FEMeshBase& mesh = *GetActiveMesh();
 	// tag all elements
 	for (int i=0; i<mesh.Elements(); ++i) mesh.Element(i).m_ntag = 0;
 
@@ -2941,7 +2950,7 @@ void CGLModel::SelectConnectedVolumeElements(FEElement &el)
 // Select faces that are connected
 void CGLModel::SelectConnectedEdges(FEEdge& e)
 {
-	FEMeshBase& mesh = *GetMesh();
+	FEMeshBase& mesh = *GetActiveMesh();
 
 	// clear tags on all faces
 	int NF = mesh.Faces();
@@ -3015,7 +3024,7 @@ void CGLModel::SelectConnectedEdges(FEEdge& e)
 // Select faces that are connected
 void CGLModel::SelectConnectedFaces(FEFace &f)
 {
-	FEMeshBase& mesh = *GetMesh();
+	FEMeshBase& mesh = *GetActiveMesh();
 
 	// clear tags on all faces
 	for (int i=0; i<mesh.Faces(); ++i) mesh.Face(i).m_ntag = 0;
@@ -3050,7 +3059,7 @@ void CGLModel::SelectConnectedFaces(FEFace &f)
 // Select nodes that are connected on a surface
 void CGLModel::SelectConnectedSurfaceNodes(int n)
 {
-	FEMeshBase& mesh = *GetMesh();
+	FEMeshBase& mesh = *GetActiveMesh();
 
 	// clear tags on all faces
 	int NF = mesh.Faces();
@@ -3108,7 +3117,7 @@ void CGLModel::SelectConnectedSurfaceNodes(int n)
 // Select nodes that are connected on a volume
 void CGLModel::SelectConnectedVolumeNodes(int n)
 {
-	FEMeshBase& mesh = *GetMesh();
+	FEMeshBase& mesh = *GetActiveMesh();
 
 	// clear tags on all elements
 	int NE = mesh.Elements();
@@ -3166,7 +3175,7 @@ void CGLModel::SelectConnectedVolumeNodes(int n)
 // Hide selected elements
 void CGLModel::HideSelectedElements()
 {
-	FEMeshBase& mesh = *GetMesh();
+	FEMeshBase& mesh = *GetActiveMesh();
 
 	// hide selected elements
 	int NE = mesh.Elements();
@@ -3215,7 +3224,7 @@ void CGLModel::HideSelectedElements()
 // Hide selected elements
 void CGLModel::HideUnselectedElements()
 {
-	FEMeshBase& mesh = *GetMesh();
+	FEMeshBase& mesh = *GetActiveMesh();
 
 	// hide unselected elements
 	int NE = mesh.Elements();
@@ -3264,7 +3273,7 @@ void CGLModel::HideUnselectedElements()
 // Hide selected faces
 void CGLModel::HideSelectedFaces()
 {
-	FEMeshBase& mesh = *GetMesh();
+	FEMeshBase& mesh = *GetActiveMesh();
 	// hide the faces and the elements that they are attached to
 	int NF = mesh.Faces();
 	for (int i=0; i<NF; ++i) 
@@ -3315,7 +3324,7 @@ void CGLModel::HideSelectedFaces()
 // hide selected edges
 void CGLModel::HideSelectedEdges()
 {
-	FEMeshBase& mesh = *GetMesh();
+	FEMeshBase& mesh = *GetActiveMesh();
 
 	int NN = mesh.Nodes();
 	for (int i=0; i<NN; ++i) mesh.Node(i).m_ntag = -1;
@@ -3394,7 +3403,7 @@ void CGLModel::HideSelectedEdges()
 // hide selected nodes
 void CGLModel::HideSelectedNodes()
 {
-	FEMeshBase& mesh = *GetMesh();
+	FEMeshBase& mesh = *GetActiveMesh();
 
 	// hide nodes and all elements they attach to
 	int NN = mesh.Nodes();
@@ -3453,7 +3462,7 @@ void CGLModel::HideSelectedNodes()
 void CGLModel::UpdateEdge()
 {
 	m_edge.Clear();
-	FEMeshBase& mesh = *m_ps->GetMesh();
+	FEMeshBase& mesh = *GetActiveMesh();
 	for (int i=0; i<mesh.Elements(); ++i)
 	{
 		FEElement& el = mesh.Element(i);
@@ -3483,7 +3492,7 @@ void CGLModel::UpdateInternalSurfaces()
 	int nmat = m_ps->Materials();
 	for (int i=0; i<nmat; ++i) m_innerSurface.push_back(new GLSurface);
 
-	FEMeshBase& mesh = *GetMesh();
+	FEMeshBase& mesh = *GetActiveMesh();
 	FEFace face;
 	int ndom = mesh.Domains();
 	for (int m = 0; m<ndom; ++m)

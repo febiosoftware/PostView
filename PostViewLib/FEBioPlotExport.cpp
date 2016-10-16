@@ -122,7 +122,7 @@ bool FEBioPlotExport::WriteHeader(FEModel& fem)
 	// output header
 	m_ar.WriteChunk(PLT_HDR_VERSION, nversion);
 
-	int N = fem.GetMesh()->Nodes();
+	int N = fem.GetFEMesh(0)->Nodes();
 	m_ar.WriteChunk(PLT_HDR_NODES, N);
 
 	// max number of nodes per facet
@@ -295,7 +295,7 @@ bool FEBioPlotExport::WriteMaterials(FEModel& fem)
 bool FEBioPlotExport::WriteGeometry(FEModel& fem)
 {
 	// get the mesh
-	FEMeshBase& m = *fem.GetMesh();
+	FEMeshBase& m = *fem.GetFEMesh(0);
 
 	// node section
 	m_ar.BeginChunk(PLT_NODE_SECTION);
@@ -523,7 +523,7 @@ bool FEBioPlotExport::WriteNodeData(FEModel& fem, FEState& state)
 	FEDataManager& DM = *fem.GetDataManager();
 	FEDataFieldPtr pd = DM.FirstDataField();
 
-	FEMeshBase& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetFEMesh(0);
 	int NN = mesh.Nodes();
 	int NDATA = state.m_Data.size();
 	unsigned int nid = 1;
@@ -561,7 +561,7 @@ bool FEBioPlotExport::WriteElemData(FEModel& fem, FEState& state)
 	FEDataManager& DM = *fem.GetDataManager();
 	FEDataFieldPtr pd = DM.FirstDataField();
 
-	FEMeshBase& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetFEMesh(0);
 	int NDATA = state.m_Data.size();
 	unsigned int nid = 1;
 	for (int n=0; n<NDATA; ++n, ++pd)
@@ -602,7 +602,7 @@ bool FEBioPlotExport::WriteFaceData(FEModel& fem, FEState& state)
 	FEDataManager& DM = *fem.GetDataManager();
 	FEDataFieldPtr pd = DM.FirstDataField();
 
-	FEMeshBase& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetFEMesh(0);
 	int NDATA = state.m_Data.size();
 	unsigned int nid = 1;
 	for (int n=0; n<NDATA; ++n, ++pd)
@@ -667,7 +667,7 @@ inline void write_data(vector<float>& val, int index, const mat3fd& v)
 bool FEBioPlotExport::FillNodeDataArray(vector<float>& val, FEMeshData& meshData)
 {
 	FEModel& fem = *meshData.GetFEModel();
-	FEMeshBase& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetFEMesh(0);
 
 	int ntype = meshData.GetType();
 	int NN = mesh.Nodes();
@@ -705,7 +705,7 @@ bool FEBioPlotExport::FillNodeDataArray(vector<float>& val, FEMeshData& meshData
 bool FEBioPlotExport::FillElemDataArray(vector<float>& val, FEMeshData& meshData, FEPart& part)
 {
 	FEModel& fem = *meshData.GetFEModel();
-	FEMeshBase& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetFEMesh(0);
 
 	int ntype = meshData.GetType();
 	int nfmt  = meshData.GetFormat();
@@ -943,7 +943,7 @@ bool FEBioPlotExport::FillElemDataArray(vector<float>& val, FEMeshData& meshData
 bool FEBioPlotExport::FillFaceDataArray(vector<float>& val, FEMeshData& meshData, FESurface& surf)
 {
 	FEModel& fem = *meshData.GetFEModel();
-	FEMeshBase& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetFEMesh(0);
 
 	int ntype = meshData.GetType();
 	int nfmt  = meshData.GetFormat();

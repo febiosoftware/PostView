@@ -149,7 +149,7 @@ void CGLSlicePlot::RenderSlice(float ref)
 
 	// get the mesh
 	FEModel* ps = m_pObj->GetFEModel();
-	FEMeshBase* pm = m_pObj->GetMesh();
+	FEMeshBase* pm = m_pObj->GetActiveMesh();
 
 	vec3f norm = m_norm;
 	norm.Normalize();
@@ -246,7 +246,7 @@ void CGLSlicePlot::SetEvalField(int n)
 //-----------------------------------------------------------------------------
 void CGLSlicePlot::Update(int ntime, float dt, bool breset)
 {
-	FEMeshBase* pm = m_pObj->GetMesh();
+	FEMeshBase* pm = m_pObj->GetActiveMesh();
 	FEModel* pfem = m_pObj->GetFEModel();
 
 	int NN = pm->Nodes();

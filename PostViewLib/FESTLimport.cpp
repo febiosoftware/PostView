@@ -122,7 +122,7 @@ void FESTLimport::build_mesh()
 	// create the mesh
 	FETriMesh* pm = new FETriMesh();
 	pm->Create(NN, NF);
-	m_pfem->SetMesh(pm);
+	m_pfem->AddMesh(pm);
 
 	// create nodes
 	for (i=0; i<NN; ++i)
@@ -149,7 +149,7 @@ void FESTLimport::build_mesh()
 	m_pfem->UpdateBoundingBox();
 
 	// we need a single state
-	FEState* ps = new FEState(0.f, m_pfem);
+	FEState* ps = new FEState(0.f, m_pfem, m_pfem->GetFEMesh(0));
 	m_pfem->AddState(ps);
 }
 

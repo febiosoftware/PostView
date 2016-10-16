@@ -1019,7 +1019,7 @@ bool XpltReader::BuildMesh(FEModel &fem)
 		}
 	}
 
-	fem.SetMesh(pmesh);
+	fem.AddMesh(pmesh);
 
 	// read the nodal coordinates
 	for (int i=0; i<hdr.nn; i++)
@@ -1115,14 +1115,14 @@ bool XpltReader::BuildMesh(FEModel &fem)
 bool XpltReader::ReadStateSection(FEModel& fem)
 {
 	// get the mesh
-	FEMeshBase& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetFEMesh(0);
 
 	// add a state
 	FEState* ps = 0;
 	
 	try 
 	{
-		ps = m_pstate = new FEState(0.f, &fem);
+		ps = m_pstate = new FEState(0.f, &fem, &mesh);
 	}
 	catch (...)
 	{
@@ -1169,7 +1169,6 @@ bool XpltReader::ReadStateSection(FEModel& fem)
 		FEDataManager& dm = *fem.GetDataManager();
 		int n = dm.FindDataField("shell thickness");
 		FEElementData<float,DATA_COMP>& df = dynamic_cast<FEElementData<float,DATA_COMP>&>(ps->m_Data[n]);
-		FEMeshBase& mesh = *fem.GetMesh();
 		int NE = mesh.Elements();
 		float h[FEGenericElement::MAX_NODES] = {0.f};
 		for (int i=0; i<NE; ++i)
@@ -1202,6 +1201,7 @@ bool XpltReader::ReadMaterialData(FEModel& fem, FEState* pstate)
 //-----------------------------------------------------------------------------
 bool XpltReader::ReadNodeData(FEModel& fem, FEState* pstate)
 {
+	FEMeshBase& mesh = *fem.GetFEMesh(0);
 	FEDataManager& dm = *fem.GetDataManager();
 	while (m_ar.OpenChunk() == IO_OK)
 	{
@@ -1221,7 +1221,7 @@ bool XpltReader::ReadNodeData(FEModel& fem, FEState* pstate)
 					DICT_ITEM it = m_dic.m_Node[nv];
 					int nfield = dm.FindDataField(it.szname);
 					int ndata = 0;
-					int NN = fem.GetMesh()->Nodes();
+					int NN = mesh.Nodes();
 					while (m_ar.OpenChunk() == IO_OK)
 					{
 						int ns = m_ar.GetChunkID();
@@ -1293,7 +1293,7 @@ bool XpltReader::ReadNodeData(FEModel& fem, FEState* pstate)
 //-----------------------------------------------------------------------------
 bool XpltReader::ReadElemData(FEModel &fem, FEState* pstate)
 {
-	FEMeshBase& m = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetFEMesh(0);
 	FEDataManager& dm = *fem.GetDataManager();
 	while (m_ar.OpenChunk() == IO_OK)
 	{
@@ -1322,7 +1322,7 @@ bool XpltReader::ReadElemData(FEModel &fem, FEState* pstate)
 						FEElemItemData& ed = dynamic_cast<FEElemItemData&>(pstate->m_Data[nfield]);
 						switch (it.nfmt)
 						{
-						case FMT_NODE: ReadElemData_NODE(*fem.GetMesh(), dom, ed, it.ntype); break;
+						case FMT_NODE: ReadElemData_NODE(mesh, dom, ed, it.ntype); break;
 						case FMT_ITEM: ReadElemData_ITEM(dom, ed, it.ntype); break;
 						case FMT_MULT: ReadElemData_MULT(dom, ed, it.ntype); break;
 						case FMT_REGION: 
@@ -1630,7 +1630,7 @@ bool XpltReader::ReadElemData_MULT(XpltReader::Domain& dom, FEMeshData& s, int n
 //-----------------------------------------------------------------------------
 bool XpltReader::ReadFaceData(FEModel& fem, FEState* pstate)
 {
-	FEMeshBase& m = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetFEMesh(0);
 	FEDataManager& dm = *fem.GetDataManager();
 	while (m_ar.OpenChunk() == IO_OK)
 	{
@@ -1658,18 +1658,18 @@ bool XpltReader::ReadFaceData(FEModel& fem, FEState* pstate)
 						Surface& s = m_Surf[ns];
 						switch (it.nfmt)
 						{
-						case FMT_NODE  : if (ReadFaceData_NODE  (m, s, pstate->m_Data[nfield], it.ntype) == false) return errf("Failed reading face data"); break;
+						case FMT_NODE  : if (ReadFaceData_NODE  (mesh, s, pstate->m_Data[nfield], it.ntype) == false) return errf("Failed reading face data"); break;
 						case FMT_ITEM  : if (ReadFaceData_ITEM  (s, pstate->m_Data[nfield], it.ntype   ) == false) return errf("Failed reading face data"); break;
-						case FMT_MULT  : if (ReadFaceData_MULT  (m, s, pstate->m_Data[nfield], it.ntype) == false) return errf("Failed reading face data"); break;
+						case FMT_MULT  : if (ReadFaceData_MULT  (mesh, s, pstate->m_Data[nfield], it.ntype) == false) return errf("Failed reading face data"); break;
 						case FMT_REGION: 
 							switch (it.ntype)
 							{
-								case FLOAT  : ReadFaceData_REGION<float  >(m_ar, m, s, pstate->m_Data[nfield]); break;
-								case VEC3F  : ReadFaceData_REGION<vec3f  >(m_ar, m, s, pstate->m_Data[nfield]); break;
-								case MAT3FS : ReadFaceData_REGION<mat3fs >(m_ar, m, s, pstate->m_Data[nfield]); break;
-								case MAT3FD : ReadFaceData_REGION<mat3fd >(m_ar, m, s, pstate->m_Data[nfield]); break;
-								case TENS4FS: ReadFaceData_REGION<tens4fs>(m_ar, m, s, pstate->m_Data[nfield]); break;
-								case MAT3F  : ReadFaceData_REGION<mat3f  >(m_ar, m, s, pstate->m_Data[nfield]); break;
+								case FLOAT  : ReadFaceData_REGION<float  >(m_ar, mesh, s, pstate->m_Data[nfield]); break;
+								case VEC3F  : ReadFaceData_REGION<vec3f  >(m_ar, mesh, s, pstate->m_Data[nfield]); break;
+								case MAT3FS : ReadFaceData_REGION<mat3fs >(m_ar, mesh, s, pstate->m_Data[nfield]); break;
+								case MAT3FD : ReadFaceData_REGION<mat3fd >(m_ar, mesh, s, pstate->m_Data[nfield]); break;
+								case TENS4FS: ReadFaceData_REGION<tens4fs>(m_ar, mesh, s, pstate->m_Data[nfield]); break;
+								case MAT3F  : ReadFaceData_REGION<mat3f  >(m_ar, mesh, s, pstate->m_Data[nfield]); break;
 								default:
 									return errf("Failed reading face data");
 							}

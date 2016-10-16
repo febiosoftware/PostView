@@ -4,6 +4,8 @@
 using namespace std;
 
 class FEModel;
+class FEState;
+class FEMeshBase;
 
 //-----------------------------------------------------------------------------
 // Data class: defines possible class types for data fields
@@ -57,16 +59,20 @@ enum Data_Tensor_Type {
 class FEMeshData
 {
 public:
-	FEMeshData(FEModel* pm, Data_Type ntype, Data_Format nfmt) { m_pm = pm; m_ntype = ntype; m_nfmt = nfmt; }
-	virtual ~FEMeshData() { m_pm = 0; }
+	FEMeshData(FEState* state, Data_Type ntype, Data_Format nfmt) { m_state = state; m_ntype = ntype; m_nfmt = nfmt; }
+	virtual ~FEMeshData() { m_state = 0; }
 
 	Data_Type GetType() { return m_ntype; }
 	Data_Format GetFormat() { return m_nfmt; }
 
-	FEModel* GetFEModel() { return m_pm; }
+	FEState* GetFEState() { return m_state; }
+
+	FEMeshBase* GetFEMesh();
+
+	FEModel* GetFEModel();
 
 protected:
-	FEModel*	m_pm;
+	FEState*	m_state;
 	Data_Type	m_ntype;
 	Data_Format	m_nfmt;
 };

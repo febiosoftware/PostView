@@ -102,7 +102,7 @@ void C3PointAngleTool::activate(CDocument* pdoc)
 	m_doc = pdoc;
 	if (pdoc && pdoc->IsValid())
 	{
-		FEMeshBase& mesh = *m_doc->GetFEModel()->GetMesh();
+		FEMeshBase& mesh = *m_doc->GetActiveMesh();
 		const vector<FENode*> selectedNodes = m_doc->GetGLModel()->GetNodeSelection();
 		int N = selectedNodes.size();
 		int nsel = 0;
@@ -143,7 +143,7 @@ void C3PointAngleTool::UpdateAngle()
 	if (m_doc && m_doc->IsValid())
 	{
 		FEModel& fem = *m_doc->GetFEModel();
-		FEMeshBase& mesh = *fem.GetMesh();
+		FEMeshBase& mesh = *m_doc->GetActiveMesh();
 		int ntime = m_doc->currentTime();
 		int NN = mesh.Nodes();
 		if ((m_node[0] >   0)&&(m_node[1] >   0)&&(m_node[2] >   0)&&

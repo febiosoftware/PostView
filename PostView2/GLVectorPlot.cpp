@@ -157,7 +157,7 @@ void CGLVectorPlot::Render(CGLContext& rc)
 	srand(m_seed);
 
 	FEModel* pfem = m_pObj->GetFEModel();
-	FEMeshBase* pm = m_pObj->GetMesh();
+	FEMeshBase* pm = m_pObj->GetActiveMesh();
 
 	float scale = 0.02f*m_scale*pfem->GetBoundingBox().Radius();
 
@@ -339,7 +339,7 @@ void CGLVectorPlot::Update(int ntime, float dt, bool breset)
 {
 	if (breset) { m_map.Clear(); m_rng.clear(); m_val.clear(); }
 
-	FEMeshBase* pm = m_pObj->GetMesh();
+	FEMeshBase* pm = m_pObj->GetActiveMesh();
 	FEModel* pfem = m_pObj->GetFEModel();
 
 	if (m_map.States() == 0)

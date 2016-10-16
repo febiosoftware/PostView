@@ -234,7 +234,7 @@ void CGLPlaneCutPlot::Render(CGLContext& rc)
 void CGLPlaneCutPlot::RenderSlice()
 {
 	FEModel* ps = m_pObj->GetFEModel();
-	FEMeshBase* pm = m_pObj->GetMesh();
+	FEMeshBase* pm = m_pObj->GetActiveMesh();
 
 	CGLColorMap* pcol = m_pObj->GetColorMap();
 
@@ -297,7 +297,7 @@ void CGLPlaneCutPlot::RenderMesh()
 	int *pf;
 
 	FEModel* ps = m_pObj->GetFEModel();
-	FEMeshBase* pm = m_pObj->GetMesh();
+	FEMeshBase* pm = m_pObj->GetActiveMesh();
 
 	glColor3ub(0,0,0);
 
@@ -444,7 +444,7 @@ void CGLPlaneCutPlot::RenderMesh()
 void CGLPlaneCutPlot::RenderOutline()
 {
 	FEModel* ps = m_pObj->GetFEModel();
-	FEMeshBase* pm = m_pObj->GetMesh();
+	FEMeshBase* pm = m_pObj->GetActiveMesh();
 
 	// store attributes
 	glPushAttrib(GL_ENABLE_BIT);
@@ -510,7 +510,7 @@ void CGLPlaneCutPlot::UpdateSlice()
 	a[3] = -m_ref;
 
 	FEModel* ps = m_pObj->GetFEModel();
-	FEMeshBase* pm = m_pObj->GetMesh();
+	FEMeshBase* pm = m_pObj->GetActiveMesh();
 
 	m_slice.Clear();
 
@@ -666,7 +666,7 @@ float CGLPlaneCutPlot::Integrate(FEState* ps)
 	int k, l;
 
 	FEModel* pfem = m_pObj->GetFEModel();
-	FEMeshBase* pm = m_pObj->GetMesh();
+	FEMeshBase* pm = m_pObj->GetActiveMesh();
 
 	float ev[8];
 	vec3f ex[8];

@@ -261,6 +261,8 @@ public:
 
 	TIMESETTINGS& GetTimeSettings() { return m_time; }
 
+	FEMeshBase* GetActiveMesh() { return m_pGLModel->GetActiveMesh(); }
+
 	// --- V I E W   M A N A G M E N T ---
 
 	// get the view settings

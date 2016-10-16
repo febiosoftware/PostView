@@ -2,6 +2,7 @@
 
 #include "FEMeshData.h"
 #include "FEModel.h"
+#include "FEState.h"
 #include <set>
 using namespace std;
 
@@ -16,7 +17,7 @@ using namespace std;
 class FENodeItemData : public FEMeshData
 {
 public:
-	FENodeItemData(FEModel* pm, Data_Type ntype, Data_Format nfmt) : FEMeshData(pm, ntype, nfmt){}
+	FENodeItemData(FEState* state, Data_Type ntype, Data_Format nfmt) : FEMeshData(state, ntype, nfmt){}
 };
 
 //-----------------------------------------------------------------------------
@@ -24,7 +25,7 @@ public:
 template <typename T, Data_Format fmt> class FENodeData_T : public FENodeItemData
 {
 public:
-	FENodeData_T(FEModel* pm, FEDataField* pdf) : FENodeItemData(pm, FEMeshDataTraits<T>::Type(), fmt) {}
+	FENodeData_T(FEState* state, FEDataField* pdf) : FENodeItemData(state, FEMeshDataTraits<T>::Type(), fmt) {}
 	virtual void eval(int n, T* pv) = 0;
 	virtual bool active(int n) { return true; }
 
@@ -39,7 +40,7 @@ public:
 template <typename T> class FENodeData : public FENodeData_T<T, DATA_ITEM>
 {
 public:
-	FENodeData(FEModel* pm, FEDataField* pdf) : FENodeData_T<T, DATA_ITEM>(pm, pdf) { m_data.resize(pm->GetMesh()->Nodes()); }
+	FENodeData(FEState* state, FEDataField* pdf) : FENodeData_T<T, DATA_ITEM>(state, pdf) { m_data.resize(state->GetFEMesh()->Nodes()); }
 	void eval(int n, T* pv) { (*pv) = m_data[n]; }
 	void copy(FENodeData<T>& d) { m_data = d.m_data; }
 
@@ -61,7 +62,7 @@ protected:
 class FEFaceItemData : public FEMeshData
 {
 public:
-	FEFaceItemData(FEModel* pm, Data_Type ntype, Data_Format nfmt) : FEMeshData(pm, ntype, nfmt){}
+	FEFaceItemData(FEState* state, Data_Type ntype, Data_Format nfmt) : FEMeshData(state, ntype, nfmt){}
 };
 
 //-----------------------------------------------------------------------------
@@ -69,7 +70,7 @@ public:
 template <typename T, Data_Format fmt> class FEFaceData_T : public FEFaceItemData
 {
 public:
-	FEFaceData_T(FEModel* pm, FEDataField* pdf) : FEFaceItemData(pm, FEMeshDataTraits<T>::Type(), fmt) {}
+	FEFaceData_T(FEState* state, FEDataField* pdf) : FEFaceItemData(state, FEMeshDataTraits<T>::Type(), fmt) {}
 	virtual void eval(int n, T* pv) = 0;
 	virtual bool active(int n) { return true; }
 
@@ -86,10 +87,10 @@ template <typename T, Data_Format fmt> class FEFaceData : public FEFaceData_T<T,
 template <typename T> class FEFaceData<T, DATA_ITEM> : public FEFaceData_T<T, DATA_ITEM>
 {
 public:
-	FEFaceData(FEModel* pm, FEDataField* pdf) : FEFaceData_T<T,DATA_ITEM>(pm, pdf), m_face(pdf->m_item)
+	FEFaceData(FEState* state, FEDataField* pdf) : FEFaceData_T<T, DATA_ITEM>(state, pdf), m_face(pdf->m_item)
 	{ 
 		if (m_face.empty())
-			m_face.assign(pm->GetMesh()->Faces(), -1); 
+			m_face.assign(state->GetFEMesh()->Faces(), -1); 
 	}
 	void eval(int n, T* pv) { (*pv) = m_data[m_face[n]]; }
 	bool active(int n) { return (m_face[n] >= 0); }
@@ -113,10 +114,10 @@ protected:
 template <typename T> class FEFaceData<T, DATA_REGION> : public FEFaceData_T<T, DATA_REGION>
 {
 public:
-	FEFaceData(FEModel* pm, FEDataField* pdf) : FEFaceData_T<T,DATA_REGION>(pm, pdf), m_face(pdf->m_item) 
+	FEFaceData(FEState* state, FEDataField* pdf) : FEFaceData_T<T, DATA_REGION>(state, pdf), m_face(pdf->m_item)
 	{ 
 		if (m_face.empty())
-			m_face.assign(pm->GetMesh()->Faces(), -1); 
+			m_face.assign(state->GetFEMesh()->Faces(), -1); 
 	}
 	void eval(int n, T* pv) { (*pv) = m_data[m_face[n]]; }
 	bool active(int n) { return (m_face[n] >= 0); }
@@ -148,14 +149,14 @@ protected:
 template <typename T> class FEFaceData<T, DATA_COMP> : public FEFaceData_T<T, DATA_COMP>
 {
 public:
-	FEFaceData(FEModel* pm, FEDataField* pdf) : FEFaceData_T<T,DATA_COMP>(pm, pdf), m_face(pdf->m_item)
+	FEFaceData(FEState* state, FEDataField* pdf) : FEFaceData_T<T, DATA_COMP>(state, pdf), m_face(pdf->m_item)
 	{ 
 		if (m_face.empty())
-			m_face.assign(pm->GetMesh()->Faces(), -1); 
+			m_face.assign(state->GetFEMesh()->Faces(), -1); 
 	}
 	void eval(int n, T* pv)
 	{ 
-		int m = this->GetFEModel()->GetMesh()->Face(n).Nodes();
+		int m = GetFEState()->GetFEMesh()->Face(n).Nodes();
 		for (int i=0; i<m; ++i) pv[i] = m_data[m_face[n] + i];
 	}
 	bool active(int n) { return (m_face[n] >= 0); }
@@ -180,11 +181,11 @@ protected:
 template <typename T> class FEFaceData<T, DATA_NODE> : public FEFaceData_T<T, DATA_NODE>
 {
 public:
-	FEFaceData(FEModel* pm, FEDataField* pdf) : FEFaceData_T<T,DATA_NODE>(pm, pdf), m_face(pdf->m_item)
+	FEFaceData(FEState* state, FEDataField* pdf) : FEFaceData_T<T, DATA_NODE>(state, pdf), m_face(pdf->m_item)
 	{
 		if (m_face.empty())
 		{
-			int N = pm->GetMesh()->Faces();
+			int N = state->GetFEMesh()->Faces();
 			m_face.assign(4*N, -1); 
 		}
 	}
@@ -229,7 +230,7 @@ protected:
 class FEElemItemData : public FEMeshData
 {
 public:
-	FEElemItemData(FEModel* pm, Data_Type ntype, Data_Format nfmt) : FEMeshData(pm, ntype, nfmt){}
+	FEElemItemData(FEState* state, Data_Type ntype, Data_Format nfmt) : FEMeshData(state, ntype, nfmt){}
 };
 
 //-----------------------------------------------------------------------------
@@ -237,7 +238,7 @@ public:
 template <typename T, Data_Format fmt> class FEElemData_T : public FEElemItemData
 {
 public:
-	FEElemData_T(FEModel* pm, FEDataField* pdf) : FEElemItemData(pm, FEMeshDataTraits<T>::Type(), fmt) {}
+	FEElemData_T(FEState* state, FEDataField* pdf) : FEElemItemData(state, FEMeshDataTraits<T>::Type(), fmt) {}
 	virtual void eval(int n, T* pv) = 0;
 	virtual bool active(int n) { return true; }
 
@@ -254,10 +255,10 @@ template <typename T, Data_Format fmt> class FEElementData : public FEElemData_T
 template <typename T> class FEElementData<T, DATA_ITEM> : public FEElemData_T<T, DATA_ITEM>
 {
 public:
-	FEElementData(FEModel* pm, FEDataField* pdf) : FEElemData_T<T,DATA_ITEM>(pm, pdf), m_elem(pdf->m_item)
+	FEElementData(FEState* state, FEDataField* pdf) : FEElemData_T<T, DATA_ITEM>(state, pdf), m_elem(pdf->m_item)
 	{ 
 		if (m_elem.empty())
-			m_elem.assign(pm->GetMesh()->Elements(), -1); 
+			m_elem.assign(state->GetFEMesh()->Elements(), -1); 
 	}
 	void eval(int n, T* pv) { assert(m_elem[n] >= 0); (*pv) = m_data[m_elem[n]]; }
 	void set(int n, const T& v) { assert(m_elem[n] >= 0); m_data[m_elem[n]] = v; }
@@ -285,10 +286,10 @@ protected:
 template <typename T> class FEElementData<T, DATA_REGION> : public FEElemData_T<T, DATA_REGION>
 {
 public:
-	FEElementData(FEModel* pm, FEDataField* pdf) : FEElemData_T<T,DATA_REGION>(pm, pdf), m_elem(pdf->m_item)
+	FEElementData(FEState* state, FEDataField* pdf) : FEElemData_T<T, DATA_REGION>(state, pdf), m_elem(pdf->m_item)
 	{
 		if (m_elem.empty())
-			m_elem.assign(pm->GetMesh()->Elements(), -1); 
+			m_elem.assign(state->GetFEMesh()->Elements(), -1); 
 	}
 	void eval(int n, T* pv) { assert(m_elem[n] >= 0); (*pv) = m_data[m_elem[n]]; }
 	void copy(FEElementData<T, DATA_REGION>& d) { m_data = d.m_data; }
@@ -319,11 +320,11 @@ protected:
 template <typename T> class FEElementData<T, DATA_COMP> : public FEElemData_T<T, DATA_COMP>
 {
 public:
-	FEElementData(FEModel* pm, FEDataField* pdf) : FEElemData_T<T,DATA_COMP>(pm, pdf), m_elem(pdf->m_item) 
+	FEElementData(FEState* state, FEDataField* pdf) : FEElemData_T<T, DATA_COMP>(state, pdf), m_elem(pdf->m_item)
 	{
 		if (m_elem.empty())
 		{
-			int N = pm->GetMesh()->Elements();
+			int N = state->GetFEMesh()->Elements();
 			m_elem.resize(2*N); 
 			for (int i=0; i<N; ++i) { m_elem[2*i] = -1; m_elem[2*i+1] = 0; }
 		}
@@ -357,9 +358,9 @@ protected:
 template <typename T> class FEElementData<T, DATA_NODE> : public FEElemData_T<T, DATA_NODE>
 {
 public:
-	FEElementData(FEModel* pm, FEDataField* pdf) : FEElemData_T<T,DATA_NODE>(pm, pdf), m_elem(pdf->m_item)
+	FEElementData(FEState* state, FEDataField* pdf) : FEElemData_T<T, DATA_NODE>(state, pdf), m_elem(pdf->m_item)
 	{
-		FEMeshBase& m = *pm->GetMesh();
+		FEMeshBase& m = *state->GetFEMesh();
 		if (m_elem.empty())
 		{
 			int N = m.Elements();
@@ -403,7 +404,7 @@ protected:
 class FENodePosition : public FENodeData_T<vec3f, DATA_ITEM>
 {
 public:
-	FENodePosition(FEModel* pm, FEDataField* pdf) : FENodeData_T<vec3f, DATA_ITEM>(pm, pdf){}
+	FENodePosition(FEState* state, FEDataField* pdf) : FENodeData_T<vec3f, DATA_ITEM>(state, pdf){}
 	void eval(int n, vec3f* pv);
 };
 
@@ -411,7 +412,7 @@ public:
 class FENodeInitPos : public FENodeData_T<vec3f, DATA_ITEM>
 {
 public:
-	FENodeInitPos(FEModel* pm, FEDataField* pdf) : FENodeData_T<vec3f, DATA_ITEM>(pm, pdf){}
+	FENodeInitPos(FEState* state, FEDataField* pdf) : FENodeData_T<vec3f, DATA_ITEM>(state, pdf){}
 	void eval(int n, vec3f* pv);
 };
 
@@ -422,7 +423,7 @@ public:
 class FECurvature : public FEFaceData_T<float, DATA_NODE>
 {
 public:
-	FECurvature(FEModel* pm, FEDataField* pdf)  : FEFaceData_T<float, DATA_NODE>(pm, pdf) { m_face.assign(pm->GetMesh()->Faces(), 1);}
+	FECurvature(FEState* state, FEDataField* pdf) : FEFaceData_T<float, DATA_NODE>(state, pdf) { m_face.assign(state->GetFEMesh()->Faces(), 1); }
 	void eval_curvature(int, float* f, int m);
 
 	bool active(int n) { return (m_face[n] == 1); }
@@ -446,7 +447,7 @@ public: // parameters
 class FEGaussCurvature : public FECurvature
 {
 public:
-	FEGaussCurvature(FEModel* pm, FEDataField* pdf) : FECurvature(pm, pdf){}
+	FEGaussCurvature(FEState* state, FEDataField* pdf) : FECurvature(state, pdf){}
 	void eval(int n, float* f) { FECurvature::eval_curvature(n, f, 0); }
 };
 
@@ -454,7 +455,7 @@ public:
 class FEMeanCurvature : public FECurvature
 {
 public:
-	FEMeanCurvature(FEModel* pm, FEDataField* pdf) : FECurvature(pm, pdf){}
+	FEMeanCurvature(FEState* state, FEDataField* pdf) : FECurvature(state, pdf){}
 	void eval(int n, float* f) { FECurvature::eval_curvature(n, f, 1); }
 };
 
@@ -462,7 +463,7 @@ public:
 class FEPrincCurvature1 : public FECurvature
 {
 public:
-	FEPrincCurvature1(FEModel* pm, FEDataField* pdf) : FECurvature(pm, pdf){}
+	FEPrincCurvature1(FEState* state, FEDataField* pdf) : FECurvature(state, pdf){}
 	void eval(int n, float* f) { FECurvature::eval_curvature(n, f, 2); }
 };
 
@@ -470,7 +471,7 @@ public:
 class FEPrincCurvature2 : public FECurvature
 {
 public:
-	FEPrincCurvature2(FEModel* pm, FEDataField* pdf) : FECurvature(pm, pdf){}
+	FEPrincCurvature2(FEState* state, FEDataField* pdf) : FECurvature(state, pdf){}
 	void eval(int n, float* f) { FECurvature::eval_curvature(n, f, 3); }
 };
 
@@ -478,7 +479,7 @@ public:
 class FERMSCurvature : public FECurvature
 {
 public:
-	FERMSCurvature(FEModel* pm, FEDataField* pdf) : FECurvature(pm, pdf){}
+	FERMSCurvature(FEState* state, FEDataField* pdf) : FECurvature(state, pdf){}
 	void eval(int n, float* f) { FECurvature::eval_curvature(n, f, 4); }
 };
 
@@ -486,7 +487,7 @@ public:
 class FEDiffCurvature : public FECurvature
 {
 public:
-	FEDiffCurvature(FEModel* pm, FEDataField* pdf) : FECurvature(pm, pdf){}
+	FEDiffCurvature(FEState* state, FEDataField* pdf) : FECurvature(state, pdf){}
 	void eval(int n, float* f) { FECurvature::eval_curvature(n, f, 5); }
 };
 
@@ -494,7 +495,7 @@ public:
 class FEPrincCurvatureVector : public FEFaceData_T<vec3f, DATA_NODE>
 {
 public:
-	FEPrincCurvatureVector(FEModel* pm, FEDataField* pdf)  : FEFaceData_T<vec3f, DATA_NODE>(pm, pdf) { m_face.assign(pm->GetMesh()->Faces(), 1);}
+	FEPrincCurvatureVector(FEState* state, FEDataField* pdf) : FEFaceData_T<vec3f, DATA_NODE>(state, pdf) { m_face.assign(state->GetFEMesh()->Faces(), 1); }
 
 	bool active(int n) { return (m_face[n] == 1); }
 
@@ -520,7 +521,7 @@ public: // parameters
 class FEPrincCurvatureVector1 : public FEPrincCurvatureVector
 {
 public:
-	FEPrincCurvatureVector1(FEModel* pm, FEDataField* pdf) : FEPrincCurvatureVector(pm, pdf){}
+	FEPrincCurvatureVector1(FEState* state, FEDataField* pdf) : FEPrincCurvatureVector(state, pdf){}
 	void eval(int n, vec3f* f) { FEPrincCurvatureVector::eval(n, f, 0); }
 };
 
@@ -528,7 +529,7 @@ public:
 class FEPrincCurvatureVector2 : public FEPrincCurvatureVector
 {
 public:
-	FEPrincCurvatureVector2(FEModel* pm, FEDataField* pdf) : FEPrincCurvatureVector(pm, pdf){}
+	FEPrincCurvatureVector2(FEState* state, FEDataField* pdf) : FEPrincCurvatureVector(state, pdf){}
 	void eval(int n, vec3f* f) { FEPrincCurvatureVector::eval(n, f, 1); }
 };
 
@@ -536,7 +537,7 @@ public:
 class FECongruency : public FEFaceData_T<float, DATA_NODE>
 {
 public:
-	FECongruency(FEModel* pm, FEDataField* pdf) : FEFaceData_T<float, DATA_NODE>(pm, pdf) { m_face.assign(pm->GetMesh()->Faces(), 1); }
+	FECongruency(FEState* state, FEDataField* pdf) : FEFaceData_T<float, DATA_NODE>(state, pdf) { m_face.assign(state->GetFEMesh()->Faces(), 1); }
 
 	bool active(int n) { return (m_face[n] == 1); }
 
@@ -561,7 +562,7 @@ public:
 class FEDeformationGradient : public FEElemData_T<mat3d, DATA_COMP>
 {
 public:
-	FEDeformationGradient(FEModel* pm, FEDataField* pdf);
+	FEDeformationGradient(FEState* pstate, FEDataField* pdf);
 	void eval(int n, mat3d* pv);
 };
 
@@ -579,7 +580,7 @@ public:
 class FELagrangeStrain : public FEElemData_T<mat3fs, DATA_COMP>, public FEStrain
 {
 public:
-	FELagrangeStrain(FEModel* pm, FEDataField* pdf);
+	FELagrangeStrain(FEState* pstate, FEDataField* pdf);
 	void eval(int n, mat3fs* pv);
 };
 
@@ -587,7 +588,7 @@ public:
 class FEInfStrain : public FEElemData_T<mat3fs, DATA_ITEM>, public FEStrain
 {
 public:
-	FEInfStrain(FEModel* pm, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(pm, pdf) {}
+	FEInfStrain(FEState* state, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(state, pdf) {}
 	void eval(int n, mat3fs* pv);
 };
 
@@ -595,7 +596,7 @@ public:
 class FERightCauchyGreen : public FEElemData_T<mat3fs, DATA_ITEM>, public FEStrain
 {
 public:
-	FERightCauchyGreen(FEModel* pm, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(pm, pdf) {}
+	FERightCauchyGreen(FEState* state, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(state, pdf) {}
 	void eval(int n, mat3fs* pv);
 };
 
@@ -603,7 +604,7 @@ public:
 class FERightStretch : public FEElemData_T<mat3fs, DATA_ITEM>, public FEStrain
 {
 public:
-	FERightStretch(FEModel* pm, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(pm, pdf) {}
+	FERightStretch(FEState* state, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(state, pdf) {}
 	void eval(int n, mat3fs* pv);
 };
 
@@ -611,7 +612,7 @@ public:
 class FEGLStrain : public FEElemData_T<mat3fs, DATA_ITEM>, public FEStrain
 {
 public:
-	FEGLStrain(FEModel* pm, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(pm, pdf) {}
+	FEGLStrain(FEState* state, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(state, pdf) {}
 	void eval(int n, mat3fs* pv);
 };
 
@@ -619,7 +620,7 @@ public:
 class FEBiotStrain : public FEElemData_T<mat3fs, DATA_ITEM>, public FEStrain
 {
 public:
-	FEBiotStrain(FEModel* pm, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(pm, pdf) {}
+	FEBiotStrain(FEState* state, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(state, pdf) {}
 	void eval(int n, mat3fs* pv);
 };
 
@@ -627,7 +628,7 @@ public:
 class FERightHencky : public FEElemData_T<mat3fs, DATA_ITEM>, public FEStrain
 {
 public:
-	FERightHencky(FEModel* pm, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(pm, pdf) {}
+	FERightHencky(FEState* state, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(state, pdf) {}
 	void eval(int n, mat3fs* pv);
 };
 
@@ -635,7 +636,7 @@ public:
 class FELeftCauchyGreen : public FEElemData_T<mat3fs, DATA_ITEM>, public FEStrain
 {
 public:
-    FELeftCauchyGreen(FEModel* pm, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(pm, pdf) {}
+	FELeftCauchyGreen(FEState* state, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(state, pdf) {}
     void eval(int n, mat3fs* pv);
 };
 
@@ -643,7 +644,7 @@ public:
 class FELeftStretch : public FEElemData_T<mat3fs, DATA_ITEM>, public FEStrain
 {
 public:
-    FELeftStretch(FEModel* pm, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(pm, pdf) {}
+	FELeftStretch(FEState* state, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(state, pdf) {}
     void eval(int n, mat3fs* pv);
 };
 
@@ -651,7 +652,7 @@ public:
 class FELeftHencky : public FEElemData_T<mat3fs, DATA_ITEM>, public FEStrain
 {
 public:
-    FELeftHencky(FEModel* pm, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(pm, pdf) {}
+	FELeftHencky(FEState* state, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(state, pdf) {}
     void eval(int n, mat3fs* pv);
 };
 
@@ -659,7 +660,7 @@ public:
 class FEAlmansi : public FEElemData_T<mat3fs, DATA_ITEM>, public FEStrain
 {
 public:
-    FEAlmansi(FEModel* pm, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(pm, pdf) {}
+	FEAlmansi(FEState* state, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(state, pdf) {}
     void eval(int n, mat3fs* pv);
 };
 
@@ -667,7 +668,7 @@ public:
 class FEVolRatio : public FEElemData_T<float, DATA_ITEM>
 {
 public:
-	FEVolRatio(FEModel* pm, FEDataField* pdf) : FEElemData_T<float, DATA_ITEM>(pm, pdf){}
+	FEVolRatio(FEState* state, FEDataField* pdf) : FEElemData_T<float, DATA_ITEM>(state, pdf){}
 	void eval(int n, float* pv);
 };
 
@@ -675,7 +676,7 @@ public:
 class FEElementVolume : public FEElemData_T<float, DATA_ITEM>
 {
 public:
-	FEElementVolume(FEModel* pm, FEDataField* pdf) : FEElemData_T<float, DATA_ITEM>(pm, pdf){}
+	FEElementVolume(FEState* state, FEDataField* pdf) : FEElemData_T<float, DATA_ITEM>(state, pdf){}
 	void eval(int n, float* pv);
 };
 
@@ -683,7 +684,7 @@ public:
 class FEAspectRatio : public FEElemData_T<float, DATA_ITEM>
 {
 public:
-	FEAspectRatio(FEModel* pm, FEDataField* pdf) : FEElemData_T<float, DATA_ITEM>(pm, pdf){}
+	FEAspectRatio(FEState* state, FEDataField* pdf) : FEElemData_T<float, DATA_ITEM>(state, pdf){}
 	void eval(int n, float* pv);
 };
 
@@ -691,7 +692,7 @@ public:
 class FEMaxEdgeAngle : public FEElemData_T<float, DATA_ITEM>
 {
 public:
-	FEMaxEdgeAngle(FEModel* pm, FEDataField* pdf) : FEElemData_T<float, DATA_ITEM>(pm, pdf){}
+	FEMaxEdgeAngle(FEState* state, FEDataField* pdf) : FEElemData_T<float, DATA_ITEM>(state, pdf){}
 	void eval(int n, float* pv);
 };
 
@@ -699,7 +700,7 @@ public:
 class FEMinEdgeAngle : public FEElemData_T<float, DATA_ITEM>
 {
 public:
-	FEMinEdgeAngle(FEModel* pm, FEDataField* pdf) : FEElemData_T<float, DATA_ITEM>(pm, pdf){}
+	FEMinEdgeAngle(FEState* state, FEDataField* pdf) : FEElemData_T<float, DATA_ITEM>(state, pdf){}
 	void eval(int n, float* pv);
 };
 
@@ -707,7 +708,7 @@ public:
 class FEVolStrain : public FEElemData_T<float, DATA_ITEM>
 {
 public:
-	FEVolStrain(FEModel* pm, FEDataField* pdf) : FEElemData_T<float, DATA_ITEM>(pm, pdf){}
+	FEVolStrain(FEState* state, FEDataField* pdf) : FEElemData_T<float, DATA_ITEM>(state, pdf){}
 	void eval(int n, float* pv);
 };
 
@@ -715,7 +716,7 @@ public:
 class FEElemPressure : public FEElemData_T<float, DATA_ITEM>
 {
 public:
-	FEElemPressure(FEModel* pm, FEDataField* pdf);
+	FEElemPressure(FEState* state, FEDataField* pdf);
 	void eval(int n, float* pv);
 private:
 	int	m_nstress;	// stress field
@@ -727,7 +728,7 @@ private:
 class FEElemNodalPressure : public FEElemData_T<float, DATA_COMP>
 {
 public:
-	FEElemNodalPressure(FEModel* pm, FEDataField* pdf);
+	FEElemNodalPressure(FEState* state, FEDataField* pdf);
 	void eval(int n, float* pv);
 private:
 	int	m_nstress;	// nodal stress field
@@ -737,7 +738,7 @@ private:
 class FESolidStress : public FEElemData_T<mat3fs, DATA_ITEM>
 {
 public:
-	FESolidStress(FEModel* pm, FEDataField* pdf);
+	FESolidStress(FEState* state, FEDataField* pdf);
 	void eval(int n, mat3fs* pv);
 private:
 	int	m_nstress;	// total stress field

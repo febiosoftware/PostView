@@ -46,7 +46,7 @@ public:
 	virtual FEDataField* Clone() const = 0;
 
 	//! FEMeshData constructor
-	virtual FEMeshData* CreateData(FEModel* pm) = 0;
+	virtual FEMeshData* CreateData(FEState* pstate) = 0;
 
 	//! type identifier
 	Data_Type Type() { return m_ntype; }
@@ -111,7 +111,7 @@ template<typename T> class FEDataField_T : public FEDataField
 {
 public:
 	FEDataField_T(const char* szname, unsigned int flag = 0) : FEDataField(T::Type(), T::Format(), T::Class(), flag) { SetName(szname); }
-	FEMeshData* CreateData(FEModel* pm) { return new T(pm, this); }
+	FEMeshData* CreateData(FEState* pstate) { return new T(pstate, this); }
 
 	virtual FEDataField* Clone() const { return new FEDataField_T<T>(GetName()); }
 

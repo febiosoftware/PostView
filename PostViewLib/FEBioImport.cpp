@@ -41,7 +41,7 @@ bool FEBioImport::Load(FEModel& fem, const char* szfile)
 	fem.Clear();
 	m_pfem = &fem;
 	m_pm = new FEMesh;
-	fem.SetMesh(m_pm);
+	fem.AddMesh(m_pm);
 
 	// Attach the XML reader to the stream
 	if (m_xml.Attach(m_fp) == false) return false;
@@ -116,7 +116,7 @@ bool FEBioImport::Load(FEModel& fem, const char* szfile)
 	fem.UpdateBoundingBox();
 
 	// we need a single state
-	FEState* ps = new FEState(0.f, &fem);
+	FEState* ps = new FEState(0.f, &fem, fem.GetFEMesh(0));
 	fem.AddState(ps);
 
 	return true;

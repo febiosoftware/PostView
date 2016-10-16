@@ -179,7 +179,7 @@ void CPlaneTool::UpdateNormal()
 
 	if ((node[0] > 0) && (node[1] > 0) && (node[2] > 0))
 	{
-		FEMeshBase* pm = m_doc->GetGLModel()->GetMesh();
+		FEMeshBase* pm = m_doc->GetActiveMesh();
 
 		FENode& n1 = pm->Node(node[0]-1);
 		FENode& n2 = pm->Node(node[1]-1);

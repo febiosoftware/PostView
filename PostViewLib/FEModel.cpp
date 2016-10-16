@@ -26,7 +26,6 @@ FEModel::FEModel()
 	m_ntime = 0;
 
 	m_pThis = this;
-	m_mesh = 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -36,8 +35,17 @@ FEModel::~FEModel()
 	Clear();
 	delete m_pDM;
 	m_pThis = 0;
-	delete m_mesh;
+
+	DeleteMeshes();
 }
+
+void FEModel::DeleteMeshes()
+{
+	// delete all meshes
+	for (size_t i = 0; i<m_mesh.size(); ++i) delete m_mesh[i];
+	m_mesh.clear();
+}
+
 
 FEModel* FEModel::GetInstance()
 {
@@ -45,10 +53,21 @@ FEModel* FEModel::GetInstance()
 }
 
 //-----------------------------------------------------------------------------
-void FEModel::SetMesh(FEMeshBase* mesh)
+void FEModel::AddMesh(FEMeshBase* mesh)
 {
-	if (m_mesh) delete m_mesh;
-	m_mesh = mesh;
+	m_mesh.push_back(mesh);
+}
+
+//-----------------------------------------------------------------------------
+int FEModel::Meshes() const
+{
+	return (int) m_mesh.size();
+}
+
+//-----------------------------------------------------------------------------
+FEMeshBase* FEModel::GetFEMesh(int n)
+{
+	return m_mesh[n];
 }
 
 //-----------------------------------------------------------------------------
@@ -56,7 +75,8 @@ void FEModel::SetMesh(FEMeshBase* mesh)
 // TODO: This does not delete the mesh. Should I?
 void FEModel::Clear()
 {
-	if (m_mesh) m_mesh->CleanUp();
+	DeleteMeshes();
+
 	m_Mat.clear();
 	ClearStates();
 	
@@ -99,7 +119,17 @@ void FEModel::ClearStates()
 // add a state
 void FEModel::AddState(float ftime)
 {
-	InsertState(new FEState(ftime, this), ftime);
+	vector<FEState*>::iterator it = m_State.begin();
+	for (it = m_State.begin(); it != m_State.end(); ++it)
+		if ((*it)->m_time > ftime)
+		{
+			m_State.insert(it, new FEState(ftime, this, (*it)->GetFEMesh()));
+			return;
+		}
+
+	// get last state
+	FEState* ps = GetState(GetStates()-1);
+	m_State.push_back(new FEState(ftime, this, ps->GetFEMesh()));
 }
 
 //-----------------------------------------------------------------------------
@@ -287,7 +317,7 @@ void FEModel::AddDataField(FEDataField* pd)
 	vector<FEState*>::iterator it;
 	for (it=m_State.begin(); it != m_State.end(); ++it)
 	{
-		(*it)->m_Data.push_back(pd->CreateData(this));
+		(*it)->m_Data.push_back(pd->CreateData(*it));
 	}
 
 	// update all dependants
@@ -307,7 +337,7 @@ void FEModel::AddDataField(FEDataField* pd, vector<int>& L)
 	vector<FEState*>::iterator it;
 	for (it=m_State.begin(); it != m_State.end(); ++it)
 	{
-		FEFaceItemData* pmd = dynamic_cast<FEFaceItemData*>(pd->CreateData(this));
+		FEFaceItemData* pmd = dynamic_cast<FEFaceItemData*>(pd->CreateData(*it));
 		(*it)->m_Data.push_back(pmd);
 		if (dynamic_cast<FECurvature*>(pmd))
 		{
@@ -330,7 +360,8 @@ void FEModel::AddDataField(FEDataField* pd, vector<int>& L)
 // displacement field.
 vec3f FEModel::NodePosition(int n, int ntime)
 {
-	vec3f r = m_mesh->Node(n).m_r0;
+	FEMeshBase* mesh = GetState(ntime)->GetFEMesh();
+	vec3f r = mesh->Node(n).m_r0;
 	if (m_ndisp) r += EvaluateNodeVector(n, ntime, m_ndisp);
 	
 	return r;
@@ -351,7 +382,8 @@ vec3f FEModel::FaceNormal(FEFace& f, int ntime)
 // get the nodal coordinates of an element at time n
 void FEModel::GetElementCoords(int iel, int ntime, vec3f* r)
 {
-	FEElement& elem = m_mesh->Element(iel);
+	FEMeshBase* mesh = GetState(ntime)->GetFEMesh();
+	FEElement& elem = mesh->Element(iel);
 	NODEDATA* pn = &m_State[ntime]->m_NODE[0];
 
 	for (int i=0; i<8; i++)
@@ -363,15 +395,16 @@ void FEModel::GetElementCoords(int iel, int ntime, vec3f* r)
 // configuration, not the current configuration
 void FEModel::UpdateBoundingBox()
 {
-	FENode& n = m_mesh->Node(0);
+	FEMeshBase* mesh = GetFEMesh(0);
+	FENode& n = mesh->Node(0);
 	m_bbox.x0 = m_bbox.x1 = n.m_r0.x;
 	m_bbox.y0 = m_bbox.y1 = n.m_r0.y;
 	m_bbox.z0 = m_bbox.z1 = n.m_r0.z;
 
-	int N = m_mesh->Nodes();
+	int N = mesh->Nodes();
 	for (int i=0; i<N; i++)
 	{
-		FENode& n = m_mesh->Node(i);
+		FENode& n = mesh->Node(i);
 		if (n.m_r0.x < m_bbox.x0) m_bbox.x0 = n.m_r0.x;
 		if (n.m_r0.y < m_bbox.y0) m_bbox.y0 = n.m_r0.y;
 		if (n.m_r0.z < m_bbox.z0) m_bbox.z0 = n.m_r0.z;

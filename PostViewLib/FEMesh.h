@@ -121,15 +121,6 @@ public:
 	//! update the normals of the mesh
 	void UpdateNormals(bool smooth);
 
-	//! set the smoothing angle
-	void SetSmoothingAngle(double w) { m_stol = w*PI/180.0; }
-
-	//! get the smoothing angle in degrees
-	double GetSmoothingAngle() { return 180*m_stol/PI; }
-
-	//! get the smoothing angle in radians
-	double GetSmoothingAngleRadians() { return m_stol; }
-
 	// --- E V A L U A T E ---
 
 	vec3f ElementCenter(FEElement& el)
@@ -171,7 +162,7 @@ public:
 	void FaceNodeNormals  (FEFace& f, vec3f* n);
 	void FaceNodeTexCoords(FEFace& f, float* t, bool bnode);
 
-	void AutoSmooth();
+	void AutoSmooth(double angleRadians);
 
 protected:
 	virtual void CreateElements(int elems) = 0;
@@ -190,9 +181,6 @@ protected:
 	void ClearNodeSets();
 
 protected:
-	// --- A T T R I B U T E S ---
-	double	m_stol;	// smoothing threshold
-
 	// --- G E O M E T R Y ---
 	vector<FENode>		m_Node;	// nodal array
 	vector<FEEdge>		m_Edge;	// edge array

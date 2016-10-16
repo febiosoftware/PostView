@@ -154,7 +154,7 @@ void CIntegrateWindow::IntegrateSelection(CPlotData& data)
 	// get the document
 	CDocument* pdoc = m_wnd->GetDocument();
 	FEModel& fem = *pdoc->GetFEModel();
-	FEMeshBase& mesh = *fem.GetMesh();
+	FEMeshBase& mesh = *fem.GetFEMesh(0);
 	CGLModel* po = pdoc->GetGLModel();
 
 	data.clear();

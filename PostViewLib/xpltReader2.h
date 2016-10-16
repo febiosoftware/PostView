@@ -249,6 +249,9 @@ protected:
 	void Clear();
 
 protected:
+	FEMeshBase* GetCurrentMesh() { return m_mesh; }
+
+protected:
 	Dictionary			m_dic;
 	vector<MATERIAL>	m_Mat;
 	vector<NODE>		m_Node;
@@ -271,5 +274,6 @@ protected:
 
 	int		m_nel;
 
-	FEState*	m_pstate;	// last read state section
+	FEState*	m_pstate;	//!< last read state section
+	FEMeshBase*	m_mesh;		//!< current mesh
 };

@@ -8,7 +8,7 @@ void CGLModel::RenderQUAD4(FEFace& f, bool bsmooth, bool bnode)
 	assert(f.m_ntype == FACE_QUAD4);
 
 	// get the mesh
-	FEMeshBase* pm = m_ps->GetMesh();
+	FEMeshBase* pm = GetActiveMesh();
 
 	// get the nodal data
 	vec3f r[4]; pm->FaceNodePosition(f, r);
@@ -38,7 +38,7 @@ void CGLModel::RenderQUAD8(FEFace& f, bool bsmooth, bool bnode)
 	assert(f.m_ntype == FACE_QUAD8);
 
 	// get the mesh
-	FEMeshBase* pm = m_ps->GetMesh();
+	FEMeshBase* pm = GetActiveMesh();
 
 	// get the nodal data
 	vec3f r[8]; pm->FaceNodePosition(f, r);
@@ -86,7 +86,7 @@ void CGLModel::RenderQUAD9(FEFace& f, bool bsmooth, bool bnode)
 	assert(f.m_ntype == FACE_QUAD9);
 
 	// get the mesh
-	FEMeshBase* pm = m_ps->GetMesh();
+	FEMeshBase* pm = GetActiveMesh();
 
 	// get the nodal data
 	vec3f r[9]; pm->FaceNodePosition(f, r);
@@ -146,7 +146,7 @@ void CGLModel::RenderTRI3(FEFace& f, bool bsmooth, bool bnode)
 	assert(f.m_ntype == FACE_TRI3);
 
 	// get the mesh
-	FEMeshBase* pm = m_ps->GetMesh();
+	FEMeshBase* pm = GetActiveMesh();
 
 	// get the nodal data
 	vec3f r[3]; pm->FaceNodePosition(f, r);
@@ -174,7 +174,7 @@ void CGLModel::RenderTRI6(FEFace& f, bool bsmooth, bool bnode)
 	assert(f.m_ntype == FACE_TRI6);
 
 	// get the mesh
-	FEMeshBase* pm = m_ps->GetMesh();
+	FEMeshBase* pm = GetActiveMesh();
 
 	// get the nodal data
 	vec3f r[6]; pm->FaceNodePosition(f, r);
@@ -214,7 +214,7 @@ void CGLModel::RenderTRI7(FEFace& f, bool bsmooth, bool bnode)
 	assert(f.m_ntype == FACE_TRI7);
 
 	// get the mesh
-	FEMeshBase* pm = m_ps->GetMesh();
+	FEMeshBase* pm = GetActiveMesh();
 
 	// get the nodal data
 	vec3f r[7]; pm->FaceNodePosition(f, r);

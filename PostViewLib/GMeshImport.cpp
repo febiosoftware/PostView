@@ -143,7 +143,7 @@ bool GMeshImport::BuildMesh(FEModel& fem)
 	// build the mesh
 	FEMesh* pm = new FEMesh;
 	pm->Create(nodes, elems);
-	fem.SetMesh(pm);
+	fem.AddMesh(pm);
 
 	// create nodes
 	for (i=0; i<nodes; ++i)
@@ -187,7 +187,7 @@ bool GMeshImport::BuildMesh(FEModel& fem)
 	fem.UpdateBoundingBox();
 
 	// we need a single state
-	FEState* ps = new FEState(0.f, &fem);
+	FEState* ps = new FEState(0.f, &fem, fem.GetFEMesh(0));
 	fem.AddState(ps);
 
 	// clean up

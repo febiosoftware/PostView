@@ -2,6 +2,7 @@
 #include "xpltFileReader.h"
 #include "xpltReader.h"
 #include "xpltReader2.h"
+#include "FEModel.h"
 
 xpltParser::xpltParser(xpltFileReader* xplt) : m_xplt(xplt), m_ar(xplt->GetArchive())
 {
@@ -49,6 +50,11 @@ bool xpltFileReader::Load(FEModel& fem, const char* szfile)
 		m_ar.CloseChunk();
 	}
 
+	// set the model's meta data
+	MetaData& meta = fem.GetMetaData();
+	meta.author = m_hdr.author;
+	meta.software = m_hdr.software;
+
 	// create a file parser
 	if (m_xplt) { delete m_xplt; m_xplt = 0; }
 	if (m_hdr.nversion <= 4) m_xplt = new XpltReader(this);
@@ -73,6 +79,8 @@ bool xpltFileReader::ReadHeader()
 	m_hdr.nn = 0;
 	m_hdr.nmax_facet_nodes = 4;	// default for version 0.1
 	m_hdr.ncompression = 0;	// default for version < 0.3
+	m_hdr.author[0] = 0;
+	m_hdr.software[0] = 0;
 	while (m_ar.OpenChunk() == IO_OK)
 	{
 		int nid = m_ar.GetChunkID();

@@ -7,6 +7,7 @@ using namespace std;
 //-----------------------------------------------------------------------------
 // forward declaration of the mesh
 class FEModel;
+class FEMeshBase;
 
 //-----------------------------------------------------------------------------
 class ValArray
@@ -74,8 +75,8 @@ struct POINTDATA
 class FEState
 {
 public:
-	FEState(float time, FEModel* pm);
-	FEState(float time, FEModel* pm, FEState* ps);
+	FEState(float time, FEModel* fem, FEMeshBase* mesh);
+	FEState(float time, FEModel* fem, FEState* state);
 
 	void AddLine(vec3f a, vec3f b);
 
@@ -86,6 +87,10 @@ public:
 
 	POINTDATA& Point(int n) { return m_Point[n]; }
 	int Points() { return (int) m_Point.size(); }
+
+	FEMeshBase* GetFEMesh() { return m_mesh; }
+
+	FEModel* GetFEModel() { return m_fem; }
 
 public:
 	float	m_time;		// time value
@@ -104,4 +109,8 @@ public:
 
 	// Data
 	FEMeshDataList	m_Data;	// data
+
+public:
+	FEModel*	m_fem;	//!< model this state belongs to
+	FEMeshBase*	m_mesh;	//!< The mesh this state uses
 };

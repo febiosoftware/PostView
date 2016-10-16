@@ -12,8 +12,6 @@
 // Constructor
 FEMeshBase::FEMeshBase()
 {
-	// TODO: store this elsewhere
-	m_stol = 60.*PI/180.0;
 }
 
 //-----------------------------------------------------------------------------
@@ -526,7 +524,7 @@ void FEMeshBase::Update()
 	UpdateDomains();
 
 	// Calculate SG and normals
-	AutoSmooth();
+	AutoSmooth(60.*PI / 180.0);
 
 	// now we can figure out which nodes are interior and which are exterior
 	UpdateNodes();
@@ -559,7 +557,7 @@ void FEMeshBase::UpdateNodes()
 //-----------------------------------------------------------------------------
 // Partition the surface depending on a smoothing tolerance. Face neighbours
 // are only set when the faces belong to the same smoothing group.
-void FEMeshBase::AutoSmooth()
+void FEMeshBase::AutoSmooth(double angleRadians)
 {
 	int faces = Faces();
 	for (int i=0; i<faces; ++i)
@@ -577,7 +575,7 @@ void FEMeshBase::AutoSmooth()
 	}
 
 	// smoothing threshold
-	double eps = cos(m_stol);
+	double eps = cos(angleRadians);
 
 	//calculate the node normals
 	int nodes = Nodes();

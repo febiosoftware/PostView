@@ -36,7 +36,7 @@ FEModel* FEPlotMix::Load(const char **szfile, int n)
 	ClearStates(*pfem);
 
 	// get the mesh
-	FEMeshBase& m1 = *pfem->GetMesh();
+	FEMeshBase& m1 = *pfem->GetFEMesh(0);
 
 	// get the datamanager
 	FEDataManager* pdm1 = pfem->GetDataManager();
@@ -59,7 +59,7 @@ FEModel* FEPlotMix::Load(const char **szfile, int n)
 		}
 
 		// make sure the mesh size is the same
-		FEMeshBase& m2 = *fem2.GetMesh();
+		FEMeshBase& m2 = *fem2.GetFEMesh(0);
 		if ((m1.Nodes   () != m2.Nodes()) ||
 			(m1.Elements() != m2.Elements())) { delete pfem; return 0; } 
 

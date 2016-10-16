@@ -6,7 +6,7 @@ bool FEFEBioExport::Save(FEModel& fem, const char* szfile)
 {
 	int nmat = fem.Materials();
 
-	FEMeshBase* pm = fem.GetMesh();
+	FEMeshBase* pm = fem.GetFEMesh(0);
 	FEState* pst = fem.GetActiveState();
 
 	XMLWriter xml;

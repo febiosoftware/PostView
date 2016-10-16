@@ -40,7 +40,7 @@ bool FENikeImport::Load(FEModel &fem, const char *szfile)
 	fem.UpdateBoundingBox();
 
 	// we need a single state
-	FEState* ps = new FEState(0.f, &fem);
+	FEState* ps = new FEState(0.f, &fem, fem.GetFEMesh(0));
 	fem.AddState(ps);
 
 	return true;
@@ -120,7 +120,7 @@ bool FENikeImport::ReadGeometrySection()
 	// create the geometry
 	m_pm = new FEMesh;
 	m_pm->Create(m_nn, m_nhel+m_nsel);	
-	m_pfem->SetMesh(m_pm);
+	m_pfem->AddMesh(m_pm);
 
 	// read the nodes
 	float x, y, z;
