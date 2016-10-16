@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "FEPlotMix.h"
 #include "FELSDYNAPlot.h"
-#include "xpltReader.h"
+#include "xpltFileReader.h"
 #include "FEDataManager.h"
 #include "FEMeshData_T.h"
 
@@ -25,11 +25,11 @@ FEModel* FEPlotMix::Load(const char **szfile, int n)
 	if (n <= 0) return 0;
 
 	// create the file import
-	XpltReader* pfr = new XpltReader;
+	xpltFileReader* pfr = new xpltFileReader;
 
 	// load the first model
 	FEModel* pfem = new FEModel;
-	pfr->SetReadStateFlag(XpltReader::XPLT_READ_LAST_STATE_ONLY);
+	pfr->SetReadStateFlag(XPLT_READ_LAST_STATE_ONLY);
 	if (pfr->Load(*pfem, szfile[0]) == false) { delete pfem; return 0; }
 
 	// clear all states, except the last one

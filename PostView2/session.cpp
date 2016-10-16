@@ -4,7 +4,7 @@
 #include "PostViewLib/XMLReader.h"
 #include "PostViewLib/FEBioImport.h"
 #include "PostViewLib/FELSDYNAPlot.h"
-#include "PostViewLib/xpltReader.h"
+#include "PostViewLib/xpltFileReader.h"
 #include "PostViewLib/FELSDYNAimport.h"
 #include "PostViewLib/GMeshImport.h"
 #include "PostViewLib/FENikeImport.h"
@@ -26,7 +26,7 @@ FEFileReader* GetFileReader(const char* szfile)
 
 	if      (szext && (strcmp(szext, ".feb" ) == 0)) pimp = new FEBioImport;
 	else if (szext && (strcmp(szext, ".plt" ) == 0)) pimp = new FELSDYNAPlotImport;
-	else if (szext && (strcmp(szext, ".xplt") == 0)) pimp = new XpltReader;
+	else if (szext && (strcmp(szext, ".xplt") == 0)) pimp = new xpltFileReader;
 	else if (szext && (strcmp(szext, ".k"   ) == 0)) pimp = new FELSDYNAimport;
 	else if (szext && (strcmp(szext, ".msh" ) == 0)) pimp = new GMeshImport;
 	else if (szext && (strcmp(szext, ".gmsh") == 0)) pimp = new GMeshImport;

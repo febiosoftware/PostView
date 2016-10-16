@@ -46,6 +46,7 @@ protected:
 	// close the file
 	void Close();
 
+public:
 	// helper function that sets the error string
 	bool errf(const char* szerr, ...);
 

@@ -1,6 +1,5 @@
 #pragma once
-#include "FEFileReader.h"
-#include "Archive.h"
+#include "xpltFileReader.h"
 #include "FEElement.h"
 
 class FEState;
@@ -9,7 +8,7 @@ class FEMeshData;
 
 //-----------------------------------------------------------------------------
 // This class reads the XPLT file, version 2.0
-class XpltReader2 :	public FEFileReader
+class XpltReader2 : public xpltParser
 {
 protected:
 	// file tags
@@ -87,9 +86,6 @@ protected:
 				PLT_FACE_DATA			= 0x02020500
 	};
 
-public:
-	enum { XPLT_READ_ALL_STATES, XPLT_READ_LAST_STATE_ONLY, XPLT_READ_STATES_FROM_LIST };
-
 protected:
 	// FEBio tag
 	enum {FEBIO_TAG = 0x00464542 };
@@ -132,14 +128,6 @@ public:
 			m_Elem.clear();
 			m_Face.clear();
 		}
-	};
-
-	struct HEADER
-	{
-		int	nversion;
-		int ncompression;				//!< compression method (or level)
-		char author[DI_NAME_SIZE];		//!< name of author
-		char software[DI_NAME_SIZE];	//!< name of software that generated the file
 	};
 
 	struct MATERIAL
@@ -213,16 +201,15 @@ public:
 	};
 
 public:
-	XpltReader2();
+	XpltReader2(xpltFileReader* xplt);
 	~XpltReader2();
 
-	bool Load(FEModel& fem, const char* szfile);
+	bool Load(FEModel& fem);
 
 protected:
 	bool ReadRootSection(FEModel& fem);
 	bool ReadStateSection(FEModel& fem);
 
-	bool ReadHeader(FEModel& fem);
 	bool ReadDictionary(FEModel& fem);
 	bool ReadMesh(FEModel& fem);
 
@@ -261,24 +248,13 @@ protected:
 
 	void Clear();
 
-public:
-	void SetReadStateFlag(int n) { m_read_state_flag = n; }
-	void SetReadStatesList(vector<int>& l) { m_state_list = l; }
-
-protected: // Options
-	int			m_read_state_flag;	//!< flag setting option for reading states
-	vector<int>	m_state_list;		//!< list of states to read (only when m_read_state_flag == XPLT_READ_STATES_FROM_LIST)
-
 protected:
-	HEADER				m_hdr;
 	Dictionary			m_dic;
 	vector<MATERIAL>	m_Mat;
 	vector<NODE>		m_Node;
 	vector<Domain>		m_Dom;
 	vector<Surface>		m_Surf;
 	vector<NodeSet>		m_NodeSet;
-
-	IArchive	m_ar;
 
 	bool	m_bHasDispl;			// has displacement field
 	bool	m_bHasStress;			// has stress field

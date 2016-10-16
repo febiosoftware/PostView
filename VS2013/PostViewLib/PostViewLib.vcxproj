@@ -198,6 +198,7 @@
     <ClInclude Include="..\..\PostViewLib\VRMLExporter.h" />
     <ClInclude Include="..\..\PostViewLib\XMLReader.h" />
     <ClInclude Include="..\..\PostViewLib\XMLWriter.h" />
+    <ClInclude Include="..\..\PostViewLib\xpltFileReader.h" />
     <ClInclude Include="..\..\PostViewLib\xpltReader.h" />
     <ClInclude Include="..\..\PostViewLib\xpltReader2.h" />
   </ItemGroup>
@@ -263,6 +264,7 @@
     <ClCompile Include="..\..\PostViewLib\VRMLExporter.cpp" />
     <ClCompile Include="..\..\PostViewLib\XMLReader.cpp" />
     <ClCompile Include="..\..\PostViewLib\XMLWriter.cpp" />
+    <ClCompile Include="..\..\PostViewLib\xpltFileReader.cpp" />
     <ClCompile Include="..\..\PostViewLib\xpltReader.cpp" />
     <ClCompile Include="..\..\PostViewLib\xpltReader2.cpp" />
   </ItemGroup>

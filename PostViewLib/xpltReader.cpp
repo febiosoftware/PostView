@@ -31,10 +31,9 @@ template <class Type> void ReadElemData_REGION(IArchive& ar, XpltReader::Domain&
 }
 
 //-----------------------------------------------------------------------------
-XpltReader::XpltReader() : FEFileReader("FEBio plot")
+XpltReader::XpltReader(xpltFileReader* xplt) : xpltParser(xplt)
 {
 	m_pstate = 0;
-	m_read_state_flag = XPLT_READ_ALL_STATES;
 }
 
 XpltReader::~XpltReader()
@@ -60,35 +59,26 @@ void XpltReader::Clear()
 }
 
 //-----------------------------------------------------------------------------
-bool XpltReader::Load(FEModel& fem, const char* szfile)
+bool XpltReader::Load(FEModel& fem)
 {
 	// make sure all data is cleared
 	Clear();
 
-	// open the file
-	if (Open(szfile, "rb") == false) return errf("Failed opening file.");
+	// read the root section
+	// (This section was already opened by xpltFileReader)
+	if (ReadRootSection(fem) == false) return false;
 
-	// attach the file to the archive
-	if (m_ar.Open(m_fp) == false) return errf("This is not a valid FEBio plot file.");
-
-	// read the root section (no compression for this section)
-	m_ar.SetCompression(0);
-	if (m_ar.OpenChunk() == IO_OK)
-	{
-		if (m_ar.GetChunkID() != PLT_ROOT) return errf("Error while reading root section");
-		if (ReadRootSection(fem) == false) return false;
-		m_ar.CloseChunk();
-	}
-	else return errf("Error while reading root section");
+	// Clear the end-flag of the root section
+	m_ar.CloseChunk();
+	if (m_ar.OpenChunk() != IO_END) return false;
 
 	// Build the mesh
 	if (BuildMesh(fem) == false) return false;
 
-	// Clear the end-flag
-	if (m_ar.OpenChunk() != IO_END) return false;
-
 	// read the state sections (these could be compressed)
-	m_ar.SetCompression(m_hdr.ncompression);
+	const xpltFileReader::HEADER& hdr = m_xplt->GetHeader();
+	m_ar.SetCompression(hdr.ncompression);
+	int read_state_flag = m_xplt->GetReadStateFlag();
 	int nstate = 0;
 	try{
 		while (true)
@@ -99,13 +89,14 @@ bool XpltReader::Load(FEModel& fem, const char* szfile)
 			{
 				if (m_pstate) { delete m_pstate; m_pstate = 0; }
 				if (ReadStateSection(fem) == false) break;
-				if (m_read_state_flag == XPLT_READ_ALL_STATES) { fem.AddState(m_pstate); m_pstate = 0; }
-				else if (m_read_state_flag == XPLT_READ_STATES_FROM_LIST)
+				if (read_state_flag == XPLT_READ_ALL_STATES) { fem.AddState(m_pstate); m_pstate = 0; }
+				else if (read_state_flag == XPLT_READ_STATES_FROM_LIST)
 				{
-					int n = (int) m_state_list.size();
+					vector<int> state_list = m_xplt->GetReadStates();
+					int n = (int) state_list.size();
 					for (int i=0; i<n; ++i)
 					{
-						if (m_state_list[i] == nstate)
+						if (state_list[i] == nstate)
 						{
 							fem.AddState(m_pstate); 
 							m_pstate = 0;
@@ -126,21 +117,20 @@ bool XpltReader::Load(FEModel& fem, const char* szfile)
 
 			++nstate;
 		}
-		if (m_read_state_flag == XPLT_READ_LAST_STATE_ONLY) { fem.AddState(m_pstate); m_pstate = 0; }
+		if (read_state_flag == XPLT_READ_LAST_STATE_ONLY) { fem.AddState(m_pstate); m_pstate = 0; }
 	}
 	catch (...)
 	{
 		errf("An unknown exception has occurred.\nNot all data was read in.");
 	}
 
-	m_ar.Close();
-	Close();
 	Clear();
 
 	return true;
 }
 
 //-----------------------------------------------------------------------------
+// Header section is already read by xpltFileReader
 bool XpltReader::ReadRootSection(FEModel& fem)
 {
 	while (m_ar.OpenChunk() == IO_OK)
@@ -148,7 +138,6 @@ bool XpltReader::ReadRootSection(FEModel& fem)
 		int nid = m_ar.GetChunkID();
 		switch (nid)
 		{
-		case PLT_HEADER    : if (ReadHeader    ()    == false) return false; break;
 		case PLT_DICTIONARY: if (ReadDictionary(fem) == false) return false; break;
 		case PLT_MATERIALS : if (ReadMaterials (fem) == false) return false; break;
 		case PLT_GEOMETRY  : if (ReadMesh      (fem) == false) return false; break;
@@ -157,32 +146,6 @@ bool XpltReader::ReadRootSection(FEModel& fem)
 		}
 		m_ar.CloseChunk();
 	}
-	return true;
-}
-
-//-----------------------------------------------------------------------------
-bool XpltReader::ReadHeader()
-{
-	m_hdr.nversion			= 0;
-	m_hdr.nn				= 0;
-	m_hdr.nmax_facet_nodes  = 4;	// default for version 0.1
-	m_hdr.ncompression      = 0;	// default for version < 0.3
-	while (m_ar.OpenChunk() == IO_OK)
-	{
-		int nid = m_ar.GetChunkID();
-		switch (nid)
-		{
-		case PLT_HDR_VERSION        : m_ar.read(m_hdr.nversion); break;
-		case PLT_HDR_NODES          : m_ar.read(m_hdr.nn); break;
-		case PLT_HDR_MAX_FACET_NODES: m_ar.read(m_hdr.nmax_facet_nodes); break;
-		case PLT_HDR_COMPRESSION    : m_ar.read(m_hdr.ncompression); break;
-		default:
-			return errf("Error while reading header.");
-		}
-		m_ar.CloseChunk();
-	}
-	if (m_hdr.nversion > 4) return false;
-	if (m_hdr.nn == 0) return false;
 	return true;
 }
 
@@ -623,7 +586,8 @@ bool XpltReader::ReadMesh(FEModel &fem)
 //-----------------------------------------------------------------------------
 bool XpltReader::ReadNodeSection(FEModel &fem)
 {
-	vector<float> a(3*m_hdr.nn);
+	const xpltFileReader::HEADER& hdr = m_xplt->GetHeader();
+	vector<float> a(3 * hdr.nn);
 	while (m_ar.OpenChunk() == IO_OK)
 	{
 		if (m_ar.GetChunkID() == PLT_NODE_COORDS) m_ar.read(a);
@@ -635,8 +599,8 @@ bool XpltReader::ReadNodeSection(FEModel &fem)
 		m_ar.CloseChunk();
 	}
 
-	m_Node.resize(m_hdr.nn);
-	for (int i=0; i<m_hdr.nn; ++i)
+	m_Node.resize(hdr.nn);
+	for (int i=0; i<hdr.nn; ++i)
 	{
 		NODE& n = m_Node[i];
 		n.r.x = a[3*i  ];
@@ -748,11 +712,12 @@ bool XpltReader::ReadDomainSection(FEModel &fem)
 //-----------------------------------------------------------------------------
 bool XpltReader::ReadSurfaceSection(FEModel &fem)
 {
-	int nodes_per_facet = m_hdr.nmax_facet_nodes;
+	const xpltFileReader::HEADER& hdr = m_xplt->GetHeader();
+	int nodes_per_facet = hdr.nmax_facet_nodes;
 
 	// in previous versions there was a bug in the number
 	// of nodes written so we need to make an adjustment.
-	if (m_hdr.nversion < 0x04) nodes_per_facet -= 2;
+	if (hdr.nversion < 0x04) nodes_per_facet -= 2;
 
 	while (m_ar.OpenChunk() == IO_OK)
 	{
@@ -781,7 +746,7 @@ bool XpltReader::ReadSurfaceSection(FEModel &fem)
 				}
 				else if (nid == PLT_FACE_LIST)
 				{
-					if (m_hdr.nversion == 1)
+					if (hdr.nversion == 1)
 					{
 						assert(S.nf > 0);
 						S.face.reserve(S.nf);
@@ -813,7 +778,7 @@ bool XpltReader::ReadSurfaceSection(FEModel &fem)
 						assert(S.nf > 0);
 						S.face.reserve(S.nf);
 						int n[11];
-						assert(m_hdr.nmax_facet_nodes <= 9);
+						assert(hdr.nmax_facet_nodes <= 9);
 						while (m_ar.OpenChunk() == IO_OK)
 						{
 							if (m_ar.GetChunkID() == PLT_FACE)
@@ -909,7 +874,8 @@ bool XpltReader::BuildMesh(FEModel &fem)
 	fem.ClearStates();
 
 	// count all nodes
-	int NN = m_hdr.nn;
+	const xpltFileReader::HEADER& hdr = m_xplt->GetHeader();
+	int NN = hdr.nn;
 
 	// count all elements
 	int ND = m_Dom.size();
@@ -1056,7 +1022,7 @@ bool XpltReader::BuildMesh(FEModel &fem)
 	fem.SetMesh(pmesh);
 
 	// read the nodal coordinates
-	for (int i=0; i<m_hdr.nn; i++)
+	for (int i=0; i<hdr.nn; i++)
 	{
 		FENode& n = pmesh->Node(i);
 		NODE& N = m_Node[i];
@@ -1738,7 +1704,8 @@ bool XpltReader::ReadFaceData_MULT(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 	int NF = s.nf;
 	vector<int> tag;
 	tag.assign(m.Nodes(), -1);
-	const int NFM = m_hdr.nmax_facet_nodes;
+	const xpltFileReader::HEADER& hdr = m_xplt->GetHeader();
+	const int NFM = hdr.nmax_facet_nodes;
 	vector<vector<int> > l(NF, vector<int>(NFM));
 	for (int i=0; i<NF; ++i)
 	{

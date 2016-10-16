@@ -8,8 +8,7 @@
 #include "Document.h"
 #include "Document.h"
 #include "GLModel.h"
-#include <PostViewLib/xpltReader.h>
-#include <PostViewLib/xpltReader2.h>
+#include <PostViewLib/xpltFileReader.h>
 #include <PostViewLib/FEFEBioExport.h>
 #include <PostViewLib/FELSDYNAExport.h>
 #include <PostViewLib/FENikeExport.h>
@@ -192,10 +191,10 @@ void CMainWindow::OpenFile(const QString& fileName, int nfilter)
 
 	switch (nfilter)
 	{
-	case -1: reader = new XpltReader; break;
+	case -1: reader = new xpltFileReader; break;
 	case 0: 
 		{
-			XpltReader* xplt = new XpltReader;
+			xpltFileReader* xplt = new xpltFileReader;
 			reader = xplt;
 
 			CDlgImportXPLT dlg(this);
