@@ -106,7 +106,9 @@ void FECongruencyMap::Apply(FEModel& fem)
 			float v1 = project(m_surf2, r, n);
 			a[i] = v0 - v1;
 		}
-		df.add(a, m_surf1.m_face, m_surf1.m_lnode);
+		vector<int> nf1(m_surf1.Faces());
+		for (int i = 0; i<m_surf1.Faces(); ++i) nf1[i] = mesh.Face(m_surf1.m_face[i]).Nodes();
+		df.add(a, m_surf1.m_face, m_surf1.m_lnode, nf1);
 	}
 }
 

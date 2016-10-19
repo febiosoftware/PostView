@@ -1898,15 +1898,21 @@ bool XpltReader::ReadFaceData_NODE(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 	vector<int> f(s.nf);
 	for (int i=0; i<s.nf; ++i) f[i] = s.face[i].nid;
 
+	// create vector that stores the number of nodes for each facet
+	vector<int> fn(s.nf, 0);
+	for (int i=0; i<s.nf; ++i) fn[i] = s.face[i].nn;
+
 	// create the local node index list
-	vector<int> l(4*s.nf);
+	vector<int> l; l.reserve(s.nf*FEFace::MAX_NODES);
 	for (int i=0; i<s.nf; ++i)
 	{
 		FEFace& f = m.Face(s.face[i].nid);
-		l[4*i  ] = m.Node(f.node[0]).m_ntag; assert(l[4*i  ] >= 0);
-		l[4*i+1] = m.Node(f.node[1]).m_ntag; assert(l[4*i+1] >= 0);
-		l[4*i+2] = m.Node(f.node[2]).m_ntag; assert(l[4*i+2] >= 0);
-		l[4*i+3] = m.Node(f.node[2]).m_ntag; assert(l[4*i+3] >= 0);
+		int nn = f.Nodes();
+		for (int j=0; j<nn; ++j) 
+		{ 
+			int n = m.Node(f.node[j]).m_ntag; assert(n >= 0);
+			l.push_back(n);
+		}
 	}
 
 	// get the data
@@ -1917,7 +1923,7 @@ bool XpltReader::ReadFaceData_NODE(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 			FEFaceData<float,DATA_NODE>& df = dynamic_cast<FEFaceData<float,DATA_NODE>&>(data);
 			vector<float> a(n);
 			m_ar.read(a);
-			df.add(a, f, l);
+			df.add(a, f, l, fn);
 		}
 		break;
 	case VEC3F:
@@ -1925,7 +1931,7 @@ bool XpltReader::ReadFaceData_NODE(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 			FEFaceData<vec3f,DATA_NODE>& df = dynamic_cast<FEFaceData<vec3f,DATA_NODE>&>(data);
 			vector<vec3f> a(n);
 			m_ar.read(a);
-			df.add(a, f, l);
+			df.add(a, f, l, fn);
 		}
 		break;
 	case MAT3FS:
@@ -1933,7 +1939,7 @@ bool XpltReader::ReadFaceData_NODE(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 			FEFaceData<mat3fs,DATA_NODE>& df = dynamic_cast<FEFaceData<mat3fs,DATA_NODE>&>(data);
 			vector<mat3fs> a(n);
 			m_ar.read(a);
-			df.add(a, f, l);
+			df.add(a, f, l, fn);
 		}
 		break;
 	case MAT3F:
@@ -1941,7 +1947,7 @@ bool XpltReader::ReadFaceData_NODE(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 			FEFaceData<mat3f,DATA_NODE>& df = dynamic_cast<FEFaceData<mat3f,DATA_NODE>&>(data);
 			vector<mat3f> a(n);
 			m_ar.read(a);
-			df.add(a, f, l);
+			df.add(a, f, l, fn);
 		}
 		break;
 	case MAT3FD:
@@ -1949,7 +1955,7 @@ bool XpltReader::ReadFaceData_NODE(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 			FEFaceData<mat3fd,DATA_NODE>& df = dynamic_cast<FEFaceData<mat3fd,DATA_NODE>&>(data);
 			vector<mat3fd> a(n);
 			m_ar.read(a);
-			df.add(a, f, l);
+			df.add(a, f, l, fn);
 		}
 		break;
     case TENS4FS:
@@ -1957,7 +1963,7 @@ bool XpltReader::ReadFaceData_NODE(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 			FEFaceData<tens4fs,DATA_NODE>& df = dynamic_cast<FEFaceData<tens4fs,DATA_NODE>&>(data);
 			vector<tens4fs> a(n);
 			m_ar.read(a);
-			df.add(a, f, l);
+			df.add(a, f, l, fn);
 		}
         break;
 	default:

@@ -1877,83 +1877,89 @@ bool XpltReader2::ReadFaceData_NODE(FEMeshBase& m, XpltReader2::Surface &s, FEMe
 {
 	// set nodal tags to local node number
 	int NN = m.Nodes();
-	for (int i=0; i<NN; ++i) m.Node(i).m_ntag = -1;
+	for (int i = 0; i<NN; ++i) m.Node(i).m_ntag = -1;
 
 	int n = 0;
-	for (int i=0; i<s.nf; ++i)
+	for (int i = 0; i<s.nf; ++i)
 	{
 		FACE& f = s.face[i];
 		int nf = f.nn;
-		for (int j=0; j<nf; ++j)
-			if (m.Node(f.node[j]).m_ntag == -1) m.Node(f.node[j]).m_ntag = n++;
+		for (int j = 0; j<nf; ++j)
+		if (m.Node(f.node[j]).m_ntag == -1) m.Node(f.node[j]).m_ntag = n++;
 	}
 
 	// create the face list
 	vector<int> f(s.nf);
-	for (int i=0; i<s.nf; ++i) f[i] = s.face[i].nid;
+	for (int i = 0; i<s.nf; ++i) f[i] = s.face[i].nid;
+
+	// create vector that stores the number of nodes for each facet
+	vector<int> fn(s.nf, 0);
+	for (int i = 0; i<s.nf; ++i) fn[i] = s.face[i].nn;
 
 	// create the local node index list
-	vector<int> l(4*s.nf);
-	for (int i=0; i<s.nf; ++i)
+	vector<int> l; l.resize(s.nf*FEFace::MAX_NODES);
+	for (int i = 0; i<s.nf; ++i)
 	{
 		FEFace& f = m.Face(s.face[i].nid);
-		l[4*i  ] = m.Node(f.node[0]).m_ntag; assert(l[4*i  ] >= 0);
-		l[4*i+1] = m.Node(f.node[1]).m_ntag; assert(l[4*i+1] >= 0);
-		l[4*i+2] = m.Node(f.node[2]).m_ntag; assert(l[4*i+2] >= 0);
-		l[4*i+3] = m.Node(f.node[2]).m_ntag; assert(l[4*i+3] >= 0);
+		int nn = f.Nodes();
+		for (int j = 0; j<nn; ++j)
+		{
+			int n = m.Node(f.node[j]).m_ntag; assert(n >= 0);
+			l.push_back(n);
+		}
 	}
 
 	// get the data
 	switch (ntype)
 	{
 	case FLOAT:
-		{
-			FEFaceData<float,DATA_NODE>& df = dynamic_cast<FEFaceData<float,DATA_NODE>&>(data);
-			vector<float> a(n);
-			m_ar.read(a);
-			df.add(a, f, l);
-		}
+	{
+				  FEFaceData<float, DATA_NODE>& df = dynamic_cast<FEFaceData<float, DATA_NODE>&>(data);
+				  vector<float> a(n);
+				  m_ar.read(a);
+				  df.add(a, f, l, fn);
+	}
 		break;
 	case VEC3F:
-		{
-			FEFaceData<vec3f,DATA_NODE>& df = dynamic_cast<FEFaceData<vec3f,DATA_NODE>&>(data);
-			vector<vec3f> a(n);
-			m_ar.read(a);
-			df.add(a, f, l);
-		}
+	{
+				  FEFaceData<vec3f, DATA_NODE>& df = dynamic_cast<FEFaceData<vec3f, DATA_NODE>&>(data);
+				  vector<vec3f> a(n);
+				  m_ar.read(a);
+				  df.add(a, f, l, fn);
+	}
 		break;
 	case MAT3FS:
-		{
-			FEFaceData<mat3fs,DATA_NODE>& df = dynamic_cast<FEFaceData<mat3fs,DATA_NODE>&>(data);
-			vector<mat3fs> a(n);
-			m_ar.read(a);
-			df.add(a, f, l);
-		}
+	{
+				   FEFaceData<mat3fs, DATA_NODE>& df = dynamic_cast<FEFaceData<mat3fs, DATA_NODE>&>(data);
+				   vector<mat3fs> a(n);
+				   m_ar.read(a);
+				   df.add(a, f, l, fn);
+	}
 		break;
 	case MAT3F:
-		{
-			FEFaceData<mat3f,DATA_NODE>& df = dynamic_cast<FEFaceData<mat3f,DATA_NODE>&>(data);
-			vector<mat3f> a(n);
-			m_ar.read(a);
-			df.add(a, f, l);
-		}
+	{
+				  FEFaceData<mat3f, DATA_NODE>& df = dynamic_cast<FEFaceData<mat3f, DATA_NODE>&>(data);
+				  vector<mat3f> a(n);
+				  m_ar.read(a);
+				  df.add(a, f, l, fn);
+	}
 		break;
 	case MAT3FD:
-		{
-			FEFaceData<mat3fd,DATA_NODE>& df = dynamic_cast<FEFaceData<mat3fd,DATA_NODE>&>(data);
-			vector<mat3fd> a(n);
-			m_ar.read(a);
-			df.add(a, f, l);
-		}
+	{
+				   FEFaceData<mat3fd, DATA_NODE>& df = dynamic_cast<FEFaceData<mat3fd, DATA_NODE>&>(data);
+				   vector<mat3fd> a(n);
+				   m_ar.read(a);
+				   df.add(a, f, l, fn);
+	}
 		break;
-    case TENS4FS:
-		{
-			FEFaceData<tens4fs,DATA_NODE>& df = dynamic_cast<FEFaceData<tens4fs,DATA_NODE>&>(data);
-			vector<tens4fs> a(n);
-			m_ar.read(a);
-			df.add(a, f, l);
-		}
-        break;
+	case TENS4FS:
+	{
+					FEFaceData<tens4fs, DATA_NODE>& df = dynamic_cast<FEFaceData<tens4fs, DATA_NODE>&>(data);
+					vector<tens4fs> a(n);
+					m_ar.read(a);
+					df.add(a, f, l, fn);
+	}
+		break;
 	default:
 		return errf("Failed reading face data");
 	}

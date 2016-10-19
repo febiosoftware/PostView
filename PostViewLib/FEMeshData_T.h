@@ -186,28 +186,28 @@ public:
 		if (m_face.empty())
 		{
 			int N = state->GetFEMesh()->Faces();
-			m_face.assign(4*N, -1); 
+			m_face.resize(2*N);
+			for (int i=0; i<N; ++i) { m_face[2*i] = -1; m_face[2*i+1] = 0; }
 		}
 	}
-	void eval(int n, T* pv)
+	void eval(int nface, T* pv)
 	{ 
-		pv[0] = m_data[m_face[4*n  ]]; 
-		pv[1] = m_data[m_face[4*n+1]]; 
-		pv[2] = m_data[m_face[4*n+2]]; 
-		pv[3] = m_data[m_face[4*n+3]]; 
+		int n = m_face[2*nface];
+		int m = m_face[2*nface+1];
+		for (int i=0; i<m; ++i) pv[i] = m_data[m_indx[n + i] ]; 
 	}
-	bool active(int n) { return (m_face[4*n] >= 0); }
-	void copy(FEFaceData<T,DATA_NODE>& d) { m_data = d.m_data; m_face = d.m_face; }
-	void add(vector<T>& d, vector<int>& f, vector<int>& l) 
-	{ 
-		int n0 = (int) m_data.size();
-		m_data.insert(m_data.end(), d.begin(), d.end());
-		for (int i=0; i<(int) f.size(); ++i) 
+	bool active(int n) { return (m_face[2*n] >= 0); }
+	void copy(FEFaceData<T,DATA_NODE>& d) { m_data = d.m_data; m_indx = d.m_indx; }
+	void add(vector<T>& data, vector<int>& face, vector<int>& index, vector<int>& nf)
+	{
+		int n0 = (int)m_data.size();
+		m_data.insert(m_data.end(), data.begin(), data.end());
+		int c = 0;
+		for (int i = 0; i<(int)face.size(); ++i)
 		{
-			if (m_face[4*f[i]  ] == -1) m_face[4*f[i]  ] = n0 + l[4*i  ]; else assert(m_face[4*f[i]  ] == n0 + l[4*i  ]);
-			if (m_face[4*f[i]+1] == -1) m_face[4*f[i]+1] = n0 + l[4*i+1]; else assert(m_face[4*f[i]+1] == n0 + l[4*i+1]);
-			if (m_face[4*f[i]+2] == -1) m_face[4*f[i]+2] = n0 + l[4*i+2]; else assert(m_face[4*f[i]+2] == n0 + l[4*i+2]);
-			if (m_face[4*f[i]+3] == -1) m_face[4*f[i]+3] = n0 + l[4*i+3]; else assert(m_face[4*f[i]+3] == n0 + l[4*i+3]);
+			m_face[2 * face[i]] = (int) m_indx.size();
+			m_face[2 * face[i] + 1] = nf[i];
+			for (int j = 0; j<nf[i]; ++j, ++c) m_indx.push_back(index[c] + n0);
 		}
 	}
 
@@ -217,6 +217,7 @@ public:
 protected:
 	vector<T>		m_data;
 	vector<int>&	m_face;
+	vector<int>		m_indx; 
 };
 
 //=============================================================================
