@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D5A65E141DBFA55800B44009 /* xpltFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E101DBFA55800B44009 /* xpltFileReader.cpp */; };
+		D5A65E151DBFA55800B44009 /* xpltFileReader.h in Headers */ = {isa = PBXBuildFile; fileRef = D5A65E111DBFA55800B44009 /* xpltFileReader.h */; };
+		D5A65E161DBFA55800B44009 /* xpltReader2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E121DBFA55800B44009 /* xpltReader2.cpp */; };
+		D5A65E171DBFA55800B44009 /* xpltReader2.h in Headers */ = {isa = PBXBuildFile; fileRef = D5A65E131DBFA55800B44009 /* xpltReader2.h */; };
+		D5D410271DAD891F007BBA0D /* ImageSlicer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5D410231DAD891F007BBA0D /* ImageSlicer.cpp */; };
+		D5D410281DAD891F007BBA0D /* ImageSlicer.h in Headers */ = {isa = PBXBuildFile; fileRef = D5D410241DAD891F007BBA0D /* ImageSlicer.h */; };
+		D5D410291DAD891F007BBA0D /* Palette.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5D410251DAD891F007BBA0D /* Palette.cpp */; };
+		D5D4102A1DAD891F007BBA0D /* Palette.h in Headers */ = {isa = PBXBuildFile; fileRef = D5D410261DAD891F007BBA0D /* Palette.h */; };
 		D5F309121CFBB65700F76762 /* 3DImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5F308991CFBB65700F76762 /* 3DImage.cpp */; };
 		D5F309131CFBB65700F76762 /* 3DImage.h in Headers */ = {isa = PBXBuildFile; fileRef = D5F3089A1CFBB65700F76762 /* 3DImage.h */; };
 		D5F309141CFBB65700F76762 /* Animation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5F3089B1CFBB65700F76762 /* Animation.cpp */; };
@@ -131,6 +139,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D5A65E101DBFA55800B44009 /* xpltFileReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xpltFileReader.cpp; sourceTree = "<group>"; };
+		D5A65E111DBFA55800B44009 /* xpltFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xpltFileReader.h; sourceTree = "<group>"; };
+		D5A65E121DBFA55800B44009 /* xpltReader2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xpltReader2.cpp; sourceTree = "<group>"; };
+		D5A65E131DBFA55800B44009 /* xpltReader2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xpltReader2.h; sourceTree = "<group>"; };
+		D5D410231DAD891F007BBA0D /* ImageSlicer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImageSlicer.cpp; sourceTree = "<group>"; };
+		D5D410241DAD891F007BBA0D /* ImageSlicer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageSlicer.h; sourceTree = "<group>"; };
+		D5D410251DAD891F007BBA0D /* Palette.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Palette.cpp; sourceTree = "<group>"; };
+		D5D410261DAD891F007BBA0D /* Palette.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Palette.h; sourceTree = "<group>"; };
 		D5F3088A1CFBB64400F76762 /* libPostViewLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPostViewLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5F308991CFBB65700F76762 /* 3DImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = 3DImage.cpp; sourceTree = "<group>"; };
 		D5F3089A1CFBB65700F76762 /* 3DImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = 3DImage.h; sourceTree = "<group>"; };
@@ -336,9 +352,9 @@
 				D5F308C91CFBB65700F76762 /* FEMaterial.h */,
 				D5F308CA1CFBB65700F76762 /* FEMesh.cpp */,
 				D5F308CB1CFBB65700F76762 /* FEMesh.h */,
+				D5F308CE1CFBB65700F76762 /* FEMeshData_T.h */,
 				D5F308CC1CFBB65700F76762 /* FEMeshData.cpp */,
 				D5F308CD1CFBB65700F76762 /* FEMeshData.h */,
-				D5F308CE1CFBB65700F76762 /* FEMeshData_T.h */,
 				D5F308CF1CFBB65700F76762 /* FEModel.cpp */,
 				D5F308D01CFBB65700F76762 /* FEModel.h */,
 				D5F308D11CFBB65700F76762 /* FENikeExport.cpp */,
@@ -381,6 +397,8 @@
 				D5F308F61CFBB65700F76762 /* GView.h */,
 				D5F308F71CFBB65700F76762 /* Image.cpp */,
 				D5F308F81CFBB65700F76762 /* Image.h */,
+				D5D410231DAD891F007BBA0D /* ImageSlicer.cpp */,
+				D5D410241DAD891F007BBA0D /* ImageSlicer.h */,
 				D5F308F91CFBB65700F76762 /* integrate.cpp */,
 				D5F308FA1CFBB65700F76762 /* Interpolator.cpp */,
 				D5F308FB1CFBB65700F76762 /* Interpolator.h */,
@@ -389,6 +407,8 @@
 				D5F308FE1CFBB65700F76762 /* lut.cpp */,
 				D5F308FF1CFBB65700F76762 /* math3d.cpp */,
 				D5F309001CFBB65700F76762 /* math3d.h */,
+				D5D410251DAD891F007BBA0D /* Palette.cpp */,
+				D5D410261DAD891F007BBA0D /* Palette.h */,
 				D5F309011CFBB65700F76762 /* PltArchive.cpp */,
 				D5F309021CFBB65700F76762 /* PltArchive.h */,
 				D5F309031CFBB65700F76762 /* SphereFit.cpp */,
@@ -404,8 +424,12 @@
 				D5F3090D1CFBB65700F76762 /* XMLReader.h */,
 				D5F3090E1CFBB65700F76762 /* XMLWriter.cpp */,
 				D5F3090F1CFBB65700F76762 /* XMLWriter.h */,
+				D5A65E101DBFA55800B44009 /* xpltFileReader.cpp */,
+				D5A65E111DBFA55800B44009 /* xpltFileReader.h */,
 				D5F309101CFBB65700F76762 /* xpltReader.cpp */,
 				D5F309111CFBB65700F76762 /* xpltReader.h */,
+				D5A65E121DBFA55800B44009 /* xpltReader2.cpp */,
+				D5A65E131DBFA55800B44009 /* xpltReader2.h */,
 			);
 			name = PostViewLib;
 			path = ../../PostViewLib;
@@ -419,6 +443,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D5F3091C1CFBB65700F76762 /* color.h in Headers */,
+				D5A65E151DBFA55800B44009 /* xpltFileReader.h in Headers */,
 				D5F309511CFBB65700F76762 /* FENodeFaceList.h in Headers */,
 				D5F309631CFBB65700F76762 /* FEVTKImport.h in Headers */,
 				D5F309401CFBB65700F76762 /* FELSDYNAPlot.h in Headers */,
@@ -448,6 +473,7 @@
 				D5F3097D1CFBB65700F76762 /* SphereFit.h in Headers */,
 				D5F309881CFBB65700F76762 /* XMLWriter.h in Headers */,
 				D5F3096D1CFBB65700F76762 /* GMeshImport.h in Headers */,
+				D5D4102A1DAD891F007BBA0D /* Palette.h in Headers */,
 				D5F309471CFBB65700F76762 /* FEMeshData_T.h in Headers */,
 				D5F309191CFBB65700F76762 /* AVIAnimation.h in Headers */,
 				D5F3097B1CFBB65700F76762 /* PltArchive.h in Headers */,
@@ -459,6 +485,7 @@
 				D5F309611CFBB65700F76762 /* FEVTKExport.h in Headers */,
 				D5F309131CFBB65700F76762 /* 3DImage.h in Headers */,
 				D5F309321CFBB65700F76762 /* FEElement.h in Headers */,
+				D5A65E171DBFA55800B44009 /* xpltReader2.h in Headers */,
 				D5F309151CFBB65700F76762 /* Animation.h in Headers */,
 				D5F309741CFBB65700F76762 /* Interpolator.h in Headers */,
 				D5F309301CFBB65700F76762 /* FEDistanceMap.h in Headers */,
@@ -478,6 +505,7 @@
 				D5F3097E1CFBB65700F76762 /* stdafx.h in Headers */,
 				D5F309261CFBB65700F76762 /* FEASCIIImport.h in Headers */,
 				D5F309821CFBB65700F76762 /* VolRender.h in Headers */,
+				D5D410281DAD891F007BBA0D /* ImageSlicer.h in Headers */,
 				D5F309171CFBB65700F76762 /* Archive.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -551,6 +579,7 @@
 				D5F309141CFBB65700F76762 /* Animation.cpp in Sources */,
 				D5F3093D1CFBB65700F76762 /* FELSDYNAimport.cpp in Sources */,
 				D5F309251CFBB65700F76762 /* FEASCIIImport.cpp in Sources */,
+				D5A65E161DBFA55800B44009 /* xpltReader2.cpp in Sources */,
 				D5F309291CFBB65700F76762 /* FEBioPlotExport.cpp in Sources */,
 				D5F309431CFBB65700F76762 /* FEMesh.cpp in Sources */,
 				D5F309311CFBB65700F76762 /* FEElement.cpp in Sources */,
@@ -558,7 +587,9 @@
 				D5F3097F1CFBB65700F76762 /* U3DFile.cpp in Sources */,
 				D5F3094E1CFBB65700F76762 /* FENodeElemList.cpp in Sources */,
 				D5F309681CFBB65700F76762 /* GLObject.cpp in Sources */,
+				D5A65E141DBFA55800B44009 /* xpltFileReader.cpp in Sources */,
 				D5F309351CFBB65700F76762 /* FEFileExport.cpp in Sources */,
+				D5D410291DAD891F007BBA0D /* Palette.cpp in Sources */,
 				D5F3094A1CFBB65700F76762 /* FENikeExport.cpp in Sources */,
 				D5F309521CFBB65700F76762 /* FENodeFaceTable.cpp in Sources */,
 				D5F3097A1CFBB65700F76762 /* PltArchive.cpp in Sources */,
@@ -581,6 +612,7 @@
 				D5F309371CFBB65700F76762 /* FEFileReader.cpp in Sources */,
 				D5F309721CFBB65700F76762 /* integrate.cpp in Sources */,
 				D5F309331CFBB65700F76762 /* FEFEBioExport.cpp in Sources */,
+				D5D410271DAD891F007BBA0D /* ImageSlicer.cpp in Sources */,
 				D5F309241CFBB65700F76762 /* evaluate.cpp in Sources */,
 				D5F3097C1CFBB65700F76762 /* SphereFit.cpp in Sources */,
 				D5F309701CFBB65700F76762 /* Image.cpp in Sources */,
@@ -722,6 +754,7 @@
 				D5F308971CFBB64400F76762 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

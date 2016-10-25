@@ -156,7 +156,7 @@ public:
 	}
 	void eval(int n, T* pv)
 	{ 
-		int m = GetFEState()->GetFEMesh()->Face(n).Nodes();
+        int m = FEMeshData::GetFEState()->GetFEMesh()->Face(n).Nodes();
 		for (int i=0; i<m; ++i) pv[i] = m_data[m_face[n] + i];
 	}
 	bool active(int n) { return (m_face[n] >= 0); }

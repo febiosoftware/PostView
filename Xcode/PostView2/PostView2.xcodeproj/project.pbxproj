@@ -16,6 +16,7 @@
 		D52C6FB21D75DCA300DF804B /* TimeController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D52C6FAB1D75DCA300DF804B /* TimeController.cpp */; };
 		D52C6FB31D75DCA300DF804B /* TimePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D52C6FAD1D75DCA300DF804B /* TimePanel.cpp */; };
 		D52C6FB51D75DCE900DF804B /* libPostViewLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D52C6FB41D75DCE900DF804B /* libPostViewLib.a */; };
+		D5A65E0F1DBFA53F00B44009 /* DlgFileInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */; };
 		D5FF7A401D72756B003D2CBD /* 3PointAngleTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79AA1D72756B003D2CBD /* 3PointAngleTool.cpp */; };
 		D5FF7A411D72756B003D2CBD /* 4PointAngleTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79AC1D72756B003D2CBD /* 4PointAngleTool.cpp */; };
 		D5FF7A421D72756B003D2CBD /* AddImage3DTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79AE1D72756B003D2CBD /* AddImage3DTool.cpp */; };
@@ -121,6 +122,8 @@
 		D52C6FAE1D75DCA300DF804B /* TimePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimePanel.h; sourceTree = "<group>"; };
 		D52C6FAF1D75DCA300DF804B /* ui_timepanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ui_timepanel.h; sourceTree = "<group>"; };
 		D52C6FB41D75DCE900DF804B /* libPostViewLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPostViewLib.a; path = ../PostViewLib/build/Release/libPostViewLib.a; sourceTree = "<group>"; };
+		D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgFileInfo.cpp; sourceTree = "<group>"; };
+		D5A65E0E1DBFA53F00B44009 /* DlgFileInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgFileInfo.h; sourceTree = "<group>"; };
 		D5FF79951D72750E003D2CBD /* PostView2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PostView2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5FF79A31D72750E003D2CBD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D5FF79AA1D72756B003D2CBD /* 3PointAngleTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = 3PointAngleTool.cpp; sourceTree = "<group>"; };
@@ -348,6 +351,8 @@
 				D5FF79BE1D72756B003D2CBD /* DistanceMapTool.h */,
 				D5FF79BF1D72756B003D2CBD /* DlgExportXPLT.cpp */,
 				D5FF79C01D72756B003D2CBD /* DlgExportXPLT.h */,
+				D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */,
+				D5A65E0E1DBFA53F00B44009 /* DlgFileInfo.h */,
 				D5FF79C11D72756B003D2CBD /* DlgFind.cpp */,
 				D5FF79C21D72756B003D2CBD /* DlgFind.h */,
 				D5FF79C31D72756B003D2CBD /* DlgImportXPLT.h */,
@@ -578,6 +583,7 @@
 				D5FF7A541D72756B003D2CBD /* GLDataMap.cpp in Sources */,
 				D5FF7A551D72756B003D2CBD /* GLIsoSurfacePlot.cpp in Sources */,
 				D5FF7A7A1D72756B003D2CBD /* moc_PropertyListForm.cpp in Sources */,
+				D5A65E0F1DBFA53F00B44009 /* DlgFileInfo.cpp in Sources */,
 				D5FF7A941D72756B003D2CBD /* SummaryWindow.cpp in Sources */,
 				D5FF7A5C1D72756B003D2CBD /* GLSlicePLot.cpp in Sources */,
 				D5FF7A691D72756B003D2CBD /* moc_DataPanel.cpp in Sources */,
@@ -705,6 +711,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -741,6 +748,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				SDKROOT = macosx;
 			};
 			name = Release;
