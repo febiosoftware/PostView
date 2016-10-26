@@ -136,7 +136,6 @@ bool FELSDYNAPlotImport::ReadHeader(FEModel& fem)
 		fem.SetTitle("(No title)");
 
 	// set the data fields we are going to read
-	FEMeshBase* pm = fem.GetFEMesh(0);
 	FEDataManager* pdm = fem.GetDataManager();
 	pdm->Clear();
 
