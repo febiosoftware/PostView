@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B49B48131DC40F0F00B5E947 /* libGLEW.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B49B48121DC40F0F00B5E947 /* libGLEW.a */; };
 		D52C6FA21D75DC3400DF804B /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D52C6FA11D75DC3400DF804B /* QtCore.framework */; };
 		D52C6FA41D75DC3F00DF804B /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D52C6FA31D75DC3F00DF804B /* QtGui.framework */; };
 		D52C6FA61D75DC4C00DF804B /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D52C6FA51D75DC4C00DF804B /* QtWidgets.framework */; };
-		D52C6FA81D75DC6300DF804B /* libGLEW.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D52C6FA71D75DC6300DF804B /* libGLEW.a */; };
 		D52C6FB01D75DCA300DF804B /* moc_TimeController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D52C6FA91D75DCA300DF804B /* moc_TimeController.cpp */; };
 		D52C6FB11D75DCA300DF804B /* moc_TimePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D52C6FAA1D75DCA300DF804B /* moc_TimePanel.cpp */; };
 		D52C6FB21D75DCA300DF804B /* TimeController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D52C6FAB1D75DCA300DF804B /* TimeController.cpp */; };
@@ -110,10 +110,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B49B48121DC40F0F00B5E947 /* libGLEW.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGLEW.a; path = "../../../../../../Applications/glew-2.0.0/lib/libGLEW.a"; sourceTree = "<group>"; };
 		D52C6FA11D75DC3400DF804B /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = "../../../../../../../../../../usr/local/Cellar/qt5/5.6.1-1/lib/QtCore.framework"; sourceTree = "<group>"; };
 		D52C6FA31D75DC3F00DF804B /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = "../../../../../../../../../../usr/local/Cellar/qt5/5.6.1-1/lib/QtGui.framework"; sourceTree = "<group>"; };
 		D52C6FA51D75DC4C00DF804B /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = "../../../../../../../../../../usr/local/Cellar/qt5/5.6.1-1/lib/QtWidgets.framework"; sourceTree = "<group>"; };
-		D52C6FA71D75DC6300DF804B /* libGLEW.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGLEW.a; path = ../../../../../../../../../../usr/local/Cellar/glew/2.0.0/lib/libGLEW.a; sourceTree = "<group>"; };
 		D52C6FA91D75DCA300DF804B /* moc_TimeController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_TimeController.cpp; sourceTree = "<group>"; };
 		D52C6FAA1D75DCA300DF804B /* moc_TimePanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_TimePanel.cpp; sourceTree = "<group>"; };
 		D52C6FAB1D75DCA300DF804B /* TimeController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimeController.cpp; sourceTree = "<group>"; };
@@ -286,9 +286,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				D52C6FB51D75DCE900DF804B /* libPostViewLib.a in Frameworks */,
-				D52C6FA81D75DC6300DF804B /* libGLEW.a in Frameworks */,
 				D52C6FA61D75DC4C00DF804B /* QtWidgets.framework in Frameworks */,
 				D52C6FA41D75DC3F00DF804B /* QtGui.framework in Frameworks */,
+				B49B48131DC40F0F00B5E947 /* libGLEW.a in Frameworks */,
 				D52C6FA21D75DC3400DF804B /* QtCore.framework in Frameworks */,
 				D5FF7A9B1D72768F003D2CBD /* OpenGL.framework in Frameworks */,
 			);
@@ -496,7 +496,7 @@
 			isa = PBXGroup;
 			children = (
 				D52C6FB41D75DCE900DF804B /* libPostViewLib.a */,
-				D52C6FA71D75DC6300DF804B /* libGLEW.a */,
+				B49B48121DC40F0F00B5E947 /* libGLEW.a */,
 				D52C6FA51D75DC4C00DF804B /* QtWidgets.framework */,
 				D52C6FA31D75DC3F00DF804B /* QtGui.framework */,
 				D52C6FA11D75DC3400DF804B /* QtCore.framework */,
@@ -672,6 +672,69 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		B49B48101DC406EF00B5E947 /* Release-Dave */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
+				SDKROOT = macosx;
+			};
+			name = "Release-Dave";
+		};
+		B49B48111DC406EF00B5E947 /* Release-Dave */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					/Applications/Qt5.6.1/5.6/clang_64/lib,
+					"$(inherited)",
+				);
+				HEADER_SEARCH_PATHS = (
+					/Applications/Qt5.6.1/5.6/clang_64/lib/QtWidgets.framework/Headers,
+					/Applications/Qt5.6.1/5.6/clang_64/lib/QtGui.framework/Headers,
+				);
+				INFOPLIST_FILE = PostView2/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Applications/glew-2.0.0/lib",
+				);
+				OTHER_LDFLAGS = "-lz";
+				PRODUCT_BUNDLE_IDENTIFIER = FEB.PostView2;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/../..";
+			};
+			name = "Release-Dave";
+		};
 		D5FF79A41D72750E003D2CBD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -815,6 +878,7 @@
 			buildConfigurations = (
 				D5FF79A41D72750E003D2CBD /* Debug */,
 				D5FF79A51D72750E003D2CBD /* Release */,
+				B49B48101DC406EF00B5E947 /* Release-Dave */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -824,6 +888,7 @@
 			buildConfigurations = (
 				D5FF79A71D72750E003D2CBD /* Debug */,
 				D5FF79A81D72750E003D2CBD /* Release */,
+				B49B48111DC406EF00B5E947 /* Release-Dave */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
