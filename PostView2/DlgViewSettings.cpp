@@ -219,6 +219,8 @@ public:
 	{
 		addProperty("Select connected" , CProperty::Bool);
 		addProperty("Tag info", CProperty::Enum)->setEnumValues(QStringList() << "Item numbers" << "Item numbers and connecting nodes");
+		addProperty("Select backfacing items", CProperty::Bool);
+		addProperty("Ignore interior items", CProperty::Bool);
 		m_bconnect = false;
 		m_ntagInfo = 0;
 	}
@@ -230,6 +232,8 @@ public:
 		{
 		case 0: return m_bconnect; break;
 		case 1: return m_ntagInfo; break;
+		case 2: return m_backface; break;
+		case 3: return m_binterior; break;
 		}
 		return v;
 	}
@@ -240,12 +244,16 @@ public:
 		{
 		case 0: m_bconnect = v.toBool(); break;
 		case 1: m_ntagInfo = v.toInt(); break;
+		case 2: m_backface = v.toBool(); break;
+		case 3: m_binterior = v.toBool(); break;
 		}
 	}
 
 public:
 	bool	m_bconnect;
 	int		m_ntagInfo;
+	bool	m_backface;
+	bool	m_binterior;
 };
 
 //-----------------------------------------------------------------------------
@@ -373,6 +381,8 @@ CDlgViewSettings::CDlgViewSettings(CMainWindow* pwnd) : ui(new Ui::CDlgViewSetti
 
 	ui->m_select->m_bconnect = view.m_bconn;
 	ui->m_select->m_ntagInfo = view.m_ntagInfo;
+	ui->m_select->m_backface = !view.m_bcull;
+	ui->m_select->m_binterior = view.m_bext;
 
 	ui->setupUi(this);
 
@@ -425,8 +435,10 @@ void CDlgViewSettings::apply()
 	cam.SetCameraSpeed(ui->m_cam->m_speed);
 	cam.SetCameraBias(ui->m_cam->m_bias);
 
-	view.m_bconn = ui->m_select->m_bconnect;
+	view.m_bconn    = ui->m_select->m_bconnect;
 	view.m_ntagInfo = ui->m_select->m_ntagInfo;
+	view.m_bcull    = !ui->m_select->m_backface;
+	view.m_bext     = ui->m_select->m_binterior;
 
 	CPaletteManager& PM = CPaletteManager::GetInstance();
 	PM.SetCurrentIndex(ui->m_col->pal->currentIndex());
