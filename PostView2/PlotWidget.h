@@ -151,7 +151,7 @@ public:
 	QPointF ScreenToView(const QPoint& p);
 	QPoint ViewToScreen(const QPointF& p);
 
-private:
+protected:
 	//! render the plot
 	void paintEvent(QPaintEvent* pe);
 

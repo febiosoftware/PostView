@@ -20,7 +20,7 @@
 #include "version.h"
 #include <PostViewLib/LinearRegression.h>
 
-RegressionUi::RegressionUi(CPlotWidget* graph, QWidget* parent) : QWidget(parent), m_graph(graph)
+RegressionUi::RegressionUi(CGraphWidget* graph, QWidget* parent) : CPlotTool(parent), m_graph(graph)
 {
 	QVBoxLayout* l = new QVBoxLayout;
 	l->addWidget(new QLabel("<p>y = <b>a</b>*x + <b>b</b></p>"));
@@ -28,10 +28,12 @@ RegressionUi::RegressionUi(CPlotWidget* graph, QWidget* parent) : QWidget(parent
 	QLabel* lbl = 0;
 	h->addWidget(lbl = new QLabel("a")); h->addWidget(a = new QLineEdit); lbl->setBuddy(a);
 	a->setValidator(new QDoubleValidator);
+	a->setReadOnly(true);
 	l->addLayout(h);
 	h = new QHBoxLayout;
 	h->addWidget(lbl = new QLabel("b")); h->addWidget(b = new QLineEdit); lbl->setBuddy(b);
 	b->setValidator(new QDoubleValidator);
+	b->setReadOnly(true);
 	l->addLayout(h);
 
 	QPushButton* b = new QPushButton("Calculate");
@@ -41,12 +43,13 @@ RegressionUi::RegressionUi(CPlotWidget* graph, QWidget* parent) : QWidget(parent
 	setLayout(l);
 
 	QObject::connect(b, SIGNAL(clicked()), this, SLOT(onCalculate()));
+
+	Update();
 }
 
 void RegressionUi::onCalculate()
 {
-	a->clear();
-	b->clear();
+	Update();
 
 	if (m_graph == 0) return;
 
@@ -66,16 +69,66 @@ void RegressionUi::onCalculate()
 	pair<double, double> ans;
 	if (LinearRegression(pt, ans))
 	{
-		a->setText(QString::number(ans.first));
-		b->setText(QString::number(ans.second));
+		m_a = ans.first;
+		m_b = ans.second;
+		a->setText(QString::number(m_a));
+		b->setText(QString::number(m_b));
+		m_bvalid = true;
+		m_graph->repaint();
 	}
 }
 
+void RegressionUi::draw(QPainter& p)
+{
+	if (m_bvalid==false) return;
+
+	QRectF view = m_graph->m_viewRect;
+	double x0 = view.left();
+	double x1 = view.right();
+	double y0 = m_a*x0 + m_b;
+	double y1 = m_a*x1 + m_b;
+
+	QPoint p0 = m_graph->ViewToScreen(QPointF(x0, y0));
+	QPoint p1 = m_graph->ViewToScreen(QPointF(x1, y1));
+
+	p.setPen(QPen(Qt::black, 2));
+	p.drawLine(p0, p1);
+}
+
+void RegressionUi::Update()
+{
+	m_bvalid = false;
+	a->clear();
+	b->clear();
+}
+
+//=============================================================================
+void CGraphWidget::paintEvent(QPaintEvent* pe)
+{
+	CPlotWidget::paintEvent(pe);
+
+	QPainter p(this);
+	p.setRenderHint(QPainter::Antialiasing, true);
+	for (size_t i = 0; i<m_tools.size(); ++i)
+	{
+		CPlotTool* tool = m_tools[i];
+		tool->draw(p);
+	}
+}
+
+void CGraphWidget::Update()
+{
+	for (size_t i = 0; i<m_tools.size(); ++i)
+		m_tools[i]->Update();
+	repaint();
+}
+
+//=============================================================================
 class Ui::CGraphWindow
 {
 public:
-	CPlotWidget*		plot;
-	QToolBar*			tool;
+	CGraphWidget*		plot;
+	QToolBar*			toolBar;
 	QToolBar*			zoomBar;
 	QComboBox*			selectPlot;
 	QStackedWidget*		selectXSource;
@@ -94,16 +147,18 @@ public:
 	{
 		QSplitter* centralWidget = new QSplitter;
 
-		plot = new CPlotWidget(parent);
+		plot = new CGraphWidget(parent);
 		plot->setObjectName("plot");
 
 		centralWidget->addWidget(plot);
 		centralWidget->addWidget(tools = new QToolBox); tools->hide();
 		parent->setCentralWidget(centralWidget);
 
-		tools->addItem(new RegressionUi(plot), "Linear Regression");
+		CPlotTool* tool = new RegressionUi(plot);
+		tools->addItem(tool, "Linear Regression");
+		plot->addTool(tool);
 
-		tool = new QToolBar(parent);
+		toolBar = new QToolBar(parent);
 		{
 			selectPlot = new QComboBox;
 			selectPlot->setObjectName("selectPlot");
@@ -129,18 +184,18 @@ public:
 			selectY->setObjectName("selectY");
 			selectY->setMinimumWidth(150);
 		}
-		actionSave = tool->addAction(QIcon(QString(":/icons/save.png")), "Save"); actionSave->setObjectName("actionSave");
-		actionClipboard = tool->addAction(QIcon(QString(":/icons/clipboard.png")), "Copy to clipboard"); actionClipboard->setObjectName("actionClipboard");
-		tool->addWidget(new QLabel("Type: "));
-		tool->addWidget(selectPlot);
-		tool->addWidget(new QLabel(" X: "));
-		tool->addWidget(selectXSource);
-		tool->addWidget(new QLabel(" Y: "));
-		tool->addWidget(selectY);
+		actionSave = toolBar->addAction(QIcon(QString(":/icons/save.png")), "Save"); actionSave->setObjectName("actionSave");
+		actionClipboard = toolBar->addAction(QIcon(QString(":/icons/clipboard.png")), "Copy to clipboard"); actionClipboard->setObjectName("actionClipboard");
+		toolBar->addWidget(new QLabel("Type: "));
+		toolBar->addWidget(selectPlot);
+		toolBar->addWidget(new QLabel(" X: "));
+		toolBar->addWidget(selectXSource);
+		toolBar->addWidget(new QLabel(" Y: "));
+		toolBar->addWidget(selectY);
 		QPushButton* showTools = new QPushButton("Tools");
 		showTools->setCheckable(true);
 		showTools->setChecked(false);
-		tool->addWidget(showTools);
+		toolBar->addWidget(showTools);
 
 		zoomBar = new QToolBar(parent);
 		QAction* actionZoomWidth  = zoomBar->addAction(QIcon(QString(":/icons/zoom_width.png" )), "Zoom Width" ); actionZoomWidth->setObjectName("actionZoomWidth" );
@@ -150,7 +205,7 @@ public:
 		zoomBar->addSeparator();
 		actionProps = zoomBar->addAction(QIcon(QString(":/icons/properties.png")), "Properties"); actionProps->setObjectName("actionProps");
 
-		parent->addToolBar(Qt::TopToolBarArea, tool);
+		parent->addToolBar(Qt::TopToolBarArea, toolBar);
 		parent->addToolBar(Qt::BottomToolBarArea, zoomBar);
 
 		QObject::connect(showTools, SIGNAL(clicked(bool)), tools, SLOT(setVisible(bool)));
@@ -283,7 +338,7 @@ void CGraphWindow::Update(bool breset)
 
 	// redraw
 	ui->plot->fitToData();
-	ui->plot->repaint();
+	ui->plot->Update();
 }
 
 //-----------------------------------------------------------------------------

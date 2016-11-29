@@ -1,15 +1,27 @@
 #pragma once
 #include <QMainWindow>
+#include "PlotWidget.h"
 
 class CMainWindow;
-class CPlotWidget;
+class CGraphWidget;
 class QLineEdit;
 
 namespace Ui {
 	class CGraphWindow;
 };
 
-class RegressionUi : public QWidget
+class CPlotTool : public QWidget
+{
+public:
+	CPlotTool(QWidget* parent = 0) : QWidget(parent){}
+	virtual ~CPlotTool(){}
+
+	virtual void draw(QPainter& p) = 0;
+
+	virtual void Update() = 0;
+};
+
+class RegressionUi : public CPlotTool
 {
 	Q_OBJECT
 public:
@@ -17,13 +29,34 @@ public:
 	QLineEdit*	b;
 
 public:
-	RegressionUi(CPlotWidget* graph, QWidget* parent = 0);
+	RegressionUi(CGraphWidget* graph, QWidget* parent = 0);
+
+	void draw(QPainter& p);
+
+	void Update();
 
 public slots:
 	void onCalculate();
 
 private:
-	CPlotWidget* m_graph;
+	CGraphWidget* m_graph;
+	double	m_a, m_b;
+	bool	m_bvalid;
+};
+
+class CGraphWidget : public CPlotWidget
+{
+public:
+	CGraphWidget(QWidget *parent, int w = 0, int h = 0) : CPlotWidget(parent, w, h){}
+
+	void addTool(CPlotTool* tool) { m_tools.push_back(tool); }
+
+	void paintEvent(QPaintEvent* pe);
+
+	void Update();
+
+public:
+	vector<CPlotTool*>	m_tools;
 };
 
 

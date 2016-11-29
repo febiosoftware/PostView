@@ -74,7 +74,7 @@ void RegressionUi::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
 }
 
 const QMetaObject RegressionUi::staticMetaObject = {
-    { &QWidget::staticMetaObject, qt_meta_stringdata_RegressionUi.data,
+    { &CPlotTool::staticMetaObject, qt_meta_stringdata_RegressionUi.data,
       qt_meta_data_RegressionUi,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
 };
 
@@ -89,12 +89,12 @@ void *RegressionUi::qt_metacast(const char *_clname)
     if (!_clname) return Q_NULLPTR;
     if (!strcmp(_clname, qt_meta_stringdata_RegressionUi.stringdata0))
         return static_cast<void*>(const_cast< RegressionUi*>(this));
-    return QWidget::qt_metacast(_clname);
+    return CPlotTool::qt_metacast(_clname);
 }
 
 int RegressionUi::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
-    _id = QWidget::qt_metacall(_c, _id, _a);
+    _id = CPlotTool::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
