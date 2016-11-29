@@ -143,6 +143,7 @@
     <ClInclude Include="..\..\PostViewLib\bbox.h" />
     <ClInclude Include="..\..\PostViewLib\color.h" />
     <ClInclude Include="..\..\PostViewLib\ColorMap.h" />
+    <ClInclude Include="..\..\PostViewLib\LinearRegression.h" />
     <ClInclude Include="..\..\PostViewLib\Palette.h" />
     <ClInclude Include="..\..\PostViewLib\constants.h" />
     <ClInclude Include="..\..\PostViewLib\DataFilter.h" />
@@ -253,6 +254,7 @@
     <ClCompile Include="..\..\PostViewLib\ImageSlicer.cpp" />
     <ClCompile Include="..\..\PostViewLib\integrate.cpp" />
     <ClCompile Include="..\..\PostViewLib\Interpolator.cpp" />
+    <ClCompile Include="..\..\PostViewLib\LinearRegression.cpp" />
     <ClCompile Include="..\..\PostViewLib\lusolver.cpp" />
     <ClCompile Include="..\..\PostViewLib\lut.cpp" />
     <ClCompile Include="..\..\PostViewLib\math3d.cpp" />

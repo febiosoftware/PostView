@@ -7,12 +7,69 @@
 #include <QAction>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QBoxLayout>
+#include <QSplitter>
+#include <QPushButton>
 #include "MainWindow.h"
 #include "Document.h"
 #include <PostViewLib/FEModel.h>
+#include <QToolBox>
+#include <QLineEdit>
 #include "GLDataMap.h"
 #include "GLModel.h"
 #include "version.h"
+#include <PostViewLib/LinearRegression.h>
+
+RegressionUi::RegressionUi(CPlotWidget* graph, QWidget* parent) : QWidget(parent), m_graph(graph)
+{
+	QVBoxLayout* l = new QVBoxLayout;
+	l->addWidget(new QLabel("<p>y = <b>a</b>*x + <b>b</b></p>"));
+	QHBoxLayout* h = new QHBoxLayout;
+	QLabel* lbl = 0;
+	h->addWidget(lbl = new QLabel("a")); h->addWidget(a = new QLineEdit); lbl->setBuddy(a);
+	a->setValidator(new QDoubleValidator);
+	l->addLayout(h);
+	h = new QHBoxLayout;
+	h->addWidget(lbl = new QLabel("b")); h->addWidget(b = new QLineEdit); lbl->setBuddy(b);
+	b->setValidator(new QDoubleValidator);
+	l->addLayout(h);
+
+	QPushButton* b = new QPushButton("Calculate");
+	l->addWidget(b);
+
+	l->addStretch();
+	setLayout(l);
+
+	QObject::connect(b, SIGNAL(clicked()), this, SLOT(onCalculate()));
+}
+
+void RegressionUi::onCalculate()
+{
+	a->clear();
+	b->clear();
+
+	if (m_graph == 0) return;
+
+	// get the first data field
+	int plots = m_graph->plots();
+	if (plots == 0) return;
+
+	CPlotData& data = m_graph->getPlotData(0);
+	int N = data.size();
+	vector<pair<double, double> > pt(N);
+	for (int i=0; i<N; ++i)
+	{	
+		QPointF p = data.Point(i);
+		pt[i].first = p.x();
+		pt[i].second = p.y();
+	}
+	pair<double, double> ans;
+	if (LinearRegression(pt, ans))
+	{
+		a->setText(QString::number(ans.first));
+		b->setText(QString::number(ans.second));
+	}
+}
 
 class Ui::CGraphWindow
 {
@@ -25,6 +82,7 @@ public:
 	QComboBox*			selectTime;
 	CDataFieldSelector*	selectX;
 	CDataFieldSelector*	selectY;
+	QToolBox*			tools;
 
 	QAction* actionSave;
 	QAction* actionClipboard;
@@ -34,9 +92,16 @@ public:
 public:
 	void setupUi(::CGraphWindow* parent)
 	{
+		QSplitter* centralWidget = new QSplitter;
+
 		plot = new CPlotWidget(parent);
 		plot->setObjectName("plot");
-		parent->setCentralWidget(plot);
+
+		centralWidget->addWidget(plot);
+		centralWidget->addWidget(tools = new QToolBox); tools->hide();
+		parent->setCentralWidget(centralWidget);
+
+		tools->addItem(new RegressionUi(plot), "Linear Regression");
 
 		tool = new QToolBar(parent);
 		{
@@ -72,6 +137,10 @@ public:
 		tool->addWidget(selectXSource);
 		tool->addWidget(new QLabel(" Y: "));
 		tool->addWidget(selectY);
+		QPushButton* showTools = new QPushButton("Tools");
+		showTools->setCheckable(true);
+		showTools->setChecked(false);
+		tool->addWidget(showTools);
 
 		zoomBar = new QToolBar(parent);
 		QAction* actionZoomWidth  = zoomBar->addAction(QIcon(QString(":/icons/zoom_width.png" )), "Zoom Width" ); actionZoomWidth->setObjectName("actionZoomWidth" );
@@ -83,6 +152,8 @@ public:
 
 		parent->addToolBar(Qt::TopToolBarArea, tool);
 		parent->addToolBar(Qt::BottomToolBarArea, zoomBar);
+
+		QObject::connect(showTools, SIGNAL(clicked(bool)), tools, SLOT(setVisible(bool)));
 
 		QMetaObject::connectSlotsByName(parent);
 	}

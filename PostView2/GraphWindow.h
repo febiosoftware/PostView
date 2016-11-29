@@ -2,10 +2,30 @@
 #include <QMainWindow>
 
 class CMainWindow;
+class CPlotWidget;
+class QLineEdit;
 
 namespace Ui {
 	class CGraphWindow;
 };
+
+class RegressionUi : public QWidget
+{
+	Q_OBJECT
+public:
+	QLineEdit*	a;
+	QLineEdit*	b;
+
+public:
+	RegressionUi(CPlotWidget* graph, QWidget* parent = 0);
+
+public slots:
+	void onCalculate();
+
+private:
+	CPlotWidget* m_graph;
+};
+
 
 class CGraphWindow : public QMainWindow
 {
