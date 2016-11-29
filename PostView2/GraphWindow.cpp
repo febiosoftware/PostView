@@ -108,6 +108,7 @@ void CGraphWidget::paintEvent(QPaintEvent* pe)
 	CPlotWidget::paintEvent(pe);
 
 	QPainter p(this);
+	p.setClipRect(m_screenRect);
 	p.setRenderHint(QPainter::Antialiasing, true);
 	for (size_t i = 0; i<m_tools.size(); ++i)
 	{
