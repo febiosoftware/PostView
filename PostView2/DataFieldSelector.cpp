@@ -120,6 +120,11 @@ void CDataFieldSelector::setCurrentValue(int nfield)
 		{
 			if ((*it)->parent() == 0)
 			{
+				// we must reset the current index, since if ncode is the current index 
+				// this won't trigger an update of the FEModel resulting in a gargabe state.
+				setCurrentIndex(-1);
+
+				// now set the current index
 				setCurrentIndex(ncode);
 			}
 			else

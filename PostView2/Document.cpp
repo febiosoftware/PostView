@@ -497,6 +497,9 @@ bool CDocument::LoadFEModel(FEFileReader* pimp, const char* szfile, bool bup)
 		(*it)->SetModel(m_pGLModel);
 	}
 
+	// make sure the model is up to date
+	UpdateFEModel(true);
+
 	// store a copy of the imorpted file
 	strcpy(m_szfile, szfile);
 
