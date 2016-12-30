@@ -638,7 +638,7 @@ void FEModel::EvaluateNode(int n, int ntime, int nfield, NODEDATA& d)
 					++n;
 				}
 			}
-			d.m_val /= (float) n;
+			if (n != 0) d.m_val /= (float) n;
 		}
 	}
 	else assert(false);
