@@ -5,6 +5,7 @@
 class CMainWindow;
 class CGraphWidget;
 class QLineEdit;
+class QRadioButton;
 
 namespace Ui {
 	class CGraphWindow;
@@ -16,9 +17,32 @@ public:
 	CPlotTool(QWidget* parent = 0) : QWidget(parent){}
 	virtual ~CPlotTool(){}
 
-	virtual void draw(QPainter& p) = 0;
+	virtual void draw(QPainter& p) {}
 
-	virtual void Update() = 0;
+	virtual void Update() {}
+};
+
+class OptionsUi : public CPlotTool
+{
+	Q_OBJECT
+
+public:
+	QRadioButton*	a[3];
+	QLineEdit*	range;
+
+public:
+	int currentOption();
+	void setUserRange(int imin, int imax);
+	void getUserRange(int& imin, int& imax);
+
+public slots:
+	void onOptionsChanged();
+
+signals:
+	void optionsChanged();
+
+public:
+	OptionsUi(CGraphWidget* graph, QWidget* parent = 0);
 };
 
 class RegressionUi : public CPlotTool
@@ -65,6 +89,21 @@ class CGraphWindow : public QMainWindow
 	Q_OBJECT
 
 public:
+	enum TimeRange
+	{
+		TRACK_TIME,
+		TRACK_CURRENT_TIME,
+		TRACK_USER_RANGE
+	};
+
+	enum PlotType
+	{
+		LINE_PLOT,
+		SCATTER_PLOT,
+		TIME_SCATTER_PLOT
+	};
+
+public:
 	CGraphWindow(CMainWindow* wnd);
 
 	void Update(bool breset = true);
@@ -89,6 +128,7 @@ private slots:
 	void on_actionZoomFit_triggered();
 	void on_actionZoomSelect_toggled(bool bchecked);
 	void on_plot_doneZoomToRect();
+	void on_options_optionsChanged();
 
 private:
 	void addSelectedNodes();
@@ -100,9 +140,7 @@ private:
 	CMainWindow*		m_wnd;
 	Ui::CGraphWindow*	ui;
 
-	bool	m_bUserRange;			//!< user sets range
-	bool	m_bAutoRange;			//!< track timer bar range
-	bool	m_bTrackTime;			//!< track current time point only
+	int		m_nTrackTime;
 	int		m_nUserMin, m_nUserMax;	//!< manual time step range
 
 	int	m_nTimeMin, m_nTimeMax;	//!< actual time range being plotted
@@ -111,4 +149,5 @@ private: // temporary variables used during update
 	int	m_xtype;						// x-plot field option (0=time, 1=steps, 2=data field)
 	int	m_firstState, m_lastState;		// first and last time step to be evaluated
 	int	m_dataX, m_dataY;				// X and Y data field IDs
+	int	m_dataXPrev, m_dataYPrev;		// Previous X, Y data fields
 };

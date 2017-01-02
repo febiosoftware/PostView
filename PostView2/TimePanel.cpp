@@ -63,8 +63,7 @@ void CTimePanel::on_timer_rangeChanged(int nmin, int nmax)
 		{
 			if (ntime < nmin) ntime = nmin;
 			if (ntime > nmax) ntime = nmax;
-
-			m_wnd->SetCurrentTime(ntime);
 		}
+		m_wnd->SetCurrentTime(ntime);
 	}
 }

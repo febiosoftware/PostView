@@ -123,7 +123,7 @@ void CMainWindow::UpdateGraphs(bool breset)
 	{
 		QList<CGraphWindow*>::iterator it;
 		for (it=ui->graphList.begin(); it != ui->graphList.end(); ++it)
-			(*it)->Update(breset);
+			if ((*it)->isVisible()) (*it)->Update(breset);
 	}
 
 	if (ui->integrateWindow && ui->integrateWindow->isVisible()) 
@@ -1020,6 +1020,7 @@ void CMainWindow::SetCurrentTime(int n)
 	ui->timePanel->SetCurrentTime(n);
 	GetDocument()->SetCurrentTime(n);
 	RedrawGL();
+	UpdateGraphs(false);
 }
 
 void CMainWindow::StopAnimation()
@@ -1124,10 +1125,8 @@ void CMainWindow::on_actionTimeSettings_triggered()
 		{
 			if (ntime < time.m_start) ntime = time.m_start;
 			if (ntime > time.m_end  ) ntime = time.m_end;
-
-			SetCurrentTime(ntime);
 		}
-
+		SetCurrentTime(ntime);
 		RedrawGL();
 	}
 }
@@ -1288,6 +1287,7 @@ void CMainWindow::on_selectTime_valueChanged(int i)
 {
 	GetDocument()->SetCurrentTime(i - 1);
 	RedrawGL();
+	UpdateGraphs(false);
 }
 
 void CMainWindow::UpdateFontToolbar()

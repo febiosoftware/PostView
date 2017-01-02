@@ -10,6 +10,8 @@
 #include <QBoxLayout>
 #include <QSplitter>
 #include <QPushButton>
+#include <QCheckBox>
+#include <QRadioButton>
 #include "MainWindow.h"
 #include "Document.h"
 #include <PostViewLib/FEModel.h>
@@ -19,6 +21,57 @@
 #include "GLModel.h"
 #include "version.h"
 #include <PostViewLib/LinearRegression.h>
+
+OptionsUi::OptionsUi(CGraphWidget* graph, QWidget* parent) : CPlotTool(parent)
+{
+	QVBoxLayout* l = new QVBoxLayout;
+	l->addWidget(a[0] = new QRadioButton("Time step range"));
+	l->addWidget(a[1] = new QRadioButton("Current time step"));
+	l->addWidget(a[2] = new QRadioButton("User range:"));
+	l->addWidget(range = new QLineEdit);
+	l->addStretch();
+	setLayout(l);
+
+	a[0]->setChecked(true);
+
+	QObject::connect(a[0], SIGNAL(clicked()), this, SLOT(onOptionsChanged()));
+	QObject::connect(a[1], SIGNAL(clicked()), this, SLOT(onOptionsChanged()));
+	QObject::connect(a[2], SIGNAL(clicked()), this, SLOT(onOptionsChanged()));
+	QObject::connect(range, SIGNAL(editingFinished()), this, SLOT(onOptionsChanged()));
+}
+
+void OptionsUi::onOptionsChanged()
+{
+	emit optionsChanged();
+}
+
+int OptionsUi::currentOption()
+{
+	if (a[0]->isChecked()) return 0;
+	if (a[1]->isChecked()) return 1;
+	if (a[2]->isChecked()) return 2;
+	return -1;
+}
+
+void OptionsUi::setUserRange(int imin, int imax)
+{
+	range->setText(QString("%1:%2").arg(imin).arg(imax));
+}
+
+void OptionsUi::getUserRange(int& imin, int& imax)
+{
+	QStringList l = range->text().split(':');
+	imin = imax = 0;
+	if (l.size() == 1)
+	{
+		imin = imax = l.at(0).toInt();
+	}
+	else if (l.size() > 1)
+	{
+		imin = l.at(0).toInt();
+		imax = l.at(1).toInt();
+	}
+}
 
 RegressionUi::RegressionUi(CGraphWidget* graph, QWidget* parent) : CPlotTool(parent), m_graph(graph)
 {
@@ -143,6 +196,8 @@ public:
 	QAction* actionProps;
 	QAction* actionZoomSelect;
 
+	OptionsUi*	ops;
+
 public:
 	void setupUi(::CGraphWindow* parent)
 	{
@@ -155,6 +210,10 @@ public:
 		centralWidget->addWidget(tools = new QToolBox); tools->hide();
 		parent->setCentralWidget(centralWidget);
 
+		ops = new OptionsUi(plot); ops->setObjectName("options");
+		tools->addItem(ops, "Options");
+		plot->addTool(ops);
+
 		CPlotTool* tool = new RegressionUi(plot);
 		tools->addItem(tool, "Linear Regression");
 		plot->addTool(tool);
@@ -165,6 +224,7 @@ public:
 			selectPlot->setObjectName("selectPlot");
 			selectPlot->addItem("Line");
 			selectPlot->addItem("Scatter");
+			selectPlot->addItem("Time-Scatter");
 
 			selectXSource = new QStackedWidget;
 			{
@@ -217,16 +277,20 @@ public:
 
 CGraphWindow::CGraphWindow(CMainWindow* pwnd) : m_wnd(pwnd), QMainWindow(pwnd), ui(new Ui::CGraphWindow)
 {
-	m_bUserRange = true;
-	m_bAutoRange = false;
-	m_bTrackTime = false;
+	m_nTrackTime = TRACK_TIME;
 	m_nUserMin = 0;
 	m_nUserMax = -1;
 
 	m_nTimeMin = -1;
 	m_nTimeMax = -1;
 
+	m_dataX = -1;
+	m_dataY = -1;
+	m_dataXPrev = -1;
+	m_dataYPrev = -1;
+
 	ui->setupUi(this);
+	ui->ops->setUserRange(m_nUserMin, m_nUserMax);
 	setMinimumWidth(500);
 	resize(600, 500);
 }
@@ -257,17 +321,19 @@ void CGraphWindow::Update(bool breset)
 
 	// Figure out the time range
 	int nmin = 0, nmax = 0;
-	if (m_bUserRange)
+	if (m_nTrackTime == TRACK_USER_RANGE)
 	{
 		// get the user defined range
 		nmin = m_nUserMin;
 		nmax = m_nUserMax;
 	}
-	else if (m_bAutoRange)
+	else if (m_nTrackTime == TRACK_TIME)
 	{
-//		m_wnd->GetTimeController()->GetRange(nmin, nmax);
+		TIMESETTINGS& timeSettings = doc->GetTimeSettings();
+		nmin = timeSettings.m_start;
+		nmax = timeSettings.m_end;
 	}
-	else if (m_bTrackTime)
+	else if (m_nTrackTime == TRACK_CURRENT_TIME)
 	{
 		// simply set the min and max to the same value
 		nmin = nmax = ntime;
@@ -285,18 +351,20 @@ void CGraphWindow::Update(bool breset)
 		if ((nmin == m_nTimeMin) && (nmax == m_nTimeMax)) return;
 	}
 
-	// get the graph of the track view and clear it
-	ui->plot->clear();
-
 	// plot type
 	int ntype = ui->selectPlot->currentIndex();
 	int ncx = ui->selectTime->currentIndex();
-	if (ntype == 0) m_xtype = ncx; else m_xtype = 2;
+	switch (ntype)
+	{
+	case LINE_PLOT: m_xtype = ncx; break;
+	case SCATTER_PLOT: m_xtype = 2; break;
+	case TIME_SCATTER_PLOT: m_xtype = 3; break;
+	}
 
 	// get the field data
 	m_dataX = ui->selectX->currentValue();
 	m_dataY = ui->selectY->currentValue();
-	if ((ntype==1) && (m_dataX<=0)) return;
+	if ((ntype!=LINE_PLOT) && (m_dataX<=0)) return;
 	if (m_dataY<=0) return;
 
 	// set current time point index (TODO: Not sure if this is still used)
@@ -308,7 +376,7 @@ void CGraphWindow::Update(bool breset)
 	FEMeshBase& mesh = *doc->GetFEModel()->GetFEMesh(0);
 
 	// get the title
-	if (ntype == 0)
+	if (ntype == LINE_PLOT)
 	{
 		ui->plot->setTitle(ui->selectY->currentText());
 	}
@@ -331,6 +399,9 @@ void CGraphWindow::Update(bool breset)
 		for (int i=0; i<nsteps; ++i) po->GetDisplacementMap()->UpdateState(i);
 	}
 
+	// get the graph of the track view and clear it
+	ui->plot->clear();
+
 	// add selections
 	addSelectedNodes();
 	addSelectedEdges();
@@ -338,7 +409,12 @@ void CGraphWindow::Update(bool breset)
 	addSelectedElems();
 
 	// redraw
-	ui->plot->fitToData();
+	if ((m_dataX != m_dataXPrev) || (m_dataY != m_dataYPrev))
+	{
+		ui->plot->fitToData();
+		m_dataXPrev = m_dataX;
+		m_dataYPrev = m_dataY;
+	}
 	ui->plot->Update();
 }
 
@@ -355,32 +431,99 @@ void CGraphWindow::addSelectedNodes()
 
 	// get the selected nodes
 	int NN = mesh.Nodes();
-	for (int i=0; i<NN; i++)
+	switch (m_xtype)
 	{
-		FENode& node = mesh.Node(i);
-		if (node.IsSelected())
+	case 0: // time values
 		{
-			// evaluate x-field
-			switch (m_xtype)
+			for (int i=0; i<NN; i++)
 			{
-			case 0: 
-				for (int j=0; j<nsteps; j++) xdata[j] = fem.GetState(j + m_firstState)->m_time;
-				break;
-			case 1:
-				for (int j=0; j<nsteps; j++) xdata[j] = (float) j + 1.f + m_firstState;
-				break;
-			default:
-				TrackNodeHistory(i, &xdata[0], m_dataX, m_firstState, m_lastState);
+				FENode& node = mesh.Node(i);
+				if (node.IsSelected())
+				{
+					for (int j=0; j<nsteps; j++) xdata[j] = fem.GetState(j + m_firstState)->m_time;
+
+					// evaluate y-field
+					TrackNodeHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
+
+					CPlotData plot;
+					plot.setLabel(QString("N%1").arg(i+1));
+					for (int j=0; j<nsteps; ++j) plot.addPoint(xdata[j], ydata[j]);
+					ui->plot->addPlotData(plot);
+				}
+			}
+		}
+		break;
+	case 1: // step values
+		{
+			for (int i = 0; i<NN; i++)
+			{
+				FENode& node = mesh.Node(i);
+				if (node.IsSelected())
+				{
+					for (int j = 0; j<nsteps; j++) xdata[j] = (float)j + 1.f + m_firstState;
+
+					// evaluate y-field
+					TrackNodeHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
+
+					CPlotData plot;
+					plot.setLabel(QString("N%1").arg(i + 1));
+					for (int j = 0; j<nsteps; ++j) plot.addPoint(xdata[j], ydata[j]);
+					ui->plot->addPlotData(plot);
+				}
+			}
+		}
+		break;
+	case 2: // scatter
+		{
+			for (int i=0; i<NN; i++)
+			{
+				FENode& node = mesh.Node(i);
+				if (node.IsSelected())
+				{
+					TrackNodeHistory(i, &xdata[0], m_dataX, m_firstState, m_lastState);
+
+					// evaluate y-field
+					TrackNodeHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
+
+					CPlotData plot;
+					plot.setLabel(QString("N%1").arg(i+1));
+					for (int j=0; j<nsteps; ++j) plot.addPoint(xdata[j], ydata[j]);
+					ui->plot->addPlotData(plot);
+				}
+			}
+		}
+		break;
+	case 3: // time-scatter
+		{
+			int nsteps = m_lastState - m_firstState + 1;
+			if (nsteps > 32) nsteps = 32;
+			for (int i=m_firstState; i<m_firstState + nsteps; ++i)
+			{
+				CPlotData plot;
+				plot.setLabel(QString("%1").arg(fem.GetState(i)->m_time));
+				ui->plot->addPlotData(plot);
 			}
 
-			// evaluate y-field
-			TrackNodeHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
+			for (int i = 0; i<NN; i++)
+			{
+				FENode& node = mesh.Node(i);
+				if (node.IsSelected())
+				{
+					// evaluate x-field
+					TrackNodeHistory(i, &xdata[0], m_dataX, m_firstState, m_firstState + nsteps -1);
 
-			CPlotData plot;
-			plot.setLabel(QString("N%1").arg(i+1));
-			for (int j=0; j<nsteps; ++j) plot.addPoint(xdata[j], ydata[j]);
-			ui->plot->addPlotData(plot);
+					// evaluate y-field
+					TrackNodeHistory(i, &ydata[0], m_dataY, m_firstState, m_firstState + nsteps -1);
+
+					for (int j=0; j<nsteps; ++j)
+					{
+						CPlotData& p = ui->plot->getPlotData(j);
+						p.addPoint(xdata[j], ydata[j]);
+					}
+				}
+			}
 		}
+		break;
 	}
 }
 
@@ -615,7 +758,10 @@ void CGraphWindow::on_selectY_currentIndexChanged(int)
 //-----------------------------------------------------------------------------
 void CGraphWindow::on_selectPlot_currentIndexChanged(int index)
 {
-	ui->selectXSource->setCurrentIndex(index);
+	if (index == 0)
+		ui->selectXSource->setCurrentIndex(0);
+	else 
+		ui->selectXSource->setCurrentIndex(1);
 	Update(false);
 }
 
@@ -670,4 +816,26 @@ void CGraphWindow::on_actionZoomSelect_toggled(bool bchecked)
 void CGraphWindow::on_plot_doneZoomToRect()
 {
 	ui->actionZoomSelect->setChecked(false);
+}
+
+//-----------------------------------------------------------------------------
+void CGraphWindow::on_options_optionsChanged()
+{
+	int a = ui->ops->currentOption();
+	switch (a)
+	{
+	case 0: m_nTrackTime = TRACK_TIME; break;
+	case 1: m_nTrackTime = TRACK_CURRENT_TIME; break;
+	case 2: m_nTrackTime = TRACK_USER_RANGE; 
+		{
+			ui->ops->getUserRange(m_nUserMin, m_nUserMax);
+			ui->ops->setUserRange(m_nUserMin, m_nUserMax);
+		}
+		break;
+	default:
+		assert(false);
+		m_nTrackTime = TRACK_TIME;
+	}
+
+	Update(true);
 }
