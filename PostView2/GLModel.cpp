@@ -1837,7 +1837,27 @@ void CGLModel::RenderFaceOutline(FEFace& face, FEMeshBase* pm, int ndivs)
 		break;
 	case FACE_TRI10:
 		{
-			// implement this
+			vec3f a[4];
+			glBegin(GL_LINE_LOOP);
+			{
+				int NE = face.Edges();
+				for (int i=0; i<NE; ++i)
+				{
+					FEEdge e = face.Edge(i);
+					a[0] = pm->Node(e.node[0]).m_rt;
+					a[1] = pm->Node(e.node[1]).m_rt;
+					a[2] = pm->Node(e.node[2]).m_rt;
+					a[3] = pm->Node(e.node[3]).m_rt;
+					const int M = 2 * ndivs;
+					for (int n=0; n<M; ++n)
+					{
+						double t = n / (double) M;
+						vec3f p = e.eval(a, t);
+						glVertex3f(p.x, p.y, p.z);
+					}
+				}
+			}
+			glEnd();
 		}
 		break;
 	default:

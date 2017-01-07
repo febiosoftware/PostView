@@ -107,6 +107,12 @@ void FEEdge::shape(double* H, double r)
 		H[1] = r*(2*r - 1);
 		H[2] = 4*(1-r)*r;
 		break;
+	case EDGE_LINE4:
+		H[0] = 0.5f*(1.f - r)*(3.f*r - 1.f)*(3.f*r - 2.f);
+		H[1] = 0.5f*r*(3.f*r - 1.f)*(3.f*r - 2.f);
+		H[2] = 9.f/2.f*r*(r - 1.f)*(3.f*r - 2.f);
+		H[3] = 9.f/2.f*r*(1.f - r)*(3.f*r - 1.f);
+		break;
 	default:
 		assert(false);
 	}
