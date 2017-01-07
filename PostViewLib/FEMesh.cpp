@@ -1254,6 +1254,8 @@ void FEMeshBase::FaceNodePosition(FEFace& f, vec3f* r)
 {
 	switch (f.m_ntype)
 	{
+	case FACE_TRI10:
+		r[9] = m_Node[f.node[9]].m_rt;
 	case FACE_QUAD9:
 		r[8] = m_Node[f.node[8]].m_rt;
 	case FACE_QUAD8:
@@ -1280,6 +1282,8 @@ void FEMeshBase::FaceNodeNormals(FEFace& f, vec3f* n)
 {
 	switch (f.m_ntype)
 	{
+	case FACE_TRI10:
+		n[9] = f.m_nn[9];
 	case FACE_QUAD9:
 		n[8] = f.m_nn[8];
 	case FACE_QUAD8:
@@ -1322,7 +1326,8 @@ bool IsInsideElement(FEElement& el, double r[3], const double tol)
 	case FE_TET4:
 	case FE_TET10:
 	case FE_TET15:
-		return (r[0] >= -tol)&&(r[1] >= -tol)&&(r[2] >= -tol)&&(r[0]+r[1]+r[2] <= 1.0+tol);
+	case FE_TET20:
+		return (r[0] >= -tol) && (r[1] >= -tol) && (r[2] >= -tol) && (r[0] + r[1] + r[2] <= 1.0 + tol);
 	case FE_HEX8:
 	case FE_HEX20:
 	case FE_HEX27:

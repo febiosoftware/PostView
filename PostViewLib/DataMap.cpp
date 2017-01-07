@@ -70,7 +70,8 @@ void VectorMap::Gradient(int ntime, std::vector<float> &v)
 			case FE_TET4:
 			case FE_TET10:
 			case FE_TET15:
-				{
+			case FE_TET20:
+			{
 					NE[0] = 0; NE[1] = 1; NE[2] = 2; NE[3] = 2; 
 					NE[4] = NE[5] = NE[6] = NE[7] = 3;
 				}

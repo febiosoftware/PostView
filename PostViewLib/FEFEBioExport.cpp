@@ -75,6 +75,7 @@ bool FEFEBioExport::Save(FEModel& fem, const char* szfile)
 					case FE_TRI3  : el.name("tri3"  ); break;
 					case FE_TET10 : el.name("tet10" ); break;
 					case FE_TET15 : el.name("tet15" ); break;
+					case FE_TET20 : el.name("tet20" ); break;
                     case FE_TRI6  : el.name("tri6"  ); break;
 					default:
 						assert(false);

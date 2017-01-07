@@ -384,6 +384,7 @@ bool FEBioPlotExport::WritePart(FEPart& part)
 	case FE_TET4  : ne =  4; dtype = PLT_ELEM_TET; break;
 	case FE_TET10 : ne = 10; dtype = PLT_ELEM_TET10; break;
 	case FE_TET15 : ne = 15; dtype = PLT_ELEM_TET15; break;
+	case FE_TET20 : ne = 20; dtype = PLT_ELEM_TET20; break;
 	case FE_HEX20 : ne = 20; dtype = PLT_ELEM_HEX20; break;
 	case FE_HEX27 : ne = 27; dtype = PLT_ELEM_HEX27; break;
 	case FE_QUAD4 : ne =  4; dtype = PLT_ELEM_QUAD; break;

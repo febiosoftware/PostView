@@ -256,6 +256,48 @@ void CGLModel::RenderTRI7(FEFace& f, bool bsmooth, bool bnode)
 }
 
 //-----------------------------------------------------------------------------
+inline void glxVertex(const vec3f& n, const vec3f& r, float t)
+{
+	glNormal3f(n.x, n.y, n.z);
+	glTexCoord1f(t);
+	glVertex3f(r.x, r.y, r.z);
+}
+
+//-----------------------------------------------------------------------------
+// Render a 10-noded tri
+void CGLModel::RenderTRI10(FEFace& f, bool bsmooth, bool bnode)
+{
+	assert(f.m_ntype == FACE_TRI10);
+
+	// get the mesh
+	FEMeshBase* pm = GetActiveMesh();
+
+	// get the nodal data
+	vec3f r[10]; pm->FaceNodePosition(f, r);
+
+	vec3f n[10];
+	if (bsmooth) pm->FaceNodeNormals(f, n);
+	else { n[0] = n[1] = n[2] = n[3] = n[4] = n[5] = n[6] = n[7] = n[8] = n[9] = f.m_fn; }
+
+	float t[10];
+	pm->FaceNodeTexCoords(f, t, bnode);
+
+	glBegin(GL_TRIANGLES);
+	{
+		glxVertex(n[0], r[0], t[0]); glxVertex(n[3], r[3], t[3]); glxVertex(n[7], r[7], t[7]);
+		glxVertex(n[1], r[1], t[1]); glxVertex(n[5], r[5], t[5]); glxVertex(n[4], r[4], t[4]);
+		glxVertex(n[2], r[2], t[2]); glxVertex(n[8], r[8], t[8]); glxVertex(n[6], r[6], t[6]);
+		glxVertex(n[9], r[9], t[9]); glxVertex(n[7], r[7], t[7]); glxVertex(n[3], r[3], t[3]);
+		glxVertex(n[9], r[9], t[9]); glxVertex(n[3], r[3], t[3]); glxVertex(n[4], r[4], t[4]);
+		glxVertex(n[9], r[9], t[9]); glxVertex(n[4], r[4], t[4]); glxVertex(n[5], r[5], t[5]);
+		glxVertex(n[9], r[9], t[9]); glxVertex(n[5], r[5], t[5]); glxVertex(n[6], r[6], t[6]);
+		glxVertex(n[9], r[9], t[9]); glxVertex(n[6], r[6], t[6]); glxVertex(n[8], r[8], t[8]);
+		glxVertex(n[9], r[9], t[9]); glxVertex(n[8], r[8], t[8]); glxVertex(n[7], r[7], t[7]);
+	}
+	glEnd();
+}
+
+//-----------------------------------------------------------------------------
 // Render a sub-divided 4-noded quadrilateral
 void CGLModel::RenderSmoothQUAD4(FEFace& face, FEMeshBase* pm, int ndivs, bool bnode)
 {
@@ -702,6 +744,127 @@ void CGLModel::RenderSmoothTRI7(vec3f x[7], vec3f n[7], float q[7], int ndivs)
 
 						glNormal3f(nk.x, nk.y, nk.z); 
 						glTexCoord1f(tk); 
+						glVertex3f(xk.x, xk.y, xk.z);
+					}
+				}
+			}
+			nj -= 1;
+		}
+	}
+	glEnd();
+}
+
+//-----------------------------------------------------------------------------
+// Render a sub-divided 10-noded triangle
+void CGLModel::RenderSmoothTRI10(FEFace& face, FEMeshBase* pm, int ndivs, bool bnode)
+{
+	assert(face.m_ntype == FACE_TRI10);
+
+	vec3f r[10];
+	r[0] = pm->Node(face.node[0]).m_rt;
+	r[1] = pm->Node(face.node[1]).m_rt;
+	r[2] = pm->Node(face.node[2]).m_rt;
+	r[3] = pm->Node(face.node[3]).m_rt;
+	r[4] = pm->Node(face.node[4]).m_rt;
+	r[5] = pm->Node(face.node[5]).m_rt;
+	r[6] = pm->Node(face.node[6]).m_rt;
+	r[7] = pm->Node(face.node[7]).m_rt;
+	r[8] = pm->Node(face.node[8]).m_rt;
+	r[9] = pm->Node(face.node[9]).m_rt;
+
+	vec3f n[10];
+	n[0] = face.m_nn[0];
+	n[1] = face.m_nn[1];
+	n[2] = face.m_nn[2];
+	n[3] = face.m_nn[3];
+	n[4] = face.m_nn[4];
+	n[5] = face.m_nn[5];
+	n[6] = face.m_nn[6];
+	n[7] = face.m_nn[7];
+	n[8] = face.m_nn[8];
+	n[9] = face.m_nn[9];
+
+	float t[10];
+	pm->FaceNodeTexCoords(face, t, bnode);
+
+	RenderSmoothTRI10(r, n, t, ndivs);
+}
+
+//-----------------------------------------------------------------------------
+// Render a sub-divided 10-noded triangle
+void CGLModel::RenderSmoothTRI10(vec3f x[10], vec3f n[10], float q[10], int ndivs)
+{
+	float sa[2], ta[2], r, s, t, tk, h[10];
+	vec3f nk, xk;
+	int i, j, k;
+	int nj = ndivs;
+
+	int sl[2][3] = { { 0, 1, 0 }, { 1, 1, 0 } };
+	int tl[2][3] = { { 0, 0, 1 }, { 0, 1, 1 } };
+
+	glBegin(GL_TRIANGLES);
+	{
+		for (i = 0; i<ndivs; ++i)
+		{
+			ta[0] = (float)i / ndivs;
+			ta[1] = (float)(i + 1) / ndivs;
+
+			for (j = 0; j<nj; ++j)
+			{
+				sa[0] = (float)j / ndivs;
+				sa[1] = (float)(j + 1) / ndivs;
+
+				for (k = 0; k<3; ++k)
+				{
+					s = sa[sl[0][k]];
+					t = ta[tl[0][k]];
+					r = 1.f - s - t;
+
+					h[0] = 0.5f*(3.f*r - 1.f)*(3.f*r - 2.f)*r;
+					h[1] = 0.5f*(3.f*s - 1.f)*(3.f*s - 2.f)*s;
+					h[2] = 0.5f*(3.f*t - 1.f)*(3.f*t - 2.f)*t;
+					h[3] = 9.f/2.f*(3.f*r - 1.f)*r*s;
+					h[4] = 9.f/2.f*(3.f*s - 1.f)*r*s;
+					h[5] = 9.f/2.f*(3.f*s - 1.f)*s*t;
+					h[6] = 9.f/2.f*(3.f*t - 1.f)*s*t;
+					h[7] = 9.f/2.f*(3.f*r - 1.f)*r*t;
+					h[8] = 9.f/2.f*(3.f*t - 1.f)*r*t;
+					h[9] = 27.f*r*s*t;
+
+					nk = n[0] * h[0] + n[1] * h[1] + n[2] * h[2] + n[3] * h[3] + n[4] * h[4] + n[5] * h[5] + n[6] * h[6] + n[7] * h[7] + n[8] * h[8] + n[9] * h[9];
+					xk = x[0] * h[0] + x[1] * h[1] + x[2] * h[2] + x[3] * h[3] + x[4] * h[4] + x[5] * h[5] + x[6] * h[6] + x[7] * h[7] + x[8] * h[8] + x[9] * h[9];
+					tk = q[0] * h[0] + q[1] * h[1] + q[2] * h[2] + q[3] * h[3] + q[4] * h[4] + q[5] * h[5] + q[6] * h[6] + q[7] * h[7] + q[8] * h[8] + q[9] * h[9];
+
+					glNormal3f(nk.x, nk.y, nk.z);
+					glTexCoord1f(tk);
+					glVertex3f(xk.x, xk.y, xk.z);
+				}
+
+				if (j != nj - 1)
+				{
+					for (k = 0; k<3; ++k)
+					{
+						s = sa[sl[1][k]];
+						t = ta[tl[1][k]];
+						r = 1.f - s - t;
+
+						h[0] = 0.5f*(3.f*r - 1.f)*(3.f*r - 2.f)*r;
+						h[1] = 0.5f*(3.f*s - 1.f)*(3.f*s - 2.f)*s;
+						h[2] = 0.5f*(3.f*t - 1.f)*(3.f*t - 2.f)*t;
+						h[3] = 9.f / 2.f*(3.f*r - 1.f)*r*s;
+						h[4] = 9.f / 2.f*(3.f*s - 1.f)*r*s;
+						h[5] = 9.f / 2.f*(3.f*s - 1.f)*s*t;
+						h[6] = 9.f / 2.f*(3.f*t - 1.f)*s*t;
+						h[7] = 9.f / 2.f*(3.f*r - 1.f)*r*t;
+						h[8] = 9.f / 2.f*(3.f*t - 1.f)*r*t;
+						h[9] = 27.f*r*s*t;
+
+						nk = n[0] * h[0] + n[1] * h[1] + n[2] * h[2] + n[3] * h[3] + n[4] * h[4] + n[5] * h[5] + n[6] * h[6] + n[7] * h[7] + n[8] * h[8] + n[9] * h[9];
+						xk = x[0] * h[0] + x[1] * h[1] + x[2] * h[2] + x[3] * h[3] + x[4] * h[4] + x[5] * h[5] + x[6] * h[6] + x[7] * h[7] + x[8] * h[8] + x[9] * h[9];
+						tk = q[0] * h[0] + q[1] * h[1] + q[2] * h[2] + q[3] * h[3] + q[4] * h[4] + q[5] * h[5] + q[6] * h[6] + q[7] * h[7] + q[8] * h[8] + q[9] * h[9];
+
+						glNormal3f(nk.x, nk.y, nk.z);
+						glTexCoord1f(tk);
 						glVertex3f(xk.x, xk.y, xk.z);
 					}
 				}

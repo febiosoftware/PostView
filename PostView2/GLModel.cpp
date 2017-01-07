@@ -927,6 +927,11 @@ void CGLModel::RenderFaceEdge(FEFace& f, int j, FEMeshBase* pm, int ndivs)
 			glEnd();
 		}
 		break;
+	case FACE_TRI10:
+		{
+			// implement this
+		}
+		break;
 	default:
 		assert(false);
 	}
@@ -1555,6 +1560,10 @@ void CGLModel::RenderFace(FEFace& face, FEMeshBase* pm, int ndivs, bool bnode)
 		if (ndivs == 1) RenderTRI7(face, m_bsmooth, bnode);
 		else RenderSmoothTRI7(face, pm, ndivs, bnode);
 		break;
+	case FACE_TRI10:
+		if (ndivs == 1) RenderTRI10(face, m_bsmooth, bnode);
+		else RenderSmoothTRI10(face, pm, ndivs, bnode);
+		break;
 	default:
 		assert(false);
 	}
@@ -1730,6 +1739,7 @@ void CGLModel::RenderElementOutline(FEElement& el, FEMeshBase* pm)
 			};
 			break;
 		case FE_TET4:
+		case FE_TET20:
 			{
 				int (*et)[2] = ET_TET;
 				for (int i=0; i<6; ++i)
@@ -1823,6 +1833,11 @@ void CGLModel::RenderFaceOutline(FEFace& face, FEMeshBase* pm, int ndivs)
 				}
 			}
 			glEnd();
+		}
+		break;
+	case FACE_TRI10:
+		{
+			// implement this
 		}
 		break;
 	default:
@@ -2520,6 +2535,7 @@ void CGLModel::RenderAllElements()
 				case FACE_TRI3:
 				case FACE_TRI6:
 				case FACE_TRI7:
+				case FACE_TRI10:
 					{
 						vec3f r0 = pm->Node(f.node[0]).m_rt;
 						vec3f r1 = pm->Node(f.node[1]).m_rt;

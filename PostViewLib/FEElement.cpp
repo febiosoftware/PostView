@@ -56,6 +56,12 @@ int FT_TET15[4][7] = {
 	{2, 0, 3, 6, 7, 9, 13},
 	{2, 1, 0, 5, 4, 6, 10}};
 
+int FT_TET20[4][10] = {
+	{ 0, 1, 3, 4, 5, 12, 13, 10, 11, 16 },
+	{ 1, 2, 3, 6, 7, 14, 15, 12, 13, 17 },
+	{ 2, 0, 3, 9, 8, 10, 11, 14, 15, 18 },
+	{ 2, 1, 0, 7, 6,  5,  4,  9,  8, 19 }};
+	
 const int ET_QUAD[4][2] = {
 	{ 0, 1},
 	{ 1, 2},
@@ -172,6 +178,16 @@ FEEdge FEFace::Edge(int i)
 			const int L[4][3] = {{0,1,4},{1,2,5},{2,3,6},{3,0,7}};
 			e.node[0] = node[L[i][0]]; e.node[1] = node[L[i][1]]; e.node[2] = node[L[i][2]];
 			e.m_type = EDGE_LINE3;
+		}
+		break;
+	case FACE_TRI10:
+		{
+			const int L[3][4] = {{0,1,3,4},{1,2,5,6},{2,0,8,7}};
+			e.m_type = EDGE_LINE4;
+			e.node[0] = node[L[i][0]];
+			e.node[1] = node[L[i][1]];
+			e.node[2] = node[L[i][2]];
+			e.node[3] = node[L[i][3]];
 		}
 		break;
 	default:
@@ -327,6 +343,7 @@ void FEGenericElement::SetType(FEElemType type)
 	case FE_TET4  : m_nodes = FEElementTraits<FE_TET4  >::Nodes; m_faces = FEElementTraits<FE_TET4  >::Faces; m_edges = FEElementTraits<FE_TET4  >::Edges; break;
 	case FE_TET10 : m_nodes = FEElementTraits<FE_TET10 >::Nodes; m_faces = FEElementTraits<FE_TET10 >::Faces; m_edges = FEElementTraits<FE_TET10 >::Edges; break;
 	case FE_TET15 : m_nodes = FEElementTraits<FE_TET15 >::Nodes; m_faces = FEElementTraits<FE_TET15 >::Faces; m_edges = FEElementTraits<FE_TET15 >::Edges; break;
+	case FE_TET20 : m_nodes = FEElementTraits<FE_TET20 >::Nodes; m_faces = FEElementTraits<FE_TET20 >::Faces; m_edges = FEElementTraits<FE_TET20 >::Edges; break;
 	case FE_PENTA6: m_nodes = FEElementTraits<FE_PENTA6>::Nodes; m_faces = FEElementTraits<FE_PENTA6>::Faces; m_edges = FEElementTraits<FE_PENTA6>::Edges; break;
 	case FE_HEX8  : m_nodes = FEElementTraits<FE_HEX8  >::Nodes; m_faces = FEElementTraits<FE_HEX8  >::Faces; m_edges = FEElementTraits<FE_HEX8  >::Edges; break;
 	case FE_HEX20 : m_nodes = FEElementTraits<FE_HEX20 >::Nodes; m_faces = FEElementTraits<FE_HEX20 >::Faces; m_edges = FEElementTraits<FE_HEX20 >::Edges; break;
@@ -496,6 +513,19 @@ void FEElement::GetFace(int i, FEFace& f) const
 		f.node[6] = m_node[FT_TET15[i][6]];
 		break;
 
+	case FE_TET20:
+		f.m_ntype = FACE_TRI10;
+		f.node[0] = m_node[FT_TET20[i][0]];
+		f.node[1] = m_node[FT_TET20[i][1]];
+		f.node[2] = m_node[FT_TET20[i][2]];
+		f.node[3] = m_node[FT_TET20[i][3]];
+		f.node[4] = m_node[FT_TET20[i][4]];
+		f.node[5] = m_node[FT_TET20[i][5]];
+		f.node[6] = m_node[FT_TET20[i][6]];
+		f.node[7] = m_node[FT_TET20[i][7]];
+		f.node[8] = m_node[FT_TET20[i][8]];
+		f.node[9] = m_node[FT_TET20[i][9]];
+		break;
 	};
 }
 
@@ -560,6 +590,7 @@ bool FEElement::operator != (FEElement& e)
     case FE_QUAD9:
 	case FE_TET10:
 	case FE_TET15:
+	case FE_TET20:
 		if ((m_node[0] != e.m_node[0]) ||
 			(m_node[1] != e.m_node[1]) ||
 			(m_node[2] != e.m_node[2]) ||
@@ -661,6 +692,35 @@ void FEElement::shape(double *H, double r, double s, double t)
 			H[11] -= 27.0*H[14]/64.0;
 			H[12] -= 27.0*H[14]/64.0;
 			H[13] -= 27.0*H[14]/64.0;
+		}
+		break;
+	case FE_TET20:
+		{
+			double L1 = 1.0 - r - s - t;
+			double L2 = r;
+			double L3 = s;
+			double L4 = t;
+
+			H[0] = 0.5*(3*L1 - 1)*(3*L1 - 2)*L1;
+			H[1] = 0.5*(3*L2 - 1)*(3*L2 - 2)*L2;
+			H[2] = 0.5*(3*L3 - 1)*(3*L3 - 2)*L3;
+			H[3] = 0.5*(3*L4 - 1)*(3*L4 - 2)*L4;
+			H[4] = 9.0/2.0*(3*L1 - 1)*L1*L2;
+			H[5] = 9.0/2.0*(3*L2 - 1)*L1*L2;
+			H[6] = 9.0/2.0*(3*L2 - 1)*L2*L3;
+			H[7] = 9.0/2.0*(3*L3 - 1)*L2*L3;
+			H[8] = 9.0/2.0*(3*L1 - 1)*L1*L3;
+			H[9] = 9.0/2.0*(3*L3 - 1)*L1*L3;
+			H[10] = 9.0/2.0*(3*L1 - 1)*L1*L4;
+			H[11] = 9.0/2.0*(3*L4 - 1)*L1*L4;
+			H[12] = 9.0/2.0*(3*L2 - 1)*L2*L4;
+			H[13] = 9.0/2.0*(3*L4 - 1)*L2*L4;
+			H[14] = 9.0/2.0*(3*L3 - 1)*L3*L4;
+			H[15] = 9.0/2.0*(3*L4 - 1)*L3*L4;
+			H[16] = 27.0*L1*L2*L4;
+			H[17] = 27.0*L2*L3*L4;
+			H[18] = 27.0*L1*L3*L4;
+			H[19] = 27.0*L1*L2*L3;
 		}
 		break;
 	case FE_HEX20:
@@ -887,6 +947,12 @@ void FEElement::shape_deriv(double* Hr, double* Hs, double* Ht, double r, double
 			Ht[11] -= 27.0*Ht[14]/64.0;
 			Ht[12] -= 27.0*Ht[14]/64.0;
 			Ht[13] -= 27.0*Ht[14]/64.0;
+		}
+		break;
+	case FE_TET20:
+		{
+			// TODO: Implement this
+			assert(false);
 		}
 		break;
 	case FE_HEX20:
@@ -1149,6 +1215,12 @@ void FEElement::iso_coord(int n, double q[3])
 			case 13: q[0] = 0; q[1] = t; q[2] = t; break;
 			case 14: q[0] = 0.25; q[1] = 0.25; q[2] = 0.25; break;
 			}
+		}
+		break;
+	case FE_TET20:
+		{
+			// TODO: Implement this
+			assert(false);
 		}
 		break;
 	case FE_HEX20:

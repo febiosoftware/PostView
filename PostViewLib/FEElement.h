@@ -25,10 +25,11 @@ enum FEElemType {
 	FE_TET4,
 	FE_TET10,
 	FE_TET15,
+	FE_TET20,
 	FE_PENTA6,
 	FE_HEX8,
 	FE_HEX20,
-	FE_HEX27
+	FE_HEX27,
 };
 
 //-----------------------------------------------------------------------------
@@ -39,14 +40,16 @@ enum FEFaceType {
 	FACE_QUAD8,
 	FACE_TRI6,
 	FACE_TRI7,
-	FACE_QUAD9
+	FACE_QUAD9,
+	FACE_TRI10
 };
 
 //-----------------------------------------------------------------------------
 // Different edge types
 enum FEEdgeType {
 	EDGE_LINE2,
-	EDGE_LINE3
+	EDGE_LINE3,
+	EDGE_LINE4
 };
 
 //-----------------------------------------------------------------------------
@@ -131,7 +134,7 @@ public:
 class FEEdge : public FEItem
 {
 public:
-	enum {MAX_NODES = 3};
+	enum {MAX_NODES = 4};
 
 	FEEdgeType Type() const { return m_type; }
 
@@ -151,7 +154,7 @@ public:
 
 	int Nodes() const
 	{
-		const int N[] = {2,3}; 
+		const int N[] = {2,3,4}; 
 		return N[m_type];
 	}
 
@@ -170,7 +173,7 @@ public:
 class FEFace : public FEItem
 {
 public:
-	enum { MAX_NODES = 9 };
+	enum { MAX_NODES = 10 };
 
 public:
 	int	node[MAX_NODES];	// array of indices to the four nodes of a face
@@ -198,6 +201,7 @@ public:
 		case FACE_TRI3:
 		case FACE_TRI6:
 		case FACE_TRI7:
+		case FACE_TRI10:
 			if ((pn[0] != node[0]) && (pn[0] != node[1]) && (pn[0] != node[2])) return false;
 			if ((pn[1] != node[0]) && (pn[1] != node[1]) && (pn[1] != node[2])) return false;
 			if ((pn[2] != node[0]) && (pn[2] != node[1]) && (pn[2] != node[2])) return false;
@@ -221,6 +225,7 @@ public:
 		case FACE_TRI3:
 		case FACE_TRI6:
 		case FACE_TRI7:
+		case FACE_TRI10:
 			if (((node[0]==n1) && (node[1]==n2)) || ((node[1]==n1) && (node[0]==n2))) return true;
 			if (((node[1]==n1) && (node[2]==n2)) || ((node[2]==n1) && (node[1]==n2))) return true;
 			if (((node[2]==n1) && (node[0]==n2)) || ((node[0]==n1) && (node[2]==n2))) return true;
@@ -246,15 +251,15 @@ public:
 
 	int Nodes() 
 	{
-		const int n[6] = {3, 4, 8, 6, 7, 9};
-		assert((m_ntype >= 0) && (m_ntype <= 5));
+		const int n[7] = {3, 4, 8, 6, 7, 9, 10};
+		assert((m_ntype >= 0) && (m_ntype <= 6));
 		return n[m_ntype]; 
 	}
 
 	int Edges()
 	{
-		const int n[6] = {3, 4, 4, 3, 3, 4};
-		assert((m_ntype >= 0) && (m_ntype <= 5));
+		const int n[7] = {3, 4, 4, 3, 3, 4, 3};
+		assert((m_ntype >= 0) && (m_ntype <= 6));
 		return n[m_ntype]; 
 	}
 
@@ -290,7 +295,7 @@ public:
 	void GetFace(int i, FEFace& face) const;
 	FEEdge GetEdge(int i) const;
 
-	bool IsSolid() { return ((m_ntype == FE_HEX8  ) || (m_ntype == FE_HEX20 ) || (m_ntype == FE_TET4) || (m_ntype == FE_PENTA6) || (m_ntype == FE_TET10) || (m_ntype == FE_TET15) || (m_ntype == FE_HEX27)); }
+	bool IsSolid() { return ((m_ntype == FE_HEX8  ) || (m_ntype == FE_HEX20 ) || (m_ntype == FE_TET4) || (m_ntype == FE_PENTA6) || (m_ntype == FE_TET10) || (m_ntype == FE_TET15) || (m_ntype == FE_TET20) || (m_ntype == FE_HEX27)); }
 	bool IsShell() { return ((m_ntype == FE_QUAD4 ) || (m_ntype == FE_QUAD8 ) || (m_ntype == FE_QUAD9 ) || (m_ntype == FE_TRI3) || (m_ntype == FE_TRI6)); }
 	bool IsBeam () { return ((m_ntype == FE_LINE2) || (m_ntype == FE_LINE3)); }
 
@@ -342,6 +347,7 @@ template <> class FEElementTraits<FE_QUAD9 >{ public: enum {Nodes =  9}; enum {F
 template <> class FEElementTraits<FE_TET4  >{ public: enum {Nodes =  4}; enum {Faces = 4}; enum {Edges = 0}; static FEElemType Type() { return FE_TET4  ; }};
 template <> class FEElementTraits<FE_TET10 >{ public: enum {Nodes = 10}; enum {Faces = 4}; enum {Edges = 0}; static FEElemType Type() { return FE_TET10 ; }};
 template <> class FEElementTraits<FE_TET15 >{ public: enum {Nodes = 15}; enum {Faces = 4}; enum {Edges = 0}; static FEElemType Type() { return FE_TET15 ; }};
+template <> class FEElementTraits<FE_TET20 >{ public: enum {Nodes = 20}; enum {Faces = 4}; enum {Edges = 0}; static FEElemType Type() { return FE_TET20 ; }};
 template <> class FEElementTraits<FE_PENTA6>{ public: enum {Nodes =  6}; enum {Faces = 5}; enum {Edges = 0}; static FEElemType Type() { return FE_PENTA6; }};
 template <> class FEElementTraits<FE_HEX8  >{ public: enum {Nodes =  8}; enum {Faces = 6}; enum {Edges = 0}; static FEElemType Type() { return FE_HEX8  ; }};
 template <> class FEElementTraits<FE_HEX20 >{ public: enum {Nodes = 20}; enum {Faces = 6}; enum {Edges = 0}; static FEElemType Type() { return FE_HEX20 ; }};
@@ -388,6 +394,7 @@ typedef FEElementBase< FEElementTraits<FE_QUAD9 > > FEQuad9;
 typedef FEElementBase< FEElementTraits<FE_TET4  > > FETet4;
 typedef FEElementBase< FEElementTraits<FE_TET10 > > FETet10;
 typedef FEElementBase< FEElementTraits<FE_TET15 > > FETet15;
+typedef FEElementBase< FEElementTraits<FE_TET20 > > FETet20;
 typedef FEElementBase< FEElementTraits<FE_PENTA6> > FEPenta6;
 typedef FEElementBase< FEElementTraits<FE_HEX8  > > FEHex8;
 typedef FEElementBase< FEElementTraits<FE_HEX20 > > FEHex20;

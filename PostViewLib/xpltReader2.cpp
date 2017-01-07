@@ -687,6 +687,7 @@ bool XpltReader2::ReadDomainSection(FEModel &fem)
 					case PLT_ELEM_HEX27: ne = 27; break;
 					case PLT_ELEM_TET10: ne = 10; break;
 					case PLT_ELEM_TET15: ne = 15; break;
+					case PLT_ELEM_TET20: ne = 20; break;
                     case PLT_ELEM_TRI6 : ne =  6; break;
                     case PLT_ELEM_QUAD8: ne =  8; break;
                     case PLT_ELEM_QUAD9: ne =  9; break;
@@ -999,6 +1000,7 @@ bool XpltReader2::BuildMesh(FEModel &fem)
 					case PLT_ELEM_HEX27: etype = FE_HEX27 ; break;
 					case PLT_ELEM_TET10: etype = FE_TET10 ; break;
 					case PLT_ELEM_TET15: etype = FE_TET15 ; break;
+					case PLT_ELEM_TET20: etype = FE_TET20 ; break;
 					case PLT_ELEM_TRI6 : etype = FE_TRI6  ; break;
 					case PLT_ELEM_QUAD8: etype = FE_QUAD8 ; break;
 					case PLT_ELEM_QUAD9: etype = FE_QUAD9 ; break;
@@ -1376,6 +1378,7 @@ bool XpltReader2::ReadElemData_NODE(FEMeshBase& m, XpltReader2::Domain &d, FEMes
 	case PLT_ELEM_HEX27: ne = 27; break;
 	case PLT_ELEM_TET10: ne = 10; break;
 	case PLT_ELEM_TET15: ne = 15; break;
+	case PLT_ELEM_TET20: ne = 20; break;
     case PLT_ELEM_TRI6 : ne =  6; break;
     case PLT_ELEM_QUAD8: ne =  8; break;
     case PLT_ELEM_QUAD9: ne =  9; break;
@@ -1548,6 +1551,7 @@ bool XpltReader2::ReadElemData_MULT(XpltReader2::Domain& dom, FEMeshData& s, int
 	case PLT_ELEM_HEX27: ne = 27; break;
 	case PLT_ELEM_TET10: ne = 10; break;
 	case PLT_ELEM_TET15: ne = 15; break;
+	case PLT_ELEM_TET20: ne = 20; break;
     case PLT_ELEM_TRI6 : ne =  6; break;
     case PLT_ELEM_QUAD8: ne =  8; break;
     case PLT_ELEM_QUAD9: ne =  9; break;

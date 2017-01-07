@@ -206,6 +206,7 @@ void FEBioImport::ParseGeometrySection(FEModel &fem, XMLTag &tag)
 				else if (tag == "tet4"  ) { etype = FE_TET4;   ++nbel; }
 				else if (tag == "tet10" ) { etype = FE_TET10;  ++nbel; }
 				else if (tag == "tet15" ) { etype = FE_TET15;  ++nbel; }
+				else if (tag == "tet20" ) { etype = FE_TET20;  ++nbel; }
 				else if (tag == "quad4" ) { etype = FE_QUAD4;  ++nsel; }
                 else if (tag == "quad8" ) { etype = FE_QUAD8;  ++nsel; }
                 else if (tag == "quad9" ) { etype = FE_QUAD9;  ++nsel; }
@@ -272,7 +273,8 @@ void FEBioImport::ParseGeometrySection2(FEModel &fem, XMLTag &tag)
 			else if (strcmp(sztype, "quad8" ) == 0) etype = FE_QUAD8; 
 			else if (strcmp(sztype, "tet10" ) == 0) etype = FE_TET10; 
 			else if (strcmp(sztype, "tet15" ) == 0) etype = FE_TET15; 
-			else if (strcmp(sztype, "hex27" ) == 0) etype = FE_HEX27; 
+			else if (strcmp(sztype, "tet20" ) == 0) etype = FE_TET20;
+			else if (strcmp(sztype, "hex27" ) == 0) etype = FE_HEX27;
 			else if (strcmp(sztype, "tri6"  ) == 0) etype = FE_TRI6; 
 			else if (strcmp(sztype, "quad9" ) == 0) etype = FE_QUAD9; 
 			else throw XMLReader::InvalidAttributeValue(tag, "type", sztype);
