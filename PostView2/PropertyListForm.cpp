@@ -45,12 +45,17 @@ void CPropertyListForm::setPropertyList(CPropertyList* pl)
 					break;
 				case CProperty::Float:
 					{
-						QDoubleSpinBox* spin = new QDoubleSpinBox;
+/*						QDoubleSpinBox* spin = new QDoubleSpinBox;
 						spin->setRange(pi.fmin, pi.fmax);
 						spin->setSingleStep(pi.fstep);
 						spin->setValue(v.toDouble());
 						connect(spin, SIGNAL(valueChanged(double)), this, SLOT(onDataChanged()));
 						pw = spin;
+*/
+						QLineEdit* edit = new QLineEdit; edit->setValidator(new QDoubleValidator);
+						edit->setText(QString::number(v.toDouble()));
+						connect(edit, SIGNAL(editingFinished()), this, SLOT(onDataChanged()));
+						pw = edit;
 					}
 					break;
 				case CProperty::Enum:
@@ -198,8 +203,11 @@ void CPropertyListForm::onDataChanged()
 						break;
 					case CProperty::Float:
 						{
-							QDoubleSpinBox* spin = qobject_cast<QDoubleSpinBox*>(pw);
+/*							QDoubleSpinBox* spin = qobject_cast<QDoubleSpinBox*>(pw);
 							if (spin) m_list->SetPropertyValue(i, spin->value());
+*/
+							QLineEdit* edit = qobject_cast<QLineEdit*>(pw);
+							if (edit) m_list->SetPropertyValue(i, edit->text().toDouble());
 						}
 						break;
 					case CProperty::Enum:
