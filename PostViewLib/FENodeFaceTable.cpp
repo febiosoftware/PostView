@@ -32,7 +32,7 @@ void FENodeFaceTable::Build()
 // The most likely cause would be if the facet is an interal fact, since PostView does not
 // process internal facets (e.g. facets between two materials).
 // \todo perhaps I should modify PostView so that it stores internal facets as well.
-int FENodeFaceTable::FindFace(int inode, int n[9], int m)
+int FENodeFaceTable::FindFace(int inode, int n[10], int m)
 {
 	FEFace ft;
 	for (int i=0; i<m; ++i) ft.node[i] = n[i];
@@ -44,6 +44,7 @@ int FENodeFaceTable::FindFace(int inode, int n[9], int m)
 	case 7: ft.m_ntype = FACE_TRI7 ; break;
 	case 8: ft.m_ntype = FACE_QUAD8; break;
 	case 9: ft.m_ntype = FACE_QUAD9; break;
+	case 10: ft.m_ntype = FACE_TRI10; break;
 	default:
 		assert(false);
 	};

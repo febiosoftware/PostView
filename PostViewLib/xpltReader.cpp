@@ -778,8 +778,8 @@ bool XpltReader::ReadSurfaceSection(FEModel &fem)
 					{
 						assert(S.nf > 0);
 						S.face.reserve(S.nf);
-						int n[11];
-						assert(hdr.nmax_facet_nodes <= 9);
+						int n[12];
+						assert(hdr.nmax_facet_nodes <= 10);
 						while (m_ar.OpenChunk() == IO_OK)
 						{
 							if (m_ar.GetChunkID() == PLT_FACE)
@@ -1729,7 +1729,7 @@ bool XpltReader::ReadFaceData_MULT(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 			FEFaceData<float,DATA_COMP>& df = dynamic_cast<FEFaceData<float,DATA_COMP>&>(data);
 			vector<float> a(NFM*NF);
 			m_ar.read(a);
-			float v[9];
+			float v[10];
 			for (int i=0; i<NF; ++i)
 			{
 				FACE& f = s.face[i];
@@ -1744,7 +1744,7 @@ bool XpltReader::ReadFaceData_MULT(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 			FEFaceData<vec3f,DATA_COMP>& df = dynamic_cast<FEFaceData<vec3f,DATA_COMP>&>(data);
 			vector<vec3f> a(NFM*NF);
 			m_ar.read(a);
-			vec3f v[9];
+			vec3f v[10];
 			for (int i=0; i<NF; ++i)
 			{
 				FACE& f = s.face[i];
@@ -1759,7 +1759,7 @@ bool XpltReader::ReadFaceData_MULT(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 			FEFaceData<mat3fs,DATA_COMP>& df = dynamic_cast<FEFaceData<mat3fs,DATA_COMP>&>(data);
 			vector<mat3fs> a(4*NF);
 			m_ar.read(a);
-			mat3fs v[9];
+			mat3fs v[10];
 			for (int i=0; i<NF; ++i)
 			{
 				FACE& f = s.face[i];
@@ -1774,7 +1774,7 @@ bool XpltReader::ReadFaceData_MULT(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 			FEFaceData<mat3f,DATA_COMP>& df = dynamic_cast<FEFaceData<mat3f,DATA_COMP>&>(data);
 			vector<mat3f> a(4*NF);
 			m_ar.read(a);
-			mat3f v[9];
+			mat3f v[10];
 			for (int i=0; i<NF; ++i)
 			{
 				FACE& f = s.face[i];
@@ -1789,7 +1789,7 @@ bool XpltReader::ReadFaceData_MULT(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 			FEFaceData<mat3fd,DATA_COMP>& df = dynamic_cast<FEFaceData<mat3fd,DATA_COMP>&>(data);
 			vector<mat3fd> a(4*NF);
 			m_ar.read(a);
-			mat3fd v[9];
+			mat3fd v[10];
 			for (int i=0; i<NF; ++i)
 			{
 				FACE& f = s.face[i];
@@ -1804,7 +1804,7 @@ bool XpltReader::ReadFaceData_MULT(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 			FEFaceData<tens4fs,DATA_COMP>& df = dynamic_cast<FEFaceData<tens4fs,DATA_COMP>&>(data);
 			vector<tens4fs> a(4*NF);
 			m_ar.read(a);
-			tens4fs v[9];
+			tens4fs v[10];
 			for (int i=0; i<NF; ++i)
 			{
 				FACE& f = s.face[i];

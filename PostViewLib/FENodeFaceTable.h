@@ -8,7 +8,7 @@ class FENodeFaceTable
 {
 public:
 	FENodeFaceTable(FEMeshBase* pm);
-	int FindFace(int inode, int n[9], int m);
+	int FindFace(int inode, int n[10], int m);
 
 protected:
 	void Build();

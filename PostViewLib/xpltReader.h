@@ -155,7 +155,7 @@ public:
 	{
 		int		nid;
 		int		nn;
-		int		node[9];
+		int		node[10];
 	};
 
 	class Domain
