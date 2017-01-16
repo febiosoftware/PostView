@@ -1289,13 +1289,17 @@ void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
 
 	if (N==1)
 	{
-//		m_wnd->SetStatusBar("1 face selected: Id = %d", nn+1);
+		char sz[512] = {0};
+		sprintf(sz, "1 face selected: Id = %d", nn + 1);
+		m_wnd->SetStatusMessage(sz);
 	}
 	else if (N > 1)
 	{
-//		m_wnd->SetStatusBar("%d faces selected", N);
+		char sz[512] = { 0 };
+		sprintf(sz, "%d faces selected", N);
+		m_wnd->SetStatusMessage(sz);
 	}
-//	else m_wnd->SetStatusBar(0);
+	else m_wnd->ClearStatusMessage();
 
 	// Restore the projection matrix
 	glMatrixMode(GL_PROJECTION);
@@ -1971,14 +1975,17 @@ void CGLView::SelectElements(int x0, int y0, int x1, int y1, int mode)
 	}
 	if (N==1)
 	{
-//		m_wnd->SetStatusBar("1 element selected: Id = %d", ne+1);
+		char sz[512] = {0};
+		sprintf(sz, "1 element selected: Id = %d", ne + 1);
+		m_wnd->SetStatusMessage(sz);
 	}
 	else if (N > 1)
 	{
-//		m_wnd->SetStatusBar("%d elements selected", N);
+		char sz[512] = { 0 };
+		sprintf(sz, "%d elements selected", N);
+		m_wnd->SetStatusMessage(sz);
 	}
-//	else m_pParent->SetStatusBar(0);
-
+	else m_wnd->ClearStatusMessage();
 
 	// Restore the projection matrix
 	glMatrixMode(GL_PROJECTION);
@@ -2171,13 +2178,17 @@ void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 		FENode& n = pm->Node(nn);
 		vec3f r = n.m_rt;
 		float f = pdoc->GetGLModel()->currentState()->m_NODE[nn].m_val;
-//		m_wnd->SetStatusBar("1 node selected: Id = %d, val = %g, pos = (%g, %g, %g)", nn+1, f, r.x, r.y, r.z);
+		char sz[512] = {0};
+		sprintf(sz, "1 node selected: Id = %d, val = %g, pos = (%g, %g, %g)", nn + 1, f, r.x, r.y, r.z);
+		m_wnd->SetStatusMessage(sz);
 	}
 	else if (N > 1)
 	{
-//		m_wnd->SetStatusBar("%d nodes selected", N);
+		char sz[512] = { 0 };
+		sprintf(sz, "%d nodes selected", N);
+		m_wnd->SetStatusMessage(sz);
 	}
-//	else m_wnd->SetStatusBar(0);
+	else m_wnd->ClearStatusMessage();
 
 	// Restore the projection matrix
 	glMatrixMode(GL_PROJECTION);
@@ -2367,13 +2378,17 @@ void CGLView::SelectEdges(int x0, int y0, int x1, int y1, int mode)
 	{
 		FEEdge& n = pm->Edge(nn);
 		float f = pdoc->GetGLModel()->currentState()->m_EDGE[nn].m_val;
-//		m_wnd->SetStatusBar("1 node selected: Id = %d, val = %g, pos = (%g, %g, %g)", nn+1, f, r.x, r.y, r.z);
+		char sz[512] = {0};
+		sprintf(sz, "1 edge selected");
+		m_wnd->SetStatusMessage(sz);
 	}
 	else if (N > 1)
 	{
-//		m_wnd->SetStatusBar("%d nodes selected", N);
+		char sz[512] = { 0 };
+		sprintf(sz, "%d edges selected", N);
+		m_wnd->SetStatusMessage(sz);
 	}
-//	else m_wnd->SetStatusBar(0);
+	else m_wnd->ClearStatusMessage();
 
 	// Restore the projection matrix
 	glMatrixMode(GL_PROJECTION);

@@ -69,6 +69,12 @@ public:
 	// set the data field on the toolbar
 	void SetCurrentDataField(int nfield);
 
+	// set a message on the status bar
+	void SetStatusMessage(const QString& message);
+
+	// clear the status message
+	void ClearStatusMessage();
+
 public slots:
 	void on_actionOpen_triggered();
 	void on_actionSave_triggered();

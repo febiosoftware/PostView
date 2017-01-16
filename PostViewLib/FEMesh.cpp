@@ -641,8 +641,8 @@ void FEMeshBase::AutoSmooth(double angleRadians)
 
 			int nf = pf->Nodes();
 			int n = -1;
-			if ((nf==3)||(nf==6)) n = 3;
-			if ((nf==4)||(nf==8)) n = 4;
+			if ((nf==3)||(nf==6)||(nf==7)||(n==10)) n = 3;
+			if ((nf==4)||(nf==8)||(nf==9)) n = 4;
 
 			// add face normal to node normal
 			for (int i=0; i<nf; ++i) pnorm[pf->node[i]] += pf->m_fn;

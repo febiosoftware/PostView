@@ -79,6 +79,16 @@ CMainWindow::~CMainWindow()
 {
 }
 
+void CMainWindow::SetStatusMessage(const QString& message)
+{
+	ui->statusBar->showMessage(message);
+}
+
+void CMainWindow::ClearStatusMessage()
+{
+	ui->statusBar->clearMessage();
+}
+
 CGLView* CMainWindow::GetGLView()
 {
 	return ui->glview;
