@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D5481BD91E2EC3F300BD2BFE /* LinearRegression.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5481BD71E2EC3F300BD2BFE /* LinearRegression.cpp */; };
+		D5481BDA1E2EC3F300BD2BFE /* LinearRegression.h in Headers */ = {isa = PBXBuildFile; fileRef = D5481BD81E2EC3F300BD2BFE /* LinearRegression.h */; };
 		D5A65E141DBFA55800B44009 /* xpltFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E101DBFA55800B44009 /* xpltFileReader.cpp */; };
 		D5A65E151DBFA55800B44009 /* xpltFileReader.h in Headers */ = {isa = PBXBuildFile; fileRef = D5A65E111DBFA55800B44009 /* xpltFileReader.h */; };
 		D5A65E161DBFA55800B44009 /* xpltReader2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E121DBFA55800B44009 /* xpltReader2.cpp */; };
@@ -139,6 +141,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D5481BD71E2EC3F300BD2BFE /* LinearRegression.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LinearRegression.cpp; sourceTree = "<group>"; };
+		D5481BD81E2EC3F300BD2BFE /* LinearRegression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinearRegression.h; sourceTree = "<group>"; };
 		D5A65E101DBFA55800B44009 /* xpltFileReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xpltFileReader.cpp; sourceTree = "<group>"; };
 		D5A65E111DBFA55800B44009 /* xpltFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xpltFileReader.h; sourceTree = "<group>"; };
 		D5A65E121DBFA55800B44009 /* xpltReader2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xpltReader2.cpp; sourceTree = "<group>"; };
@@ -402,6 +406,8 @@
 				D5F308F91CFBB65700F76762 /* integrate.cpp */,
 				D5F308FA1CFBB65700F76762 /* Interpolator.cpp */,
 				D5F308FB1CFBB65700F76762 /* Interpolator.h */,
+				D5481BD71E2EC3F300BD2BFE /* LinearRegression.cpp */,
+				D5481BD81E2EC3F300BD2BFE /* LinearRegression.h */,
 				D5F308FC1CFBB65700F76762 /* lusolver.cpp */,
 				D5F308FD1CFBB65700F76762 /* lusolver.h */,
 				D5F308FE1CFBB65700F76762 /* lut.cpp */,
@@ -474,6 +480,7 @@
 				D5F309881CFBB65700F76762 /* XMLWriter.h in Headers */,
 				D5F3096D1CFBB65700F76762 /* GMeshImport.h in Headers */,
 				D5D4102A1DAD891F007BBA0D /* Palette.h in Headers */,
+				D5481BDA1E2EC3F300BD2BFE /* LinearRegression.h in Headers */,
 				D5F309471CFBB65700F76762 /* FEMeshData_T.h in Headers */,
 				D5F309191CFBB65700F76762 /* AVIAnimation.h in Headers */,
 				D5F3097B1CFBB65700F76762 /* PltArchive.h in Headers */,
@@ -629,6 +636,7 @@
 				D5F309831CFBB65700F76762 /* VRMLExporter.cpp in Sources */,
 				D5F309501CFBB65700F76762 /* FENodeFaceList.cpp in Sources */,
 				D5F3096E1CFBB65700F76762 /* GView.cpp in Sources */,
+				D5481BD91E2EC3F300BD2BFE /* LinearRegression.cpp in Sources */,
 				D5F309661CFBB65700F76762 /* GLCamera.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
