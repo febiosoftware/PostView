@@ -233,7 +233,6 @@ public:
 	bool OpenSession(const char* szfile);
 
 	// export routines
-	bool ExportAscii (const char* szfile);
 	bool ExportPlot  (const char* szfile, bool bflag[6], int ncode[6]);
 	bool ExportVRML  (const char* szfile);
 	bool ExportBYU   (const char* szfile);

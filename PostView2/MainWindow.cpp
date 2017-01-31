@@ -25,6 +25,7 @@
 #include <PostViewLib/FEASCIIImport.h>
 #include <PostViewLib/FESTLimport.h>
 #include <PostViewLib/FERAWImageReader.h>
+#include <PostViewLib/FEAsciiExport.h>
 #include "GLPlaneCutPlot.h"
 #include "GLIsoSurfacePlot.h"
 #include "GLSlicePLot.h"
@@ -37,6 +38,7 @@
 #include "DlgSelectRange.h"
 #include "DlgTimeSettings.h"
 #include "DlgFileInfo.h"
+#include "DlgExportAscii.h"
 #include <string>
 
 CFileThread::CFileThread(CMainWindow* wnd, FEFileReader* file, const QString& fileName) : m_wnd(wnd), m_fileReader(file), m_fileName(fileName)
@@ -331,7 +333,30 @@ bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 		break;
 	case 2:
 		{
-			bret = m_doc->ExportAscii(szfilename);
+			CDlgExportAscii dlg(this);
+			if (dlg.exec() == QDialog::Accepted)
+			{ 
+				// decide which time steps to export
+				int n0, n1;
+				if (dlg.m_nstep == 0) n0 = n1 = m_doc->currentTime();
+				else
+				{
+					n0 = 0;
+					n1 = fem.GetStates() - 1;
+				}
+
+				// export the data
+				FEASCIIExport out;
+				out.m_bcoords = dlg.m_bcoords;
+				out.m_bedata = dlg.m_bedata;
+				out.m_belem = dlg.m_belem;
+				out.m_bface = dlg.m_bface;
+				out.m_bfnormals = dlg.m_bfnormals;
+				out.m_bndata = dlg.m_bndata;
+				out.m_bselonly = dlg.m_bsel;
+
+				bret = out.Save(&fem, n0, n1, szfilename);
+			}
 		}
 		break;
 	case 3:

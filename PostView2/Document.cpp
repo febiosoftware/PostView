@@ -11,6 +11,7 @@
 #include "GLModel.h"
 #include <PostViewLib/constants.h>
 #include <PostViewLib/Palette.h>
+#include <PostViewLib/FEAsciiExport.h>
 
 #ifdef WIN32
 	#include "direct.h"	// for getcwd, chdir
@@ -1085,38 +1086,6 @@ bool CDocument::ExportPlot(const char* szfile, bool bflag[6], int ncode[6])
 
 //	FELSDYNAPlotExport ex;
 //	return ex.Save(*m_fem, szfile, bflag, ncode);
-	return false;
-}
-
-bool CDocument::ExportAscii(const char* szfile)
-{
-/*	CDlgExportAscii dlg;
-
-	if (dlg.DoModal() != FLX_OK) return true;
-
-	// decide which time steps to export
-	int n0, n1;
-	if (dlg.m_bcur) n0 = n1 = currentTime();
-	else
-	{
-		n0 = 0;
-		n1 = m_fem->GetStates() - 1;
-	}
-
-	// export the data
-	FEASCIIExport out;
-	out.m_bcoords   = dlg.m_bcoords;
-	out.m_bedata    = dlg.m_bedata;
-	out.m_belem     = dlg.m_belem;
-	out.m_bface     = dlg.m_bface;
-	out.m_bfnormals = dlg.m_bfnormals;
-	out.m_bndata    = dlg.m_bndata;
-	out.m_bselonly  = dlg.m_bsel;
-
-	if (out.Save(m_fem, n0, n1, szfile) == false) return false;
-
-	return true;
-*/
 	return false;
 }
 

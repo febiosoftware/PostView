@@ -126,6 +126,9 @@
     <ClInclude Include="..\..\PostView2\DlgFileInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\PostView2\DlgExportAscii.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\PostView2\3PointAngleTool.cpp">
@@ -405,6 +408,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\PostView2\DlgFileInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PostView2\DlgExportAscii.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

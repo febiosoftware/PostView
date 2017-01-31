@@ -143,6 +143,7 @@
     <ClInclude Include="..\..\PostViewLib\bbox.h" />
     <ClInclude Include="..\..\PostViewLib\color.h" />
     <ClInclude Include="..\..\PostViewLib\ColorMap.h" />
+    <ClInclude Include="..\..\PostViewLib\FEAsciiExport.h" />
     <ClInclude Include="..\..\PostViewLib\LinearRegression.h" />
     <ClInclude Include="..\..\PostViewLib\Palette.h" />
     <ClInclude Include="..\..\PostViewLib\constants.h" />
@@ -213,6 +214,7 @@
     <ClCompile Include="..\..\PostViewLib\DataFilter.cpp" />
     <ClCompile Include="..\..\PostViewLib\DataMap.cpp" />
     <ClCompile Include="..\..\PostViewLib\evaluate.cpp" />
+    <ClCompile Include="..\..\PostViewLib\FEAsciiExport.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEASCIIImport.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEBioImport.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEBioPlotExport.cpp" />

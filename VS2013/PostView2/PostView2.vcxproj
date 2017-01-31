@@ -101,7 +101,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -178,6 +178,7 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </CustomBuild>
+    <ClInclude Include="..\..\PostView2\DlgExportAscii.h" />
     <ClInclude Include="..\..\PostView2\DlgFileInfo.h" />
     <ClInclude Include="..\..\PostView2\DlgFind.h" />
     <ClInclude Include="..\..\PostView2\DlgImportXPLT.h" />
@@ -340,6 +341,7 @@
     <ClCompile Include="..\..\PostView2\DataFieldSelector.cpp" />
     <ClCompile Include="..\..\PostView2\DataPanel.cpp" />
     <ClCompile Include="..\..\PostView2\DistanceMapTool.cpp" />
+    <ClCompile Include="..\..\PostView2\DlgExportAscii.cpp" />
     <ClCompile Include="..\..\PostView2\DlgExportXPLT.cpp" />
     <ClCompile Include="..\..\PostView2\DlgFind.cpp" />
     <ClCompile Include="..\..\PostView2\DlgSelectRange.cpp" />
