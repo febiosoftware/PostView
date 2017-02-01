@@ -78,6 +78,10 @@ public:
 	FEState(float time, FEModel* fem, FEMeshBase* mesh);
 	FEState(float time, FEModel* fem, FEState* state);
 
+	void SetID(int n);
+
+	int GetID() const;
+
 	void AddLine(vec3f a, vec3f b);
 
 	void AddPoint(vec3f a, int nlabel = 0);
@@ -95,6 +99,7 @@ public:
 public:
 	float	m_time;		// time value
 	int		m_nField;	// the field whos values are contained in m_pval
+	int		m_id;		// index in state array of FEModel
 	bool	m_bsmooth;
 
 	vector<NODEDATA>	m_NODE;		// nodal data

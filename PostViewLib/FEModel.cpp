@@ -116,6 +116,13 @@ void FEModel::ClearStates()
 }
 
 //-----------------------------------------------------------------------------
+void FEModel::AddState(FEState* pFEState)
+{
+	pFEState->SetID((int) m_State.size());
+	m_State.push_back(pFEState); 
+}
+
+//-----------------------------------------------------------------------------
 // add a state
 void FEModel::AddState(float ftime)
 {
@@ -129,6 +136,7 @@ void FEModel::AddState(float ftime)
 
 	// get last state
 	FEState* ps = GetState(GetStates()-1);
+	ps->SetID((int)m_State.size());
 	m_State.push_back(new FEState(ftime, this, ps->GetFEMesh()));
 }
 
@@ -141,6 +149,9 @@ void FEModel::DeleteState(int n)
 	assert((n>=0) && (n<N));
 	for (int i=0; i<n; ++i) ++it;
 	m_State.erase(it);
+
+	// reindex the states
+	for (int i=0; i<(int)m_State.size(); ++i) m_State[i]->SetID(i);
 }
 
 //-----------------------------------------------------------------------------
@@ -155,6 +166,9 @@ void FEModel::InsertState(FEState *ps, float f)
 			return;
 		}
 	m_State.push_back(ps);
+
+	// reindex the states
+	for (int i = 0; i<(int)m_State.size(); ++i) m_State[i]->SetID(i);
 }
 
 //-----------------------------------------------------------------------------

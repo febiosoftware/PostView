@@ -79,7 +79,7 @@ public:
 
 	// --- S T A T E   M A N A G M E N T ---
 	//! add a state to the mesh
-	void AddState(FEState* pFEState) { m_State.push_back(pFEState); }
+	void AddState(FEState* pFEState);
 
 	//! Add a new state at time
 	void AddState(float ftime);

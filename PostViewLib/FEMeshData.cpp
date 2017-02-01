@@ -142,7 +142,8 @@ FELagrangeStrain::FELagrangeStrain(FEState* pm, FEDataField* pdf) : FEElemData_T
 void FELagrangeStrain::eval(int n, mat3fs* pv)
 {
 	// get the element
-	FEElement& e = GetFEState()->GetFEMesh()->Element(n);
+	FEState* state = GetFEState();
+	FEElement& e = state->GetFEMesh()->Element(n);
 
 	// if this is not a solid element, return 0
 	if (e.IsSolid() == false)
@@ -154,7 +155,7 @@ void FELagrangeStrain::eval(int n, mat3fs* pv)
 	}
 
 	// get the current state
-	int nstate = GetFEModel()->currentTime();
+	int nstate = state->GetID();
 
 	// loop over all the element nodes
 	int N = e.Nodes();

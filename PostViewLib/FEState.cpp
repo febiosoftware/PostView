@@ -16,6 +16,8 @@ void ValArray::append(int items)
 // Constructor
 FEState::FEState(float time, FEModel* fem, FEMeshBase* pmesh) : m_fem(fem), m_mesh(pmesh)
 {
+	m_id = -1;
+
 	FEMeshBase& mesh = *m_mesh;
 
 	int nodes = mesh.Nodes();
@@ -81,9 +83,24 @@ template <class T> void copyData(FEMeshData* dest, FEMeshData* src)
 }
 
 //-----------------------------------------------------------------------------
+void FEState::SetID(int n)
+{
+	m_id = n;
+}
+
+//-----------------------------------------------------------------------------
+int FEState::GetID() const 
+{ 
+	assert(m_id != -1);
+	return m_id; 
+}
+
+//-----------------------------------------------------------------------------
 // Constructor
 FEState::FEState(float time, FEModel* pfem, FEState* pstate) : m_fem(pfem)
 {
+	m_id = -1;
+
 	m_mesh = pstate->m_mesh;
 	FEMeshBase& mesh = *m_mesh;
 
