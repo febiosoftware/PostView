@@ -16,6 +16,8 @@
 		D52C6FB21D75DCA300DF804B /* TimeController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D52C6FAB1D75DCA300DF804B /* TimeController.cpp */; };
 		D52C6FB31D75DCA300DF804B /* TimePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D52C6FAD1D75DCA300DF804B /* TimePanel.cpp */; };
 		D52C6FB51D75DCE900DF804B /* libPostViewLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D52C6FB41D75DCE900DF804B /* libPostViewLib.a */; };
+		D53292B81E45341C002798B3 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D53292B71E45341C002798B3 /* AGL.framework */; };
+		D53292BB1E453447002798B3 /* DlgExportAscii.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53292B91E453447002798B3 /* DlgExportAscii.cpp */; };
 		D5A65E0F1DBFA53F00B44009 /* DlgFileInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */; };
 		D5FF7A401D72756B003D2CBD /* 3PointAngleTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79AA1D72756B003D2CBD /* 3PointAngleTool.cpp */; };
 		D5FF7A411D72756B003D2CBD /* 4PointAngleTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79AC1D72756B003D2CBD /* 4PointAngleTool.cpp */; };
@@ -122,6 +124,9 @@
 		D52C6FAE1D75DCA300DF804B /* TimePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimePanel.h; sourceTree = "<group>"; };
 		D52C6FAF1D75DCA300DF804B /* ui_timepanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ui_timepanel.h; sourceTree = "<group>"; };
 		D52C6FB41D75DCE900DF804B /* libPostViewLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPostViewLib.a; path = ../PostViewLib/build/Release/libPostViewLib.a; sourceTree = "<group>"; };
+		D53292B71E45341C002798B3 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = System/Library/Frameworks/AGL.framework; sourceTree = SDKROOT; };
+		D53292B91E453447002798B3 /* DlgExportAscii.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgExportAscii.cpp; sourceTree = "<group>"; };
+		D53292BA1E453447002798B3 /* DlgExportAscii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgExportAscii.h; sourceTree = "<group>"; };
 		D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgFileInfo.cpp; sourceTree = "<group>"; };
 		D5A65E0E1DBFA53F00B44009 /* DlgFileInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgFileInfo.h; sourceTree = "<group>"; };
 		D5FF79951D72750E003D2CBD /* PostView2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PostView2.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -285,6 +290,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D53292B81E45341C002798B3 /* AGL.framework in Frameworks */,
 				D52C6FB51D75DCE900DF804B /* libPostViewLib.a in Frameworks */,
 				D52C6FA61D75DC4C00DF804B /* QtWidgets.framework in Frameworks */,
 				D52C6FA41D75DC3F00DF804B /* QtGui.framework in Frameworks */,
@@ -349,6 +355,8 @@
 				D5FF79BC1D72756B003D2CBD /* DataPanel.h */,
 				D5FF79BD1D72756B003D2CBD /* DistanceMapTool.cpp */,
 				D5FF79BE1D72756B003D2CBD /* DistanceMapTool.h */,
+				D53292B91E453447002798B3 /* DlgExportAscii.cpp */,
+				D53292BA1E453447002798B3 /* DlgExportAscii.h */,
 				D5FF79BF1D72756B003D2CBD /* DlgExportXPLT.cpp */,
 				D5FF79C01D72756B003D2CBD /* DlgExportXPLT.h */,
 				D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */,
@@ -495,6 +503,7 @@
 		D5FF7AA61D727B52003D2CBD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D53292B71E45341C002798B3 /* AGL.framework */,
 				D52C6FB41D75DCE900DF804B /* libPostViewLib.a */,
 				B49B48121DC40F0F00B5E947 /* libGLEW.a */,
 				D52C6FA51D75DC4C00DF804B /* QtWidgets.framework */,
@@ -574,6 +583,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D5FF7A5B1D72756B003D2CBD /* GLPlot.cpp in Sources */,
+				D53292BB1E453447002798B3 /* DlgExportAscii.cpp in Sources */,
 				D5FF7A461D72756B003D2CBD /* CommandPanel.cpp in Sources */,
 				D5FF7A561D72756B003D2CBD /* GLLinePlot.cpp in Sources */,
 				D5FF7A841D72756B003D2CBD /* PlotMixTool.cpp in Sources */,

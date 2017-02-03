@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D53292BE1E453471002798B3 /* FEAsciiExport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53292BC1E453471002798B3 /* FEAsciiExport.cpp */; };
+		D53292BF1E453471002798B3 /* FEAsciiExport.h in Headers */ = {isa = PBXBuildFile; fileRef = D53292BD1E453471002798B3 /* FEAsciiExport.h */; };
 		D5481BD91E2EC3F300BD2BFE /* LinearRegression.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5481BD71E2EC3F300BD2BFE /* LinearRegression.cpp */; };
 		D5481BDA1E2EC3F300BD2BFE /* LinearRegression.h in Headers */ = {isa = PBXBuildFile; fileRef = D5481BD81E2EC3F300BD2BFE /* LinearRegression.h */; };
 		D5A65E141DBFA55800B44009 /* xpltFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E101DBFA55800B44009 /* xpltFileReader.cpp */; };
@@ -141,6 +143,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D53292BC1E453471002798B3 /* FEAsciiExport.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FEAsciiExport.cpp; sourceTree = "<group>"; };
+		D53292BD1E453471002798B3 /* FEAsciiExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FEAsciiExport.h; sourceTree = "<group>"; };
 		D5481BD71E2EC3F300BD2BFE /* LinearRegression.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LinearRegression.cpp; sourceTree = "<group>"; };
 		D5481BD81E2EC3F300BD2BFE /* LinearRegression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinearRegression.h; sourceTree = "<group>"; };
 		D5A65E101DBFA55800B44009 /* xpltFileReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xpltFileReader.cpp; sourceTree = "<group>"; };
@@ -305,6 +309,8 @@
 		D5F308981CFBB65700F76762 /* PostViewLib */ = {
 			isa = PBXGroup;
 			children = (
+				D53292BC1E453471002798B3 /* FEAsciiExport.cpp */,
+				D53292BD1E453471002798B3 /* FEAsciiExport.h */,
 				D5F308991CFBB65700F76762 /* 3DImage.cpp */,
 				D5F3089A1CFBB65700F76762 /* 3DImage.h */,
 				D5F3089B1CFBB65700F76762 /* Animation.cpp */,
@@ -498,6 +504,7 @@
 				D5F309301CFBB65700F76762 /* FEDistanceMap.h in Headers */,
 				D5F309591CFBB65700F76762 /* FERAWImageReader.h in Headers */,
 				D5F309791CFBB65700F76762 /* math3d.h in Headers */,
+				D53292BF1E453471002798B3 /* FEAsciiExport.h in Headers */,
 				D5F309531CFBB65700F76762 /* FENodeFaceTable.h in Headers */,
 				D5F309801CFBB65700F76762 /* U3DFile.h in Headers */,
 				D5F3094F1CFBB65700F76762 /* FENodeElemList.h in Headers */,
@@ -579,6 +586,7 @@
 				D5F3094C1CFBB65700F76762 /* FENikeImport.cpp in Sources */,
 				D5F309601CFBB65700F76762 /* FEVTKExport.cpp in Sources */,
 				D5F309771CFBB65700F76762 /* lut.cpp in Sources */,
+				D53292BE1E453471002798B3 /* FEAsciiExport.cpp in Sources */,
 				D5F3093B1CFBB65700F76762 /* FELSDYNAExport.cpp in Sources */,
 				D5F3095C1CFBB65700F76762 /* FESTLimport.cpp in Sources */,
 				D5F309411CFBB65700F76762 /* FEMaterial.cpp in Sources */,
