@@ -7,17 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B49B48131DC40F0F00B5E947 /* libGLEW.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B49B48121DC40F0F00B5E947 /* libGLEW.a */; };
-		D52C6FA21D75DC3400DF804B /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D52C6FA11D75DC3400DF804B /* QtCore.framework */; };
-		D52C6FA41D75DC3F00DF804B /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D52C6FA31D75DC3F00DF804B /* QtGui.framework */; };
-		D52C6FA61D75DC4C00DF804B /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D52C6FA51D75DC4C00DF804B /* QtWidgets.framework */; };
 		D52C6FB01D75DCA300DF804B /* moc_TimeController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D52C6FA91D75DCA300DF804B /* moc_TimeController.cpp */; };
 		D52C6FB11D75DCA300DF804B /* moc_TimePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D52C6FAA1D75DCA300DF804B /* moc_TimePanel.cpp */; };
 		D52C6FB21D75DCA300DF804B /* TimeController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D52C6FAB1D75DCA300DF804B /* TimeController.cpp */; };
 		D52C6FB31D75DCA300DF804B /* TimePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D52C6FAD1D75DCA300DF804B /* TimePanel.cpp */; };
 		D52C6FB51D75DCE900DF804B /* libPostViewLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D52C6FB41D75DCE900DF804B /* libPostViewLib.a */; };
-		D53292B81E45341C002798B3 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D53292B71E45341C002798B3 /* AGL.framework */; };
 		D53292BB1E453447002798B3 /* DlgExportAscii.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53292B91E453447002798B3 /* DlgExportAscii.cpp */; };
+		D55150721E5270830041C45B /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D551506F1E5270830041C45B /* QtCore.framework */; };
+		D55150731E5270830041C45B /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D55150701E5270830041C45B /* QtGui.framework */; };
+		D55150741E5270830041C45B /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D55150711E5270830041C45B /* QtWidgets.framework */; };
 		D5A65E0F1DBFA53F00B44009 /* DlgFileInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */; };
 		D5FF7A401D72756B003D2CBD /* 3PointAngleTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79AA1D72756B003D2CBD /* 3PointAngleTool.cpp */; };
 		D5FF7A411D72756B003D2CBD /* 4PointAngleTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79AC1D72756B003D2CBD /* 4PointAngleTool.cpp */; };
@@ -112,10 +110,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		B49B48121DC40F0F00B5E947 /* libGLEW.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGLEW.a; path = "../../../../../../Applications/glew-2.0.0/lib/libGLEW.a"; sourceTree = "<group>"; };
-		D52C6FA11D75DC3400DF804B /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = "../../../../../../../../../../usr/local/Cellar/qt5/5.6.1-1/lib/QtCore.framework"; sourceTree = "<group>"; };
-		D52C6FA31D75DC3F00DF804B /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = "../../../../../../../../../../usr/local/Cellar/qt5/5.6.1-1/lib/QtGui.framework"; sourceTree = "<group>"; };
-		D52C6FA51D75DC4C00DF804B /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = "../../../../../../../../../../usr/local/Cellar/qt5/5.6.1-1/lib/QtWidgets.framework"; sourceTree = "<group>"; };
 		D52C6FA91D75DCA300DF804B /* moc_TimeController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_TimeController.cpp; sourceTree = "<group>"; };
 		D52C6FAA1D75DCA300DF804B /* moc_TimePanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_TimePanel.cpp; sourceTree = "<group>"; };
 		D52C6FAB1D75DCA300DF804B /* TimeController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimeController.cpp; sourceTree = "<group>"; };
@@ -124,9 +118,11 @@
 		D52C6FAE1D75DCA300DF804B /* TimePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimePanel.h; sourceTree = "<group>"; };
 		D52C6FAF1D75DCA300DF804B /* ui_timepanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ui_timepanel.h; sourceTree = "<group>"; };
 		D52C6FB41D75DCE900DF804B /* libPostViewLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPostViewLib.a; path = ../PostViewLib/build/Release/libPostViewLib.a; sourceTree = "<group>"; };
-		D53292B71E45341C002798B3 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = System/Library/Frameworks/AGL.framework; sourceTree = SDKROOT; };
 		D53292B91E453447002798B3 /* DlgExportAscii.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgExportAscii.cpp; sourceTree = "<group>"; };
 		D53292BA1E453447002798B3 /* DlgExportAscii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgExportAscii.h; sourceTree = "<group>"; };
+		D551506F1E5270830041C45B /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt5/5.8.0_1/lib/QtCore.framework; sourceTree = "<group>"; };
+		D55150701E5270830041C45B /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt5/5.8.0_1/lib/QtGui.framework; sourceTree = "<group>"; };
+		D55150711E5270830041C45B /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt5/5.8.0_1/lib/QtWidgets.framework; sourceTree = "<group>"; };
 		D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgFileInfo.cpp; sourceTree = "<group>"; };
 		D5A65E0E1DBFA53F00B44009 /* DlgFileInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgFileInfo.h; sourceTree = "<group>"; };
 		D5FF79951D72750E003D2CBD /* PostView2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PostView2.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -290,12 +286,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D53292B81E45341C002798B3 /* AGL.framework in Frameworks */,
 				D52C6FB51D75DCE900DF804B /* libPostViewLib.a in Frameworks */,
-				D52C6FA61D75DC4C00DF804B /* QtWidgets.framework in Frameworks */,
-				D52C6FA41D75DC3F00DF804B /* QtGui.framework in Frameworks */,
-				B49B48131DC40F0F00B5E947 /* libGLEW.a in Frameworks */,
-				D52C6FA21D75DC3400DF804B /* QtCore.framework in Frameworks */,
+				D55150721E5270830041C45B /* QtCore.framework in Frameworks */,
+				D55150731E5270830041C45B /* QtGui.framework in Frameworks */,
+				D55150741E5270830041C45B /* QtWidgets.framework in Frameworks */,
 				D5FF7A9B1D72768F003D2CBD /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -503,12 +497,10 @@
 		D5FF7AA61D727B52003D2CBD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D53292B71E45341C002798B3 /* AGL.framework */,
 				D52C6FB41D75DCE900DF804B /* libPostViewLib.a */,
-				B49B48121DC40F0F00B5E947 /* libGLEW.a */,
-				D52C6FA51D75DC4C00DF804B /* QtWidgets.framework */,
-				D52C6FA31D75DC3F00DF804B /* QtGui.framework */,
-				D52C6FA11D75DC3400DF804B /* QtCore.framework */,
+				D551506F1E5270830041C45B /* QtCore.framework */,
+				D55150701E5270830041C45B /* QtGui.framework */,
+				D55150711E5270830041C45B /* QtWidgets.framework */,
 				D5FF7A9A1D72768F003D2CBD /* OpenGL.framework */,
 			);
 			name = Frameworks;
@@ -727,6 +719,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					/Applications/Qt5.6.1/5.6/clang_64/lib,
 					"$(inherited)",
+					/usr/local/Cellar/qt5/5.8.0_1/lib,
 				);
 				HEADER_SEARCH_PATHS = (
 					/Applications/Qt5.6.1/5.6/clang_64/lib/QtWidgets.framework/Headers,
@@ -833,18 +826,17 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/usr/local/Cellar/qt5/5.6.1-1/lib",
+					/usr/local/Cellar/qt5/5.8.0_1/lib,
 				);
 				HEADER_SEARCH_PATHS = (
 					/usr/local/opt/qt5/include/QtWidgets,
 					/usr/local/opt/qt5/include/QtGui,
-					/usr/local/include/GL,
 				);
 				INFOPLIST_FILE = PostView2/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/usr/local/Cellar/glew/2.0.0/lib,
+					/usr/local/opt/qt5/lib,
 				);
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_BUNDLE_IDENTIFIER = FEB.PostView2;
@@ -860,7 +852,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/usr/local/Cellar/qt5/5.6.1-1/lib",
+					/usr/local/Cellar/qt5/5.8.0_1/lib,
 				);
 				HEADER_SEARCH_PATHS = (
 					/usr/local/opt/qt5/include/QtWidgets,
@@ -871,7 +863,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/usr/local/Cellar/glew/2.0.0/lib,
+					/usr/local/opt/qt5/lib,
 				);
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_BUNDLE_IDENTIFIER = FEB.PostView2;
