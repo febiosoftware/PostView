@@ -180,17 +180,6 @@ void CGLWidgetManager::SnapWidget(GLWidget* pw)
 
 void CGLWidgetManager::DrawWidgets(QPainter* painter)
 {
-	painter->beginNativePainting();
-
-	glPushAttrib(GL_ALL_ATTRIB_BITS);
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_LIGHTING);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	int vp[4];
-	glGetIntegerv(GL_VIEWPORT, vp);
-
 	for (int i=0; i<(int) m_Widget.size(); ++i) 
 	{
 		GLWidget* pw = m_Widget[i];
@@ -200,39 +189,21 @@ void CGLWidgetManager::DrawWidgets(QPainter* painter)
 			if (pw->GetSnap()) SnapWidget(pw);
 
 			int x0 = pw->m_x;
-			int y0 = vp[3] - pw->m_y;
+			int y0 = pw->m_y;
 			int x1 = pw->m_x + pw->m_w;
-			int y1 = vp[3] - (pw->m_y+pw->m_h);
+			int y1 = (pw->m_y+pw->m_h);
+
 
 			if (pw->has_focus())
 			{
-				glColor4ub(200, 200, 200, 128);
-				glRecti(x0,  y0, x1, y1);
-				glColor4ub(0, 0, 128, 255);
-				glLineWidth(1.f);
-				glBegin(GL_LINES);
-				{
-					glVertex2i(x1-10, y1+1);
-					glVertex2i(x1-1 , y1+10);
-
-					glVertex2i(x1-5, y1+1);
-					glVertex2i(x1-1 , y1+5);
-				}
-				glEnd();
-
-				glBegin(GL_LINE_LOOP);
-				{
-					glVertex2i(x0, y0);
-					glVertex2i(x1, y0);
-					glVertex2i(x1, y1);
-					glVertex2i(x0, y1);
-				}
-				glEnd();
+				painter->fillRect(x0, y0, pw->m_w, pw->m_h, QBrush(QColor::fromRgb(200,200,200,128)));
+				painter->setPen(QPen(QColor::fromRgb(0, 0, 128)));
+				painter->drawLine(x1-10, y1-1, x1-1, y1-10);
+				painter->drawLine(x1- 5, y1-1, x1-1, y1- 5);
+				painter->drawRect(x0, y0, pw->m_w, pw->m_h);
 			}
 		}
 	}
-	glPopAttrib();
-	painter->endNativePainting();
 
 	for (int i=0; i<(int) m_Widget.size(); ++i) 
 	{
