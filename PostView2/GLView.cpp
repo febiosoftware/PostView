@@ -574,7 +574,7 @@ bool CGLView::event(QEvent* event)
 //-----------------------------------------------------------------------------
 void CGLView::contextMenuEvent(QContextMenuEvent* ev)
 {
-#ifndef __APPLE__
+
 	int x = ev->x();
 	int y = ev->y();
 	if ((x==m_p0.x)&&(y==m_p0.y))
@@ -583,9 +583,6 @@ void CGLView::contextMenuEvent(QContextMenuEvent* ev)
 		menu->exec(ev->globalPos());
 		ev->accept();
 	}
-#else
-    ev->ignore();
-#endif
 }
 
 //-----------------------------------------------------------------------------
