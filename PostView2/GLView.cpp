@@ -343,7 +343,7 @@ void CGLView::paintGL()
 	// set the projection matrix to ortho2d so we can draw some stuff on the screen
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluOrtho2D(0, width(), 0, height());
+	gluOrtho2D(0, width(), height(), 0);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -1839,7 +1839,7 @@ void CGLView::InitSelect(int x0, int y0, int x1, int y1, int nbufsize)
 
 	// establish new clipping volume
 	glLoadIdentity();
-	gluPickMatrix(x, m_viewport[3] - y, wx, wy, m_viewport);
+	gluPickMatrix(x, y, wx, wy, m_viewport);
 
 	CDocument* pdoc = GetDocument();
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
