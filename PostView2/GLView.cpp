@@ -105,6 +105,7 @@ CGLView::CGLView(CMainWindow* pwnd, QWidget* parent) : QOpenGLWidget(parent), m_
 	m_dpr = pwnd->devicePixelRatio();
 
 	m_bsingle = true;
+	m_selbuf = 0;
 
 	// NOTE: multi-sampling prevents the snapshot feature from working
 	QSurfaceFormat fmt = format();
@@ -340,7 +341,7 @@ void CGLView::paintGL()
 	// set the projection matrix to ortho2d so we can draw some stuff on the screen
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluOrtho2D(0, width(), height(), 0);
+	gluOrtho2D(0, width(), 0, height());
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -1129,7 +1130,18 @@ void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
 	CDocument* pdoc = GetDocument();
 	if (pdoc->IsValid() == false) return;
 
-	InitSelect(x0, y0, x1, y1);
+	int x = (x0+x1)/2;
+	int y = (y0+y1)/2;
+	int wx = abs(x1-x0);
+	int wy = abs(y1-y0);
+
+	bool bsingle = (wx==0) && (wy==0);
+
+	if (wx == 0) wx = 4;
+	if (wy == 0) wy = 4;
+
+	// activate the gl rendercontext
+	makeCurrent();
 
 	BOUNDINGBOX box = pdoc->GetBoundingBox();
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
@@ -1144,11 +1156,33 @@ void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
 	m_fnear = 0.01*radius;
 	m_ffar  = 10*radius;
 
+/*	if (!valid())
+	{
+		SetupGL();
+		glViewport(0,0,w(),h());
+		valid(1);	// validate window
+	}
+*/
 	// set up selection buffer
 	int size = pm->Faces();
 	GLuint *pbuf = new GLuint[4*size];
 
 	glSelectBuffer(4*size, pbuf);
+
+	// viewport storage
+	GLint viewport[4];
+	glGetIntegerv(GL_VIEWPORT, viewport);
+
+	// switch to projection and save the matrix
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+
+	// change render mode
+	glRenderMode(GL_SELECT);
+
+	// establish new clipping volume
+	glLoadIdentity();
+	gluPickMatrix(x, viewport[3] - y, wx, wy, viewport);
 
 	// apply perspective projection
 	if (view.m_nproj == RENDER_ORTHO)
@@ -1162,6 +1196,9 @@ void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
 	{
 		gluPerspective(m_fov, m_ar, m_fnear, m_ffar);
 	}
+
+	glInitNames();
+	glPushName(0);
 
 	// draw the scene
 	glMatrixMode(GL_MODELVIEW);
@@ -1195,7 +1232,7 @@ void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
 
 
 	// collect the hits
-	GLint hits = EndSelect();
+	GLint hits = glRenderMode(GL_RENDER);
 
 	if (mode == 0)
 	{
@@ -1208,7 +1245,7 @@ void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
 	// parse the selection buffer
 	if (hits > 0)
 	{
-		if (m_bsingle)
+		if (bsingle)
 		{
 			unsigned int index = pbuf[3];
 			unsigned int minz = pbuf[1];
@@ -1273,6 +1310,10 @@ void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
 	}
 	else m_wnd->ClearStatusMessage();
 
+	// Restore the projection matrix
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+
 	// clean up
 	delete [] pbuf;
 
@@ -1283,6 +1324,12 @@ void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
 
 GLNODE_PICK CGLView::PickNode(int x, int y, bool bselect)
 {
+	int wx = 6;
+	int wy = 6;
+
+	// activate the gl rendercontext
+	makeCurrent();
+
 	CDocument* pdoc = GetDocument();
 	BOUNDINGBOX box = pdoc->GetBoundingBox();
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
@@ -1297,14 +1344,49 @@ GLNODE_PICK CGLView::PickNode(int x, int y, bool bselect)
 	m_fnear = 0.01*radius;
 	m_ffar  = 10*radius;
 
-	// setup selection
-	InitSelect(x, y, x, y);
-
+/*	if (!valid())
+	{
+		SetupGL();
+		glViewport(0,0,w(),h());
+		valid(1);	// validate window
+	}
+*/
 	// set up selection buffer
 	int size = pm->Nodes();
 	GLuint *pbuf = new GLuint[4*size];
 
 	glSelectBuffer(4*size, pbuf);
+
+	// viewport storage
+	GLint viewport[4];
+	glGetIntegerv(GL_VIEWPORT, viewport);
+
+	// switch to projection and save the matrix
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+
+	// change render mode
+	glRenderMode(GL_SELECT);
+
+	// establish new clipping volume
+	glLoadIdentity();
+	gluPickMatrix(x, viewport[3] - y, wx, wy, viewport);
+
+	// apply perspective projection
+	if (view.m_nproj == RENDER_ORTHO)
+	{
+		double z = GetCamera().GetTargetDistance();
+		double dx = z*tan(0.5*m_fov*PI/180.0)*m_ar;
+		double dy = z*tan(0.5*m_fov*PI/180.0);
+		glOrtho(-dx, dx, -dy, dy, m_fnear, m_ffar);
+	}
+	else
+	{
+		gluPerspective(m_fov, m_ar, m_fnear, m_ffar);
+	}
+
+	glInitNames();
+	glPushName(0);
 
 	// draw the scene
 	glMatrixMode(GL_MODELVIEW);
@@ -1318,6 +1400,8 @@ GLNODE_PICK CGLView::PickNode(int x, int y, bool bselect)
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	glPushMatrix();
+
 	// setup the rendering context
 	CGLContext grc(this);
 
@@ -1329,11 +1413,10 @@ GLNODE_PICK CGLView::PickNode(int x, int y, bool bselect)
 
 	pdoc->GetGLModel()->RenderNodes(ps, grc);
 
-	// restore attributes
-	glPopAttrib();
+	glPopMatrix();
 
 	// collect the hits
-	GLint hits = EndSelect();
+	GLint hits = glRenderMode(GL_RENDER);
 
 	// parse the selection buffer
 	unsigned int index = 0;
@@ -1350,6 +1433,13 @@ GLNODE_PICK CGLView::PickNode(int x, int y, bool bselect)
 			}
 		}
 	}
+
+	// Restore the projection matrix
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+
+	// restore attributes
+	glPopAttrib();
 
 	// clean up
 	delete [] pbuf;
@@ -1377,6 +1467,12 @@ GLNODE_PICK CGLView::PickNode(int x, int y, bool bselect)
 
 FEElement* CGLView::PickElement(int x, int y)
 {
+	int wx = 5;
+	int wy = 5;
+
+	// activate the gl rendercontext
+	makeCurrent();
+
 	CDocument* pdoc = GetDocument();
 	BOUNDINGBOX box = pdoc->GetBoundingBox();
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
@@ -1390,14 +1486,33 @@ FEElement* CGLView::PickElement(int x, int y)
 	m_fnear = 0.01*radius;
 	m_ffar  = 10*radius;
 
-	// initialize selection
-	InitSelect(x, y, x, y);
-
+/*	if (!valid())
+	{
+		SetupGL();
+		glViewport(0,0,w(),h());
+		valid(1);	// validate window
+	}
+*/
 	// set up selection buffer
 	int size = 10*pm->Elements();
 	GLuint *pbuf = new GLuint[4*size];
 
 	glSelectBuffer(4*size, pbuf);
+
+	// viewport storage
+	GLint viewport[4];
+	glGetIntegerv(GL_VIEWPORT, viewport);
+
+	// switch to projection and save the matrix
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+
+	// change render mode
+	glRenderMode(GL_SELECT);
+
+	// establish new clipping volume
+	glLoadIdentity();
+	gluPickMatrix(x, viewport[3] - y, wx, wy, viewport);
 
 	if (view.m_nproj == RENDER_ORTHO)
 	{
@@ -1410,6 +1525,9 @@ FEElement* CGLView::PickElement(int x, int y)
 	{
 		gluPerspective(m_fov, m_ar, m_fnear, m_ffar);
 	}
+
+	glInitNames();
+	glPushName(0);
 
 	// draw the scene
 	glMatrixMode(GL_MODELVIEW);
@@ -1684,43 +1802,37 @@ void CGLView::RegionSelectEdges(const SelectRegion& region, int mode)
 }
 
 //-----------------------------------------------------------------------------
-void CGLView::InitSelect(int x0, int y0, int x1, int y1)
+void CGLView::InitSelect(int x0, int y0, int x1, int y1, int nbufsize)
 {
-	// convert to pixel coordinates
-	QPoint p0 = DeviceToPhysical(x0, y0);
-	QPoint p1 = DeviceToPhysical(x1, y1);
-	x0 = p0.x(); y0 = p0.y();
-	x1 = p1.x(); y1 = p1.y();
+	// activate the gl rendercontext
+	makeCurrent();
 
-	// find the center and selection window size
 	int x = (x0 + x1) / 2;
 	int y = (y0 + y1) / 2;
 	int wx = abs(x1 - x0);
 	int wy = abs(y1 - y0);
 
-	// set selection to single or multiple
 	m_bsingle = (wx == 0) && (wy == 0);
+
 	if (wx == 0) wx = 4;
 	if (wy == 0) wy = 4;
 
-	// activate the gl rendercontext
-	makeCurrent();
-
-	// change render mode
-	glRenderMode(GL_SELECT);
+	// allocate the selection buffer
+	if (m_selbuf != 0) delete [] m_selbuf;
+	m_selbuf = new GLuint[nbufsize];
+	glSelectBuffer(nbufsize, m_selbuf);
 
 	// switch to projection and save the matrix
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 
+	// change render mode
+	glRenderMode(GL_SELECT);
+
 	// establish new clipping volume
 	glLoadIdentity();
-	gluPickMatrix(x, y, wx, wy, m_viewport);
+	gluPickMatrix(x, m_viewport[3] - y, wx, wy, m_viewport);
 
-	glInitNames();
-	glPushName(0);
-
-	// apply perspective projection
 	CDocument* pdoc = GetDocument();
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
 	if (view.m_nproj == RENDER_ORTHO)
@@ -1734,20 +1846,24 @@ void CGLView::InitSelect(int x0, int y0, int x1, int y1)
 	{
 		gluPerspective(m_fov, m_ar, m_fnear, m_ffar);
 	}
+
+	glInitNames();
+	glPushName(0);
 }
 
 //-----------------------------------------------------------------------------
 GLint CGLView::EndSelect()
 {
-	// switch to projection and save the matrix
+	GLint hits = glRenderMode(GL_RENDER);
+
+	// Restore the projection matrix
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
 
-	return glRenderMode(GL_RENDER);
+	return hits;
 }
 
 //-----------------------------------------------------------------------------
-
 void CGLView::SelectElements(int x0, int y0, int x1, int y1, int mode)
 {
 	CDocument* pdoc = GetDocument();
@@ -1766,15 +1882,16 @@ void CGLView::SelectElements(int x0, int y0, int x1, int y1, int mode)
 	m_fnear = 0.01*radius;
 	m_ffar  = 10*radius;
 
-	// initialize selection
-	InitSelect(x0, y0, x1, y1);
-
 	// set up selection buffer
 	int size = 6*pm->Elements();
 	if (size > 1000000) size = 1000000;
+	
+	// initalize selection
+	InitSelect(x0, y0, x1, y1, 4*size);
 
-	GLuint *pbuf = new GLuint[4*size];
-	glSelectBuffer(4*size, pbuf);
+	// draw the scene
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 
 	// store attributes
 	glPushAttrib(GL_ENABLE_BIT);
@@ -1784,18 +1901,14 @@ void CGLView::SelectElements(int x0, int y0, int x1, int y1, int mode)
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// draw the scene
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	VIEWSETTINGS& v = pdoc->GetViewSettings();
 
 	CGLContext RC(this);
 	PositionCam();
 
-	VIEWSETTINGS& v = pdoc->GetViewSettings();
 	if (v.m_bcull) glEnable(GL_CULL_FACE);
 	else glDisable(GL_CULL_FACE);
 
-	// render all elements
 	pdoc->GetGLModel()->RenderAllElements();
 
 	// restore attributes
@@ -1814,6 +1927,7 @@ void CGLView::SelectElements(int x0, int y0, int x1, int y1, int mode)
 	}
 
 	// parse the selection buffer
+	GLuint* pbuf = m_selbuf;
 	if (hits > 0)
 	{
 		int n;
@@ -1865,7 +1979,6 @@ void CGLView::SelectElements(int x0, int y0, int x1, int y1, int mode)
 		}
 	}
 
-
 	// count element selection
 	int N = 0, ne = -1, i;
 	for (i=0; i<pm->Elements(); ++i)
@@ -1891,17 +2004,15 @@ void CGLView::SelectElements(int x0, int y0, int x1, int y1, int mode)
 	else m_wnd->ClearStatusMessage();
 
 	// clean up
-	delete [] pbuf;
+	delete [] m_selbuf; m_selbuf = 0;
 	mdl.UpdateSelectionLists(SELECT_ELEMS);
 }
 
+//-----------------------------------------------------------------------------
 void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 {
 	CDocument* pdoc = GetDocument();
 	if (pdoc->IsValid() == false) return;
-
-	// initialize selection
-	InitSelect(x0, y0, x1, y1);
 
 	BOUNDINGBOX box = pdoc->GetBoundingBox();
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
@@ -1916,10 +2027,9 @@ void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 	m_fnear = 0.01*radius;
 	m_ffar  = 10*radius;
 
-	// set up selection buffer
+	// initalize selection
 	int size = pm->Nodes();
-	GLuint *pbuf = new GLuint[4*size];
-	glSelectBuffer(4*size, pbuf);
+	InitSelect(x0, y0, x1, y1, 4 * size);
 
 	// draw the scene
 	glMatrixMode(GL_MODELVIEW);
@@ -1933,6 +2043,8 @@ void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	glPushMatrix();
+
 	// setup the rendering context
 	CGLContext grc(this);
 
@@ -1943,6 +2055,8 @@ void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 	else glDisable(GL_CULL_FACE);
 
 	pdoc->GetGLModel()->RenderNodes(ps, grc);
+
+	glPopMatrix();
 
 	// restore attributes
 	glPopAttrib();
@@ -1959,6 +2073,7 @@ void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 	}
 
 	// parse the selection buffer
+	GLuint* pbuf = m_selbuf;
 	if (hits > 0)
 	{
 		if (m_bsingle)
@@ -2037,7 +2152,8 @@ void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 	else m_wnd->ClearStatusMessage();
 
 	// clean up
-	delete [] pbuf;
+	delete [] m_selbuf; 
+	m_selbuf = 0;
 
 	pdoc->GetGLModel()->UpdateSelectionLists(SELECT_NODES);
 }
@@ -2046,8 +2162,6 @@ void CGLView::SelectEdges(int x0, int y0, int x1, int y1, int mode)
 {
 	CDocument* pdoc = GetDocument();
 	if (pdoc->IsValid() == false) return;
-
-	InitSelect(x0, y0, x1, y1);
 
 	BOUNDINGBOX box = pdoc->GetBoundingBox();
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
@@ -2064,9 +2178,7 @@ void CGLView::SelectEdges(int x0, int y0, int x1, int y1, int mode)
 
 	// set up selection buffer
 	int size = pm->Nodes();
-	GLuint *pbuf = new GLuint[4*size];
-
-	glSelectBuffer(4*size, pbuf);
+	InitSelect(x0, y0, x1, y1, 4*size);
 
 	// draw the scene
 	glMatrixMode(GL_MODELVIEW);
@@ -2080,6 +2192,8 @@ void CGLView::SelectEdges(int x0, int y0, int x1, int y1, int mode)
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	glPushMatrix();
+
 	// setup the rendering context
 	CGLContext grc(this);
 
@@ -2090,6 +2204,8 @@ void CGLView::SelectEdges(int x0, int y0, int x1, int y1, int mode)
 	else glDisable(GL_CULL_FACE);
 
 	pdoc->GetGLModel()->RenderEdges(ps, grc);
+
+	glPopMatrix();
 
 	// restore attributes
 	glPopAttrib();
@@ -2106,6 +2222,7 @@ void CGLView::SelectEdges(int x0, int y0, int x1, int y1, int mode)
 	}
 
 	// parse the selection buffer
+	GLuint* pbuf = m_selbuf;
 	if (hits > 0)
 	{
 		if (m_bsingle)
@@ -2179,8 +2296,12 @@ void CGLView::SelectEdges(int x0, int y0, int x1, int y1, int mode)
 	}
 	else m_wnd->ClearStatusMessage();
 
+	// Restore the projection matrix
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+
 	// clean up
-	delete [] pbuf;
+	delete [] m_selbuf; m_selbuf = 0;
 
 	pdoc->GetGLModel()->UpdateSelectionLists(SELECT_EDGES);
 }

@@ -217,7 +217,7 @@ protected:
 
 	void SetVideoFormat(GLenum fmt) { m_video_fmt = fmt; }
 
-	void InitSelect(int x0, int y0, int x1, int y1);
+	void InitSelect(int x0, int y0, int x1, int y1, int bufsize);
 	GLint EndSelect();
 
 	// convert from device pixel to physical pixel
@@ -283,4 +283,5 @@ private:
 private:
 	int	m_viewport[4];		//!< store viewport coordinates
 	int m_dpr;				//!< device pixel ratio for converting from physical to device-independent pixels
+	GLuint*	m_selbuf;		//!< selection buffer
 };
