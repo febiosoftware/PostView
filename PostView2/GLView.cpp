@@ -1653,8 +1653,8 @@ void CGLView::parseFeedbackBuffer(GLfloat* feedbackBuffer, int hits, const Selec
 			bool binside = false;
 			for (int n=0; n<nv; ++n)
 			{
-				int x = (int)(feedbackBuffer[++i]);
-				int y = (int)(height()-feedbackBuffer[++i]);
+				int x = (int)(feedbackBuffer[++i]) / m_dpr;
+				int y = (int)(height()-feedbackBuffer[++i] / m_dpr);
 				if ((binside == false) && region.IsInside(x, y)) binside = true;
 			}
 			i++;
