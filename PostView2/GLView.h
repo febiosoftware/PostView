@@ -223,17 +223,10 @@ protected:
 public:
 	// convert from device pixel to physical pixel
     static int DevicePixelRatio() { return m_dpr; }
-#ifdef __APPLE__
-	static QPoint DeviceToPhysical(int x, int y)
-	{
-		return QPoint(m_dpr*x, m_dpr*y);
-    }
-#else
     static QPoint DeviceToPhysical(int x, int y)
     {
         return QPoint(m_dpr*x, m_viewport[3] - m_dpr*y);
     }
-#endif
 
 protected:
 	void setupProjectionMatrix();
