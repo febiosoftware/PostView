@@ -253,13 +253,10 @@ void GLLegendBar::draw_gradient(QPainter* painter)
 
 	glDisable(GL_BLEND);
 
-	int vp[4];
-	glGetIntegerv(GL_VIEWPORT, vp);
-
 	int x0 = x() + w() - 50;
-	int y0 = vp[3] - (y() + 30);
+	int y0 = y() + 30;
 	int x1 = x0 + 25;
-	int y1 = y0 - h() + 40;
+	int y1 = y0 + h() - 40;
 
 	glColor3ub(255, 255, 255);
 	glBegin(GL_QUADS);
@@ -307,10 +304,6 @@ void GLLegendBar::draw_gradient(QPainter* painter)
 
 	glPopAttrib();
 	painter->endNativePainting();
-
-	// convert back to normal window coordinates
-	y0 = vp[3] - y0;
-	y1 = vp[3] - y1;
 
 	if (m_blabels)
 	{
@@ -374,23 +367,20 @@ void GLLegendBar::draw_discrete(QPainter* painter)
 	glGetIntegerv(GL_DEPTH_FUNC, &dfnc);
 	glDepthFunc(GL_ALWAYS);
 
-	int vp[4];
-	glGetIntegerv(GL_VIEWPORT, vp);
-
 	int x0, y0, x1, y1;
 	if (m_nrot == VERTICAL)
 	{
 		x0 = x() + w() - 50;
-		y0 = vp[3] - (y() + 30);
+		y0 = y() + 30;
 		x1 = x0 + 25;
-		y1 = y0 - h() + 40;
+		y1 = y0 - 40;
 	}
 	else
 	{
 		x0 = x()+30;
-		y0 = vp[3] - (y() + h() - 90);
+		y0 = y() + h() - 90;
 		x1 = x()+w()-50;
-		y1 = y0 - 25;
+		y1 = y0 + 25;
 	}
 
 	glColor3ub(m_fgc.r,m_fgc.g,m_fgc.b);
@@ -643,8 +633,6 @@ GLSafeFrame::GLSafeFrame(CGLObject* po, int x, int y, int w, int h) : GLWidget(p
 void GLSafeFrame::draw(QPainter* painter)
 {
 	painter->beginNativePainting();
-	int vp[4];
-	glGetIntegerv(GL_VIEWPORT, vp);
 
 	glPushAttrib(GL_ENABLE_BIT);
 	glDisable(GL_DEPTH_TEST);
@@ -657,9 +645,9 @@ void GLSafeFrame::draw(QPainter* painter)
 
 	glLineWidth(2.f);
 	int x0 = x()-1;
-	int y0 = vp[3] - y()+1;
+	int y0 = y()-1;
 	int x1 = x()+w()+1;
-	int y1 = vp[3] - (y()+h())-1;
+	int y1 = y()+h()+1;
 	glBegin(GL_LINE_LOOP);
 	{
 		glVertex2i(x0, y0);

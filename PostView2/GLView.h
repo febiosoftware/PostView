@@ -213,15 +213,18 @@ protected:
 	void StopAnimation();
 	void PauseAnimation();
 
-	vec3f Global2Local(vec3f r);
-	void Local2View(vec3f r, GLdouble g[2]);
-	void View2Screen(double x, double y, int n[2]);
-
-	void Global2Screen(vec3f r, int n[2]);
-
 	void RenderTrack();
 
 	void SetVideoFormat(GLenum fmt) { m_video_fmt = fmt; }
+
+	void InitSelect(int x0, int y0, int x1, int y1);
+	GLint EndSelect();
+
+	// convert from device pixel to physical pixel
+	QPoint DeviceToPhysical(int x, int y)
+	{
+		return QPoint(m_dpr*x, m_viewport[3] - m_dpr*y);
+	}
 
 protected:
 	void setupProjectionMatrix();
@@ -268,6 +271,7 @@ private:
 	MyPoint	m_p0;		// first point of selection
 	MyPoint	m_p1;		// second point of selection
 	int		m_xp, m_yp;
+	bool	m_bsingle;
 
 	bool	m_bZoomRect;	// zoom rect activated
 
@@ -275,4 +279,8 @@ private:
 
 	ANIMATION_MODE	m_nanim;	// the animation mode
 	CAnimation*		m_panim;	// animation object
+
+private:
+	int	m_viewport[4];		//!< store viewport coordinates
+	int m_dpr;				//!< device pixel ratio for converting from physical to device-independent pixels
 };
