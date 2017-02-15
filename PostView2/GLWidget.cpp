@@ -14,6 +14,7 @@
 
 #include "GLWidget.h"
 #include "Document.h"
+#include "GLView.h"
 #include "PostViewLib/GLObject.h"
 #include <ctype.h>
 #include <time.h>
@@ -502,11 +503,13 @@ void GLTriad::draw(QPainter* painter)
 
 	int view[4];
 	glGetIntegerv(GL_VIEWPORT, view);
+    
+    int DPR = CGLView::DevicePixelRatio();
 
-	int x0 = x();
-	int y0 = view[3]-(y() + h());
-	int x1 = x0 + w();
-	int y1 = view[3]-y();
+	int x0 = DPR*x();
+	int y0 = view[3]-DPR*(y() + h());
+	int x1 = x0 + DPR*w();
+	int y1 = view[3]-DPR*y();
 	if (x1 < x0) { x0 ^= x1; x1 ^= x0; x0 ^= x1; }
 	if (y1 < y0) { y0 ^= y1; y1 ^= y0; y0 ^= y1; }
 
@@ -608,8 +611,10 @@ void GLTriad::draw(QPainter* painter)
 		q.RotateVector(ey);
 		q.RotateVector(ez);
 
-		y0 = view[3] - y0;
-		y1 = view[3] - y1;
+        x0 /= DPR;
+        x1 /= DPR;
+		y0 = (view[3] - y0)/DPR;
+		y1 = (view[3] - y1)/DPR;
 
 		ex.x = x0 + (x1 - x0)*(ex.x + 1)*0.5; ex.y = y0 + (y1 - y0)*(ex.y + 1)*0.5;
 		ey.x = x0 + (x1 - x0)*(ey.x + 1)*0.5; ey.y = y0 + (y1 - y0)*(ey.y + 1)*0.5;

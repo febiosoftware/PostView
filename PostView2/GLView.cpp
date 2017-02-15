@@ -94,6 +94,8 @@ bool FreeRegion::IsInside(int x, int y) const
 	return ((nint>0) && (nint%2));
 }
 
+int	CGLView::m_viewport[4];		//!< store viewport coordinates
+int CGLView::m_dpr;				//!< device pixel ratio for converting from physical to device-
 
 CGLView::CGLView(CMainWindow* pwnd, QWidget* parent) : QOpenGLWidget(parent), m_wnd(pwnd)
 {
@@ -1000,7 +1002,8 @@ void CGLView::RenderTags()
 	// render the tags
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluOrtho2D(0, width(), 0, height());
+    
+	gluOrtho2D(0, m_viewport[2],0, m_viewport[3]);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -1029,8 +1032,8 @@ void CGLView::RenderTags()
 	for (int i=0; i<nsel; ++i)
 		if (vtag[i].bvis)
 		{
-			int x = vtag[i].wx;
-			int y = height() - vtag[i].wy;
+			int x = vtag[i].wx / m_dpr;
+			int y = height() - vtag[i].wy / m_dpr;
 			painter.setPen(Qt::black);
 			
 			painter.drawText(x+3, y-2, vtag[i].sztag);
@@ -1806,6 +1809,11 @@ void CGLView::InitSelect(int x0, int y0, int x1, int y1, int nbufsize)
 {
 	// activate the gl rendercontext
 	makeCurrent();
+    
+    QPoint p0 = DeviceToPhysical(x0, y0);
+    QPoint p1 = DeviceToPhysical(x1, y1);
+    x0 = p0.x(); y0 = p0.y();
+    x1 = p1.x(); y1 = p1.y();
 
 	int x = (x0 + x1) / 2;
 	int y = (y0 + y1) / 2;

@@ -220,11 +220,20 @@ protected:
 	void InitSelect(int x0, int y0, int x1, int y1, int bufsize);
 	GLint EndSelect();
 
+public:
 	// convert from device pixel to physical pixel
-	QPoint DeviceToPhysical(int x, int y)
+    static int DevicePixelRatio() { return m_dpr; }
+#ifdef __APPLE__
+	static QPoint DeviceToPhysical(int x, int y)
 	{
-		return QPoint(m_dpr*x, m_viewport[3] - m_dpr*y);
-	}
+		return QPoint(m_dpr*x, m_dpr*y);
+    }
+#else
+    static QPoint DeviceToPhysical(int x, int y)
+    {
+        return QPoint(m_dpr*x, m_viewport[3] - m_dpr*y);
+    }
+#endif
 
 protected:
 	void setupProjectionMatrix();
@@ -281,7 +290,7 @@ private:
 	CAnimation*		m_panim;	// animation object
 
 private:
-	int	m_viewport[4];		//!< store viewport coordinates
-	int m_dpr;				//!< device pixel ratio for converting from physical to device-independent pixels
+	static int	m_viewport[4];		//!< store viewport coordinates
+	static int m_dpr;				//!< device pixel ratio for converting from physical to device-independent pixels
 	GLuint*	m_selbuf;		//!< selection buffer
 };
