@@ -16,6 +16,7 @@
 		D55150721E5270830041C45B /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D551506F1E5270830041C45B /* QtCore.framework */; };
 		D55150731E5270830041C45B /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D55150701E5270830041C45B /* QtGui.framework */; };
 		D55150741E5270830041C45B /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D55150711E5270830041C45B /* QtWidgets.framework */; };
+		D55AC5011E61EB6E00BBA0D1 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D55AC5001E61EB6E00BBA0D1 /* OpenGL.framework */; };
 		D5A65E0F1DBFA53F00B44009 /* DlgFileInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */; };
 		D5FF7A401D72756B003D2CBD /* 3PointAngleTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79AA1D72756B003D2CBD /* 3PointAngleTool.cpp */; };
 		D5FF7A411D72756B003D2CBD /* 4PointAngleTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79AC1D72756B003D2CBD /* 4PointAngleTool.cpp */; };
@@ -105,7 +106,6 @@
 		D5FF7A951D72756B003D2CBD /* Tool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF7A381D72756B003D2CBD /* Tool.cpp */; };
 		D5FF7A961D72756B003D2CBD /* ToolsPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF7A3A1D72756B003D2CBD /* ToolsPanel.cpp */; };
 		D5FF7A971D72756B003D2CBD /* TransformTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF7A3C1D72756B003D2CBD /* TransformTool.cpp */; };
-		D5FF7A9B1D72768F003D2CBD /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5FF7A9A1D72768F003D2CBD /* OpenGL.framework */; };
 		D5FF7AA31D72778E003D2CBD /* PostView.icns in Resources */ = {isa = PBXBuildFile; fileRef = D5FF7AA21D72778E003D2CBD /* PostView.icns */; };
 /* End PBXBuildFile section */
 
@@ -123,6 +123,7 @@
 		D551506F1E5270830041C45B /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt5/5.8.0_1/lib/QtCore.framework; sourceTree = "<group>"; };
 		D55150701E5270830041C45B /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt5/5.8.0_1/lib/QtGui.framework; sourceTree = "<group>"; };
 		D55150711E5270830041C45B /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt5/5.8.0_1/lib/QtWidgets.framework; sourceTree = "<group>"; };
+		D55AC5001E61EB6E00BBA0D1 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgFileInfo.cpp; sourceTree = "<group>"; };
 		D5A65E0E1DBFA53F00B44009 /* DlgFileInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgFileInfo.h; sourceTree = "<group>"; };
 		D5FF79951D72750E003D2CBD /* PostView2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PostView2.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -277,7 +278,6 @@
 		D5FF7A3D1D72756B003D2CBD /* TransformTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformTool.h; sourceTree = "<group>"; };
 		D5FF7A3E1D72756B003D2CBD /* ui_mainwindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ui_mainwindow.h; sourceTree = "<group>"; };
 		D5FF7A3F1D72756B003D2CBD /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
-		D5FF7A9A1D72768F003D2CBD /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		D5FF7AA21D72778E003D2CBD /* PostView.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = PostView.icns; path = ../PostView.icns; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -286,11 +286,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D55AC5011E61EB6E00BBA0D1 /* OpenGL.framework in Frameworks */,
 				D52C6FB51D75DCE900DF804B /* libPostViewLib.a in Frameworks */,
 				D55150721E5270830041C45B /* QtCore.framework in Frameworks */,
 				D55150731E5270830041C45B /* QtGui.framework in Frameworks */,
 				D55150741E5270830041C45B /* QtWidgets.framework in Frameworks */,
-				D5FF7A9B1D72768F003D2CBD /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -498,10 +498,10 @@
 			isa = PBXGroup;
 			children = (
 				D52C6FB41D75DCE900DF804B /* libPostViewLib.a */,
+				D55AC5001E61EB6E00BBA0D1 /* OpenGL.framework */,
 				D551506F1E5270830041C45B /* QtCore.framework */,
 				D55150701E5270830041C45B /* QtGui.framework */,
 				D55150711E5270830041C45B /* QtWidgets.framework */,
-				D5FF7A9A1D72768F003D2CBD /* OpenGL.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
