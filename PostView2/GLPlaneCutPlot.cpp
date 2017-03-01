@@ -515,145 +515,149 @@ void CGLPlaneCutPlot::UpdateSlice()
 
 	m_slice.Clear();
 
-	// loop over all enabled materials
-	for (int n=0; n<ps->Materials(); ++n)
+	// loop over all domains
+	for (int n=0; n<pm->Domains(); ++n)
 	{
-		FEMaterial* pmat = ps->GetMaterial(n);
-		if ((pmat->bvisible || m_bcut_hidden) && pmat->bclip)
+		FEDomain& dom = pm->Domain(n);
+		int matId = dom.GetMatID();
+		if ((matId >= 0) && (matId < ps->Materials()))
 		{
-			// repeat over all elements
-			FEDomain& dom = pm->Domain(n);
-			for (int i=0; i<dom.Elements(); ++i)
+			FEMaterial* pmat = ps->GetMaterial(matId);
+			if ((pmat->bvisible || m_bcut_hidden) && pmat->bclip)
 			{
-				// render only when visible
-				FEElement& el = dom.Element(i);
-				if (el.IsVisible() || m_bcut_hidden)
+				// repeat over all elements
+				for (int i=0; i<dom.Elements(); ++i)
 				{
-					if (el.IsSolid())
+					// render only when visible
+					FEElement& el = dom.Element(i);
+					if (el.IsVisible() || m_bcut_hidden)
 					{
-						const int *nt;
-						switch (el.Type())
+						if (el.IsSolid())
 						{
-						case FE_HEX8  : nt = HEX_NT; break;
-						case FE_HEX20 : nt = HEX_NT; break;
-						case FE_HEX27 : nt = HEX_NT; break;
-						case FE_PENTA6: nt = PEN_NT; break;
-						case FE_TET4  : nt = TET_NT; break;
-						case FE_TET10 : nt = TET_NT; break;
-						case FE_TET15 : nt = TET_NT; break;
-						case FE_TET20 : nt = TET_NT; break;
-						}
-	
-						// get the nodal values
-						for (int k=0; k<8; ++k)
-						{
-							FENode& node = pm->Node(el.m_node[nt[k]]);
-							nf[k] = (node.m_bext?1:0);
-							ex[k] = node.m_rt;
-							en[k] = el.m_node[k];
-							ev[k] = node.m_tex;
-						}
-
-						// calculate the case of the element
-						int ncase = 0;
-						for (int k=0; k<8; ++k) 
-						if (norm*ex[k] >= m_ref) ncase |= (1 << k);
-
-						// store the case for this element
-						// so we don't have to calculate it again when
-						// we draw the mesh
-						el.m_ntag = 0;
-						if ((ncase > 0) && (ncase < 255)) el.m_ntag = ncase;
-
-						// loop over faces
-						int* pf = LUT[ncase];
-						int ne = 0;
-						for (int l=0; l<5; l++)
-						{
-							if (*pf == -1) break;
-
-							// calculate nodal positions
-							vec3f r[3];
-							float tex[3], w1, w2, w;
-							for (int k=0; k<3; k++)
+							const int *nt;
+							switch (el.Type())
 							{
-								int n1 = ET_HEX[pf[k]][0];
-								int n2 = ET_HEX[pf[k]][1];
-
-								w1 = norm*ex[n1];
-								w2 = norm*ex[n2];
-			
-								if (w2 != w1)
-									w = (m_ref - w1)/(w2 - w1);
-								else 
-									w = 0.f;
-
-								r[k] = ex[n1]*(1-w) + ex[n2]*w;
-								tex[k] = ev[n1]*(1-w) + ev[n2]*w;
-								rf[k] = ((nf[n1]==1)&&(nf[n2]==1)?1:0);
+							case FE_HEX8  : nt = HEX_NT; break;
+							case FE_HEX20 : nt = HEX_NT; break;
+							case FE_HEX27 : nt = HEX_NT; break;
+							case FE_PENTA6: nt = PEN_NT; break;
+							case FE_TET4  : nt = TET_NT; break;
+							case FE_TET10 : nt = TET_NT; break;
+							case FE_TET15 : nt = TET_NT; break;
+							case FE_TET20 : nt = TET_NT; break;
+							}
+	
+							// get the nodal values
+							for (int k=0; k<8; ++k)
+							{
+								FENode& node = pm->Node(el.m_node[nt[k]]);
+								nf[k] = (node.m_bext?1:0);
+								ex[k] = node.m_rt;
+								en[k] = el.m_node[k];
+								ev[k] = node.m_tex;
 							}
 
-							GLSlice::FACE face;
-							face.mat = n;
-							face.norm = norm;
-							face.r[0] = r[0];
-							face.r[1] = r[1];
-							face.r[2] = r[2];
-							face.tex[0] = tex[0];
-							face.tex[1] = tex[1];
-							face.tex[2] = tex[2];
+							// calculate the case of the element
+							int ncase = 0;
+							for (int k=0; k<8; ++k) 
+							if (norm*ex[k] >= m_ref) ncase |= (1 << k);
 
-							m_slice.AddFace(face);
+							// store the case for this element
+							// so we don't have to calculate it again when
+							// we draw the mesh
+							el.m_ntag = 0;
+							if ((ncase > 0) && (ncase < 255)) el.m_ntag = ncase;
 
-							// add all edges to the list
-							for (int k=0; k<3; ++k)
+							// loop over faces
+							int* pf = LUT[ncase];
+							int ne = 0;
+							for (int l=0; l<5; l++)
 							{
-								int n1 = pf[k];
-								int n2 = pf[(k+1)%3];
+								if (*pf == -1) break;
 
-								bool badd = true;
-								// make sure this edge is on the surface
-								if ((rf[k] != 1) || (rf[(k+1)%3] != 1)) badd = false;
-								else
+								// calculate nodal positions
+								vec3f r[3];
+								float tex[3], w1, w2, w;
+								for (int k=0; k<3; k++)
 								{
-									// make sure we don't have this edge yet
-									for (int m=0; m<ne; ++m)
+									int n1 = ET_HEX[pf[k]][0];
+									int n2 = ET_HEX[pf[k]][1];
+
+									w1 = norm*ex[n1];
+									w2 = norm*ex[n2];
+			
+									if (w2 != w1)
+										w = (m_ref - w1)/(w2 - w1);
+									else 
+										w = 0.f;
+
+									r[k] = ex[n1]*(1-w) + ex[n2]*w;
+									tex[k] = ev[n1]*(1-w) + ev[n2]*w;
+									rf[k] = ((nf[n1]==1)&&(nf[n2]==1)?1:0);
+								}
+
+								GLSlice::FACE face;
+								face.mat = n;
+								face.norm = norm;
+								face.r[0] = r[0];
+								face.r[1] = r[1];
+								face.r[2] = r[2];
+								face.tex[0] = tex[0];
+								face.tex[1] = tex[1];
+								face.tex[2] = tex[2];
+
+								m_slice.AddFace(face);
+
+								// add all edges to the list
+								for (int k=0; k<3; ++k)
+								{
+									int n1 = pf[k];
+									int n2 = pf[(k+1)%3];
+
+									bool badd = true;
+									// make sure this edge is on the surface
+									if ((rf[k] != 1) || (rf[(k+1)%3] != 1)) badd = false;
+									else
 									{
-										int m1 = edge[m].m_n[0];
-										int m2 = edge[m].m_n[1];
-										if (((n1 == m1) && (n2 == m2)) ||
-											((n1 == m2) && (n2 == m1)))
+										// make sure we don't have this edge yet
+										for (int m=0; m<ne; ++m)
 										{
-											badd = false;
-											edge[m].m_ntag++;
-											break;
+											int m1 = edge[m].m_n[0];
+											int m2 = edge[m].m_n[1];
+											if (((n1 == m1) && (n2 == m2)) ||
+												((n1 == m2) && (n2 == m1)))
+											{
+												badd = false;
+												edge[m].m_ntag++;
+												break;
+											}
 										}
+									}
+
+									if (badd)
+									{
+										edge[ne].m_n[0] = n1;
+										edge[ne].m_n[1] = n2;
+										edge[ne].m_r[0] = r[k];
+										edge[ne].m_r[1] = r[(k+1)%3];
+										edge[ne].m_ntag = 0;
+										++ne;
 									}
 								}
 
-								if (badd)
+								pf+=3;
+							}
+
+							// add the lines
+							GLSlice::EDGE e;
+							for (int k=0; k<ne; ++k)
+								if (edge[k].m_ntag == 0)
 								{
-									edge[ne].m_n[0] = n1;
-									edge[ne].m_n[1] = n2;
-									edge[ne].m_r[0] = r[k];
-									edge[ne].m_r[1] = r[(k+1)%3];
-									edge[ne].m_ntag = 0;
-									++ne;
+									e.r[0] = edge[k].m_r[0];
+									e.r[1] = edge[k].m_r[1];
+									m_slice.AddEdge(e);
 								}
-							}
-
-							pf+=3;
 						}
-
-						// add the lines
-						GLSlice::EDGE e;
-						for (int k=0; k<ne; ++k)
-							if (edge[k].m_ntag == 0)
-							{
-								e.r[0] = edge[k].m_r[0];
-								e.r[1] = edge[k].m_r[1];
-								m_slice.AddEdge(e);
-							}
 					}
 				}
 			}
