@@ -572,20 +572,6 @@ bool CGLView::event(QEvent* event)
 }
 
 //-----------------------------------------------------------------------------
-void CGLView::contextMenuEvent(QContextMenuEvent* ev)
-{
-
-	int x = ev->x();
-	int y = ev->y();
-	if ((x==m_p0.x)&&(y==m_p0.y))
-	{
-		QMenu* menu = m_wnd->BuildContextMenu();
-		menu->exec(ev->globalPos());
-		ev->accept();
-	}
-}
-
-//-----------------------------------------------------------------------------
 void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 {
 	int x = ev->x();
@@ -621,7 +607,11 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 
 	if (but3)
 	{
-//		if ((m_p0.x == m_p1.x) && (m_p0.y == m_p1.y)) m_pop->popup();
+		if ((x == m_p0.x) && (y == m_p0.y))
+		{
+			QMenu* menu = m_wnd->BuildContextMenu();
+			menu->exec(ev->globalPos());
+		}
 		ev->accept();
 	}
 	else

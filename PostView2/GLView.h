@@ -145,8 +145,6 @@ protected:
 	void wheelEvent(QWheelEvent* ev);
 	bool event(QEvent* event);
 
-	void contextMenuEvent(QContextMenuEvent* ev);
-
 protected slots:
 	void repaintEvent();
 	
