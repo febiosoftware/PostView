@@ -140,19 +140,27 @@ void CTimeController::mousePressEvent(QMouseEvent* ev)
 		int x1 = rt.right();
 		int W = x1 - x0;
 
+		// find the time point that is closest to the click
 		int xp = ev->x();
+		int isel = -1;
+		int dmin = 0;
 		for (int i= m_first; i<= m_last; ++i)
 		{
 			double t = m_data[i];
 			int xi = x0 + (int)((t - m_min) / (m_max - m_min) * W);
 
 			int d = abs(xp - xi);
-			if (d <= 9)
+			if ((isel == -1) || (d < dmin))
 			{
-				emit pointClicked(i);
-				ev->accept();
-				return;
+				isel = i;
+				dmin = d;
 			}
+		}
+
+		if (isel != -1)
+		{
+			emit pointClicked(isel);
+			ev->accept();
 		}
 	}
 }
@@ -212,6 +220,36 @@ void CTimeController::mouseMoveEvent(QMouseEvent* ev)
 			update();
 			ev->accept();
 			return;
+		}
+	}
+	else
+	{
+		QRect rt = rect();
+		int x0 = rt.left();
+		int x1 = rt.right();
+		int W = x1 - x0;
+
+		// find the time point that is closest to the click
+		int xp = ev->x();
+		int isel = -1;
+		int dmin = 0;
+		for (int i = m_first; i <= m_last; ++i)
+		{
+			double t = m_data[i];
+			int xi = x0 + (int)((t - m_min) / (m_max - m_min) * W);
+
+			int d = abs(xp - xi);
+			if ((isel == -1) || (d < dmin))
+			{
+				isel = i;
+				dmin = d;
+			}
+		}
+
+		if (isel != -1)
+		{
+			emit pointClicked(isel);
+			ev->accept();
 		}
 	}
 }
