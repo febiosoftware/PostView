@@ -8,6 +8,8 @@ class QTreeWidget;
 
 class CDataFieldSelector : public QComboBox, public FEModelDependant
 {
+	Q_OBJECT
+
 public:
 	CDataFieldSelector(QWidget* parent = 0);
 	~CDataFieldSelector();
@@ -22,10 +24,16 @@ public:
 	// from FEModelDependant
 	void Update(FEModel* pfem);
 
+private slots:
+	void onItemEntered(QTreeWidgetItem*, int);
+	void onTimer();
+
 private:
 	void addComponent(QTreeWidgetItem* parent, const char* szname, int ndata);
 	FEModel*	m_fem;
 	Data_Tensor_Type	m_class;
 	QTreeWidget*	m_tree;
+	QTreeWidgetItem*	m_sel;
 	bool m_bvec;
+	int	m_ntimer;
 };

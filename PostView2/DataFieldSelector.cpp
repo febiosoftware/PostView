@@ -3,11 +3,13 @@
 #include <QHeaderView>
 #include <PostViewLib/FEModel.h>
 #include <PostViewLib/constants.h>
+#include <QtCore/QTimer>
 
 CDataFieldSelector::CDataFieldSelector(QWidget* parent) : QComboBox(parent)
 {
 	m_tree = new QTreeWidget;
 	m_tree->header()->hide();
+	m_tree->setMouseTracking(true);
 	setModel(m_tree->model());
 	setView(m_tree);
 //	setMinimumWidth(200);
@@ -23,11 +25,36 @@ CDataFieldSelector::CDataFieldSelector(QWidget* parent) : QComboBox(parent)
     setStyleSheet(styleSheet); 
 */
 	m_fem = 0;
+
+	m_sel = 0;
+	m_ntimer = 0;
+
+	setMaxVisibleItems(50);
+
+	QObject::connect(m_tree, SIGNAL(itemEntered(QTreeWidgetItem*,int)), this, SLOT(onItemEntered(QTreeWidgetItem*,int)));
 }
 
 CDataFieldSelector::~CDataFieldSelector()
 {
 	if (m_fem) m_fem->RemoveDependant(this);
+}
+
+void CDataFieldSelector::onTimer()
+{
+	m_ntimer--;
+	if (m_ntimer == 0)
+	{
+		if (m_sel && (m_sel->isExpanded() == false)) m_sel->setExpanded(true);
+		this->view()->updateGeometry();
+		m_sel = 0;
+	}
+}
+
+void CDataFieldSelector::onItemEntered(QTreeWidgetItem* item, int)
+{
+	m_ntimer++;
+	m_sel = item;
+	QTimer::singleShot(500, this, SLOT(onTimer()));
 }
 
 void CDataFieldSelector::BuildMenu(FEModel* fem, Data_Tensor_Type nclass, bool btvec)
@@ -76,6 +103,10 @@ void CDataFieldSelector::BuildMenu(FEModel* fem, Data_Tensor_Type nclass, bool b
 				pi = new QTreeWidgetItem(pw); pi->setText(0, d.GetName());
 				pi->setFlags(pi->flags() & ~Qt::ItemIsSelectable); 
 				pi->setExpanded(false);
+
+				QFont font = pi->font(0);
+				font.setBold(true);
+				pi->setFont(0, font);
 
 				for (int n=0; n<dataComponents; ++n)
 				{

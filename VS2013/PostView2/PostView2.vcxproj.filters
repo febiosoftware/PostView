@@ -33,9 +33,6 @@
     <ClInclude Include="..\..\PostView2\convert.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PostView2\DataFieldSelector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\PostView2\DlgFind.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -413,6 +410,9 @@
     <ClCompile Include="..\..\PostView2\DlgExportAscii.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\PostView2\moc_DataFieldSelector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\PostView2\AddImage3DTool.h">
@@ -500,6 +500,9 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\PostView2\TimeController.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\DataFieldSelector.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
