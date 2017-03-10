@@ -18,6 +18,7 @@
 		D55150741E5270830041C45B /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D55150711E5270830041C45B /* QtWidgets.framework */; };
 		D55AC5011E61EB6E00BBA0D1 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D55AC5001E61EB6E00BBA0D1 /* OpenGL.framework */; };
 		D5A65E0F1DBFA53F00B44009 /* DlgFileInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */; };
+		D5E0E6A71E72390D006FE591 /* moc_DataFieldSelector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5E0E6A61E72390D006FE591 /* moc_DataFieldSelector.cpp */; };
 		D5FF7A401D72756B003D2CBD /* 3PointAngleTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79AA1D72756B003D2CBD /* 3PointAngleTool.cpp */; };
 		D5FF7A411D72756B003D2CBD /* 4PointAngleTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79AC1D72756B003D2CBD /* 4PointAngleTool.cpp */; };
 		D5FF7A421D72756B003D2CBD /* AddImage3DTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79AE1D72756B003D2CBD /* AddImage3DTool.cpp */; };
@@ -126,6 +127,7 @@
 		D55AC5001E61EB6E00BBA0D1 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgFileInfo.cpp; sourceTree = "<group>"; };
 		D5A65E0E1DBFA53F00B44009 /* DlgFileInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgFileInfo.h; sourceTree = "<group>"; };
+		D5E0E6A61E72390D006FE591 /* moc_DataFieldSelector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_DataFieldSelector.cpp; sourceTree = "<group>"; };
 		D5FF79951D72750E003D2CBD /* PostView2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PostView2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5FF79A31D72750E003D2CBD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D5FF79AA1D72756B003D2CBD /* 3PointAngleTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = 3PointAngleTool.cpp; sourceTree = "<group>"; };
@@ -414,6 +416,7 @@
 				D5FF79F91D72756B003D2CBD /* MeasureAreaTool.h */,
 				D5FF79FA1D72756B003D2CBD /* moc_AddImage3DTool.cpp */,
 				D5FF79FB1D72756B003D2CBD /* moc_CColorButton.cpp */,
+				D5E0E6A61E72390D006FE591 /* moc_DataFieldSelector.cpp */,
 				D5FF79FC1D72756B003D2CBD /* moc_DataPanel.cpp */,
 				D5FF79FD1D72756B003D2CBD /* moc_DistanceMapTool.cpp */,
 				D5FF79FE1D72756B003D2CBD /* moc_DlgExportXPLT.cpp */,
@@ -600,6 +603,7 @@
 				D52C6FB01D75DCA300DF804B /* moc_TimeController.cpp in Sources */,
 				D5FF7A6D1D72756B003D2CBD /* moc_DlgWidgetProps.cpp in Sources */,
 				D5FF7A7D1D72756B003D2CBD /* moc_StatePanel.cpp in Sources */,
+				D5E0E6A71E72390D006FE591 /* moc_DataFieldSelector.cpp in Sources */,
 				D5FF7A421D72756B003D2CBD /* AddImage3DTool.cpp in Sources */,
 				D5FF7A911D72756B003D2CBD /* StatePanel.cpp in Sources */,
 				D5FF7A431D72756B003D2CBD /* AddPointTool.cpp in Sources */,
