@@ -199,6 +199,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </CustomBuild>
     <ClInclude Include="..\..\PostView2\Document.h" />
+    <ClInclude Include="..\..\PostView2\DragBox.h" />
     <ClInclude Include="..\..\PostView2\FEKinemat.h" />
     <CustomBuild Include="..\..\PostView2\FileViewer.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
@@ -353,6 +354,7 @@
     <ClCompile Include="..\..\PostView2\DlgViewSettings.cpp" />
     <ClCompile Include="..\..\PostView2\DlgWidgetProps.cpp" />
     <ClCompile Include="..\..\PostView2\Document.cpp" />
+    <ClCompile Include="..\..\PostView2\DragBox.cpp" />
     <ClCompile Include="..\..\PostView2\FEKinemat.cpp" />
     <ClCompile Include="..\..\PostView2\FileViewer.cpp" />
     <ClCompile Include="..\..\PostView2\GLContext.cpp" />
