@@ -482,6 +482,11 @@ public:
 		pFontToolBar->setEnabled(false);
 
 	}
+
+	void checkColormap(bool b)
+	{
+		actionColorMap->setChecked(b);
+	}
 };
 
 namespace Ui {

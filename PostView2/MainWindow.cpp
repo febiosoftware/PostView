@@ -1182,7 +1182,7 @@ void CMainWindow::on_actionViewMesh_toggled(bool bchecked)
 void CMainWindow::on_actionViewOutline_toggled(bool bchecked)
 {
 	VIEWSETTINGS& view = GetDocument()->GetViewSettings();
-	view.m_boutline = !view.m_boutline;
+	view.m_boutline = bchecked;
 	RedrawGL();
 }
 
@@ -1196,16 +1196,19 @@ void CMainWindow::on_actionViewShowTags_toggled(bool bchecked)
 void CMainWindow::on_actionViewSmooth_toggled(bool bchecked)
 {
 	CGLModel* po = GetDocument()->GetGLModel();
-	CGLColorMap* pcm = po->GetColorMap();
-	if (pcm)
+	if (po)
 	{
-		CColorMap* pc = pcm->GetColorMap();
-		if (pc)
+		CGLColorMap* pcm = po->GetColorMap();
+		if (pcm)
 		{
-			bool b = pc->Smooth();
-			pc->Smooth(!b);
-			m_doc->UpdateFEModel();
-			RedrawGL();
+			CColorMap* pc = pcm->GetColorMap();
+			if (pc)
+			{
+				bool b = pc->Smooth();
+				pc->Smooth(!b);
+				m_doc->UpdateFEModel();
+				RedrawGL();
+			}
 		}
 	}
 }
@@ -1296,7 +1299,16 @@ void CMainWindow::UpdateMainToolbar()
 {
 	FEModel* pfem = m_doc->GetFEModel();
 	ui->selectData->BuildMenu(pfem, DATA_SCALAR);
+	ui->checkColormap(false);
+	ui->actionViewSmooth->setChecked(true);
 	UpdatePlayToolbar(true);
+
+	const VIEWSETTINGS& settings = GetDocument()->GetViewSettings();
+	ui->actionViewProjection->setChecked(settings.m_nproj == 0);
+	ui->actionViewOutline->setChecked(settings.m_boutline);
+	ui->actionViewMesh->setChecked(settings.m_bmesh);
+	ui->actionViewShowTags->setChecked(settings.m_bTags);
+
 }
 
 void CMainWindow::UpdatePlayToolbar(bool breset)
@@ -1493,4 +1505,7 @@ void CMainWindow::readSettings()
 	view.m_flinethick       = settings.value("m_flinethick" , view.m_flinethick).toFloat();
 	view.m_fpointsize       = settings.value("m_fpointsize" , view.m_fpointsize).toFloat();
 	settings.endGroup();
+
+	// update the menu and toolbar to reflect the correct settings
+	UpdateMainToolbar();
 }

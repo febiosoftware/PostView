@@ -2746,37 +2746,6 @@ void CGLView::OnZoomRect(Fl_Widget* pw, void* pd)
 }
 */
 
-void CGLView::SetRenderStyle(int nstyle)
-{
-	CDocument* pdoc = GetDocument();
-	VIEWSETTINGS& view = pdoc->GetViewSettings();
-	CGLModel* po = pdoc->GetGLModel();
-
-	GLCOLOR c = view.fgcol;
-
-	int i;
-	switch (nstyle)
-	{
-	case RENDER_DEFAULT:
-		{
-			for (i=0; i<m_Widget->Widgets(); ++i) (*m_Widget)[i]->set_fg_color(c.r,c.g,c.b);
-			view.m_boutline = false;
-			po->m_bghost = false;
-			view.m_nproj = RENDER_PERSP;
-		}
-		break;
-	case RENDER_CAD:
-		{
-			for (i=0; i<m_Widget->Widgets(); ++i) (*m_Widget)[i]->set_fg_color(c.r,c.g,c.b);
-			view.m_boutline = true;
-			po->m_bghost = false;
-			view.m_nproj = RENDER_ORTHO;
-		}
-		break;
-	}
-}
-
-
 void CGLView::SetView(View_Mode n)
 {
 	quat4f q;

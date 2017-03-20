@@ -46,10 +46,6 @@ class FEDataField;
 #define SELECT_CIRCLE	2
 #define SELECT_FREE		3
 
-// render styles
-#define RENDER_DEFAULT	1
-#define RENDER_CAD		2
-
 // projection modes
 #define RENDER_ORTHO	0
 #define RENDER_PERSP	1

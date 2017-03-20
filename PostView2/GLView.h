@@ -204,8 +204,6 @@ protected:
 		}
 	}
 
-	void SetRenderStyle(int nstyle);
-
 	void NewAnimation(const char* szfile, CAnimation* panim, GLenum fmt = GL_RGB);
 	void StartAnimation();
 	void StopAnimation();
