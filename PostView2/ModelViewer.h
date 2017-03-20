@@ -33,6 +33,7 @@ private slots:
 	void on_nameEdit_editingFinished();
 	void on_deleteButton_clicked();
 	void on_props_dataChanged();
+	void on_enabled_stateChanged(int nstate);
 
 private:
 	Ui::CModelViewer*			ui;

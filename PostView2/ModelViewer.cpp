@@ -4,6 +4,7 @@
 #include <QTableWidget>
 #include <QMessageBox>
 #include <QHeaderView>
+#include <QCheckBox>
 #include <QSplitter>
 #include <QLabel>
 #include "MainWindow.h"
@@ -476,6 +477,19 @@ private:
 };
 
 //-----------------------------------------------------------------------------
+class CModelTreeItem : public QTreeWidgetItem
+{
+public:
+	CModelTreeItem(CGLObject* po, QTreeWidget* tree) : QTreeWidgetItem(tree), m_po(po) {}
+	CModelTreeItem(CGLObject* po, QTreeWidgetItem* item) : QTreeWidgetItem(item), m_po(po) {}
+
+	CGLObject* Object() { return m_po; }
+
+private:
+	CGLObject* m_po;
+};
+
+//-----------------------------------------------------------------------------
 class Ui::CModelViewer
 {
 public:
@@ -484,6 +498,7 @@ public:
 	QVector<CPropertyList*>	m_list;
 
 	QLineEdit* name;
+	QCheckBox* enabled;
 
 public:
 	void setupUi(::CModelViewer* parent)
@@ -504,7 +519,10 @@ public:
 		pvl->setMargin(0);
 		
 		QHBoxLayout* phl = new QHBoxLayout;
+		enabled = new QCheckBox; enabled->setObjectName("enabled");
+
 		QLabel* label = new QLabel("name");
+		phl->addWidget(enabled);
 		phl->addWidget(label);
 		phl->addWidget(name = new QLineEdit); name->setObjectName("nameEdit"); label->setBuddy(name);
 		QPushButton* del = new QPushButton("Delete"); del->setObjectName("deleteButton");
@@ -540,7 +558,8 @@ void CModelViewer::selectObject(CGLObject* po)
 			if ((*it)->text(0) == s)
 			{
 				(*it)->setSelected(true);
-				on_modelTree_currentItemChanged(*it, 0);
+				ui->m_tree->setCurrentItem(*it);
+//				on_modelTree_currentItemChanged(*it, 0);
 				break;
 			}
 			++it;
@@ -586,7 +605,7 @@ void CModelViewer::Update(bool breset)
 			pdoc->GetDocTitle(szfile);
 
 			ui->m_tree->clear();
-			QTreeWidgetItem* pi1 = new QTreeWidgetItem(ui->m_tree);
+			CModelTreeItem* pi1 = new CModelTreeItem(0, ui->m_tree);
 			pi1->setText(0, szfile);
 			pi1->setIcon(0, QIcon(QString(":/icons/postview_small.png")));
 			ui->m_list.push_back(new CModelProps(mdl));
@@ -595,24 +614,31 @@ void CModelViewer::Update(bool breset)
 			pi1->setExpanded(true);
 
 			// add the mesh
-			QTreeWidgetItem* pi2 = new QTreeWidgetItem(pi1);
+			CModelTreeItem* pi2 = new CModelTreeItem(0, pi1);
 			pi2->setText(0, "Mesh");
 			pi2->setIcon(0, QIcon(QString(":/icons/mesh.png")));
 			ui->m_list.push_back(new CMeshProps(fem));
 			pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
 			m_obj.push_back(0);
 		
-			pi2 = new QTreeWidgetItem(pi1);
-			pi2->setText(0, "Displacement map");
-			pi2->setIcon(0, QIcon(QString(":/icons/distort.png")));
-			ui->m_list.push_back(new CDisplacementMapProps(m_wnd, mdl->GetDisplacementMap()));
-			pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
-			m_obj.push_back(0);
+			CGLDisplacementMap* map = mdl->GetDisplacementMap();
+			if (map)
+			{
+				pi2 = new CModelTreeItem(map, pi1);
+				pi2->setText(0, "Displacement map");
+				pi2->setTextColor(0, map && map->IsActive() ? Qt::black : Qt::gray);
+				pi2->setIcon(0, QIcon(QString(":/icons/distort.png")));
+				ui->m_list.push_back(new CDisplacementMapProps(m_wnd, map));
+				pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
+				m_obj.push_back(0);
+			}
 
-			pi2 = new QTreeWidgetItem(pi1);
+			CGLColorMap* col = mdl->GetColorMap();
+			pi2 = new CModelTreeItem(col, pi1);
 			pi2->setText(0, "Color map");
+			pi2->setTextColor(0, col->IsActive() ? Qt::black : Qt::gray);
 			pi2->setIcon(0, QIcon(QString(":/icons/colormap.png")));
-			ui->m_list.push_back(new CColorMapProps(m_wnd, mdl->GetColorMap()));
+			ui->m_list.push_back(new CColorMapProps(m_wnd, col));
 			pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
 			m_obj.push_back(0);
 
@@ -621,7 +647,7 @@ void CModelViewer::Update(bool breset)
 			for (it = pl.begin(); it != pl.end(); ++it)
 			{
 				CGLPlot& plot = *(*it);
-				QTreeWidgetItem* pi1 = new QTreeWidgetItem(ui->m_tree);
+				CModelTreeItem* pi1 = new CModelTreeItem(&plot, ui->m_tree);
 
 				if      (dynamic_cast<CGLPlaneCutPlot  *>(&plot))  pi1->setIcon(0, QIcon(QString(":/icons/cut.png")));
 				else if (dynamic_cast<CGLVectorPlot    *>(&plot))  pi1->setIcon(0, QIcon(QString(":/icons/vectors.png")));
@@ -629,6 +655,7 @@ void CModelViewer::Update(bool breset)
 				else if (dynamic_cast<CGLIsoSurfacePlot*>(&plot))  pi1->setIcon(0, QIcon(QString(":/icons/isosurface.png")));
 			
 				pi1->setText(0, plot.GetName());
+				pi1->setTextColor(0, plot.IsActive() ? Qt::black : Qt::gray);
 				ui->m_list.push_back(plot.propertyList());
 				pi1->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
 				m_obj.push_back(&plot);
@@ -637,8 +664,9 @@ void CModelViewer::Update(bool breset)
 			CVolRender* volRender = pdoc->GetVolumeRenderer();
 			if (volRender)
 			{
-				QTreeWidgetItem* pi = new QTreeWidgetItem(ui->m_tree);
+				CModelTreeItem* pi = new CModelTreeItem(volRender, ui->m_tree);
 				pi->setText(0, "Volume Render");
+				pi->setTextColor(0, volRender->IsActive() ? Qt::black : Qt::gray);
 				ui->m_list.push_back(new CVolRenderProps(m_wnd, volRender));
 				pi->setData(0, Qt::UserRole, (int) (ui->m_list.size() - 1));
 				m_obj.push_back(volRender);
@@ -647,15 +675,16 @@ void CModelViewer::Update(bool breset)
 			CImageSlicer* imgSlice = pdoc->GetImageSlicer();
 			if (imgSlice)
 			{
-				QTreeWidgetItem* pi = new QTreeWidgetItem(ui->m_tree);
+				CModelTreeItem* pi = new CModelTreeItem(imgSlice, ui->m_tree);
 				pi->setText(0, "Image Slicer");
+				pi->setTextColor(0, imgSlice->IsActive() ? Qt::black : Qt::gray);
 				ui->m_list.push_back(new CImageSlicerProps(m_wnd, imgSlice));
 				pi->setData(0, Qt::UserRole, (int)(ui->m_list.size() - 1));
 				m_obj.push_back(imgSlice);
 			}
 	
 			CGView& view = *pdoc->GetView();
-			pi1 = new QTreeWidgetItem(ui->m_tree);
+			pi1 = new CModelTreeItem(&view, ui->m_tree);
 			pi1->setText(0, "View");
 			pi1->setIcon(0, QIcon(QString(":/icons/view.png")));
 			ui->m_list.push_back(new CViewProps(view));
@@ -666,7 +695,7 @@ void CModelViewer::Update(bool breset)
 			for (int i=0; i<view.CameraKeys(); ++i)
 			{
 				GLCameraTransform& key = view.GetKey(i);
-				pi2 = new QTreeWidgetItem(pi1);
+				pi2 = new CModelTreeItem(&key, pi1);
 				pi2->setText(0, key.GetName());
 				pi2->setIcon(0, QIcon(QString(":/icons/view.png")));
 				ui->m_list.push_back(new CCameraTransformProps(key));
@@ -685,6 +714,27 @@ void CModelViewer::on_modelTree_currentItemChanged(QTreeWidgetItem* current, QTr
 {
 	if (current)
 	{
+		CModelTreeItem* item = dynamic_cast<CModelTreeItem*>(current);
+		if (item)
+		{
+			CGLObject* po = item->Object();
+			if (po)
+			{
+				ui->enabled->setEnabled(true);
+				ui->enabled->setChecked(po->IsActive());
+			}
+			else 
+			{
+				ui->enabled->setEnabled(false);
+				ui->enabled->setChecked(true);
+			}
+		}
+		else
+		{
+			ui->enabled->setEnabled(false);
+			ui->enabled->setChecked(false);
+		}
+
 		ui->name->setText(current->text(0));
 		QVariant v = current->data(0, Qt::UserRole);
 		ui->m_props->Update(ui->m_list[v.toInt()]);
@@ -731,5 +781,29 @@ void CModelViewer::on_deleteButton_clicked()
 
 void CModelViewer::on_props_dataChanged()
 {
+	m_wnd->RedrawGL();
+}
+
+void CModelViewer::on_enabled_stateChanged(int nstate)
+{
+	QTreeWidgetItem* current = ui->m_tree->currentItem();
+	CModelTreeItem* item = dynamic_cast<CModelTreeItem*>(current);
+	if (item == 0) return;
+
+	CGLObject* po = item->Object();
+	if (po == 0) return;
+
+	if (nstate == Qt::Unchecked)
+	{
+		po->Activate(false);
+		item->setTextColor(0, Qt::gray);
+	}
+	else if (nstate == Qt::Checked)
+	{
+		po->Activate(true);
+		item->setTextColor(0, Qt::black);
+	}
+
+	m_wnd->CheckUi();
 	m_wnd->RedrawGL();
 }

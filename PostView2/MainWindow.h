@@ -34,6 +34,10 @@ public:
 	// force a redraw of the GLView
 	void RedrawGL();
 
+	// checks the Ui and makes any necessary adjustments
+	// TODO: use this instead of the UpdateUi stuff
+	void CheckUi();
+
 	// this is called after a new model is loaded 
 	// or an existing model is reloaded
 	// and also after a mouse release event

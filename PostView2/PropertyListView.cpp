@@ -56,6 +56,8 @@ public:
 	{
 		if ((m_list==0)||(!index.isValid())) return QVariant();
 
+		if (role == Qt::TextColorRole) return QColor(Qt::black);
+
 		const CProperty& prop = m_list->Property(index.row());
 
 		if (role == Qt::ToolTipRole)
@@ -141,7 +143,8 @@ public:
 			if (m_list->Property(index.row()).isEditable())
 				return QAbstractTableModel::flags(index) | Qt::ItemIsEditable;
 		}
-		return QAbstractTableModel::flags(index);
+		return 0;
+//		return QAbstractTableModel::flags(index);
 	}
 
 	bool setData(const QModelIndex& index, const QVariant& value, int role)
@@ -332,7 +335,7 @@ public:
 
 		m_prop = new QTableView;
 		m_prop->setObjectName(QStringLiteral("modelProps"));
-		m_prop->setSelectionBehavior(QAbstractItemView::SelectRows);
+		m_prop->setSelectionBehavior(QAbstractItemView::SelectItems);
 		m_prop->setSelectionMode(QAbstractItemView::SingleSelection);
 		m_prop->horizontalHeader()->setStretchLastSection(true);
 //		m_prop->horizontalHeader()->hide();
@@ -379,7 +382,7 @@ void CPropertyListView::Update(CPropertyList* plist)
 		for (int i=0; i<plist->Properties(); ++i)
 		{
 			const CProperty& p = plist->Property(i);
-			if (p.type == CProperty::Color)
+			if ((p.type == CProperty::Color))// || (p.type == CProperty::Enum) || (p.type == CProperty::Bool))
 			{
 				ui->m_prop->openPersistentEditor(ui->m_data->index(i, 1));
 			}

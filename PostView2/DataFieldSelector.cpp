@@ -54,7 +54,7 @@ void CDataFieldSelector::onItemEntered(QTreeWidgetItem* item, int)
 {
 	m_ntimer++;
 	m_sel = item;
-	QTimer::singleShot(500, this, SLOT(onTimer()));
+	QTimer::singleShot(250, this, SLOT(onTimer()));
 }
 
 void CDataFieldSelector::BuildMenu(FEModel* fem, Data_Tensor_Type nclass, bool btvec)

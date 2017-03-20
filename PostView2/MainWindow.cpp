@@ -119,6 +119,22 @@ void CMainWindow::RedrawGL()
 	ui->glview->repaint();
 }
 
+void CMainWindow::CheckUi()
+{
+	// check the color map state
+	CDocument* doc = GetDocument();
+	CGLModel* po = doc->GetGLModel();
+	if (po)
+	{
+		bool bcheck = ui->actionColorMap->isChecked();
+		CGLColorMap* col = po->GetColorMap();
+		if (col)
+		{
+			if (bcheck != col->IsActive()) ui->actionColorMap->setChecked(col->IsActive());
+		}
+	}
+}
+
 void CMainWindow::UpdateView()
 {
 	ui->modelViewer->UpdateView();
@@ -282,6 +298,9 @@ void CMainWindow::finishedReadingFile(bool success, const QString& errorString)
 		QMessageBox::information(this, "PostView2", errorString);
 	}
 
+	// update all Ui components
+	UpdateUi(true);
+
 	UpdateMainToolbar();
 
 	// This is already done in UpdateMainToolbar so I can probably remove this
@@ -294,9 +313,6 @@ void CMainWindow::finishedReadingFile(bool success, const QString& errorString)
 	{
 		ui->playToolBar->setDisabled(true);
 	}
-
-	// update all Ui components
-	UpdateUi(true);
 }
 
 bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
