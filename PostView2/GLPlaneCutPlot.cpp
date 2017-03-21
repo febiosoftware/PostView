@@ -337,14 +337,15 @@ void CGLPlaneCutPlot::RenderMesh()
 
 			switch (el.Type())
 			{
-			case FE_HEX8  : nt = HEX_NT; break;
-			case FE_HEX20 : nt = HEX_NT; break;
-			case FE_HEX27 : nt = HEX_NT; break;
-			case FE_PENTA6: nt = PEN_NT; break;
-			case FE_TET4  : nt = TET_NT; break;
-			case FE_TET10 : nt = TET_NT; break;
-			case FE_TET15 : nt = TET_NT; break;
-			case FE_TET20 : nt = TET_NT; break;
+			case FE_HEX8   : nt = HEX_NT; break;
+			case FE_HEX20  : nt = HEX_NT; break;
+			case FE_HEX27  : nt = HEX_NT; break;
+			case FE_PENTA6 : nt = PEN_NT; break;
+            case FE_PENTA15: nt = PEN_NT; break;
+            case FE_TET4   : nt = TET_NT; break;
+			case FE_TET10  : nt = TET_NT; break;
+			case FE_TET15  : nt = TET_NT; break;
+			case FE_TET20  : nt = TET_NT; break;
 			}
 
 			// calculate the case of the element
@@ -537,14 +538,15 @@ void CGLPlaneCutPlot::UpdateSlice()
 							const int *nt;
 							switch (el.Type())
 							{
-							case FE_HEX8  : nt = HEX_NT; break;
-							case FE_HEX20 : nt = HEX_NT; break;
-							case FE_HEX27 : nt = HEX_NT; break;
-							case FE_PENTA6: nt = PEN_NT; break;
-							case FE_TET4  : nt = TET_NT; break;
-							case FE_TET10 : nt = TET_NT; break;
-							case FE_TET15 : nt = TET_NT; break;
-							case FE_TET20 : nt = TET_NT; break;
+							case FE_HEX8   : nt = HEX_NT; break;
+							case FE_HEX20  : nt = HEX_NT; break;
+							case FE_HEX27  : nt = HEX_NT; break;
+							case FE_PENTA6 : nt = PEN_NT; break;
+                            case FE_PENTA15: nt = PEN_NT; break;
+                            case FE_TET4   : nt = TET_NT; break;
+							case FE_TET10  : nt = TET_NT; break;
+							case FE_TET15  : nt = TET_NT; break;
+							case FE_TET20  : nt = TET_NT; break;
 							}
 	
 							// get the nodal values
@@ -700,14 +702,15 @@ float CGLPlaneCutPlot::Integrate(FEState* ps)
 			const int* nt;
 			switch (el.Type())
 			{
-			case FE_HEX8  : nt = HEX_NT; break;
-			case FE_HEX20 : nt = HEX_NT; break;
-			case FE_HEX27 : nt = HEX_NT; break;
-			case FE_PENTA6: nt = PEN_NT; break;
-			case FE_TET4  : nt = TET_NT; break;
-			case FE_TET10 : nt = TET_NT; break;
-			case FE_TET15 : nt = TET_NT; break;
-			case FE_TET20 : nt = TET_NT; break;
+			case FE_HEX8   : nt = HEX_NT; break;
+			case FE_HEX20  : nt = HEX_NT; break;
+			case FE_HEX27  : nt = HEX_NT; break;
+			case FE_PENTA6 : nt = PEN_NT; break;
+            case FE_PENTA15: nt = PEN_NT; break;
+            case FE_TET4   : nt = TET_NT; break;
+			case FE_TET10  : nt = TET_NT; break;
+			case FE_TET15  : nt = TET_NT; break;
+			case FE_TET20  : nt = TET_NT; break;
 			}
 
 			// get the nodal values

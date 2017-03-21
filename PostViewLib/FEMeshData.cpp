@@ -714,7 +714,8 @@ void FEVolRatio::eval(int n, float* pv)
 		dN3 = dN_hex[2];
 		break;
 	case FE_PENTA6:
-		dN1 = dN_pen[0];
+    case FE_PENTA15:
+        dN1 = dN_pen[0];
 		dN2 = dN_pen[1];
 		dN3 = dN_pen[2];
 		break;
@@ -1686,7 +1687,8 @@ void FEVolStrain::eval(int n, float* pv)
 		dN3 = dN_hex[2];
 		break;
 	case FE_PENTA6:
-		dN1 = dN_pen[0];
+    case FE_PENTA15:
+        dN1 = dN_pen[0];
 		dN2 = dN_pen[1];
 		dN3 = dN_pen[2];
 		break;

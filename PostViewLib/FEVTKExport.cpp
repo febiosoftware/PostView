@@ -1,6 +1,28 @@
 #include "FEVTKExport.h"
 #include <stdio.h>
 #include "FEModel.h"
+#include "FEMeshData_T.h"
+
+#define VTK_VERTEX                  1
+#define VTK_POLY_VERTEX             2
+#define VTK_LINE                    3
+#define VTK_POLY_LINE               4
+#define VTK_TRIANGLE                5
+#define VTK_TRIANGLE_STRIP          6
+#define VTK_POLYGON                 7
+#define VTK_PIXEL                   8
+#define VTK_QUAD                    9
+#define VTK_TETRA                   10
+#define VTK_VOXEL                   11
+#define VTK_HEXAHEDRON              12
+#define VTK_WEDGE                   13
+#define VTK_PYRAMID                 14
+#define VTK_QUADRATIC_EDGE          21
+#define VTK_QUADRATIC_TRIANGLE      22
+#define VTK_QUADRATIC_QUAD          23
+#define VTK_QUADRATIC_TETRA         24
+#define VTK_QUADRATIC_HEXAHEDRON    25
+#define VTK_QUADRATIC_WEDGE         26
 
 FEVTKExport::FEVTKExport(void)
 {
@@ -10,199 +32,317 @@ FEVTKExport::~FEVTKExport(void)
 {
 }
 
-bool FEVTKExport::Save(FEModel& fem, int ntime, const char* szfile)
+bool FEVTKExport::Save(FEModel& fem, const char* szfile)
 {
-	int j, k;
-	bool  isPOLYDATA = false, isUnstructuredGrid = false, isTriShell = false, isQuadShell = false, isHex8 = false;
-	FILE* fp = fopen(szfile, "wt");
-	if (fp == 0) return false;
+    int i, j, k;
+    
+    FEState* ps;
+    int ns = fem.GetStates();
+    if (ns == 0) return false;
+    
+    char szroot[256], szname[256], szext[16];
+    const char* sz;
+    sz = strrchr(szfile, '.');
+    if (sz == 0) {
+        strcpy(szroot, szfile);
+        strcat(szroot,".");
+        strcpy(szext,".vtk");
+    }
+    else {
+        strncpy(szroot, szfile,sz-szfile+1);
+        strcpy(szext, sz);
+    }
+    
+    FEMeshBase* pm = fem.GetFEMesh(0);
+    if (pm == 0) return false;
+    
+    FEMeshBase& m = *pm;
+    
+    int nodes = m.Nodes();
+    
+    // save each state in a separate file
+    int l0 = log10((double)ns) + 1;
+    for (int is=0; is<ns; ++is) {
+        ps = fem.GetState(is);
+        if (sprintf(szname, "%st%0*d%s",szroot,l0,is,szext) < 0) return false;
+        
+        FILE* fp = fopen(szname, "wt");
+        if (fp == 0) return false;
+        
+        // --- H E A D E R ---
+        fprintf(fp, "%s\n"       ,"# vtk DataFile Version 3.0");
+        fprintf(fp, "%s %g\n"    ,"vtk output at time",ps->m_time);
+        fprintf(fp, "%s\n"       ,"ASCII");
+        fprintf(fp, "%s\n"       ,"DATASET UNSTRUCTURED_GRID");
+        fprintf(fp, "%s %d %s\n" ,"POINTS", nodes ,"float");
+        
+        // --- N O D E S ---
+        for (j=0; j<nodes; )
+        {
+            for (int k =0; k<3 && j+k<nodes;k++)
+            {
+                vec3f& r = ps->m_NODE[j+k].m_rt;
+                fprintf(fp, "%g %g %g ", r.x, r.y, r.z);
+            }
+            fprintf(fp, "\n");
+            j = j + 3;
+        }
+        fprintf(fp, "%s\n" ,"");
+        
+        // --- E L E M E N T S ---
+        int nn[FEGenericElement::MAX_NODES];
+        int nsize = 0;
+        for (j=0; j<m.Elements(); ++j)
+            nsize += m.Element(j).Nodes() + 1;
+        
+        fprintf(fp, "%s %d %d\n" ,"CELLS", m.Elements(), nsize);
+        
+        for (int j=0; j<m.Elements(); ++j)
+        {
+            FEElement& el = m.Element(j);
+            fprintf(fp, "%d ", el.Nodes());
+            for (int k=0; k<el.Nodes(); ++k) fprintf(fp, "%d ", el.m_node[k]);
+            fprintf(fp, "\n");
+        }
+        
+        fprintf(fp, "\n%s %d\n" ,"CELL_TYPES", m.Elements());
+        for (j=0; j<m.Elements(); ++j)
+        {
+            FEElement& el = m.Element(j);
+            int vtk_type;
+            switch (el.Type()) {
+                case FE_HEX8  : vtk_type = VTK_HEXAHEDRON; break;
+                case FE_TET4  : vtk_type = VTK_TETRA; break;
+                case FE_PENTA6: vtk_type = VTK_WEDGE; break;
+                case FE_QUAD4 : vtk_type = VTK_QUAD; break;
+                case FE_TRI3  : vtk_type = VTK_TRIANGLE; break;
+                case FE_LINE2: vtk_type = VTK_LINE; break;
+                case FE_HEX20 : vtk_type = VTK_QUADRATIC_HEXAHEDRON; break;
+                case FE_QUAD8 : vtk_type = VTK_QUADRATIC_QUAD; break;
+                case FE_LINE3: vtk_type = VTK_QUADRATIC_EDGE; break;
+                case FE_TET10 : vtk_type = VTK_QUADRATIC_TETRA; break;
+                case FE_TET15 : vtk_type = VTK_QUADRATIC_TETRA; break;
+                case FE_PENTA15: vtk_type = VTK_QUADRATIC_WEDGE; break;
+                case FE_HEX27 : vtk_type = VTK_QUADRATIC_HEXAHEDRON; break;
+                case FE_TRI6  : vtk_type = VTK_QUADRATIC_TRIANGLE; break;
+                case FE_QUAD9 : vtk_type = VTK_QUADRATIC_QUAD; break;
+                default: vtk_type = -1; break;
+            }
+            
+            fprintf(fp, "%d\n", vtk_type);
+        }
+        
+        // --- N O D E   D A T A ---
+        {
+            FEDataManager& DM = *fem.GetDataManager();
+            FEDataFieldPtr pd = DM.FirstDataField();
+            
+            int NDATA = ps->m_Data.size();
+            if (NDATA > 0) fprintf(fp, "\n%s %d\n" ,"POINT_DATA",nodes);
+            
+            for (int n=0; n<NDATA; ++n, ++pd)
+            {
+                FEDataField& data = *(*pd);
+                if ((data.DataClass() == CLASS_NODE) && (data.Flags() & EXPORT_DATA))
+                {
+                    FEMeshData& meshData = ps->m_Data[n];
+                    char szname[256];
+                    strcpy(szname, data.GetName());
+                    Space2_(szname);
+                    
+                    // value array
+                    vector<float> val;
+                    if (FillNodeDataArray(val, meshData) == false) return false;
+                    
+                    // write the value array
+                    if (val.empty() == false) {
+                        int ntype = meshData.GetType();
+                        if (ntype == DATA_FLOAT) {
+                            fprintf(fp, "%s %s %s\n" ,"SCALARS",szname,"float");
+                            fprintf(fp, "%s %s\n","LOOKUP_TABLE","default");
+                            for (int i=0; i<val.size(); ++i) fprintf(fp,"%g\n",val[i]);
+                        }
+                        else if (ntype == DATA_VEC3F) {
+                            fprintf(fp, "%s %s %s\n" ,"VECTORS",szname,"float");
+                            for (int i=0; i<val.size(); i+=3) fprintf(fp,"%g %g %g\n",val[i],val[i+1],val[i+2]);
+                        }
+                        else if (ntype == DATA_MAT3FS) {
+                            fprintf(fp, "%s %s %s\n" ,"TENSORS",szname,"float");
+                            for (int i=0; i<val.size(); i+=6)
+                                fprintf(fp,"%g %g %g\n%g %g %g\n%g %g %g\n\n",
+                                        val[i  ],val[i+3],val[i+5],
+                                        val[i+3],val[i+1],val[i+4],
+                                        val[i+5],val[i+4],val[i+2]);
+                        }
+                        else if (ntype == DATA_MAT3FD) {
+                            fprintf(fp, "%s %s %s\n" ,"TENSORS",szname,"float");
+                            for (int i=0; i<val.size(); i+=3)
+                                fprintf(fp,"%g %g %g\n%g %g %g\n%g %g %g\n\n",
+                                        val[i  ],0.f,0.f,
+                                        0.f,val[i+1],0.f,
+                                        0.f,0.f,val[i+2]);
+                        }
+                    }
+                }
+            }
+        }
+        
+        // --- E L E M E N T   P O I N T   D A T A ---
+        {
+            FEDataManager& DM = *fem.GetDataManager();
+            FEDataFieldPtr pd = DM.FirstDataField();
+            
+            int NDATA = ps->m_Data.size();
+            
+            for (int n=0; n<NDATA; ++n, ++pd)
+            {
+                FEDataField& data = *(*pd);
+                if ((data.DataClass() == CLASS_ELEM) && (data.Flags() & EXPORT_DATA))
+                {
+                    FEMeshData& meshData = ps->m_Data[n];
+                    Data_Format dfmt = meshData.GetFormat();
+                    if (dfmt == DATA_NODE) {
+                        FEDataField& data = *(*pd);
+                        char szname[256];
+                        strcpy(szname, data.GetName());
+                        Space2_(szname);
+                        
+                        // value array
+                        vector<float> val;
+                        
+                        int ND = m.Parts();
+                        for (int i=0; i<ND; ++i)
+                        {
+                            FEPart& part = m.Part(i);
+                            
+                            if (FillElemDataArray(val, meshData, part) == false) return false;
+                            
+                            // write the value array
+                            if (val.empty() == false) {
+                                int ntype = meshData.GetType();
+                                if (ntype == DATA_FLOAT) {
+                                    if (i==0) {
+                                        fprintf(fp, "%s %s %s\n" ,"SCALARS",szname,"float");
+                                        fprintf(fp, "%s %s\n","LOOKUP_TABLE","default");
+                                    }
+                                    for (int i=0; i<val.size(); ++i) fprintf(fp,"%g\n",val[i]);
+                                }
+                                else if (ntype == DATA_VEC3F) {
+                                    if (i==0) {
+                                        fprintf(fp, "%s %s %s\n" ,"VECTORS",szname,"float");
+                                    }
+                                    for (int i=0; i<val.size(); i+=3) fprintf(fp,"%g %g %g\n",val[i],val[i+1],val[i+2]);
+                                }
+                                else if (ntype == DATA_MAT3FS) {
+                                    if (i==0) {
+                                        fprintf(fp, "%s %s %s\n" ,"TENSORS",szname,"float");
+                                    }
+                                    for (int i=0; i<val.size(); i+=6)
+                                        fprintf(fp,"%g %g %g\n%g %g %g\n%g %g %g\n\n",
+                                                val[i  ],val[i+3],val[i+5],
+                                                val[i+3],val[i+1],val[i+4],
+                                                val[i+5],val[i+4],val[i+2]);
+                                }
+                                else if (ntype == DATA_MAT3FD) {
+                                    if (i==0) {
+                                        fprintf(fp, "%s %s %s\n" ,"TENSORS",szname,"float");
+                                    }
+                                    for (int i=0; i<val.size(); i+=3)
+                                        fprintf(fp,"%g %g %g\n%g %g %g\n%g %g %g\n\n",
+                                                val[i  ],0.f,0.f,
+                                                0.f,val[i+1],0.f,
+                                                0.f,0.f,val[i+2]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        // --- E L E M E N T   C E L L   D A T A ---
+        {
+            FEDataManager& DM = *fem.GetDataManager();
+            FEDataFieldPtr pd = DM.FirstDataField();
+            
+            int NDATA = ps->m_Data.size();
+            if (NDATA > 0) fprintf(fp, "\n%s %d\n" ,"CELL_DATA",m.Elements());
+            
+            for (int n=0; n<NDATA; ++n, ++pd)
+            {
+                FEDataField& data = *(*pd);
+                if ((data.DataClass() == CLASS_ELEM) && (data.Flags() & EXPORT_DATA))
+                {
+                    FEMeshData& meshData = ps->m_Data[n];
+                    Data_Format dfmt = meshData.GetFormat();
+                    if (dfmt == DATA_ITEM) {
+                        FEDataField& data = *(*pd);
+                        char szname[256];
+                        strcpy(szname, data.GetName());
+                        Space2_(szname);
+                        
+                        // value array
+                        vector<float> val;
+                        
+                        int ND = m.Parts();
+                        for (int i=0; i<ND; ++i)
+                        {
+                            FEPart& part = m.Part(i);
+                            
+                            if (FillElemDataArray(val, meshData, part) == false) return false;
+                            
+                            // write the value array
+                            if (val.empty() == false) {
+                                int ntype = meshData.GetType();
+                                if (ntype == DATA_FLOAT) {
+                                    if (i==0) {
+                                        fprintf(fp, "%s %s %s\n" ,"SCALARS",szname,"float");
+                                        fprintf(fp, "%s %s\n","LOOKUP_TABLE","default");
+                                    }
+                                    for (int i=0; i<val.size(); ++i) fprintf(fp,"%g\n",val[i]);
+                                }
+                                else if (ntype == DATA_VEC3F) {
+                                    if (i==0) {
+                                        fprintf(fp, "%s %s %s\n" ,"VECTORS",szname,"float");
+                                    }
+                                    for (int i=0; i<val.size(); i+=3) fprintf(fp,"%g %g %g\n",val[i],val[i+1],val[i+2]);
+                                }
+                                else if (ntype == DATA_MAT3FS) {
+                                    if (i==0) {
+                                        fprintf(fp, "%s %s %s\n" ,"TENSORS",szname,"float");
+                                    }
+                                    for (int i=0; i<val.size(); i+=6)
+                                        fprintf(fp,"%g %g %g\n%g %g %g\n%g %g %g\n\n",
+                                                val[i  ],val[i+3],val[i+5],
+                                                val[i+3],val[i+1],val[i+4],
+                                                val[i+5],val[i+4],val[i+2]);
+                                }
+                                else if (ntype == DATA_MAT3FD) {
+                                    if (i==0) {
+                                        fprintf(fp, "%s %s %s\n" ,"TENSORS",szname,"float");
+                                    }
+                                    for (int i=0; i<val.size(); i+=3)
+                                        fprintf(fp,"%g %g %g\n%g %g %g\n%g %g %g\n\n",
+                                                val[i  ],0.f,0.f,
+                                                0.f,val[i+1],0.f,
+                                                0.f,0.f,val[i+2]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        fclose(fp);
+    }
+    
+    return true;
+}
 
-	FEMeshBase* pm = fem.GetFEMesh(0);
-	if (pm == 0) return false;
-		
-	FEMeshBase& m = *pm;
-	
-	//tags all nodes as 0
-	for (j=0; j<m.Nodes(); ++j) 
-		m.Node(j).m_ntag = 0;
-
-	// tags all the nodes in elements as 1
-	for (j=0; j<m.Elements(); ++j)
-	{
-		FEElement &el = m.Element(j);
-		for (k=0; k<el.Nodes(); ++k)
-			m.Node(el.m_node[k]).m_ntag = 1;
-		//check element type
-		if (j==0)
-		{
-			int elType = el.Type();
-			switch(elType)
-			{
-			case FE_TRI3:
-				isPOLYDATA = true;
-				isTriShell = true;
-				break;
-			case FE_QUAD4:
-				isPOLYDATA = true;
-				isQuadShell = true;
-				break;
-			case FE_HEX8:
-				isHex8 = true;
-				isUnstructuredGrid = true;
-				break;
-			default:
-				delete pm;
-				return false; // Only triangular, quadrilateral and hexahedron polygons are supported.
-			}
-		}
-	}
-
-	// tag the node as per the node number
-	int nodes = m.Nodes();
-
-	// --- H E A D E R ---
-	fprintf(fp, "%s\n" , "# vtk DataFile Version 3.0");
-	fprintf(fp, "%s\n" ,"vtk output");
-	fprintf(fp, "%s\n" ,"ASCII");
-	if(isPOLYDATA)
-		fprintf(fp, "%s\n" ,"DATASET POLYDATA");
-	if(isUnstructuredGrid)
-		fprintf(fp, "%s\n" ,"DATASET UNSTRUCTURED_GRID");
-	fprintf(fp, "%s %d %s\n" ,"POINTS", nodes ,"float");
-
-	//fprintf(fp, "%d %d %d %d\n", parts, nodes, faces, edges);
-
-	// --- N O D E S ---
-	for (j=0; j<m.Nodes(); )
-	{
-		for (int k =0; k<3 && j+k<m.Nodes();k++)
-		{
-			FENode& n = m.Node(j+k);
-			vec3f& r = n.m_rt;
-			fprintf(fp, "%g %g %g ", r.x, r.y, r.z);
-		}
-		fprintf(fp, "\n");
-		j = j + 3;				
-	}
-	fprintf(fp, "%s\n" ,"");
-
-	// --- E L E M E N T S ---	
-	int nn[FEGenericElement::MAX_NODES];
-	for (j=0; j<m.Elements(); ++j)
-	{
-		FEElement& el = m.Element(j);
-		for (int k=0; k<el.Nodes(); ++k) 
-			nn[k] = m.Node(el.m_node[k]).m_ntag;
-
-		if(j==0)
-		{
-			if(isPOLYDATA)
-				fprintf(fp, "%s %d %d\n" ,"POLYGONS", m.Elements(), m.Elements() * (el.Nodes()+1));
-			if(isUnstructuredGrid)
-				fprintf(fp, "%s %d %d\n" ,"CELLS", m.Elements(), m.Elements() * (el.Nodes()+1));
-		}
-
-		switch (el.Type())
-		{
-		case FE_TRI3:
-			fprintf(fp, "%d %d %d %d\n", el.Nodes(), nn[0], nn[1], nn[2]);
-			break;
-		case FE_QUAD4:
-			fprintf(fp, "%d %d %d %d %d\n", el.Nodes(),nn[0], nn[1], nn[2], nn[3]);
-			break;
-		case FE_HEX8:
-			fprintf(fp, "%d %d %d %d %d %d %d %d %d\n", el.Nodes(),nn[0], nn[1], nn[2], nn[3], nn[4], nn[5], nn[6], nn[7]);
-			break;
-		default:
-			return false;
-		}
-	}
-/*
-	//----Shell Thickness ----
-	if (m_ops.bshellthick)
-	{
-		fprintf(fp, "%s\n" ,"");
-		fprintf(fp, "%s %d\n" ,"POINT_DATA", nodes);
-		fprintf(fp, "%s %s %s\n" ,"SCALARS", "ShellThickness", "float");
-		fprintf(fp,"%s\n","LOOKUP_TABLE default");
-
-		vector<double> nodeShellThickness; 
-		nodeShellThickness.reserve(nodes);
-		int nn[8];
-		for (int k = 0 ; k< nodes;k++)
-			nodeShellThickness.push_back(0);
-
-			for (j=0; j<m.Elements(); ++j)
-			{
-				FEElement& el = m.Element(j);
-				if (!el.IsType(FE_TRI3) && !el.IsType(FE_QUAD4))
-					break;
-
-				for (int k=0; k<el.Nodes(); ++k) 
-						nn[k] = el.m_node[k];
-
-				double* h = el.m_h;
-			
-				for(int k =0;k<el.Nodes();k++)
-					nodeShellThickness[nn[k]] = h[k];
-
-			}
-			for (i=0; i<model.Objects(); ++i)
-			{
-				FEMeshBase& m = *model.Object(i)->GetFEMesh();
-				for (j=0; j<m.Nodes();)
-				{
-					for (int k =0; k<9 && j+k<m.Nodes();k++)
-						fprintf(fp, "%15.10lg ", nodeShellThickness[j+k]);	
-					fprintf(fp, "\n");
-					j = j + 9;	
-				}
-			}							
-		}
-	}
-
-	//-----Nodal Data-----------
-	if (m_ops.bscalar_data)
-	{
-		fprintf(fp, "%s\n" ,"");
-		fprintf(fp, "%s %d\n" ,"POINT_DATA", nodes);
-		fprintf(fp, "%s %s %s\n" ,"SCALARS", "ScalarData", "float");
-		fprintf(fp,"%s\n","LOOKUP_TABLE default");
-		for (i=0; i<model.Objects(); ++i)
-		{
-			FEMeshBase& m = *model.Object(i)->GetFEMesh();
-			for (j=0; j<m.Nodes();)
-			{
-				for (int k =0; k<9 && j+k<m.Nodes();k++)
-				{
-					FENode& n = m.Node(j+k);
-						fprintf(fp, "%15.10lg ", n.m_ndata);
-				}
-				fprintf(fp, "\n");
-				j = j + 9;	
-			}
-		}
-	}
-
-	//celll type
-	if(isHex8)
-	{
-		fprintf(fp, "%s\n" ,"");		
-		for (i=0; i<model.Objects(); ++i)
-		{
-			FEMeshBase& m = *model.Object(i)->GetFEMesh();
-			for (j=0; j<m.Elements(); ++j)
-			{
-				if(j == 0)
-				{
-					fprintf(fp, "%s %d\n" ,"CELL_TYPES", m.Elements());
-				}
-				fprintf(fp,"%s\n","12");
-			}
-		}	
-	}
-*/
-	fclose(fp);
-
-	return true;
+void FEVTKExport::Space2_(char* szname)
+{
+    int n = strlen(szname);
+    for (int i=0; i<n; ++i)
+        if (szname[i] == ' ') szname[i] = '_';
 }

@@ -908,12 +908,13 @@ float FEMeshBase::ElementVolume(int iel)
 	FEElement& el = Element(iel);
 	switch (el.Type())
 	{
-	case FE_HEX8  : return HexVolume(el); break;
-	case FE_HEX20 : return HexVolume(el); break;
-	case FE_HEX27 : return HexVolume(el); break;
-	case FE_TET4  : return TetVolume(el); break;
-	case FE_PENTA6: return PentaVolume(el); break;
-	}
+	case FE_HEX8   : return HexVolume(el); break;
+	case FE_HEX20  : return HexVolume(el); break;
+	case FE_HEX27  : return HexVolume(el); break;
+	case FE_TET4   : return TetVolume(el); break;
+	case FE_PENTA6 : return PentaVolume(el); break;
+    case FE_PENTA15: return PentaVolume(el); break;
+    }
 
 	return 0.f;
 }
@@ -1037,7 +1038,7 @@ float FEMeshBase::HexVolume(const FEElement& el)
 // Calculate the volume of a pentahedral element
 float FEMeshBase::PentaVolume(const FEElement& el)
 {
-	assert(el.Type() == FE_PENTA6);
+	assert((el.Type() == FE_PENTA6) || (el.Type() == FE_PENTA15));
 
 	// gauss-point data
 	//gauss intergration points

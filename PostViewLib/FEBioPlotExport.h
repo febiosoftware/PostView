@@ -105,7 +105,8 @@ protected:
 		PLT_ELEM_HEX27, 
 		PLT_ELEM_TRI6, 
 		PLT_ELEM_QUAD8, 
-		PLT_ELEM_QUAD9, 
+		PLT_ELEM_QUAD9,
+        PLT_ELEM_PENTA15,
 		PLT_ELEM_TET20,
 		PLT_ELEM_TRI10
 	};
@@ -125,7 +126,7 @@ public:
 	// set the compression flag
 	void SetCompression(bool b) { m_ncompress = (b ? 1 : 0); }
 
-private:
+protected:
 	bool WriteRoot(FEModel& fem);
 	bool WriteHeader    (FEModel& fem);
 	bool WriteDictionary(FEModel& fem);

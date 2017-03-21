@@ -5,6 +5,7 @@
 extern int FT_HEX[6][4];
 extern int FT_TET[4][4];
 extern int FT_PENTA[5][4];
+extern int FT_PENTA15[5][8];
 extern int FT_HEX20[6][8];
 extern int FT_HEX27[6][9];
 extern int FT_TET10[4][6];
@@ -396,9 +397,38 @@ void FEModel::EvalElemField(int ntime, int nfield)
                     }
 				}
 				break;
-			case FE_HEX8:
-				{
-					const int* fn = FT_HEX[f.m_elem[1]];
+            case FE_PENTA15:
+                {
+                    const int* fn = FT_PENTA[f.m_elem[1]];
+                    switch (f.m_ntype) {
+                        case FACE_TRI6:
+                            fd.value(i, 0) = elemData.value(f.m_elem[0], fn[0]);
+                            fd.value(i, 1) = elemData.value(f.m_elem[0], fn[1]);
+                            fd.value(i, 2) = elemData.value(f.m_elem[0], fn[2]);
+                            fd.value(i, 3) = elemData.value(f.m_elem[0], fn[3]);
+                            fd.value(i, 4) = elemData.value(f.m_elem[0], fn[4]);
+                            fd.value(i, 5) = elemData.value(f.m_elem[0], fn[5]);
+                            d.m_val = (fd.value(i, 0) + fd.value(i, 1) + fd.value(i, 2) + fd.value(i, 3) + fd.value(i, 4) + fd.value(i, 5)) / 6.f;
+                            break;
+                        case FACE_QUAD8:
+                            fd.value(i, 0) = elemData.value(f.m_elem[0], fn[0]);
+                            fd.value(i, 1) = elemData.value(f.m_elem[0], fn[1]);
+                            fd.value(i, 2) = elemData.value(f.m_elem[0], fn[2]);
+                            fd.value(i, 3) = elemData.value(f.m_elem[0], fn[3]);
+                            fd.value(i, 4) = elemData.value(f.m_elem[0], fn[4]);
+                            fd.value(i, 5) = elemData.value(f.m_elem[0], fn[5]);
+                            fd.value(i, 6) = elemData.value(f.m_elem[0], fn[6]);
+                            fd.value(i, 7) = elemData.value(f.m_elem[0], fn[7]);
+                            d.m_val = (fd.value(i, 0) + fd.value(i, 1) + fd.value(i, 2) + fd.value(i, 3) + fd.value(i, 4) + fd.value(i, 5) + fd.value(i, 6) + fd.value(i, 7)) * 0.125f;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                break;
+            case FE_HEX8:
+                {
+                    const int* fn = FT_HEX[f.m_elem[1]];
 					fd.value(i, 0) = elemData.value(f.m_elem[0], fn[0]);
 					fd.value(i, 1) = elemData.value(f.m_elem[0], fn[1]);
 					fd.value(i, 2) = elemData.value(f.m_elem[0], fn[2]);
@@ -1173,9 +1203,38 @@ bool FEModel::EvaluateFace(int n, int ntime, int nfield, float* data, float& val
                 }
             }
             break;
-		case FE_HEX8:
-			{
-				const int* fn = FT_HEX[f.m_elem[1]];
+        case FE_PENTA15:
+            {
+                const int* fn = FT_PENTA[f.m_elem[1]];
+                switch (f.m_ntype) {
+                    case FACE_TRI6:
+                        data[0] = edata[fn[0]];
+                        data[1] = edata[fn[1]];
+                        data[2] = edata[fn[2]];
+                        data[3] = edata[fn[3]];
+                        data[4] = edata[fn[4]];
+                        data[5] = edata[fn[5]];
+                        val = (data[0] + data[1] + data[2] + data[3] + data[4] + data[5]) / 6.f;
+                        break;
+                    case FACE_QUAD8:
+                        data[0] = edata[fn[0]];
+                        data[1] = edata[fn[1]];
+                        data[2] = edata[fn[2]];
+                        data[3] = edata[fn[3]];
+                        data[4] = edata[fn[4]];
+                        data[5] = edata[fn[5]];
+                        data[6] = edata[fn[6]];
+                        data[7] = edata[fn[7]];
+                        val = (data[0] + data[1] + data[2] + data[3] + data[4] + data[5] + data[6] + data[7]) / 8.f;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            break;
+            case FE_HEX8:
+            {
+                const int* fn = FT_HEX[f.m_elem[1]];
                 data[0] = edata[fn[0]];
                 data[1] = edata[fn[1]];
                 data[2] = edata[fn[2]];

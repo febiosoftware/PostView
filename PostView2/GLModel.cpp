@@ -15,6 +15,7 @@ extern int ET_HEX[12][2];
 extern int ET_HEX20[12][3];
 extern int ET_TET[6][2];
 extern int ET_PENTA[9][2];
+extern int ET_PENTA15[9][3];
 extern int ET_TET10[6][3];
 
 //-----------------------------------------------------------------------------
@@ -1738,7 +1739,21 @@ void CGLModel::RenderElementOutline(FEElement& el, FEMeshBase* pm)
 				}
 			};
 			break;
-		case FE_TET4:
+        case FE_PENTA15:
+            {
+                int (*et)[3] = ET_PENTA15;
+                for (int i=0; i<9; ++i)
+                {
+                    vec3f& r0 = pm->Node(el.m_node[et[i][0]]).m_rt;
+                    vec3f& r1 = pm->Node(el.m_node[et[i][1]]).m_rt;
+                    vec3f& r2 = pm->Node(el.m_node[et[i][2]]).m_rt;
+                    
+                    glVertex3f(r0.x, r0.y, r0.z); glVertex3f(r2.x, r2.y, r2.z);
+                    glVertex3f(r2.x, r2.y, r2.z); glVertex3f(r1.x, r1.y, r1.z);
+                }
+            };
+            break;
+        case FE_TET4:
 		case FE_TET20:
 			{
 				int (*et)[2] = ET_TET;

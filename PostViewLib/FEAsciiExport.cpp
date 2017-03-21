@@ -162,7 +162,10 @@ bool FEASCIIExport::Save(FEModel* pfem, int n0, int n1, const char* szfile)
 			case FE_TET15:
 				fprintf(fp, "%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d\n", i + 1, n[0], n[1], n[2], n[3], n[4], n[5], n[6], n[7], n[8], n[9], n[10], n[11], n[12], n[13], n[14]);
 				break;
-			}
+            case FE_PENTA15:
+                    fprintf(fp, "%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d\n", i + 1, n[0], n[1], n[2], n[3], n[4], n[5], n[6], n[7], n[8], n[9], n[10], n[11], n[12], n[13], n[14]);
+                    break;
+            }
 		}
 	}
 

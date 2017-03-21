@@ -199,19 +199,20 @@ void FEBioImport::ParseGeometrySection(FEModel &fem, XMLTag &tag)
 			{
 				FEElemType etype;
 				FEGenericElement& el = static_cast<FEGenericElement&>(m_pm->Element(i));
-				if      (tag == "hex8"  ) { etype = FE_HEX8;   ++nbel; }
-				else if (tag == "hex20" ) { etype = FE_HEX20;  ++nbel; }
-				else if (tag == "hex27" ) { etype = FE_HEX27;  ++nbel; }
-				else if (tag == "penta6") { etype = FE_PENTA6; ++nbel; }
-				else if (tag == "tet4"  ) { etype = FE_TET4;   ++nbel; }
-				else if (tag == "tet10" ) { etype = FE_TET10;  ++nbel; }
-				else if (tag == "tet15" ) { etype = FE_TET15;  ++nbel; }
-				else if (tag == "tet20" ) { etype = FE_TET20;  ++nbel; }
-				else if (tag == "quad4" ) { etype = FE_QUAD4;  ++nsel; }
-                else if (tag == "quad8" ) { etype = FE_QUAD8;  ++nsel; }
-                else if (tag == "quad9" ) { etype = FE_QUAD9;  ++nsel; }
-				else if (tag == "tri3"  ) { etype = FE_TRI3;   ++nsel; }
-                else if (tag == "tri6"  ) { etype = FE_TRI6;   ++nsel; }
+				if      (tag == "hex8"   ) { etype = FE_HEX8;    ++nbel; }
+				else if (tag == "hex20"  ) { etype = FE_HEX20;   ++nbel; }
+				else if (tag == "hex27"  ) { etype = FE_HEX27;   ++nbel; }
+				else if (tag == "penta6" ) { etype = FE_PENTA6;  ++nbel; }
+                else if (tag == "penta15") { etype = FE_PENTA15; ++nbel; }
+                else if (tag == "tet4"   ) { etype = FE_TET4;    ++nbel; }
+				else if (tag == "tet10"  ) { etype = FE_TET10;   ++nbel; }
+				else if (tag == "tet15"  ) { etype = FE_TET15;   ++nbel; }
+				else if (tag == "tet20"  ) { etype = FE_TET20;   ++nbel; }
+				else if (tag == "quad4"  ) { etype = FE_QUAD4;   ++nsel; }
+                else if (tag == "quad8"  ) { etype = FE_QUAD8;   ++nsel; }
+                else if (tag == "quad9"  ) { etype = FE_QUAD9;   ++nsel; }
+				else if (tag == "tri3"   ) { etype = FE_TRI3;    ++nsel; }
+                else if (tag == "tri6"   ) { etype = FE_TRI6;    ++nsel; }
 				else throw XMLReader::InvalidTag(tag);
 				el.SetType(etype);
 
@@ -264,19 +265,20 @@ void FEBioImport::ParseGeometrySection2(FEModel &fem, XMLTag &tag)
 			// get the element type
 			const char* sztype = tag.AttributeValue("type");
 			FEElemType etype;
-			if      (strcmp(sztype, "hex8"  ) == 0) etype = FE_HEX8; 
-			else if (strcmp(sztype, "tet4"  ) == 0) etype = FE_TET4; 
-			else if (strcmp(sztype, "penta6") == 0) etype = FE_PENTA6; 
-			else if (strcmp(sztype, "quad4" ) == 0) etype = FE_QUAD4; 
-			else if (strcmp(sztype, "tri3"  ) == 0) etype = FE_TRI3; 
-			else if (strcmp(sztype, "hex20" ) == 0) etype = FE_HEX20; 
-			else if (strcmp(sztype, "quad8" ) == 0) etype = FE_QUAD8; 
-			else if (strcmp(sztype, "tet10" ) == 0) etype = FE_TET10; 
-			else if (strcmp(sztype, "tet15" ) == 0) etype = FE_TET15; 
-			else if (strcmp(sztype, "tet20" ) == 0) etype = FE_TET20;
-			else if (strcmp(sztype, "hex27" ) == 0) etype = FE_HEX27;
-			else if (strcmp(sztype, "tri6"  ) == 0) etype = FE_TRI6; 
-			else if (strcmp(sztype, "quad9" ) == 0) etype = FE_QUAD9; 
+			if      (strcmp(sztype, "hex8"   ) == 0) etype = FE_HEX8;
+			else if (strcmp(sztype, "tet4"   ) == 0) etype = FE_TET4;
+			else if (strcmp(sztype, "penta6" ) == 0) etype = FE_PENTA6;
+            else if (strcmp(sztype, "penta15") == 0) etype = FE_PENTA15;
+            else if (strcmp(sztype, "quad4"  ) == 0) etype = FE_QUAD4;
+			else if (strcmp(sztype, "tri3"   ) == 0) etype = FE_TRI3;
+			else if (strcmp(sztype, "hex20"  ) == 0) etype = FE_HEX20;
+			else if (strcmp(sztype, "quad8"  ) == 0) etype = FE_QUAD8;
+			else if (strcmp(sztype, "tet10"  ) == 0) etype = FE_TET10;
+			else if (strcmp(sztype, "tet15"  ) == 0) etype = FE_TET15;
+			else if (strcmp(sztype, "tet20"  ) == 0) etype = FE_TET20;
+			else if (strcmp(sztype, "hex27"  ) == 0) etype = FE_HEX27;
+			else if (strcmp(sztype, "tri6"   ) == 0) etype = FE_TRI6;
+			else if (strcmp(sztype, "quad9"  ) == 0) etype = FE_QUAD9;
 			else throw XMLReader::InvalidAttributeValue(tag, "type", sztype);
 
 			// get the material ID

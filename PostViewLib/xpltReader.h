@@ -98,7 +98,8 @@ protected:
 		PLT_ELEM_TRI6, 
 		PLT_ELEM_QUAD8, 
 		PLT_ELEM_QUAD9, 
-		PLT_ELEM_TET20,
+        PLT_ELEM_PENTA15,
+        PLT_ELEM_TET20,
 		PLT_ELEM_TRI10 
 	};
 

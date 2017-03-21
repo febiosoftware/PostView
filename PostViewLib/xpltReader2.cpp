@@ -677,20 +677,21 @@ bool XpltReader2::ReadDomainSection(FEModel &fem)
 					int ne = 0;
 					switch (D.etype)
 					{
-					case PLT_ELEM_HEX8 : ne =  8; break;
-					case PLT_ELEM_PENTA: ne =  6; break;
-					case PLT_ELEM_TET  : ne =  4; break;
-					case PLT_ELEM_QUAD : ne =  4; break;
-					case PLT_ELEM_TRI  : ne =  3; break;
-					case PLT_ELEM_TRUSS: ne =  2; break;
-					case PLT_ELEM_HEX20: ne = 20; break;
-					case PLT_ELEM_HEX27: ne = 27; break;
-					case PLT_ELEM_TET10: ne = 10; break;
-					case PLT_ELEM_TET15: ne = 15; break;
-					case PLT_ELEM_TET20: ne = 20; break;
-                    case PLT_ELEM_TRI6 : ne =  6; break;
-                    case PLT_ELEM_QUAD8: ne =  8; break;
-                    case PLT_ELEM_QUAD9: ne =  9; break;
+					case PLT_ELEM_HEX8   : ne =  8; break;
+					case PLT_ELEM_PENTA  : ne =  6; break;
+                    case PLT_ELEM_PENTA15: ne =  15; break;
+                    case PLT_ELEM_TET    : ne =  4; break;
+					case PLT_ELEM_QUAD   : ne =  4; break;
+					case PLT_ELEM_TRI    : ne =  3; break;
+					case PLT_ELEM_TRUSS  : ne =  2; break;
+					case PLT_ELEM_HEX20  : ne = 20; break;
+					case PLT_ELEM_HEX27  : ne = 27; break;
+					case PLT_ELEM_TET10  : ne = 10; break;
+					case PLT_ELEM_TET15  : ne = 15; break;
+					case PLT_ELEM_TET20  : ne = 20; break;
+                    case PLT_ELEM_TRI6   : ne =  6; break;
+                    case PLT_ELEM_QUAD8  : ne =  8; break;
+                    case PLT_ELEM_QUAD9  : ne =  9; break;
 					default:
 						assert(false);
 						return errf("Error while reading Domain section");
@@ -990,20 +991,21 @@ bool XpltReader2::BuildMesh(FEModel &fem)
 					FEElemType etype;
 					switch (D.etype)
 					{
-					case PLT_ELEM_HEX8 : etype = FE_HEX8  ; break;
-					case PLT_ELEM_PENTA: etype = FE_PENTA6; break;
-					case PLT_ELEM_TET  : etype = FE_TET4  ; break;
-					case PLT_ELEM_QUAD : etype = FE_QUAD4 ; break;
-					case PLT_ELEM_TRI  : etype = FE_TRI3  ; break;
-					case PLT_ELEM_TRUSS: etype = FE_LINE2 ; break;
-					case PLT_ELEM_HEX20: etype = FE_HEX20 ; break;
-					case PLT_ELEM_HEX27: etype = FE_HEX27 ; break;
-					case PLT_ELEM_TET10: etype = FE_TET10 ; break;
-					case PLT_ELEM_TET15: etype = FE_TET15 ; break;
-					case PLT_ELEM_TET20: etype = FE_TET20 ; break;
-					case PLT_ELEM_TRI6 : etype = FE_TRI6  ; break;
-					case PLT_ELEM_QUAD8: etype = FE_QUAD8 ; break;
-					case PLT_ELEM_QUAD9: etype = FE_QUAD9 ; break;
+					case PLT_ELEM_HEX8   : etype = FE_HEX8  ; break;
+					case PLT_ELEM_PENTA  : etype = FE_PENTA6; break;
+                    case PLT_ELEM_PENTA15: etype = FE_PENTA15; break;
+                    case PLT_ELEM_TET    : etype = FE_TET4  ; break;
+					case PLT_ELEM_QUAD   : etype = FE_QUAD4 ; break;
+					case PLT_ELEM_TRI    : etype = FE_TRI3  ; break;
+					case PLT_ELEM_TRUSS  : etype = FE_LINE2 ; break;
+					case PLT_ELEM_HEX20  : etype = FE_HEX20 ; break;
+					case PLT_ELEM_HEX27  : etype = FE_HEX27 ; break;
+					case PLT_ELEM_TET10  : etype = FE_TET10 ; break;
+					case PLT_ELEM_TET15  : etype = FE_TET15 ; break;
+					case PLT_ELEM_TET20  : etype = FE_TET20 ; break;
+					case PLT_ELEM_TRI6   : etype = FE_TRI6  ; break;
+					case PLT_ELEM_QUAD8  : etype = FE_QUAD8 ; break;
+					case PLT_ELEM_QUAD9  : etype = FE_QUAD9 ; break;
 					}
 					el.SetType(etype);
 					int ne = el.Nodes();
@@ -1368,20 +1370,21 @@ bool XpltReader2::ReadElemData_NODE(FEMeshBase& m, XpltReader2::Domain &d, FEMes
 	int ne = 0;
 	switch (d.etype)
 	{
-	case PLT_ELEM_HEX8 : ne =  8; break;
-	case PLT_ELEM_PENTA: ne =  6; break;
-	case PLT_ELEM_TET  : ne =  4; break;
-	case PLT_ELEM_QUAD : ne =  4; break;
-	case PLT_ELEM_TRI  : ne =  3; break;
-	case PLT_ELEM_TRUSS: ne =  2; break;
-	case PLT_ELEM_HEX20: ne = 20; break;
-	case PLT_ELEM_HEX27: ne = 27; break;
-	case PLT_ELEM_TET10: ne = 10; break;
-	case PLT_ELEM_TET15: ne = 15; break;
-	case PLT_ELEM_TET20: ne = 20; break;
-    case PLT_ELEM_TRI6 : ne =  6; break;
-    case PLT_ELEM_QUAD8: ne =  8; break;
-    case PLT_ELEM_QUAD9: ne =  9; break;
+	case PLT_ELEM_HEX8   : ne =  8; break;
+	case PLT_ELEM_PENTA  : ne =  6; break;
+    case PLT_ELEM_PENTA15: ne =  15; break;
+    case PLT_ELEM_TET    : ne =  4; break;
+	case PLT_ELEM_QUAD   : ne =  4; break;
+	case PLT_ELEM_TRI    : ne =  3; break;
+	case PLT_ELEM_TRUSS  : ne =  2; break;
+	case PLT_ELEM_HEX20  : ne = 20; break;
+	case PLT_ELEM_HEX27  : ne = 27; break;
+	case PLT_ELEM_TET10  : ne = 10; break;
+	case PLT_ELEM_TET15  : ne = 15; break;
+	case PLT_ELEM_TET20  : ne = 20; break;
+    case PLT_ELEM_TRI6   : ne =  6; break;
+    case PLT_ELEM_QUAD8  : ne =  8; break;
+    case PLT_ELEM_QUAD9  : ne =  9; break;
 	default:
 		assert(false);
 		return errf("Error while reading element data");
@@ -1541,20 +1544,21 @@ bool XpltReader2::ReadElemData_MULT(XpltReader2::Domain& dom, FEMeshData& s, int
 	int ne = 0;
 	switch (dom.etype)
 	{
-	case PLT_ELEM_HEX8 : ne =  8; break;
-	case PLT_ELEM_PENTA: ne =  6; break;
-	case PLT_ELEM_TET  : ne =  4; break;
-	case PLT_ELEM_QUAD : ne =  4; break;
-	case PLT_ELEM_TRI  : ne =  3; break;
-	case PLT_ELEM_TRUSS: ne =  2; break;
-	case PLT_ELEM_HEX20: ne = 20; break;
-	case PLT_ELEM_HEX27: ne = 27; break;
-	case PLT_ELEM_TET10: ne = 10; break;
-	case PLT_ELEM_TET15: ne = 15; break;
-	case PLT_ELEM_TET20: ne = 20; break;
-    case PLT_ELEM_TRI6 : ne =  6; break;
-    case PLT_ELEM_QUAD8: ne =  8; break;
-    case PLT_ELEM_QUAD9: ne =  9; break;
+	case PLT_ELEM_HEX8   : ne =  8; break;
+	case PLT_ELEM_PENTA  : ne =  6; break;
+    case PLT_ELEM_PENTA15: ne =  15; break;
+    case PLT_ELEM_TET    : ne =  4; break;
+	case PLT_ELEM_QUAD   : ne =  4; break;
+	case PLT_ELEM_TRI    : ne =  3; break;
+	case PLT_ELEM_TRUSS  : ne =  2; break;
+	case PLT_ELEM_HEX20  : ne = 20; break;
+	case PLT_ELEM_HEX27  : ne = 27; break;
+	case PLT_ELEM_TET10  : ne = 10; break;
+	case PLT_ELEM_TET15  : ne = 15; break;
+	case PLT_ELEM_TET20  : ne = 20; break;
+    case PLT_ELEM_TRI6   : ne =  6; break;
+    case PLT_ELEM_QUAD8  : ne =  8; break;
+    case PLT_ELEM_QUAD9  : ne =  9; break;
 	default:
 		assert(false);
 		return errf("Error while reading element data");

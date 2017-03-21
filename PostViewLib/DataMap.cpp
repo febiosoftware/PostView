@@ -62,7 +62,8 @@ void VectorMap::Gradient(int ntime, std::vector<float> &v)
 				}
 				break;
 			case FE_PENTA6:
-				{
+            case FE_PENTA15:
+                {
 					NE[0] = 0; NE[1] = 1; NE[2] = NE[3] = 2;
 					NE[4] = 3; NE[5] = 4; NE[6] = NE[7] = 5;
 				}

@@ -64,19 +64,20 @@ bool FEFEBioExport::Save(FEModel& fem, const char* szfile)
 					FEElement& elm = pm->Element(i);
 					switch (elm.Type())
 					{
-					case FE_HEX8  : el.name("hex8"  ); break;
-					case FE_HEX20 : el.name("hex20" ); break;
-					case FE_HEX27 : el.name("hex27" ); break;
-					case FE_PENTA6: el.name("penta6"); break;
-					case FE_TET4  : el.name("tet4"  ); break;
-					case FE_QUAD4 : el.name("quad4" ); break;
-                    case FE_QUAD8 : el.name("quad8" ); break;
-                    case FE_QUAD9 : el.name("quad9" ); break;
-					case FE_TRI3  : el.name("tri3"  ); break;
-					case FE_TET10 : el.name("tet10" ); break;
-					case FE_TET15 : el.name("tet15" ); break;
-					case FE_TET20 : el.name("tet20" ); break;
-                    case FE_TRI6  : el.name("tri6"  ); break;
+					case FE_HEX8   : el.name("hex8"  ); break;
+					case FE_HEX20  : el.name("hex20" ); break;
+					case FE_HEX27  : el.name("hex27" ); break;
+					case FE_PENTA6 : el.name("penta6"); break;
+                    case FE_PENTA15: el.name("penta15"); break;
+                    case FE_TET4   : el.name("tet4"  ); break;
+					case FE_QUAD4  : el.name("quad4" ); break;
+                    case FE_QUAD8  : el.name("quad8" ); break;
+                    case FE_QUAD9  : el.name("quad9" ); break;
+					case FE_TRI3   : el.name("tri3"  ); break;
+					case FE_TET10  : el.name("tet10" ); break;
+					case FE_TET15  : el.name("tet15" ); break;
+					case FE_TET20  : el.name("tet20" ); break;
+                    case FE_TRI6   : el.name("tri6"  ); break;
 					default:
 						assert(false);
 					}

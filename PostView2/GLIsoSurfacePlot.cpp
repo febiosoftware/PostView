@@ -156,11 +156,12 @@ void CGLIsoSurfacePlot::RenderSlice(float ref)
 		{
 			switch (el.Type())
 			{
-			case FE_HEX8  : nt = HEX_NT; break;
-			case FE_HEX20 : nt = HEX_NT; break;
-			case FE_HEX27 : nt = HEX_NT; break;
-			case FE_PENTA6: nt = PEN_NT; break;
-			case FE_TET4  : nt = TET_NT; break;
+			case FE_HEX8   : nt = HEX_NT; break;
+			case FE_HEX20  : nt = HEX_NT; break;
+			case FE_HEX27  : nt = HEX_NT; break;
+			case FE_PENTA6 : nt = PEN_NT; break;
+            case FE_PENTA15: nt = PEN_NT; break;
+            case FE_TET4   : nt = TET_NT; break;
 			}
 
 			// get the nodal values

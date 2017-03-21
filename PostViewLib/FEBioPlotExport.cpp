@@ -379,20 +379,21 @@ bool FEBioPlotExport::WritePart(FEPart& part)
 	int dtype = 0;
 	switch (e0.Type())
 	{
-	case FE_HEX8  : ne =  8; dtype = PLT_ELEM_HEX8; break;
-	case FE_PENTA6: ne =  6; dtype = PLT_ELEM_PENTA; break;
-	case FE_TET4  : ne =  4; dtype = PLT_ELEM_TET; break;
-	case FE_TET10 : ne = 10; dtype = PLT_ELEM_TET10; break;
-	case FE_TET15 : ne = 15; dtype = PLT_ELEM_TET15; break;
-	case FE_TET20 : ne = 20; dtype = PLT_ELEM_TET20; break;
-	case FE_HEX20 : ne = 20; dtype = PLT_ELEM_HEX20; break;
-	case FE_HEX27 : ne = 27; dtype = PLT_ELEM_HEX27; break;
-	case FE_QUAD4 : ne =  4; dtype = PLT_ELEM_QUAD; break;
-	case FE_QUAD8 : ne =  8; dtype = PLT_ELEM_QUAD8; break;
-	case FE_QUAD9 : ne =  9; dtype = PLT_ELEM_QUAD9; break;
-	case FE_TRI3  : ne =  3; dtype = PLT_ELEM_TRI; break;
-	case FE_TRI6  : ne =  6; dtype = PLT_ELEM_TRI6; break;
-	case FE_LINE2 : ne =  2; dtype = PLT_ELEM_TRUSS; break;
+	case FE_HEX8   : ne =  8; dtype = PLT_ELEM_HEX8; break;
+	case FE_PENTA6 : ne =  6; dtype = PLT_ELEM_PENTA; break;
+    case FE_PENTA15: ne = 15; dtype = PLT_ELEM_PENTA15; break;
+    case FE_TET4   : ne =  4; dtype = PLT_ELEM_TET; break;
+	case FE_TET10  : ne = 10; dtype = PLT_ELEM_TET10; break;
+	case FE_TET15  : ne = 15; dtype = PLT_ELEM_TET15; break;
+	case FE_TET20  : ne = 20; dtype = PLT_ELEM_TET20; break;
+	case FE_HEX20  : ne = 20; dtype = PLT_ELEM_HEX20; break;
+	case FE_HEX27  : ne = 27; dtype = PLT_ELEM_HEX27; break;
+	case FE_QUAD4  : ne =  4; dtype = PLT_ELEM_QUAD; break;
+	case FE_QUAD8  : ne =  8; dtype = PLT_ELEM_QUAD8; break;
+	case FE_QUAD9  : ne =  9; dtype = PLT_ELEM_QUAD9; break;
+	case FE_TRI3   : ne =  3; dtype = PLT_ELEM_TRI; break;
+	case FE_TRI6   : ne =  6; dtype = PLT_ELEM_TRI6; break;
+	case FE_LINE2  : ne =  2; dtype = PLT_ELEM_TRUSS; break;
 	default:
 		assert(false);
 		return error("Unknown element type in WritePart");

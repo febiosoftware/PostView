@@ -407,7 +407,7 @@ bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 	case 7:
 		{
 			FEVTKExport w;
-			bret = w.Save(fem, m_doc->currentTime(), szfilename);
+			bret = w.Save(fem, szfilename);
 		}
 		break;
 	case 8:
