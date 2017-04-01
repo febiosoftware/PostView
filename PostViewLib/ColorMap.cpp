@@ -130,9 +130,9 @@ void CColorMap::jet()
 	m_ncol = 5;
 
 	m_pos[0] =   0; m_col[0] = GLCOLOR(  0,  0,255);
-	m_pos[1] =  80; m_col[1] = GLCOLOR(  0,255,255);
+	m_pos[1] = 102; m_col[1] = GLCOLOR(  0,255,255);
 	m_pos[2] = 128; m_col[2] = GLCOLOR(  0,255,  0);
-	m_pos[3] = 176; m_col[3] = GLCOLOR(255,255,  0);
+	m_pos[3] = 154; m_col[3] = GLCOLOR(255,255,  0);
 	m_pos[4] = 255; m_col[4] = GLCOLOR(255,  0,  0);
 
 	UpdateTexture();
