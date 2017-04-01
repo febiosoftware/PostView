@@ -13,6 +13,7 @@
 		D52C6FB31D75DCA300DF804B /* TimePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D52C6FAD1D75DCA300DF804B /* TimePanel.cpp */; };
 		D52C6FB51D75DCE900DF804B /* libPostViewLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D52C6FB41D75DCE900DF804B /* libPostViewLib.a */; };
 		D53292BB1E453447002798B3 /* DlgExportAscii.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53292B91E453447002798B3 /* DlgExportAscii.cpp */; };
+		D53598C01E901C0500584A4F /* DragBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53598BE1E901C0500584A4F /* DragBox.cpp */; };
 		D55150721E5270830041C45B /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D551506F1E5270830041C45B /* QtCore.framework */; };
 		D55150731E5270830041C45B /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D55150701E5270830041C45B /* QtGui.framework */; };
 		D55150741E5270830041C45B /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D55150711E5270830041C45B /* QtWidgets.framework */; };
@@ -121,6 +122,8 @@
 		D52C6FB41D75DCE900DF804B /* libPostViewLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPostViewLib.a; path = ../PostViewLib/build/Release/libPostViewLib.a; sourceTree = "<group>"; };
 		D53292B91E453447002798B3 /* DlgExportAscii.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgExportAscii.cpp; sourceTree = "<group>"; };
 		D53292BA1E453447002798B3 /* DlgExportAscii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgExportAscii.h; sourceTree = "<group>"; };
+		D53598BE1E901C0500584A4F /* DragBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DragBox.cpp; sourceTree = "<group>"; };
+		D53598BF1E901C0500584A4F /* DragBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DragBox.h; sourceTree = "<group>"; };
 		D551506F1E5270830041C45B /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt5/5.8.0_1/lib/QtCore.framework; sourceTree = "<group>"; };
 		D55150701E5270830041C45B /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt5/5.8.0_1/lib/QtGui.framework; sourceTree = "<group>"; };
 		D55150711E5270830041C45B /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt5/5.8.0_1/lib/QtWidgets.framework; sourceTree = "<group>"; };
@@ -370,6 +373,8 @@
 				D5FF79CB1D72756B003D2CBD /* DlgWidgetProps.h */,
 				D5FF79CC1D72756B003D2CBD /* Document.cpp */,
 				D5FF79CD1D72756B003D2CBD /* Document.h */,
+				D53598BE1E901C0500584A4F /* DragBox.cpp */,
+				D53598BF1E901C0500584A4F /* DragBox.h */,
 				D5FF79CE1D72756B003D2CBD /* FEKinemat.cpp */,
 				D5FF79CF1D72756B003D2CBD /* FEKinemat.h */,
 				D5FF79D01D72756B003D2CBD /* FileViewer.cpp */,
@@ -644,6 +649,7 @@
 				D5FF7A6C1D72756B003D2CBD /* moc_DlgViewSettings.cpp in Sources */,
 				D5FF7A5A1D72756B003D2CBD /* GLPlaneCutPlot.cpp in Sources */,
 				D5FF7A7E1D72756B003D2CBD /* moc_StatsWindow.cpp in Sources */,
+				D53598C01E901C0500584A4F /* DragBox.cpp in Sources */,
 				D5FF7A651D72756B003D2CBD /* MaterialPanel.cpp in Sources */,
 				D5FF7A4A1D72756B003D2CBD /* DlgExportXPLT.cpp in Sources */,
 				D5FF7A631D72756B003D2CBD /* IntegrateWindow.cpp in Sources */,
