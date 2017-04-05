@@ -542,7 +542,7 @@ void CGLView::mouseMoveEvent(QMouseEvent* ev)
 //-----------------------------------------------------------------------------
 bool CGLView::event(QEvent* event)
 {
-	switch (event->type())
+/*	switch (event->type())
 	{
 	case QEvent::TouchBegin:
 	case QEvent::TouchCancel:
@@ -559,7 +559,7 @@ bool CGLView::event(QEvent* event)
 
 				CGLCamera* pcam = &GetCamera();
 
-/*				QLineF line1(p0.startPos(), p1.startPos());
+				QLineF line1(p0.startPos(), p1.startPos());
 				QLineF line2(p0.pos(), p1.pos());
 				double scale = line2.length() / line1.length();
 
@@ -572,30 +572,12 @@ bool CGLView::event(QEvent* event)
 				{
 					pcam->SetTargetDistance(initDistance * scale);
 				}
-*/
-
-				double Dx = p0.pos().x() - p0.startPos().x();
-				double Dy = p0.pos().y() - p0.startPos().y();
-
-				vec3f startPos;
-				if (event->type() == QEvent::TouchBegin)
-				{
-					startPos = pcam->GetFinalPosition();
-				}
-				else if (event->type() == QEvent::TouchUpdate)
-				{
-					pcam->SetTarget(startPos);
-					pcam->Update(true);
-
-					vec3f dr(Dx, Dy, 0.f);
-					PanView(dr);
-				}
-
 				repaint();
 			}
 		}
 		return true;
 	}
+*/
 	return QOpenGLWidget::event(event);
 }
 

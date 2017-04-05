@@ -602,6 +602,7 @@ void CMainWindow::on_actionSaveSession_triggered()
 
 void CMainWindow::on_actionQuit_triggered()
 {
+	writeSettings();
 	QApplication::quit();
 }
 
