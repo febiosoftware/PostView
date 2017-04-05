@@ -946,8 +946,6 @@ void CGLModel::RenderFaceEdge(FEFace& f, int j, FEMeshBase* pm, int ndivs)
 
 void CGLModel::RenderOutline(CGLContext& rc, int nmat)
 {
-	glDepthRange(0, 0.99998);
-
 	FEModel* ps = m_ps;
 	FEMeshBase* pm = GetActiveMesh();
 
@@ -1007,8 +1005,6 @@ void CGLModel::RenderOutline(CGLContext& rc, int nmat)
 	}
 
 	glPopAttrib();
-
-	glDepthRange(0, 1);
 }
 
 

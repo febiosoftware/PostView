@@ -163,6 +163,7 @@ void CGLView::initializeGL()
 //	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);
 	glDepthFunc(GL_LEQUAL);
+	glEnable(GL_POLYGON_OFFSET_FILL);
 
 //	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 //	glShadeModel(GL_FLAT);
@@ -555,13 +556,40 @@ bool CGLView::event(QEvent* event)
 			{
 				QTouchEvent::TouchPoint p0 = points.first();
 				QTouchEvent::TouchPoint p1 = points.last();
-				QLineF line1(p0.startPos(), p1.startPos());
+
+				CGLCamera* pcam = &GetCamera();
+
+/*				QLineF line1(p0.startPos(), p1.startPos());
 				QLineF line2(p0.pos(), p1.pos());
 				double scale = line2.length() / line1.length();
 
-				CGLCamera* pcam = &GetCamera();
-				if (scale > 1.0) pcam->Zoom(0.95f);
-				else pcam->Zoom(1.0f/0.95f);
+				static float initDistance = 1.0f;
+				if (event->type() == QEvent::TouchBegin)
+				{
+					initDistance = pcam->GetFinalTargetDistance();
+				}
+				else if (event->type() == QEvent::TouchUpdate)
+				{
+					pcam->SetTargetDistance(initDistance * scale);
+				}
+*/
+
+				double Dx = p0.pos().x() - p0.startPos().x();
+				double Dy = p0.pos().y() - p0.startPos().y();
+
+				vec3f startPos;
+				if (event->type() == QEvent::TouchBegin)
+				{
+					startPos = pcam->GetFinalPosition();
+				}
+				else if (event->type() == QEvent::TouchUpdate)
+				{
+					pcam->SetTarget(startPos);
+					pcam->Update(true);
+
+					vec3f dr(Dx, Dy, 0.f);
+					PanView(dr);
+				}
 
 				repaint();
 			}
@@ -1120,19 +1148,6 @@ void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
 	CDocument* pdoc = GetDocument();
 	if (pdoc->IsValid() == false) return;
 
-	int x = (x0+x1)/2;
-	int y = (y0+y1)/2;
-	int wx = abs(x1-x0);
-	int wy = abs(y1-y0);
-
-	bool bsingle = (wx==0) && (wy==0);
-
-	if (wx == 0) wx = 4;
-	if (wy == 0) wy = 4;
-
-	// activate the gl rendercontext
-	makeCurrent();
-
 	BOUNDINGBOX box = pdoc->GetBoundingBox();
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
 
@@ -1146,49 +1161,9 @@ void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
 	m_fnear = 0.01*radius;
 	m_ffar  = 10*radius;
 
-/*	if (!valid())
-	{
-		SetupGL();
-		glViewport(0,0,w(),h());
-		valid(1);	// validate window
-	}
-*/
 	// set up selection buffer
 	int size = pm->Faces();
-	GLuint *pbuf = new GLuint[4*size];
-
-	glSelectBuffer(4*size, pbuf);
-
-	// viewport storage
-	GLint viewport[4];
-	glGetIntegerv(GL_VIEWPORT, viewport);
-
-	// switch to projection and save the matrix
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-
-	// change render mode
-	glRenderMode(GL_SELECT);
-
-	// establish new clipping volume
-	glLoadIdentity();
-	gluPickMatrix(x, viewport[3] - y, wx, wy, viewport);
-
-	// apply perspective projection
-	if (view.m_nproj == RENDER_ORTHO)
-	{
-		double z = GetCamera().GetTargetDistance();
-		double dx = z*tan(0.5*m_fov*PI/180.0)*m_ar;
-		double dy = z*tan(0.5*m_fov*PI/180.0);
-		glOrtho(-dx, dx, -dy, dy, m_fnear, m_ffar);
-	}
-	else
-	{
-		gluPerspective(m_fov, m_ar, m_fnear, m_ffar);
-	}
-
-	glInitNames();
-	glPushName(0);
+	InitSelect(x0, y0, x1, y1, 4*size);
 
 	// draw the scene
 	glMatrixMode(GL_MODELVIEW);
@@ -1202,8 +1177,6 @@ void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glPushMatrix();
-
 	// setup the rendering context
 	CGLContext grc(this);
 
@@ -1215,14 +1188,11 @@ void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
 
 	pdoc->GetGLModel()->RenderAllFaces();
 
-	glPopMatrix();
-
 	// restore attributes
 	glPopAttrib();
 
-
 	// collect the hits
-	GLint hits = glRenderMode(GL_RENDER);
+	GLint hits = EndSelect();
 
 	if (mode == 0)
 	{
@@ -1235,7 +1205,8 @@ void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
 	// parse the selection buffer
 	if (hits > 0)
 	{
-		if (bsingle)
+		GLuint* pbuf = m_selbuf;
+		if (m_bsingle)
 		{
 			unsigned int index = pbuf[3];
 			unsigned int minz = pbuf[1];
@@ -1300,13 +1271,8 @@ void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
 	}
 	else m_wnd->ClearStatusMessage();
 
-	// Restore the projection matrix
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-
 	// clean up
-	delete [] pbuf;
-
+	delete[] m_selbuf; m_selbuf = 0;
 	mdl.UpdateSelectionLists(SELECT_FACES);
 }
 
@@ -2521,7 +2487,9 @@ void CGLView::RenderDoc()
 		if (po && po->IsActive())
 		{
 			// Render the model
+			glPolygonOffset(1.0, 1.0);
 			po->Render(rc);
+			glPolygonOffset(0.0, 0.0);
 
 			// render the lines
 			// Notice that we change the depth range for rendering the lines
@@ -2531,9 +2499,9 @@ void CGLView::RenderDoc()
 			// with more than just polygons.
 			if (view.m_bmesh && (mode != SELECT_EDGES))
 			{
-				glDepthRange(0, 0.999999);
+//				glDepthRange(0, 0.999999);
 				po->RenderMeshLines(pdoc->GetFEModel());
-				glDepthRange(0, 1);
+//				glDepthRange(0, 1);
 			}
 
 			if (view.m_boutline)
