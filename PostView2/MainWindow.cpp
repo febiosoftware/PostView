@@ -449,8 +449,12 @@ void CMainWindow::on_actionOpen_triggered()
 	QFileDialog dlg(this, "Open");
 	dlg.setNameFilters(filters);
 	dlg.setFileMode(QFileDialog::ExistingFile);
+	dlg.setDirectory(ui->currentPath);
 	if (dlg.exec())
 	{
+		QDir dir = dlg.directory();
+		ui->currentPath = dir.absolutePath();
+
 		QStringList files = dlg.selectedFiles();
 		QString filter = dlg.selectedNameFilter();
 		int nfilter = filters.indexOf(filter);
@@ -1485,6 +1489,10 @@ void CMainWindow::writeSettings()
 	settings.setValue("m_flinethick"      , view.m_flinethick);
 	settings.setValue("m_fpointsize"      , view.m_fpointsize);
 	settings.endGroup();
+
+	settings.beginGroup("FolderSettings");
+	settings.setValue("currentPath", ui->currentPath);
+	settings.endGroup();
 }
 
 void CMainWindow::readSettings()
@@ -1522,6 +1530,14 @@ void CMainWindow::readSettings()
 	view.m_flinethick       = settings.value("m_flinethick" , view.m_flinethick).toFloat();
 	view.m_fpointsize       = settings.value("m_fpointsize" , view.m_fpointsize).toFloat();
 	settings.endGroup();
+
+	settings.beginGroup("FolderSettings");
+	ui->currentPath = settings.value("currentPath", QDir::homePath()).toString();
+	settings.endGroup();
+
+	string s = ui->currentPath.toStdString();
+
+	ui->fileViewer->setCurrentPath(ui->currentPath);
 
 	// update the menu and toolbar to reflect the correct settings
 	UpdateMainToolbar();

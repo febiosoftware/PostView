@@ -74,9 +74,19 @@ CFileViewer::CFileViewer(CMainWindow* pwnd, QWidget* parent) : QWidget(parent), 
     
 	// set the file system model
 	ui->m_fileList->setModel(m_fileSystem);
-    ui->m_fileList->setRootIndex(m_fileSystem->index("C:\\Users\\steve\\Documents"));
+    ui->m_fileList->setRootIndex(m_fileSystem->index(QDir::homePath()));
 
 	QMetaObject::connectSlotsByName(this);
+}
+
+QString CFileViewer::currentPath() const
+{
+	return m_fileSystem->rootPath();
+}
+
+void CFileViewer::setCurrentPath(const QString& s)
+{
+	ui->m_fileList->setRootIndex(m_fileSystem->index(s));
 }
 
 void CFileViewer::on_fileList_doubleClicked(const QModelIndex& index)

@@ -17,6 +17,9 @@ class CFileViewer : public QWidget
 public:
 	CFileViewer(CMainWindow* pwnd, QWidget* parent = 0);
 
+	QString currentPath() const;
+	void setCurrentPath(const QString& s);
+
 private slots:
 	void on_fileList_doubleClicked(const QModelIndex& index);
 	void on_fileFilter_currentIndexChanged(int index);

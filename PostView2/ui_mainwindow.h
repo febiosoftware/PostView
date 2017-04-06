@@ -25,6 +25,7 @@
 #include <QFontComboBox>
 #include <QSpinBox>
 #include <QProgressBar>
+#include <QtCore/QDir.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -97,6 +98,8 @@ public:
 	QStatusBar*		statusBar;
 	QProgressBar*	fileProgress;
 
+	QString currentPath;
+
 public:
 	// build the UI
 	void setupUi(CMainWindow* MainWindow)
@@ -105,6 +108,8 @@ public:
 		integrateWindow = 0;
 		statsWindow = 0;
 		pwnd = MainWindow;
+
+		currentPath = QDir::currentPath();
 
 		// set the initial window size
         MainWindow->resize(wndWidth, wndHeight);
