@@ -177,6 +177,11 @@ QMenu* CMainWindow::BuildContextMenu()
 	return menu;
 }
 
+void CMainWindow::SetCurrentFolder(const QString& folder)
+{
+	ui->currentPath = folder;
+}
+
 void CMainWindow::OpenFile(const QString& fileName, int nfilter)
 {
 	std::string sfile = fileName.toStdString();
@@ -453,7 +458,7 @@ void CMainWindow::on_actionOpen_triggered()
 	if (dlg.exec())
 	{
 		QDir dir = dlg.directory();
-		ui->currentPath = dir.absolutePath();
+		SetCurrentFolder(dir.absolutePath());
 
 		QStringList files = dlg.selectedFiles();
 		QString filter = dlg.selectedNameFilter();
@@ -1535,7 +1540,7 @@ void CMainWindow::readSettings()
 	ui->currentPath = settings.value("currentPath", QDir::homePath()).toString();
 	settings.endGroup();
 
-	string s = ui->currentPath.toStdString();
+//	string s = ui->currentPath.toStdString();
 
 	ui->fileViewer->setCurrentPath(ui->currentPath);
 

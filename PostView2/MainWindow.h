@@ -79,6 +79,9 @@ public:
 	// clear the status message
 	void ClearStatusMessage();
 
+	// sets the current folder
+	void SetCurrentFolder(const QString& folder);
+
 public slots:
 	void on_actionOpen_triggered();
 	void on_actionSave_triggered();

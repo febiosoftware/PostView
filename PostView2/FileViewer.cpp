@@ -81,7 +81,7 @@ CFileViewer::CFileViewer(CMainWindow* pwnd, QWidget* parent) : QWidget(parent), 
 
 QString CFileViewer::currentPath() const
 {
-	return m_fileSystem->rootPath();
+	return m_fileSystem->filePath(ui->m_fileList->rootIndex());
 }
 
 void CFileViewer::setCurrentPath(const QString& s)
@@ -96,6 +96,7 @@ void CFileViewer::on_fileList_doubleClicked(const QModelIndex& index)
 	else
 	{
 		m_wnd->OpenFile(m_fileSystem->filePath(index), ui->m_fileFilter->currentIndex());
+		m_wnd->SetCurrentFolder(currentPath());
 	}
 }
 
