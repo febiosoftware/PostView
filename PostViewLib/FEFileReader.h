@@ -39,6 +39,12 @@ public:
 	// expressed in percentage of total file size
 	float GetFileProgress() const;
 
+	// Cancel the file read
+	void Cancel();
+
+	// See if the file read was cancelled
+	bool IsCancelled() const;
+
 protected:
 	// open the file
 	bool Open(const char* szfile, const char* szmode);
@@ -58,5 +64,6 @@ private:
 	const char*		m_sztype;	//!< type identifier
 	std::string		m_err;		//!< error messages (separated by \n)
 	int				m_nerrors;	//!< number of errors
-	off_type		m_nfilesize;	// size of file
+	off_type		m_nfilesize;	//!< size of file
+	bool			m_cancelled;	//!< file read was cancelled
 };

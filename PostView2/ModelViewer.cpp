@@ -171,6 +171,7 @@ public:
 		addProperty("Range type"        , CProperty::Enum)->setEnumValues(QStringList() << "dynamic" << "static" << "user");
 		addProperty("Range divisions"   , CProperty::Int)->setIntRange(1, 100);
 		addProperty("Show Legend"       , CProperty::Bool);
+		addProperty("Legend orientation", CProperty::Enum)->setEnumValues(QStringList() << "Horizontal" << "Vertical");
 		addProperty("User max"          , CProperty::Float);
 		addProperty("User min"          , CProperty::Float);
 	}
@@ -189,8 +190,9 @@ public:
 			case 3: return m_map->GetRangeType(); break;
 			case 4: return m_map->GetColorMap()->GetDivisions(); break;
 			case 5: return m_map->ShowLegend(); break;
-			case 6: return rng[1]; break;
-			case 7: return rng[0]; break;
+			case 6: return m_map->m_pbar->Orientation(); break;
+			case 7: return rng[1]; break;
+			case 8: return rng[0]; break;
 			}
 		}
 		return QVariant();
@@ -210,8 +212,9 @@ public:
 		case 3: m_map->SetRangeType(v.toInt()); break;
 		case 4: m_map->GetColorMap()->SetDivisions(v.toInt()); break;
 		case 5: m_map->ShowLegend(v.toBool()); break;
-		case 6: rng[1] = v.toFloat(); m_map->SetRange(rng); break;
-		case 7: rng[0] = v.toFloat(); m_map->SetRange(rng); break;
+		case 6: m_map->m_pbar->SetOrientation(v.toInt()); break;
+		case 7: rng[1] = v.toFloat(); m_map->SetRange(rng); break;
+		case 8: rng[0] = v.toFloat(); m_map->SetRange(rng); break;
 		}
 		m_wnd->GetDocument()->UpdateFEModel();
 	}

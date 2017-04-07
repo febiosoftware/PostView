@@ -17,6 +17,7 @@
 #include "CIntInput.h"
 #include "CColorButton.h"
 #include "convert.h"
+#include "MainWindow.h"
 
 class CFontWidget : public QGroupBox
 {
@@ -248,6 +249,7 @@ public:
 	CPositionWidget* ppos;
 
 	QDialogButtonBox* buttonBox;
+	QComboBox* placement;
 
 public:
 	void setupUi(QDialog* parent)
@@ -264,8 +266,12 @@ public:
 				QHBoxLayout* ph = new QHBoxLayout;
 					ph->addWidget(pshowLabels = new QCheckBox("show labels"));
 					QLabel* plabel = new QLabel("precision");
+					placement = new QComboBox;
+					placement->addItem("Left/Top");
+					placement->addItem("Right/Bottom");
 					ph->addWidget(plabel);
 					ph->addWidget(pprec = new QSpinBox); plabel->setBuddy(pprec); pprec->setRange(1, 7);
+					ph->addWidget(placement);
 					ph->addStretch();
 				labelsPageLayout->addLayout(ph);
 				plabelFont = new CFontWidget;
@@ -289,7 +295,7 @@ public:
 	}
 };
 
-CDlgLegendProps::CDlgLegendProps(GLWidget* widget, QWidget* parent) : QDialog(parent), ui(new Ui::CDlgLegendProps)
+CDlgLegendProps::CDlgLegendProps(GLWidget* widget, CMainWindow* parent) : QDialog(parent), ui(new Ui::CDlgLegendProps), m_wnd(parent)
 {
 	ui->setupUi(this);
 
@@ -301,6 +307,8 @@ CDlgLegendProps::CDlgLegendProps(GLWidget* widget, QWidget* parent) : QDialog(pa
 
 	QFont labelFont = pb->get_font();
 	ui->plabelFont->setFont(labelFont, toQColor(pb->get_fg_color()));
+
+	ui->placement->setCurrentIndex(pb->GetLabelPosition());
 
 	ui->ppos->setPosition(widget->x(), widget->y(), widget->w(), widget->h());
 }
@@ -316,12 +324,13 @@ void CDlgLegendProps::apply()
 	GLLegendBar* pb = dynamic_cast<GLLegendBar*>(pw);
 	pb->ShowLabels(ui->pshowLabels->isChecked());
 	pb->SetPrecision(ui->pprec->value());
+	pb->SetLabelPosition(ui->placement->currentIndex());
 
 	QFont labelFont = ui->plabelFont->getFont();
 	pb->set_font(labelFont);
 	pb->set_fg_color(toGLColor(ui->plabelFont->getFontColor()));
 
-	if (parentWidget()) parentWidget()->repaint();
+	if (m_wnd) m_wnd->RedrawGL();
 }
 
 void CDlgLegendProps::accept()

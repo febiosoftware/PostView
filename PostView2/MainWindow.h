@@ -166,6 +166,8 @@ public slots:
 
 	void checkFileProgress();
 
+	void onCancelFileRead();
+
 private:
 	void timerEvent(QTimerEvent* ev);
 	void closeEvent(QCloseEvent* ev);
@@ -193,6 +195,8 @@ public:
 	CFileThread(CMainWindow* wnd, FEFileReader* file, const QString& fileName);
 
 	float getFileProgress() const;
+
+	FEFileReader* GetFileReader() { return m_fileReader; }
 
 signals:
 	void resultReady(bool, const QString&);

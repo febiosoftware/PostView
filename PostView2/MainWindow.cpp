@@ -272,9 +272,28 @@ void CMainWindow::OpenFile(const QString& fileName, int nfilter)
 	ui->statusBar->showMessage(QString("Reading file %1 ...").arg(fileName));
 	ui->fileProgress->setValue(0);
 	ui->statusBar->addPermanentWidget(ui->fileProgress);
+	ui->statusBar->addPermanentWidget(ui->stopFileReading);
+	ui->stopFileReading->setEnabled(true);
+	ui->fileProgress->show();
+	ui->stopFileReading->show();
+	QObject::connect(ui->stopFileReading, SIGNAL(clicked()), this, SLOT(onCancelFileRead()));
 	ui->fileProgress->show();
 	QTimer::singleShot(100, this, SLOT(checkFileProgress()));
 }
+
+void CMainWindow::onCancelFileRead()
+{
+	if (m_fileThread)
+	{
+		FEFileReader* fileReader = m_fileThread->GetFileReader();
+		if (fileReader)
+		{
+			fileReader->Cancel();
+			ui->stopFileReading->setDisabled(true);
+		}
+	}
+}
+
 
 void CMainWindow::checkFileProgress()
 {
@@ -291,6 +310,7 @@ void CMainWindow::finishedReadingFile(bool success, const QString& errorString)
 {
 	m_fileThread = 0;
 	ui->statusBar->clearMessage();
+	ui->statusBar->removeWidget(ui->stopFileReading);
 	ui->statusBar->removeWidget(ui->fileProgress);
 
 	if (success == false)

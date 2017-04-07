@@ -26,6 +26,7 @@ public:
 		addProperty("Show plane", CProperty::Bool);
 		addProperty("Cut hidden", CProperty::Bool);
 		addProperty("Show Mesh" , CProperty::Bool);
+		addProperty("Transparency", CProperty::Float)->setFloatRange(0.0, 1.0);
 		addProperty("X-normal"  , CProperty::Float)->setFloatRange(-1.0, 1.0);
 		addProperty("Y-normal"  , CProperty::Float)->setFloatRange(-1.0, 1.0);
 		addProperty("Z-normal"  , CProperty::Float)->setFloatRange(-1.0, 1.0);
@@ -39,10 +40,11 @@ public:
 		case 0: return m_planeCut->m_bshowplane; break;
 		case 1: return m_planeCut->m_bcut_hidden; break;
 		case 2: return m_planeCut->m_bshow_mesh; break;
-		case 3: return m_planeCut->GetPlaneNormal().x; break;
-		case 4: return m_planeCut->GetPlaneNormal().y; break;
-		case 5: return m_planeCut->GetPlaneNormal().z; break;
-		case 6: return m_planeCut->GetPlaneOffset(); break;
+		case 3: return m_planeCut->m_transparency; break;
+		case 4: return m_planeCut->GetPlaneNormal().x; break;
+		case 5: return m_planeCut->GetPlaneNormal().y; break;
+		case 6: return m_planeCut->GetPlaneNormal().z; break;
+		case 7: return m_planeCut->GetPlaneOffset(); break;
 		}
 		return QVariant();
 	}
@@ -56,10 +58,11 @@ public:
 		case 0: m_planeCut->m_bshowplane = v.toBool(); break;
 		case 1: m_planeCut->m_bcut_hidden = v.toBool(); break;
 		case 2: m_planeCut->m_bshow_mesh = v.toBool(); break;
-		case 3: a[0] = v.toDouble(); m_planeCut->SetPlaneEqn(a); break;
-		case 4: a[1] = v.toDouble(); m_planeCut->SetPlaneEqn(a); break;
-		case 5: a[2] = v.toDouble(); m_planeCut->SetPlaneEqn(a); break;
-		case 6: a[3] = v.toDouble(); m_planeCut->SetPlaneEqn(a); break;
+		case 3: m_planeCut->m_transparency = v.toFloat(); break;
+		case 4: a[0] = v.toDouble(); m_planeCut->SetPlaneEqn(a); break;
+		case 5: a[1] = v.toDouble(); m_planeCut->SetPlaneEqn(a); break;
+		case 6: a[2] = v.toDouble(); m_planeCut->SetPlaneEqn(a); break;
+		case 7: a[3] = v.toDouble(); m_planeCut->SetPlaneEqn(a); break;
 		}
 	}
 
@@ -86,7 +89,7 @@ CGLPlaneCutPlot::CGLPlaneCutPlot(CGLModel* po) : CGLPlot(po)
 	m_eq[3] = 0;
 
 	m_rot = 0.f;
-
+	m_transparency = 0.25;
 	m_bcut_hidden = false;
 	m_bshowplane = true;
 	m_bshow_mesh = false;
@@ -808,7 +811,7 @@ void CGLPlaneCutPlot::RenderPlane()
 	GLdouble g = fabs(norm.y);
 	GLdouble b = fabs(norm.z);
 
-	glColor4d(r, g, b, 0.25);
+	glColor4d(r, g, b, m_transparency);
 	glDepthMask(false);
 	glNormal3f(0,0,1);
 	glBegin(GL_QUADS);

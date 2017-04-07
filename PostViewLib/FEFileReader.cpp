@@ -21,14 +21,27 @@ FEFileReader::FEFileReader(const char* sztype) : m_sztype(sztype)
 {
 	m_fp = 0;
 	m_nfilesize = 0;
+	m_cancelled = false;
 }
 
 FEFileReader::~FEFileReader()
 {
 }
 
+void FEFileReader::Cancel()
+{
+	m_cancelled = true;
+}
+
+bool FEFileReader::IsCancelled() const
+{
+	return m_cancelled;
+}
+
 bool FEFileReader::Open(const char* szfile, const char* szmode)
 {
+	m_cancelled = false;
+
 	if (m_fp) Close();
 	m_fp = fopen(szfile, szmode);
 	m_fileName = szfile;

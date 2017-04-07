@@ -102,12 +102,12 @@ public:
 	bool	m_bshowplane;	// show the plane or not
 	bool	m_bcut_hidden;	// cut hidden materials
 	bool	m_bshow_mesh;
+	float	m_transparency;
 
 protected:
 	GLdouble	m_eq[4];	// plane equation
 
 	float		m_ref;	// reference = m_pos + m_off
-
 	float		m_rot;	// rotation around z-axis
 	BOUNDINGBOX	m_box;	// bounding box to cut
 

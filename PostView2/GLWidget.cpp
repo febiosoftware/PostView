@@ -30,6 +30,9 @@ GLWidget::GLWidget(CGLObject* po, int x, int y, int w, int h, const char* szlabe
 {
 	m_po = po;
 
+	m_minw = 30;
+	m_minh = 20;
+
 	m_x = x;
 	m_y = y;
 	m_w = w;
@@ -218,20 +221,35 @@ GLLegendBar::GLLegendBar(CGLObject* po, CColorMap* pm, int x, int y, int w, int 
 	m_btitle = false;
 	m_blabels = true;
 	m_nprec = 3;
+	m_labelPos = 0;
 }
 
 void GLLegendBar::draw(QPainter* painter)
 {
 	switch (m_ntype)
 	{
-	case GRADIENT: draw_gradient(painter); break;
+	case GRADIENT: 
+		if (m_nrot == VERTICAL) draw_gradient_vert(painter);
+		else draw_gradient_horz(painter);
+		break;
 	case DISCRETE: draw_discrete(painter); break;
 	default:
 		assert(false);
 	}
 }
 
-void GLLegendBar::draw_gradient(QPainter* painter)
+void GLLegendBar::SetOrientation(int n)
+{
+	if (m_nrot == n) return;
+	m_nrot = n;
+
+	// swap width and height
+	int tmp = m_w;
+	m_w = m_h;
+	m_h = tmp;
+}
+
+void GLLegendBar::draw_gradient_vert(QPainter* painter)
 {
 	painter->beginNativePainting();
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
@@ -258,6 +276,12 @@ void GLLegendBar::draw_gradient(QPainter* painter)
 	int y0 = y() + 30;
 	int x1 = x0 + 25;
 	int y1 = y0 + h() - 40;
+
+	if (m_labelPos == 1)
+	{
+		x0 = x() + 25;
+		x1 = x0 + 25;
+	}
 
 	glColor3ub(255, 255, 255);
 	glBegin(GL_QUADS);
@@ -342,13 +366,158 @@ void GLLegendBar::draw_gradient(QPainter* painter)
 			sprintf(str, szfmt, (fabs(f/p) < 1e-5 ? 0 : f/p));
 			QString s(str);
 
-			int w = fm.width(s);
-			int h = fm.ascent()/2;
+			if (m_labelPos == 0)
+			{
+				int w = fm.width(s);
+				int h = fm.ascent()/2;
 		
-			painter->drawText(x0-w-5, yt + h, s);
+				painter->drawText(x0-w-5, yt + h, s);
+			}
+			else
+			{
+				int h = fm.ascent() / 2;
+				painter->drawText(x1 + 5, yt + h, s);
+			}
 		}
 	}
 }
+
+void GLLegendBar::draw_gradient_horz(QPainter* painter)
+{
+	painter->beginNativePainting();
+	glPushAttrib(GL_ALL_ATTRIB_BITS);
+
+	// draw the legend
+	float fmin, fmax;
+	m_pMap->GetRange(fmin, fmax);
+	int nsteps = m_pMap->GetDivisions();
+
+	glDisable(GL_CULL_FACE);
+
+	glEnable(GL_TEXTURE_1D);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+
+	m_pMap->GetTexture().MakeCurrent();
+
+	GLint dfnc;
+	glGetIntegerv(GL_DEPTH_FUNC, &dfnc);
+	glDepthFunc(GL_ALWAYS);
+
+	glDisable(GL_BLEND);
+
+	int x0 = x() + 10;
+	int y0 = y() + h() - 50;
+	int x1 = x() + w() - 30;
+	int y1 = y0 + 25;
+
+	if (m_labelPos == 1)
+	{
+		y0 = y() + 25;
+		y1 = y0 + 25;
+	}
+
+	glColor3ub(255, 255, 255);
+	glBegin(GL_QUADS);
+	{
+		glTexCoord1d(0); glVertex2i(x0, y0);
+		glTexCoord1d(0); glVertex2i(x0, y1);
+		glTexCoord1d(1); glVertex2i(x1, y1);
+		glTexCoord1d(1); glVertex2i(x1, y0);
+	}
+	glEnd();
+
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glDisable(GL_TEXTURE_1D);
+
+	glDisable(GL_LIGHTING);
+
+	int i, ipow;
+	double p = 1;
+	char str[256], pstr[256];
+
+	double a = MAX(fabs(fmin), fabs(fmax));
+	if (a > 0)
+	{
+		double g = log10(a);
+		ipow = (int)floor(g);
+	}
+	else ipow = 0;
+
+	glColor3ub(m_fgc.r, m_fgc.g, m_fgc.b);
+	glLineWidth(1.f);
+	glBegin(GL_LINES);
+	{
+		for (i = 0; i <= nsteps; i++)
+		{
+			int xt = x0 + i*(x1 - x0) / nsteps;
+			double f = fmax + i*(fmin - fmax) / nsteps;
+
+			glVertex2i(xt, y0 + 1);
+			glVertex2i(xt, y1 - 1);
+		}
+	}
+	glEnd();
+
+	glDepthFunc(dfnc);
+
+	glPopAttrib();
+	painter->endNativePainting();
+
+	if (m_blabels)
+	{
+		painter->setPen(QColor(m_fgc.r, m_fgc.g, m_fgc.b));
+		painter->setFont(m_font);
+		QFontMetrics fm(m_font);
+
+		if ((abs(ipow)>2))
+		{
+			sprintf(pstr, "x10");
+			int x = x1 + 5;
+			int y = y1 - 5;
+			painter->drawText(x, y, QString(pstr));
+
+			// change font size and draw superscript
+			sprintf(pstr, "%d", ipow);
+			QFontMetrics fm = painter->fontMetrics();
+			int l = fm.width(QString("x10"));
+			QFont f = m_font;
+			f.setPointSize(m_font.pointSize() - 2);
+			painter->setFont(f);
+			painter->drawText(x + l, y - 14, QString(pstr));
+
+			// reset font size
+			painter->setFont(m_font);
+			p = pow(10.0, ipow);
+		}
+
+		char szfmt[16] = { 0 };
+		sprintf(szfmt, "%%.%dg", m_nprec);
+
+		for (i = 0; i <= nsteps; i++)
+		{
+			int xt = x0 + i*(x1 - x0) / nsteps;
+			double f = fmin + i*(fmax - fmin) / nsteps;
+
+			sprintf(str, szfmt, (fabs(f / p) < 1e-5 ? 0 : f / p));
+			QString s(str);
+
+			if (m_labelPos == 0)
+			{
+				int w = fm.width(s);
+				int h = fm.ascent() / 2;
+
+				painter->drawText(xt - w/2, y0 - h - 5, s);
+			}
+			else
+			{
+				int w = fm.width(s);
+				int h = fm.ascent() / 2;
+				painter->drawText(xt - w / 2, y1 + h + 10, s);
+			}
+		}
+	}
+}
+
 
 void GLLegendBar::draw_discrete(QPainter* painter)
 {

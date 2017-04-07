@@ -75,6 +75,9 @@ public:
 		m_y = y;
 		m_w = w;
 		m_h = h;
+
+		if (m_w < m_minw) m_w = m_minw;
+		if (m_h < m_minh) m_h = m_minh;
 	}
 
 	static CGLView* GetView() { return m_pview; }
@@ -94,6 +97,7 @@ public:
 protected:
 	int m_x, m_y;
 	int m_w, m_h;
+	int	m_minw, m_minh;
 	bool	m_balloc;
 	
 	char*			m_szlabel;
@@ -156,7 +160,9 @@ public:
 	void draw(QPainter* painter);
 
 	void SetType(int n) { m_ntype = n; }
-	void SetOrientation(int n) { m_nrot = n; }
+
+	void SetOrientation(int n);
+	int Orientation() const { return m_nrot; }
 
 	bool ShowLabels() { return m_blabels; }
 	void ShowLabels(bool bshow) { m_blabels = bshow; }
@@ -164,8 +170,12 @@ public:
 	int GetPrecision() { return m_nprec; }
 	void SetPrecision(int n) { n = (n<1?1:(n>7?7:n)); m_nprec = n; }
 
+	int GetLabelPosition() const { return m_labelPos; }
+	void SetLabelPosition(int n) { m_labelPos = n; }
+
 protected:
-	void draw_gradient(QPainter* painter);
+	void draw_gradient_vert(QPainter* painter);
+	void draw_gradient_horz(QPainter* painter);
 	void draw_discrete(QPainter* painter);
 
 protected:
@@ -173,6 +183,7 @@ protected:
 	int		m_nrot;		// orientation
 	bool	m_btitle;	// show title
 	bool	m_blabels;	// show labels
+	int		m_labelPos;	// label placement
 	int		m_nprec;	// precision
 
 	CColorMap*		m_pMap;

@@ -10,6 +10,7 @@ namespace Ui{
 
 class GLWidget;
 class QAbstractButton;
+class CMainWindow;
 
 class CDlgBoxProps : public QDialog
 {
@@ -34,7 +35,7 @@ class CDlgLegendProps : public QDialog
 	Q_OBJECT
 
 public:
-	CDlgLegendProps(GLWidget* widget, QWidget* parent);
+	CDlgLegendProps(GLWidget* widget, CMainWindow* parent);
 
 	void accept();
 	void apply();
@@ -45,6 +46,7 @@ private slots:
 private:
 	Ui::CDlgLegendProps* ui;
 	GLWidget* pw;
+	CMainWindow*	m_wnd;
 };
 
 class CDlgTriadProps : public QDialog

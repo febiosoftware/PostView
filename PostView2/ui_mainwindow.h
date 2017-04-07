@@ -26,6 +26,7 @@
 #include <QSpinBox>
 #include <QProgressBar>
 #include <QtCore/QDir.h>
+#include <QPushButton>
 
 QT_BEGIN_NAMESPACE
 
@@ -97,6 +98,7 @@ public:
 
 	QStatusBar*		statusBar;
 	QProgressBar*	fileProgress;
+	QPushButton*	stopFileReading;
 
 	QString currentPath;
 
@@ -135,6 +137,7 @@ public:
 		fileProgress->setMaximumWidth(200);
 		fileProgress->setMaximumHeight(15);
 
+		stopFileReading = new QPushButton("Cancel");
 
 		// connect all the slots
 		QMetaObject::connectSlotsByName(MainWindow);
