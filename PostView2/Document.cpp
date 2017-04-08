@@ -464,6 +464,12 @@ bool CDocument::LoadFEModel(FEFileReader* pimp, const char* szfile, bool bup)
 	if (bup)
 	{
 		MD.SetData(m_pGLModel);
+
+		// Since the GL model has changed, we need to update all plots
+		// that keep a reference to the model
+		list<CGLPlot*>::iterator it;
+		for (it = m_pPlot.begin(); it != m_pPlot.end(); ++it) (*it)->SetModel(m_pGLModel);
+
 		m_bValid = true;
 		SetCurrentTime(ntime);
 	}
@@ -488,14 +494,6 @@ bool CDocument::LoadFEModel(FEFileReader* pimp, const char* szfile, bool bup)
 		// set the current time
 		// this will also update the scene
 		SetCurrentTime(0);
-	}
-
-	// Since the GL model has changed, we need to update all plots
-	// that keep a reference to the model
-	list<CGLPlot*>::iterator it;
-	for (it = m_pPlot.begin(); it != m_pPlot.end(); ++it)
-	{
-		(*it)->SetModel(m_pGLModel);
 	}
 
 	// make sure the model is up to date
