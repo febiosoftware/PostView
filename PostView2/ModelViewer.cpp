@@ -165,8 +165,22 @@ class CColorMapProps : public CPropertyList
 public:
 	CColorMapProps(CMainWindow* wnd, CGLColorMap* map) : m_wnd(wnd), m_map(map)
 	{
+		QStringList cols;
+		cols << "autumn";
+		cols << "blue";
+		cols << "fire";
+		cols << "gray";
+		cols << "green";
+		cols << "jet";
+		cols << "rbb";
+		cols << "red";
+		cols << "spring";
+		cols << "summer";
+		cols << "winter";
+
 		addProperty("Data field"        , CProperty::DataScalar);
 		addProperty("Gradient smoothing", CProperty::Bool);
+		addProperty("Color map"         , CProperty::Enum)->setEnumValues(cols);
 		addProperty("Nodal Values"      , CProperty::Bool);
 		addProperty("Range type"        , CProperty::Enum)->setEnumValues(QStringList() << "dynamic" << "static" << "user");
 		addProperty("Range divisions"   , CProperty::Int)->setIntRange(1, 100);
@@ -186,13 +200,14 @@ public:
 			{
 			case 0: return m_map->GetEvalField(); break;
 			case 1: return m_map->GetColorMap()->Smooth(); break;
-			case 2: return m_map->m_bDispNodeVals; break;
-			case 3: return m_map->GetRangeType(); break;
-			case 4: return m_map->GetColorMap()->GetDivisions(); break;
-			case 5: return m_map->ShowLegend(); break;
-			case 6: return m_map->m_pbar->Orientation(); break;
-			case 7: return rng[1]; break;
-			case 8: return rng[0]; break;
+			case 2: return m_map->GetColorMap()->Type();
+			case 3: return m_map->m_bDispNodeVals; break;
+			case 4: return m_map->GetRangeType(); break;
+			case 5: return m_map->GetColorMap()->GetDivisions(); break;
+			case 6: return m_map->ShowLegend(); break;
+			case 7: return m_map->m_pbar->Orientation(); break;
+			case 8: return rng[1]; break;
+			case 9: return rng[0]; break;
 			}
 		}
 		return QVariant();
@@ -208,13 +223,14 @@ public:
 		{
 		case 0: m_wnd->SetCurrentDataField(v.toInt()); break;
 		case 1: m_map->GetColorMap()->Smooth(v.toBool()); break;
-		case 2: m_map->m_bDispNodeVals = v.toBool(); break;
-		case 3: m_map->SetRangeType(v.toInt()); break;
-		case 4: m_map->GetColorMap()->SetDivisions(v.toInt()); break;
-		case 5: m_map->ShowLegend(v.toBool()); break;
-		case 6: m_map->m_pbar->SetOrientation(v.toInt()); break;
-		case 7: rng[1] = v.toFloat(); m_map->SetRange(rng); break;
-		case 8: rng[0] = v.toFloat(); m_map->SetRange(rng); break;
+		case 2: m_map->GetColorMap()->SetType(v.toInt()); break;
+		case 3: m_map->m_bDispNodeVals = v.toBool(); break;
+		case 4: m_map->SetRangeType(v.toInt()); break;
+		case 5: m_map->GetColorMap()->SetDivisions(v.toInt()); break;
+		case 6: m_map->ShowLegend(v.toBool()); break;
+		case 7: m_map->m_pbar->SetOrientation(v.toInt()); break;
+		case 8: rng[1] = v.toFloat(); m_map->SetRange(rng); break;
+		case 9: rng[0] = v.toFloat(); m_map->SetRange(rng); break;
 		}
 		m_wnd->GetDocument()->UpdateFEModel();
 	}
