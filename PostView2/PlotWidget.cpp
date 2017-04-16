@@ -277,8 +277,7 @@ void CPlotWidget::OnShowProps()
 
 	if (dlg.exec())
 	{
-		rt.setLeft(dlg.m_xmin); rt.setRight(dlg.m_xmax);
-		rt.setTop(dlg.m_ymin); rt.setBottom(dlg.m_ymax);
+		rt = QRectF(QPointF(dlg.m_xmin, dlg.m_ymin), QPointF(dlg.m_xmax, dlg.m_ymax));
 
 		setViewRect(rt);
 		repaint();
