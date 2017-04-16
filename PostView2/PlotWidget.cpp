@@ -10,6 +10,70 @@
 #include <QClipboard>
 #include <assert.h>
 #include <math.h>
+#include <QFormLayout>
+#include <QDialogButtonBox>
+#include <QBoxLayout>
+#include <QLineEdit>
+#include <QValidator>
+
+class CDlgPlotWidgetProps_Ui
+{
+public:
+	QLineEdit*	x[2];
+	QLineEdit*	y[2];
+
+public:
+	void setup(CDlgPlotWidgetProps* dlg)
+	{
+		QFormLayout* form = new QFormLayout;
+
+		form->addRow("X min:", x[0] = new QLineEdit); x[0]->setValidator(new QDoubleValidator);
+		form->addRow("X max:", x[1] = new QLineEdit); x[1]->setValidator(new QDoubleValidator);
+
+		form->addRow("Y min:", y[0] = new QLineEdit); y[0]->setValidator(new QDoubleValidator);
+		form->addRow("Y max:", y[1] = new QLineEdit); y[1]->setValidator(new QDoubleValidator);
+
+		QDialogButtonBox* bb = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+
+		QVBoxLayout* l = new QVBoxLayout;
+		l->addLayout(form);
+		l->addWidget(bb);
+
+		dlg->setLayout(l);
+
+		QObject::connect(bb, SIGNAL(accepted()), dlg, SLOT(accept()));
+		QObject::connect(bb, SIGNAL(rejected()), dlg, SLOT(reject()));
+	}
+};
+
+CDlgPlotWidgetProps::CDlgPlotWidgetProps(QWidget* parent) : QDialog(parent), ui(new CDlgPlotWidgetProps_Ui)
+{
+	ui->setup(this);
+}
+
+void CDlgPlotWidgetProps::SetRange(double xmin, double xmax, double ymin, double ymax)
+{
+	if (ui)
+	{
+		ui->x[0]->setText(QString::number(xmin));
+		ui->x[1]->setText(QString::number(xmax));
+
+		ui->y[0]->setText(QString::number(ymin));
+		ui->y[1]->setText(QString::number(ymax));
+	}
+}
+
+void CDlgPlotWidgetProps::accept()
+{
+	m_xmin = ui->x[0]->text().toDouble();
+	m_xmax = ui->x[1]->text().toDouble();
+	m_ymin = ui->y[0]->text().toDouble();
+	m_ymax = ui->y[1]->text().toDouble();
+
+	QDialog::accept();
+}
+
+//=============================================================================
 
 class CPalette
 {
@@ -207,10 +271,18 @@ void CPlotWidget::OnZoomToFit()
 //-----------------------------------------------------------------------------
 void CPlotWidget::OnShowProps()
 {
-	QMessageBox b;
-	b.setText("Coming soon!");
-	b.setIcon(QMessageBox::Information);
-	b.exec();
+	CDlgPlotWidgetProps dlg(this);
+	QRectF rt = m_viewRect;
+	dlg.SetRange(rt.left(), rt.right(), rt.top(), rt.bottom());
+
+	if (dlg.exec())
+	{
+		rt.setLeft(dlg.m_xmin); rt.setRight(dlg.m_xmax);
+		rt.setTop(dlg.m_ymin); rt.setBottom(dlg.m_ymax);
+
+		setViewRect(rt);
+		repaint();
+	}
 }
 
 //-----------------------------------------------------------------------------

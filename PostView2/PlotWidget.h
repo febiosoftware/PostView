@@ -1,6 +1,7 @@
 #pragma once
 #include <QWidget>
 #include <vector>
+#include <QDialog>
 using namespace std;
 
 //-----------------------------------------------------------------------------
@@ -191,4 +192,26 @@ private:
 	QAction*	m_pShowProps;
 	QAction*	m_pCopyToClip;
 	QSize		m_sizeHint;
+};
+
+
+class CDlgPlotWidgetProps_Ui;
+
+class CDlgPlotWidgetProps : public QDialog
+{
+	Q_OBJECT
+
+public:
+	CDlgPlotWidgetProps(QWidget* parent = 0);
+
+	void SetRange(double xmin, double xmax, double ymin, double ymax);
+
+	void accept();
+
+public:
+	double	m_xmin, m_xmax;
+	double	m_ymin,	m_ymax;
+
+private:
+	CDlgPlotWidgetProps_Ui*	ui;
 };
