@@ -522,6 +522,14 @@ void CGraphWindow::addSelectedNodes()
 					}
 				}
 			}
+
+			// sort the plots 
+			int nplots = ui->plot->plots();
+			for (int i=0; i<nplots; ++i)
+			{
+				CPlotData& data = ui->plot->getPlotData(i);
+				data.sort();
+			}
 		}
 		break;
 	}

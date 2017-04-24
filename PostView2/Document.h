@@ -303,6 +303,9 @@ public:
 	// set selection style
 	void SetSelectionStyle(int n) { m_selectStyle = n; }
 
+	// convert between selections
+	void ConvertSelection(int oldMode, int newMode);
+
 
 	// --- O B J E C T   M A N A G M E N T ---
 

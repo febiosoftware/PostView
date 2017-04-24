@@ -642,7 +642,12 @@ void CMainWindow::on_actionQuit_triggered()
 
 void CMainWindow::on_selectNodes_triggered()
 {
+	int oldMode = m_doc->GetSelectionMode();
+
+	m_doc->ConvertSelection(oldMode, SELECT_NODES);
+
 	m_doc->SetSelectionMode(SELECT_NODES);
+
 	RedrawGL();
 }
 

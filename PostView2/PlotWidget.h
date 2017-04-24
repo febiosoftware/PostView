@@ -40,6 +40,9 @@ public:
 	QColor color() const { return m_col; }
 	void setColor(const QColor& col) { m_col = col; }
 
+	// sort the data
+	void sort();
+
 protected:
 	vector<QPointF>	m_data;
 	QString			m_label;

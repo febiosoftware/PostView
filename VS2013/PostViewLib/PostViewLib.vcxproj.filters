@@ -216,6 +216,12 @@
     <ClInclude Include="..\..\PostViewLib\LinearRegression.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\PostViewLib\FEAsciiExport.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PostViewLib\FENodeEdgeList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\PostViewLib\3DImage.cpp">
@@ -411,6 +417,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\PostViewLib\LinearRegression.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PostViewLib\FEAsciiExport.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PostViewLib\FENodeEdgeList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

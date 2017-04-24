@@ -144,6 +144,7 @@
     <ClInclude Include="..\..\PostViewLib\color.h" />
     <ClInclude Include="..\..\PostViewLib\ColorMap.h" />
     <ClInclude Include="..\..\PostViewLib\FEAsciiExport.h" />
+    <ClInclude Include="..\..\PostViewLib\FENodeEdgeList.h" />
     <ClInclude Include="..\..\PostViewLib\LinearRegression.h" />
     <ClInclude Include="..\..\PostViewLib\Palette.h" />
     <ClInclude Include="..\..\PostViewLib\constants.h" />
@@ -235,6 +236,7 @@
     <ClCompile Include="..\..\PostViewLib\FEModel.cpp" />
     <ClCompile Include="..\..\PostViewLib\FENikeExport.cpp" />
     <ClCompile Include="..\..\PostViewLib\FENikeImport.cpp" />
+    <ClCompile Include="..\..\PostViewLib\FENodeEdgeList.cpp" />
     <ClCompile Include="..\..\PostViewLib\FENodeElemList.cpp" />
     <ClCompile Include="..\..\PostViewLib\FENodeFaceList.cpp" />
     <ClCompile Include="..\..\PostViewLib\FENodeFaceTable.cpp" />

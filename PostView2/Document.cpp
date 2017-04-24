@@ -1571,3 +1571,57 @@ int CDocument::GetTimeSteps() { return (m_fem?m_fem->GetStates():0); }
 
 const char* CDocument::GetTitle() { return (m_fem?m_fem->GetTitle():0); }
 void CDocument::SetTitle(const char* sztitle) { if (m_fem) m_fem->SetTitle(sztitle); }
+
+void CDocument::ConvertSelection(int oldMode, int newMode)
+{
+	if (newMode == SELECT_NODES)
+	{
+		FEMeshBase& mesh = *GetFEModel()->GetFEMesh(0);
+
+		if (oldMode == SELECT_EDGES)
+		{
+			int NE = mesh.Edges();
+			for (int i=0; i<NE; ++i)
+			{
+				FEEdge& e = mesh.Edge(i);
+				if (e.IsSelected())
+				{
+					e.Unselect();
+					int ne = e.Nodes();
+					for (int j = 0; j<ne; ++j)
+						mesh.Node(e.node[j]).Select();
+				}
+			}
+		}
+		if (oldMode == SELECT_FACES)
+		{
+			int NF = mesh.Faces();
+			for (int i = 0; i<NF; ++i)
+			{
+				FEFace& f = mesh.Face(i);
+				if (f.IsSelected())
+				{
+					f.Unselect();
+					int nf = f.Nodes();
+					for (int j=0; j<nf; ++j)
+						mesh.Node(f.node[j]).Select();
+				}
+			}
+		}
+		if (oldMode == SELECT_ELEMS)
+		{
+			int NE = mesh.Elements();
+			for (int i = 0; i<NE; ++i)
+			{
+				FEElement& e = mesh.Element(i);
+				if (e.IsSelected())
+				{
+					e.Unselect();
+					int ne = e.Nodes();
+					for (int j = 0; j<ne; ++j)
+						mesh.Node(e.m_node[j]).Select();
+				}
+			}
+		}
+	}
+}

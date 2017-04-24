@@ -7,6 +7,7 @@
 #include "GLView.h"
 #include "GLContext.h"
 #include <PostViewLib/GLCamera.h>
+#include <PostViewLib/FENodeEdgeList.h>
 #include <stack>
 using namespace std;
 
@@ -2999,69 +3000,51 @@ void CGLModel::SelectConnectedEdges(FEEdge& e)
 {
 	FEMeshBase& mesh = *GetActiveMesh();
 
-	// clear tags on all faces
-	int NF = mesh.Faces();
-	for (int i=0; i<NF; ++i) mesh.Face(i).m_ntag = 0;
+	// clear tags on all edge
+	int NE = mesh.Edges();
+	for (int i=0; i<NE; ++i) mesh.Edge(i).m_ntag = 0;
+
+	// build the node-edge table
+	FENodeEdgeList NEL;
+	NEL.Build(&mesh);
+
+	if (NEL.Empty()) return;
 
 	// find a face that has both nodes connects to
-	int n0 = e.node[0];
-	int n1 = e.node[1];
-	FEFace* pf = 0;
-	for (int i=0; i<mesh.Faces(); ++i)
+	stack<FEEdge*> Stack;
+	Stack.push(&e);
+	while (Stack.empty() == false)
 	{
-		FEFace& f = mesh.Face(i);
-		if (f.IsVisible() && f.HasNode(n0) && f.HasNode(n1))
-		{
-			pf = &f;
-			break;
-		}
-	}
-	if (pf == 0) return;
+		FEEdge* pe = Stack.top(); Stack.pop();
+		pe->m_ntag = 1;
 
-	// propagate through all neighbors
-	stack<FEFace*> S;
-	pf->m_ntag = 1;
-	S.push(pf);
-	while (!S.empty())
-	{
-		FEFace* pf = S.top(); S.pop();
-		if (pf->IsVisible())
+		// get the edge vector
+		vec3f n = mesh.Node(pe->node[1]).m_rt - mesh.Node(pe->node[0]).m_rt; n.Normalize();
+
+		// find the neighbor edges whose vector is closely aligned to the edge vector n
+		for (int i=0; i<2; ++i)
 		{
-			for (int j=0; j<pf->Edges(); ++j)
+			int m = pe->node[i];
+			int ne = NEL.Valence(m);
+			int* EL = NEL.EdgeList(m);
+			for (int j=0; j<ne; ++j)
 			{
-				FEFace* pf2 = (pf->m_nbr[j] >= 0? &mesh.Face(pf->m_nbr[j]) : 0);
-				if (pf2 && pf2->IsVisible() && (pf2->m_ntag == 0) && (pf2->m_nsg == pf->m_nsg)) 
+				FEEdge& ej = mesh.Edge(EL[j]);
+
+				if (ej.IsVisible() && (&ej != pe) && (ej.m_ntag == 0))
 				{
-					pf2->m_ntag = 1;
-					S.push(pf2);
+					vec3f nj = mesh.Node(ej.node[1]).m_rt - mesh.Node(ej.node[0]).m_rt; nj.Normalize();
+					if (n*nj > 0.866) Stack.push(&ej);
 				}
 			}
 		}
 	}
 
-	// tag all nodes
-	int NN = mesh.Nodes();
-	for (int i=0; i<NN; ++i) mesh.Node(i).m_ntag = 0;
-	for (int i=0; i<NF; ++i)
-	{
-		FEFace& face = mesh.Face(i);
-		if (face.m_ntag == 1)
-		{
-			int nf = face.Nodes();
-			for (int j=0; j<nf; ++j) mesh.Node(face.node[j]).m_ntag = 1;
-		}
-	}
-
-	// select all the edges of tagged nodes
-	int NL = mesh.Edges();
-	for (int i=0; i<NL; ++i)
+	// select all the tagged edges
+	for (int i=0; i<NE; ++i)
 	{
 		FEEdge& edge = mesh.Edge(i);
-		if (edge.IsVisible())
-		{
-			if ((mesh.Node(edge.node[0]).m_ntag == 1) && 
-				(mesh.Node(edge.node[1]).m_ntag == 1)) edge.Select();
-		}
+		if (edge.IsVisible() && (edge.m_ntag == 1)) edge.Select();
 	}
 
 	UpdateSelectionLists(SELECT_EDGES);
