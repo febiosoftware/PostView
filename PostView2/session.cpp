@@ -55,10 +55,11 @@ bool CDocument::SaveSession(const char* szfile)
 		e.name("Model");
 
 		// only store the filename
-		char* sz = strrchr(m_szfile, '\\');
+		char* sz = m_szfile;
+/*		char* sz = strrchr(m_szfile, '\\');
 		if (sz==0) sz = strrchr(m_szfile, '/');
 		if (sz) sz = sz+1; else sz = m_szfile;
-		e.add_attribute("file", sz);
+*/		e.add_attribute("file", sz);
 
 		// store model data
 		CGLModel* pmdl = m_pGLModel;

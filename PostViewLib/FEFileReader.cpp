@@ -47,9 +47,12 @@ bool FEFileReader::Open(const char* szfile, const char* szmode)
 	m_fileName = szfile;
 
 	// get the filesize
-	fseek(m_fp, 0, SEEK_END);
-	m_nfilesize = ftell64(m_fp);
-	fseek64(m_fp, 0, SEEK_SET);
+	if (m_fp)
+	{
+		fseek(m_fp, 0, SEEK_END);
+		m_nfilesize = ftell64(m_fp);
+		fseek64(m_fp, 0, SEEK_SET);
+	}
 
 	return (m_fp != 0);
 }

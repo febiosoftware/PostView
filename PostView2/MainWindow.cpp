@@ -581,10 +581,12 @@ void CMainWindow::on_actionSnapShot_triggered()
 
 void CMainWindow::on_actionOpenSession_triggered()
 {
-	char szfile[1024] = {0};
 	QString filename = QFileDialog::getOpenFileName(this, "Open session file", 0, "PostView session (*.pvs)");
 	if (filename.isEmpty() == false)
 	{
+		std::string sfile = filename.toStdString();
+		const char* szfile = sfile.c_str();
+
 		CDocument* pdoc = GetDocument();
 		// try to open the session
 		if (pdoc->OpenSession(szfile) == false)
@@ -598,7 +600,7 @@ void CMainWindow::on_actionOpenSession_triggered()
 			int N = pdoc->GetFEModel()->GetStates();
 //			ShowTimeController(N > 1);
 
-			char* ch = strrchr(szfile, '\\');
+			const char* ch = strrchr(szfile, '\\');
 			if (ch == 0) 
 			{
 				ch = strrchr(szfile, '/'); 
@@ -623,7 +625,8 @@ void CMainWindow::on_actionSaveSession_triggered()
 	QString fileName = QFileDialog::getSaveFileName(this, "Save session", 0, "PostView session (*.pvs)");
 	if (fileName.isEmpty() == false)
 	{
-		const char* szfile = fileName.toStdString().c_str();
+		std::string sfile = fileName.toStdString();
+		const char* szfile = sfile.c_str();
 		if (m_doc->SaveSession(szfile) == false)
 		{
 			QMessageBox::critical(this, "PostView", "Failed storing PostView session.");
