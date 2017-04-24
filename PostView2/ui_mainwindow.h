@@ -288,7 +288,7 @@ public:
 		actionViewVPNext     = addAction("Next viewpoint",         "actionViewVPNext"    ); actionViewVPNext->setShortcut(Qt::CTRL + Qt::Key_L);
 
 		// --- Help Menu ---
-		QAction* actionHelp  = new QAction("Help ... " , MainWindow); actionHelp ->setObjectName(QStringLiteral("actionHelp" ));
+		QAction* actionHelp  = new QAction("Online Help ... " , MainWindow); actionHelp ->setObjectName(QStringLiteral("actionHelp" ));
 		QAction* actionAbout = new QAction("About ... ", MainWindow); actionAbout->setObjectName(QStringLiteral("actionAbout"));
 
 		// create menu bar

@@ -5,6 +5,7 @@
 #include <QFileDialog>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
+#include <QDesktopServices>
 #include "Document.h"
 #include "Document.h"
 #include "GLModel.h"
@@ -39,6 +40,7 @@
 #include "DlgTimeSettings.h"
 #include "DlgFileInfo.h"
 #include "DlgExportAscii.h"
+#include "version.h"
 #include <string>
 
 CFileThread::CFileThread(CMainWindow* wnd, FEFileReader* file, const QString& fileName) : m_wnd(wnd), m_fileReader(file), m_fileName(fileName)
@@ -1566,4 +1568,16 @@ void CMainWindow::readSettings()
 
 	// update the menu and toolbar to reflect the correct settings
 	UpdateMainToolbar();
+}
+
+void CMainWindow::on_actionHelp_triggered()
+{
+//	QDesktopServices::openUrl(QUrl("http://help.mrl.sci.utah.edu/help/index.jsp"));
+	QDesktopServices::openUrl(QUrl("http://help.mrl.sci.utah.edu/help/topic/org.febio.help.postview_um/html/title_page.html?cp=3"));
+}
+
+void CMainWindow::on_actionAbout_triggered()
+{
+	QString txt = QString("<h1>PostView</h1><p>version %1.%2.%3</p><p>Musculoskeletal Research Laboratories, University of Utah</p><p> Copyright (c) 2005 - 2017, All rights reserved</p>").arg(VERSION).arg(SUBVERSION).arg(SUBSUBVERSION);
+	QMessageBox::information(this, "About PostView2", txt, QMessageBox::Close);
 }

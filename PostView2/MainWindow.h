@@ -155,6 +155,9 @@ public slots:
 	void on_actionViewVPPrev_triggered();
 	void on_actionViewVPNext_triggered();
 
+	void on_actionHelp_triggered();
+	void on_actionAbout_triggered();
+
 	void on_fontStyle_currentFontChanged(const QFont& font);
 	void on_fontSize_valueChanged(int i);
 	void on_fontBold_toggled(bool checked);
