@@ -21,7 +21,6 @@
 #include <PostViewLib/3DImage.h>
 #include <PostViewLib/VolRender.h>
 #include <PostViewLib/ImageSlicer.h>
-#include "DlgColorMap.h"
 
 //-----------------------------------------------------------------------------
 class CModelProps : public CPropertyList

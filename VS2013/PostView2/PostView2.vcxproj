@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug (No MOC)|Win32">
+      <Configuration>Debug (No MOC)</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug (No MOC)|x64">
+      <Configuration>Debug (No MOC)</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
@@ -30,7 +38,19 @@
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
@@ -56,7 +76,13 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -69,7 +95,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(QTDIR)\include;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtWidgets;$(SolutionDir)..;$(ZLIBDIR);$(GLEWDIR)\include\GL;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)x64\Debug;$(QTDIR)\lib;$(GLEWDIR)\lib\Release\x64;$(ZLIBDIR)\lib64;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(QTDIR)\include;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtWidgets;$(SolutionDir)..;$(ZLIBDIR);$(GLEWDIR)\include\GL;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)x64\Debug;$(QTDIR)\lib;$(GLEWDIR)\lib\Release\x64;$(ZLIBDIR)\lib64;$(LibraryPath)</LibraryPath>
@@ -95,7 +129,34 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;postviewlib.lib;glew32.lib;opengl32.lib;glu32.lib;zlib64d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
@@ -148,64 +209,91 @@
   <ItemGroup>
     <ClInclude Include="..\..\PostView2\3PointAngleTool.h" />
     <ClInclude Include="..\..\PostView2\4PointAngleTool.h" />
-    <CustomBuild Include="..\..\PostView2\AddImage3DTool.h">
+    <ClInclude Include="..\..\PostView2\AddImage3DTool.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
     <ClInclude Include="..\..\PostView2\AddPointTool.h" />
-    <CustomBuild Include="..\..\PostView2\CColorButton.h">
+    <ClInclude Include="..\..\PostView2\CColorButton.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
     <ClInclude Include="..\..\PostView2\CIntInput.h" />
     <ClInclude Include="..\..\PostView2\CommandPanel.h" />
     <ClInclude Include="..\..\PostView2\convert.h" />
-    <CustomBuild Include="..\..\PostView2\DataFieldSelector.h">
+    <ClInclude Include="..\..\PostView2\DataFieldSelector.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="..\..\PostView2\DataPanel.h">
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
+    <ClInclude Include="..\..\PostView2\DataPanel.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="..\..\PostView2\DistanceMapTool.h">
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
+    <ClInclude Include="..\..\PostView2\DistanceMapTool.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="..\..\PostView2\DlgExportXPLT.h">
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
+    <ClInclude Include="..\..\PostView2\DlgExportXPLT.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
     <ClInclude Include="..\..\PostView2\DlgExportAscii.h" />
     <ClInclude Include="..\..\PostView2\DlgFileInfo.h" />
     <ClInclude Include="..\..\PostView2\DlgFind.h" />
     <ClInclude Include="..\..\PostView2\DlgImportXPLT.h" />
     <ClInclude Include="..\..\PostView2\DlgSelectRange.h" />
     <ClInclude Include="..\..\PostView2\DlgTimeSettings.h" />
-    <CustomBuild Include="..\..\PostView2\DlgViewSettings.h">
+    <ClInclude Include="..\..\PostView2\DlgViewSettings.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="..\..\PostView2\DlgWidgetProps.h">
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
+    <ClInclude Include="..\..\PostView2\DlgWidgetProps.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
     <ClInclude Include="..\..\PostView2\Document.h" />
     <ClInclude Include="..\..\PostView2\DragBox.h" />
     <ClInclude Include="..\..\PostView2\FEKinemat.h" />
-    <CustomBuild Include="..\..\PostView2\FileViewer.h">
+    <ClInclude Include="..\..\PostView2\FileViewer.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
     <ClInclude Include="..\..\PostView2\GLContext.h" />
     <ClInclude Include="..\..\PostView2\GLDataMap.h" />
     <ClInclude Include="..\..\PostView2\GLIsoSurfacePlot.h" />
@@ -217,119 +305,182 @@
     <ClInclude Include="..\..\PostView2\GLPlot.h" />
     <ClInclude Include="..\..\PostView2\GLSlicePLot.h" />
     <ClInclude Include="..\..\PostView2\GLVectorPlot.h" />
-    <CustomBuild Include="..\..\PostView2\GLView.h">
+    <ClInclude Include="..\..\PostView2\GLView.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
     <ClInclude Include="..\..\PostView2\GLWidget.h" />
     <ClInclude Include="..\..\PostView2\GLWidgetManager.h" />
-    <CustomBuild Include="..\..\PostView2\GraphWindow.h">
+    <ClInclude Include="..\..\PostView2\GraphWindow.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="..\..\PostView2\ImportLinesTool.h">
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
+    <ClInclude Include="..\..\PostView2\ImportLinesTool.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="..\..\PostView2\IntegrateWindow.h">
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
+    <ClInclude Include="..\..\PostView2\IntegrateWindow.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="..\..\PostView2\MainWindow.h">
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
+    <ClInclude Include="..\..\PostView2\MainWindow.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="..\..\PostView2\MaterialPanel.h">
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
+    <ClInclude Include="..\..\PostView2\MaterialPanel.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
     <ClInclude Include="..\..\PostView2\MeasureAreaTool.h" />
-    <CustomBuild Include="..\..\PostView2\ModelViewer.h">
+    <ClInclude Include="..\..\PostView2\ModelViewer.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="..\..\PostView2\PlaneTool.h">
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
+    <ClInclude Include="..\..\PostView2\PlaneTool.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="..\..\PostView2\PlotMixTool.h">
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
+    <ClInclude Include="..\..\PostView2\PlotMixTool.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="..\..\PostView2\PlotWidget.h">
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
+    <ClInclude Include="..\..\PostView2\PlotWidget.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="..\..\PostView2\PointCongruencyTool.h">
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
+    <ClInclude Include="..\..\PostView2\PointCongruencyTool.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
     <ClInclude Include="..\..\PostView2\PointDistanceTool.h" />
     <ClInclude Include="..\..\PostView2\PropertyList.h" />
-    <CustomBuild Include="..\..\PostView2\PropertyListForm.h">
+    <ClInclude Include="..\..\PostView2\PropertyListForm.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="..\..\PostView2\PropertyListView.h">
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
+    <ClInclude Include="..\..\PostView2\PropertyListView.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
     <ClInclude Include="..\..\PostView2\ShellThicknessTool.h" />
-    <CustomBuild Include="..\..\PostView2\SphereFitTool.h">
+    <ClInclude Include="..\..\PostView2\SphereFitTool.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="..\..\PostView2\StatePanel.h">
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
+    <ClInclude Include="..\..\PostView2\StatePanel.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="..\..\PostView2\StatsWindow.h">
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
+    <ClInclude Include="..\..\PostView2\StatsWindow.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
     <ClInclude Include="..\..\PostView2\stdafx.h" />
-    <CustomBuild Include="..\..\PostView2\SummaryWindow.h">
+    <ClInclude Include="..\..\PostView2\SummaryWindow.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
     <ClInclude Include="..\..\PostView2\targetver.h" />
-    <CustomBuild Include="..\..\PostView2\Tool.h">
+    <ClInclude Include="..\..\PostView2\Tool.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="..\..\PostView2\ToolsPanel.h">
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
+    <ClInclude Include="..\..\PostView2\ToolsPanel.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="..\..\PostView2\TimePanel.h">
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
+    <ClInclude Include="..\..\PostView2\TimePanel.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="..\..\PostView2\TimeController.h">
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
+    <ClInclude Include="..\..\PostView2\TimeController.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </ClInclude>
     <ClInclude Include="..\..\PostView2\TransformTool.h" />
     <ClInclude Include="..\..\PostView2\ui_mainwindow.h" />
     <ClInclude Include="..\..\PostView2\ui_timepanel.h" />
