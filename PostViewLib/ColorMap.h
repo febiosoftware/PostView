@@ -11,21 +11,10 @@
 
 #include "GLTexture1D.h"
 #include "color.h"
+#include <vector>
+using namespace std;
 
 #define MAX_MAP_COLORS	9
-
-#define COLOR_MAP_AUTUMN	0
-#define COLOR_MAP_BLUE		1
-#define COLOR_MAP_FIRE		2
-#define COLOR_MAP_GRAY		3
-#define COLOR_MAP_GREEN		4
-#define COLOR_MAP_JET		5
-#define COLOR_MAP_RBB		6
-#define COLOR_MAP_RED 		7
-#define COLOR_MAP_SPRING	8
-#define COLOR_MAP_SUMMER	9
-#define COLOR_MAP_WINTER	10
-#define COLOR_MAP_USER		11
 
 class CGLTexture1D;
 
@@ -50,32 +39,16 @@ public:
 	void rbb   ();
 	void fire  ();
 
-	int Type() { return m_ntype; }
-	void SetType(int ntype);
+	GLCOLOR map(float fval) const;
 
-	GLCOLOR map(float fval);
+	int Colors() const { return m_ncol; }
+	void SetColors(int n) { m_ncol = n; }
 
-	void SetRange(float min, float max, bool bup = true) { m_min = min; m_max = max; if (bup) UpdateTexture(); }
-	void GetRange(float& min, float& max) { min = m_min; max = m_max; }
+	GLCOLOR GetColor(int i) const { return m_col[i]; }
+	void SetColor(int i, GLCOLOR c) { m_col[i] = c; }
 
-	GLTexture1D& GetTexture() { return m_tex; }
-
-	int GetDivisions() { return m_ndivs; }
-	void SetDivisions(int n, bool bup = true) { m_ndivs = n; if (bup) UpdateTexture(); }
-
-	bool Smooth() { return m_bsmooth; }
-	void Smooth(bool b) { m_bsmooth = b; }
-
-	void UpdateTexture();
-
-	int Colors() { return m_ncol; }
-	void SetColors(int n) { SetType(COLOR_MAP_USER); m_ncol = n; }
-
-	GLCOLOR GetColor(int i) { return m_col[i]; }
-	void SetColor(int i, GLCOLOR c) { SetType(COLOR_MAP_USER); m_col[i] = c; }
-
-	float GetColorPos(int i) { return m_pos[i]; }
-	void SetColorPos(int i, float v) { SetType(COLOR_MAP_USER); m_pos[i] = v; }
+	float GetColorPos(int i) const { return m_pos[i]; }
+	void SetColorPos(int i, float v) { m_pos[i] = v; }
 
 	void Invert();
 
@@ -83,15 +56,80 @@ protected:
 	int		m_ncol;
 	GLCOLOR	m_col[MAX_MAP_COLORS];
 	float	m_pos[MAX_MAP_COLORS];
+};
 
-	int		m_ntype;
-	int		m_ndivs;
-	bool	m_bsmooth;	// smooth gradient or not
+//-----------------------------------------------------------------------------
+class CColorTexture
+{
+public:
+	CColorTexture();
+	CColorTexture(const CColorTexture& col);
+	void operator = (const CColorTexture& col);
 
-	float	m_min;
-	float	m_max;
+	GLTexture1D& GetTexture() { return m_tex; }
 
-	GLTexture1D m_tex;
+	void UpdateTexture();
+
+	int GetDivisions() const;
+	void SetDivisions(int n);
+
+	bool GetSmooth() const;
+	void SetSmooth(bool b);
+
+	void SetColorMap(int n);
+	int GetColorMap() const;
+
+private:
+	int		m_colorMap;		// index of template to use
+	int		m_ndivs;		// number of divisions
+	bool	m_bsmooth;		// smooth interpolation or not
+
+	GLTexture1D m_tex;	// the actual texture
+};
+
+//-----------------------------------------------------------------------------
+// Class for managing available color maps
+class ColorMapManager
+{
+public:
+	enum DefaultMap
+	{
+		AUTUMN,
+		BLUE,
+		FIRE,
+		GRAY,
+		GREEN,
+		JET,
+		RBB,
+		RED,
+		SPRING,
+		SUMMER,
+		WINTER
+	};
+
+public:
+	// calls this to generate a list of default maps
+	static void Initialize();
+
+	// get the number of templates available
+	static int ColorMaps();
+
+	// return the name of a template
+	static string GetColorMapName(int n);
+
+	// add a color map template
+	static void AddColormap(const string& name, const CColorMap& map);
+
+	// get a reference to the color map template
+	static CColorMap& GetColorMap(int n);
+
+private:
+	// this is a singleton so don't try to instantiate this
+	ColorMapManager(){}
+	ColorMapManager(const ColorMapManager&){}
+
+private:
+	static vector<class ColorMapTemplate>	m_map;
 };
 
 #endif // !defined(AFX_COLORMAP_H__5CE5C222_17D8_4BD3_8CDB_D4FF17C64525__INCLUDED_)

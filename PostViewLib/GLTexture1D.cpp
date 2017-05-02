@@ -18,8 +18,13 @@
 GLTexture1D::GLTexture1D()
 {
 	m_n = 1024; 
-	m_bsmooth = false; 
 	for (int i=0; i<3*m_n; i++) m_pb[i] = 0;
+}
+
+GLTexture1D::GLTexture1D(const GLTexture1D& tex)
+{
+	m_n = tex.m_n;
+	for (int i = 0; i<3 * m_n; i++) m_pb[i] = tex.m_pb[i];
 }
 
 void GLTexture1D::SetTexture(unsigned char* pb)
@@ -43,9 +48,4 @@ int GLTexture1D::Size()
 unsigned char* GLTexture1D::GetBytes() 
 { 
 	return m_pb; 
-}
-
-void GLTexture1D::Smooth(bool bs)
-{
-	m_bsmooth = bs; 
 }

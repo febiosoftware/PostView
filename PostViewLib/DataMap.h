@@ -14,7 +14,7 @@ public:
 	DataMap(void) { m_pmesh = 0; }
 	~DataMap(void) {}
 
-	int States() { return m_Data.size(); }
+	int States() { return (int)m_Data.size(); }
 	vector<T>& State(int n) { return m_Data[n]; }
 	int GetTag(int n) { return m_tag[n]; }
 	void SetTag(int n, int ntag) { m_tag[n] = ntag; }

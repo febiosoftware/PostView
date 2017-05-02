@@ -88,11 +88,11 @@ ModelData::ModelData(CGLModel *po)
 		m_cmap.m_nField = pglmap->GetEvalField();
 		pglmap->GetRange(m_cmap.m_user);
 
-		CColorMap* pcm = pglmap->GetColorMap();
-		m_cmap.m_ntype = pcm->Type();
+		CColorTexture* pcm = pglmap->GetColorMap();
+		m_cmap.m_ntype = pcm->GetColorMap();
 		m_cmap.m_ndivs = pcm->GetDivisions();
-		m_cmap.m_bsmooth = pcm->Smooth();
-		pcm->GetRange(m_cmap.m_min, m_cmap.m_max);
+		m_cmap.m_bsmooth = pcm->GetSmooth();
+//		pcm->GetRange(m_cmap.m_min, m_cmap.m_max);
 	}
 
 	// displacement map
@@ -132,11 +132,11 @@ void ModelData::SetData(CGLModel* po)
 		pglmap->SetEvalField(m_cmap.m_nField);
 		pglmap->Activate(m_cmap.m_bactive);
 
-		CColorMap* pcm = pglmap->GetColorMap();
-		pcm->SetType(m_cmap.m_ntype);
+		CColorTexture* pcm = pglmap->GetColorMap();
+		pcm->SetColorMap(m_cmap.m_ntype);
 		pcm->SetDivisions(m_cmap.m_ndivs);
-		pcm->Smooth(m_cmap.m_bsmooth);
-		pcm->SetRange(m_cmap.m_min, m_cmap.m_max);
+		pcm->SetSmooth(m_cmap.m_bsmooth);
+//		pcm->SetRange(m_cmap.m_min, m_cmap.m_max);
 	}
 
 	// displacement map

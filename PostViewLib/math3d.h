@@ -161,7 +161,7 @@ public:
 		vm  = x*x + y*y + z*z;
 		vm -= x*y + y*z + x*z;
 		vm += 3*(xy*xy + yz*yz + xz*xz);
-		vm = sqrt(vm >= 0.0 ? vm : 0.0);
+		vm = (float)sqrt(vm >= 0.0 ? vm : 0.0);
 		return vm;
 	}
 

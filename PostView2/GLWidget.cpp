@@ -67,7 +67,7 @@ void GLWidget::copy_label(const char* szlabel)
 	m_szlabel = 0;
 	m_balloc = false;
 
-	int n = strlen(szlabel);
+	int n = (int)strlen(szlabel);
 	if (n)
 	{
 		m_szlabel = new char[n+1];
@@ -213,7 +213,7 @@ void GLBox::parse_label(char* szlabel, const char* szval, int nmax)
 
 //-----------------------------------------------------------------------------
 
-GLLegendBar::GLLegendBar(CGLObject* po, CColorMap* pm, int x, int y, int w, int h) : GLWidget(po, x,y,w,h,0)
+GLLegendBar::GLLegendBar(CGLObject* po, CColorTexture* pm, int x, int y, int w, int h) : GLWidget(po, x,y,w,h,0)
 {
 	m_pMap = pm;
 	m_ntype = GRADIENT;
@@ -222,6 +222,9 @@ GLLegendBar::GLLegendBar(CGLObject* po, CColorMap* pm, int x, int y, int w, int 
 	m_blabels = true;
 	m_nprec = 3;
 	m_labelPos = 0;
+
+	m_fmin = 0.0f;
+	m_fmax = 1.0f;
 }
 
 void GLLegendBar::draw(QPainter* painter)
@@ -249,14 +252,24 @@ void GLLegendBar::SetOrientation(int n)
 	m_h = tmp;
 }
 
+void GLLegendBar::SetRange(float fmin, float fmax)
+{
+	m_fmin = fmin;
+	m_fmax = fmax;
+}
+
+void GLLegendBar::GetRange(float& fmin, float& fmax)
+{
+	fmin = m_fmin;
+	fmax = m_fmax;
+}
+
 void GLLegendBar::draw_gradient_vert(QPainter* painter)
 {
 	painter->beginNativePainting();
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
 
 	// draw the legend
-	float fmin, fmax;
-	m_pMap->GetRange(fmin, fmax);
 	int nsteps = m_pMap->GetDivisions();
 
 	glDisable(GL_CULL_FACE);
@@ -302,7 +315,7 @@ void GLLegendBar::draw_gradient_vert(QPainter* painter)
 	double f, p=1;
 	char str[256], pstr[256];
 	
-	double a = MAX(fabs(fmin),fabs(fmax));
+	double a = MAX(fabs(m_fmin),fabs(m_fmax));
 	if (a > 0)
 	{
 		double g = log10(a);
@@ -317,7 +330,7 @@ void GLLegendBar::draw_gradient_vert(QPainter* painter)
 		for (i=0; i<=nsteps; i++)
 		{
 			yt = y0 + i*(y1 - y0)/nsteps;
-			f = fmax + i*(fmin - fmax)/nsteps;
+			f = m_fmax + i*(m_fmin - m_fmax)/nsteps;
 		
 			glVertex2i(x0+1, yt);
 			glVertex2i(x1-1, yt);
@@ -361,7 +374,7 @@ void GLLegendBar::draw_gradient_vert(QPainter* painter)
 		for (i=0; i<=nsteps; i++)
 		{
 			yt = y0 + i*(y1 - y0)/nsteps;
-			f = fmax + i*(fmin - fmax)/nsteps;
+			f = m_fmax + i*(m_fmin - m_fmax)/nsteps;
 
 			sprintf(str, szfmt, (fabs(f/p) < 1e-5 ? 0 : f/p));
 			QString s(str);
@@ -388,8 +401,6 @@ void GLLegendBar::draw_gradient_horz(QPainter* painter)
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
 
 	// draw the legend
-	float fmin, fmax;
-	m_pMap->GetRange(fmin, fmax);
 	int nsteps = m_pMap->GetDivisions();
 
 	glDisable(GL_CULL_FACE);
@@ -435,7 +446,7 @@ void GLLegendBar::draw_gradient_horz(QPainter* painter)
 	double p = 1;
 	char str[256], pstr[256];
 
-	double a = MAX(fabs(fmin), fabs(fmax));
+	double a = MAX(fabs(m_fmin), fabs(m_fmax));
 	if (a > 0)
 	{
 		double g = log10(a);
@@ -450,7 +461,7 @@ void GLLegendBar::draw_gradient_horz(QPainter* painter)
 		for (i = 0; i <= nsteps; i++)
 		{
 			int xt = x0 + i*(x1 - x0) / nsteps;
-			double f = fmax + i*(fmin - fmax) / nsteps;
+			double f = m_fmax + i*(m_fmin - m_fmax) / nsteps;
 
 			glVertex2i(xt, y0 + 1);
 			glVertex2i(xt, y1 - 1);
@@ -496,7 +507,7 @@ void GLLegendBar::draw_gradient_horz(QPainter* painter)
 		for (i = 0; i <= nsteps; i++)
 		{
 			int xt = x0 + i*(x1 - x0) / nsteps;
-			double f = fmin + i*(fmax - fmin) / nsteps;
+			double f = m_fmin + i*(m_fmax - m_fmin) / nsteps;
 
 			sprintf(str, szfmt, (fabs(f / p) < 1e-5 ? 0 : f / p));
 			QString s(str);
@@ -525,8 +536,6 @@ void GLLegendBar::draw_discrete(QPainter* painter)
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
 
 	// draw the legend
-	float fmin, fmax;
-	m_pMap->GetRange(fmin, fmax);
 	int nsteps = m_pMap->GetDivisions();
 
 	glDisable(GL_CULL_FACE);
@@ -557,9 +566,8 @@ void GLLegendBar::draw_discrete(QPainter* painter)
 
 	int i, yt, ipow;
 	double f, p=1;
-	char str[256], pstr[256];
 	
-	double a = MAX(fabs(fmin),fabs(fmax));
+	double a = MAX(fabs(m_fmin),fabs(m_fmax));
 	if (a > 0)
 	{
 		double g = log10(a);
@@ -598,20 +606,22 @@ void GLLegendBar::draw_discrete(QPainter* painter)
 //		char szfmt[16]={0};
 //		sprintf(szfmt, "%%.%dg", m_nprec);
 
+		CColorMap& map = ColorMapManager::GetColorMap(m_pMap->GetColorMap());
+
 		// render the lines and text
 		for (i=1; i<nsteps+1; i++)
 		{
 			if (m_nrot == VERTICAL)
 			{
 				yt = y0 + i*(y1 - y0)/(nsteps+1);
-				f = fmax + i*(fmin - fmax)/(nsteps+1);
+				f = m_fmax + i*(m_fmin - m_fmax)/(nsteps+1);
 		
 //				sprintf(str, szfmt, (fabs(f/p) < 1e-5 ? 0 : f/p));
 
 				glColor3ub(m_fgc.r,m_fgc.g,m_fgc.b);
 //				gl_draw(str, x0 - 55, yt-8, 50, 20, FL_ALIGN_RIGHT);
 
-				GLCOLOR c = m_pMap->map((float) f);
+				GLCOLOR c = map.map((float) f);
 				glColor3ub(c.r, c.g, c.b);
 
 				glLineWidth(5.f);
@@ -625,14 +635,14 @@ void GLLegendBar::draw_discrete(QPainter* painter)
 			else
 			{
 				int xt = x0 + i*(x1 - x0)/(nsteps+1);
-				f = fmin + i*(fmax - fmin)/(nsteps+1);
+				f = m_fmin + i*(m_fmax - m_fmin)/(nsteps+1);
 		
 //				sprintf(str, szfmt, (fabs(f/p) < 1e-5 ? 0 : f/p));
 
 				glColor3ub(m_fgc.r,m_fgc.g,m_fgc.b);
 //				gl_draw(str, xt - 25, y1-30, 50, 20, FL_ALIGN_CENTER);
 
-				GLCOLOR c = m_pMap->map((float) f);
+				GLCOLOR c = map.map((float)f);
 				glColor3ub(c.r, c.g, c.b);
 
 				glLineWidth(5.f);

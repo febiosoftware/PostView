@@ -19,8 +19,8 @@ public:
 	CGLIsoSurfacePlot(CGLModel* po);
 	virtual ~CGLIsoSurfacePlot();
 
-	int GetSlices() { return m_nslices; }
-	void SetSlices(int nslices) { m_nslices = nslices; m_Col.SetDivisions(nslices, false); }
+	int GetSlices();
+	void SetSlices(int nslices);
 
 	void Render(CGLContext& rc);
 
@@ -32,7 +32,7 @@ public:
 	int GetEvalField() { return m_nfield; }
 	void SetEvalField(int n);
 
-	CColorMap* GetColorMap() { return &m_Col; }
+	CColorTexture* GetColorMap() { return &m_Col; }
 
 	bool ShowLegend() { return m_pbar->visible(); }
 	void ShowLegend(bool b) { if (b) m_pbar->show(); else m_pbar->hide(); }
@@ -50,8 +50,8 @@ protected:
 	bool	m_bsmooth;		// render smooth or not
 	bool	m_bcut_hidden;	//!< cut hidden materials or not
 
-	int			m_nfield;	// data field
-	CColorMap	m_Col;		// colormap
+	int				m_nfield;	// data field
+	CColorTexture	m_Col;		// colormap
 
 	vector<vec2f>	m_rng;	// value range
 	DataMap<float>	m_map;	// nodal values map

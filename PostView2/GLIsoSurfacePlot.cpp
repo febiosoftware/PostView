@@ -70,8 +70,9 @@ CGLIsoSurfacePlot::CGLIsoSurfacePlot(CGLModel* po) : CGLPlot(po)
 	m_bcut_hidden = false;
 	m_nfield = BUILD_FIELD(1,0,0);
 
-	m_Col.SetDivisions(m_nslices, false);
-	m_Col.jet();
+	m_Col.SetDivisions(m_nslices);
+	m_Col.SetSmooth(false);
+	m_Col.SetColorMap(ColorMapManager::JET);
 
 	m_pbar = new GLLegendBar(this, &m_Col, 0, 0, 600, 100);
 	m_pbar->align(GLW_ALIGN_BOTTOM | GLW_ALIGN_HCENTER);
@@ -89,6 +90,17 @@ CGLIsoSurfacePlot::~CGLIsoSurfacePlot()
 CPropertyList* CGLIsoSurfacePlot::propertyList()
 {
 	return new CIsoSurfaceProps(this);
+}
+
+int CGLIsoSurfacePlot::GetSlices() 
+{ 
+	return m_nslices; 
+}
+
+void CGLIsoSurfacePlot::SetSlices(int nslices)
+{ 
+	m_nslices = nslices; 
+	m_Col.SetDivisions(nslices); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -142,7 +154,8 @@ void CGLIsoSurfacePlot::RenderSlice(float ref)
 
 	const int* nt;
 
-	GLCOLOR col = m_Col.map(ref);
+	CColorMap& map = ColorMapManager::GetColorMap(m_Col.GetColorMap());
+	GLCOLOR col = map.map(ref);
 	glColor3ub(col.r, col.g, col.b);
 
 	// loop over all elements
@@ -306,7 +319,7 @@ void CGLIsoSurfacePlot::Update(int ntime, float dt, bool breset)
 
 	// update colormap range
 	vec2f r = m_rng[ntime];
-	m_Col.SetRange(r.x, r.y, false);
+//	m_Col.SetRange(r.x, r.y, false);
 
 	m_crng = m_rng[ntime];
 }

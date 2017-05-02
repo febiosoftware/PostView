@@ -4,10 +4,42 @@
 
 class CMainWindow;
 class QAbstractButton;
+class QGridLayout;
+class QSpinBox;
+class QComboBox;
 
 namespace Ui {
 	class CDlgViewSettings;
 };
+
+class CColormapWidget : public QWidget
+{
+	Q_OBJECT
+
+public:
+	CColormapWidget(QWidget* parent = 0);
+
+	void updateColorMap(const CColorMap& map);
+
+	void clearGrid();
+
+protected slots:
+	void currentMapChanged(int n);
+	void onDataChanged();
+	void onSpinValueChanged(int n);
+	void onNew();
+	void onInvert();
+
+private:
+	void updateMaps();
+
+private:
+	QGridLayout*	m_grid;
+	QSpinBox*		m_spin;
+	QComboBox*		m_maps;
+	int				m_currentMap;
+};
+
 
 class CDlgViewSettings : public QDialog
 {

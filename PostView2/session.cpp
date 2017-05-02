@@ -97,13 +97,13 @@ bool CDocument::SaveSession(const char* szfile)
 			CGLColorMap* pc = pmdl->GetColorMap();
 			if (pc)
 			{
-				CColorMap* pmap = pc->GetColorMap();
+				CColorTexture* pmap = pc->GetColorMap();
 				xml.add_branch("ColorMap");
 				{
 					xml.add_leaf("enable", pc->IsActive());
 					xml.add_leaf("field", pc->GetEvalField());
-					xml.add_leaf("map" , pmap->Type());
-					xml.add_leaf("smooth", pmap->Smooth());
+					xml.add_leaf("smooth", pmap->GetSmooth());
+					xml.add_leaf("map", pmap->GetColorMap());
 					xml.add_leaf("nodal_values", pc->DisplayNodalValues());
 					xml.add_leaf("range_type", pc->GetRangeType());
 					xml.add_leaf("range_divs", pmap->GetDivisions());
@@ -352,7 +352,7 @@ bool CDocument::OpenSession(const char* szfile)
 				else if (tag == "ColorMap")
 				{
 					CGLColorMap* pc = pmdl->GetColorMap();
-					CColorMap* pmap = pc->GetColorMap();
+					CColorTexture* pmap = pc->GetColorMap();
 					assert(pc);
 					if (pc)
 					{
@@ -360,8 +360,8 @@ bool CDocument::OpenSession(const char* szfile)
 						do
 						{
 							if (tag == "field") { tag.value(n); pc->SetEvalField(n); }
-							else if (tag == "map") { tag.value(n); pmap->SetType(n); }
-							else if (tag == "smooth") { tag.value(b); pmap->Smooth(b); }
+							else if (tag == "map") { tag.value(n); pmap->SetColorMap(n); }
+							else if (tag == "smooth") { tag.value(b); pmap->SetSmooth(b); }
 							else if (tag == "nodal_value") { tag.value(b); pc->DisplayNodalValues(b); }
 							else if (tag == "range_type") { tag.value(n); pc->SetRangeType(n); }
 							else if (tag == "range_divs") { tag.value(n); pmap->SetDivisions(n); }

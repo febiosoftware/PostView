@@ -103,7 +103,7 @@ CGLVectorPlot::CGLVectorPlot(CGLModel* po) : CGLPlot(po)
 
 	m_seed = rand();
 
-	m_Col.SetType(COLOR_MAP_JET);
+	m_Col.SetColorMap(ColorMapManager::JET);
 }
 
 CGLVectorPlot::~CGLVectorPlot()
@@ -150,7 +150,7 @@ void CGLVectorPlot::Render(CGLContext& rc)
 
 	vec2f& rng = m_crng;
 
-	m_Col.SetRange(rng.x, rng.y);
+//	m_Col.SetRange(rng.x, rng.y);
 
 	GLCOLOR col;
 
@@ -197,6 +197,12 @@ void CGLVectorPlot::Render(CGLContext& rc)
 		auto_scale = 1.f/Lmax;
 	}
 
+	float vmin = m_crng.x;
+	float vmax = m_crng.y;
+	if (vmin == vmax) vmax += 1.0f;
+
+	CColorMap& map = ColorMapManager::GetColorMap(m_Col.GetColorMap());
+
 	for (i=0; i<pm->Nodes(); ++i)
 	{
 		FENode& node = pm->Node(i);
@@ -210,7 +216,8 @@ void CGLVectorPlot::Render(CGLContext& rc)
 
 			if (L > 0)
 			{
-				col = m_Col.map((float) L);
+				float f = (L - vmin) / (vmax - vmin);
+				col = map.map(f);
 				v.Normalize();
 
 				switch (m_ncol)

@@ -81,8 +81,9 @@ CGLSlicePlot::CGLSlicePlot(CGLModel* po) : CGLPlot(po)
 	m_nslices = 10;
 	m_nfield = BUILD_FIELD(1,0,0);
 
-	m_Col.SetDivisions(m_nslices, false);
-	m_Col.jet();
+	m_Col.SetDivisions(m_nslices);
+	m_Col.SetSmooth(false);
+	m_Col.SetColorMap(ColorMapManager::JET);
 
 	m_nrange = 0;
 	m_fmin = 0.f;
@@ -103,6 +104,10 @@ CPropertyList* CGLSlicePlot::propertyList()
 {
 	return new CSliceProps(this);
 }
+
+int CGLSlicePlot::GetSlices() { return m_nslices; }
+void CGLSlicePlot::SetSlices(int nslices) { m_nslices = nslices; m_Col.SetDivisions(nslices); }
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -305,7 +310,7 @@ void CGLSlicePlot::Update(int ntime, float dt, bool breset)
 
 	// update range
 	vec2f r = m_rng[ntime];
-	m_Col.SetRange(r.x, r.y, false);
+//	m_Col.SetRange(r.x, r.y, false);
 
 	m_crng = m_rng[ntime];
 }

@@ -21,8 +21,8 @@ public:
 
 	void SetBoundingBox(BOUNDINGBOX box) { m_box = box; }
 
-	int GetSlices() { return m_nslices; }
-	void SetSlices(int nslices) { m_nslices = nslices; m_Col.SetDivisions(nslices, false); }
+	int GetSlices();
+	void SetSlices(int nslices);
 
 	vec3f GetPlaneNormal() { return m_norm; }
 	void SetPlaneNormal(vec3f& n) { m_norm = n; }
@@ -32,7 +32,7 @@ public:
 	int GetEvalField() { return m_nfield; }
 	void SetEvalField(int n);
 
-	CColorMap* GetColorMap() { return &m_Col; }
+	CColorTexture* GetColorMap() { return &m_Col; }
 
 	void Update(int ntime, float dt, bool breset);
 
@@ -60,8 +60,8 @@ protected:
 	int			m_nrange;		//!< range option (0=dynamic, 1=user)
 	float		m_fmin, m_fmax;	//!< user-defined range 
 
-	int			m_nfield;	// data field
-	CColorMap	m_Col;		// colormap
+	int				m_nfield;	// data field
+	CColorTexture	m_Col;		// colormap
 
 	vector<vec2f>	m_rng;	// value range
 	DataMap<float>	m_map;	// nodal values map

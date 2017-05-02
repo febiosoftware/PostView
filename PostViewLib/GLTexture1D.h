@@ -13,6 +13,7 @@ class GLTexture1D
 {
 public:
 	GLTexture1D();
+	GLTexture1D(const GLTexture1D& tex);
 
 	void SetTexture(unsigned char* pb);
 
@@ -22,13 +23,9 @@ public:
 
 	unsigned char* GetBytes();
 
-	void Smooth(bool bs);
-
 protected:
-	unsigned char m_pb[3*1024];
-
 	int		m_n;
-	bool	m_bsmooth;
+	unsigned char m_pb[3 * 1024];
 };
 
 #endif // !defined(AFX_GLTEXTURE1D_H__1924E4C1_AF77_41B1_8E7D_29CC3ADAA2DB__INCLUDED_)

@@ -61,7 +61,7 @@ public:
 	CGLColorMap(CGLModel* po);
 	~CGLColorMap();
 
-	CColorMap* GetColorMap() { return &m_Col; }
+	CColorTexture* GetColorMap() { return &m_Col; }
 
 	void Update(int ntime, float dt, bool breset);
 
@@ -94,7 +94,7 @@ protected:
 public:
 	bool	m_bDispNodeVals;	// render nodal values
 
-	CColorMap		m_Col;	// colormap used for rendering
+	CColorTexture	m_Col;	// colormap used for rendering
 
 	GLLegendBar*	m_pbar;	// the legend bar
 };

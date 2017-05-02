@@ -134,7 +134,7 @@ CGLColorMap::CGLColorMap(CGLModel *po) : CGLDataMap(po)
 	m_breset = true;
 	m_bDispNodeVals = true;
 
-	m_Col.jet();
+	m_Col.SetColorMap(ColorMapManager::JET);
 	sprintf(m_szname, "Color Map");
 
 	m_pbar = new GLLegendBar(this, &m_Col, 0, 0, 120, 600);
@@ -257,7 +257,7 @@ void CGLColorMap::Update(int ntime, float dt, bool breset)
 	}
 
 	// set the colormap's range
-	m_Col.SetRange(m_range.min, m_range.max);
+	m_pbar->SetRange(m_range.min, m_range.max);
 
 	// update mesh texture coordinates
 	float min = m_range.min;

@@ -75,6 +75,9 @@ CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMai
 	m_fileThread = 0;
 	readSettings();
 
+	// initialize color maps
+	ColorMapManager::Initialize();
+
 	// make sure the file viewer is visible
 	ui->fileViewer->parentWidget()->raise();
 }
@@ -1257,11 +1260,11 @@ void CMainWindow::on_actionViewSmooth_toggled(bool bchecked)
 		CGLColorMap* pcm = po->GetColorMap();
 		if (pcm)
 		{
-			CColorMap* pc = pcm->GetColorMap();
+			CColorTexture* pc = pcm->GetColorMap();
 			if (pc)
 			{
-				bool b = pc->Smooth();
-				pc->Smooth(!b);
+				bool b = pc->GetSmooth();
+				pc->SetSmooth(!b);
 				m_doc->UpdateFEModel();
 				RedrawGL();
 			}

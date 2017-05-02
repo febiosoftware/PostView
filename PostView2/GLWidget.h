@@ -155,7 +155,7 @@ public:
 	enum { HORIZONTAL, VERTICAL };
 
 public:
-	GLLegendBar(CGLObject* po, CColorMap* pm, int x, int y, int w, int h);
+	GLLegendBar(CGLObject* po, CColorTexture* pm, int x, int y, int w, int h);
 
 	void draw(QPainter* painter);
 
@@ -173,6 +173,9 @@ public:
 	int GetLabelPosition() const { return m_labelPos; }
 	void SetLabelPosition(int n) { m_labelPos = n; }
 
+	void SetRange(float fmin, float fmax);
+	void GetRange(float& fmin, float& fmax);
+
 protected:
 	void draw_gradient_vert(QPainter* painter);
 	void draw_gradient_horz(QPainter* painter);
@@ -185,8 +188,10 @@ protected:
 	bool	m_blabels;	// show labels
 	int		m_labelPos;	// label placement
 	int		m_nprec;	// precision
+	float	m_fmin;		// min of range
+	float	m_fmax;		// max of range
 
-	CColorMap*		m_pMap;
+	CColorTexture*		m_pMap;
 };
 
 //-----------------------------------------------------------------------------

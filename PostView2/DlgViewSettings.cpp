@@ -18,6 +18,8 @@
 #include "PropertyList.h"
 #include "PropertyListView.h"
 #include <PostViewLib/Palette.h>
+#include <QSpinBox>
+#include <QInputDialog>
 
 //-----------------------------------------------------------------------------
 class CRenderingProps : public CPropertyList
@@ -299,6 +301,160 @@ public:
 };
 
 //-----------------------------------------------------------------------------
+CColormapWidget::CColormapWidget(QWidget* parent) : QWidget(parent)
+{
+	QHBoxLayout* h = new QHBoxLayout;
+	QComboBox* l = m_maps = new QComboBox;
+	l->setMinimumWidth(120);
+	l->setCurrentIndex(0);
+
+	QPushButton* newButton = new QPushButton("New ...");
+	QPushButton* invertButton = new QPushButton("Invert");
+	h->addWidget(new QLabel("Select color map:"));
+	h->addWidget(l);
+	h->addWidget(newButton);
+	h->addWidget(invertButton);
+	h->addStretch();
+
+	QVBoxLayout* v = new QVBoxLayout;
+	v->addLayout(h);
+
+	h = new QHBoxLayout;
+
+	m_spin = new QSpinBox;
+	m_spin->setRange(2, 9);
+	m_spin->setMaximumWidth(75);
+	m_spin->setMinimumWidth(50);
+
+	h->addWidget(new QLabel("Number of colors:"));
+	h->addWidget(m_spin);
+	h->addStretch();
+	v->addLayout(h);
+
+	m_grid = new QGridLayout;
+
+	v->addLayout(m_grid);
+	v->addStretch();
+
+	setLayout(v);
+
+	QObject::connect(l, SIGNAL(currentIndexChanged(int)), this, SLOT(currentMapChanged(int)));
+	QObject::connect(m_spin, SIGNAL(valueChanged(int)), this, SLOT(onSpinValueChanged(int)));
+	QObject::connect(newButton, SIGNAL(clicked()), this, SLOT(onNew()));
+	QObject::connect(invertButton, SIGNAL(clicked()), this, SLOT(onInvert()));
+
+	updateMaps();
+	m_currentMap = 0;
+	currentMapChanged(0);
+}
+
+void CColormapWidget::updateMaps()
+{
+	m_maps->clear();
+	for (int i = 0; i < ColorMapManager::ColorMaps(); ++i)
+	{
+		string name = ColorMapManager::GetColorMapName(i);
+		m_maps->addItem(QString(name.c_str()));
+	}
+}
+
+void CColormapWidget::onNew()
+{
+	static int n = 1;
+	QString name = QString("user%1").arg(n);
+	bool bok = true;
+	QString newName = QInputDialog::getText(this, "New color map", "name:", QLineEdit::Normal, name, &bok);
+	if (bok && (newName.isEmpty() == false))
+	{
+		CColorMap& map = ColorMapManager::GetColorMap(m_currentMap);
+		string sname = name.toStdString();
+		ColorMapManager::AddColormap(sname, map);
+
+		updateMaps();
+		m_maps->setCurrentIndex(ColorMapManager::ColorMaps() - 1);
+	}
+}
+
+void CColormapWidget::onInvert()
+{
+	CColorMap& map = ColorMapManager::GetColorMap(m_currentMap);
+	map.Invert();
+	updateColorMap(map);
+}
+
+void CColormapWidget::updateColorMap(const CColorMap& map)
+{
+	clearGrid();
+
+	m_spin->setValue(map.Colors());
+
+	QLineEdit* l;
+	CColorButton* b;
+	for (int i=0; i<map.Colors(); ++i)
+	{
+		QColor c = toQColor(map.GetColor(i));
+		float f = map.GetColorPos(i);
+
+		m_grid->addWidget(new QLabel(QString("Color %1").arg(i+1)), i, 0, Qt::AlignRight);
+		m_grid->addWidget(l = new QLineEdit, i, 1); l->setValidator(new QDoubleValidator); l->setText(QString::number(f)); l->setMaximumWidth(100);
+		m_grid->addWidget(b = new CColorButton, i, 2); b->setColor(c);
+
+		QObject::connect(l, SIGNAL(editingFinished()), this, SLOT(onDataChanged()));
+		QObject::connect(b, SIGNAL(colorChanged(QColor)), this, SLOT(onDataChanged()));
+	}
+}
+
+void CColormapWidget::clearGrid()
+{
+	while (m_grid->count())
+	{
+		QLayoutItem* item = m_grid->takeAt(0);
+		delete item->widget();
+		delete item;
+	}
+}
+
+void CColormapWidget::currentMapChanged(int n)
+{
+	if (n != -1)
+	{
+		m_currentMap = n;
+		updateColorMap(ColorMapManager::GetColorMap(n));
+	}
+}
+
+void CColormapWidget::onDataChanged()
+{
+	CColorMap& map = ColorMapManager::GetColorMap(m_currentMap);
+	for (int i=0; i<map.Colors(); ++i)
+	{
+		QLineEdit* pos = dynamic_cast<QLineEdit*>(m_grid->itemAtPosition(i, 1)->widget()); assert(pos);
+		if (pos)
+		{
+			float f = pos->text().toFloat();
+			map.SetColorPos(i, f);
+		}
+
+		CColorButton* col = dynamic_cast<CColorButton*>(m_grid->itemAtPosition(i, 2)->widget()); assert(col);
+		if (col)
+		{
+			QColor c = col->color();
+			map.SetColor(i, toGLColor(c));
+		}
+	}
+}
+
+void CColormapWidget::onSpinValueChanged(int n)
+{
+	CColorMap& map = ColorMapManager::GetColorMap(m_currentMap);
+	if (map.Colors() != n)
+	{
+		map.SetColors(n);
+		updateColorMap(map);
+	}
+}
+
+//-----------------------------------------------------------------------------
 class Ui::CDlgViewSettings
 {
 public:
@@ -307,7 +463,8 @@ public:
 	CLightingProps*		m_light;
 	CCameraProps*		m_cam;
 	CSelectionProps*	m_select;
-	CPaletteWidget*		m_col;
+	CPaletteWidget*		m_pal;
+	CColormapWidget*	m_map;
 	QDialogButtonBox*	buttonBox;
 
 public:
@@ -323,14 +480,16 @@ public:
 		::CPropertyListView* pw4 = new ::CPropertyListView; pw4->Update(m_cam   );
 		::CPropertyListView* pw5 = new ::CPropertyListView; pw5->Update(m_select);
 
-		m_col = new CPaletteWidget;
+		m_pal = new CPaletteWidget;
+		m_map = new CColormapWidget;
 
 		pt->addTab(pw1, "Rendering");
 		pt->addTab(pw2, "Background");
 		pt->addTab(pw3, "Lighting");
 		pt->addTab(pw4, "Camera");
 		pt->addTab(pw5, "Selection");
-		pt->addTab(m_col, "Palette");
+		pt->addTab(m_pal, "Palette");
+		pt->addTab(m_map, "Colormap");
 		pg->addWidget(pt);
 
 		buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Apply); 
@@ -389,21 +548,22 @@ CDlgViewSettings::CDlgViewSettings(CMainWindow* pwnd) : ui(new Ui::CDlgViewSetti
 	// fill the palette list
 	UpdatePalettes();
 
-	resize(450, 300);
+	setWindowTitle("PostView Settings");
+	resize(600, 400);
 }
 
 void CDlgViewSettings::UpdatePalettes()
 {
-	ui->m_col->pal->clear();
+	ui->m_pal->pal->clear();
 
 	CPaletteManager& PM = CPaletteManager::GetInstance();
 	int pals = PM.Palettes();
 	for (int i = 0; i<pals; ++i)
 	{
-		ui->m_col->pal->addItem(QString::fromStdString(PM.Palette(i).Name()));
+		ui->m_pal->pal->addItem(QString::fromStdString(PM.Palette(i).Name()));
 	}
 
-	ui->m_col->pal->setCurrentIndex(PM.CurrentIndex());
+	ui->m_pal->pal->setCurrentIndex(PM.CurrentIndex());
 }
 
 CDlgViewSettings::~CDlgViewSettings()
@@ -441,7 +601,7 @@ void CDlgViewSettings::apply()
 	view.m_bext     = ui->m_select->m_binterior;
 
 	CPaletteManager& PM = CPaletteManager::GetInstance();
-	PM.SetCurrentIndex(ui->m_col->pal->currentIndex());
+	PM.SetCurrentIndex(ui->m_pal->pal->currentIndex());
 
 	m_pwnd->RedrawGL();
 }
@@ -486,7 +646,7 @@ void CDlgViewSettings::on_save_clicked()
 	if (fileName.isEmpty() == false)
 	{
 		CPaletteManager& PM = CPaletteManager::GetInstance();
-		int n = ui->m_col->pal->currentIndex();
+		int n = ui->m_pal->pal->currentIndex();
 		const CPalette& p = PM.Palette(n);
 
 		string sfile = fileName.toStdString();
@@ -542,7 +702,7 @@ void CDlgViewSettings::on_apply_clicked()
 	}
 
 	CPaletteManager& PM = CPaletteManager::GetInstance();
-	const CPalette& pal = PM.Palette(ui->m_col->pal->currentIndex());
+	const CPalette& pal = PM.Palette(ui->m_pal->pal->currentIndex());
 	doc.ApplyPalette(pal);
 
 	m_pwnd->UpdateUi(true);

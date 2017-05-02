@@ -43,7 +43,7 @@ public:
 	bool GetAutoScale() { return m_bautoscale; }
 	void SetAutoScale(bool b) { m_bautoscale = b; }
 
-	CColorMap* GetColorMap() { return &m_Col; }
+	CColorTexture* GetColorMap() { return &m_Col; }
 
 	void Update(int ntime, float dt, bool breset);
 
@@ -61,8 +61,8 @@ protected:
 	bool	m_bnorm;		// normalize vectors or not
 	bool	m_bautoscale;	// auto scale the vectors
 
-	GLCOLOR		m_gcl;	// glyph color (for GLYPH_COL_SOLID)
-	CColorMap	m_Col;	// glyph color (for not GLYPH_COL_SOLID)
+	GLCOLOR			m_gcl;	// glyph color (for GLYPH_COL_SOLID)
+	CColorTexture	m_Col;	// glyph color (for not GLYPH_COL_SOLID)
 
 	vector<vec2f>	m_rng;	// nodal ranges
 	DataMap<vec3f>	m_map;	// nodal values map
