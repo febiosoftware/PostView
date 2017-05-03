@@ -168,10 +168,7 @@ bool FEPointCongruency::IntersectTri3(const Ray& ray, FEFace& face, vec3f& q, do
 	vec3f n2 = m_pfem->NodePosition(face.node[1], m_nstate);
 	vec3f n3 = m_pfem->NodePosition(face.node[2], m_nstate);
 
-	// find the intersection of the point with the plane
-	vec3f fn = m_pfem->FaceNormal(face, m_nstate);
-
-	Triangle tri = {n1, n2, n3, fn};
+	Triangle tri = {n1, n2, n3};
 
 	Intersection intersect;
 	bool b = ::IntersectTriangle(ray, tri, intersect);

@@ -14,8 +14,11 @@ bool IntersectTriangle(const Ray& ray, const Triangle& tri, Intersection& inters
 	vec3f r0 = ray.origin;
 	vec3f nn = ray.direction;
 
+	// calculate the triangle normal
+	vec3f fn = (n2 - n1)^(n3 - n1);
+	fn.Normalize();
+
 	// find the intersection of the point with the plane
-	vec3f fn = tri.normal;
 	if (fn*nn == 0.f) return false;
 	double l = fn*(n1 - r0) / (fn*nn);
 
