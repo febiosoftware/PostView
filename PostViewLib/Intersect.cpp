@@ -123,7 +123,7 @@ bool IntersectQuad(const Ray& ray, const Quad& quad, Intersection& intersect)
 }
 
 //-----------------------------------------------------------------------------
-bool FindMeshIntersection(const Ray& ray, const FEMeshBase& mesh, Intersection& q)
+bool FindFaceIntersection(const Ray& ray, const FEMeshBase& mesh, Intersection& q)
 {
 	vec3f rn[10];
 
@@ -132,7 +132,7 @@ bool FindMeshIntersection(const Ray& ray, const FEMeshBase& mesh, Intersection& 
 	double gmin = 1e99;
 	bool b = false;
 
-	q.m_nface = -1;
+	q.m_index = -1;
 	Intersection tmp;
 	for (int i=0; i<faces; ++i)
 	{
@@ -173,10 +173,132 @@ bool FindMeshIntersection(const Ray& ray, const FEMeshBase& mesh, Intersection& 
 					gmin = distance;
 					rmin = q.point;
 					b = true;
-					q.m_nface = i;
+					q.m_index = i;
 					q.point = tmp.point;
 					q.r[0] = tmp.r[0];
 					q.r[1] = tmp.r[1];
+				}
+			}
+		}
+	}
+
+	return b;
+}
+
+//-----------------------------------------------------------------------------
+bool FindElementIntersection(const Ray& ray, const FEMeshBase& mesh, Intersection& q)
+{
+	vec3f rn[10];
+
+	int elems = mesh.Elements();
+	vec3f r, rmin;
+	double gmin = 1e99;
+	bool b = false;
+
+	FEFace face;
+	q.m_index = -1;
+	Intersection tmp;
+	for (int i = 0; i<elems; ++i)
+	{
+		const FEElement& elem = mesh.Element(i);
+		if (elem.IsVisible())
+		{
+			// solid elements
+			int NF = elem.Faces();
+			for (int j = 0; j<NF; ++j)
+			{
+				bool bfound = false;
+				elem.GetFace(j, face);
+				switch (face.m_ntype)
+				{
+				case FACE_QUAD4:
+				case FACE_QUAD8:
+				case FACE_QUAD9:
+				{
+					rn[0] = mesh.Node(face.node[0]).m_rt;
+					rn[1] = mesh.Node(face.node[1]).m_rt;
+					rn[2] = mesh.Node(face.node[2]).m_rt;
+					rn[3] = mesh.Node(face.node[3]).m_rt;
+
+					Quad quad = { rn[0], rn[1], rn[2], rn[3] };
+					bfound = IntersectQuad(ray, quad, tmp);
+				}
+				break;
+				case FACE_TRI3:
+				case FACE_TRI6:
+				case FACE_TRI7:
+				case FACE_TRI10:
+				{
+					rn[0] = mesh.Node(face.node[0]).m_rt;
+					rn[1] = mesh.Node(face.node[1]).m_rt;
+					rn[2] = mesh.Node(face.node[2]).m_rt;
+
+					Triangle tri = { rn[0], rn[1], rn[2] };
+					bfound = IntersectTriangle(ray, tri, tmp);
+				}
+				break;
+				default:
+					assert(false);
+				}
+
+				if (bfound)
+				{
+					// signed distance
+					float distance = ray.direction*(tmp.point - ray.origin);
+
+					if ((distance > 0.f) && (distance < gmin))
+					{
+						gmin = distance;
+						rmin = q.point;
+						b = true;
+						q.m_index = i;
+						q.point = tmp.point;
+						q.r[0] = tmp.r[0];
+						q.r[1] = tmp.r[1];
+					}
+				}
+			}
+
+			// shell elements
+			int NE = elem.Edges();
+			if (NE > 0)
+			{
+				bool bfound = false;
+				if (elem.Nodes() == 4)
+				{
+					rn[0] = mesh.Node(elem.m_node[0]).m_rt;
+					rn[1] = mesh.Node(elem.m_node[1]).m_rt;
+					rn[2] = mesh.Node(elem.m_node[2]).m_rt;
+					rn[3] = mesh.Node(elem.m_node[3]).m_rt;
+
+					Quad quad = { rn[0], rn[1], rn[2], rn[3] };
+					bfound = IntersectQuad(ray, quad, tmp);
+				}
+				else
+				{
+					rn[0] = mesh.Node(elem.m_node[0]).m_rt;
+					rn[1] = mesh.Node(elem.m_node[1]).m_rt;
+					rn[2] = mesh.Node(elem.m_node[2]).m_rt;
+
+					Triangle tri = { rn[0], rn[1], rn[2] };
+					bfound = IntersectTriangle(ray, tri, tmp);
+				}
+
+				if (bfound)
+				{
+					// signed distance
+					float distance = ray.direction*(tmp.point - ray.origin);
+
+					if ((distance > 0.f) && (distance < gmin))
+					{
+						gmin = distance;
+						rmin = q.point;
+						b = true;
+						q.m_index = i;
+						q.point = tmp.point;
+						q.r[0] = tmp.r[0];
+						q.r[1] = tmp.r[1];
+					}
 				}
 			}
 		}

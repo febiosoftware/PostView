@@ -1082,7 +1082,7 @@ void CGLView::PanView(vec3f r)
 	pcam->Truck(r);
 }
 
-bool CGLView::PickPoint(int x, int y, Intersection& q)
+Ray CGLView::PointToRay(int x, int y)
 {
 	makeCurrent();
 
@@ -1164,13 +1164,8 @@ bool CGLView::PickPoint(int x, int y, Intersection& q)
 	vec3f r1 = vec3f(r_far[0], r_far[1], r_far[2]);
 	vec3f n = r1 - r0; n.Normalize();
 
-	// get the active object
-	CDocument* doc = GetDocument();
-	FEMeshBase& mesh = *doc->GetActiveMesh();
-
-	// find the mesh intersection
-	Ray ray = {r0, n};
-	return FindMeshIntersection(ray, mesh, q);
+	Ray ray = { r0, n };
+	return ray;
 }
 
 //-----------------------------------------------------------------------------
@@ -1222,13 +1217,16 @@ void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
 	CDocument* pdoc = GetDocument();
 	if (pdoc->IsValid() == false) return;
 
-	// find the intersection
-	Intersection q;
-	if (PickPoint(x0, y0, q) == false) return;
-
 	// get the active mesh
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEMeshBase* pm = pdoc->GetActiveMesh();
+
+	// convert the point to a ray
+	Ray ray = PointToRay(x0, y0);
+
+	// find the intersection
+	Intersection q;
+	if (FindFaceIntersection(ray, *pm, q) == false) return;
 
 	// get view settings
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
@@ -1242,9 +1240,9 @@ void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
 	}
 
 	// parse the selection buffer
-	if (q.m_nface >= 0) 
+	if (q.m_index >= 0) 
 	{
-		FEFace& f = pm->Face(q.m_nface);
+		FEFace& f = pm->Face(q.m_index);
 		if (mode == SELECT_ADD) 
 		{
 			if (view.m_bconn == false) f.Select();
@@ -1834,117 +1832,48 @@ GLint CGLView::EndSelect()
 //-----------------------------------------------------------------------------
 void CGLView::SelectElements(int x0, int y0, int x1, int y1, int mode)
 {
+	// Make sure we have a valid model
 	CDocument* pdoc = GetDocument();
 	if (pdoc->IsValid() == false) return;
 
-	BOUNDINGBOX box = pdoc->GetBoundingBox();
-	VIEWSETTINGS& view = pdoc->GetViewSettings();
-
+	// get the active mesh
 	CGLModel& mdl = *pdoc->GetGLModel();
-	FEModel* ps = pdoc->GetFEModel();
 	FEMeshBase* pm = pdoc->GetActiveMesh();
 
-	double radius = box.Radius();
-	vec3f rc = box.Center();
+	// convert the point to a ray
+	Ray ray = PointToRay(x0, y0);
 
-	m_fnear = 0.01*radius;
-	m_ffar  = 10*radius;
+	// find the intersection
+	Intersection q;
+	if (FindElementIntersection(ray, *pm, q) == false) return;
 
-	// set up selection buffer
-	int size = 6*pm->Elements();
-	if (size > 1000000) size = 1000000;
-	
-	// initalize selection
-	InitSelect(x0, y0, x1, y1, 4*size);
+	// get view settings
+	VIEWSETTINGS& view = pdoc->GetViewSettings();
 
-	// draw the scene
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	// store attributes
-	glPushAttrib(GL_ENABLE_BIT);
-
-	glEnable(GL_DEPTH_TEST);
-	glDisable(GL_LIGHTING);
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	VIEWSETTINGS& v = pdoc->GetViewSettings();
-
-	CGLContext RC(this);
-	PositionCam();
-
-	if (v.m_bcull) glEnable(GL_CULL_FACE);
-	else glDisable(GL_CULL_FACE);
-
-	pdoc->GetGLModel()->RenderAllElements();
-
-	// restore attributes
-	glPopAttrib();
-
-	// collect the hits
-	GLint hits = EndSelect();
-
-	// clear selection if mode = 0
 	if (mode == 0)
 	{
 		int elems = pm->Elements();
-		for (int i=0; i<elems; i++) pm->Element(i).Unselect();
+		for (int i = 0; i<elems; i++) pm->Element(i).Unselect();
 
 		mode = SELECT_ADD;
 	}
 
 	// parse the selection buffer
-	GLuint* pbuf = m_selbuf;
-	if (hits > 0)
+	if (q.m_index >= 0)
 	{
-		int n;
-		if (m_bsingle)
+		FEElement& el = pm->Element(q.m_index);
+		if (mode == SELECT_ADD)
 		{
-			unsigned int index = pbuf[3];
-			unsigned int minz = pbuf[1];
-			for (int i=1; i<hits; i++)
+			if (view.m_bconn == false) el.Select();
+			else
 			{
-				if (pbuf[4*i+1] < minz)
-				{
-					minz = pbuf[4*i+1];
-					index = pbuf[4*i+3];
-				}
-			}
-
-			if (index > 0) 
-			{
-				FEElement& e = pm->Element(index-1);
-				if (mode == SELECT_ADD) 
-				{
-					if (v.m_bconn == false) e.Select();
-					else
-					{
-						if (v.m_bext) 
-							mdl.SelectConnectedSurfaceElements(e);
-						else
-							mdl.SelectConnectedVolumeElements(e);
-					}
-				}
-				else 
-				{
-					e.Unselect();
-				}
+				if (view.m_bext)
+					mdl.SelectConnectedSurfaceElements(el);
+				else
+					mdl.SelectConnectedVolumeElements(el);
 			}
 		}
-		else
-		{
-			for (int i=0; i<hits; i++)
-			{
-				n = pbuf[4*i+3];
-				if ((n>0) && (n<=size))
-				{
-					FEElement& e = pm->Element(n-1);
-					if (mode == SELECT_ADD)	e.Select();
-					else e.Unselect();
-				}
-			}
-		}
+		else el.Unselect();
 	}
 
 	// count element selection

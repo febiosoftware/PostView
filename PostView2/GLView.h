@@ -158,7 +158,7 @@ protected:
 	void RenderBox();
 	void RenderPlots(CGLContext& rc);
 
-	bool PickPoint(int x, int y, Intersection& q);
+	Ray PointToRay(int x, int y);
 
 	// Render the model
 	void RenderModel();

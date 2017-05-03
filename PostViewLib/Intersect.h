@@ -14,7 +14,7 @@ struct Intersection
 {
 	vec3f	point;		// point of intersection
 	float	r[2];		// natural coordinates
-	int		m_nface;	// index of face
+	int		m_index;	// index of item that was intersected (context dependent)
 };
 
 //-----------------------------------------------------------------------------
@@ -43,4 +43,7 @@ bool IntersectTriangle(const Ray& ray, const Triangle& tri, Intersection& q);
 bool IntersectQuad(const Ray& ray, const Quad& quad, Intersection& q);
 
 //-----------------------------------------------------------------------------
-bool FindMeshIntersection(const Ray& ray, const FEMeshBase& mesh, Intersection& q);
+bool FindFaceIntersection(const Ray& ray, const FEMeshBase& mesh, Intersection& q);
+
+//-----------------------------------------------------------------------------
+bool FindElementIntersection(const Ray& ray, const FEMeshBase& mesh, Intersection& q);
