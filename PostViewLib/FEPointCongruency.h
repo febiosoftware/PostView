@@ -1,5 +1,6 @@
 #pragma once
 #include "math3d.h"
+#include "Intersect.h"
 #include <set>
 using namespace std;
 
@@ -34,10 +35,10 @@ public:
 
 private:
 	bool Project(int nid, int& nface, vec3f& q, double rs[2], vec3f& sn);
-	bool Intersect(vec3f& nr, vec3f& nn, int& nface, int nid, vec3f& q, double rs[2]);
+	bool Intersect(const Ray& ray, int& nface, int nid, vec3f& q, double rs[2]);
 
-	bool IntersectTri3 (vec3f& nr, vec3f& nn, FEFace& face, vec3f& q, double rs[2]);
-	bool IntersectQuad4(vec3f& nr, vec3f& nn, FEFace& face, vec3f& q, double rs[2]);
+	bool IntersectTri3 (const Ray& ray, FEFace& face, vec3f& q, double rs[2]);
+	bool IntersectQuad4(const Ray& ray, FEFace& face, vec3f& q, double rs[2]);
 	float nodal_curvature(int nid, vec3f& nn, int m);
 	void level(int n, int l, set<int>& nl1);
 

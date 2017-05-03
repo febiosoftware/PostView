@@ -117,11 +117,12 @@ bool FEPointCongruency::Project(int nid, int& nface, vec3f& q, double rs[2], vec
 
 	// find the intersection of the ray with the surface makin sure not to intersect
 	// faces that contain this node
-	return Intersect(nr, sn, nface, nid, q, rs);
+	Ray ray = {nr, sn};
+	return Intersect(ray, nface, nid, q, rs);
 }
 
 //-----------------------------------------------------------------------------
-bool FEPointCongruency::Intersect(vec3f& nr, vec3f& nn, int& nface, int nid, vec3f& q, double rs[2])
+bool FEPointCongruency::Intersect(const Ray& ray, int& nface, int nid, vec3f& q, double rs[2])
 {
 	FEMeshBase* pm = m_pfem->GetFEMesh(0);
 	nface = -1;
@@ -136,13 +137,13 @@ bool FEPointCongruency::Intersect(vec3f& nr, vec3f& nn, int& nface, int nid, vec
 			bool b = false;
 			switch (face.m_ntype)
 			{
-			case FACE_TRI3 : b = IntersectTri3 (nr, nn, face, q, rsi); break;
-			case FACE_QUAD4: b = IntersectQuad4(nr, nn, face, q, rsi); break;
+			case FACE_TRI3 : b = IntersectTri3 (ray, face, q, rsi); break;
+			case FACE_QUAD4: b = IntersectQuad4(ray, face, q, rsi); break;
 			}
 
 			if (b)
 			{
-				double D = (q - nr).Length();
+				double D = (q - ray.origin).Length();
 				if ((nface == -1) || (D < Dmin))
 				{
 					nface = i;
@@ -157,7 +158,7 @@ bool FEPointCongruency::Intersect(vec3f& nr, vec3f& nn, int& nface, int nid, vec
 }
 
 //-----------------------------------------------------------------------------
-bool FEPointCongruency::IntersectTri3(vec3f& nr, vec3f& nn, FEFace& face, vec3f& q, double rs[2])
+bool FEPointCongruency::IntersectTri3(const Ray& ray, FEFace& face, vec3f& q, double rs[2])
 {
 	const double tol = 0.01;
 
@@ -169,36 +170,21 @@ bool FEPointCongruency::IntersectTri3(vec3f& nr, vec3f& nn, FEFace& face, vec3f&
 
 	// find the intersection of the point with the plane
 	vec3f fn = m_pfem->FaceNormal(face, m_nstate);
-	if (fn*nn== 0.f) return false;
-	double l = fn*(n1 - nr)/(fn*nn);
-//	if (l <= 0) return false;
-	q = nr + nn*l;
 
-	// find  the natural coordinates
-	vec3f e1 = n2 - n1;
-	vec3f e2 = n3 - n1;
+	Triangle tri = {n1, n2, n3, fn};
 
-	double A[2][2] = {{e1*e1, e1*e2}, {e2*e1, e2*e2}};
-	double D = A[0][0]*A[1][1] - A[0][1]*A[1][0];
-	double Ai[2][2];
-	Ai[0][0] = (A[1][1])/D;
-	Ai[1][1] = (A[0][0])/D;
-	Ai[0][1] = -A[0][1]/D;
-	Ai[1][0] = -A[1][0]/D;
+	Intersection intersect;
+	bool b = ::IntersectTriangle(ray, tri, intersect);
 
-	vec3f E1 = e1*Ai[0][0] + e2*Ai[0][1];
-	vec3f E2 = e1*Ai[1][0] + e2*Ai[1][1];
+	q = intersect.point;
+	rs[0] = intersect.r[0];
+	rs[1] = intersect.r[1];
 
-	double r = (q - n1)*E1;
-	double s = (q - n1)*E2;
-	rs[0] = r;
-	rs[1] = s;
-
-	return ((r >= -tol) && (s >= -tol) && (r + s <= 1.0+tol));
+	return b;
 }
 
 //-----------------------------------------------------------------------------
-bool FEPointCongruency::IntersectQuad4(vec3f& nr, vec3f& nn, FEFace& face, vec3f& q, double rs[2])
+bool FEPointCongruency::IntersectQuad4(const Ray& ray, FEFace& face, vec3f& q, double rs[2])
 {
 	const double tol = 0.01;
 	FEFace tri1,tri2;
@@ -208,8 +194,8 @@ bool FEPointCongruency::IntersectQuad4(vec3f& nr, vec3f& nn, FEFace& face, vec3f
 	tri2.node[0] = face.node[2]; tri2.node[1] = face.node[3]; tri2.node[2] = face.node[0];
 	tri2.m_nn[0] = face.m_nn[2]; tri2.m_nn[1] = face.m_nn[3]; tri2.m_nn[2] = face.m_nn[0];
 
-	if (IntersectTri3(nr, nn, tri1, q, rs) ||
-		IntersectTri3(nr, nn, tri2, q, rs))
+	if (IntersectTri3(ray, tri1, q, rs) ||
+		IntersectTri3(ray, tri2, q, rs))
 	{
 		FEMeshBase* pm = m_pfem->GetFEMesh(0);
 		vec3f y[4];
@@ -218,61 +204,14 @@ bool FEPointCongruency::IntersectQuad4(vec3f& nr, vec3f& nn, FEFace& face, vec3f
 		y[2] = m_pfem->NodePosition(face.node[2], m_nstate);
 		y[3] = m_pfem->NodePosition(face.node[3], m_nstate);
 
-		double r = 0, s = 0, l = 0, normu;
-		int niter = 0;
-		const int NMAX = 10;
-		do
-		{
-			// evaluate shape functions
-			double H[4], Hr[4], Hs[4];
-			H[0] = 0.25*(1 - r)*(1 - s);
-			H[1] = 0.25*(1 + r)*(1 - s);
-			H[2] = 0.25*(1 + r)*(1 + s);
-			H[3] = 0.25*(1 - r)*(1 + s);
+		Quad quad = {y[0], y[1], y[2], y[3]};
+		Intersection intersect;
+		bool b = ::IntersectQuad(ray, quad, intersect);
 
-			Hr[0] = -0.25*(1 - s);
-			Hr[1] =  0.25*(1 - s);
-			Hr[2] =  0.25*(1 + s);
-			Hr[3] = -0.25*(1 + s);
-
-			Hs[0] = -0.25*(1 - r);
-			Hs[1] = -0.25*(1 + r);
-			Hs[2] =  0.25*(1 + r);
-			Hs[3] =  0.25*(1 - r);
-
-			// evaluate residual
-			vec3f R = q + nn*l - y[0]*H[0] - y[1]*H[1] - y[2]*H[2] - y[3]*H[3];
-
-			mat3d K;
-			K[0][0] = nn.x; 
-			K[0][1] = -y[0].x*Hr[0]-y[1].x*Hr[1]-y[2].x*Hr[2]-y[3].x*Hr[3];
-			K[0][2] = -y[0].x*Hs[0]-y[1].x*Hs[1]-y[2].x*Hs[2]-y[3].x*Hs[3];
-
-			K[1][0] = nn.y; 
-			K[1][1] = -y[0].y*Hr[0]-y[1].y*Hr[1]-y[2].y*Hr[2]-y[3].y*Hr[3];
-			K[1][2] = -y[0].y*Hs[0]-y[1].y*Hs[1]-y[2].y*Hs[2]-y[3].y*Hs[3];
-
-			K[2][0] = nn.z; 
-			K[2][1] = -y[0].z*Hr[0]-y[1].z*Hr[1]-y[2].z*Hr[2]-y[3].z*Hr[3];
-			K[2][2] = -y[0].z*Hs[0]-y[1].z*Hs[1]-y[2].z*Hs[2]-y[3].z*Hs[3];
-
-			K.Invert();
-
-			vec3f du = K*R;
-			l -= du.x;
-			r -= du.y;
-			s -= du.z;
-
-			normu = du.y*du.y + du.z*du.z;
-			niter++;
-		}
-		while ((normu > 1e-6)&&(niter < NMAX));
-
-		rs[0] = r;
-		rs[1] = s;
-		q = q + nn*l;
-
-		return ((rs[0]+tol>=-1)&&(rs[0]-tol<=1)&&(rs[1]+tol>=-1)&&(rs[1]-tol<=1));
+		q = intersect.point;
+		rs[0] = intersect.r[0];
+		rs[1] = intersect.r[1];
+		return b;
 	}
 	else return false;
 }

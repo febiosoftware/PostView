@@ -3,6 +3,7 @@
 #include <PostViewLib/math3d.h>
 #include <PostViewLib/Animation.h>
 #include <PostViewLib/FEElement.h>
+#include <PostViewLib/Intersect.h>
 #include "GLWidgetManager.h"
 
 //-----------------------------------------------------------------------------
@@ -156,6 +157,8 @@ protected:
 	void RenderWidgets();
 	void RenderBox();
 	void RenderPlots(CGLContext& rc);
+
+	bool PickPoint(int x, int y, Intersection& q);
 
 	// Render the model
 	void RenderModel();

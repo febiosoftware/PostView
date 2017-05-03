@@ -245,6 +245,20 @@ matrix::matrix(int r, int c) : m_nr(r), m_nc(c)
 }
 
 //-----------------------------------------------------------------------------
+matrix::matrix(const matrix& m)
+{
+	m_nr = m.m_nr;
+	m_nc = m.m_nc;
+	m_ne = m.m_ne;
+	d = 0;
+	if (m_ne > 0)
+	{
+		d = new double[m_ne];
+		for (int i = 0; i<m_ne; ++i) d[i] = m.d[i];
+	}
+}
+
+//-----------------------------------------------------------------------------
 void matrix::zero()
 {
 	for (int i=0; i<m_ne; ++i) d[i] = 0.0;
@@ -277,6 +291,17 @@ bool matrix::lsq_solve(vector<double>& x, vector<double>& b)
 	AA.solve(x, y);
 
 	return true;
+}
+
+//-----------------------------------------------------------------------------
+void matrix::mult(vector<double>& x, vector<double>& y)
+{
+	for (int i = 0; i<m_nr; ++i)
+	{
+		double* di = d + i*m_nc;
+		y[i] = 0.0;
+		for (int j = 0; j<m_nc; ++j) y[i] += di[j] * x[j];
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -415,4 +440,63 @@ quat4f quat4f::slerp(quat4f &q1, quat4f &q2, double t)
 		return (q1*sin(angle*(1-t)) + q3*sin(angle*t))/sin(angle);
 	} else // if the angle is small, use linear interpolation								
 		return quat4f::lerp(q1,q3,t);
+}
+
+
+//-----------------------------------------------------------------------------
+matrix matrix::inverse()
+{
+	// make sure this is a square matrix
+	assert(m_nr == m_nc);
+
+	// make a copy of this matrix
+	// since we don't want to change it
+	matrix tmp(*this);
+	double** a = new double*[m_nr];
+	for (int i = 0; i<m_nr; ++i) a[i] = tmp.d + i*m_nr;
+
+	// do a LU decomposition
+	int n = m_nr;
+	vector<int> indx(n);
+	ludcmp(a, n, &indx[0]);
+
+	// allocate the inverse matrix
+	matrix ai(n, n);
+
+	// do a backsubstituation on the columns of a
+	vector<double> b; b.assign(n, 0);
+	for (int j = 0; j<n; ++j)
+	{
+		b[j] = 1;
+		lubksb(a, n, &indx[0], &b[0]);
+
+		for (int i = 0; i<n; ++i)
+		{
+			ai[i][j] = b[i];
+			b[i] = 0;
+		}
+	}
+
+	delete[] a;
+
+	return ai;
+}
+
+//-----------------------------------------------------------------------------
+matrix matrix::operator * (const matrix& m)
+{
+	assert(m_nc == m.m_nr);
+	matrix a(m_nr, m.m_nc);
+	matrix& T = *this;
+
+	for (int i = 0; i<m_nr; ++i)
+	{
+		for (int j = 0; j<m.m_nc; ++j)
+		{
+			a(i, j) = 0;
+			for (int k = 0; k<m_nc; ++k) a(i, j) += T(i, k) * m(k, j);
+		}
+	}
+
+	return a;
 }

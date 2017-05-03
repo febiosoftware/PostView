@@ -1251,7 +1251,7 @@ float FEMeshBase::TetVolume(const FEElement& el)
 }
 
 //-----------------------------------------------------------------------------
-void FEMeshBase::FaceNodePosition(FEFace& f, vec3f* r)
+void FEMeshBase::FaceNodePosition(const FEFace& f, vec3f* r) const
 {
 	switch (f.m_ntype)
 	{
@@ -1445,4 +1445,14 @@ bool FindElementRef(FEMeshBase& m, const vec3f& p, int& nelem, double r[3])
 	}
 
 	return false;
+}
+
+int FEMeshBase::CountSelectedFaces() const
+{
+	int N = 0, NF = Faces();
+	for (int i = 0; i<NF; ++i)
+	{
+		if (Face(i).IsSelected()) N++;
+	}
+	return N;
 }

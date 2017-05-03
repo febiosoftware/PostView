@@ -38,7 +38,7 @@ public:
 		return vec3f( y*v.z - z*v.y, z*v.x - x*v.z, x*v.y - y*v.x); 
 	}
 
-	float operator * (const vec3f& v) { return (x*v.x + y*v.y + z*v.z); }
+	float operator * (const vec3f& v) const { return (x*v.x + y*v.y + z*v.z); }
 
 	vec3f operator * (const float g) const { return vec3f(x*g, y*g, z*g); }
 	vec3f operator / (const float g) const { return vec3f(x/g, y/g, z/g); }
@@ -594,12 +594,14 @@ class matrix
 {
 public:
 	matrix(int r, int c);
+	matrix(const matrix& m);
 	~matrix() { delete [] d; }
 
 	void zero();
 
 	double* operator [] (int i) { return d + i*m_nc; }
 	double& operator () (int i, int j) { return d[i*m_nc + j]; }
+	double operator () (int i, int j) const { return d[i*m_nc + j]; }
 
 	bool solve(vector<double>& x, vector<double>& b);
 
@@ -607,9 +609,16 @@ public:
 
 	int Rows() { return m_nr; }
 
+	void mult(vector<double>& x, vector<double>& y);
 	void mult_transpose(vector<double>& x, vector<double>& y);
 
 	void mult_transpose_self(matrix& AAt);
+
+	//! matrix inversion
+	matrix inverse();
+
+	//! multiplication
+	matrix operator * (const matrix& m);
 
 private:
 	double*		d;

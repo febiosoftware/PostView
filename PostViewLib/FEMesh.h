@@ -158,11 +158,14 @@ public:
 	float IntegrateHex (vec3f* r, float* v);
 
 	// --- F A C E   D A T A ---
-	void FaceNodePosition (FEFace& f, vec3f* r);
+	void FaceNodePosition (const FEFace& f, vec3f* r) const;
 	void FaceNodeNormals  (FEFace& f, vec3f* n);
 	void FaceNodeTexCoords(FEFace& f, float* t, bool bnode);
 
 	void AutoSmooth(double angleRadians);
+
+	// --- S E L E C T I O N ---
+	int CountSelectedFaces() const;
 
 protected:
 	virtual void CreateElements(int elems) = 0;

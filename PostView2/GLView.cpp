@@ -1082,6 +1082,97 @@ void CGLView::PanView(vec3f r)
 	pcam->Truck(r);
 }
 
+bool CGLView::PickPoint(int x, int y, Intersection& q)
+{
+	makeCurrent();
+
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+
+	VIEWSETTINGS& view = GetDocument()->GetViewSettings();
+
+	// set up the projection matrix
+	if (view.m_nproj == RENDER_ORTHO)
+	{
+		double z = GetCamera().GetTargetDistance();
+		double dx = z*tan(0.5*m_fov*PI / 180.0)*m_ar;
+		double dy = z*tan(0.5*m_fov*PI / 180.0);
+		glOrtho(-dx, dx, -dy, dy, m_fnear, m_ffar);
+	}
+	else
+	{
+		gluPerspective(m_fov, m_ar, m_fnear, m_ffar);
+	}
+
+	PositionCam();
+
+	double p[16], m[16];
+	glGetDoublev(GL_PROJECTION_MATRIX, p);
+	glGetDoublev(GL_MODELVIEW_MATRIX, m);
+
+	int vp[4];
+	glGetIntegerv(GL_VIEWPORT, vp);
+
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+
+	// calculate projection matrix
+	matrix P(4, 4);
+	for (int i = 0; i<4; ++i)
+		for (int j = 0; j<4; ++j) P(i, j) = p[j * 4 + i];
+
+	// calculate modelview matrix
+	matrix M(4, 4);
+	for (int i = 0; i<4; ++i)
+		for (int j = 0; j<4; ++j) M(i, j) = m[j * 4 + i];
+
+	// multiply them together
+	matrix PM = P*M;
+
+	// invert it
+	matrix PMi = PM.inverse();
+
+	// flip the y-axis
+	y = vp[3] - y;
+
+	// convert to devices coordinates
+	double W = vp[2];
+	double H = vp[3];
+	double xd = 2.0* x / W - 1.0;
+	double yd = 2.0* y / H - 1.0;
+
+	// convert to clip coordinates
+	vector<double> c(4);
+	c[3] = m_fnear;
+	c[0] = xd*c[3];
+	c[1] = yd*c[3];
+	c[2] = -c[3];
+
+	// convert to world coordinates
+	vector<double> r_near(4), r_far(4);
+	PMi.mult(c, r_near);
+
+	// do back clip point
+	c[3] = m_ffar;
+	c[0] = xd*c[3];
+	c[1] = yd*c[3];
+	c[2] = c[3];
+	PMi.mult(c, r_far);
+
+	vec3f r0 = vec3f(r_near[0], r_near[1], r_near[2]);
+	vec3f r1 = vec3f(r_far[0], r_far[1], r_far[2]);
+	vec3f n = r1 - r0; n.Normalize();
+
+	// get the active object
+	CDocument* doc = GetDocument();
+	FEMeshBase& mesh = *doc->GetActiveMesh();
+
+	// find the mesh intersection
+	Ray ray = {r0, n};
+	return FindMeshIntersection(ray, mesh, q);
+}
+
 //-----------------------------------------------------------------------------
 void CGLView::ZoomRect(MyPoint p0, MyPoint p1)
 {
@@ -1127,54 +1218,20 @@ void CGLView::ZoomRect(MyPoint p0, MyPoint p1)
 
 void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
 {
+	// Make sure we have a valid model
 	CDocument* pdoc = GetDocument();
 	if (pdoc->IsValid() == false) return;
 
-	BOUNDINGBOX box = pdoc->GetBoundingBox();
-	VIEWSETTINGS& view = pdoc->GetViewSettings();
+	// find the intersection
+	Intersection q;
+	if (PickPoint(x0, y0, q) == false) return;
 
+	// get the active mesh
 	CGLModel& mdl = *pdoc->GetGLModel();
-	FEModel* ps = pdoc->GetFEModel();
 	FEMeshBase* pm = pdoc->GetActiveMesh();
 
-	double radius = box.Radius();
-	vec3f rc = box.Center();
-
-	m_fnear = 0.01*radius;
-	m_ffar  = 10*radius;
-
-	// set up selection buffer
-	int size = pm->Faces();
-	InitSelect(x0, y0, x1, y1, 4*size);
-
-	// draw the scene
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	// store attributes
-	glPushAttrib(GL_ENABLE_BIT);
-
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_LIGHTING);
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	// setup the rendering context
-	CGLContext grc(this);
-
-	// render the scene
-	PositionCam();
-
-	if (view.m_bcull) glEnable(GL_CULL_FACE);
-	else glDisable(GL_CULL_FACE);
-
-	pdoc->GetGLModel()->RenderAllFaces();
-
-	// restore attributes
-	glPopAttrib();
-
-	// collect the hits
-	GLint hits = EndSelect();
+	// get view settings
+	VIEWSETTINGS& view = pdoc->GetViewSettings();
 
 	if (mode == 0)
 	{
@@ -1185,47 +1242,15 @@ void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
 	}
 
 	// parse the selection buffer
-	if (hits > 0)
+	if (q.m_nface >= 0) 
 	{
-		GLuint* pbuf = m_selbuf;
-		if (m_bsingle)
+		FEFace& f = pm->Face(q.m_nface);
+		if (mode == SELECT_ADD) 
 		{
-			unsigned int index = pbuf[3];
-			unsigned int minz = pbuf[1];
-			for (int i=1; i<hits; i++)
-			{
-				if (pbuf[4*i+1] < minz)
-				{
-					minz = pbuf[4*i+1];
-					index = pbuf[4*i+3];
-				}
-			}
-
-			if (index >= 0) 
-			{
-				FEFace& f = pm->Face(index-1);
-				if (mode == SELECT_ADD) 
-				{
-					if (view.m_bconn == false) f.Select();
-					else mdl.SelectConnectedFaces(f);
-				}
-				else f.Unselect();
-			}
+			if (view.m_bconn == false) f.Select();
+			else mdl.SelectConnectedFaces(f);
 		}
-		else
-		{
-			int n;
-			for (int i=0; i<hits; i++)
-			{
-				n = pbuf[4*i+3];
-				if ((n>0) && (n<=size))
-				{
-					FEFace& face = pm->Face(n-1);
-					if (mode == SELECT_ADD)	face.Select();
-					else face.Unselect();
-				}
-			}
-		}
+		else f.Unselect();
 	}
 
 	// count selection
