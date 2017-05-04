@@ -158,7 +158,11 @@ protected:
 	void RenderBox();
 	void RenderPlots(CGLContext& rc);
 
+	// calculate a ray based on screen position (x, y)
 	Ray PointToRay(int x, int y);
+
+	// find screen coordinates of point
+	vec3f WorldToScreen(const vec3f& f);
 
 	// Render the model
 	void RenderModel();
@@ -179,9 +183,6 @@ protected:
 	void RegionSelectEdges   (const SelectRegion& region, int mode);
 
 	void AddRegionPoint(int x, int y);
-
-	FEElement* PickElement(int x, int y);
-	GLNODE_PICK PickNode(int x, int y, bool bselect = false);
 
 	//! Render the tags on the selected items
 	void RenderTags();
@@ -216,9 +217,6 @@ protected:
 
 	void SetVideoFormat(GLenum fmt) { m_video_fmt = fmt; }
 
-	void InitSelect(int x0, int y0, int x1, int y1, int bufsize);
-	GLint EndSelect();
-
 public:
 	// convert from device pixel to physical pixel
     static int DevicePixelRatio() { return m_dpr; }
@@ -229,9 +227,6 @@ public:
 
 protected:
 	void setupProjectionMatrix();
-
-	int getFeedback(GLfloat* feedbackBuffer, int bufferSize, void (CGLModel::*renderFunc)(void));
-	void parseFeedbackBuffer(GLfloat* feedbackBuffer, int hits, const SelectRegion& region, vector<int>& list, GLfloat token);
 
 protected:
 	int OnPush   (int nevent);
@@ -284,5 +279,4 @@ private:
 private:
 	static int	m_viewport[4];		//!< store viewport coordinates
 	static int m_dpr;				//!< device pixel ratio for converting from physical to device-independent pixels
-	GLuint*	m_selbuf;		//!< selection buffer
 };

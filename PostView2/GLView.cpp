@@ -107,7 +107,6 @@ CGLView::CGLView(CMainWindow* pwnd, QWidget* parent) : QOpenGLWidget(parent), m_
 	m_dpr = pwnd->devicePixelRatio();
 
 	m_bsingle = true;
-	m_selbuf = 0;
 
 	// NOTE: multi-sampling prevents the snapshot feature from working
 	QSurfaceFormat fmt = format();
@@ -927,73 +926,18 @@ void CGLView::RenderTags()
 	// if we don't have any tags, just return
 	if (vtag.empty()) return;
 
-	// Okay, we got some tags to render. We now need to figure out
-	// the screen location of each tag. We do this by rendering the 
-	// tags in 3D in feedback mode. This will return the screen locations
-	// of the tags.
-
-	// set the feedback buffer
+	// limit the number of tags to render
 	const int MAX_TAGS = 100;
 	int nsel = (int) vtag.size();
 	if (nsel > MAX_TAGS) nsel = MAX_TAGS;
-	int size = nsel*5;
-	GLfloat *pbuf = new GLfloat[size];
-	GLfloat* pb = pbuf;
-	glFeedbackBuffer(size, GL_2D, pbuf);
 
-	// enter feedback mode
-	glRenderMode(GL_FEEDBACK);
-
-	// switch to projection and save the matrix
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	// apply perspective projection
-	if (view.m_nproj == RENDER_ORTHO)
+	// find out where the tags are on the screen
+	for (int i = 0; i<nsel; i++)
 	{
-		double z = GetCamera().GetTargetDistance();
-		double dx = z*tan(0.5*m_fov*PI/180.0)*m_ar;
-		double dy = z*tan(0.5*m_fov*PI/180.0);
-		glOrtho(-dx, dx, -dy, dy, m_fnear, m_ffar);
-	}
-	else
-	{
-		gluPerspective(m_fov, m_ar, m_fnear, m_ffar);
-	}
-
-	// draw the scene
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	// render the tags
-	PositionCam();
-	for (int i=0; i<nsel; i++)
-	{
-		glPassThrough((float) i);
-		glBegin(GL_POINTS);
-		{
-			glVertex3f(vtag[i].r.x, vtag[i].r.y, vtag[i].r.z);
-		}
-		glEnd();
-	}
-
-	// leave feedback mode
-	glRenderMode(GL_RENDER);
-
-	// parse the feedback buffer
-	for (int i=0; i<nsel; i++)
-	{
-		int n = (int)(pb[1] + 0.5f);
-
-		if ((int) (pb[2] + 0.5f) == 1793)
-		{
-			vtag[n].wx = pb[3];
-			vtag[n].wy = pb[4];
-			vtag[n].bvis = true;
-
-			pb+=5;
-		}
-		else pb += 2;
+		vec3f p = WorldToScreen(vtag[i].r);
+		vtag[i].wx = p.x;
+		vtag[i].wy = m_viewport[3] - p.y;
+		vtag[i].bvis = true;
 	}
 
 	// render the tags
@@ -1044,11 +988,7 @@ void CGLView::RenderTags()
 	painter.end();
 
 	glPopAttrib();
-
-	// clean up
-	delete [] pbuf;
 }
-
 
 //-----------------------------------------------------------------------------
 void CGLView::PanView(vec3f r)
@@ -1080,6 +1020,76 @@ void CGLView::PanView(vec3f r)
 	}
 
 	pcam->Truck(r);
+}
+
+vec3f CGLView::WorldToScreen(const vec3f& r)
+{
+	makeCurrent();
+
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+
+	VIEWSETTINGS& view = GetDocument()->GetViewSettings();
+
+	// set up the projection matrix
+	if (view.m_nproj == RENDER_ORTHO)
+	{
+		double z = GetCamera().GetTargetDistance();
+		double dx = z*tan(0.5*m_fov*PI / 180.0)*m_ar;
+		double dy = z*tan(0.5*m_fov*PI / 180.0);
+		glOrtho(-dx, dx, -dy, dy, m_fnear, m_ffar);
+	}
+	else
+	{
+		gluPerspective(m_fov, m_ar, m_fnear, m_ffar);
+	}
+
+	PositionCam();
+
+	double p[16], m[16];
+	glGetDoublev(GL_PROJECTION_MATRIX, p);
+	glGetDoublev(GL_MODELVIEW_MATRIX, m);
+
+	int vp[4];
+	glGetIntegerv(GL_VIEWPORT, vp);
+
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+
+	// calculate projection matrix
+	matrix P(4, 4);
+	for (int i = 0; i<4; ++i)
+		for (int j = 0; j<4; ++j) P(i, j) = p[j * 4 + i];
+
+	// calculate modelview matrix
+	matrix M(4, 4);
+	for (int i = 0; i<4; ++i)
+		for (int j = 0; j<4; ++j) M(i, j) = m[j * 4 + i];
+
+	// multiply them together
+	matrix PM = P*M;
+
+	// get the homogeneous coordinates
+	vector<double> q(4);
+	q[0] = r.x; q[1] = r.y; q[2] = r.z; q[3] = 1.0;
+
+	// calculcate clip coordinates
+	vector<double> c(4);
+	PM.mult(q, c);
+
+	// calculate device coordinates
+	vec3f d;
+	d.x = c[0] / c[3];
+	d.y = c[1] / c[3];
+	d.z = c[2] / c[3];
+
+	int W = vp[2];
+	int H = vp[3];
+	float xd = W*((d.x + 1.f)*0.5f);
+	float yd = H - H*((d.y + 1.f)*0.5f);
+
+	return vec3f(xd, yd, d.z);
 }
 
 Ray CGLView::PointToRay(int x, int y)
@@ -1276,557 +1286,147 @@ void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
 	}
 	else m_wnd->ClearStatusMessage();
 
-	// clean up
-	delete[] m_selbuf; m_selbuf = 0;
 	mdl.UpdateSelectionLists(SELECT_FACES);
 }
 
 //-----------------------------------------------------------------------------
-
-GLNODE_PICK CGLView::PickNode(int x, int y, bool bselect)
+void CGLView::RegionSelectElements(const SelectRegion& region, int mode)
 {
-	int wx = 6;
-	int wy = 6;
-
-	// activate the gl rendercontext
-	makeCurrent();
-
 	CDocument* pdoc = GetDocument();
-	BOUNDINGBOX box = pdoc->GetBoundingBox();
+	if (pdoc->IsValid() == false) return;
+
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
 	FEMeshBase* pm = pdoc->GetActiveMesh();
 
-	double radius = box.Radius();
-	vec3f rc = box.Center();
-
-	m_fnear = 0.01*radius;
-	m_ffar  = 10*radius;
-
-/*	if (!valid())
+	int NE = pm->Elements();
+	for (int i = 0; i<NE; ++i)
 	{
-		SetupGL();
-		glViewport(0,0,w(),h());
-		valid(1);	// validate window
-	}
-*/
-	// set up selection buffer
-	int size = pm->Nodes();
-	GLuint *pbuf = new GLuint[4*size];
+		FEElement& el = pm->Element(i);
 
-	glSelectBuffer(4*size, pbuf);
-
-	// viewport storage
-	GLint viewport[4];
-	glGetIntegerv(GL_VIEWPORT, viewport);
-
-	// switch to projection and save the matrix
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-
-	// change render mode
-	glRenderMode(GL_SELECT);
-
-	// establish new clipping volume
-	glLoadIdentity();
-	gluPickMatrix(x, viewport[3] - y, wx, wy, viewport);
-
-	// apply perspective projection
-	if (view.m_nproj == RENDER_ORTHO)
-	{
-		double z = GetCamera().GetTargetDistance();
-		double dx = z*tan(0.5*m_fov*PI/180.0)*m_ar;
-		double dy = z*tan(0.5*m_fov*PI/180.0);
-		glOrtho(-dx, dx, -dy, dy, m_fnear, m_ffar);
-	}
-	else
-	{
-		gluPerspective(m_fov, m_ar, m_fnear, m_ffar);
-	}
-
-	glInitNames();
-	glPushName(0);
-
-	// draw the scene
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	// store attributes
-	glPushAttrib(GL_ENABLE_BIT);
-
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_LIGHTING);
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glPushMatrix();
-
-	// setup the rendering context
-	CGLContext grc(this);
-
-	// render the scene
-	PositionCam();
-
-	if (view.m_bcull) glEnable(GL_CULL_FACE);
-	else glDisable(GL_CULL_FACE);
-
-	pdoc->GetGLModel()->RenderNodes(ps, grc);
-
-	glPopMatrix();
-
-	// collect the hits
-	GLint hits = glRenderMode(GL_RENDER);
-
-	// parse the selection buffer
-	unsigned int index = 0;
-	if (hits > 0)
-	{
-		index = pbuf[3];
-		unsigned int minz = pbuf[1];
-		for (int i=1; i<hits; i++)
+		int ne = el.Nodes();
+		bool binside = false;
+		for (int i = 0; i<ne; ++i)
 		{
-			if (pbuf[4*i+1] < minz)
+			vec3f r = pm->Node(el.m_node[i]).m_rt;
+			vec3f p = WorldToScreen(r);
+			if (region.IsInside((int)p.x, (int)p.y))
 			{
-				minz = pbuf[4*i+1];
-				index = pbuf[4*i+3];
+				binside = true;
+				break;
 			}
 		}
-	}
 
-	// Restore the projection matrix
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-
-	// restore attributes
-	glPopAttrib();
-
-	// clean up
-	delete [] pbuf;
-
-	GLNODE_PICK p;
-	p.m_pm = 0;
-	p.m_node = (int) index - 1;
-
-	if (bselect)
-	{
-		FEMeshBase& mesh = *pdoc->GetActiveMesh();
-		int N = mesh.Nodes();
-		if ((index > 0) && (index <= N))
+		if (binside)
 		{
-			mdl.ClearSelection();
-			mesh.Node(index-1).Select();
-			mdl.UpdateSelectionLists();
+			if (mode == SELECT_ADD) el.Select(); else el.Unselect();
 		}
 	}
 
-	return p;
-}
-
-//-----------------------------------------------------------------------------
-
-FEElement* CGLView::PickElement(int x, int y)
-{
-	int wx = 5;
-	int wy = 5;
-
-	// activate the gl rendercontext
-	makeCurrent();
-
-	CDocument* pdoc = GetDocument();
-	BOUNDINGBOX box = pdoc->GetBoundingBox();
-	VIEWSETTINGS& view = pdoc->GetViewSettings();
-
-	FEModel* ps = pdoc->GetFEModel();
-	FEMeshBase* pm = pdoc->GetActiveMesh();
-
-	double radius = box.Radius();
-	vec3f rc = box.Center();
-
-	m_fnear = 0.01*radius;
-	m_ffar  = 10*radius;
-
-/*	if (!valid())
-	{
-		SetupGL();
-		glViewport(0,0,w(),h());
-		valid(1);	// validate window
-	}
-*/
-	// set up selection buffer
-	int size = 10*pm->Elements();
-	GLuint *pbuf = new GLuint[4*size];
-
-	glSelectBuffer(4*size, pbuf);
-
-	// viewport storage
-	GLint viewport[4];
-	glGetIntegerv(GL_VIEWPORT, viewport);
-
-	// switch to projection and save the matrix
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-
-	// change render mode
-	glRenderMode(GL_SELECT);
-
-	// establish new clipping volume
-	glLoadIdentity();
-	gluPickMatrix(x, viewport[3] - y, wx, wy, viewport);
-
-	if (view.m_nproj == RENDER_ORTHO)
-	{
-		double z = GetCamera().GetTargetDistance();
-		double dx = z*tan(0.5*m_fov*PI/180.0)*m_ar;
-		double dy = z*tan(0.5*m_fov*PI/180.0);
-		glOrtho(-dx, dx, -dy, dy, m_fnear, m_ffar);
-	}
-	else
-	{
-		gluPerspective(m_fov, m_ar, m_fnear, m_ffar);
-	}
-
-	glInitNames();
-	glPushName(0);
-
-	// draw the scene
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	// store attributes
-	glPushAttrib(GL_ENABLE_BIT);
-
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_LIGHTING);
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glPushMatrix();
-
-	CGLContext RC(this);
-	PositionCam();
-	pdoc->GetGLModel()->RenderFaces(RC);
-
-	glPopMatrix();
-
-	// collect the hits
-	GLint hits = glRenderMode(GL_RENDER);
-
-	// parse the selection buffer
-	FEElement* pel = 0;
-	if (hits > 0)
-	{
-		unsigned int index = pbuf[3];
-		unsigned int minz = pbuf[1];
-		for (int i=1; i<hits; i++)
-		{
-			if (pbuf[4*i+1] < minz)
-			{
-				minz = pbuf[4*i+1];
-				index = pbuf[4*i+3];
-			}
-		}
-		if (index > 0) pel = &pm->Element(index-1);
-	}
-
-	// Restore the projection matrix
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-
-	// restore attributes
-	glPopAttrib();
-
-	// clean up
-	delete [] pbuf;
-
-	return pel;
-}
-
-//-----------------------------------------------------------------------------
-int CGLView::getFeedback(GLfloat* feedbackBuffer, int bufferSize, void (CGLModel::*renderFunc)(void))
-{
-	CDocument* pdoc = GetDocument();
-	CGLModel* glModel = pdoc->GetGLModel();
-	VIEWSETTINGS& view = pdoc->GetViewSettings();
-
-	// set the feedback buffer
-	glFeedbackBuffer(bufferSize, GL_2D, feedbackBuffer);
-
-	// clear buffers
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	// setup projection matrix
-	setupProjectionMatrix();
-
-	// position camera
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	PositionCam();
-
-	// setup state
-	GLint hits = 0;
-	glPushAttrib(GL_ENABLE_BIT);
-	{
-		glDisable(GL_LIGHTING);
-		glEnable(GL_DEPTH_TEST);
-		if (view.m_bcull) glEnable(GL_CULL_FACE);
-		else glDisable(GL_CULL_FACE);
-
-		// render all elements
-		glRenderMode(GL_FEEDBACK);
-		{
-			(glModel->*renderFunc)();
-		}
-		// collect the hits
-		hits = glRenderMode(GL_RENDER);
-	}
-	// restore attributes
-	glPopAttrib();
-
-	return hits;
-}
-
-//-----------------------------------------------------------------------------
-void CGLView::parseFeedbackBuffer(GLfloat* feedbackBuffer, int hits, const SelectRegion& region, vector<int>& list, GLfloat token)
-{
-	// parse the buffer
-	int i=0;
-	int nid = -1, lid = -1; // last id
-	while (i<hits)
-	{
-		if (feedbackBuffer[i] == GL_PASS_THROUGH_TOKEN)
-		{
-			nid = (int) feedbackBuffer[i+1];
-			i+=2;
-		}
-		else if (feedbackBuffer[i] == token)
-		{
-			int nv = 0;
-			if      (token == GL_POLYGON_TOKEN   ) nv = (int) feedbackBuffer[++i];
-			else if (token == GL_LINE_TOKEN      ) nv = 2;
-			else if (token == GL_LINE_RESET_TOKEN) nv = 2;
-			else if (token == GL_POINT_TOKEN     ) nv = 1;
-
-			bool binside = false;
-			for (int n=0; n<nv; ++n)
-			{
-				int x = (int)(feedbackBuffer[++i]) / m_dpr;
-				int y = (int)(height()-feedbackBuffer[++i] / m_dpr);
-				if ((binside == false) && region.IsInside(x, y)) binside = true;
-			}
-			i++;
-			if (binside && (nid != lid)) { list.push_back(nid); lid = nid; }
-		}
-		else ++i;
-	}
-}
-
-//-----------------------------------------------------------------------------
-void CGLView::RegionSelectElements(const SelectRegion& region, int mode)
-{
-	// get the model and mesh
-	CDocument* pdoc = GetDocument();
-	FEModel& fem = *pdoc->GetFEModel();
-	FEMeshBase& mesh = *pdoc->GetActiveMesh();
-
-	// activate the gl rendercontext
-	makeCurrent();
-
-	// set up feedback buffer
-	int nbufsize = mesh.Elements()*512;
-	if (nbufsize > MAX_FEEDBACK_BUFFER_SIZE) nbufsize = MAX_FEEDBACK_BUFFER_SIZE;
-	GLfloat *fb = new GLfloat[nbufsize];
-
-	// get feedback data
-	int hits = getFeedback(fb, nbufsize, &CGLModel::RenderAllElements);
-
-	// get the selected item list
-	vector<int> item;
-	parseFeedbackBuffer(fb, hits, region, item, GL_POLYGON_TOKEN);
-
-	// select the elements
-	if (mode == SELECT_ADD)
-		for (int i=0; i<(int) item.size(); ++i) mesh.Element(item[i]).Select();
-	else
-		for (int i=0; i<(int) item.size(); ++i) mesh.Element(item[i]).Unselect();
-
-	// clean up
-	delete [] fb;
-	pdoc->GetGLModel()->UpdateSelectionLists(SELECT_ELEMS);
-
+	mdl.UpdateSelectionLists(SELECT_ELEMS);
 }
 
 //-----------------------------------------------------------------------------
 void CGLView::RegionSelectFaces(const SelectRegion& region, int mode)
 {
-	// get the model and mesh
 	CDocument* pdoc = GetDocument();
-	FEModel& fem = *pdoc->GetFEModel();
-	FEMeshBase& mesh = *pdoc->GetActiveMesh();
+	if (pdoc->IsValid() == false) return;
 
-	// activate the gl rendercontext
-	makeCurrent();
+	VIEWSETTINGS& view = pdoc->GetViewSettings();
 
-	// set up feedback buffer
-	int nbufsize = mesh.Faces()*512;
-	if (nbufsize > MAX_FEEDBACK_BUFFER_SIZE) nbufsize = MAX_FEEDBACK_BUFFER_SIZE;
-	GLfloat *fb = new GLfloat[nbufsize];
+	CGLModel& mdl = *pdoc->GetGLModel();
+	FEModel* ps = pdoc->GetFEModel();
+	FEMeshBase* pm = pdoc->GetActiveMesh();
 
-	// get feedback data
-	int hits = getFeedback(fb, nbufsize, &CGLModel::RenderAllFaces);
+	int NF = pm->Faces();
+	for (int i = 0; i<NF; ++i)
+	{
+		FEFace& face = pm->Face(i);
 
-	// get the selected item list
-	vector<int> item;
-	parseFeedbackBuffer(fb, hits, region, item, GL_POLYGON_TOKEN);
+		int nf = face.Nodes();
+		bool binside = false;
+		for (int i=0; i<nf; ++i)
+		{
+			vec3f r = pm->Node(face.node[i]).m_rt;
+			vec3f p = WorldToScreen(r);
+			if (region.IsInside((int) p.x, (int) p.y))
+			{
+				binside = true;
+				break;
+			}
+		}
 
-	// select the faces
-	if (mode == SELECT_ADD)
-		for (int i=0; i<(int) item.size(); ++i) mesh.Face(item[i]).Select();
-	else
-		for (int i=0; i<(int) item.size(); ++i) mesh.Face(item[i]).Unselect();
+		if (binside)
+		{
+			if (mode == SELECT_ADD) face.Select(); else face.Unselect();
+		}
+	}
 
-	// clean up
-	delete [] fb;
-
-	pdoc->GetGLModel()->UpdateSelectionLists(SELECT_FACES);
+	mdl.UpdateSelectionLists(SELECT_FACES);
 }
 
 //-----------------------------------------------------------------------------
 void CGLView::RegionSelectNodes(const SelectRegion& region, int mode)
 {
-	// get the model and mesh
 	CDocument* pdoc = GetDocument();
-	FEModel& fem = *pdoc->GetFEModel();
-	FEMeshBase& mesh = *pdoc->GetActiveMesh();
+	if (pdoc->IsValid() == false) return;
 
-	// activate the gl rendercontext
-	makeCurrent();
+	VIEWSETTINGS& view = pdoc->GetViewSettings();
 
-	// set up feedback buffer
-	int nbufsize = mesh.Nodes()*5;
-	if (nbufsize > MAX_FEEDBACK_BUFFER_SIZE) nbufsize = MAX_FEEDBACK_BUFFER_SIZE;
-	GLfloat *fb = new GLfloat[nbufsize];
+	CGLModel& mdl = *pdoc->GetGLModel();
+	FEModel* ps = pdoc->GetFEModel();
+	FEMeshBase* pm = pdoc->GetActiveMesh();
 
-	// get feedback data
-	int hits = getFeedback(fb, nbufsize, &CGLModel::RenderAllNodes);
+	int NN = pm->Nodes();
+	for (int i = 0; i<NN; ++i)
+	{
+		FENode& node = pm->Node(i);
+		vec3f r = node.m_rt;
 
-	// get the selected item list
-	vector<int> item;
-	parseFeedbackBuffer(fb, hits, region, item, GL_POINT_TOKEN);
+		vec3f p = WorldToScreen(r);
 
-	// select the nodes
-	if (mode == SELECT_ADD)
-		for (int i=0; i<(int) item.size(); ++i) mesh.Node(item[i]).Select();
-	else
-		for (int i=0; i<(int) item.size(); ++i) mesh.Node(item[i]).Unselect();
+		if (region.IsInside((int) p.x, (int) p.y))
+		{
+			if (mode == SELECT_ADD) node.Select(); else node.Unselect();
+		}
+	}
 
-	// clean up
-	delete [] fb;
-
-	pdoc->GetGLModel()->UpdateSelectionLists(SELECT_NODES);
+	mdl.UpdateSelectionLists(SELECT_NODES);
 }
 
 //-----------------------------------------------------------------------------
 void CGLView::RegionSelectEdges(const SelectRegion& region, int mode)
 {
-	// get the model and mesh
 	CDocument* pdoc = GetDocument();
-	FEModel& fem = *pdoc->GetFEModel();
-	FEMeshBase& mesh = *pdoc->GetActiveMesh();
+	if (pdoc->IsValid() == false) return;
 
-	// activate the gl rendercontext
-	makeCurrent();
-
-	// set up feedback buffer
-	int nbufsize = mesh.Edges()*12;
-	if (nbufsize > MAX_FEEDBACK_BUFFER_SIZE) nbufsize = MAX_FEEDBACK_BUFFER_SIZE;
-	GLfloat *fb = new GLfloat[nbufsize];
-
-	// get feedback data
-	int hits = getFeedback(fb, nbufsize, &CGLModel::RenderAllEdges);
-
-	// get the selected item list
-	vector<int> item;
-	parseFeedbackBuffer(fb, hits, region, item, GL_LINE_RESET_TOKEN);
-
-	// clean up
-	delete [] fb;
-
-	// select the edges
-	if (mode == SELECT_ADD)
-		for (int i=0; i<(int) item.size(); ++i) mesh.Edge(item[i]).Select();
-	else
-		for (int i=0; i<(int) item.size(); ++i) mesh.Edge(item[i]).Unselect();
-
-	pdoc->GetGLModel()->UpdateSelectionLists(SELECT_EDGES);
-}
-
-//-----------------------------------------------------------------------------
-void CGLView::InitSelect(int x0, int y0, int x1, int y1, int nbufsize)
-{
-	// activate the gl rendercontext
-	makeCurrent();
-    
-    QPoint p0 = DeviceToPhysical(x0, y0);
-    QPoint p1 = DeviceToPhysical(x1, y1);
-    x0 = p0.x(); y0 = p0.y();
-    x1 = p1.x(); y1 = p1.y();
-
-	int x = (x0 + x1) / 2;
-	int y = (y0 + y1) / 2;
-	int wx = abs(x1 - x0);
-	int wy = abs(y1 - y0);
-
-	m_bsingle = (wx == 0) && (wy == 0);
-
-	if (wx == 0) wx = 4;
-	if (wy == 0) wy = 4;
-
-	// allocate the selection buffer
-	if (m_selbuf != 0) delete [] m_selbuf;
-	m_selbuf = new GLuint[nbufsize];
-	glSelectBuffer(nbufsize, m_selbuf);
-
-	// switch to projection and save the matrix
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-
-	// change render mode
-	glRenderMode(GL_SELECT);
-
-	// establish new clipping volume
-	glLoadIdentity();
-	gluPickMatrix(x, y, wx, wy, m_viewport);
-
-	CDocument* pdoc = GetDocument();
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
-	if (view.m_nproj == RENDER_ORTHO)
+
+	CGLModel& mdl = *pdoc->GetGLModel();
+	FEModel* ps = pdoc->GetFEModel();
+	FEMeshBase* pm = pdoc->GetActiveMesh();
+
+	int NE = pm->Edges();
+	for (int i = 0; i<NE; ++i)
 	{
-		double z = GetCamera().GetTargetDistance();
-		double dx = z*tan(0.5*m_fov*PI / 180.0)*m_ar;
-		double dy = z*tan(0.5*m_fov*PI / 180.0);
-		glOrtho(-dx, dx, -dy, dy, m_fnear, m_ffar);
+		FEEdge& edge = pm->Edge(i);
+
+		vec3f r0 = pm->Node(edge.node[0]).m_rt;
+		vec3f r1 = pm->Node(edge.node[1]).m_rt;
+
+		vec3f p0 = WorldToScreen(r0);
+		vec3f p1 = WorldToScreen(r1);
+
+		if (region.IsInside((int)p0.x, (int)p0.y) ||
+			region.IsInside((int)p1.x, (int)p1.y))
+		{
+			if (mode == SELECT_ADD) edge.Select(); else edge.Unselect();
+		}
 	}
-	else
-	{
-		gluPerspective(m_fov, m_ar, m_fnear, m_ffar);
-	}
 
-	glInitNames();
-	glPushName(0);
-}
-
-//-----------------------------------------------------------------------------
-GLint CGLView::EndSelect()
-{
-	GLint hits = glRenderMode(GL_RENDER);
-
-	// Restore the projection matrix
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-
-	return hits;
+	mdl.UpdateSelectionLists(SELECT_EDGES);
 }
 
 //-----------------------------------------------------------------------------
@@ -1900,8 +1500,6 @@ void CGLView::SelectElements(int x0, int y0, int x1, int y1, int mode)
 	}
 	else m_wnd->ClearStatusMessage();
 
-	// clean up
-	delete [] m_selbuf; m_selbuf = 0;
 	mdl.UpdateSelectionLists(SELECT_ELEMS);
 }
 
@@ -1911,113 +1509,59 @@ void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 	CDocument* pdoc = GetDocument();
 	if (pdoc->IsValid() == false) return;
 
-	BOUNDINGBOX box = pdoc->GetBoundingBox();
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
 	FEMeshBase* pm = pdoc->GetActiveMesh();
 
-	double radius = box.Radius();
-	vec3f rc = box.Center();
+	int S = 4;
+	QRect rt(x0 - S, y0 - S, 2*S, 2*S);
 
-	m_fnear = 0.01*radius;
-	m_ffar  = 10*radius;
+	int index = -1;
+	float zmin = 0.f;
+	int NN = pm->Nodes();
+	for (int i=0; i<NN; ++i)
+	{
+		vec3f r = pm->Node(i).m_rt;
 
-	// initalize selection
-	int size = pm->Nodes();
-	InitSelect(x0, y0, x1, y1, 4 * size);
+		vec3f p = WorldToScreen(r);
 
-	// draw the scene
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	// store attributes
-	glPushAttrib(GL_ENABLE_BIT);
-
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_LIGHTING);
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glPushMatrix();
-
-	// setup the rendering context
-	CGLContext grc(this);
-
-	// render the scene
-	PositionCam();
-
-	if (view.m_bcull) glEnable(GL_CULL_FACE);
-	else glDisable(GL_CULL_FACE);
-
-	pdoc->GetGLModel()->RenderNodes(ps, grc);
-
-	glPopMatrix();
-
-	// restore attributes
-	glPopAttrib();
-
-	// collect the hits
-	GLint hits = EndSelect();
+		if (rt.contains(QPoint((int) p.x, (int) p.y)))
+		{
+			if ((index == -1) || (p.z < zmin))
+			{
+				index = i;
+				zmin = p.z;
+			}
+		}
+	}
 
 	if (mode == 0)
 	{
 		int nodes = pm->Nodes();
-		for (int i=0; i<nodes; i++) pm->Node(i).Unselect();
+		for (int i = 0; i<nodes; i++) pm->Node(i).Unselect();
 
 		mode = SELECT_ADD;
 	}
 
 	// parse the selection buffer
-	GLuint* pbuf = m_selbuf;
-	if (hits > 0)
+	if (index >= 0) 
 	{
-		if (m_bsingle)
+		FENode& n = pm->Node(index);
+		if (mode == SELECT_ADD) 
 		{
-			unsigned int index = pbuf[3];
-			unsigned int minz = pbuf[1];
-			for (int i=1; i<hits; i++)
+			n.Select();
+			if (view.m_bconn == false) n.Select();
+			else 
 			{
-				if (pbuf[4*i+1] < minz)
-				{
-					minz = pbuf[4*i+1];
-					index = pbuf[4*i+3];
-				}
-			}
-
-			if (index >= 0) 
-			{
-				FENode& n = pm->Node(index-1);
-				if (mode == SELECT_ADD) 
-				{
-					n.Select();
-					if (view.m_bconn == false) n.Select();
-					else 
-					{
-						if (view.m_bext)
-							mdl.SelectConnectedSurfaceNodes(index-1);
-						else
-							mdl.SelectConnectedVolumeNodes(index-1);
-					}
-				}
-				else n.Unselect();
+				if (view.m_bext)
+					mdl.SelectConnectedSurfaceNodes(index);
+				else
+					mdl.SelectConnectedVolumeNodes(index);
 			}
 		}
-		else
-		{
-			int n;
-			for (int i=0; i<hits; i++)
-			{
-				n = pbuf[4*i+3];
-				if ((n>0) && (n<=size))
-				{
-					FENode& node = pm->Node(n-1);
-					if (mode == SELECT_ADD)	node.Select();
-					else node.Unselect();
-				}
-			}
-		}
+		else n.Unselect();
 	}
 
 	// count nodal selection
@@ -2035,7 +1579,7 @@ void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 	{
 		FENode& n = pm->Node(nn);
 		vec3f r = n.m_rt;
-		float f = pdoc->GetGLModel()->currentState()->m_NODE[nn].m_val;
+		float f = mdl.currentState()->m_NODE[nn].m_val;
 		char sz[512] = {0};
 		sprintf(sz, "1 node selected: Id = %d, val = %g, pos = (%g, %g, %g)", nn + 1, f, r.x, r.y, r.z);
 		m_wnd->SetStatusMessage(sz);
@@ -2048,11 +1592,91 @@ void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 	}
 	else m_wnd->ClearStatusMessage();
 
-	// clean up
-	delete [] m_selbuf; 
-	m_selbuf = 0;
+	mdl.UpdateSelectionLists(SELECT_NODES);
+}
 
-	pdoc->GetGLModel()->UpdateSelectionLists(SELECT_NODES);
+bool intersectsRect(QPoint& p0, QPoint& p1, QRect& rt)
+{
+	// see if either point lies inside the rectangle
+	if (rt.contains(p0)) return true;
+	if (rt.contains(p1)) return true;
+
+	// get the point coordinates
+	int ax = p0.x();
+	int ay = p0.y();
+	int bx = p1.x();
+	int by = p1.y();
+
+	// get the rect coordinates
+	int x0 = rt.x();
+	int y0 = rt.y();
+	int x1 = x0 + rt.width();
+	int y1 = y0 + rt.height();
+	if (y0 == y1) return false;
+	if (x0 == x1) return false;
+
+	// check horizontal lines
+	if (ay == by)
+	{
+		if ((ay > y0) && (ay < y1))
+		{
+			if ((ax < x0) && (bx > x1)) return true;
+			if ((bx < x0) && (ax > x1)) return true;
+			return false;
+		}
+		else return false;
+	}
+
+	// check vertical lines
+	if (ax == bx)
+	{
+		if ((ax > x0) && (ax < x1))
+		{
+			if ((ay < y0) && (by > y1)) return true;
+			if ((by < y0) && (ay > y1)) return true;
+			return false;
+		}
+		else return false;
+	}
+
+	// for the general case, we see if any of the four edges of the rectangle are crossed
+	// top edge
+	int x = ax + ((y0 - ay) * (bx - ax))/(by - ay);
+	if ((x > x0) && (x < x1)) 
+	{
+		if ((ay < y0) && (by > y0)) return true;
+		if ((by < y0) && (ay > y0)) return true;
+		return false;
+	}
+
+	// bottom edge
+	x = ax + ((y1 - ay) * (bx - ax)) / (by - ay);
+	if ((x > x0) && (x < x1))
+	{
+		if ((ay < y1) && (by > y1)) return true;
+		if ((by < y1) && (ay > y1)) return true;
+		return false;
+	}
+
+	// left edge
+	int y = ay + ((x0 - ax) * (by - ay)) / (bx - ax);
+	if ((y > y0) && (y < y1))
+	{
+		if ((ax < x0) && (bx > x0)) return true;
+		if ((bx < x0) && (ax > x0)) return true;
+		return false;
+	}
+
+	// right edge
+	y = ay + ((x1 - ax) * (by - ay)) / (bx - ax);
+	if ((y > y0) && (y < y1))
+	{
+		if ((ax < x1) && (bx > x1)) return true;
+		if ((bx < x1) && (ax > x1)) return true;
+		return false;
+	}
+
+	return false;
 }
 
 void CGLView::SelectEdges(int x0, int y0, int x1, int y1, int mode)
@@ -2060,55 +1684,36 @@ void CGLView::SelectEdges(int x0, int y0, int x1, int y1, int mode)
 	CDocument* pdoc = GetDocument();
 	if (pdoc->IsValid() == false) return;
 
-	BOUNDINGBOX box = pdoc->GetBoundingBox();
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
 	FEMeshBase* pm = pdoc->GetActiveMesh();
 
-	double radius = box.Radius();
-	vec3f rc = box.Center();
+	int S = 4;
+	QRect rt(x0 - S, y0 - S, 2 * S, 2 * S);
 
-	m_fnear = 0.01*radius;
-	m_ffar  = 10*radius;
+	int index = -1;
+	float zmin = 0.f;
+	int NE = pm->Edges();
+	for (int i = 0; i<NE; ++i)
+	{
+		FEEdge& edge = pm->Edge(i);
+		vec3f r0 = pm->Node(edge.node[0]).m_rt;
+		vec3f r1 = pm->Node(edge.node[1]).m_rt;
 
-	// set up selection buffer
-	int size = pm->Nodes();
-	InitSelect(x0, y0, x1, y1, 4*size);
+		vec3f p0 = WorldToScreen(r0);
+		vec3f p1 = WorldToScreen(r1);
 
-	// draw the scene
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	// store attributes
-	glPushAttrib(GL_ENABLE_BIT);
-
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_LIGHTING);
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glPushMatrix();
-
-	// setup the rendering context
-	CGLContext grc(this);
-
-	// render the scene
-	PositionCam();
-
-	if (view.m_bcull) glEnable(GL_CULL_FACE);
-	else glDisable(GL_CULL_FACE);
-
-	pdoc->GetGLModel()->RenderEdges(ps, grc);
-
-	glPopMatrix();
-
-	// restore attributes
-	glPopAttrib();
-
-	// collect the hits
-	GLint hits = EndSelect();
+		if (intersectsRect(QPoint((int)p0.x, (int)p0.y), QPoint((int)p1.x, (int)p1.y), rt))
+		{
+			if ((index == -1) || (p0.z < zmin))
+			{
+				index = i;
+				zmin = p0.z;
+			}
+		}
+	}
 
 	if (mode == 0)
 	{
@@ -2118,55 +1723,22 @@ void CGLView::SelectEdges(int x0, int y0, int x1, int y1, int mode)
 		mode = SELECT_ADD;
 	}
 
-	// parse the selection buffer
-	GLuint* pbuf = m_selbuf;
-	if (hits > 0)
+	if (index >= 0) 
 	{
-		if (m_bsingle)
+		FEEdge& edge = pm->Edge(index);
+		if (mode == SELECT_ADD) 
 		{
-			unsigned int index = pbuf[3];
-			unsigned int minz = pbuf[1];
-			for (int i=1; i<hits; i++)
+			edge.Select();
+			if (view.m_bconn == false) edge.Select();
+			else 
 			{
-				if (pbuf[4*i+1] < minz)
-				{
-					minz = pbuf[4*i+1];
-					index = pbuf[4*i+3];
-				}
-			}
-
-			if (index >= 0) 
-			{
-				FEEdge& edge = pm->Edge(index-1);
-				if (mode == SELECT_ADD) 
-				{
-					edge.Select();
-					if (view.m_bconn == false) edge.Select();
-					else 
-					{
-						mdl.SelectConnectedEdges(edge);
-					}
-				}
-				else edge.Unselect();
+				mdl.SelectConnectedEdges(edge);
 			}
 		}
-		else
-		{
-			int n;
-			for (int i=0; i<hits; i++)
-			{
-				n = pbuf[4*i+3];
-				if ((n>0) && (n<=size))
-				{
-					FEEdge& edge = pm->Edge(n-1);
-					if (mode == SELECT_ADD)	edge.Select();
-					else edge.Unselect();
-				}
-			}
-		}
+		else edge.Unselect();
 	}
 
-	// count nodal selection
+	// count edge selection
 	int N = 0, nn = -1, i;
 	for (i=0; i<pm->Edges(); ++i)
 	{
@@ -2180,7 +1752,7 @@ void CGLView::SelectEdges(int x0, int y0, int x1, int y1, int mode)
 	if (N==1)
 	{
 		FEEdge& n = pm->Edge(nn);
-		float f = pdoc->GetGLModel()->currentState()->m_EDGE[nn].m_val;
+		float f = mdl.currentState()->m_EDGE[nn].m_val;
 		char sz[512] = {0};
 		sprintf(sz, "1 edge selected");
 		m_wnd->SetStatusMessage(sz);
@@ -2193,14 +1765,7 @@ void CGLView::SelectEdges(int x0, int y0, int x1, int y1, int mode)
 	}
 	else m_wnd->ClearStatusMessage();
 
-	// Restore the projection matrix
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-
-	// clean up
-	delete [] m_selbuf; m_selbuf = 0;
-
-	pdoc->GetGLModel()->UpdateSelectionLists(SELECT_EDGES);
+	mdl.UpdateSelectionLists(SELECT_EDGES);
 }
 
 QImage CGLView::CaptureScreen()
