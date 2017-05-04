@@ -1256,7 +1256,7 @@ void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
 	FEMeshBase* pm = pdoc->GetActiveMesh();
 
 	// convert the point to a ray
-	Ray ray = PointToRay(x0, y0);
+	Ray ray = PointToRay(x0 * m_dpr, y0 * m_dpr);
 
 	// find the intersection
 	Intersection q;
@@ -1477,7 +1477,7 @@ void CGLView::SelectElements(int x0, int y0, int x1, int y1, int mode)
 	FEMeshBase* pm = pdoc->GetActiveMesh();
 
 	// convert the point to a ray
-	Ray ray = PointToRay(x0, y0);
+	Ray ray = PointToRay(x0 * m_dpr, y0 * m_dpr);
 
 	// find the intersection
 	Intersection q;
@@ -1551,8 +1551,11 @@ void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 	FEModel* ps = pdoc->GetFEModel();
 	FEMeshBase* pm = pdoc->GetActiveMesh();
 
-	int S = 4;
-	QRect rt(x0 - S, y0 - S, 2*S, 2*S);
+	int X = x0*m_dpr;
+	int Y = y0*m_dpr;
+
+	int S = 4*m_dpr;
+	QRect rt(X - S, Y - S, 2*S, 2*S);
 
 	makeCurrent();
 	WorldToScreen transform(this);
@@ -1729,8 +1732,11 @@ void CGLView::SelectEdges(int x0, int y0, int x1, int y1, int mode)
 	FEModel* ps = pdoc->GetFEModel();
 	FEMeshBase* pm = pdoc->GetActiveMesh();
 
-	int S = 4;
-	QRect rt(x0 - S, y0 - S, 2 * S, 2 * S);
+	int X = x0*m_dpr;
+	int Y = y0*m_dpr;
+
+	int S = 4 * m_dpr;
+	QRect rt(X - S, Y - S, 2 * S, 2 * S);
 
 	makeCurrent();
 	WorldToScreen transform(this);
