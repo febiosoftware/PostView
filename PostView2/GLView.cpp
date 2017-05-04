@@ -1339,7 +1339,7 @@ void CGLView::RegionSelectElements(const SelectRegion& region, int mode)
 		{
 			vec3f r = pm->Node(el.m_node[i]).m_rt;
 			vec3f p = transform.Apply(r);
-			if (region.IsInside((int)p.x, (int)p.y))
+			if (region.IsInside((int)p.x / m_dpr, (int)p.y / m_dpr))
 			{
 				binside = true;
 				break;
@@ -1381,7 +1381,7 @@ void CGLView::RegionSelectFaces(const SelectRegion& region, int mode)
 		{
 			vec3f r = pm->Node(face.node[i]).m_rt;
 			vec3f p = transform.Apply(r);
-			if (region.IsInside((int) p.x, (int) p.y))
+			if (region.IsInside((int) p.x / m_dpr, (int) p.y / m_dpr))
 			{
 				binside = true;
 				break;
@@ -1420,7 +1420,7 @@ void CGLView::RegionSelectNodes(const SelectRegion& region, int mode)
 
 		vec3f p = transform.Apply(r);
 
-		if (region.IsInside((int) p.x, (int) p.y))
+		if (region.IsInside((int) p.x / m_dpr, (int) p.y / m_dpr))
 		{
 			if (mode == SELECT_ADD) node.Select(); else node.Unselect();
 		}
@@ -1455,8 +1455,8 @@ void CGLView::RegionSelectEdges(const SelectRegion& region, int mode)
 		vec3f p0 = transform.Apply(r0);
 		vec3f p1 = transform.Apply(r1);
 
-		if (region.IsInside((int)p0.x, (int)p0.y) ||
-			region.IsInside((int)p1.x, (int)p1.y))
+		if (region.IsInside((int)p0.x / m_dpr, (int)p0.y / m_dpr) ||
+			region.IsInside((int)p1.x / m_dpr, (int)p1.y / m_dpr))
 		{
 			if (mode == SELECT_ADD) edge.Select(); else edge.Unselect();
 		}
