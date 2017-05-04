@@ -106,7 +106,7 @@ public:
 public:
 	CGraphWindow(CMainWindow* wnd);
 
-	void Update(bool breset = true);
+	void Update(bool breset = true, bool bfit = false);
 
 private:
 	// track mesh data

@@ -298,7 +298,7 @@ CGraphWindow::CGraphWindow(CMainWindow* pwnd) : m_wnd(pwnd), QMainWindow(pwnd), 
 //-----------------------------------------------------------------------------
 // If breset==true, a new model was loaded. 
 // If breset==false, the selection has changed
-void CGraphWindow::Update(bool breset)
+void CGraphWindow::Update(bool breset, bool bfit)
 {
 	CDocument* doc = m_wnd->GetDocument();
 	if (doc->IsValid() == false) return;
@@ -409,7 +409,7 @@ void CGraphWindow::Update(bool breset)
 	addSelectedElems();
 
 	// redraw
-	if ((m_dataX != m_dataXPrev) || (m_dataY != m_dataYPrev))
+	if ((m_dataX != m_dataXPrev) || (m_dataY != m_dataYPrev) || bfit)
 	{
 		ui->plot->fitToData();
 		m_dataXPrev = m_dataX;

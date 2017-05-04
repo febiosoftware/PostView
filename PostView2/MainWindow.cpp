@@ -150,13 +150,13 @@ void CMainWindow::UpdateTools()
 	ui->toolsPanel->Update(false);
 }
 
-void CMainWindow::UpdateGraphs(bool breset)
+void CMainWindow::UpdateGraphs(bool breset, bool bfit)
 {
 	if (ui->graphList.isEmpty() == false)
 	{
 		QList<CGraphWindow*>::iterator it;
 		for (it=ui->graphList.begin(); it != ui->graphList.end(); ++it)
-			if ((*it)->isVisible()) (*it)->Update(breset);
+			if ((*it)->isVisible()) (*it)->Update(breset, bfit);
 	}
 
 	if (ui->integrateWindow && ui->integrateWindow->isVisible()) 

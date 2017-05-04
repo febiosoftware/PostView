@@ -64,7 +64,7 @@ public:
 
 	// update the graph windows
 	// (e.g. when selection has changed)
-	void UpdateGraphs(bool breset = true);
+	void UpdateGraphs(bool breset = true, bool bfit = false);
 
 	// update the tool window
 	// (e.g. when selection was changed)

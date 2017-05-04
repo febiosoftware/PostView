@@ -414,13 +414,13 @@ void CPlotWidget::fitToData()
 void CPlotWidget::setViewRect(const QRectF& rt)
 {
 	m_viewRect = rt;
-	if (fabs(rt.height()) < 1e-7) m_viewRect.setHeight(1.0);
-	if (fabs(rt.width ()) < 1e-7) m_viewRect.setWidth (1.0);
+	if (fabs(rt.height()) < 1e-12) m_viewRect.setHeight(1.0);
+	if (fabs(rt.width ()) < 1e-12) m_viewRect.setWidth (1.0);
 
-	double dx = 0.05*m_viewRect.width();
+/*	double dx = 0.05*m_viewRect.width();
 	double dy = 0.05*m_viewRect.height();
 	m_viewRect.adjust(0.0, 0.0, dx, dy);
-
+*/
 	m_xscale = findScale(m_viewRect.left(), m_viewRect.right());
 	m_yscale = findScale(m_viewRect.top(), m_viewRect.bottom());
 }

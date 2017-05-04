@@ -681,7 +681,7 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 
 //	m_wnd->UpdateUi();
 	m_wnd->UpdateView();
-	m_wnd->UpdateGraphs(false);
+	m_wnd->UpdateGraphs(false, true);
 	repaint();
 }
 
