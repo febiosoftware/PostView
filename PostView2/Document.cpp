@@ -1624,4 +1624,6 @@ void CDocument::ConvertSelection(int oldMode, int newMode)
 			}
 		}
 	}
+
+	GetGLModel()->UpdateSelectionLists();
 }
