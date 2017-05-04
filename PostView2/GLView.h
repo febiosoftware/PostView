@@ -110,9 +110,6 @@ class CGLView : public QOpenGLWidget
 {
 	Q_OBJECT
 
-
-	enum {MAX_FEEDBACK_BUFFER_SIZE = 10000000};
-
 public:
 	CGLView(CMainWindow* pwnd, QWidget* parent = 0);
 	~CGLView();
@@ -133,6 +130,23 @@ public:
 	void OnZoomSelect ();
 
 	CDocument* GetDocument();
+
+	int GetProjectionMode();
+
+	double GetFOV() { return m_fov; }
+	double GetAspectRatio() { return m_ar; }
+	double GetNearPlane() { return m_fnear; }
+	double GetFarPlane() { return m_ffar; }
+
+	void GetViewport(int vp[4])
+	{
+		vp[0] = m_viewport[0];
+		vp[1] = m_viewport[1];
+		vp[2] = m_viewport[2];
+		vp[3] = m_viewport[3];
+	}
+
+	void PositionCam();
 
 protected:
 	void initializeGL();
@@ -160,9 +174,6 @@ protected:
 
 	// calculate a ray based on screen position (x, y)
 	Ray PointToRay(int x, int y);
-
-	// find screen coordinates of point
-	vec3f WorldToScreen(const vec3f& f);
 
 	// Render the model
 	void RenderModel();
@@ -235,7 +246,6 @@ protected:
 	int OnRelease(int nevent);
 
 protected:
-	void PositionCam();
 
 	void PanView(vec3f r);
 

@@ -259,6 +259,22 @@ matrix::matrix(const matrix& m)
 }
 
 //-----------------------------------------------------------------------------
+void matrix::operator = (const matrix& m)
+{
+	if (d) delete [] d;
+
+	m_nr = m.m_nr;
+	m_nc = m.m_nc;
+	m_ne = m.m_ne;
+	d = 0;
+	if (m_ne > 0)
+	{
+		d = new double[m_ne];
+		for (int i = 0; i<m_ne; ++i) d[i] = m.d[i];
+	}
+}
+
+//-----------------------------------------------------------------------------
 void matrix::zero()
 {
 	for (int i=0; i<m_ne; ++i) d[i] = 0.0;

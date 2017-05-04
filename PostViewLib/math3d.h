@@ -596,6 +596,7 @@ public:
 	matrix(int r, int c);
 	matrix(const matrix& m);
 	~matrix() { delete [] d; }
+	void operator = (const matrix& m);
 
 	void zero();
 

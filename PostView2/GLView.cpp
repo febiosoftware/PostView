@@ -18,6 +18,93 @@
 #include <QtCore/QTimer>
 #include <QMenu>
 
+class WorldToScreen
+{
+public:
+	// NOTE: make sure to call makeCurrent before calling the constructor!!
+	WorldToScreen(CGLView* view) : m_PM(4, 4), q(4, 0.0), c(4, 0.0)
+	{
+		glMatrixMode(GL_PROJECTION);
+		glPushMatrix();
+		glLoadIdentity();
+
+		// get the projection mode
+		int projectionMode = view->GetProjectionMode();
+
+		// set up the projection matrix
+		double fov = view->GetFOV();
+		double ar = view->GetAspectRatio();
+		double fnear = view->GetNearPlane();
+		double ffar = view->GetFarPlane();
+		if (projectionMode == RENDER_ORTHO)
+		{
+			double z = view->GetCamera().GetTargetDistance();
+			double dx = z*tan(0.5*fov*PI / 180.0)*ar;
+			double dy = z*tan(0.5*fov*PI / 180.0);
+			glOrtho(-dx, dx, -dy, dy, fnear, ffar);
+		}
+		else
+		{
+			gluPerspective(fov, ar, fnear, ffar);
+		}
+
+		view->PositionCam();
+
+		double p[16], m[16];
+		glGetDoublev(GL_PROJECTION_MATRIX, p);
+		glGetDoublev(GL_MODELVIEW_MATRIX, m);
+
+		int vp[4];
+		glGetIntegerv(GL_VIEWPORT, vp);
+
+		glMatrixMode(GL_PROJECTION);
+		glPopMatrix();
+
+		// calculate projection matrix
+		matrix P(4, 4);
+		for (int i = 0; i<4; ++i)
+			for (int j = 0; j<4; ++j) P(i, j) = p[j * 4 + i];
+
+		// calculate modelview matrix
+		matrix M(4, 4);
+		for (int i = 0; i<4; ++i)
+			for (int j = 0; j<4; ++j) M(i, j) = m[j * 4 + i];
+
+		// multiply them together
+		m_PM = P*M;
+
+		// store the viewport
+		view->GetViewport(m_vp);
+	}
+
+	vec3f Apply(const vec3f& r)
+	{
+		// get the homogeneous coordinates
+		q[0] = r.x; q[1] = r.y; q[2] = r.z; q[3] = 1.0;
+
+		// calculcate clip coordinates
+		m_PM.mult(q, c);
+
+		// calculate device coordinates
+		vec3f d;
+		d.x = c[0] / c[3];
+		d.y = c[1] / c[3];
+		d.z = c[2] / c[3];
+
+		int W = m_vp[2];
+		int H = m_vp[3];
+		float xd = W*((d.x + 1.f)*0.5f);
+		float yd = H - H*((d.y + 1.f)*0.5f);
+
+		return vec3f(xd, yd, d.z);
+	}
+
+private:
+	matrix m_PM;
+	int	m_vp[4];
+	vector<double>	c, q;
+};
+
 //=============================================================================
 BoxRegion::BoxRegion(int x0, int x1, int y0, int y1)
 {
@@ -149,6 +236,12 @@ CGLView::~CGLView()
 CDocument* CGLView::GetDocument()
 {
 	return m_wnd->GetDocument();
+}
+
+int CGLView::GetProjectionMode()
+{
+	VIEWSETTINGS& view = GetDocument()->GetViewSettings();
+	return view.m_nproj;
 }
 
 void CGLView::initializeGL()
@@ -932,9 +1025,10 @@ void CGLView::RenderTags()
 	if (nsel > MAX_TAGS) nsel = MAX_TAGS;
 
 	// find out where the tags are on the screen
+	WorldToScreen transform(this);
 	for (int i = 0; i<nsel; i++)
 	{
-		vec3f p = WorldToScreen(vtag[i].r);
+		vec3f p = transform.Apply(vtag[i].r);
 		vtag[i].wx = p.x;
 		vtag[i].wy = m_viewport[3] - p.y;
 		vtag[i].bvis = true;
@@ -1020,76 +1114,6 @@ void CGLView::PanView(vec3f r)
 	}
 
 	pcam->Truck(r);
-}
-
-vec3f CGLView::WorldToScreen(const vec3f& r)
-{
-	makeCurrent();
-
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	glLoadIdentity();
-
-	VIEWSETTINGS& view = GetDocument()->GetViewSettings();
-
-	// set up the projection matrix
-	if (view.m_nproj == RENDER_ORTHO)
-	{
-		double z = GetCamera().GetTargetDistance();
-		double dx = z*tan(0.5*m_fov*PI / 180.0)*m_ar;
-		double dy = z*tan(0.5*m_fov*PI / 180.0);
-		glOrtho(-dx, dx, -dy, dy, m_fnear, m_ffar);
-	}
-	else
-	{
-		gluPerspective(m_fov, m_ar, m_fnear, m_ffar);
-	}
-
-	PositionCam();
-
-	double p[16], m[16];
-	glGetDoublev(GL_PROJECTION_MATRIX, p);
-	glGetDoublev(GL_MODELVIEW_MATRIX, m);
-
-	int vp[4];
-	glGetIntegerv(GL_VIEWPORT, vp);
-
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-
-	// calculate projection matrix
-	matrix P(4, 4);
-	for (int i = 0; i<4; ++i)
-		for (int j = 0; j<4; ++j) P(i, j) = p[j * 4 + i];
-
-	// calculate modelview matrix
-	matrix M(4, 4);
-	for (int i = 0; i<4; ++i)
-		for (int j = 0; j<4; ++j) M(i, j) = m[j * 4 + i];
-
-	// multiply them together
-	matrix PM = P*M;
-
-	// get the homogeneous coordinates
-	vector<double> q(4);
-	q[0] = r.x; q[1] = r.y; q[2] = r.z; q[3] = 1.0;
-
-	// calculcate clip coordinates
-	vector<double> c(4);
-	PM.mult(q, c);
-
-	// calculate device coordinates
-	vec3f d;
-	d.x = c[0] / c[3];
-	d.y = c[1] / c[3];
-	d.z = c[2] / c[3];
-
-	int W = vp[2];
-	int H = vp[3];
-	float xd = W*((d.x + 1.f)*0.5f);
-	float yd = H - H*((d.y + 1.f)*0.5f);
-
-	return vec3f(xd, yd, d.z);
 }
 
 Ray CGLView::PointToRay(int x, int y)
@@ -1301,6 +1325,9 @@ void CGLView::RegionSelectElements(const SelectRegion& region, int mode)
 	FEModel* ps = pdoc->GetFEModel();
 	FEMeshBase* pm = pdoc->GetActiveMesh();
 
+	makeCurrent();
+	WorldToScreen transform(this);
+
 	int NE = pm->Elements();
 	for (int i = 0; i<NE; ++i)
 	{
@@ -1311,7 +1338,7 @@ void CGLView::RegionSelectElements(const SelectRegion& region, int mode)
 		for (int i = 0; i<ne; ++i)
 		{
 			vec3f r = pm->Node(el.m_node[i]).m_rt;
-			vec3f p = WorldToScreen(r);
+			vec3f p = transform.Apply(r);
 			if (region.IsInside((int)p.x, (int)p.y))
 			{
 				binside = true;
@@ -1340,6 +1367,9 @@ void CGLView::RegionSelectFaces(const SelectRegion& region, int mode)
 	FEModel* ps = pdoc->GetFEModel();
 	FEMeshBase* pm = pdoc->GetActiveMesh();
 
+	makeCurrent();
+	WorldToScreen transform(this);
+
 	int NF = pm->Faces();
 	for (int i = 0; i<NF; ++i)
 	{
@@ -1350,7 +1380,7 @@ void CGLView::RegionSelectFaces(const SelectRegion& region, int mode)
 		for (int i=0; i<nf; ++i)
 		{
 			vec3f r = pm->Node(face.node[i]).m_rt;
-			vec3f p = WorldToScreen(r);
+			vec3f p = transform.Apply(r);
 			if (region.IsInside((int) p.x, (int) p.y))
 			{
 				binside = true;
@@ -1379,13 +1409,16 @@ void CGLView::RegionSelectNodes(const SelectRegion& region, int mode)
 	FEModel* ps = pdoc->GetFEModel();
 	FEMeshBase* pm = pdoc->GetActiveMesh();
 
+	makeCurrent();
+	WorldToScreen transform(this);
+
 	int NN = pm->Nodes();
 	for (int i = 0; i<NN; ++i)
 	{
 		FENode& node = pm->Node(i);
 		vec3f r = node.m_rt;
 
-		vec3f p = WorldToScreen(r);
+		vec3f p = transform.Apply(r);
 
 		if (region.IsInside((int) p.x, (int) p.y))
 		{
@@ -1408,6 +1441,9 @@ void CGLView::RegionSelectEdges(const SelectRegion& region, int mode)
 	FEModel* ps = pdoc->GetFEModel();
 	FEMeshBase* pm = pdoc->GetActiveMesh();
 
+	makeCurrent();
+	WorldToScreen transform(this);
+
 	int NE = pm->Edges();
 	for (int i = 0; i<NE; ++i)
 	{
@@ -1416,8 +1452,8 @@ void CGLView::RegionSelectEdges(const SelectRegion& region, int mode)
 		vec3f r0 = pm->Node(edge.node[0]).m_rt;
 		vec3f r1 = pm->Node(edge.node[1]).m_rt;
 
-		vec3f p0 = WorldToScreen(r0);
-		vec3f p1 = WorldToScreen(r1);
+		vec3f p0 = transform.Apply(r0);
+		vec3f p1 = transform.Apply(r1);
 
 		if (region.IsInside((int)p0.x, (int)p0.y) ||
 			region.IsInside((int)p1.x, (int)p1.y))
@@ -1518,6 +1554,9 @@ void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 	int S = 4;
 	QRect rt(x0 - S, y0 - S, 2*S, 2*S);
 
+	makeCurrent();
+	WorldToScreen transform(this);
+
 	int index = -1;
 	float zmin = 0.f;
 	int NN = pm->Nodes();
@@ -1525,7 +1564,7 @@ void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 	{
 		vec3f r = pm->Node(i).m_rt;
 
-		vec3f p = WorldToScreen(r);
+		vec3f p = transform.Apply(r);
 
 		if (rt.contains(QPoint((int) p.x, (int) p.y)))
 		{
@@ -1693,6 +1732,9 @@ void CGLView::SelectEdges(int x0, int y0, int x1, int y1, int mode)
 	int S = 4;
 	QRect rt(x0 - S, y0 - S, 2 * S, 2 * S);
 
+	makeCurrent();
+	WorldToScreen transform(this);
+
 	int index = -1;
 	float zmin = 0.f;
 	int NE = pm->Edges();
@@ -1702,8 +1744,8 @@ void CGLView::SelectEdges(int x0, int y0, int x1, int y1, int mode)
 		vec3f r0 = pm->Node(edge.node[0]).m_rt;
 		vec3f r1 = pm->Node(edge.node[1]).m_rt;
 
-		vec3f p0 = WorldToScreen(r0);
-		vec3f p1 = WorldToScreen(r1);
+		vec3f p0 = transform.Apply(r0);
+		vec3f p1 = transform.Apply(r1);
 
 		if (intersectsRect(QPoint((int)p0.x, (int)p0.y), QPoint((int)p1.x, (int)p1.y), rt))
 		{
