@@ -1595,7 +1595,7 @@ void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 	mdl.UpdateSelectionLists(SELECT_NODES);
 }
 
-bool intersectsRect(QPoint& p0, QPoint& p1, QRect& rt)
+bool intersectsRect(const QPoint& p0, const QPoint& p1, const QRect& rt)
 {
 	// see if either point lies inside the rectangle
 	if (rt.contains(p0)) return true;
