@@ -1236,7 +1236,7 @@ void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
 
 	// find the intersection
 	Intersection q;
-	if (FindFaceIntersection(ray, *pm, q) == false) return;
+	FindFaceIntersection(ray, *pm, q);
 
 	// get view settings
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
@@ -1445,7 +1445,7 @@ void CGLView::SelectElements(int x0, int y0, int x1, int y1, int mode)
 
 	// find the intersection
 	Intersection q;
-	if (FindElementIntersection(ray, *pm, q) == false) return;
+	FindElementIntersection(ray, *pm, q);
 
 	// get view settings
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
