@@ -11,6 +11,8 @@
 #endif
 
 #include <assert.h>
+#include <string>
+using namespace std;
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
