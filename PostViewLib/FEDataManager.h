@@ -113,7 +113,12 @@ public:
 	FEDataField_T(const char* szname, unsigned int flag = 0) : FEDataField(T::Type(), T::Format(), T::Class(), flag) { SetName(szname); }
 	FEMeshData* CreateData(FEState* pstate) { return new T(pstate, this); }
 
-	virtual FEDataField* Clone() const { return new FEDataField_T<T>(GetName()); }
+	virtual FEDataField* Clone() const 
+	{ 
+		FEDataField_T<T>* newData = new FEDataField_T<T>(GetName());
+		newData->m_item = m_item;
+		return newData;
+	}
 
 	const std::type_info& TypeInfo() { return typeid(T); }
 };
