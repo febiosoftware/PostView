@@ -496,7 +496,7 @@ void CDataPanel::on_FilterButton_clicked()
 				if ((pdi != pdf)&&
 					(pdi->DataClass() == pdf->DataClass())&&
 					(pdi->Format() == pdf->Format())&&
-					(pdi->Type() == pdf->Type()))
+					((pdi->Type() == pdf->Type()) || (pdi->Type() == DATA_FLOAT)))
 					{
 						dataNames.push_back(pdi->GetName());
 						dataIds.push_back(i);
@@ -523,8 +523,8 @@ void CDataPanel::on_FilterButton_clicked()
 					break;
 				case 2:
 					{
-						FEDataFieldPtr p = fem.GetDataManager()->DataField(dlg.m_ndata);
-						DataArithmetic(fem, nfield, dataIds[dlg.m_nop], (*p)->GetFieldID());
+						FEDataFieldPtr p = fem.GetDataManager()->DataField(dataIds[dlg.m_ndata]);
+						DataArithmetic(fem, nfield, dlg.m_nop, (*p)->GetFieldID());
 					}
 					break;
 				default:

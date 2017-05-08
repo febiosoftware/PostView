@@ -529,12 +529,11 @@ void DataArithmetic(FEModel& fem, int nfield, int nop, int noperand)
 
 		Data_Format fmt = d.GetFormat();
 		if (d.GetFormat() != s.GetFormat()) return;
-		if (d.GetType() != s.GetType()) return;
-
+		if ((d.GetType() != s.GetType()) && (s.GetType() != DATA_SCALAR)) return;
 
 		if (IS_NODE_FIELD(nfield) && IS_NODE_FIELD(noperand))
 		{
-			if (d.GetType() == DATA_FLOAT)
+			if ((d.GetType() == DATA_FLOAT) && (s.GetType() == DATA_FLOAT))
 			{
 				double(*f)(double, double) = 0;
 				if      (nop == 0) f = flt_add;
@@ -554,21 +553,33 @@ void DataArithmetic(FEModel& fem, int nfield, int nop, int noperand)
 			}
 			else if (d.GetType() == DATA_VEC3F)
 			{
-				FENodeData<vec3f>* pd = dynamic_cast<FENodeData<vec3f>*>(&d);
-				FENodeData<vec3f>* ps = dynamic_cast<FENodeData<vec3f>*>(&s);
-				int N = pd->size();
-				switch (nop)
+				if (s.GetType() == DATA_VEC3F)
 				{
-				case 0: for (int i = 0; i<N; ++i) (*pd)[i] += (*ps)[i]; break;
-				case 1: for (int i = 0; i<N; ++i) (*pd)[i] -= (*ps)[i]; break;
+					FENodeData<vec3f>* pd = dynamic_cast<FENodeData<vec3f>*>(&d);
+					FENodeData<vec3f>* ps = dynamic_cast<FENodeData<vec3f>*>(&s);
+					int N = pd->size();
+					switch (nop)
+					{
+					case 0: for (int i = 0; i<N; ++i) (*pd)[i] += (*ps)[i]; break;
+					case 1: for (int i = 0; i<N; ++i) (*pd)[i] -= (*ps)[i]; break;
+					}
+				}
+				else if (s.GetType() == DATA_FLOAT)
+				{
+					FENodeData<vec3f>* pd = dynamic_cast<FENodeData<vec3f>*>(&d);
+					FENodeData<float>* ps = dynamic_cast<FENodeData<float>*>(&s);
+					int N = pd->size();
+					switch (nop)
+					{
+					case 2: for (int i = 0; i<N; ++i) (*pd)[i] *= (*ps)[i]; break;
+					case 3: for (int i = 0; i<N; ++i) (*pd)[i] /= (*ps)[i]; break;
+					}
 				}
 			}
 		}
 		else if (IS_ELEM_FIELD(nfield) && IS_ELEM_FIELD(noperand))
 		{
-			switch (d.GetType())
-			{
-			case DATA_FLOAT:
+			if ((d.GetType() == DATA_FLOAT) && (s.GetType() == DATA_FLOAT))
 			{
 				double (*f)(double,double) = 0;
 				if      (nop == 0) f = flt_add;
@@ -585,30 +596,10 @@ void DataArithmetic(FEModel& fem, int nfield, int nop, int noperand)
 				{
 					FEElementData<float, DATA_ITEM>* pd = dynamic_cast<FEElementData<float, DATA_ITEM>*>(&d);
 					FEElementData<float, DATA_ITEM>* ps = dynamic_cast<FEElementData<float, DATA_ITEM>*>(&s);
-					int N = pd->size();
-					for (int i = 0; i<N; ++i) (*pd)[i] = f((*pd)[i], (*ps)[i]); break;
-				}
-				else
-				{
-					return;
-				}
-			}
-			break;
-			case DATA_MAT3FS:
-			{
-				if (fmt == DATA_ITEM)
-				{
-					FEElementData<mat3fs, DATA_ITEM>* pd = dynamic_cast<FEElementData<mat3fs, DATA_ITEM>*>(&d);
-					FEElementData<mat3fs, DATA_ITEM>* ps = dynamic_cast<FEElementData<mat3fs, DATA_ITEM>*>(&s);
-					int N = pd->size();
-					switch (nop)
+					if (pd && ps)
 					{
-					case 0: for (int i = 0; i<N; ++i) (*pd)[i] += (*ps)[i]; break;
-					case 1: for (int i = 0; i<N; ++i) (*pd)[i] -= (*ps)[i]; break;
-					default:
-						{
-							return;
-						}
+						int N = pd->size();
+						for (int i = 0; i<N; ++i) (*pd)[i] = f((*pd)[i], (*ps)[i]); break;
 					}
 				}
 				else
@@ -616,10 +607,54 @@ void DataArithmetic(FEModel& fem, int nfield, int nop, int noperand)
 					return;
 				}
 			}
-			break;
-			default:
-				return;
-				break;
+			else if (d.GetType() == DATA_MAT3FS)
+			{
+				if (s.GetType() == DATA_MAT3FS)
+				{
+					if (fmt == DATA_ITEM)
+					{
+						FEElementData<mat3fs, DATA_ITEM>* pd = dynamic_cast<FEElementData<mat3fs, DATA_ITEM>*>(&d);
+						FEElementData<mat3fs, DATA_ITEM>* ps = dynamic_cast<FEElementData<mat3fs, DATA_ITEM>*>(&s);
+						if (pd && ps)
+						{
+							int N = pd->size();
+							switch (nop)
+							{
+							case 0: for (int i = 0; i<N; ++i) (*pd)[i] += (*ps)[i]; break;
+							case 1: for (int i = 0; i<N; ++i) (*pd)[i] -= (*ps)[i]; break;
+							default:
+								{
+									return;
+								}
+							}
+						}
+					}
+				}
+				else if (s.GetType() == DATA_FLOAT)
+				{
+					if (fmt == DATA_ITEM)
+					{
+						FEElementData<mat3fs, DATA_ITEM>* pd = dynamic_cast<FEElementData<mat3fs, DATA_ITEM>*>(&d);
+						FEElementData<float, DATA_ITEM>* ps = dynamic_cast<FEElementData<float, DATA_ITEM>*>(&s);
+						if (pd && ps)
+						{
+							int N = pd->size();
+							switch (nop)
+							{
+							case 2: for (int i = 0; i<N; ++i) (*pd)[i] *= (*ps)[i]; break;
+							case 3: for (int i = 0; i<N; ++i) (*pd)[i] /= (*ps)[i]; break;
+							default:
+								{
+									return;
+								}
+							}
+						}
+					}
+				}
+				else
+				{
+					return;
+				}
 			}
 		}
 		else
