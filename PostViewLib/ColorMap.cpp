@@ -89,9 +89,9 @@ void CColorMap::jet()
 	m_ncol = 5;
 
 	m_pos[0] = 0.00f; m_col[0] = GLCOLOR(0, 0, 255);
-	m_pos[1] = 0.25f; m_col[1] = GLCOLOR(0, 255, 255);
+	m_pos[1] = 0.40f; m_col[1] = GLCOLOR(0, 255, 255);
 	m_pos[2] = 0.50f; m_col[2] = GLCOLOR(0, 255, 0);
-	m_pos[3] = 0.75f; m_col[3] = GLCOLOR(255, 255, 0);
+	m_pos[3] = 0.60f; m_col[3] = GLCOLOR(255, 255, 0);
 	m_pos[4] = 1.00f; m_col[4] = GLCOLOR(255, 0, 0);
 }
 
