@@ -124,9 +124,9 @@ public:
 	{
 		QVBoxLayout* pg = new QVBoxLayout(parent);
 
-		QPushButton* pAdd  = new QPushButton("Add..." ); pAdd ->setObjectName("addButton"   ); pAdd ->setFixedWidth(60);
-		QPushButton* pEdit = new QPushButton("Edit..."); pEdit->setObjectName("editButton"  ); pEdit->setFixedWidth(60);
-		QPushButton* pDel  = new QPushButton("Delete" ); pDel ->setObjectName("deleteButton"); pDel ->setFixedWidth(60);
+		QPushButton* pAdd  = new QPushButton("Add..." ); pAdd ->setObjectName("addButton"   );// pAdd ->setFixedWidth(60);
+		QPushButton* pEdit = new QPushButton("Edit..."); pEdit->setObjectName("editButton"  ); //pEdit->setFixedWidth(60);
+		QPushButton* pDel  = new QPushButton("Delete" ); pDel ->setObjectName("deleteButton"); //pDel ->setFixedWidth(60);
 		QHBoxLayout* ph = new QHBoxLayout;
 		ph->setSpacing(0);
 		ph->addWidget(pAdd);
@@ -143,7 +143,7 @@ public:
 		list->horizontalHeader()->show();
 		list->horizontalHeader()->setStretchLastSection(true);
 		list->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
-		list->verticalHeader()->setDefaultSectionSize(24);
+//		list->verticalHeader()->setDefaultSectionSize(24);
 		list->verticalHeader()->hide();
 
 		data = new CStateModel(list);

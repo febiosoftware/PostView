@@ -108,16 +108,16 @@ public:
 		QAction* addActionStd  = new QAction("Standard ...", parent); addActionStd ->setObjectName("AddStandard");
 		QAction* addActionFile = new QAction("From file ...", parent); addActionFile->setObjectName("AddFromFile");
 
-		QToolButton* pbAdd = new QToolButton(); pbAdd->setFixedSize(BW, BH);
+		QToolButton* pbAdd = new QToolButton(); //pbAdd->setFixedSize(BW, BH);
 		pbAdd->setText("Add");
 		pbAdd->setPopupMode(QToolButton::InstantPopup);
 		pbAdd->addAction(addActionStd);
 		pbAdd->addAction(addActionFile);
 
-		QPushButton* pbCpy = new QPushButton("Copy"     ); pbCpy->setFixedSize(BW, BH); pbCpy->setObjectName("CopyButton"  );
-		QPushButton* pbDel = new QPushButton("Delete"   ); pbDel->setFixedSize(BW, BH); pbDel->setObjectName("DeleteButton");
-		QPushButton* pbFlt = new QPushButton("Filter..."); pbFlt->setFixedSize(BW, BH); pbFlt->setObjectName("FilterButton");
-		QPushButton* pbExp = new QPushButton("Export..."); pbExp->setFixedSize(BW, BH); pbExp->setObjectName("ExportButton");
+		QPushButton* pbCpy = new QPushButton("Copy"     ); pbCpy->setObjectName("CopyButton"  ); //pbCpy->setFixedSize(BW, BH); 
+		QPushButton* pbDel = new QPushButton("Delete"   ); pbDel->setObjectName("DeleteButton"); //pbDel->setFixedSize(BW, BH); 
+		QPushButton* pbFlt = new QPushButton("Filter..."); pbFlt->setObjectName("FilterButton"); //pbFlt->setFixedSize(BW, BH); 
+		QPushButton* pbExp = new QPushButton("Export..."); pbExp->setObjectName("ExportButton"); //pbExp->setFixedSize(BW, BH); 
 
 		QHBoxLayout* ph = new QHBoxLayout;
 		ph->setSpacing(0);
@@ -136,7 +136,7 @@ public:
 		list->setSelectionMode(QAbstractItemView::SingleSelection);
 		list->horizontalHeader()->setStretchLastSection(true);
 		list->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
-		list->verticalHeader()->setDefaultSectionSize(24);
+//		list->verticalHeader()->setDefaultSectionSize(24);
 		list->verticalHeader()->hide();
 
 		data = new CDataModel(list);

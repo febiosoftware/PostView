@@ -373,7 +373,7 @@ void CPropertyListView::Update(CPropertyList* plist)
 {
 	ui->m_list = plist;
 	ui->m_data->setPropertyList(plist);
-//	ui->m_prop->resizeColumnToContents(0);
+	ui->m_prop->resizeColumnToContents(0);
 //	ui->m_prop->setColumnWidth(0, 150);
 
 	// we make persistent editors for color properties

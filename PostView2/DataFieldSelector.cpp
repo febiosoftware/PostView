@@ -13,7 +13,7 @@ CDataFieldSelector::CDataFieldSelector(QWidget* parent) : QComboBox(parent)
 	setModel(m_tree->model());
 	setView(m_tree);
 //	setMinimumWidth(200);
-	view()->setMinimumWidth(300);
+//	view()->setMinimumWidth(300);
 	view()->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
 	setCurrentIndex(-1);
 

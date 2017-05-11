@@ -434,7 +434,7 @@ public:
 		// create the data field selector
 		mainToolBar->addSeparator();
 		selectData = new CDataFieldSelector;
-		selectData->setMinimumWidth(200);
+		selectData->setMinimumWidth(300);
 //		selectData->setFixedHeight(23);
 		selectData->setObjectName("selectData");
 
