@@ -160,7 +160,7 @@ protected:
 	void mouseReleaseEvent(QMouseEvent* ev);
 	void mouseDoubleClickEvent(QMouseEvent* ev);
 	void wheelEvent(QWheelEvent* ev);
-	bool event(QEvent* event);
+//	bool event(QEvent* event);
 
 protected slots:
 	void repaintEvent();
@@ -287,9 +287,6 @@ private:
 
 	ANIMATION_MODE	m_nanim;	// the animation mode
 	CAnimation*		m_panim;	// animation object
-
-	bool	m_btouchMode;	// true while processing touch events
-	bool	m_bmouseMode;	// true while processing mouse events
 
 private:
 	static int	m_viewport[4];		//!< store viewport coordinates

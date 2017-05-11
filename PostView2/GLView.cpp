@@ -231,9 +231,6 @@ CGLView::CGLView(CMainWindow* pwnd, QWidget* parent) : QOpenGLWidget(parent), m_
 	m_pframe->align(GLW_ALIGN_HCENTER | GLW_ALIGN_VCENTER);
 	m_pframe->hide();
 
-	m_btouchMode = false;
-	m_bmouseMode = false;
-
 	setFocusPolicy(Qt::StrongFocus);
 	setAttribute(Qt::WA_AcceptTouchEvents, true);
 }
@@ -495,9 +492,6 @@ void CGLView::repaintEvent()
 //-----------------------------------------------------------------------------
 void CGLView::mousePressEvent(QMouseEvent* ev)
 {
-	if (m_btouchMode) { ev->accept(); return; }
-	m_bmouseMode = true;
-
 	int mode = 0;
 	Qt::KeyboardModifiers key = ev->modifiers();
 	if (key & Qt::ShiftModifier  ) mode |= SELECT_ADD;
@@ -564,8 +558,6 @@ void CGLView::wheelEvent(QWheelEvent* ev)
 //-----------------------------------------------------------------------------
 void CGLView::mouseMoveEvent(QMouseEvent* ev)
 {
-	if (m_btouchMode) { ev->accept(); return; }
-	if (m_bmouseMode == false) { ev->accept(); return; }
 	int x = ev->x();
 	int y = ev->y();
 
@@ -659,7 +651,7 @@ void CGLView::mouseMoveEvent(QMouseEvent* ev)
 }
 
 //-----------------------------------------------------------------------------
-bool CGLView::event(QEvent* event)
+/*bool CGLView::event(QEvent* event)
 {
 	switch (event->type())
 	{
@@ -708,15 +700,11 @@ bool CGLView::event(QEvent* event)
 
 	return QOpenGLWidget::event(event);
 }
+*/
 
 //-----------------------------------------------------------------------------
 void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 {
-	if (m_btouchMode) { ev->accept(); return; }
-	if (m_bmouseMode == false) { ev->accept(); return; }
-
-	m_bmouseMode = false;
-
 	int x = ev->x();
 	int y = ev->y();
 
