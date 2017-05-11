@@ -148,6 +148,8 @@ public:
 
 	void PositionCam();
 
+	void UpdateWidgets();
+
 protected:
 	void initializeGL();
 	void resizeGL(int w, int h);

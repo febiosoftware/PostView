@@ -309,7 +309,8 @@ int CDocument::currentTime()
 //-----------------------------------------------------------------------------
 float CDocument::GetTimeValue()
 { 
-	return m_pGLModel->currentTime(); 
+	if (m_pGLModel) return m_pGLModel->currentTime(); 
+	else return 0.f;
 }
 
 //-----------------------------------------------------------------------------

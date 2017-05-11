@@ -215,10 +215,16 @@ CGLView::CGLView(CMainWindow* pwnd, QWidget* parent) : QOpenGLWidget(parent), m_
 	m_Widget = CGLWidgetManager::GetInstance();
 	m_Widget->AttachToView(this);
 
+	int Y = 0;
 	m_Widget->AddWidget(m_ptitle = new GLBox(po, 20, 20, 300, 50, pdoc, "%title")); 
 	m_ptitle->set_font_size(30);
+	m_ptitle->fit_to_size();
+	Y += m_ptitle->h();
 
-	m_Widget->AddWidget(m_psubtitle = new GLBox(po, 20, 70, 300, 60, pdoc, "%field\\nTime = %time")); m_psubtitle->set_font_size(20);
+	m_Widget->AddWidget(m_psubtitle = new GLBox(po, Y, 70, 300, 60, pdoc, "%field\\nTime = %time")); 
+	m_psubtitle->set_font_size(15);
+	m_psubtitle->fit_to_size();
+
 	m_Widget->AddWidget(m_ptriad = new GLTriad(po, 0, 0, 150, 150, &GetCamera()));
 	m_ptriad->align(GLW_ALIGN_LEFT | GLW_ALIGN_BOTTOM);
 	m_Widget->AddWidget(m_pframe = new GLSafeFrame(po, 0, 0, 800, 600));
@@ -231,6 +237,19 @@ CGLView::CGLView(CMainWindow* pwnd, QWidget* parent) : QOpenGLWidget(parent), m_
 
 CGLView::~CGLView()
 {
+}
+
+void CGLView::UpdateWidgets()
+{
+	int Y = 0;
+	m_ptitle->resize(0, 0, m_ptitle->w(), m_ptitle->h());
+	m_ptitle->fit_to_size();
+	Y += m_ptitle->h();
+
+	m_psubtitle->resize(0, Y, m_psubtitle->w(), m_psubtitle->h());
+	m_psubtitle->fit_to_size();
+
+	repaint();
 }
 
 CDocument* CGLView::GetDocument()

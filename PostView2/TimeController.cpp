@@ -10,6 +10,8 @@ CTimeController::CTimeController(QWidget* parent) : QWidget(parent)
 	m_nselect = -1;
 	m_first = m_last = 0;
 	m_ndrag = -1;
+
+	setMinimumHeight(50);
 }
 
 void CTimeController::clearData()
@@ -293,8 +295,11 @@ void CTimeController::paintEvent(QPaintEvent* ev)
 		return;
 	}
 
+	QFontMetrics FM = painter.fontMetrics();
+	int fontH = FM.height();
+
 	// update rectangles
-	m_timeRect = rt; m_timeRect.setTop(rt.bottom() - 20);
+	m_timeRect = rt; m_timeRect.setTop(rt.bottom() - fontH - 8);
 	m_dataRect = rt; m_dataRect.setBottom(m_timeRect.top() - 1);
 	int x0 = rt.left();
 	int x1 = rt.right();
@@ -358,7 +363,6 @@ void CTimeController::paintEvent(QPaintEvent* ev)
 	}
 
 	// draw the time bar
-	QFontMetrics FM = painter.fontMetrics();
 
 	int Y0 = m_timeRect.top();
 	int Y1 = m_timeRect.bottom();

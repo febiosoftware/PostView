@@ -106,7 +106,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(QTDIR)\include;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtWidgets;$(SolutionDir)..;$(ZLIBDIR);$(GLEWDIR)\include\GL;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)x64\Debug;$(QTDIR)\lib;$(GLEWDIR)\lib\Release\x64;$(ZLIBDIR)\lib64;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)x64\Debug (No MOC);$(QTDIR)\lib;$(GLEWDIR)\lib\Release\x64;$(ZLIBDIR)\lib64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>

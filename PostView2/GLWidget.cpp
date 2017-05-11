@@ -98,8 +98,8 @@ void GLBox::fit_to_size()
 	QFontMetrics fm(m_font);
 	char szlabel[256] = {0};
 	parse_label(szlabel, m_szlabel, 255);
-	QRect rt = fm.boundingRect(szlabel);
-	resize(x(), y(), rt.width(), rt.height());
+	QSize size = fm.size(Qt::TextExpandTabs, szlabel);
+	resize(x(), y(), size.width(), size.height());
 }
 
 void GLBox::draw_bg(int x0, int y0, int x1, int y1, QPainter* painter)
@@ -170,6 +170,8 @@ void GLBox::parse_label(char* szlabel, const char* szval, int nmax)
 {
 	const char* cs = szval;
 	char* cd = szlabel;
+
+//	*cd++ = ' ';
 
 	while (*cs)
 	{

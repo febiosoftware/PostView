@@ -135,7 +135,7 @@ public:
 		fileProgress = new QProgressBar;
 		fileProgress->setRange(0, 100);
 		fileProgress->setMaximumWidth(200);
-		fileProgress->setMaximumHeight(15);
+//		fileProgress->setMaximumHeight(15);
 
 		stopFileReading = new QPushButton("Cancel");
 
@@ -435,7 +435,7 @@ public:
 		mainToolBar->addSeparator();
 		selectData = new CDataFieldSelector;
 		selectData->setMinimumWidth(200);
-		selectData->setFixedHeight(23);
+//		selectData->setFixedHeight(23);
 		selectData->setObjectName("selectData");
 
 		mainToolBar->addWidget(selectData);

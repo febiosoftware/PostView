@@ -275,6 +275,11 @@ void CMainWindow::OpenFile(const QString& fileName, int nfilter)
 	m_fileThread = new CFileThread(this, reader, fileName);
 	m_fileThread->start();
 	ui->statusBar->showMessage(QString("Reading file %1 ...").arg(fileName));
+
+	int H = ui->statusBar->height() - 5;
+	ui->fileProgress->setFixedHeight(H);
+	ui->stopFileReading->setFixedHeight(H);
+
 	ui->fileProgress->setValue(0);
 	ui->statusBar->addPermanentWidget(ui->fileProgress);
 	ui->statusBar->addPermanentWidget(ui->stopFileReading);
@@ -282,7 +287,6 @@ void CMainWindow::OpenFile(const QString& fileName, int nfilter)
 	ui->fileProgress->show();
 	ui->stopFileReading->show();
 	QObject::connect(ui->stopFileReading, SIGNAL(clicked()), this, SLOT(onCancelFileRead()));
-	ui->fileProgress->show();
 	QTimer::singleShot(100, this, SLOT(checkFileProgress()));
 }
 
@@ -327,6 +331,7 @@ void CMainWindow::finishedReadingFile(bool success, const QString& errorString)
 	{
 		QMessageBox::information(this, "PostView2", errorString);
 	}
+	ui->glview->UpdateWidgets();
 
 	// update all Ui components
 	UpdateUi(true);
@@ -1082,7 +1087,8 @@ void CMainWindow::on_selectData_currentIndexChanged(int index)
 
 		pdoc->UpdateFEModel();
 
-		RedrawGL();
+		ui->glview->UpdateWidgets();
+//		RedrawGL();
 	}
 
 	if (ui->integrateWindow && ui->integrateWindow->isVisible()) 

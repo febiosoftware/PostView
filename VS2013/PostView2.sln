@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PostView2", "PostView2\PostView2.vcxproj", "{91ED7824-098D-48E1-804F-D79A362BEFAD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4989852C-31F2-43BB-B60B-8F06B4011499} = {4989852C-31F2-43BB-B60B-8F06B4011499}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PostViewLib", "PostViewLib\PostViewLib.vcxproj", "{4989852C-31F2-43BB-B60B-8F06B4011499}"
 EndProject

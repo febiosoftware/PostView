@@ -340,7 +340,7 @@ public:
 		m_prop->horizontalHeader()->setStretchLastSection(true);
 //		m_prop->horizontalHeader()->hide();
 		m_prop->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
-		m_prop->verticalHeader()->setDefaultSectionSize(24);
+//		m_prop->verticalHeader()->setDefaultSectionSize(24);
 		m_prop->verticalHeader()->hide();
 		m_prop->setEditTriggers(QAbstractItemView::AllEditTriggers);
 //		m_prop->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -374,7 +374,7 @@ void CPropertyListView::Update(CPropertyList* plist)
 	ui->m_list = plist;
 	ui->m_data->setPropertyList(plist);
 //	ui->m_prop->resizeColumnToContents(0);
-	ui->m_prop->setColumnWidth(0, 150);
+//	ui->m_prop->setColumnWidth(0, 150);
 
 	// we make persistent editors for color properties
 	if (plist)
