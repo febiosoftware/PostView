@@ -288,6 +288,9 @@ private:
 	ANIMATION_MODE	m_nanim;	// the animation mode
 	CAnimation*		m_panim;	// animation object
 
+	bool	m_btouchMode;	// true while processing touch events
+	bool	m_bmouseMode;	// true while processing mouse events
+
 private:
 	static int	m_viewport[4];		//!< store viewport coordinates
 	static int m_dpr;				//!< device pixel ratio for converting from physical to device-independent pixels
