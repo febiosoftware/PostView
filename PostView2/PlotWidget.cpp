@@ -587,7 +587,11 @@ void CPlotWidget::paintEvent(QPaintEvent* pe)
 	// render the title
 	drawTitle(p);
 
-	m_screenRect.adjust(50, 0, -90, -30);
+	// figure out some metrics
+	QFontMetrics fm = p.fontMetrics();
+	int fontHeight = fm.height(); // height in pixels
+
+	m_screenRect.adjust(50, 0, -90, -fontHeight - 2);
 	p.setBrush(Qt::NoBrush);
 	p.drawRect(m_screenRect);
 

@@ -292,7 +292,7 @@ CGraphWindow::CGraphWindow(CMainWindow* pwnd) : m_wnd(pwnd), QMainWindow(pwnd), 
 	ui->setupUi(this);
 	ui->ops->setUserRange(m_nUserMin, m_nUserMax);
 	setMinimumWidth(500);
-	resize(600, 500);
+	resize(800, 600);
 }
 
 //-----------------------------------------------------------------------------
