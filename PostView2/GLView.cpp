@@ -1399,27 +1399,34 @@ void CGLView::RegionSelectFaces(const SelectRegion& region, int mode)
 	makeCurrent();
 	WorldToScreen transform(this);
 
+//	if (view.m_bcull)
+	{
+		TagBackfacingFaces(*pm);
+	}
+
 	int NF = pm->Faces();
 	for (int i = 0; i<NF; ++i)
 	{
 		FEFace& face = pm->Face(i);
-
-		int nf = face.Nodes();
-		bool binside = false;
-		for (int i=0; i<nf; ++i)
+		if (face.m_ntag == 0)
 		{
-			vec3f r = pm->Node(face.node[i]).m_rt;
-			vec3f p = transform.Apply(r);
-			if (region.IsInside((int) p.x / m_dpr, (int) p.y / m_dpr))
+			int nf = face.Nodes();
+			bool binside = false;
+			for (int i=0; i<nf; ++i)
 			{
-				binside = true;
-				break;
+				vec3f r = pm->Node(face.node[i]).m_rt;
+				vec3f p = transform.Apply(r);
+				if (region.IsInside((int) p.x / m_dpr, (int) p.y / m_dpr))
+				{
+					binside = true;
+					break;
+				}
 			}
-		}
 
-		if (binside)
-		{
-			if (mode == SELECT_ADD) face.Select(); else face.Unselect();
+			if (binside)
+			{
+				if (mode == SELECT_ADD) face.Select(); else face.Unselect();
+			}
 		}
 	}
 
@@ -1437,21 +1444,29 @@ void CGLView::RegionSelectNodes(const SelectRegion& region, int mode)
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
 	FEMeshBase* pm = pdoc->GetActiveMesh();
+	int NN = pm->Nodes();
 
 	makeCurrent();
 	WorldToScreen transform(this);
 
-	int NN = pm->Nodes();
+//	if (view.m_bcull)
+	{
+		TagBackfacingNodes(*pm);
+	}
+	
 	for (int i = 0; i<NN; ++i)
 	{
 		FENode& node = pm->Node(i);
-		vec3f r = node.m_rt;
-
-		vec3f p = transform.Apply(r);
-
-		if (region.IsInside((int) p.x / m_dpr, (int) p.y / m_dpr))
+		if (node.m_ntag == 0)
 		{
-			if (mode == SELECT_ADD) node.Select(); else node.Unselect();
+			vec3f r = node.m_rt;
+
+			vec3f p = transform.Apply(r);
+
+			if (region.IsInside((int) p.x / m_dpr, (int) p.y / m_dpr))
+			{
+				if (mode == SELECT_ADD) node.Select(); else node.Unselect();
+			}
 		}
 	}
 
@@ -1473,21 +1488,29 @@ void CGLView::RegionSelectEdges(const SelectRegion& region, int mode)
 	makeCurrent();
 	WorldToScreen transform(this);
 
+//	if (view.m_bcull)
+	{
+		TagBackfacingEdges(*pm);
+	}
+
 	int NE = pm->Edges();
 	for (int i = 0; i<NE; ++i)
 	{
 		FEEdge& edge = pm->Edge(i);
 
-		vec3f r0 = pm->Node(edge.node[0]).m_rt;
-		vec3f r1 = pm->Node(edge.node[1]).m_rt;
-
-		vec3f p0 = transform.Apply(r0);
-		vec3f p1 = transform.Apply(r1);
-
-		if (region.IsInside((int)p0.x / m_dpr, (int)p0.y / m_dpr) ||
-			region.IsInside((int)p1.x / m_dpr, (int)p1.y / m_dpr))
+		if (edge.m_ntag == 0)
 		{
-			if (mode == SELECT_ADD) edge.Select(); else edge.Unselect();
+			vec3f r0 = pm->Node(edge.node[0]).m_rt;
+			vec3f r1 = pm->Node(edge.node[1]).m_rt;
+
+			vec3f p0 = transform.Apply(r0);
+			vec3f p1 = transform.Apply(r1);
+
+			if (region.IsInside((int)p0.x / m_dpr, (int)p0.y / m_dpr) ||
+				region.IsInside((int)p1.x / m_dpr, (int)p1.y / m_dpr))
+			{
+				if (mode == SELECT_ADD) edge.Select(); else edge.Unselect();
+			}
 		}
 	}
 
@@ -1566,6 +1589,103 @@ void CGLView::SelectElements(int x0, int y0, int x1, int y1, int mode)
 	else m_wnd->ClearStatusMessage();
 
 	mdl.UpdateSelectionLists(SELECT_ELEMS);
+}
+
+//-----------------------------------------------------------------------------
+bool IsBackfacing(const vec3f r[3])
+{
+	bool b = ((r[1].x - r[0].x)*(r[2].y - r[0].y) - (r[1].y - r[0].y)*(r[2].x - r[0].x)) >= 0.f;
+	return b;
+}
+
+void CGLView::TagBackfacingFaces(FEMeshBase& mesh)
+{
+	WorldToScreen transform(this);
+
+	vec3f r[4], p1[3], p2[3];
+	int NF = mesh.Faces();
+	for (int i=0; i<NF; ++i)
+	{
+		FEFace& f = mesh.Face(i);
+
+		switch (f.m_ntype)
+		{
+		case FACE_TRI3:
+		case FACE_TRI6:
+		case FACE_TRI7:
+		case FACE_TRI10:
+			{
+				r[0] = mesh.Node(f.node[0]).m_rt;
+				r[1] = mesh.Node(f.node[1]).m_rt;
+				r[2] = mesh.Node(f.node[2]).m_rt;
+
+				p1[0] = transform.Apply(r[0]);
+				p1[1] = transform.Apply(r[1]);
+				p1[2] = transform.Apply(r[2]);
+
+				if (IsBackfacing(p1)) f.m_ntag = 1;
+				else f.m_ntag = 0;
+			}
+			break;
+		case FACE_QUAD4:
+		case FACE_QUAD8:
+		case FACE_QUAD9:
+			{
+				r[0] = mesh.Node(f.node[0]).m_rt;
+				r[1] = mesh.Node(f.node[1]).m_rt;
+				r[2] = mesh.Node(f.node[2]).m_rt;
+				r[3] = mesh.Node(f.node[3]).m_rt;
+
+				p1[0] = transform.Apply(r[0]);
+				p1[1] = transform.Apply(r[1]);
+				p1[2] = transform.Apply(r[2]);
+
+				p2[0] = p1[2];
+				p2[1] = transform.Apply(r[3]);
+				p2[2] = p1[0];
+
+				if (IsBackfacing(p1) && IsBackfacing(p2)) f.m_ntag = 1;
+				else f.m_ntag = 0;
+			}
+			break;
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+void CGLView::TagBackfacingNodes(FEMeshBase& mesh)
+{
+	int NN = mesh.Nodes();
+	for (int i = 0; i<NN; ++i) mesh.Node(i).m_ntag = 1;
+
+	TagBackfacingFaces(mesh);
+
+	int NF = mesh.Faces();
+	for (int i = 0; i<NF; ++i)
+	{
+		FEFace& f = mesh.Face(i);
+		if (f.m_ntag == 0)
+		{
+			int nn = f.Nodes();
+			for (int i = 0; i<nn; ++i) mesh.Node(f.node[i]).m_ntag = 0;
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+void CGLView::TagBackfacingEdges(FEMeshBase& mesh)
+{
+	int NE = mesh.Edges();
+	for (int i = 0; i<NE; ++i) mesh.Edge(i).m_ntag = 1;
+
+	TagBackfacingNodes(mesh);
+
+	for (int i = 0; i<NE; ++i)
+	{
+		FEEdge& e = mesh.Edge(i);
+		if ((mesh.Node(e.node[0]).m_ntag == 0) || (mesh.Node(e.node[1]).m_ntag == 0))
+			e.m_ntag = 0;
+	}
 }
 
 //-----------------------------------------------------------------------------

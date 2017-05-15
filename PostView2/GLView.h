@@ -195,6 +195,10 @@ protected:
 	void RegionSelectNodes   (const SelectRegion& region, int mode);
 	void RegionSelectEdges   (const SelectRegion& region, int mode);
 
+	void TagBackfacingFaces(FEMeshBase& mesh);
+	void TagBackfacingNodes(FEMeshBase& mesh);
+	void TagBackfacingEdges(FEMeshBase& mesh);
+
 	void AddRegionPoint(int x, int y);
 
 	//! Render the tags on the selected items
