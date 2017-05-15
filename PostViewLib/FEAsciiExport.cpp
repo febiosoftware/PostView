@@ -144,6 +144,9 @@ bool FEASCIIExport::Save(FEModel* pfem, int n0, int n1, const char* szfile)
 			case FE_HEX8:
 				fprintf(fp, "%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d\n", i + 1, n[0], n[1], n[2], n[3], n[4], n[5], n[6], n[7]);
 				break;
+			case FE_PYRA5:
+				fprintf(fp, "%8d,%8d,%8d,%8d,%8d,%8d\n", i + 1, n[0], n[1], n[2], n[3], n[4]);
+				break;
 			case FE_HEX20:
 				fprintf(fp, "%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d,%8d\n", i + 1, n[0], n[1], n[2], n[3], n[4], n[5], n[6], n[7], n[8], n[9], n[10], n[11], n[12], n[13], n[14], n[15], n[16], n[17], n[18], n[19]);
 				break;

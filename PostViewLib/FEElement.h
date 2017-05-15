@@ -31,6 +31,7 @@ enum FEElemType {
     FE_HEX8,
 	FE_HEX20,
 	FE_HEX27,
+	FE_PYRA5
 };
 
 //-----------------------------------------------------------------------------
@@ -296,7 +297,7 @@ public:
 	void GetFace(int i, FEFace& face) const;
 	FEEdge GetEdge(int i) const;
 
-	bool IsSolid() { return ((m_ntype == FE_HEX8  ) || (m_ntype == FE_HEX20 ) || (m_ntype == FE_TET4) || (m_ntype == FE_PENTA6) || (m_ntype == FE_TET10) || (m_ntype == FE_TET15) || (m_ntype == FE_TET20) || (m_ntype == FE_HEX27) || (m_ntype == FE_PENTA15)); }
+	bool IsSolid() { return ((m_ntype == FE_HEX8  ) || (m_ntype == FE_HEX20 ) || (m_ntype == FE_TET4) || (m_ntype == FE_PENTA6) || (m_ntype == FE_TET10) || (m_ntype == FE_TET15) || (m_ntype == FE_TET20) || (m_ntype == FE_HEX27) || (m_ntype == FE_PENTA15) || (m_ntype == FE_PYRA5)); }
 	bool IsShell() { return ((m_ntype == FE_QUAD4 ) || (m_ntype == FE_QUAD8 ) || (m_ntype == FE_QUAD9 ) || (m_ntype == FE_TRI3) || (m_ntype == FE_TRI6)); }
 	bool IsBeam () { return ((m_ntype == FE_LINE2) || (m_ntype == FE_LINE3)); }
 
@@ -354,6 +355,7 @@ template <> class FEElementTraits<FE_PENTA15>{ public: enum {Nodes = 15}; enum {
 template <> class FEElementTraits<FE_HEX8   >{ public: enum {Nodes =  8}; enum {Faces = 6}; enum {Edges = 0}; static FEElemType Type() { return FE_HEX8  ; }};
 template <> class FEElementTraits<FE_HEX20  >{ public: enum {Nodes = 20}; enum {Faces = 6}; enum {Edges = 0}; static FEElemType Type() { return FE_HEX20 ; }};
 template <> class FEElementTraits<FE_HEX27  >{ public: enum {Nodes = 27}; enum {Faces = 6}; enum {Edges = 0}; static FEElemType Type() { return FE_HEX27 ; }};
+template <> class FEElementTraits<FE_PYRA5  >{ public: enum {Nodes =  5}; enum {Faces = 5}; enum {Edges = 0}; static FEElemType Type() { return FE_PYRA5 ; }};
 
 template <class T> class FEElementBase : public FEElement
 {
@@ -402,6 +404,7 @@ typedef FEElementBase< FEElementTraits<FE_PENTA15> > FEPenta15;
 typedef FEElementBase< FEElementTraits<FE_HEX8   > > FEHex8;
 typedef FEElementBase< FEElementTraits<FE_HEX20  > > FEHex20;
 typedef FEElementBase< FEElementTraits<FE_HEX27  > > FEHex27;
+typedef FEElementBase< FEElementTraits<FE_PYRA5  > > FEPyra5;
 
 //-----------------------------------------------------------------------------
 // Generice element class that can represent any of the supported element classes

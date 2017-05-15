@@ -149,9 +149,10 @@ public:
 
 	// element volume
 	float ElementVolume(int iel);
-	float HexVolume  (const FEElement& el);
-	float PentaVolume(const FEElement& el);
-	float TetVolume  (const FEElement& el);
+	float HexVolume    (const FEElement& el);
+	float PentaVolume  (const FEElement& el);
+	float TetVolume    (const FEElement& el);
+	float PyramidVolume(const FEElement& el);
 
 	// --- I N T E G R A T E ---
 	float IntegrateQuad(vec3f* r, float* v);

@@ -22,6 +22,13 @@ int FT_PENTA[5][4] = {
 	{2, 1, 0, 0},
 	{3, 4, 5, 5}};
 
+int FT_PYRA[5][4] = {
+	{ 0, 1, 4, -1 },
+	{ 1, 2, 4, -1 },
+	{ 2, 3, 4, -1 },
+	{ 3, 0, 4, -1 },
+	{ 3, 2, 1, 0 }};
+
 int FT_TET[4][4] = {
 	{2, 1, 0, 0},
 	{0, 1, 3, 3},
@@ -362,6 +369,7 @@ void FEGenericElement::SetType(FEElemType type)
     case FE_HEX8   : m_nodes = FEElementTraits<FE_HEX8   >::Nodes; m_faces = FEElementTraits<FE_HEX8   >::Faces; m_edges = FEElementTraits<FE_HEX8   >::Edges; break;
 	case FE_HEX20  : m_nodes = FEElementTraits<FE_HEX20  >::Nodes; m_faces = FEElementTraits<FE_HEX20  >::Faces; m_edges = FEElementTraits<FE_HEX20  >::Edges; break;
 	case FE_HEX27  : m_nodes = FEElementTraits<FE_HEX27  >::Nodes; m_faces = FEElementTraits<FE_HEX27  >::Faces; m_edges = FEElementTraits<FE_HEX27  >::Edges; break;
+	case FE_PYRA5  : m_nodes = FEElementTraits<FE_PYRA5  >::Nodes; m_faces = FEElementTraits<FE_PYRA5  >::Faces; m_edges = FEElementTraits<FE_PYRA5  >::Edges; break;
 	default:
 		assert(false);
 		m_nodes = 0;
@@ -411,6 +419,7 @@ void FELinearElement::SetType(FEElemType type)
 	case FE_PENTA6 : m_nodes = FEElementTraits<FE_PENTA6 >::Nodes; m_faces = FEElementTraits<FE_PENTA6 >::Faces; m_edges = FEElementTraits<FE_PENTA6 >::Edges; break;
     case FE_PENTA15: m_nodes = FEElementTraits<FE_PENTA15>::Nodes; m_faces = FEElementTraits<FE_PENTA15>::Faces; m_edges = FEElementTraits<FE_PENTA15>::Edges; break;
 	case FE_HEX8   : m_nodes = FEElementTraits<FE_HEX8   >::Nodes; m_faces = FEElementTraits<FE_HEX8   >::Faces; m_edges = FEElementTraits<FE_HEX8   >::Edges; break;
+	case FE_PYRA5  : m_nodes = FEElementTraits<FE_PYRA5  >::Nodes; m_faces = FEElementTraits<FE_PYRA5  >::Faces; m_edges = FEElementTraits<FE_PYRA5  >::Edges; break;
 	default:
 		assert(false);
 		m_nodes = 0;
@@ -541,6 +550,17 @@ void FEElement::GetFace(int i, FEFace& f) const
 		f.node[8] = m_node[FT_TET20[i][8]];
 		f.node[9] = m_node[FT_TET20[i][9]];
 		break;
+
+	case FE_PYRA5:
+		{
+			const int ft[5] = { FACE_TRI3, FACE_TRI3, FACE_TRI3, FACE_TRI3, FACE_QUAD4 };
+			f.m_ntype = ft[i];
+			f.node[0] = m_node[FT_PYRA[i][0]];
+			f.node[1] = m_node[FT_PYRA[i][1]];
+			f.node[2] = m_node[FT_PYRA[i][2]];
+			f.node[3] = m_node[FT_PYRA[i][3]];
+		}
+		break;
     
     case FE_PENTA15:
         {
@@ -616,6 +636,13 @@ bool FEElement::operator != (FEElement& e)
 			(m_node[4] != e.m_node[4]) ||
 			(m_node[5] != e.m_node[5])) return true;
 		break;
+	case FE_PYRA5:
+		if ((m_node[0] != e.m_node[0]) ||
+			(m_node[1] != e.m_node[1]) ||
+			(m_node[2] != e.m_node[2]) ||
+			(m_node[3] != e.m_node[3]) ||
+			(m_node[4] != e.m_node[4])) return true;
+		break;
 	case FE_TET4:
 	case FE_QUAD4:
     case FE_QUAD8:
@@ -673,6 +700,15 @@ void FEElement::shape(double *H, double r, double s, double t)
 			H[5] = 0.125*(1 + r)*(1 - s)*(1 + t);
 			H[6] = 0.125*(1 + r)*(1 + s)*(1 + t);
 			H[7] = 0.125*(1 - r)*(1 + s)*(1 + t);
+		}
+		break;
+	case FE_PYRA5:
+		{
+			H[0] = 0.125*(1.0 - r)*(1.0 - s)*(1.0 - t);
+			H[1] = 0.125*(1.0 + r)*(1.0 - s)*(1.0 - t);
+			H[2] = 0.125*(1.0 + r)*(1.0 + s)*(1.0 - t);
+			H[3] = 0.125*(1.0 - r)*(1.0 + s)*(1.0 - t);
+			H[4] = 0.5*(1.0 + t);
 		}
 		break;
 	case FE_TET10:
@@ -894,6 +930,27 @@ void FEElement::shape_deriv(double* Hr, double* Hs, double* Ht, double r, double
 			Hr[5] =  0.125*(1 - s)*(1 + t);	Hs[5] = -0.125*(1 + r)*(1 + t);	Ht[5] =  0.125*(1 + r)*(1 - s);
 			Hr[6] =  0.125*(1 + s)*(1 + t);	Hs[6] =  0.125*(1 + r)*(1 + t);	Ht[6] =  0.125*(1 + r)*(1 + s);
 			Hr[7] = -0.125*(1 + s)*(1 + t);	Hs[7] =  0.125*(1 - r)*(1 + t);	Ht[7] =  0.125*(1 - r)*(1 + s);
+		}
+		break;
+	case FE_PYRA5:
+		{
+			Hr[0] = -0.125*(1.0 - s)*(1.0 - t);
+			Hr[1] =  0.125*(1.0 - s)*(1.0 - t);
+			Hr[2] =  0.125*(1.0 + s)*(1.0 - t);
+			Hr[3] = -0.125*(1.0 + s)*(1.0 - t);
+			Hr[4] =  0.0;
+
+			Hs[0] = -0.125*(1.0 - r)*(1.0 - t);
+			Hs[1] = -0.125*(1.0 + r)*(1.0 - t);
+			Hs[2] =  0.125*(1.0 + r)*(1.0 - t);
+			Hs[3] =  0.125*(1.0 - r)*(1.0 - t);
+			Hs[4] =  0.0;
+
+			Ht[0] = -0.125*(1.0 - r)*(1.0 - s);
+			Ht[1] = -0.125*(1.0 + r)*(1.0 - s);
+			Ht[2] = -0.125*(1.0 + r)*(1.0 + s);
+			Ht[3] = -0.125*(1.0 - r)*(1.0 + s);
+			Ht[4] =  0.5;
 		}
 		break;
 	case FE_TET10:
@@ -1276,6 +1333,19 @@ void FEElement::iso_coord(int n, double q[3])
 			case 5: q[0] =  1; q[1] = -1; q[2] =  1; break;
 			case 6: q[0] =  1; q[1] =  1; q[2] =  1; break;
 			case 7: q[0] = -1; q[1] =  1; q[2] =  1; break;
+			}
+		}
+		break;
+	case FE_PYRA5:
+		{
+			switch (n)
+			{
+			case -1: q[0] = 0.0; q[1] = 0.0; q[2] = 0.0; break;
+			case 0: q[0] =-1.0; q[1] =-1.0; q[2] =-1.0; break;
+			case 1: q[0] = 1.0; q[1] =-1.0; q[2] =-1.0; break;
+			case 2: q[0] = 1.0; q[1] = 1.0; q[2] =-1.0; break;
+			case 3: q[0] =-1.0; q[1] = 1.0; q[2] =-1.0; break;
+			case 4: q[0] = 0.0; q[1] = 0.0; q[2] = 1.0; break;
 			}
 		}
 		break;

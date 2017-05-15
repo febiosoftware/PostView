@@ -17,6 +17,7 @@ extern int ET2D[4][2];
 const int HEX_NT[8] = {0, 1, 2, 3, 4, 5, 6, 7};
 const int PEN_NT[8] = {0, 1, 2, 2, 3, 4, 5, 5};
 const int TET_NT[8] = {0, 1, 2, 2, 3, 3, 3, 3};
+const int PYR_NT[8] = {0, 1, 2, 3, 4, 4, 4, 4};
 
 class CPlaneCutProps : public CPropertyList
 {
@@ -550,6 +551,7 @@ void CGLPlaneCutPlot::UpdateSlice()
 							case FE_TET10  : nt = TET_NT; break;
 							case FE_TET15  : nt = TET_NT; break;
 							case FE_TET20  : nt = TET_NT; break;
+							case FE_PYRA5  : nt = PYR_NT; break;
 							}
 	
 							// get the nodal values

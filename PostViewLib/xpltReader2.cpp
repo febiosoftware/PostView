@@ -692,6 +692,7 @@ bool XpltReader2::ReadDomainSection(FEModel &fem)
                     case PLT_ELEM_TRI6   : ne =  6; break;
                     case PLT_ELEM_QUAD8  : ne =  8; break;
                     case PLT_ELEM_QUAD9  : ne =  9; break;
+					case PLT_ELEM_PYRA5  : ne =  5; break;
 					default:
 						assert(false);
 						return errf("Error while reading Domain section");
@@ -888,7 +889,8 @@ bool XpltReader2::BuildMesh(FEModel &fem)
 			(domType != PLT_ELEM_QUAD) && 
 			(domType != PLT_ELEM_TET) && 
 			(domType != PLT_ELEM_PENTA) && 
-			(domType != PLT_ELEM_HEX8)) blinear = false;
+			(domType != PLT_ELEM_HEX8) &&
+			(domType != PLT_ELEM_PYRA5)) blinear = false;
 	}
 
 	FEMeshBase* pmesh = 0;
@@ -961,6 +963,7 @@ bool XpltReader2::BuildMesh(FEModel &fem)
 					case PLT_ELEM_QUAD : etype = FE_QUAD4 ; break;
 					case PLT_ELEM_TRI  : etype = FE_TRI3  ; break;
 					case PLT_ELEM_TRUSS: etype = FE_LINE2 ; break;
+					case PLT_ELEM_PYRA5: etype = FE_PYRA5 ; break;
 					default:
 						assert(false);
 						return false;
@@ -1006,6 +1009,7 @@ bool XpltReader2::BuildMesh(FEModel &fem)
 					case PLT_ELEM_TRI6   : etype = FE_TRI6  ; break;
 					case PLT_ELEM_QUAD8  : etype = FE_QUAD8 ; break;
 					case PLT_ELEM_QUAD9  : etype = FE_QUAD9 ; break;
+					case PLT_ELEM_PYRA5  : etype = FE_PYRA5 ; break;
 					}
 					el.SetType(etype);
 					int ne = el.Nodes();
@@ -1385,6 +1389,7 @@ bool XpltReader2::ReadElemData_NODE(FEMeshBase& m, XpltReader2::Domain &d, FEMes
     case PLT_ELEM_TRI6   : ne =  6; break;
     case PLT_ELEM_QUAD8  : ne =  8; break;
     case PLT_ELEM_QUAD9  : ne =  9; break;
+	case PLT_ELEM_PYRA5  : ne =  5; break;
 	default:
 		assert(false);
 		return errf("Error while reading element data");
@@ -1559,6 +1564,7 @@ bool XpltReader2::ReadElemData_MULT(XpltReader2::Domain& dom, FEMeshData& s, int
     case PLT_ELEM_TRI6   : ne =  6; break;
     case PLT_ELEM_QUAD8  : ne =  8; break;
     case PLT_ELEM_QUAD9  : ne =  9; break;
+	case PLT_ELEM_PYRA5  : ne =  5; break;
 	default:
 		assert(false);
 		return errf("Error while reading element data");

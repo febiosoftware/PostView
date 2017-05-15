@@ -914,6 +914,7 @@ float FEMeshBase::ElementVolume(int iel)
 	case FE_TET4   : return TetVolume(el); break;
 	case FE_PENTA6 : return PentaVolume(el); break;
     case FE_PENTA15: return PentaVolume(el); break;
+	case FE_PYRA5  : return PyramidVolume(el); break;
     }
 
 	return 0.f;
@@ -1148,6 +1149,110 @@ float FEMeshBase::PentaVolume(const FEElement& el)
 }
 
 //-----------------------------------------------------------------------------
+// Calculate the volume of a pyramid element
+float FEMeshBase::PyramidVolume(const FEElement& el)
+{
+	assert(el.Type() == FE_PYRA5);
+
+	// gauss-point data
+	const float a = 1.f / (float)sqrt(3.0);
+	const int NELN = 5;
+	const int NINT = 8;
+	static float gr[NINT] = { -a, a, a, -a, -a, a, a, -a };
+	static float gs[NINT] = { -a, -a, a, a, -a, -a, a, a };
+	static float gt[NINT] = { -a, -a, -a, -a, a, a, a, a };
+	static float gw[NINT] = { 1, 1, 1, 1, 1, 1, 1, 1 };
+
+	static float H[NINT][NELN] = { 0 };
+	static float Gr[NINT][NELN] = { 0 };
+	static float Gs[NINT][NELN] = { 0 };
+	static float Gt[NINT][NELN] = { 0 };
+	static bool bfirst = true;
+
+	if (bfirst)
+	{
+		int n;
+
+		// calculate shape function values at gauss points
+		for (n = 0; n<NINT; ++n)
+		{
+			H[n][0] = 0.125f*(1 - gr[n])*(1 - gs[n])*(1 - gt[n]);
+			H[n][1] = 0.125f*(1 + gr[n])*(1 - gs[n])*(1 - gt[n]);
+			H[n][2] = 0.125f*(1 + gr[n])*(1 + gs[n])*(1 - gt[n]);
+			H[n][3] = 0.125f*(1 - gr[n])*(1 + gs[n])*(1 - gt[n]);
+			H[n][4] = 0.5f*(1 + gt[n]);
+		}
+
+		// calculate local derivatives of shape functions at gauss points
+		for (n = 0; n<NINT; ++n)
+		{
+			float r = gr[n], s = gs[n], t = gt[n];
+			Gr[n][0] = -0.125f*(1.f - s)*(1.f - t);
+			Gr[n][1] =  0.125f*(1.f - s)*(1.f - t);
+			Gr[n][2] =  0.125f*(1.f + s)*(1.f - t);
+			Gr[n][3] = -0.125f*(1.f + s)*(1.f - t);
+			Gr[n][4] = 0.f;
+
+			Gs[n][0] = -0.125f*(1.f - r)*(1.f - t);
+			Gs[n][1] = -0.125f*(1.f + r)*(1.f - t);
+			Gs[n][2] =  0.125f*(1.f + r)*(1.f - t);
+			Gs[n][3] =  0.125f*(1.f - r)*(1.f - t);
+			Gs[n][4] =  0.f;
+
+			Gt[n][0] = -0.125f*(1.f - r)*(1.f - s);
+			Gt[n][1] = -0.125f*(1.f + r)*(1.f - s);
+			Gt[n][2] = -0.125f*(1.f + r)*(1.f + s);
+			Gt[n][3] = -0.125f*(1.f - r)*(1.f + s);
+			Gt[n][4] = 0.5f;
+		}
+
+		bfirst = false;
+	}
+
+	float *Grn, *Gsn, *Gtn;
+	float vol = 0, detJ;
+	float J[3][3];
+	int i, n;
+
+	vec3f rt[NELN];
+	for (i = 0; i<NELN; ++i) rt[i] = m_Node[el.m_node[i]].m_rt;
+
+	for (n = 0; n<NINT; ++n)
+	{
+		Grn = Gr[n];
+		Gsn = Gs[n];
+		Gtn = Gt[n];
+
+		J[0][0] = J[0][1] = J[0][2] = 0.0;
+		J[1][0] = J[1][1] = J[1][2] = 0.0;
+		J[2][0] = J[2][1] = J[2][2] = 0.0;
+		for (i = 0; i<NELN; ++i)
+		{
+			const float& Gri = Grn[i];
+			const float& Gsi = Gsn[i];
+			const float& Gti = Gtn[i];
+
+			const float& x = rt[i].x;
+			const float& y = rt[i].y;
+			const float& z = rt[i].z;
+
+			J[0][0] += Gri*x; J[0][1] += Gsi*x; J[0][2] += Gti*x;
+			J[1][0] += Gri*y; J[1][1] += Gsi*y; J[1][2] += Gti*y;
+			J[2][0] += Gri*z; J[2][1] += Gsi*z; J[2][2] += Gti*z;
+		}
+
+		// calculate the determinant
+		detJ = J[0][0] * (J[1][1] * J[2][2] - J[1][2] * J[2][1])
+			+ J[0][1] * (J[1][2] * J[2][0] - J[2][2] * J[1][0])
+			+ J[0][2] * (J[1][0] * J[2][1] - J[1][1] * J[2][0]);
+
+		vol += detJ*gw[n];
+	}
+
+	return vol;
+}
+
+//-----------------------------------------------------------------------------
 // Calculate the volume of a tetrahedral element
 float FEMeshBase::TetVolume(const FEElement& el)
 {
@@ -1332,6 +1437,7 @@ bool IsInsideElement(FEElement& el, double r[3], const double tol)
 	case FE_HEX8:
 	case FE_HEX20:
 	case FE_HEX27:
+	case FE_PYRA5:
 		return ((r[0]>=-1.0-tol)&&(r[0]<= 1.0+tol)&&
 			    (r[1]>=-1.0-tol)&&(r[1]<= 1.0+tol)&&
 				(r[2]>=-1.0-tol)&&(r[2]<= 1.0+tol));

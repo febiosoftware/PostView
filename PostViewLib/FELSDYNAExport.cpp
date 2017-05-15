@@ -248,6 +248,13 @@ bool FELSDYNAExport::ExportMesh(FEModel& fem, int ntime, const char* szfile)
 						n[6] = e.m_node[6];
 						n[7] = e.m_node[7];
 						break;
+					case FE_PYRA5:
+						n[0] = e.m_node[0];
+						n[1] = e.m_node[1];
+						n[2] = e.m_node[2];
+						n[3] = e.m_node[3];
+						n[4] = e.m_node[4];
+						break;
 					}
 					for (j=0; j<8; ++j) n[j] = m.Node(n[j]).m_ntag;
 					fprintf(fp, "%8d%8d%8d%8d%8d%8d%8d%8d%8d%8d\n", i+1, e.m_MatID+1, n[0], n[1], n[2], n[3], n[4], n[5], n[6], n[7]);
