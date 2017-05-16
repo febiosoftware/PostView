@@ -1,8 +1,8 @@
 #pragma once
-#include "Animation.h"
+#include <PostViewLib/Animation.h>
 #ifdef WIN32
-#include <Windows.h>
 #include <vfw.h>
+
 //-----------------------------------------------------------------------------
 //! Base class for creating animation
 class CAVIAnimation : public CAnimation
@@ -12,7 +12,7 @@ public:
 
 public:
 	int Create(const char* szAVIFile, int cx, int cy, float fps = 10.f);
-	int Write(CRGBImage& im);
+	int Write(QImage& im);
 	void Close();
 	bool IsValid() { return (m_pfile != NULL); }
 
@@ -26,6 +26,10 @@ protected:
 
 	int			m_cx;		// width of animation rectangle
 	int			m_cy;		// height of animation rectangle
+
+	unsigned char*	m_buf;		// pixel buffer
+	int				m_bufSize;	// buffer size
+	int				m_bufLine;	// bytes per line (must be multiple of 4!)
 
 	AVISTREAMINFO		m_ai;
 	BITMAPINFOHEADER	m_bmi;

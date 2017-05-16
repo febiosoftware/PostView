@@ -194,7 +194,6 @@
     <ClInclude Include="..\..\PostViewLib\3DImage.h" />
     <ClInclude Include="..\..\PostViewLib\Animation.h" />
     <ClInclude Include="..\..\PostViewLib\Archive.h" />
-    <ClInclude Include="..\..\PostViewLib\AVIAnimation.h" />
     <ClInclude Include="..\..\PostViewLib\bbox.h" />
     <ClInclude Include="..\..\PostViewLib\color.h" />
     <ClInclude Include="..\..\PostViewLib\ColorMap.h" />
@@ -265,7 +264,6 @@
     <ClCompile Include="..\..\PostViewLib\3DImage.cpp" />
     <ClCompile Include="..\..\PostViewLib\Animation.cpp" />
     <ClCompile Include="..\..\PostViewLib\Archive.cpp" />
-    <ClCompile Include="..\..\PostViewLib\AVIAnimation.cpp" />
     <ClCompile Include="..\..\PostViewLib\bbox.cpp" />
     <ClCompile Include="..\..\PostViewLib\ColorMap.cpp" />
     <ClCompile Include="..\..\PostViewLib\DataFilter.cpp" />

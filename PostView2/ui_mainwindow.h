@@ -124,6 +124,9 @@ public:
 		// build the menu
 		buildMenu(MainWindow);
 
+		// set default tab position
+		MainWindow->setTabPosition(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea, QTabWidget::North);
+
 		// build the dockable windows
 		// (must be done after menu is created)
 		buildDockWidgets(MainWindow);

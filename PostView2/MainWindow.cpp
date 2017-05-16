@@ -42,6 +42,9 @@
 #include "DlgExportAscii.h"
 #include "version.h"
 #include "convert.h"
+#include "ImgAnimation.h"
+#include "AVIAnimation.h"
+#include "MPEGAnimation.h"
 #include <string>
 
 CFileThread::CFileThread(CMainWindow* wnd, FEFileReader* file, const QString& fileName) : m_wnd(wnd), m_fileReader(file), m_fileName(fileName)
@@ -1666,4 +1669,96 @@ void CMainWindow::on_actionAbout_triggered()
 {
 	QString txt = QString("<h1>PostView</h1><p>version %1.%2.%3</p><p>Musculoskeletal Research Laboratories, University of Utah</p><p> Copyright (c) 2005 - 2017, All rights reserved</p>").arg(VERSION).arg(SUBVERSION).arg(SUBSUBVERSION);
 	QMessageBox::information(this, "About PostView2", txt, QMessageBox::Close);
+}
+
+void CMainWindow::on_actionRecordNew_triggered()
+{
+#ifdef WIN32
+	int noff = 1;
+	QStringList filters;
+	filters << "Windows AVI files (*.avi)"
+			<< "Bitmap files (*.bmp)"
+			<< "JPG files (*.jpg)"
+			<< "PNG files (*.png)"
+			<< "MPG files (*.mpg)";
+#else
+	int noff = 0;
+	QStringList filters;
+	filters << "Bitmap files (*.bmp)"
+			<< "JPG files (*.jpg)"
+			<< "Tiff files (*.tiff)"
+			<< "MPG files (*.mpg)";
+#endif
+
+	QFileDialog dlg(this, "Save");
+	dlg.setNameFilters(filters);
+	dlg.setFileMode(QFileDialog::AnyFile);
+	dlg.setAcceptMode(QFileDialog::AcceptSave);
+	if (dlg.exec())
+	{
+		QString fileName = dlg.selectedFiles().first();
+		string sfile = fileName.toStdString();
+		char szfilename[512] = {0};
+		sprintf(szfilename, "%s", sfile.c_str());
+		int l = sfile.length();
+		char* ch = strrchr(szfilename, '.');
+
+		int nfilter = filters.indexOf(dlg.selectedNameFilter());
+
+		CAnimation* panim = 0;
+#ifdef WIN32
+		if (nfilter == 0)
+		{
+			panim = new CAVIAnimation;
+			if (ch == 0) sprintf(szfilename + l, ".avi");
+			ui->glview->NewAnimation(szfilename, panim, GL_BGR_EXT);
+		}
+		else if (nfilter == noff)
+#else
+		if (nfilter == noff)
+#endif
+		{
+			panim = new CBmpAnimation;
+			if (ch == 0) sprintf(szfilename + l, ".bmp");
+			ui->glview->NewAnimation(szfilename, panim);
+		}
+		else if (nfilter == noff + 1)
+		{
+			panim = new CJpgAnimation;
+			if (ch == 0) sprintf(szfilename + l, ".jpg");
+			ui->glview->NewAnimation(szfilename, panim);
+		}
+		else if (nfilter == noff + 2)
+		{
+			panim = new CPNGAnimation;
+			if (ch == 0) sprintf(szfilename + l, ".png");
+			ui->glview->NewAnimation(szfilename, panim);
+		}
+		else if (nfilter == noff + 3)
+		{
+#ifdef FFMPEG
+			panim = new CMPEGAnimation;
+			if (ch == 0) sprintf(szfilename + l, ".mpg");
+			m_pGLView->NewAnimation(szfilename, panim);
+#else
+			QMessageBox::critical(this, "PostView2", "This video format is not supported in this version");
+#endif
+		}
+		RedrawGL();
+	}
+}
+
+void CMainWindow::on_actionRecordStart_triggered()
+{
+	ui->glview->StartAnimation();
+}
+
+void CMainWindow::on_actionRecordPause_triggered()
+{
+	ui->glview->PauseAnimation();
+}
+
+void CMainWindow::on_actionRecordStop_triggered()
+{
+	ui->glview->StopAnimation();
 }

@@ -266,7 +266,7 @@ int CGLView::GetProjectionMode()
 void CGLView::initializeGL()
 {
 	GLfloat ones[] = {1.f, 1.f, 1.f, 1.f};
-	glClearColor(1.f, 0.f, 0.f, 1.f);
+	glClearColor(1.f, 0.f, 0.5f, 1.f);
 
 	VIEWSETTINGS& view = GetDocument()->GetViewSettings();
 
@@ -388,14 +388,6 @@ void CGLView::setupProjectionMatrix()
 
 void CGLView::paintGL()
 {
-/*	if (m_nanim == ANIM_RECORDING)
-	{
-		assert(m_panim);
-		CRGBImage im;
-		CaptureScreen(&im, m_video_fmt);
-		m_panim->Write(im);
-	}
-*/
 	// clear the Graphics view
 	// This renders the background
 	Clear();
@@ -405,74 +397,82 @@ void CGLView::paintGL()
 
 	// get the document
 	CDocument* pdoc = m_wnd->GetDocument();
-	if (pdoc->IsValid() == false) return;
-
-	// get the scene's view settings
-	VIEWSETTINGS view = pdoc->GetViewSettings();
-
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	glPointSize(view.m_fpointsize);
-	glLineWidth(view.m_flinethick);
-
-	// turn on/off lighting
-	if (view.m_bLighting)
-		glEnable(GL_LIGHTING);
-	else
-		glDisable(GL_LIGHTING);
-
-	// setup the projection matrix
-	setupProjectionMatrix();
-
-	// set the model_view matrix mode
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	// position the light
-	vec3f lp = pdoc->GetLightPosition();
-	GLfloat fv[4] = {0};
-	fv[0] = lp.x; fv[1] = lp.y; fv[2] = lp.z;
-	glLightfv(GL_LIGHT0, GL_POSITION, fv);
-
-	// position the camera
-	PositionCam();
-
-	// render the model
-	if (pdoc->IsValid()) RenderModel();
-
-	// render the tracking
-	if (m_btrack) RenderTrack();
-
-	// render the tags
-	if (view.m_bTags && pdoc->IsValid()) RenderTags();
-
-	// give the command window a chance to render stuff
-	CGLContext cgl(this);
-	cgl.m_x = cgl.m_y = 0;
-
-	// set the projection matrix to ortho2d so we can draw some stuff on the screen
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluOrtho2D(0, width(), height(), 0);
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	RenderWidgets();
-
-	// render the selection rectangle
-	if (m_bdrag) RenderRubberBand();
-
-	if (m_nanim != ANIM_STOPPED)
+	if (pdoc->IsValid())
 	{
-		glPushAttrib(GL_ENABLE_BIT);
-		glDisable(GL_DEPTH_TEST);
-		glDisable(GL_LIGHTING);
-		int x = width()-200;
-		int y = height()-40;
-		glPopAttrib();
+		// get the scene's view settings
+		VIEWSETTINGS view = pdoc->GetViewSettings();
+
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		glPointSize(view.m_fpointsize);
+		glLineWidth(view.m_flinethick);
+
+		// turn on/off lighting
+		if (view.m_bLighting)
+			glEnable(GL_LIGHTING);
+		else
+			glDisable(GL_LIGHTING);
+
+		// setup the projection matrix
+		setupProjectionMatrix();
+
+		// set the model_view matrix mode
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+
+		// position the light
+		vec3f lp = pdoc->GetLightPosition();
+		GLfloat fv[4] = {0};
+		fv[0] = lp.x; fv[1] = lp.y; fv[2] = lp.z;
+		glLightfv(GL_LIGHT0, GL_POSITION, fv);
+
+		// position the camera
+		PositionCam();
+
+		// render the model
+		if (pdoc->IsValid()) RenderModel();
+
+		// render the tracking
+		if (m_btrack) RenderTrack();
+
+		// render the tags
+		if (view.m_bTags && pdoc->IsValid()) RenderTags();
+
+		// give the command window a chance to render stuff
+		CGLContext cgl(this);
+		cgl.m_x = cgl.m_y = 0;
+
+		// set the projection matrix to ortho2d so we can draw some stuff on the screen
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluOrtho2D(0, width(), height(), 0);
+
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+
+		RenderWidgets();
+
+		// render the selection rectangle
+		if (m_bdrag) RenderRubberBand();
+
+		if (m_nanim != ANIM_STOPPED)
+		{
+			glPushAttrib(GL_ENABLE_BIT);
+			glDisable(GL_DEPTH_TEST);
+			glDisable(GL_LIGHTING);
+			int x = width()-200;
+			int y = height()-40;
+			glPopAttrib();
+		}
+	}
+
+	if ((m_nanim == ANIM_RECORDING) && (m_panim != 0))
+	{
+		glFlush();
+		QImage im = CaptureScreen();
+		m_panim->Write(im);
 	}
 
 	// if the camera is animating, we need to redraw
@@ -2472,8 +2472,8 @@ void CGLView::NewAnimation(const char* szfile, CAnimation* panim, GLenum fmt)
 	SetVideoFormat(fmt);
 
 	// get the width/height of the animation
-	int cx = m_pframe->w();
-	int cy = m_pframe->h();
+	int cx = width();// m_pframe->w();
+	int cy = height();//m_pframe->h();
 
 	// get the frame rate
 	float fps = 0.f; //m_wnd->GetTimeController()->GetFPS();

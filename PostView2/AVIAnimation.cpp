@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "AVIAnimation.h"
+#include <QImage>
 #ifdef WIN32
 
 CAVIAnimation::CAVIAnimation()
@@ -9,6 +10,9 @@ CAVIAnimation::CAVIAnimation()
 	m_pavicmp = NULL;
 	m_nsample = 0;
 
+	m_buf = 0;
+	m_bufSize = 0;
+	m_bufLine = 0;
 	m_cx = m_cy = 0;
 }
 
@@ -17,6 +21,11 @@ void CAVIAnimation::Close()
 	if (m_pavi) AVIStreamRelease(m_pavi); 
 	if (m_pavicmp) AVIStreamRelease(m_pavi); 
 	if (m_pfile) AVIFileRelease(m_pfile); 
+
+	delete [] m_buf;
+	m_buf = 0;
+	m_bufSize = 0;
+	m_bufLine = 0;
 
 	m_pfile = 0;
 	m_pavi = 0;
@@ -82,10 +91,21 @@ int CAVIAnimation::Create(const char* szfile, int cx, int cy, float fps)
 	pbmi->bmiHeader.biBitCount	= 24;
 	pbmi->bmiHeader.biPlanes	= 1;
 
+	// make sure that the bytes per line is a multiple of 4!
+	int w = cx*3;
+	if (w %4) w += 4 - w%4;
+
+	m_bufLine = w;
+	m_bufSize = cy*m_bufLine;
+	m_buf = new unsigned char[m_bufSize];
+
+	m_cx = cx;
+	m_cy = cy;
+
 	return TRUE;
 }
 
-int CAVIAnimation::Write(CRGBImage& im)
+int CAVIAnimation::Write(QImage& im)
 {
 	// make sure there is a file and a stream
 	if ((m_pfile == NULL) || (m_pavi == NULL)) return FALSE;
@@ -101,21 +121,33 @@ int CAVIAnimation::Write(CRGBImage& im)
 			Close();
 			return FALSE;
 		}
-
-		m_cx = im.Width();
-		m_cy = im.Height();
 	}
 	else // else make sure the format is still the same
 	{
-		if ((m_cx != im.Width()) || (m_cy != im.Height()))
+		if ((m_cx != im.width()) || (m_cy != im.height()))
 		{
 			Close();
 			return FALSE;
 		}
 	}
 
+	// we need to flip the image and convert it to BGR
+	int bytesPerLine = im.bytesPerLine();
+	const uchar* s = im.bits();
+	for (int y=0; y<m_cy; ++y)
+	{
+		const uchar* c = s + bytesPerLine*(m_cy - y - 1);
+		unsigned char* d = m_buf + m_bufLine*y;
+		for (int x=0; x<m_cx; ++x, d += 3, c += 4)
+		{
+			d[0] = c[0];
+			d[1] = c[1];
+			d[2] = c[2];
+		}
+	}
+
 	// write the image data to the stream
-	hr = AVIStreamWrite(m_pavicmp, m_nsample, 1, im.GetBytes(), im.Size(), AVIIF_KEYFRAME, NULL, NULL);
+	hr = AVIStreamWrite(m_pavicmp, m_nsample, 1, m_buf, m_bufSize, AVIIF_KEYFRAME, NULL, NULL);
 	if (hr != 0)
 	{
 		// close the file

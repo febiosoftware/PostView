@@ -155,6 +155,11 @@ public slots:
 	void on_actionViewVPPrev_triggered();
 	void on_actionViewVPNext_triggered();
 
+	void on_actionRecordNew_triggered();
+	void on_actionRecordStart_triggered();
+	void on_actionRecordPause_triggered();
+	void on_actionRecordStop_triggered();
+
 	void on_actionHelp_triggered();
 	void on_actionAbout_triggered();
 

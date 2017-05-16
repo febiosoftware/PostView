@@ -9,7 +9,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "Image.h"
+class QImage;
 
 //-----------------------------------------------------------------------------
 //! Base class for creating animation
@@ -21,7 +21,7 @@ public:
 
 public:
 	virtual int Create(const char* szfile, int cx, int cy, float fps = 10.f) = 0;
-	virtual int Write(CRGBImage& im) = 0;
+	virtual int Write(QImage& im) = 0;
 	virtual bool IsValid() = 0;
 	virtual void Close();
 };

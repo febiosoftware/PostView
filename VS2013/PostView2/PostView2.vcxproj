@@ -153,7 +153,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;postviewlib.lib;glew32.lib;opengl32.lib;glu32.lib;zlib64d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;postviewlib.lib;glew32.lib;opengl32.lib;glu32.lib;zlib64d.lib;vfw32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">
@@ -218,6 +218,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </ClInclude>
     <ClInclude Include="..\..\PostView2\AddPointTool.h" />
+    <ClInclude Include="..\..\PostView2\AVIAnimation.h" />
     <ClInclude Include="..\..\PostView2\CColorButton.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
@@ -323,6 +324,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </ClInclude>
+    <ClInclude Include="..\..\PostView2\ImgAnimation.h" />
     <ClInclude Include="..\..\PostView2\ImportLinesTool.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
@@ -339,14 +341,14 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </ClInclude>
-    <ClInclude Include="..\..\PostView2\MainWindow.h">
+    <CustomBuild Include="..\..\PostView2\MainWindow.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </ClInclude>
+    </CustomBuild>
     <ClInclude Include="..\..\PostView2\MaterialPanel.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
@@ -364,6 +366,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </ClInclude>
+    <ClInclude Include="..\..\PostView2\MPEGAnimation.h" />
     <ClInclude Include="..\..\PostView2\PlaneTool.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
@@ -491,6 +494,7 @@
     <ClCompile Include="..\..\PostView2\4PointAngleTool.cpp" />
     <ClCompile Include="..\..\PostView2\AddImage3DTool.cpp" />
     <ClCompile Include="..\..\PostView2\AddPointTool.cpp" />
+    <ClCompile Include="..\..\PostView2\AVIAnimation.cpp" />
     <ClCompile Include="..\..\PostView2\CColorButton.cpp" />
     <ClCompile Include="..\..\PostView2\CDlgImportXPLT.cpp" />
     <ClCompile Include="..\..\PostView2\CommandPanel.cpp" />
@@ -523,6 +527,7 @@
     <ClCompile Include="..\..\PostView2\GLWidget.cpp" />
     <ClCompile Include="..\..\PostView2\GLWidgetManager.cpp" />
     <ClCompile Include="..\..\PostView2\GraphWindow.cpp" />
+    <ClCompile Include="..\..\PostView2\ImgAnimation.cpp" />
     <ClCompile Include="..\..\PostView2\ImportLinesTool.cpp" />
     <ClCompile Include="..\..\PostView2\IntegrateWindow.cpp" />
     <ClCompile Include="..\..\PostView2\MainWindow.cpp" />
@@ -559,6 +564,7 @@
     <ClCompile Include="..\..\PostView2\moc_Tool.cpp" />
     <ClCompile Include="..\..\PostView2\moc_ToolsPanel.cpp" />
     <ClCompile Include="..\..\PostView2\ModelViewer.cpp" />
+    <ClCompile Include="..\..\PostView2\MPEGAnimation.cpp" />
     <ClCompile Include="..\..\PostView2\PlaneTool.cpp" />
     <ClCompile Include="..\..\PostView2\PlotMixTool.cpp" />
     <ClCompile Include="..\..\PostView2\PlotWidget.cpp" />

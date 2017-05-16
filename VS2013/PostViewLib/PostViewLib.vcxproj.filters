@@ -27,9 +27,6 @@
     <ClInclude Include="..\..\PostViewLib\Archive.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PostViewLib\AVIAnimation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\PostViewLib\bbox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -234,9 +231,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\PostViewLib\Archive.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\PostViewLib\AVIAnimation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\PostViewLib\bbox.cpp">

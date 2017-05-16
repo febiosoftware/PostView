@@ -150,6 +150,13 @@ public:
 
 	void UpdateWidgets();
 
+public:
+	void NewAnimation(const char* szfile, CAnimation* panim, GLenum fmt = GL_RGB);
+	void StartAnimation();
+	void StopAnimation();
+	void PauseAnimation();
+	void SetVideoFormat(GLenum fmt) { m_video_fmt = fmt; }
+
 protected:
 	void initializeGL();
 	void resizeGL(int w, int h);
@@ -225,14 +232,7 @@ protected:
 		}
 	}
 
-	void NewAnimation(const char* szfile, CAnimation* panim, GLenum fmt = GL_RGB);
-	void StartAnimation();
-	void StopAnimation();
-	void PauseAnimation();
-
 	void RenderTrack();
-
-	void SetVideoFormat(GLenum fmt) { m_video_fmt = fmt; }
 
 public:
 	// convert from device pixel to physical pixel
