@@ -73,6 +73,11 @@ public:
 	virtual ~SelectRegion(){}
 
 	virtual bool IsInside(int x, int y) const = 0;
+
+	// see if a line intersects this region
+	// default implementation only checks if one of the end points is inside.
+	// derived classes should provide a better implementation.
+	virtual bool LineIntersects(int x0, int y0, int x1, int y1) const;
 };
 
 class BoxRegion : public SelectRegion
@@ -80,6 +85,7 @@ class BoxRegion : public SelectRegion
 public:
 	BoxRegion(int x0, int x1, int y0, int y1);
 	bool IsInside(int x, int y) const;
+	bool LineIntersects(int x0, int y0, int x1, int y1) const;
 private:
 	int	m_x0, m_x1;
 	int	m_y0, m_y1;
@@ -90,6 +96,7 @@ class CircleRegion : public SelectRegion
 public:
 	CircleRegion(int x0, int x1, int y0, int y1);
 	bool IsInside(int x, int y) const;
+	bool LineIntersects(int x0, int y0, int x1, int y1) const;
 private:
 	int	m_xc, m_yc;
 	int	m_R;

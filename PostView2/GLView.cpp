@@ -105,6 +105,96 @@ private:
 	vector<double>	c, q;
 };
 
+bool intersectsRect(const QPoint& p0, const QPoint& p1, const QRect& rt)
+{
+	// see if either point lies inside the rectangle
+	if (rt.contains(p0)) return true;
+	if (rt.contains(p1)) return true;
+
+	// get the point coordinates
+	int ax = p0.x();
+	int ay = p0.y();
+	int bx = p1.x();
+	int by = p1.y();
+
+	// get the rect coordinates
+	int x0 = rt.x();
+	int y0 = rt.y();
+	int x1 = x0 + rt.width();
+	int y1 = y0 + rt.height();
+	if (y0 == y1) return false;
+	if (x0 == x1) return false;
+
+	// check horizontal lines
+	if (ay == by)
+	{
+		if ((ay > y0) && (ay < y1))
+		{
+			if ((ax < x0) && (bx > x1)) return true;
+			if ((bx < x0) && (ax > x1)) return true;
+			return false;
+		}
+		else return false;
+	}
+
+	// check vertical lines
+	if (ax == bx)
+	{
+		if ((ax > x0) && (ax < x1))
+		{
+			if ((ay < y0) && (by > y1)) return true;
+			if ((by < y0) && (ay > y1)) return true;
+			return false;
+		}
+		else return false;
+	}
+
+	// for the general case, we see if any of the four edges of the rectangle are crossed
+	// top edge
+	int x = ax + ((y0 - ay) * (bx - ax)) / (by - ay);
+	if ((x > x0) && (x < x1))
+	{
+		if ((ay < y0) && (by > y0)) return true;
+		if ((by < y0) && (ay > y0)) return true;
+		return false;
+	}
+
+	// bottom edge
+	x = ax + ((y1 - ay) * (bx - ax)) / (by - ay);
+	if ((x > x0) && (x < x1))
+	{
+		if ((ay < y1) && (by > y1)) return true;
+		if ((by < y1) && (ay > y1)) return true;
+		return false;
+	}
+
+	// left edge
+	int y = ay + ((x0 - ax) * (by - ay)) / (bx - ax);
+	if ((y > y0) && (y < y1))
+	{
+		if ((ax < x0) && (bx > x0)) return true;
+		if ((bx < x0) && (ax > x0)) return true;
+		return false;
+	}
+
+	// right edge
+	y = ay + ((x1 - ax) * (by - ay)) / (bx - ax);
+	if ((y > y0) && (y < y1))
+	{
+		if ((ax < x1) && (bx > x1)) return true;
+		if ((bx < x1) && (ax > x1)) return true;
+		return false;
+	}
+
+	return false;
+}
+
+//=============================================================================
+bool SelectRegion::LineIntersects(int x0, int y0, int x1, int y1) const
+{
+	return (IsInside(x0, y0) || IsInside(x1, y1));
+}
+
 //=============================================================================
 BoxRegion::BoxRegion(int x0, int x1, int y0, int y1)
 {
@@ -115,6 +205,11 @@ BoxRegion::BoxRegion(int x0, int x1, int y0, int y1)
 bool BoxRegion::IsInside(int x, int y) const
 {
 	return ((x>=m_x0)&&(x<=m_x1)&&(y>=m_y0)&&(y<=m_y1));
+}
+
+bool BoxRegion::LineIntersects(int x0, int y0, int x1, int y1) const
+{
+	return intersectsRect(QPoint(x0, y0), QPoint(x1, y1), QRect(m_x0, m_y0, m_x1 - m_x0, m_y1 - m_y0));
 }
 
 CircleRegion::CircleRegion(int x0, int x1, int y0, int y1)
@@ -129,11 +224,33 @@ CircleRegion::CircleRegion(int x0, int x1, int y0, int y1)
 
 bool CircleRegion::IsInside(int x, int y) const
 {
-	double rx = x - m_xc;
-	double ry = y - m_yc;
-	int r = (int) sqrt(rx*rx+ry*ry);
-	return (r <= m_R);
+	int rx = x - m_xc;
+	int ry = y - m_yc;
+	int r = rx*rx+ry*ry;
+	return (r <= m_R*m_R);
 }
+
+bool CircleRegion::LineIntersects(int x0, int y0, int x1, int y1) const
+{
+	if (IsInside(x0, y0) || IsInside(x1, y1)) return true;
+
+	int tx = x1 - x0;
+	int ty = y1 - y0;
+
+	int D = tx*(m_xc - x0) + ty*(m_yc - y0);
+	int N = tx*tx + ty*ty;
+	if (N == 0) return false;
+
+	if ((D >= 0) && (D <= N))
+	{
+		int px = x0 + D*tx / N - m_xc;
+		int py = y0 + D*ty / N - m_yc;
+
+		if (px*px + py*py <= m_R*m_R) return true;
+	}
+	else return false;
+}
+
 
 FreeRegion::FreeRegion(vector<pair<int, int> >& pl) : m_pl(pl)
 {
@@ -1506,8 +1623,12 @@ void CGLView::RegionSelectEdges(const SelectRegion& region, int mode)
 			vec3f p0 = transform.Apply(r0);
 			vec3f p1 = transform.Apply(r1);
 
-			if (region.IsInside((int)p0.x / m_dpr, (int)p0.y / m_dpr) ||
-				region.IsInside((int)p1.x / m_dpr, (int)p1.y / m_dpr))
+			int x0 = (int) p0.x / m_dpr;
+			int y0 = (int) p0.y / m_dpr;
+			int x1 = (int) p1.x / m_dpr;
+			int y1 = (int) p1.y / m_dpr;
+
+			if (region.LineIntersects(x0, y0, x1, y1))
 			{
 				if (mode == SELECT_ADD) edge.Select(); else edge.Unselect();
 			}
@@ -1683,7 +1804,7 @@ void CGLView::TagBackfacingEdges(FEMeshBase& mesh)
 	for (int i = 0; i<NE; ++i)
 	{
 		FEEdge& e = mesh.Edge(i);
-		if ((mesh.Node(e.node[0]).m_ntag == 0) || (mesh.Node(e.node[1]).m_ntag == 0))
+		if ((mesh.Node(e.node[0]).m_ntag == 0) && (mesh.Node(e.node[1]).m_ntag == 0))
 			e.m_ntag = 0;
 	}
 }
@@ -1784,90 +1905,6 @@ void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 	else m_wnd->ClearStatusMessage();
 
 	mdl.UpdateSelectionLists(SELECT_NODES);
-}
-
-bool intersectsRect(const QPoint& p0, const QPoint& p1, const QRect& rt)
-{
-	// see if either point lies inside the rectangle
-	if (rt.contains(p0)) return true;
-	if (rt.contains(p1)) return true;
-
-	// get the point coordinates
-	int ax = p0.x();
-	int ay = p0.y();
-	int bx = p1.x();
-	int by = p1.y();
-
-	// get the rect coordinates
-	int x0 = rt.x();
-	int y0 = rt.y();
-	int x1 = x0 + rt.width();
-	int y1 = y0 + rt.height();
-	if (y0 == y1) return false;
-	if (x0 == x1) return false;
-
-	// check horizontal lines
-	if (ay == by)
-	{
-		if ((ay > y0) && (ay < y1))
-		{
-			if ((ax < x0) && (bx > x1)) return true;
-			if ((bx < x0) && (ax > x1)) return true;
-			return false;
-		}
-		else return false;
-	}
-
-	// check vertical lines
-	if (ax == bx)
-	{
-		if ((ax > x0) && (ax < x1))
-		{
-			if ((ay < y0) && (by > y1)) return true;
-			if ((by < y0) && (ay > y1)) return true;
-			return false;
-		}
-		else return false;
-	}
-
-	// for the general case, we see if any of the four edges of the rectangle are crossed
-	// top edge
-	int x = ax + ((y0 - ay) * (bx - ax))/(by - ay);
-	if ((x > x0) && (x < x1)) 
-	{
-		if ((ay < y0) && (by > y0)) return true;
-		if ((by < y0) && (ay > y0)) return true;
-		return false;
-	}
-
-	// bottom edge
-	x = ax + ((y1 - ay) * (bx - ax)) / (by - ay);
-	if ((x > x0) && (x < x1))
-	{
-		if ((ay < y1) && (by > y1)) return true;
-		if ((by < y1) && (ay > y1)) return true;
-		return false;
-	}
-
-	// left edge
-	int y = ay + ((x0 - ax) * (by - ay)) / (bx - ax);
-	if ((y > y0) && (y < y1))
-	{
-		if ((ax < x0) && (bx > x0)) return true;
-		if ((bx < x0) && (ax > x0)) return true;
-		return false;
-	}
-
-	// right edge
-	y = ay + ((x1 - ax) * (by - ay)) / (bx - ax);
-	if ((y > y0) && (y < y1))
-	{
-		if ((ax < x1) && (bx > x1)) return true;
-		if ((bx < x1) && (ax > x1)) return true;
-		return false;
-	}
-
-	return false;
 }
 
 void CGLView::SelectEdges(int x0, int y0, int x1, int y1, int mode)
