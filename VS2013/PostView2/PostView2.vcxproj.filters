@@ -168,9 +168,6 @@
     <ClInclude Include="..\..\PostView2\IntegrateWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PostView2\MainWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\PostView2\MaterialPanel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -527,5 +524,10 @@
     <ClCompile Include="..\..\PostView2\MPEGAnimation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\PostView2\MainWindow.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>
