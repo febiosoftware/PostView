@@ -78,6 +78,10 @@ public:
 	// default implementation only checks if one of the end points is inside.
 	// derived classes should provide a better implementation.
 	virtual bool LineIntersects(int x0, int y0, int x1, int y1) const;
+
+	// see if a triangle intersects this region
+	// default implementation checks for line intersections
+	virtual bool TriangleIntersect(int x0, int y0, int x1, int y1, int x2, int y2) const;
 };
 
 class BoxRegion : public SelectRegion

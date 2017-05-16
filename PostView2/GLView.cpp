@@ -196,6 +196,12 @@ bool SelectRegion::LineIntersects(int x0, int y0, int x1, int y1) const
 }
 
 //=============================================================================
+bool SelectRegion::TriangleIntersect(int x0, int y0, int x1, int y1, int x2, int y2) const
+{
+	return (LineIntersects(x0, y0, x1, y1) || LineIntersects(x1, y1, x2, y2) || LineIntersects(x2, y2, x0, y0));
+}
+
+//=============================================================================
 BoxRegion::BoxRegion(int x0, int x1, int y0, int y1)
 {
 	m_x0 = (x0<x1?x0:x1); m_x1 = (x0<x1?x1:x0);
@@ -249,6 +255,8 @@ bool CircleRegion::LineIntersects(int x0, int y0, int x1, int y1) const
 		if (px*px + py*py <= m_R*m_R) return true;
 	}
 	else return false;
+
+	return false;
 }
 
 
@@ -1521,23 +1529,53 @@ void CGLView::RegionSelectFaces(const SelectRegion& region, int mode)
 		TagBackfacingFaces(*pm);
 	}
 
+	vec3f r[4], p[4];
 	int NF = pm->Faces();
 	for (int i = 0; i<NF; ++i)
 	{
 		FEFace& face = pm->Face(i);
 		if (face.m_ntag == 0)
 		{
-			int nf = face.Nodes();
 			bool binside = false;
-			for (int i=0; i<nf; ++i)
+			switch (face.m_ntype)
 			{
-				vec3f r = pm->Node(face.node[i]).m_rt;
-				vec3f p = transform.Apply(r);
-				if (region.IsInside((int) p.x / m_dpr, (int) p.y / m_dpr))
+			case FACE_TRI3:
+			case FACE_TRI6:
+			case FACE_TRI7:
+			case FACE_TRI10:
+				r[0] = pm->Node(face.node[0]).m_rt;
+				r[1] = pm->Node(face.node[1]).m_rt;
+				r[2] = pm->Node(face.node[2]).m_rt;
+
+				p[0] = transform.Apply(r[0]);
+				p[1] = transform.Apply(r[1]);
+				p[2] = transform.Apply(r[2]);
+
+				if (region.TriangleIntersect((int)p[0].x, (int)p[0].y, (int)p[1].x, (int)p[1].y, (int)p[2].x, (int)p[2].y))
 				{
 					binside = true;
-					break;
 				}
+				break;
+
+			case FACE_QUAD4:
+			case FACE_QUAD8:
+			case FACE_QUAD9:
+				r[0] = pm->Node(face.node[0]).m_rt;
+				r[1] = pm->Node(face.node[1]).m_rt;
+				r[2] = pm->Node(face.node[2]).m_rt;
+				r[3] = pm->Node(face.node[3]).m_rt;
+
+				p[0] = transform.Apply(r[0]);
+				p[1] = transform.Apply(r[1]);
+				p[2] = transform.Apply(r[2]);
+				p[3] = transform.Apply(r[3]);
+
+				if ((region.TriangleIntersect((int)p[0].x, (int)p[0].y, (int)p[1].x, (int)p[1].y, (int)p[2].x, (int)p[2].y)) ||
+					(region.TriangleIntersect((int)p[2].x, (int)p[2].y, (int)p[3].x, (int)p[3].y, (int)p[0].x, (int)p[0].y)))
+				{
+					binside = true;
+				}
+				break;
 			}
 
 			if (binside)
