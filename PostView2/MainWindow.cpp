@@ -41,6 +41,7 @@
 #include "DlgFileInfo.h"
 #include "DlgExportAscii.h"
 #include "version.h"
+#include "convert.h"
 #include <string>
 
 CFileThread::CFileThread(CMainWindow* wnd, FEFileReader* file, const QString& fileName) : m_wnd(wnd), m_fileReader(file), m_fileName(fileName)
@@ -73,10 +74,13 @@ CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMai
 	m_doc = new CDocument(this);
 	ui->setupUi(this);
 	m_fileThread = 0;
-	readSettings();
 
 	// initialize color maps
+	// (This must be done before we read the settings!)
 	ColorMapManager::Initialize();
+
+	// read settings from last session
+	readSettings();
 
 	// make sure the file viewer is visible
 	ui->fileViewer->parentWidget()->raise();
@@ -1537,6 +1541,37 @@ void CMainWindow::writeSettings()
 	settings.beginGroup("FolderSettings");
 	settings.setValue("currentPath", ui->currentPath);
 	settings.endGroup();
+
+	// store the user color maps
+	int maps = ColorMapManager::ColorMaps();
+	if (maps > ColorMapManager::USER)
+	{
+		settings.beginWriteArray("colorMaps");
+		{
+			for (int i=ColorMapManager::USER; i < maps; ++i)
+			{
+				CColorMap& map = ColorMapManager::GetColorMap(i);
+				settings.setArrayIndex(i - ColorMapManager::USER);
+
+				string name = ColorMapManager::GetColorMapName(i);
+				settings.setValue("name", QString(name.c_str()));
+
+				// save colors
+				settings.beginWriteArray("colors");
+				{
+					int ncol = map.Colors();
+					for (int j=0; j<ncol; ++j)
+					{
+						settings.setArrayIndex(j);
+						settings.setValue("colorPos", map.GetColorPos(j));
+						settings.setValue("rgbColor", toQColor(map.GetColor(j)));
+					}
+				}
+				settings.endArray();
+			}
+		}
+		settings.endArray();
+	}
 }
 
 void CMainWindow::readSettings()
@@ -1578,6 +1613,40 @@ void CMainWindow::readSettings()
 	settings.beginGroup("FolderSettings");
 	ui->currentPath = settings.value("currentPath", QDir::homePath()).toString();
 	settings.endGroup();
+
+	// store the user color maps
+	int userMaps = settings.beginReadArray("colorMaps");
+	{
+		for (int i = 0; i < userMaps; ++i)
+		{
+			settings.setArrayIndex(i);
+
+			QString name = settings.value("name").toString();
+			string sname = name.toStdString();
+
+			CColorMap map;
+
+			// read colors
+			int colors = settings.beginReadArray("colors");
+			map.SetColors(colors);
+			{
+				for (int j = 0; j<colors; ++j)
+				{
+					settings.setArrayIndex(j);
+					float colorPos = settings.value("colorPos").toFloat();
+					QColor color = settings.value("rgbColor").value<QColor>();
+
+					map.SetColorPos(j, colorPos);
+					map.SetColor(j, toGLColor(color));
+				}
+			}
+			settings.endArray();
+
+			ColorMapManager::AddColormap(sname, map);
+		}
+		settings.endArray();
+	}
+
 
 //	string s = ui->currentPath.toStdString();
 

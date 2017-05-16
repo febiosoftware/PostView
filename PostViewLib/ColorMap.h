@@ -104,7 +104,8 @@ public:
 		RED,
 		SPRING,
 		SUMMER,
-		WINTER
+		WINTER,
+		USER
 	};
 
 public:
