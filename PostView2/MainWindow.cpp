@@ -1397,7 +1397,7 @@ void CMainWindow::UpdatePlayToolbar(bool breset)
 			ui->pspin->setRange(1, states);
 		};
 		int n = pfem->currentTime();
-		ui->pspin->setValue(n);
+		ui->pspin->setValue(n + 1);
 		ui->playToolBar->setEnabled(true);
 	}
 }
