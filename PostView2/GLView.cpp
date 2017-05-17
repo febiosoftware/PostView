@@ -1299,9 +1299,6 @@ Ray CGLView::PointToRay(int x, int y)
 	glGetDoublev(GL_PROJECTION_MATRIX, p);
 	glGetDoublev(GL_MODELVIEW_MATRIX, m);
 
-	int vp[4];
-	glGetIntegerv(GL_VIEWPORT, vp);
-
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
 
@@ -1322,17 +1319,17 @@ Ray CGLView::PointToRay(int x, int y)
 	matrix PMi = PM.inverse();
 
 	// flip the y-axis
-	y = vp[3] - y;
+	y = m_viewport[3] - y;
 
 	// convert to devices coordinates
-	double W = vp[2];
-	double H = vp[3];
+	double W = m_viewport[2];
+	double H = m_viewport[3];
 	double xd = 2.0* x / W - 1.0;
 	double yd = 2.0* y / H - 1.0;
 
 	// convert to clip coordinates
 	vector<double> c(4);
-	c[3] = m_fnear;
+	c[3] = (view.m_nproj == RENDER_ORTHO ? 1.0 : m_fnear);
 	c[0] = xd*c[3];
 	c[1] = yd*c[3];
 	c[2] = -c[3];
@@ -1342,7 +1339,7 @@ Ray CGLView::PointToRay(int x, int y)
 	PMi.mult(c, r_near);
 
 	// do back clip point
-	c[3] = m_ffar;
+	c[3] = (view.m_nproj == RENDER_ORTHO ? 1.0 : m_ffar);
 	c[0] = xd*c[3];
 	c[1] = yd*c[3];
 	c[2] = c[3];
