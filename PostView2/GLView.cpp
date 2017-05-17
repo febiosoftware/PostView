@@ -1547,9 +1547,9 @@ void CGLView::RegionSelectFaces(const SelectRegion& region, int mode)
 				r[1] = pm->Node(face.node[1]).m_rt;
 				r[2] = pm->Node(face.node[2]).m_rt;
 
-				p[0] = transform.Apply(r[0]);
-				p[1] = transform.Apply(r[1]);
-				p[2] = transform.Apply(r[2]);
+				p[0] = transform.Apply(r[0]) / m_dpr;
+				p[1] = transform.Apply(r[1]) / m_dpr;
+				p[2] = transform.Apply(r[2]) / m_dpr;
 
 				if (region.TriangleIntersect((int)p[0].x, (int)p[0].y, (int)p[1].x, (int)p[1].y, (int)p[2].x, (int)p[2].y))
 				{
@@ -1565,10 +1565,10 @@ void CGLView::RegionSelectFaces(const SelectRegion& region, int mode)
 				r[2] = pm->Node(face.node[2]).m_rt;
 				r[3] = pm->Node(face.node[3]).m_rt;
 
-				p[0] = transform.Apply(r[0]);
-				p[1] = transform.Apply(r[1]);
-				p[2] = transform.Apply(r[2]);
-				p[3] = transform.Apply(r[3]);
+				p[0] = transform.Apply(r[0]) / m_dpr;
+				p[1] = transform.Apply(r[1]) / m_dpr;
+				p[2] = transform.Apply(r[2]) / m_dpr;
+				p[3] = transform.Apply(r[3]) / m_dpr;
 
 				if ((region.TriangleIntersect((int)p[0].x, (int)p[0].y, (int)p[1].x, (int)p[1].y, (int)p[2].x, (int)p[2].y)) ||
 					(region.TriangleIntersect((int)p[2].x, (int)p[2].y, (int)p[3].x, (int)p[3].y, (int)p[0].x, (int)p[0].y)))
