@@ -64,6 +64,7 @@ public:
 
 CSummaryWindow::CSummaryWindow(CMainWindow* wnd) : m_wnd(wnd), QMainWindow(wnd), ui(new Ui::CSummaryWindow)
 {
+	setWindowTitle("PostView2: Summary");
 	m_ncurrentData = -1;
 
 	ui->setupUi(this);

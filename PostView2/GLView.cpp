@@ -2040,9 +2040,17 @@ void CGLView::SelectEdges(int x0, int y0, int x1, int y1, int mode)
 	mdl.UpdateSelectionLists(SELECT_EDGES);
 }
 
+//-----------------------------------------------------------------------------
 QImage CGLView::CaptureScreen()
 {
-	return grabFramebuffer();
+	if (m_pframe && m_pframe->visible())
+	{
+		QImage im = grabFramebuffer();
+		
+		// crop based on the capture frame
+		return im.copy(m_pframe->x(), m_pframe->y(), m_pframe->w(), m_pframe->h());
+	}
+	else return grabFramebuffer();
 }
 
 //-----------------------------------------------------------------------------
@@ -2547,8 +2555,13 @@ void CGLView::NewAnimation(const char* szfile, CAnimation* panim, GLenum fmt)
 	SetVideoFormat(fmt);
 
 	// get the width/height of the animation
-	int cx = width();// m_pframe->w();
-	int cy = height();//m_pframe->h();
+	int cx = width();
+	int cy = height();
+	if (m_pframe && m_pframe->visible())
+	{
+		cx = m_pframe->w();
+		cy = m_pframe->h();
+	}
 
 	// get the frame rate
 	float fps = 0.f; //m_wnd->GetTimeController()->GetFPS();

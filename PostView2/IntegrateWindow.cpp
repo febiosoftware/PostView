@@ -62,6 +62,7 @@ public:
 
 CIntegrateWindow::CIntegrateWindow(CMainWindow* wnd) : m_wnd(wnd), QMainWindow(wnd), ui(new Ui::CIntegrateWindow)
 {
+	setWindowTitle("PostView2: Integrate");
 	m_nsrc = -1;
 	ui->setupUi(this);
 	setMinimumWidth(500);

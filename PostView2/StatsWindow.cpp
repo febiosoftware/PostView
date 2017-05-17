@@ -48,6 +48,7 @@ public:
 
 CStatsWindow::CStatsWindow(CMainWindow* wnd) : m_wnd(wnd), QMainWindow(wnd), ui(new Ui::CStatsWindow)
 {
+	setWindowTitle("PostView2: Statistics");
 	ui->setupUi(this);
 	setMinimumWidth(500);
 	resize(600, 500);
