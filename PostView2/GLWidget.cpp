@@ -183,9 +183,12 @@ void GLBox::parse_label(char* szlabel, const char* szval, int nmax)
 				const char* ce = cs+1;
 				while (isalpha(*ce)) { ++ce; ++n; }
 
-				const char* sztitle = m_pdoc->GetTitle();
 
-				if      (strncmp(cs+1, "title"    , n) == 0) cd += sprintf(cd, "%s", sztitle);
+				if (strncmp(cs+1, "title", n) == 0) 
+				{
+					const char* sztitle = m_pdoc->GetTitle();
+					if (sztitle) cd += sprintf(cd, "%s", sztitle);
+				}
 				else if (strncmp(cs+1, "field"    , n) == 0) cd += sprintf(cd, "%s", m_pdoc->GetFieldString().c_str());
 				else if (strncmp(cs+1, "time"     , n) == 0) cd += sprintf(cd, "%.4g", m_pdoc->GetTimeValue());
 				else if (strncmp(cs+1, "state"    , n) == 0) cd += sprintf(cd, "%d", m_pdoc->currentTime()+1);
