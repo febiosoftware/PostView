@@ -194,7 +194,8 @@ int compare(const void* p1, const void* p2)
 
 void CPlotData::sort()
 {
-	qsort(&m_data[0], m_data.size(), sizeof(QPointF), compare);
+	if (m_data.size() > 0)
+		qsort(&m_data[0], m_data.size(), sizeof(QPointF), compare);
 }
 
 //-----------------------------------------------------------------------------
@@ -363,6 +364,19 @@ void CPlotWidget::addPlotData(CPlotData& p)
 }
 
 //-----------------------------------------------------------------------------
+// helper function for evaluating the union of rects
+// (Qt's QRectF::united doesn't always seem to work correctly)
+QRectF rectUnion(const QRectF& r1, const QRectF& r2)
+{
+	QRectF r(r1);
+	if (r2.left() < r.left()) r.setLeft(r2.left());
+	if (r2.right() > r.right()) r.setRight(r2.right());
+	if (r2.top() < r.top()) r.setTop(r2.top());
+	if (r2.bottom() > r.bottom()) r.setBottom(r2.bottom());
+	return r;
+}
+
+//-----------------------------------------------------------------------------
 void CPlotWidget::fitWidthToData()
 {
 	if (m_data.empty()) return;
@@ -371,7 +385,7 @@ void CPlotWidget::fitWidthToData()
 	for (int i=1; i<(int) m_data.size(); ++i)
 	{
 		QRectF ri = m_data[i].boundRect();
-		r = ri.united(r);
+		r = rectUnion(r, ri);
 	}
 
 	r.setTop(m_viewRect.top());
@@ -388,7 +402,7 @@ void CPlotWidget::fitHeightToData()
 	for (int i=1; i<(int) m_data.size(); ++i)
 	{
 		QRectF ri = m_data[i].boundRect();
-		r = ri.united(r);
+		r = rectUnion(r, ri);
 	}
 
 	r.setLeft (m_viewRect.left ());
@@ -405,7 +419,7 @@ void CPlotWidget::fitToData()
 	for (int i=1; i<(int) m_data.size(); ++i)
 	{
 		QRectF ri = m_data[i].boundRect();
-		r = ri.united(r);
+		r = rectUnion(r, ri);
 	}
 	setViewRect(r);
 }
@@ -414,8 +428,8 @@ void CPlotWidget::fitToData()
 void CPlotWidget::setViewRect(const QRectF& rt)
 {
 	m_viewRect = rt;
-	if (fabs(rt.height()) < 1e-12) m_viewRect.setHeight(1.0);
-	if (fabs(rt.width ()) < 1e-12) m_viewRect.setWidth (1.0);
+	if (fabs(rt.height()) < 1e-20) m_viewRect.setHeight(1.0);
+	if (fabs(rt.width ()) < 1e-20) m_viewRect.setWidth (1.0);
 
 /*	double dx = 0.05*m_viewRect.width();
 	double dy = 0.05*m_viewRect.height();
