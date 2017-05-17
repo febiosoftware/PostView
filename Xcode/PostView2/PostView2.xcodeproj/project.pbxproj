@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D51114421ECC973100B8849F /* AVIAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D511143C1ECC973100B8849F /* AVIAnimation.cpp */; };
+		D51114431ECC973100B8849F /* ImgAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D511143E1ECC973100B8849F /* ImgAnimation.cpp */; };
+		D51114441ECC973100B8849F /* MPEGAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D51114401ECC973100B8849F /* MPEGAnimation.cpp */; };
 		D52C6FB01D75DCA300DF804B /* moc_TimeController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D52C6FA91D75DCA300DF804B /* moc_TimeController.cpp */; };
 		D52C6FB11D75DCA300DF804B /* moc_TimePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D52C6FAA1D75DCA300DF804B /* moc_TimePanel.cpp */; };
 		D52C6FB21D75DCA300DF804B /* TimeController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D52C6FAB1D75DCA300DF804B /* TimeController.cpp */; };
@@ -18,6 +21,9 @@
 		D55150731E5270830041C45B /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D55150701E5270830041C45B /* QtGui.framework */; };
 		D55150741E5270830041C45B /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D55150711E5270830041C45B /* QtWidgets.framework */; };
 		D55AC5011E61EB6E00BBA0D1 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D55AC5001E61EB6E00BBA0D1 /* OpenGL.framework */; };
+		D5727B7E1EB38F7000712275 /* QtCore.framework in Resources */ = {isa = PBXBuildFile; fileRef = D551506F1E5270830041C45B /* QtCore.framework */; };
+		D5727B7F1EB38F7000712275 /* QtGui.framework in Resources */ = {isa = PBXBuildFile; fileRef = D55150701E5270830041C45B /* QtGui.framework */; };
+		D5727B801EB38F7000712275 /* QtWidgets.framework in Resources */ = {isa = PBXBuildFile; fileRef = D55150711E5270830041C45B /* QtWidgets.framework */; };
 		D5A65E0F1DBFA53F00B44009 /* DlgFileInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */; };
 		D5E0E6A71E72390D006FE591 /* moc_DataFieldSelector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5E0E6A61E72390D006FE591 /* moc_DataFieldSelector.cpp */; };
 		D5FF7A401D72756B003D2CBD /* 3PointAngleTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79AA1D72756B003D2CBD /* 3PointAngleTool.cpp */; };
@@ -112,6 +118,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D511143C1ECC973100B8849F /* AVIAnimation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AVIAnimation.cpp; sourceTree = "<group>"; };
+		D511143D1ECC973100B8849F /* AVIAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVIAnimation.h; sourceTree = "<group>"; };
+		D511143E1ECC973100B8849F /* ImgAnimation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImgAnimation.cpp; sourceTree = "<group>"; };
+		D511143F1ECC973100B8849F /* ImgAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImgAnimation.h; sourceTree = "<group>"; };
+		D51114401ECC973100B8849F /* MPEGAnimation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MPEGAnimation.cpp; sourceTree = "<group>"; };
+		D51114411ECC973100B8849F /* MPEGAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPEGAnimation.h; sourceTree = "<group>"; };
 		D52C6FA91D75DCA300DF804B /* moc_TimeController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_TimeController.cpp; sourceTree = "<group>"; };
 		D52C6FAA1D75DCA300DF804B /* moc_TimePanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_TimePanel.cpp; sourceTree = "<group>"; };
 		D52C6FAB1D75DCA300DF804B /* TimeController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimeController.cpp; sourceTree = "<group>"; };
@@ -341,6 +353,8 @@
 				D5FF79AF1D72756B003D2CBD /* AddImage3DTool.h */,
 				D5FF79B01D72756B003D2CBD /* AddPointTool.cpp */,
 				D5FF79B11D72756B003D2CBD /* AddPointTool.h */,
+				D511143C1ECC973100B8849F /* AVIAnimation.cpp */,
+				D511143D1ECC973100B8849F /* AVIAnimation.h */,
 				D5FF79B21D72756B003D2CBD /* CColorButton.cpp */,
 				D5FF79B31D72756B003D2CBD /* CColorButton.h */,
 				D5FF79B41D72756B003D2CBD /* CDlgImportXPLT.cpp */,
@@ -409,6 +423,8 @@
 				D5FF79ED1D72756B003D2CBD /* GLWidgetManager.h */,
 				D5FF79EE1D72756B003D2CBD /* GraphWindow.cpp */,
 				D5FF79EF1D72756B003D2CBD /* GraphWindow.h */,
+				D511143E1ECC973100B8849F /* ImgAnimation.cpp */,
+				D511143F1ECC973100B8849F /* ImgAnimation.h */,
 				D5FF79F01D72756B003D2CBD /* ImportLinesTool.cpp */,
 				D5FF79F11D72756B003D2CBD /* ImportLinesTool.h */,
 				D5FF79F21D72756B003D2CBD /* IntegrateWindow.cpp */,
@@ -451,6 +467,8 @@
 				D5FF7A141D72756B003D2CBD /* moc_ToolsPanel.cpp */,
 				D5FF7A151D72756B003D2CBD /* ModelViewer.cpp */,
 				D5FF7A161D72756B003D2CBD /* ModelViewer.h */,
+				D51114401ECC973100B8849F /* MPEGAnimation.cpp */,
+				D51114411ECC973100B8849F /* MPEGAnimation.h */,
 				D5FF7A171D72756B003D2CBD /* PlaneTool.cpp */,
 				D5FF7A181D72756B003D2CBD /* PlaneTool.h */,
 				D5FF7A191D72756B003D2CBD /* PlotMixTool.cpp */,
@@ -571,6 +589,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5727B7E1EB38F7000712275 /* QtCore.framework in Resources */,
+				D5727B7F1EB38F7000712275 /* QtGui.framework in Resources */,
+				D5727B801EB38F7000712275 /* QtWidgets.framework in Resources */,
 				D5FF7AA31D72778E003D2CBD /* PostView.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -592,6 +613,7 @@
 				D5FF7A571D72756B003D2CBD /* GLMesh.cpp in Sources */,
 				D5FF7A541D72756B003D2CBD /* GLDataMap.cpp in Sources */,
 				D5FF7A551D72756B003D2CBD /* GLIsoSurfacePlot.cpp in Sources */,
+				D51114431ECC973100B8849F /* ImgAnimation.cpp in Sources */,
 				D5FF7A7A1D72756B003D2CBD /* moc_PropertyListForm.cpp in Sources */,
 				D5A65E0F1DBFA53F00B44009 /* DlgFileInfo.cpp in Sources */,
 				D5FF7A941D72756B003D2CBD /* SummaryWindow.cpp in Sources */,
@@ -645,6 +667,7 @@
 				D5FF7A801D72756B003D2CBD /* moc_Tool.cpp in Sources */,
 				D5FF7A471D72756B003D2CBD /* DataFieldSelector.cpp in Sources */,
 				D5FF7A531D72756B003D2CBD /* GLContext.cpp in Sources */,
+				D51114441ECC973100B8849F /* MPEGAnimation.cpp in Sources */,
 				D5FF7A671D72756B003D2CBD /* moc_AddImage3DTool.cpp in Sources */,
 				D5FF7A6C1D72756B003D2CBD /* moc_DlgViewSettings.cpp in Sources */,
 				D5FF7A5A1D72756B003D2CBD /* GLPlaneCutPlot.cpp in Sources */,
@@ -670,6 +693,7 @@
 				D5FF7A711D72756B003D2CBD /* moc_ImportLinesTool.cpp in Sources */,
 				D5FF7A831D72756B003D2CBD /* PlaneTool.cpp in Sources */,
 				D5FF7A811D72756B003D2CBD /* moc_ToolsPanel.cpp in Sources */,
+				D51114421ECC973100B8849F /* AVIAnimation.cpp in Sources */,
 				D5FF7A6B1D72756B003D2CBD /* moc_DlgExportXPLT.cpp in Sources */,
 				D5FF7A411D72756B003D2CBD /* 4PointAngleTool.cpp in Sources */,
 				D5FF7A751D72756B003D2CBD /* moc_ModelViewer.cpp in Sources */,
@@ -872,8 +896,8 @@
 				INFOPLIST_FILE = PostView2/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
+					"@executable_path/../Resources",
 					"$(inherited)",
-					/usr/local/opt/qt5/lib,
 				);
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_BUNDLE_IDENTIFIER = FEB.PostView2;

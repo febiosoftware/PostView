@@ -29,8 +29,6 @@
 		D5F309151CFBB65700F76762 /* Animation.h in Headers */ = {isa = PBXBuildFile; fileRef = D5F3089C1CFBB65700F76762 /* Animation.h */; };
 		D5F309161CFBB65700F76762 /* Archive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5F3089D1CFBB65700F76762 /* Archive.cpp */; };
 		D5F309171CFBB65700F76762 /* Archive.h in Headers */ = {isa = PBXBuildFile; fileRef = D5F3089E1CFBB65700F76762 /* Archive.h */; };
-		D5F309181CFBB65700F76762 /* AVIAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5F3089F1CFBB65700F76762 /* AVIAnimation.cpp */; };
-		D5F309191CFBB65700F76762 /* AVIAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = D5F308A01CFBB65700F76762 /* AVIAnimation.h */; };
 		D5F3091A1CFBB65700F76762 /* bbox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5F308A11CFBB65700F76762 /* bbox.cpp */; };
 		D5F3091B1CFBB65700F76762 /* bbox.h in Headers */ = {isa = PBXBuildFile; fileRef = D5F308A21CFBB65700F76762 /* bbox.h */; };
 		D5F3091C1CFBB65700F76762 /* color.h in Headers */ = {isa = PBXBuildFile; fileRef = D5F308A31CFBB65700F76762 /* color.h */; };
@@ -170,8 +168,6 @@
 		D5F3089C1CFBB65700F76762 /* Animation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Animation.h; sourceTree = "<group>"; };
 		D5F3089D1CFBB65700F76762 /* Archive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Archive.cpp; sourceTree = "<group>"; };
 		D5F3089E1CFBB65700F76762 /* Archive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Archive.h; sourceTree = "<group>"; };
-		D5F3089F1CFBB65700F76762 /* AVIAnimation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AVIAnimation.cpp; sourceTree = "<group>"; };
-		D5F308A01CFBB65700F76762 /* AVIAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVIAnimation.h; sourceTree = "<group>"; };
 		D5F308A11CFBB65700F76762 /* bbox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bbox.cpp; sourceTree = "<group>"; };
 		D5F308A21CFBB65700F76762 /* bbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bbox.h; sourceTree = "<group>"; };
 		D5F308A31CFBB65700F76762 /* color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = color.h; sourceTree = "<group>"; };
@@ -323,8 +319,6 @@
 				D5F3089C1CFBB65700F76762 /* Animation.h */,
 				D5F3089D1CFBB65700F76762 /* Archive.cpp */,
 				D5F3089E1CFBB65700F76762 /* Archive.h */,
-				D5F3089F1CFBB65700F76762 /* AVIAnimation.cpp */,
-				D5F308A01CFBB65700F76762 /* AVIAnimation.h */,
 				D5F308A11CFBB65700F76762 /* bbox.cpp */,
 				D5F308A21CFBB65700F76762 /* bbox.h */,
 				D5F308A31CFBB65700F76762 /* color.h */,
@@ -500,7 +494,6 @@
 				D5D4102A1DAD891F007BBA0D /* Palette.h in Headers */,
 				D5481BDA1E2EC3F300BD2BFE /* LinearRegression.h in Headers */,
 				D5F309471CFBB65700F76762 /* FEMeshData_T.h in Headers */,
-				D5F309191CFBB65700F76762 /* AVIAnimation.h in Headers */,
 				D5F3097B1CFBB65700F76762 /* PltArchive.h in Headers */,
 				D5F309841CFBB65700F76762 /* VRMLExporter.h in Headers */,
 				D5F3093C1CFBB65700F76762 /* FELSDYNAExport.h in Headers */,
@@ -625,7 +618,6 @@
 				D5F3097A1CFBB65700F76762 /* PltArchive.cpp in Sources */,
 				D5F309811CFBB65700F76762 /* VolRender.cpp in Sources */,
 				D5F309751CFBB65700F76762 /* lusolver.cpp in Sources */,
-				D5F309181CFBB65700F76762 /* AVIAnimation.cpp in Sources */,
 				D5F3091D1CFBB65700F76762 /* ColorMap.cpp in Sources */,
 				D5F3092F1CFBB65700F76762 /* FEDistanceMap.cpp in Sources */,
 				D5F309621CFBB65700F76762 /* FEVTKImport.cpp in Sources */,
