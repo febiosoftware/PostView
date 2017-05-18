@@ -1535,7 +1535,7 @@ void CMainWindow::writeSettings()
 	settings.setValue("m_bBox"            , view.m_bBox);
 	settings.setValue("m_nproj"           , view.m_nproj);
 	settings.setValue("m_bLighting"       , view.m_bLighting);
-	settings.setValue("m_bcull"           , view.m_bcull);
+	settings.setValue("m_bcull"           , view.m_bignoreBackfacingItems);
 	settings.setValue("m_blinesmooth"     , view.m_blinesmooth);
 	settings.setValue("m_flinethick"      , view.m_flinethick);
 	settings.setValue("m_fpointsize"      , view.m_fpointsize);
@@ -1607,7 +1607,7 @@ void CMainWindow::readSettings()
 	view.m_bBox             = settings.value("m_bBox"       , view.m_bBox).toBool();
 	view.m_nproj            = settings.value("m_nproj"      , view.m_nproj).toInt();
 	view.m_bLighting        = settings.value("m_bLighting"  , view.m_bLighting).toBool();
-	view.m_bcull            = settings.value("m_bcull"      , view.m_bcull).toBool();
+	view.m_bignoreBackfacingItems = settings.value("m_bcull", view.m_bignoreBackfacingItems).toBool();
 	view.m_blinesmooth      = settings.value("m_blinesmooth", view.m_blinesmooth).toBool();
 	view.m_flinethick       = settings.value("m_flinethick" , view.m_flinethick).toFloat();
 	view.m_fpointsize       = settings.value("m_fpointsize" , view.m_fpointsize).toFloat();

@@ -247,7 +247,7 @@ bool CDocument::SaveSession(const char* szfile)
 			xml.add_leaf("show_box", v.m_bBox);
 			xml.add_leaf("projection", v.m_nproj);
 			xml.add_leaf("lighting", v.m_bLighting);
-			xml.add_leaf("cull_face", v.m_bcull);
+			xml.add_leaf("cull_face", v.m_bignoreBackfacingItems);
 			xml.add_leaf("line_smooth", v.m_blinesmooth);
 			xml.add_leaf("line_thickness", v.m_flinethick);
 			xml.add_leaf("point_size", v.m_fpointsize);
@@ -526,7 +526,7 @@ bool CDocument::OpenSession(const char* szfile)
 				else if (tag == "show_box") tag.value(v.m_bBox);
 				else if (tag == "projection") tag.value(v.m_nproj);
 				else if (tag == "lighting") tag.value(v.m_bLighting);
-				else if (tag == "cull_face") tag.value(v.m_bcull);
+				else if (tag == "cull_face") tag.value(v.m_bignoreBackfacingItems);
 				else if (tag == "line_smooth") tag.value(v.m_blinesmooth);
 				else if (tag == "line_thickness") tag.value(v.m_flinethick);
 				else if (tag == "point_size") tag.value(v.m_fpointsize);

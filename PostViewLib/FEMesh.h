@@ -168,6 +168,11 @@ public:
 	// --- S E L E C T I O N ---
 	int CountSelectedFaces() const;
 
+	void SetNodeTags(int ntag);
+	void SetEdgeTags(int ntag);
+	void SetFaceTags(int ntag);
+	void SetElementTags(int ntag);
+
 protected:
 	virtual void CreateElements(int elems) = 0;
 

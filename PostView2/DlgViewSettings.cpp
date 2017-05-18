@@ -221,7 +221,7 @@ public:
 	{
 		addProperty("Select connected" , CProperty::Bool);
 		addProperty("Tag info", CProperty::Enum)->setEnumValues(QStringList() << "Item numbers" << "Item numbers and connecting nodes");
-		addProperty("Select backfacing items", CProperty::Bool);
+		addProperty("Ignore backfacing items", CProperty::Bool);
 		addProperty("Ignore interior items", CProperty::Bool);
 		m_bconnect = false;
 		m_ntagInfo = 0;
@@ -540,7 +540,7 @@ CDlgViewSettings::CDlgViewSettings(CMainWindow* pwnd) : ui(new Ui::CDlgViewSetti
 
 	ui->m_select->m_bconnect = view.m_bconn;
 	ui->m_select->m_ntagInfo = view.m_ntagInfo;
-	ui->m_select->m_backface = !view.m_bcull;
+	ui->m_select->m_backface = view.m_bignoreBackfacingItems;
 	ui->m_select->m_binterior = view.m_bext;
 
 	ui->setupUi(this);
@@ -597,7 +597,7 @@ void CDlgViewSettings::apply()
 
 	view.m_bconn    = ui->m_select->m_bconnect;
 	view.m_ntagInfo = ui->m_select->m_ntagInfo;
-	view.m_bcull    = !ui->m_select->m_backface;
+	view.m_bignoreBackfacingItems = ui->m_select->m_backface;
 	view.m_bext     = ui->m_select->m_binterior;
 
 	CPaletteManager& PM = CPaletteManager::GetInstance();

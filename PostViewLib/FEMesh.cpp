@@ -1562,3 +1562,23 @@ int FEMeshBase::CountSelectedFaces() const
 	}
 	return N;
 }
+
+void FEMeshBase::SetNodeTags(int ntag)
+{
+	for (int i=0; i<Nodes(); ++i) Node(i).m_ntag = ntag;
+}
+
+void FEMeshBase::SetEdgeTags(int ntag)
+{
+	for (int i = 0; i<Edges(); ++i) Edge(i).m_ntag = ntag;
+}
+
+void FEMeshBase::SetFaceTags(int ntag)
+{
+	for (int i = 0; i<Faces(); ++i) Face(i).m_ntag = ntag;
+}
+
+void FEMeshBase::SetElementTags(int ntag)
+{
+	for (int i = 0; i<Elements(); ++i) Element(i).m_ntag = ntag;
+}

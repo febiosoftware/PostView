@@ -83,11 +83,11 @@ struct VIEWSETTINGS
 	bool	m_bBox;			// show bounding box or not
 	int		m_nproj;		// projection mode or not
 	bool	m_bLighting;	// use lighting or not
-	bool	m_bcull;		// use backface culling or not
 
 	// selections
-	bool	m_bTags;		// show tags or not
-	int		m_ntagInfo;		// tag info level
+	bool	m_bTags;						// show tags or not
+	int		m_ntagInfo;						// tag info level
+	bool	m_bignoreBackfacingItems;		// ignore backfacing items or not
 
 	// OpenGL settings
 	bool	m_blinesmooth;	// line smoothing

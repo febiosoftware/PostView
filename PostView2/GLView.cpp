@@ -1524,10 +1524,11 @@ void CGLView::RegionSelectFaces(const SelectRegion& region, int mode)
 	makeCurrent();
 	WorldToScreen transform(this);
 
-//	if (view.m_bcull)
+	if (view.m_bignoreBackfacingItems)
 	{
 		TagBackfacingFaces(*pm);
 	}
+	else pm->SetFaceTags(0);
 
 	vec3f r[4], p[4];
 	int NF = pm->Faces();
@@ -1604,10 +1605,17 @@ void CGLView::RegionSelectNodes(const SelectRegion& region, int mode)
 	makeCurrent();
 	WorldToScreen transform(this);
 
-//	if (view.m_bcull)
+	if (view.m_bignoreBackfacingItems)
 	{
 		TagBackfacingNodes(*pm);
 	}
+	else if (view.m_bext)
+	{
+		pm->SetNodeTags(0);
+		for (int i=0; i<pm->Nodes(); ++i) 
+			if (pm->Node(i).m_bext == false) pm->Node(i).m_ntag = 1;
+	}
+	else pm->SetNodeTags(0);
 	
 	for (int i = 0; i<NN; ++i)
 	{
@@ -1643,10 +1651,11 @@ void CGLView::RegionSelectEdges(const SelectRegion& region, int mode)
 	makeCurrent();
 	WorldToScreen transform(this);
 
-//	if (view.m_bcull)
+	if (view.m_bignoreBackfacingItems)
 	{
 		TagBackfacingEdges(*pm);
 	}
+	else  pm->SetEdgeTags(0);
 
 	int NE = pm->Edges();
 	for (int i = 0; i<NE; ++i)
@@ -2252,7 +2261,8 @@ void CGLView::RenderDoc()
 		VIEWSETTINGS& view = pdoc->GetViewSettings();
 		int mode = pdoc->GetSelectionMode();
 
-		if (view.m_bcull) glEnable(GL_CULL_FACE); else glDisable(GL_CULL_FACE);
+		// never do backface culling as it hides shells, iso-surface, slice plots, etc.
+		glDisable(GL_CULL_FACE);
 
 		// setup the rendering context
 		CGLContext rc(this);

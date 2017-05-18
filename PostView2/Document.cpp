@@ -46,7 +46,7 @@ void VIEWSETTINGS::Defaults()
 	m_bLighting   = true;
 	m_ambient     = 0.3f;
 	m_diffuse     = 0.7f;
-	m_bcull		 = false;
+	m_bignoreBackfacingItems = true;
 	m_blinesmooth = true;
 	m_flinethick  = 1.0f;
 	m_fpointsize  = 6.0f;
