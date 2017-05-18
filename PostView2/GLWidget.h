@@ -155,7 +155,7 @@ public:
 	enum { HORIZONTAL, VERTICAL };
 
 public:
-	GLLegendBar(CGLObject* po, CColorTexture* pm, int x, int y, int w, int h);
+	GLLegendBar(CGLObject* po, CColorTexture* pm, int x, int y, int w, int h, int orientation = VERTICAL);
 
 	void draw(QPainter* painter);
 
@@ -166,6 +166,9 @@ public:
 
 	bool ShowLabels() { return m_blabels; }
 	void ShowLabels(bool bshow) { m_blabels = bshow; }
+
+	bool ShowTitle() const { return m_btitle; }
+	void ShowTitle(bool b) { m_btitle = b; }
 
 	int GetPrecision() { return m_nprec; }
 	void SetPrecision(int n) { n = (n<1?1:(n>7?7:n)); m_nprec = n; }
@@ -179,7 +182,8 @@ public:
 protected:
 	void draw_gradient_vert(QPainter* painter);
 	void draw_gradient_horz(QPainter* painter);
-	void draw_discrete(QPainter* painter);
+	void draw_discrete_vert(QPainter* painter);
+	void draw_discrete_horz(QPainter* painter);
 
 protected:
 	int		m_ntype;	// type of bar

@@ -218,11 +218,11 @@ void GLBox::parse_label(char* szlabel, const char* szval, int nmax)
 
 //-----------------------------------------------------------------------------
 
-GLLegendBar::GLLegendBar(CGLObject* po, CColorTexture* pm, int x, int y, int w, int h) : GLWidget(po, x,y,w,h,0)
+GLLegendBar::GLLegendBar(CGLObject* po, CColorTexture* pm, int x, int y, int w, int h, int orientation) : GLWidget(po, x, y, w, h, 0)
 {
 	m_pMap = pm;
 	m_ntype = GRADIENT;
-	m_nrot = VERTICAL;
+	m_nrot = orientation;
 	m_btitle = false;
 	m_blabels = true;
 	m_nprec = 3;
@@ -240,7 +240,10 @@ void GLLegendBar::draw(QPainter* painter)
 		if (m_nrot == VERTICAL) draw_gradient_vert(painter);
 		else draw_gradient_horz(painter);
 		break;
-	case DISCRETE: draw_discrete(painter); break;
+	case DISCRETE:
+		if (m_nrot == VERTICAL) draw_discrete_vert(painter); 
+		else draw_discrete_horz(painter);
+		break;
 	default:
 		assert(false);
 	}
@@ -534,8 +537,13 @@ void GLLegendBar::draw_gradient_horz(QPainter* painter)
 	}
 }
 
+void GLLegendBar::draw_discrete_vert(QPainter* painter)
+{
+	// TODO: implement this
+	assert(false);
+}
 
-void GLLegendBar::draw_discrete(QPainter* painter)
+void GLLegendBar::draw_discrete_horz(QPainter* painter)
 {
 	painter->beginNativePainting();
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
@@ -596,14 +604,6 @@ void GLLegendBar::draw_discrete(QPainter* painter)
 		p = pow(10.0, ipow);
 	}
 
-	// render the title
-	if (m_btitle && m_po)
-	{
-		if (m_nrot == HORIZONTAL)
-		{
-			gl_draw(m_po->GetName(), x(), vp[3] - y(), w(), -h()+30, FL_ALIGN_TOP);
-		}
-	}
 */
 
 	if (m_blabels)
@@ -665,6 +665,53 @@ void GLLegendBar::draw_discrete(QPainter* painter)
 
 	glPopAttrib();
 	painter->endNativePainting();
+
+	// render the title
+	if (m_btitle && m_po)
+	{
+		painter->setPen(QColor(m_fgc.r, m_fgc.g, m_fgc.b));
+		painter->setFont(m_font);
+
+		if (m_nrot == HORIZONTAL)
+		{
+			painter->drawText(x(), y(), w(), h(), Qt::AlignCenter | Qt::AlignBottom, m_po->GetName());
+		}
+	}
+
+	if (m_blabels)
+	{
+		painter->setPen(QColor(m_fgc.r, m_fgc.g, m_fgc.b));
+		painter->setFont(m_font);
+		QFontMetrics fm(m_font);
+		int fh = fm.height();
+
+		char szfmt[16]={0}, str[128] = {0};
+		sprintf(szfmt, "%%.%dg", m_nprec);
+
+		// render the lines and text
+		for (i = 1; i<nsteps + 1; i++)
+		{
+			if (m_nrot == VERTICAL)
+			{
+				yt = y0 + i*(y1 - y0) / (nsteps + 1);
+				f = m_fmax + i*(m_fmin - m_fmax) / (nsteps + 1);
+
+				sprintf(str, szfmt, (fabs(f/p) < 1e-5 ? 0 : f/p));
+
+				painter->drawText(x0 - 55, yt - 8, 50, 20, Qt::AlignRight, str);
+			}
+			else
+			{
+				int xt = x0 + i*(x1 - x0) / (nsteps + 1);
+				f = m_fmin + i*(m_fmax - m_fmin) / (nsteps + 1);
+
+				sprintf(str, szfmt, (fabs(f/p) < 1e-5 ? 0 : f/p));
+
+				int fw = fm.width(str);
+				painter->drawText(xt - fw/2, y1 + fh + 5, str);
+			}
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
