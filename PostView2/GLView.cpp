@@ -374,6 +374,9 @@ void CGLView::UpdateWidgets()
 	m_psubtitle->resize(0, Y, m_psubtitle->w(), m_psubtitle->h());
 	m_psubtitle->fit_to_size();
 
+	// set a min width for the subtitle otherwise the time values may get cropped
+	m_psubtitle->resize(m_psubtitle->x(), m_psubtitle->y(), 150, m_psubtitle->h());
+
 	repaint();
 }
 
