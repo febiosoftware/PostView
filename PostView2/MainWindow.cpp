@@ -1575,6 +1575,9 @@ void CMainWindow::writeSettings()
 		}
 		settings.endArray();
 	}
+
+	QStringList folders = ui->fileViewer->FolderList();
+	if (folders.isEmpty() == false) settings.setValue("folders", folders);
 }
 
 void CMainWindow::readSettings()
@@ -1647,11 +1650,14 @@ void CMainWindow::readSettings()
 
 			ColorMapManager::AddColormap(sname, map);
 		}
-		settings.endArray();
 	}
+	settings.endArray();
 
-
-//	string s = ui->currentPath.toStdString();
+	QStringList folders = settings.value("folders").toStringList();
+	if (folders.isEmpty() == false)
+	{
+		ui->fileViewer->SetFolderList(folders);
+	}
 
 	ui->fileViewer->setCurrentPath(ui->currentPath);
 

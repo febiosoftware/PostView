@@ -268,12 +268,12 @@ public:
 	void add(int n, const T& v)
 	{ 
 		int m = m_elem[n]; 
-		if (m == -1) 
-		{ 
+		if (m == -1)
+		{
 			m_elem[n] = (int) m_data.size(); 
-		} 
-		else assert(m == (int) m_data.size());
-		m_data.push_back(v); 
+		}
+		else assert(m == (int)m_data.size());
+		m_data.push_back(v);
 	}
 	int size() { return (int) m_data.size(); }
 	T& operator [] (int i) { return m_data[i]; }

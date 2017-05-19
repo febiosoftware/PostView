@@ -1956,8 +1956,11 @@ bool FEModel::EvaluateFaceVector(int n, int ntime, int nvec, vec3f& r)
 				case DATA_ITEM:
 					{
 						FEFaceData_T<vec3f,DATA_ITEM>& dv = dynamic_cast<FEFaceData_T<vec3f,DATA_ITEM>&>(rd);
-						dv.eval(n, &r);
-						return true;
+						if (dv.active(n))
+						{
+							dv.eval(n, &r);
+							return true;
+						}
 					}
 					break;
 				case DATA_NODE:

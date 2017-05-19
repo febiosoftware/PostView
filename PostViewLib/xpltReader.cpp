@@ -206,11 +206,13 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 	pdm->Clear();
 
 	// read nodal variables
+	int nfields = 0;
 	int i;
 	int nv = m_dic.m_Node.size();
 	for (i=0; i<nv; ++i)
 	{
 		DICT_ITEM& it = m_dic.m_Node[i];
+		it.index = nfields++;
 
 		// add nodal field
 		switch (it.ntype)
@@ -231,6 +233,7 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 	for (i=0; i<nv; ++i)
 	{
 		DICT_ITEM& it = m_dic.m_Elem[i];
+		it.index = nfields++;
 
 		switch (it.nfmt)
 		{
@@ -309,6 +312,7 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 	for (i=0; i<nv; ++i)
 	{
 		DICT_ITEM& it = m_dic.m_Face[i];
+		it.index = nfields++;
 
 		switch (it.nfmt)
 		{
@@ -1233,7 +1237,7 @@ bool XpltReader::ReadNodeData(FEModel& fem, FEState* pstate)
 					if ((nv<0) || (nv >= (int)m_dic.m_Node.size())) return errf("Failed reading node data");
 
 					DICT_ITEM it = m_dic.m_Node[nv];
-					int nfield = dm.FindDataField(it.szname);
+					int nfield = it.index;
 					int ndata = 0;
 					int NN = mesh.Nodes();
 					while (m_ar.OpenChunk() == IO_OK)
@@ -1330,7 +1334,7 @@ bool XpltReader::ReadElemData(FEModel &fem, FEState* pstate)
 						assert((nd >= 0)&&(nd < (int)m_Dom.size()));
 						if ((nd < 0) || (nd >= (int) m_Dom.size())) return errf("Failed reading all state data");
 
-						int nfield = dm.FindDataField(it.szname);
+						int nfield = it.index;
 
 						Domain& dom = m_Dom[nd];
 						FEElemItemData& ed = dynamic_cast<FEElemItemData&>(pstate->m_Data[nfield]);
@@ -1672,7 +1676,7 @@ bool XpltReader::ReadFaceData(FEModel& fem, FEState* pstate)
 						assert((ns >= 0)&&(ns < (int)m_Surf.size()));
 						if ((ns < 0) || (ns >= (int)m_Surf.size())) return errf("Failed reading all state data");
 
-						int nfield = dm.FindDataField(it.szname);
+						int nfield = it.index;
 
 						Surface& s = m_Surf[ns];
 						switch (it.nfmt)

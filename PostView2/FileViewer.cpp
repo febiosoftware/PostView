@@ -28,6 +28,7 @@ public:
 		m_folder->setObjectName("folder");
 		m_folder->setEditable(true);
 		m_folder->setInsertPolicy(QComboBox::NoInsert);
+		m_folder->setMaxCount(15);
 
 		m_fileFilter = new QComboBox(parent);
 		m_fileFilter->setObjectName(QStringLiteral("fileFilter"));
@@ -40,6 +41,22 @@ public:
 		pg->addLayout(pg2);
 		pg->addWidget(m_fileFilter);
 		pg->addWidget(m_fileList);
+	}
+
+	void addFolder(const QString& folder)
+	{
+		// see if this item already exists
+		int n = m_folder->findText(folder);
+		if (n != -1) return;
+
+		// if not, add it
+		n = m_folder->count();
+		if (n == m_folder->maxCount())
+		{
+			m_folder->removeItem(0);
+		}
+		m_folder->addItem(folder);
+		m_folder->setCurrentIndex(m_folder->count()-1);
 	}
 };
 
@@ -97,7 +114,10 @@ QString CFileViewer::currentPath() const
 void CFileViewer::setCurrentPath(const QString& s)
 {
 	ui->m_fileList->setRootIndex(m_fileSystem->index(s));
-	ui->m_folder->setEditText(currentPath());
+
+	int n = ui->m_folder->findText(s);
+	if (n >= 0) ui->m_folder->setCurrentIndex(n);
+	else ui->m_folder->setEditText(currentPath());
 }
 
 void CFileViewer::on_fileList_doubleClicked(const QModelIndex& index)
@@ -114,9 +134,7 @@ void CFileViewer::on_fileList_doubleClicked(const QModelIndex& index)
 		QString filePath = currentPath();
 		m_wnd->SetCurrentFolder(filePath);
 
-		int n = ui->m_folder->findText(filePath);
-		if (n == -1)
-			ui->m_folder->addItem(filePath);
+		ui->addFolder(filePath);
 	}
 }
 
@@ -142,4 +160,21 @@ void CFileViewer::on_toolUp_clicked()
 void CFileViewer::on_folder_editTextChanged(const QString& text)
 {
 	setCurrentPath(text);
+}
+
+QStringList CFileViewer::FolderList()
+{
+	QStringList folders;
+	for (int i=0; i<ui->m_folder->count(); ++i)
+	{
+		folders << ui->m_folder->itemText(i);
+	}
+	return folders;
+}
+
+void CFileViewer::SetFolderList(const QStringList& folders)
+{
+	ui->m_folder->clear();
+	ui->m_folder->addItems(folders);
+	ui->m_folder->setCurrentIndex(0);
 }

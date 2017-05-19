@@ -157,6 +157,6 @@ public:
 	std::string getDataString(int nfield, Data_Tensor_Type ntype);
 
 protected:
-	vector<FEDataField*>	m_Data;		// nodal data
+	vector<FEDataField*>	m_Data;
 	FEModel*	m_pm;
 };

@@ -113,6 +113,8 @@ public:
 		unsigned int	ntype;
 		unsigned int	nfmt;
 		char			szname[DI_NAME_SIZE];
+
+		unsigned int	index;	// index into data manager list
 	};
 
 	class Dictionary

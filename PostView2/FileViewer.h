@@ -20,6 +20,9 @@ public:
 	QString currentPath() const;
 	void setCurrentPath(const QString& s);
 
+	QStringList FolderList();
+	void SetFolderList(const QStringList& folders);
+
 private slots:
 	void on_fileList_doubleClicked(const QModelIndex& index);
 	void on_fileFilter_currentIndexChanged(int index);
