@@ -681,7 +681,13 @@ void CGLView::wheelEvent(QWheelEvent* ev)
 
 	CGLCamera& cam = GetCamera();
     
+#ifdef __APPLE__
+// on Mac, pan by default and zoom when alt/option is pressed
+    if (!balt) {
+#else
+// otherwise, zoom by default and pan when alt/option is pressed
     if (balt) {
+#endif
         int dx = ev->pixelDelta().x();
         int dy = ev->pixelDelta().y();
         vec3f r = vec3f(-(float)dx, (float)dy, 0.f);
