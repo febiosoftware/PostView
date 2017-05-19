@@ -23,6 +23,7 @@ public:
 private slots:
 	void on_fileList_doubleClicked(const QModelIndex& index);
 	void on_fileFilter_currentIndexChanged(int index);
+	void on_folder_editTextChanged(const QString& text);
 	void on_toolUp_clicked();
 
 private:

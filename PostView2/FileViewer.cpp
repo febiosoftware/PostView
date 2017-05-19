@@ -11,6 +11,7 @@ class Ui::CFileViewer
 public:
 	QComboBox*	m_fileFilter;
 	QListView*	m_fileList;
+	QComboBox*	m_folder;
 
 public:
 	void setupUi(QWidget* parent)
@@ -23,6 +24,11 @@ public:
 		pb->setIcon(QIcon(":/icons/up.png"));
 		pb->setAutoRaise(true);
 
+		m_folder = new QComboBox;
+		m_folder->setObjectName("folder");
+		m_folder->setEditable(true);
+		m_folder->setInsertPolicy(QComboBox::NoInsert);
+
 		m_fileFilter = new QComboBox(parent);
 		m_fileFilter->setObjectName(QStringLiteral("fileFilter"));
 
@@ -30,8 +36,9 @@ public:
 		m_fileList->setObjectName(QStringLiteral("fileList"));
 
 		pg2->addWidget(pb);
-		pg2->addWidget(m_fileFilter);
+		pg2->addWidget(m_folder);
 		pg->addLayout(pg2);
+		pg->addWidget(m_fileFilter);
 		pg->addWidget(m_fileList);
 	}
 };
@@ -76,6 +83,9 @@ CFileViewer::CFileViewer(CMainWindow* pwnd, QWidget* parent) : QWidget(parent), 
 	ui->m_fileList->setModel(m_fileSystem);
     ui->m_fileList->setRootIndex(m_fileSystem->index(QDir::homePath()));
 
+	// set the folder
+	ui->m_folder->setEditText(currentPath());
+
 	QMetaObject::connectSlotsByName(this);
 }
 
@@ -87,16 +97,26 @@ QString CFileViewer::currentPath() const
 void CFileViewer::setCurrentPath(const QString& s)
 {
 	ui->m_fileList->setRootIndex(m_fileSystem->index(s));
+	ui->m_folder->setEditText(currentPath());
 }
 
 void CFileViewer::on_fileList_doubleClicked(const QModelIndex& index)
 {
 	if (m_fileSystem->isDir(index))
+	{
 		ui->m_fileList->setRootIndex(index);
+		ui->m_folder->setEditText(currentPath());
+	}
 	else
 	{
 		m_wnd->OpenFile(m_fileSystem->filePath(index), ui->m_fileFilter->currentIndex());
-		m_wnd->SetCurrentFolder(currentPath());
+
+		QString filePath = currentPath();
+		m_wnd->SetCurrentFolder(filePath);
+
+		int n = ui->m_folder->findText(filePath);
+		if (n == -1)
+			ui->m_folder->addItem(filePath);
 	}
 }
 
@@ -116,4 +136,10 @@ void CFileViewer::on_toolUp_clicked()
     QModelIndex n = ui->m_fileList->rootIndex();
     n = m_fileSystem->parent(n);
     ui->m_fileList->setRootIndex(n);
+	ui->m_folder->setEditText(currentPath());
+}
+
+void CFileViewer::on_folder_editTextChanged(const QString& text)
+{
+	setCurrentPath(text);
 }
