@@ -792,9 +792,28 @@ void CGLView::mouseMoveEvent(QMouseEvent* ev)
 }
 
 //-----------------------------------------------------------------------------
-/*bool CGLView::event(QEvent* event)
+bool CGLView::gestureEvent(QNativeGestureEvent* ev)
 {
-	switch (event->type())
+    CGLCamera& cam = GetCamera();
+    
+    if (ev->gestureType() == Qt::ZoomNativeGesture) {
+        cam.Zoom(1.0f+(float)ev->value());
+    }
+    else if (ev->gestureType() == Qt::RotateNativeGesture) {
+        // rotate in-plane
+        quat4f qz = quat4f(-2*ev->value()*0.01745329, vec3f(0, 0, 1));
+        cam.Orbit(qz);
+    }
+    repaint();
+    cam.Update(true);
+    update();
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+bool CGLView::event(QEvent* event)
+{
+/*	switch (event->type())
 	{
 	case QEvent::TouchBegin:
 	case QEvent::TouchCancel:
@@ -837,11 +856,12 @@ void CGLView::mouseMoveEvent(QMouseEvent* ev)
 			return true;
 		}
 		break;
-	}
-
+	}*/
+    if (event->type() == QEvent::NativeGesture)
+        return gestureEvent(static_cast<QNativeGestureEvent*>(event));
 	return QOpenGLWidget::event(event);
 }
-*/
+
 
 //-----------------------------------------------------------------------------
 void CGLView::keyPressEvent(QKeyEvent* ev)

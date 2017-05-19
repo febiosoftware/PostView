@@ -5,6 +5,7 @@
 #include <PostViewLib/FEElement.h>
 #include <PostViewLib/Intersect.h>
 #include "GLWidgetManager.h"
+#include <QNativeGestureEvent>
 
 //-----------------------------------------------------------------------------
 // forward declarations
@@ -179,7 +180,8 @@ protected:
 	void mouseDoubleClickEvent(QMouseEvent* ev);
 	void wheelEvent(QWheelEvent* ev);
 	void keyPressEvent(QKeyEvent* ev);
-//	bool event(QEvent* event);
+    bool gestureEvent(QNativeGestureEvent* ev);
+	bool event(QEvent* event);
 
 protected slots:
 	void repaintEvent();
