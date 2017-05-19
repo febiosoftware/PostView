@@ -676,9 +676,22 @@ void CGLView::mouseDoubleClickEvent(QMouseEvent* ev)
 //-----------------------------------------------------------------------------
 void CGLView::wheelEvent(QWheelEvent* ev)
 {
+    Qt::KeyboardModifiers key = ev->modifiers();
+    bool balt   = (key & Qt::AltModifier);
+
 	CGLCamera& cam = GetCamera();
-	if (ev->delta() > 0) cam.Zoom(0.95f);
-	else cam.Zoom(1.0f/0.95f);
+    
+    if (balt) {
+        int dx = ev->pixelDelta().x();
+        int dy = ev->pixelDelta().y();
+        vec3f r = vec3f(-(float)dx, (float)dy, 0.f);
+        PanView(r);
+    }
+    else {
+        if (ev->delta() > 0) cam.Zoom(0.95f);
+        else cam.Zoom(1.0f/0.95f);
+    }
+    repaint();
 	cam.Update(true);
 	update();
 }
