@@ -680,7 +680,7 @@ void CGLView::wheelEvent(QWheelEvent* ev)
 	if (ev->delta() > 0) cam.Zoom(0.95f);
 	else cam.Zoom(1.0f/0.95f);
 	cam.Update(true);
-	repaint();
+	update();
 }
 
 //-----------------------------------------------------------------------------
@@ -829,6 +829,29 @@ void CGLView::mouseMoveEvent(QMouseEvent* ev)
 	return QOpenGLWidget::event(event);
 }
 */
+
+//-----------------------------------------------------------------------------
+void CGLView::keyPressEvent(QKeyEvent* ev)
+{
+	float panSpeed = 10.f;
+	vec3f panDirection;
+	switch (ev->key())
+	{
+	case Qt::Key_Left : panDirection = vec3f( 1.f,  0.f,  0.f); break;
+	case Qt::Key_Right: panDirection = vec3f(-1.f,  0.f,  0.f); break;
+	case Qt::Key_Up   : panDirection = vec3f( 0.f, -1.f,  0.f); break;
+	case Qt::Key_Down : panDirection = vec3f( 0.f,  1.f,  0.f); break;
+	default:
+		ev->ignore();
+	}
+
+	if (ev->isAccepted())
+	{
+		PanView(panDirection*panSpeed);
+		GetCamera().Update(true);
+		update();
+	}
+}
 
 //-----------------------------------------------------------------------------
 void CGLView::mouseReleaseEvent(QMouseEvent* ev)

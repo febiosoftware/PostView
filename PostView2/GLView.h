@@ -178,6 +178,7 @@ protected:
 	void mouseReleaseEvent(QMouseEvent* ev);
 	void mouseDoubleClickEvent(QMouseEvent* ev);
 	void wheelEvent(QWheelEvent* ev);
+	void keyPressEvent(QKeyEvent* ev);
 //	bool event(QEvent* event);
 
 protected slots:
