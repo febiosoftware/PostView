@@ -803,7 +803,12 @@ bool CGLView::gestureEvent(QNativeGestureEvent* ev)
     CGLCamera& cam = GetCamera();
     
     if (ev->gestureType() == Qt::ZoomNativeGesture) {
-        cam.Zoom(1.0f-(float)ev->value());
+        if (ev->value() < 0) {
+            cam.Zoom(1./(1.0f+(float)ev->value()));
+        }
+        else {
+            cam.Zoom(1.0f-(float)ev->value());
+        }
     }
     else if (ev->gestureType() == Qt::RotateNativeGesture) {
         // rotate in-plane
