@@ -51,6 +51,16 @@ bool IntersectTriangle(const Ray& ray, const Triangle& tri, Intersection& inters
 }
 
 //-----------------------------------------------------------------------------
+bool FastIntersectQuad(const Ray& ray, const Quad& quad, Intersection& intersect)
+{
+	Triangle tri[2] = {
+		{ quad.r0, quad.r1, quad.r2 },
+		{ quad.r2, quad.r3, quad.r0 }};
+
+	return IntersectTriangle(ray, tri[0], intersect) || IntersectTriangle(ray, tri[1], intersect);
+}
+
+//-----------------------------------------------------------------------------
 // Find intersection of a ray with a quad
 bool IntersectQuad(const Ray& ray, const Quad& quad, Intersection& intersect)
 {
@@ -115,11 +125,16 @@ bool IntersectQuad(const Ray& ray, const Quad& quad, Intersection& intersect)
 	} 
 	while ((normu > 1e-6) && (niter < NMAX));
 
-	intersect.point = nr + nn*l;
-	intersect.r[0] = r;
-	intersect.r[1] = s;
-
-	return ((r + tol >= -1) && (r - tol <= 1) && (s + tol >= -1) && (s - tol <= 1));
+	if (niter < NMAX)
+	{
+		intersect.point = nr + nn*l;
+		intersect.r[0] = r;
+		intersect.r[1] = s;
+	
+		bool b = ((r + tol >= -1) && (r - tol <= 1) && (s + tol >= -1) && (s - tol <= 1));
+		return b;
+	}
+	else return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -158,7 +173,7 @@ bool FindFaceIntersection(const Ray& ray, const FEMeshBase& mesh, Intersection& 
 			case FACE_QUAD9:
 			{
 				Quad quad = { rn[0], rn[1], rn[2], rn[3] };
-				bfound = IntersectQuad(ray, quad, tmp);
+				bfound = FastIntersectQuad(ray, quad, tmp);
 			}
 			break;
 			}
@@ -221,7 +236,7 @@ bool FindElementIntersection(const Ray& ray, const FEMeshBase& mesh, Intersectio
 					rn[3] = mesh.Node(face.node[3]).m_rt;
 
 					Quad quad = { rn[0], rn[1], rn[2], rn[3] };
-					bfound = IntersectQuad(ray, quad, tmp);
+					bfound = FastIntersectQuad(ray, quad, tmp);
 				}
 				break;
 				case FACE_TRI3:

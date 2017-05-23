@@ -41,6 +41,7 @@ bool IntersectTriangle(const Ray& ray, const Triangle& tri, Intersection& q);
 //-----------------------------------------------------------------------------
 // Find intersection of a ray with a quad
 bool IntersectQuad(const Ray& ray, const Quad& quad, Intersection& q);
+bool FastIntersectQuad(const Ray& ray, const Quad& quad, Intersection& q);
 
 //-----------------------------------------------------------------------------
 bool FindFaceIntersection(const Ray& ray, const FEMeshBase& mesh, Intersection& q);

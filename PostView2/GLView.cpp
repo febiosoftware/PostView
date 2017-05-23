@@ -1246,7 +1246,7 @@ void CGLView::RenderTags()
 	// limit the number of tags to render
 	const int MAX_TAGS = 100;
 	int nsel = (int) vtag.size();
-	if (nsel > MAX_TAGS) nsel = MAX_TAGS;
+	if (nsel > MAX_TAGS) return; // nsel = MAX_TAGS;
 
 	// find out where the tags are on the screen
 	WorldToScreen transform(this);

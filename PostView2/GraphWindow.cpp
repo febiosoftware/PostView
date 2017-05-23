@@ -275,7 +275,7 @@ public:
 	}
 };
 
-CGraphWindow::CGraphWindow(CMainWindow* pwnd) : m_wnd(pwnd), QMainWindow(pwnd), ui(new Ui::CGraphWindow)
+CGraphWindow::CGraphWindow(CMainWindow* pwnd) : m_wnd(pwnd), QMainWindow(pwnd, Qt::WindowStaysOnTopHint), ui(new Ui::CGraphWindow)
 {
 	m_nTrackTime = TRACK_TIME;
 	m_nUserMin = 0;
