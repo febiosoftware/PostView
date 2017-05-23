@@ -31,7 +31,8 @@ CDataFieldSelector::CDataFieldSelector(QWidget* parent) : QComboBox(parent)
 
 	setMaxVisibleItems(50);
 
-	QObject::connect(m_tree, SIGNAL(itemEntered(QTreeWidgetItem*,int)), this, SLOT(onItemEntered(QTreeWidgetItem*,int)));
+//	QObject::connect(m_tree, SIGNAL(itemEntered(QTreeWidgetItem*,int)), this, SLOT(onItemEntered(QTreeWidgetItem*,int)));
+	QObject::connect(m_tree, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(onItemClicked(QTreeWidgetItem*,int)));
 }
 
 CDataFieldSelector::~CDataFieldSelector()
@@ -55,6 +56,16 @@ void CDataFieldSelector::onItemEntered(QTreeWidgetItem* item, int)
 	m_ntimer++;
 	m_sel = item;
 	QTimer::singleShot(250, this, SLOT(onTimer()));
+}
+
+void CDataFieldSelector::onItemClicked(QTreeWidgetItem* item, int)
+{
+	if (item)
+	{
+		if (item->isExpanded() == false) item->setExpanded(true);
+		else item->setExpanded(false);
+		this->view()->updateGeometry();
+	}
 }
 
 void CDataFieldSelector::BuildMenu(FEModel* fem, Data_Tensor_Type nclass, bool btvec)

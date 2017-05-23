@@ -27,6 +27,7 @@ public:
 private slots:
 	void onItemEntered(QTreeWidgetItem*, int);
 	void onTimer();
+	void onItemClicked(QTreeWidgetItem*, int);
 
 private:
 	void addComponent(QTreeWidgetItem* parent, const char* szname, int ndata);
