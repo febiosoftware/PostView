@@ -15,7 +15,7 @@ GLEW_DIR = /home/sci/rawlins/Applications/glew-2.0.0
 GLEW_INC = -I$(GLEW_DIR)/include/GL
 GLEW_LIB = -L$(GLEW_DIR)/lib -lGLEW
 
-QT_DIR = /home/sci/rawlins/Applications/Qt/Qt5.6.1/5.6/gcc_64
+QT_DIR = /home/sci/rawlins/Applications/Qt/Qt5.8/5.8/gcc_64
 QT_INC = -I$(QT_DIR)/include -I$(QT_DIR)/include/QtGui -I$(QT_DIR)/include/QtWidgets
 QT_LIB = -Wl,-rpath-link=$(QT_DIR)/lib -lQt5Core -lQt5Gui -lQt5Widgets
 

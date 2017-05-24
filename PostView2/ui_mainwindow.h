@@ -25,7 +25,7 @@
 #include <QFontComboBox>
 #include <QSpinBox>
 #include <QProgressBar>
-#include <QtCore/QDir.h>
+#include <QtCore/qdir.h>
 #include <QPushButton>
 
 QT_BEGIN_NAMESPACE

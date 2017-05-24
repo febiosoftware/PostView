@@ -12,6 +12,7 @@
 #include "GLTexture1D.h"
 #include "color.h"
 #include <vector>
+#include <string>
 using namespace std;
 
 #define MAX_MAP_COLORS	9
