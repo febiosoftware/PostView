@@ -1094,7 +1094,7 @@ void CMainWindow::on_selectData_currentIndexChanged(int index)
 
 		pdoc->UpdateFEModel();
 
-		ui->glview->UpdateWidgets();
+		ui->glview->UpdateWidgets(false);
 //		RedrawGL();
 	}
 

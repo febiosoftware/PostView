@@ -160,7 +160,7 @@ public:
 
 	void PositionCam();
 
-	void UpdateWidgets();
+	void UpdateWidgets(bool bposition = true);
 
 public:
 	void NewAnimation(const char* szfile, CAnimation* panim, GLenum fmt = GL_RGB);

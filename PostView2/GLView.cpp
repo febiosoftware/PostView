@@ -364,18 +364,23 @@ CGLView::~CGLView()
 {
 }
 
-void CGLView::UpdateWidgets()
+void CGLView::UpdateWidgets(bool bposition)
 {
 	int Y = 0;
-	m_ptitle->resize(0, 0, m_ptitle->w(), m_ptitle->h());
-	m_ptitle->fit_to_size();
-	Y += m_ptitle->h();
+	if (bposition)
+		m_ptitle->resize(0, 0, m_ptitle->w(), m_ptitle->h());
 
-	m_psubtitle->resize(0, Y, m_psubtitle->w(), m_psubtitle->h());
+	m_ptitle->fit_to_size();
+	Y = m_ptitle->y() + m_ptitle->h();
+
+	if (bposition)
+		m_psubtitle->resize(0, Y, m_psubtitle->w(), m_psubtitle->h());
+
 	m_psubtitle->fit_to_size();
 
 	// set a min width for the subtitle otherwise the time values may get cropped
-	m_psubtitle->resize(m_psubtitle->x(), m_psubtitle->y(), 150, m_psubtitle->h());
+	if (m_psubtitle->w() < 150)
+		m_psubtitle->resize(m_psubtitle->x(), m_psubtitle->y(), 150, m_psubtitle->h());
 
 	repaint();
 }
