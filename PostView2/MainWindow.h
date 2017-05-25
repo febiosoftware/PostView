@@ -79,6 +79,9 @@ public:
 	// clear the status message
 	void ClearStatusMessage();
 
+	// update status message (used for printing selection info)
+	void UpdateStatusMessage();
+
 	// sets the current folder
 	void SetCurrentFolder(const QString& folder);
 

@@ -216,6 +216,7 @@ protected:
 	void RegionSelectNodes   (const SelectRegion& region, int mode);
 	void RegionSelectEdges   (const SelectRegion& region, int mode);
 
+	void TagBackfacingElements(FEMeshBase& mesh);
 	void TagBackfacingFaces(FEMeshBase& mesh);
 	void TagBackfacingNodes(FEMeshBase& mesh);
 	void TagBackfacingEdges(FEMeshBase& mesh);

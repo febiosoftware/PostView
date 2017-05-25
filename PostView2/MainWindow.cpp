@@ -103,6 +103,124 @@ void CMainWindow::ClearStatusMessage()
 	ui->statusBar->clearMessage();
 }
 
+void CMainWindow::UpdateStatusMessage()
+{
+	ClearStatusMessage();
+	if (m_doc->IsValid())
+	{
+		CGLModel& mdl = *m_doc->GetGLModel();
+		FEMeshBase* mesh = m_doc->GetActiveMesh();
+		if (mesh)
+		{
+			int selectionMode = m_doc->GetSelectionMode();
+
+			int N = 0;
+			char sz[128] = {0};
+			switch (selectionMode)
+			{
+			case SELECT_NODES:
+				{
+					// count nodal selection
+					int nn = -1, i;
+					for (i = 0; i<mesh->Nodes(); ++i)
+					{
+						if (mesh->Node(i).IsSelected())
+						{
+							N++;
+							nn = i;
+						}
+					}
+
+					if (N == 1)
+					{
+						FENode& n = mesh->Node(nn);
+						vec3f r = n.m_rt;
+						float f = mdl.currentState()->m_NODE[nn].m_val;
+						sprintf(sz, "1 node selected: Id = %d, val = %g, pos = (%g, %g, %g)", nn + 1, f, r.x, r.y, r.z);
+					}
+					else if (N > 1)
+					{
+						sprintf(sz, "%d nodes selected", N);
+					}
+				}
+				break;
+			case SELECT_EDGES:
+				{
+					// count edge selection
+					int nn = -1, i;
+					for (i = 0; i<mesh->Edges(); ++i)
+					{
+						if (mesh->Edge(i).IsSelected())
+						{
+							N++;
+							nn = i;
+						}
+					}
+
+					if (N == 1)
+					{
+						FEEdge& n = mesh->Edge(nn);
+						float f = mdl.currentState()->m_EDGE[nn].m_val;
+						sprintf(sz, "1 edge selected");
+					}
+					else if (N > 1)
+					{
+						sprintf(sz, "%d edges selected", N);
+					}
+				}
+				break;
+			case SELECT_FACES:
+				{
+					// count selection
+					int nn = -1, i;
+					for (i = 0; i<mesh->Faces(); ++i)
+					{
+						if (mesh->Face(i).IsSelected())
+						{
+							N++;
+							nn = i;
+						}
+					}
+
+					if (N == 1)
+					{
+						sprintf(sz, "1 face selected: Id = %d", nn + 1);
+					}
+					else if (N > 1)
+					{
+						sprintf(sz, "%d faces selected", N);
+					}
+				}
+				break;
+			case SELECT_ELEMS:
+				{
+					int ne = -1, i;
+					for (i = 0; i<mesh->Elements(); ++i)
+					{
+						if (mesh->Element(i).IsSelected())
+						{
+							N++;
+							ne = i;
+						}
+					}
+					if (N == 1)
+					{
+						sprintf(sz, "1 element selected: Id = %d", ne + 1);
+					}
+					else if (N > 1)
+					{
+						sprintf(sz, "%d elements selected", N);
+					}
+				}
+				break;
+			}
+
+			if (N > 0) SetStatusMessage(sz);
+			else ClearStatusMessage();
+		}
+	}
+}
+
 CGLView* CMainWindow::GetGLView()
 {
 	return ui->glview;
@@ -734,6 +852,7 @@ void CMainWindow::on_actionHideSelected_triggered()
 	case SELECT_ELEMS: mdl.HideSelectedElements(); break;
 	}
 
+	UpdateStatusMessage();
 	pdoc->UpdateFEModel();
 	RedrawGL();
 }
@@ -752,15 +871,11 @@ void CMainWindow::on_actionHideUnselected_triggered()
 void CMainWindow::on_actionInvertSelection_triggered()
 {
 	CDocument* pdoc = GetDocument();
-	FEMeshBase* pfe = pdoc->GetActiveMesh();
+	CGLModel& mdl = *pdoc->GetGLModel();
 
-	for (int i=0; i<pfe->Elements(); i++)
-	{
-		FEElement& e = pfe->Element(i);
-		if (e.IsVisible())
-			if (e.IsSelected()) e.Unselect(); else e.Select();
-	}
+	mdl.InvertSelectedElements();
 
+	UpdateStatusMessage();
 	pdoc->UpdateFEModel();
 	RedrawGL();
 }
@@ -793,6 +908,7 @@ void CMainWindow::on_actionSelectAll_triggered()
 		if (e.IsVisible()) e.Select();
 	}
 
+	UpdateStatusMessage();
 	pdoc->UpdateFEModel();
 	RedrawGL();
 }
@@ -822,6 +938,7 @@ void CMainWindow::on_actionSelectRange_triggered()
 		case SELECT_ELEMS: pdoc->SelectElemsInRange(dlg.m_min, dlg.m_max, dlg.m_brange); break;
 		}
 		
+		UpdateStatusMessage();
 		pdoc->UpdateFEModel();
 		UpdateUi(false);
 	}
@@ -834,6 +951,7 @@ void CMainWindow::on_actionClearSelection_triggered()
 	{
 		CGLModel& mdl = *pdoc->GetGLModel();
 		mdl.ClearSelection(); 
+		UpdateStatusMessage();
 		pdoc->UpdateFEModel();
 		RedrawGL();
 	}
@@ -870,6 +988,8 @@ void CMainWindow::on_actionFind_triggered()
 		case SELECT_ELEMS: on_selectElems_triggered(); pm->SelectElements(dlg.m_item, dlg.m_bclear); break;
 		}
 
+		doc.GetGLModel()->UpdateSelectionLists();
+		UpdateStatusMessage();
 		RedrawGL();
 	}
 }

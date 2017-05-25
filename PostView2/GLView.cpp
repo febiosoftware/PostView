@@ -1511,32 +1511,57 @@ void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
 		else f.Unselect();
 	}
 
-	// count selection
-	int N = 0, nn = -1, i;
-	for (i=0; i<pm->Faces(); ++i)
-	{
-		if (pm->Face(i).IsSelected())
-		{
-			N++;
-			nn = i;
-		}
-	}
-
-	if (N==1)
-	{
-		char sz[512] = {0};
-		sprintf(sz, "1 face selected: Id = %d", nn + 1);
-		m_wnd->SetStatusMessage(sz);
-	}
-	else if (N > 1)
-	{
-		char sz[512] = { 0 };
-		sprintf(sz, "%d faces selected", N);
-		m_wnd->SetStatusMessage(sz);
-	}
-	else m_wnd->ClearStatusMessage();
+	m_wnd->UpdateStatusMessage();
 
 	mdl.UpdateSelectionLists(SELECT_FACES);
+}
+
+//-----------------------------------------------------------------------------
+bool regionFaceIntersect(WorldToScreen& transform, const SelectRegion& region, FEFace& face, FEMeshBase* pm, double dpr)
+{
+	vec3f r[4], p[4];
+	bool binside = false;
+	switch (face.m_ntype)
+	{
+	case FACE_TRI3:
+	case FACE_TRI6:
+	case FACE_TRI7:
+	case FACE_TRI10:
+		r[0] = pm->Node(face.node[0]).m_rt;
+		r[1] = pm->Node(face.node[1]).m_rt;
+		r[2] = pm->Node(face.node[2]).m_rt;
+
+		p[0] = transform.Apply(r[0]) / dpr;
+		p[1] = transform.Apply(r[1]) / dpr;
+		p[2] = transform.Apply(r[2]) / dpr;
+
+		if (region.TriangleIntersect((int)p[0].x, (int)p[0].y, (int)p[1].x, (int)p[1].y, (int)p[2].x, (int)p[2].y))
+		{
+			binside = true;
+		}
+		break;
+
+	case FACE_QUAD4:
+	case FACE_QUAD8:
+	case FACE_QUAD9:
+		r[0] = pm->Node(face.node[0]).m_rt;
+		r[1] = pm->Node(face.node[1]).m_rt;
+		r[2] = pm->Node(face.node[2]).m_rt;
+		r[3] = pm->Node(face.node[3]).m_rt;
+
+		p[0] = transform.Apply(r[0]) / dpr;
+		p[1] = transform.Apply(r[1]) / dpr;
+		p[2] = transform.Apply(r[2]) / dpr;
+		p[3] = transform.Apply(r[3]) / dpr;
+
+		if ((region.TriangleIntersect((int)p[0].x, (int)p[0].y, (int)p[1].x, (int)p[1].y, (int)p[2].x, (int)p[2].y)) ||
+			(region.TriangleIntersect((int)p[2].x, (int)p[2].y, (int)p[3].x, (int)p[3].y, (int)p[0].x, (int)p[0].y)))
+		{
+			binside = true;
+		}
+		break;
+	}
+	return binside;
 }
 
 //-----------------------------------------------------------------------------
@@ -1554,29 +1579,42 @@ void CGLView::RegionSelectElements(const SelectRegion& region, int mode)
 	makeCurrent();
 	WorldToScreen transform(this);
 
+	if (view.m_bext && view.m_bignoreBackfacingItems)
+	{
+		TagBackfacingElements(*pm);
+	}
+	else pm->SetElementTags(0);
+
 	int NE = pm->Elements();
 	for (int i = 0; i<NE; ++i)
 	{
 		FEElement& el = pm->Element(i);
 
-		int ne = el.Nodes();
-		bool binside = false;
-		for (int i = 0; i<ne; ++i)
+		if (el.IsVisible() && (el.m_ntag == 0) && ((view.m_bext == false) || el.IsExterior()))
 		{
-			vec3f r = pm->Node(el.m_node[i]).m_rt;
-			vec3f p = transform.Apply(r);
-			if (region.IsInside((int)p.x / m_dpr, (int)p.y / m_dpr))
+			int ne = el.Nodes();
+			bool binside = false;
+
+			for (int i = 0; i<ne; ++i)
 			{
-				binside = true;
-				break;
+				vec3f r = pm->Node(el.m_node[i]).m_rt;
+				vec3f p = transform.Apply(r);
+				if (region.IsInside((int)p.x / m_dpr, (int)p.y / m_dpr))
+				{
+					binside = true;
+					break;
+				}
+			}
+
+			if (binside)
+			{
+				if (mode == SELECT_ADD) el.Select(); else el.Unselect();
 			}
 		}
-
-		if (binside)
-		{
-			if (mode == SELECT_ADD) el.Select(); else el.Unselect();
-		}
 	}
+
+	// update status bar
+	m_wnd->UpdateStatusMessage();
 
 	mdl.UpdateSelectionLists(SELECT_ELEMS);
 }
@@ -1602,61 +1640,21 @@ void CGLView::RegionSelectFaces(const SelectRegion& region, int mode)
 	}
 	else pm->SetFaceTags(0);
 
-	vec3f r[4], p[4];
 	int NF = pm->Faces();
 	for (int i = 0; i<NF; ++i)
 	{
 		FEFace& face = pm->Face(i);
 		if (face.m_ntag == 0)
 		{
-			bool binside = false;
-			switch (face.m_ntype)
-			{
-			case FACE_TRI3:
-			case FACE_TRI6:
-			case FACE_TRI7:
-			case FACE_TRI10:
-				r[0] = pm->Node(face.node[0]).m_rt;
-				r[1] = pm->Node(face.node[1]).m_rt;
-				r[2] = pm->Node(face.node[2]).m_rt;
-
-				p[0] = transform.Apply(r[0]) / m_dpr;
-				p[1] = transform.Apply(r[1]) / m_dpr;
-				p[2] = transform.Apply(r[2]) / m_dpr;
-
-				if (region.TriangleIntersect((int)p[0].x, (int)p[0].y, (int)p[1].x, (int)p[1].y, (int)p[2].x, (int)p[2].y))
-				{
-					binside = true;
-				}
-				break;
-
-			case FACE_QUAD4:
-			case FACE_QUAD8:
-			case FACE_QUAD9:
-				r[0] = pm->Node(face.node[0]).m_rt;
-				r[1] = pm->Node(face.node[1]).m_rt;
-				r[2] = pm->Node(face.node[2]).m_rt;
-				r[3] = pm->Node(face.node[3]).m_rt;
-
-				p[0] = transform.Apply(r[0]) / m_dpr;
-				p[1] = transform.Apply(r[1]) / m_dpr;
-				p[2] = transform.Apply(r[2]) / m_dpr;
-				p[3] = transform.Apply(r[3]) / m_dpr;
-
-				if ((region.TriangleIntersect((int)p[0].x, (int)p[0].y, (int)p[1].x, (int)p[1].y, (int)p[2].x, (int)p[2].y)) ||
-					(region.TriangleIntersect((int)p[2].x, (int)p[2].y, (int)p[3].x, (int)p[3].y, (int)p[0].x, (int)p[0].y)))
-				{
-					binside = true;
-				}
-				break;
-			}
-
-			if (binside)
+			if (regionFaceIntersect(transform, region, face, pm, m_dpr))
 			{
 				if (mode == SELECT_ADD) face.Select(); else face.Unselect();
 			}
 		}
 	}
+
+	// update status bar
+	m_wnd->UpdateStatusMessage();
 
 	mdl.UpdateSelectionLists(SELECT_FACES);
 }
@@ -1704,6 +1702,9 @@ void CGLView::RegionSelectNodes(const SelectRegion& region, int mode)
 			}
 		}
 	}
+
+	// update status bar
+	m_wnd->UpdateStatusMessage();
 
 	mdl.UpdateSelectionLists(SELECT_NODES);
 }
@@ -1753,6 +1754,9 @@ void CGLView::RegionSelectEdges(const SelectRegion& region, int mode)
 			}
 		}
 	}
+
+	// update status bar
+	m_wnd->UpdateStatusMessage();
 
 	mdl.UpdateSelectionLists(SELECT_EDGES);
 }
@@ -1804,29 +1808,8 @@ void CGLView::SelectElements(int x0, int y0, int x1, int y1, int mode)
 		else el.Unselect();
 	}
 
-	// count element selection
-	int N = 0, ne = -1, i;
-	for (i=0; i<pm->Elements(); ++i)
-	{
-		if (pm->Element(i).IsSelected())
-		{
-			N++;
-			ne = i;
-		}
-	}
-	if (N==1)
-	{
-		char sz[512] = {0};
-		sprintf(sz, "1 element selected: Id = %d", ne + 1);
-		m_wnd->SetStatusMessage(sz);
-	}
-	else if (N > 1)
-	{
-		char sz[512] = { 0 };
-		sprintf(sz, "%d elements selected", N);
-		m_wnd->SetStatusMessage(sz);
-	}
-	else m_wnd->ClearStatusMessage();
+	// update status bar
+	m_wnd->UpdateStatusMessage();
 
 	mdl.UpdateSelectionLists(SELECT_ELEMS);
 }
@@ -1888,6 +1871,84 @@ void CGLView::TagBackfacingFaces(FEMeshBase& mesh)
 				else f.m_ntag = 0;
 			}
 			break;
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+void CGLView::TagBackfacingElements(FEMeshBase& mesh)
+{
+	WorldToScreen transform(this);
+	vec3f r[4], p1[3], p2[3];
+	int NE = mesh.Elements();
+	for (int i=0; i<NE; ++i)
+	{
+		FEElement& el = mesh.Element(i);
+		el.m_ntag = 0;
+
+		// make sure the element is visible
+		if (el.IsExterior())
+		{
+			// get the number of faces
+			// Note that NF = 0 for shells so shells are never considered back facing
+			int NF = el.Faces();
+
+			// check each face
+			// an element is backfacing if all its visible faces are back facing
+			bool backFacing = true;
+			el.m_ntag = 1;
+			for (int j=0; j<NF; ++j)
+			{
+				if ((el.m_pElem[j] == 0) || (el.m_pElem[j]->IsVisible() == false))
+				{
+					FEFace f = el.GetFace(j);
+					switch (f.m_ntype)
+					{
+					case FACE_TRI3:
+					case FACE_TRI6:
+					case FACE_TRI7:
+					case FACE_TRI10:
+					{
+						r[0] = mesh.Node(f.node[0]).m_rt;
+						r[1] = mesh.Node(f.node[1]).m_rt;
+						r[2] = mesh.Node(f.node[2]).m_rt;
+
+						p1[0] = transform.Apply(r[0]);
+						p1[1] = transform.Apply(r[1]);
+						p1[2] = transform.Apply(r[2]);
+
+						if (IsBackfacing(p1) == false) backFacing = false;
+					}
+					break;
+					case FACE_QUAD4:
+					case FACE_QUAD8:
+					case FACE_QUAD9:
+					{
+						r[0] = mesh.Node(f.node[0]).m_rt;
+						r[1] = mesh.Node(f.node[1]).m_rt;
+						r[2] = mesh.Node(f.node[2]).m_rt;
+						r[3] = mesh.Node(f.node[3]).m_rt;
+
+						p1[0] = transform.Apply(r[0]);
+						p1[1] = transform.Apply(r[1]);
+						p1[2] = transform.Apply(r[2]);
+
+						p2[0] = p1[2];
+						p2[1] = transform.Apply(r[3]);
+						p2[2] = p1[0];
+
+						if (IsBackfacing(p1) == false) backFacing = false;
+					}
+					break;
+					}
+				}
+
+				if (backFacing == false)
+				{
+					el.m_ntag = 0;
+					break;
+				}
+			}
 		}
 	}
 }
@@ -1995,33 +2056,7 @@ void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 		else n.Unselect();
 	}
 
-	// count nodal selection
-	int N = 0, nn = -1, i;
-	for (i=0; i<pm->Nodes(); ++i)
-	{
-		if (pm->Node(i).IsSelected())
-		{
-			N++;
-			nn = i;
-		}
-	}
-
-	if (N==1)
-	{
-		FENode& n = pm->Node(nn);
-		vec3f r = n.m_rt;
-		float f = mdl.currentState()->m_NODE[nn].m_val;
-		char sz[512] = {0};
-		sprintf(sz, "1 node selected: Id = %d, val = %g, pos = (%g, %g, %g)", nn + 1, f, r.x, r.y, r.z);
-		m_wnd->SetStatusMessage(sz);
-	}
-	else if (N > 1)
-	{
-		char sz[512] = { 0 };
-		sprintf(sz, "%d nodes selected", N);
-		m_wnd->SetStatusMessage(sz);
-	}
-	else m_wnd->ClearStatusMessage();
+	m_wnd->UpdateStatusMessage();
 
 	mdl.UpdateSelectionLists(SELECT_NODES);
 }
@@ -2091,32 +2126,7 @@ void CGLView::SelectEdges(int x0, int y0, int x1, int y1, int mode)
 		else edge.Unselect();
 	}
 
-	// count edge selection
-	int N = 0, nn = -1, i;
-	for (i=0; i<pm->Edges(); ++i)
-	{
-		if (pm->Edge(i).IsSelected())
-		{
-			N++;
-			nn = i;
-		}
-	}
-
-	if (N==1)
-	{
-		FEEdge& n = pm->Edge(nn);
-		float f = mdl.currentState()->m_EDGE[nn].m_val;
-		char sz[512] = {0};
-		sprintf(sz, "1 edge selected");
-		m_wnd->SetStatusMessage(sz);
-	}
-	else if (N > 1)
-	{
-		char sz[512] = { 0 };
-		sprintf(sz, "%d edges selected", N);
-		m_wnd->SetStatusMessage(sz);
-	}
-	else m_wnd->ClearStatusMessage();
+	m_wnd->UpdateStatusMessage();
 
 	mdl.UpdateSelectionLists(SELECT_EDGES);
 }

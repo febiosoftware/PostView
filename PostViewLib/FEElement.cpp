@@ -608,6 +608,29 @@ FEEdge FEElement::GetEdge(int i) const
 }
 
 //-----------------------------------------------------------------------------
+// An element is exterior if it has at least one null neighbor or an invisible neighbor
+bool FEElement::IsExterior() const
+{
+	// make sure the element is visible
+	if (IsVisible() == false) return false;
+
+	// get number of faces
+	int NF = Faces();
+
+	// a shell has 0 faces and is always exterior
+	if (NF == 0) return true;
+
+	// solid elements
+	for (int i=0; i<NF; ++i)
+	{
+		FEElement* ei = m_pElem[i];
+		if ((ei == 0) || (ei->IsVisible() == false)) return true;
+	}
+
+	return false;
+}
+
+//-----------------------------------------------------------------------------
 // Check comparison between two elements
 bool FEElement::operator != (FEElement& e)
 {

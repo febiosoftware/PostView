@@ -3503,6 +3503,22 @@ void CGLModel::HideSelectedNodes()
 }
 
 //-----------------------------------------------------------------------------
+void CGLModel::InvertSelectedElements()
+{
+	FEMeshBase* mesh = GetActiveMesh();
+	if (mesh)
+	{
+		for (int i = 0; i<mesh->Elements(); i++)
+		{
+			FEElement& e = mesh->Element(i);
+			if (e.IsVisible())
+				if (e.IsSelected()) e.Unselect(); else e.Select();
+		}
+	}
+	UpdateSelectionLists(SELECT_ELEMS);
+}
+
+//-----------------------------------------------------------------------------
 void CGLModel::UpdateEdge()
 {
 	m_edge.Clear();

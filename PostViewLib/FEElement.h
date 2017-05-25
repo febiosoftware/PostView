@@ -320,6 +320,8 @@ public:
 
 	FEElemType Type() const { return m_ntype; }
 
+	bool IsExterior() const;
+
 public:
 	int			m_lid;		// local ID (zero-based index into element array)
 	int			m_MatID;	// material id

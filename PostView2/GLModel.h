@@ -237,6 +237,9 @@ public: // Selection
 	//! hide selected nodes
 	void HideSelectedNodes();
 
+	//! Invert selected elements
+	void InvertSelectedElements();
+
 protected:
 	void UpdateInternalSurfaces();
 	void ClearInternalSurfaces();
