@@ -6,6 +6,7 @@ class CMainWindow;
 class CGraphWidget;
 class QLineEdit;
 class QRadioButton;
+class QCheckBox;
 
 namespace Ui {
 	class CGraphWindow;
@@ -29,11 +30,17 @@ class OptionsUi : public CPlotTool
 public:
 	QRadioButton*	a[3];
 	QLineEdit*	range;
+	QCheckBox*	smoothLines;
+	QCheckBox*	dataMarks;
 
 public:
 	int currentOption();
 	void setUserRange(int imin, int imax);
 	void getUserRange(int& imin, int& imax);
+
+	bool lineSmoothing();
+
+	bool showDataMarks();
 
 public slots:
 	void onOptionsChanged();
@@ -142,8 +149,6 @@ private:
 
 	int		m_nTrackTime;
 	int		m_nUserMin, m_nUserMax;	//!< manual time step range
-
-	int	m_nTimeMin, m_nTimeMax;	//!< actual time range being plotted
 
 private: // temporary variables used during update
 	int	m_xtype;						// x-plot field option (0=time, 1=steps, 2=data field)

@@ -2741,8 +2741,13 @@ void CGLModel::UpdateSelectionLists(int mode)
 void CGLModel::SelectNodes(vector<int>& items, bool bclear)
 {
 	FEMeshBase& m = *GetActiveMesh();
-	if (bclear) for (int i=0; i<m.Nodes(); ++i) m.Node(i).Unselect();
-	for (int i=0; i<(int) items.size(); ++i) m.Node(items[i]).Select();
+	int N = m.Nodes();
+	if (bclear) for (int i=0; i<N; ++i) m.Node(i).Unselect();
+	for (int i=0; i<(int) items.size(); ++i)
+	{
+		int nid = items[i];
+		if ((nid >= 0) && (nid < N)) m.Node(nid).Select();
+	}
 	UpdateSelectionLists(SELECT_NODES);
 }
 
@@ -2750,8 +2755,13 @@ void CGLModel::SelectNodes(vector<int>& items, bool bclear)
 void CGLModel::SelectEdges(vector<int>& items, bool bclear)
 {
 	FEMeshBase& m = *GetActiveMesh();
-	if (bclear) for (int i=0; i<m.Edges(); ++i) m.Edge(i).Unselect();
-	for (int i=0; i<(int) items.size(); ++i) m.Edge(items[i]).Select();
+	int N = m.Edges();
+	if (bclear) for (int i = 0; i<N; ++i) m.Edge(i).Unselect();
+	for (int i=0; i<(int) items.size(); ++i)
+	{
+		int eid = items[i];
+		if ((eid >= 0) && (eid < N)) m.Edge(eid).Select();
+	}
 	UpdateSelectionLists(SELECT_EDGES);
 }
 
@@ -2759,8 +2769,13 @@ void CGLModel::SelectEdges(vector<int>& items, bool bclear)
 void CGLModel::SelectFaces(vector<int>& items, bool bclear)
 {
 	FEMeshBase& m = *GetActiveMesh();
-	if (bclear) for (int i=0; i<m.Faces(); ++i) m.Face(i).Unselect();
-	for (int i=0; i<(int) items.size(); ++i) m.Face(items[i]).Select();
+	int N = m.Faces();
+	if (bclear) for (int i=0; i<N; ++i) m.Face(i).Unselect();
+	for (int i=0; i<(int) items.size(); ++i) 
+	{
+		int fid = items[i];
+		if ((fid >= 0) && (fid < N)) m.Face(fid).Select();
+	}
 	UpdateSelectionLists(SELECT_FACES);
 }
 
@@ -2768,8 +2783,13 @@ void CGLModel::SelectFaces(vector<int>& items, bool bclear)
 void CGLModel::SelectElements(vector<int>& items, bool bclear)
 {
 	FEMeshBase& m = *GetActiveMesh();
-	if (bclear) for (int i=0; i<m.Elements(); ++i) m.Element(i).Unselect();
-	for (int i=0; i<(int) items.size(); ++i) m.Element(items[i]).Select();
+	int N = m.Elements();
+	if (bclear) for (int i=0; i<N; ++i) m.Element(i).Unselect();
+	for (int i=0; i<(int) items.size(); ++i)
+	{
+		int eid = items[i];
+		if ((eid <= 0) && (eid < N)) m.Element(eid).Select();
+	}
 	UpdateSelectionLists(SELECT_ELEMS);
 }
 

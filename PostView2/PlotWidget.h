@@ -130,6 +130,12 @@ public:
 	void showXAxis(bool b) { m_bdrawXAxis = b; }
 	void ShowYAxis(bool b) { m_bdrawYAxis = b; }
 
+	bool lineSmoothing() const { return m_bsmoothLines; }
+	void setLineSmoothing(bool b) { m_bsmoothLines = b; }
+
+	bool showDataMarks() const { return m_bshowDataMarks; }
+	void showDataMarks(bool b) { m_bshowDataMarks = b; }
+
 signals:
 	void doneZoomToRect();
 
@@ -150,6 +156,8 @@ public:
 	bool		m_bzoomRect;
 	bool		m_bvalidRect;
 	bool		m_select;
+	bool		m_bsmoothLines;
+	bool		m_bshowDataMarks;
 	Selection	m_selection;
 
 	QPointF ScreenToView(const QPoint& p);

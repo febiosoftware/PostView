@@ -1245,9 +1245,9 @@ void CMainWindow::SetCurrentTime(int n)
 {
 	ui->pspin->setValue(n + 1);
 	ui->timePanel->SetCurrentTime(n);
-	GetDocument()->SetCurrentTime(n);
+//	GetDocument()->SetCurrentTime(n);
 	RedrawGL();
-	UpdateGraphs(false);
+//	UpdateGraphs(false);
 }
 
 void CMainWindow::StopAnimation()
@@ -1509,15 +1509,17 @@ void CMainWindow::UpdatePlayToolbar(bool breset)
 	if (pfem == 0) ui->playToolBar->setDisabled(true);
 	else
 	{
+		int ntime = pfem->currentTime() + 1;
+
 		if (breset)
 		{
 			int states = pfem->GetStates();
 			QString suff = QString("/%1").arg(states);
 			ui->pspin->setSuffix(suff);
+
 			ui->pspin->setRange(1, states);
 		};
-		int n = pfem->currentTime();
-		ui->pspin->setValue(n + 1);
+		ui->pspin->setValue(ntime);
 		ui->playToolBar->setEnabled(true);
 	}
 }

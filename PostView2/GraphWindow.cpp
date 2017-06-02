@@ -29,6 +29,8 @@ OptionsUi::OptionsUi(CGraphWidget* graph, QWidget* parent) : CPlotTool(parent)
 	l->addWidget(a[1] = new QRadioButton("Current time step"));
 	l->addWidget(a[2] = new QRadioButton("User range:"));
 	l->addWidget(range = new QLineEdit);
+	l->addWidget(smoothLines = new QCheckBox("Smooth lines")); smoothLines->setChecked(true);
+	l->addWidget(dataMarks   = new QCheckBox("Show data marks")); dataMarks->setChecked(true);
 	l->addStretch();
 	setLayout(l);
 
@@ -38,6 +40,8 @@ OptionsUi::OptionsUi(CGraphWidget* graph, QWidget* parent) : CPlotTool(parent)
 	QObject::connect(a[1], SIGNAL(clicked()), this, SLOT(onOptionsChanged()));
 	QObject::connect(a[2], SIGNAL(clicked()), this, SLOT(onOptionsChanged()));
 	QObject::connect(range, SIGNAL(editingFinished()), this, SLOT(onOptionsChanged()));
+	QObject::connect(smoothLines, SIGNAL(stateChanged(int)), SLOT(onOptionsChanged()));
+	QObject::connect(dataMarks  , SIGNAL(stateChanged(int)), SLOT(onOptionsChanged()));
 }
 
 void OptionsUi::onOptionsChanged()
@@ -51,6 +55,16 @@ int OptionsUi::currentOption()
 	if (a[1]->isChecked()) return 1;
 	if (a[2]->isChecked()) return 2;
 	return -1;
+}
+
+bool OptionsUi::lineSmoothing()
+{
+	return smoothLines->isChecked();
+}
+
+bool OptionsUi::showDataMarks()
+{
+	return dataMarks->isChecked();
 }
 
 void OptionsUi::setUserRange(int imin, int imax)
@@ -281,8 +295,8 @@ CGraphWindow::CGraphWindow(CMainWindow* pwnd) : m_wnd(pwnd), QMainWindow(pwnd, Q
 	m_nUserMin = 0;
 	m_nUserMax = -1;
 
-	m_nTimeMin = -1;
-	m_nTimeMax = -1;
+	m_firstState = -1;
+	m_lastState = -1;
 
 	m_dataX = -1;
 	m_dataY = -1;
@@ -348,7 +362,7 @@ void CGraphWindow::Update(bool breset, bool bfit)
 	// When a reset is not required, see if the range has actually changed
 	if (breset == false)
 	{
-		if ((nmin == m_nTimeMin) && (nmax == m_nTimeMax)) return;
+		if ((nmin == m_firstState) && (nmax == m_lastState)) return;
 	}
 
 	// plot type
@@ -844,6 +858,12 @@ void CGraphWindow::on_options_optionsChanged()
 		assert(false);
 		m_nTrackTime = TRACK_TIME;
 	}
+
+	bool smooth = ui->ops->lineSmoothing();
+	ui->plot->setLineSmoothing(smooth);
+
+	bool marks = ui->ops->showDataMarks();
+	ui->plot->showDataMarks(marks);
 
 	Update(true);
 }

@@ -2015,16 +2015,20 @@ void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 	int NN = pm->Nodes();
 	for (int i=0; i<NN; ++i)
 	{
-		vec3f r = pm->Node(i).m_rt;
-
-		vec3f p = transform.Apply(r);
-
-		if (rt.contains(QPoint((int) p.x, (int) p.y)))
+		FENode& node = pm->Node(i);
+		if (node.IsVisible() && ((view.m_bext == false) || node.m_bext))
 		{
-			if ((index == -1) || (p.z < zmin))
+			vec3f r = pm->Node(i).m_rt;
+
+			vec3f p = transform.Apply(r);
+
+			if (rt.contains(QPoint((int) p.x, (int) p.y)))
 			{
-				index = i;
-				zmin = p.z;
+				if ((index == -1) || (p.z < zmin))
+				{
+					index = i;
+					zmin = p.z;
+				}
 			}
 		}
 	}

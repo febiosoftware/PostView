@@ -217,6 +217,9 @@ CPlotWidget::CPlotWidget(QWidget* parent, int w, int h) : QWidget(parent)
 	m_bdrawXAxis = true;
 	m_bdrawYAxis = true;
 
+	m_bsmoothLines = true;
+	m_bshowDataMarks = true;
+
 	m_chartStyle = CPlotWidget::LineChart;
 
 	m_viewRect = QRectF(0.0, 0.0, 1.0, 1.0);
@@ -881,6 +884,8 @@ void CPlotWidget::drawAxes(QPainter& p)
 //-----------------------------------------------------------------------------
 void CPlotWidget::drawAllData(QPainter& p)
 {
+	p.setRenderHint(QPainter::Antialiasing, m_bsmoothLines);
+
 	int N = m_data.size();
 	for (int i=0; i<N; ++i)
 	{
@@ -890,6 +895,8 @@ void CPlotWidget::drawAllData(QPainter& p)
 		p.setBrush(col);
 		drawData(p, m_data[i]);
 	}
+
+	p.setRenderHint(QPainter::Antialiasing, true);
 }
 
 //-----------------------------------------------------------------------------
@@ -910,25 +917,26 @@ void CPlotWidget::drawLineChartData(QPainter& p, CPlotData& d)
 	int N = d.size();
 	if (N == 0) return;
 
-	QPainterPath path;
-	QPoint pt = ViewToScreen(d.Point(0));
-	path.moveTo(pt.x(), pt.y());
+	QPoint p0 = ViewToScreen(d.Point(0)), p1(p0);
 	QBrush b = p.brush();
 	p.setBrush(Qt::NoBrush);
-	for (int i=1; i<N; ++i)
+	for (int i = 1; i<N; ++i)
 	{
-		pt = ViewToScreen(d.Point(i));
-		path.lineTo(pt.x(), pt.y());
+		p1 = ViewToScreen(d.Point(i));
+		p.drawLine(p0, p1);
+		p0 = p1;
 	}
-	p.drawPath(path);
 
 	// draw the marks
-	p.setBrush(b);
-	for (int i=0; i<N; ++i)
+	if (m_bshowDataMarks)
 	{
-		pt = ViewToScreen(d.Point(i));
-		QRect r(pt.x()-2, pt.y()-2,5,5);
-		p.drawRect(r);
+		p.setBrush(b);
+		for (int i=0; i<N; ++i)
+		{
+			p1 = ViewToScreen(d.Point(i));
+			QRect r(p1.x()-2, p1.y()-2,5,5);
+			p.drawRect(r);
+		}
 	}
 }
 
