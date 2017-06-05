@@ -4,7 +4,6 @@
 
 CGLObject::CGLObject()
 {
-	m_szname[0] = 0;
 	m_bactive = true;
 }
 
@@ -13,4 +12,8 @@ CGLObject::~CGLObject(void)
 
 }
 
-void CGLObject::SetName(const char* szname) { strcpy(m_szname, szname); }
+// get the name
+const std::string& CGLObject::GetName() const { return m_name; }
+
+// set the name
+void CGLObject::SetName(const std::string& name) { m_name = name; }

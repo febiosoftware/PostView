@@ -1,5 +1,5 @@
 #pragma once
-
+#include <string>
 class CGLContext;
 
 //-----------------------------------------------------------------------------
@@ -16,16 +16,16 @@ public:
 	virtual void Update(int ntime, float dt, bool breset) {}
 
 	// get the name
-	const char* GetName() const { return m_szname; }
-	void SetName(const char* szname);
+	const std::string& GetName() const;
+	void SetName(const std::string& szname);
 
 	// (de-)activate
 	virtual void Activate(bool bact) { m_bactive = bact; }
 	bool IsActive() { return m_bactive; }
 
 protected:
-	char	m_szname[64];
-	bool	m_bactive;
+	std::string		m_name;
+	bool			m_bactive;
 };
 
 //-----------------------------------------------------------------------------

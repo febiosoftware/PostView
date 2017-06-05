@@ -30,6 +30,10 @@ private slots:
 	void OnBrowse();
 
 private:
+	bool ReadOldFormat(const char* szfile);
+	bool ReadAng2Format(const char* szfile);
+
+private:
 	CDocument*				m_doc;
 	CImportLinesToolUI*		ui;
 	friend class Props;

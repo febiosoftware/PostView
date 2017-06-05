@@ -239,4 +239,8 @@ typedef FEMesh_<FELinearElement> FELinearMesh;
 // find the element and the iso-parametric coordinates of a point inside the mesh
 bool FindElementRef(FEMeshBase& m, const vec3f& x, int& nelem, double r[3]);
 
+// find the element and the iso-parametric coordinates of a point inside the mesh
+// the x coordinates is assumed to be in reference frame
+bool FindElementInReferenceFrame(FEMeshBase& m, const vec3f& x, int& nelem, double r[3]);
+
 #endif // !defined(AFX_FEMESH_H__4E540300_07D8_4732_BB8D_6570BB162180__INCLUDED_)

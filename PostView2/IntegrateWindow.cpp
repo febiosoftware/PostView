@@ -140,7 +140,8 @@ void CIntegrateWindow::UpdateSourceOptions()
 		CGLPlaneCutPlot* pp = dynamic_cast<CGLPlaneCutPlot*>(*it);
 		if (pp) 
 		{
-			ui->dataSource->addItem(pp->GetName());
+			string name = pp->GetName();
+			ui->dataSource->addItem(name.c_str());
 			m_src.push_back(pp);
 		}
 	}

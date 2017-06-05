@@ -382,6 +382,32 @@ vec3f FEModel::NodePosition(int n, int ntime)
 }
 
 //-----------------------------------------------------------------------------
+vec3f FEModel::NodePosition(const vec3f& r, int ntime)
+{
+	FEMeshBase* mesh = GetState(ntime)->GetFEMesh();
+
+	// find the element in which this node lies
+	int iel = -1; double iso[3] = {0};
+	if (FindElementInReferenceFrame(*mesh, r, iel, iso))
+	{
+		vec3f x[FEGenericElement::MAX_NODES];
+		GetElementCoords(iel, ntime, x);
+
+		// evaluate 
+		FEElement& el = mesh->Element(iel);
+
+		vec3f xt = el.eval(x, iso[0], iso[1], iso[2]);
+
+		return xt;
+	}
+	else 
+	{
+		assert(false);
+		return r;
+	}
+}
+
+//-----------------------------------------------------------------------------
 vec3f FEModel::FaceNormal(FEFace& f, int ntime)
 {
 	vec3f r0 = NodePosition(f.node[0], ntime);
@@ -400,7 +426,7 @@ void FEModel::GetElementCoords(int iel, int ntime, vec3f* r)
 	FEElement& elem = mesh->Element(iel);
 	NODEDATA* pn = &m_State[ntime]->m_NODE[0];
 
-	for (int i=0; i<8; i++)
+	for (int i=0; i<elem.Nodes(); i++)
 		r[i] = pn[ elem.m_node[i] ].m_rt;
 }
 

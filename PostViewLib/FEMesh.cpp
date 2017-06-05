@@ -1501,6 +1501,61 @@ bool ProjectInsideElement(FEMeshBase& m, FEElement& el, const vec3f& p, double r
 }
 
 //-----------------------------------------------------------------------------
+bool ProjectInsideReferenceElement(FEMeshBase& m, FEElement& el, const vec3f& p, double r[3])
+{
+	const double tol = 0.0001;
+	const int nmax = 10;
+	r[0] = r[1] = r[2] = 0.f;
+	double dr[3], R[3];
+	int ne = el.Nodes();
+	vec3f x[FEGenericElement::MAX_NODES];
+	for (int i = 0; i<ne; ++i) x[i] = m.Node(el.m_node[i]).m_r0;
+	mat3d K, Ki;
+	double u2, N[FEGenericElement::MAX_NODES], G[3][FEGenericElement::MAX_NODES];
+	int n = 0;
+	do
+	{
+		el.shape(N, r[0], r[1], r[2]);
+		el.shape_deriv(G[0], G[1], G[2], r[0], r[1], r[2]);
+
+		R[0] = p.x;
+		R[1] = p.y;
+		R[2] = p.z;
+		for (int i = 0; i<ne; ++i)
+		{
+			R[0] -= N[i] * x[i].x;
+			R[1] -= N[i] * x[i].y;
+			R[2] -= N[i] * x[i].z;
+		}
+
+		K.zero();
+		for (int i = 0; i<ne; ++i)
+		{
+			K[0][0] -= G[0][i] * x[i].x; K[0][1] -= G[1][i] * x[i].x; K[0][2] -= G[2][i] * x[i].x;
+			K[1][0] -= G[0][i] * x[i].y; K[1][1] -= G[1][i] * x[i].y; K[1][2] -= G[2][i] * x[i].y;
+			K[2][0] -= G[0][i] * x[i].z; K[2][1] -= G[1][i] * x[i].z; K[2][2] -= G[2][i] * x[i].z;
+		}
+
+		Ki = K;
+		Ki.Invert();
+
+		dr[0] = Ki[0][0] * R[0] + Ki[0][1] * R[1] + Ki[0][2] * R[2];
+		dr[1] = Ki[1][0] * R[0] + Ki[1][1] * R[1] + Ki[1][2] * R[2];
+		dr[2] = Ki[2][0] * R[0] + Ki[2][1] * R[1] + Ki[2][2] * R[2];
+
+		r[0] -= dr[0];
+		r[1] -= dr[1];
+		r[2] -= dr[2];
+
+		u2 = dr[0] * dr[0] + dr[1] * dr[1] + dr[2] * dr[2];
+		++n;
+	} while ((u2 > tol*tol) && (n < nmax));
+
+	return IsInsideElement(el, r, 0.001);
+}
+
+
+//-----------------------------------------------------------------------------
 bool FindElementRef(FEMeshBase& m, const vec3f& p, int& nelem, double r[3])
 {
 	vec3f y[FEGenericElement::MAX_NODES];
@@ -1547,6 +1602,59 @@ bool FindElementRef(FEMeshBase& m, const vec3f& p, int& nelem, double r[3])
 			(p.z  >= r0.z)&&(p.z <= r1.z))
 		{
 			if (ProjectInsideElement(m, e, p, r)) return true;	
+		}
+	}
+
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+bool FindElementInReferenceFrame(FEMeshBase& m, const vec3f& p, int& nelem, double r[3])
+{
+	vec3f y[FEGenericElement::MAX_NODES];
+	int NE = m.Elements();
+	for (int i = 0; i<NE; ++i)
+	{
+		FEElement& e = m.Element(i);
+		int ne = e.Nodes();
+		nelem = i;
+
+		// do a quick bounding box test
+		vec3f r0 = m.Node(e.m_node[0]).m_r0;
+		vec3f r1 = r0;
+		for (int j = 1; j<ne; ++j)
+		{
+			vec3f& rj = m.Node(e.m_node[j]).m_r0;
+			if (rj.x < r0.x) r0.x = rj.x;
+			if (rj.y < r0.y) r0.y = rj.y;
+			if (rj.z < r0.z) r0.z = rj.z;
+			if (rj.x > r1.x) r1.x = rj.x;
+			if (rj.y > r1.y) r1.y = rj.y;
+			if (rj.z > r1.z) r1.z = rj.z;
+		}
+
+		float dx = fabs(r0.x - r1.x);
+		float dy = fabs(r0.y - r1.y);
+		float dz = fabs(r0.z - r1.z);
+
+		float R = dx;
+		if (dy > R) R = dy;
+		if (dz > R) R = dz;
+		float eps = R*0.001f;
+
+		r0.x -= eps;
+		r0.y -= eps;
+		r0.z -= eps;
+
+		r1.x += eps;
+		r1.y += eps;
+		r1.z += eps;
+
+		if ((p.x >= r0.x) && (p.x <= r1.x) &&
+			(p.y >= r0.y) && (p.y <= r1.y) &&
+			(p.z >= r0.z) && (p.z <= r1.z))
+		{
+			if (ProjectInsideReferenceElement(m, e, p, r)) return true;
 		}
 	}
 

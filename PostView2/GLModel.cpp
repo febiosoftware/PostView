@@ -51,7 +51,7 @@ CGLModel::CGLModel(FEModel* ps)
 
 	m_pcol = new CGLColorMap(this);
 
-	sprintf(m_szname, "Model");
+	SetName("Model");
 
 	m_bnorm   = false;
 	m_bsmooth = true;

@@ -258,6 +258,48 @@ void CDocument::ClearObjects()
 }
 
 //-----------------------------------------------------------------------------
+void CDocument::AddObserver(CDocObserver* observer)
+{
+	// no duplicates allowed
+	for (int i=0; i<m_Observers.size(); ++i)
+	{
+		if (m_Observers[i] == observer)
+		{
+			assert(false);
+			return;
+		}
+	}
+
+	m_Observers.push_back(observer);
+}
+
+//-----------------------------------------------------------------------------
+void CDocument::RemoveObserver(CDocObserver* observer)
+{
+	for (int i = 0; i<m_Observers.size(); ++i)
+	{
+		if (m_Observers[i] == observer)
+		{
+			m_Observers.erase(m_Observers.begin() + i);
+			return;
+		}
+	}
+	assert(false);
+}
+
+//-----------------------------------------------------------------------------
+void CDocument::UpdateObservers()
+{
+	if (m_Observers.empty()) return;
+
+	for (int i=0; i<m_Observers.size(); ++i)
+	{
+		CDocObserver* observer = m_Observers[i];
+		if (observer) observer->DocumentUpdate(this);
+	}
+}
+
+//-----------------------------------------------------------------------------
 void CDocument::Reset()
 {
 	m_bValid = false;
@@ -1449,6 +1491,7 @@ void CDocument::AddPlot(CGLPlot* pplot)
 { 
 	m_pPlot.push_back(pplot); 
 	pplot->Update(currentTime(), 0.f, true); 
+	UpdateObservers();
 }
 
 void CDocument::DeleteObject(CGLObject *po)

@@ -82,7 +82,9 @@ vector<int> CGLPlaneCutPlot::m_clip;
 CGLPlaneCutPlot::CGLPlaneCutPlot(CGLModel* po) : CGLPlot(po)
 {
 	static int n = 1;
-	sprintf(m_szname, "Planecut.%02d", n++);
+	char szname[128] = { 0 };
+	sprintf(szname, "Planecut.%02d", n++);
+	SetName(szname);
 
 	m_eq[0] = 1;
 	m_eq[1] = 0;

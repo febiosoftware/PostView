@@ -75,7 +75,10 @@ private:
 CGLSlicePlot::CGLSlicePlot(CGLModel* po) : CGLPlot(po)
 {
 	static int n = 1;
-	sprintf(m_szname, "Slice.%02d", n++);
+	char szname[128] = {0};
+	sprintf(szname, "Slice.%02d", n++);
+	SetName(szname);
+
 	m_norm = vec3f(1,0,0);
 
 	m_nslices = 10;

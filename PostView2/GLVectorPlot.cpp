@@ -81,7 +81,9 @@ private:
 CGLVectorPlot::CGLVectorPlot(CGLModel* po) : CGLPlot(po)
 {
 	static int n = 1;
-	sprintf(m_szname, "Vector plot.%02d", n++);
+	char szname[128] = {0};
+	sprintf(szname, "Vector plot.%02d", n++);
+	SetName(szname);
 
 	m_scale = 1;
 	m_dens = 1;

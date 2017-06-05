@@ -560,12 +560,18 @@ CModelViewer::CModelViewer(CMainWindow* pwnd, QWidget* parent) : CCommandPanel(p
 	ui->setupUi(this);
 }
 
+void CModelViewer::DocumentUpdate(CDocument* doc)
+{
+	Update(true);
+}
+
 void CModelViewer::selectObject(CGLObject* po)
 {
 	if (po == 0) ui->m_tree->clearSelection();
 	else
 	{
-		QString s(po->GetName());
+		string name = po->GetName();
+		QString s(name.c_str());
 		QTreeWidgetItemIterator it(ui->m_tree);
 		while (*it)
 		{
@@ -668,7 +674,9 @@ void CModelViewer::Update(bool breset)
 				else if (dynamic_cast<CGLSlicePlot     *>(&plot))  pi1->setIcon(0, QIcon(QString(":/icons/slice.png")));
 				else if (dynamic_cast<CGLIsoSurfacePlot*>(&plot))  pi1->setIcon(0, QIcon(QString(":/icons/isosurface.png")));
 			
-				pi1->setText(0, plot.GetName());
+				string name = plot.GetName();
+
+				pi1->setText(0, name.c_str());
 				pi1->setTextColor(0, plot.IsActive() ? Qt::black : Qt::gray);
 				ui->m_list.push_back(plot.propertyList());
 				pi1->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
@@ -710,7 +718,10 @@ void CModelViewer::Update(bool breset)
 			{
 				GLCameraTransform& key = view.GetKey(i);
 				pi2 = new CModelTreeItem(&key, pi1);
-				pi2->setText(0, key.GetName());
+
+				string name = key.GetName();
+				pi2->setText(0, name.c_str());
+
 				pi2->setIcon(0, QIcon(QString(":/icons/view.png")));
 				ui->m_list.push_back(new CCameraTransformProps(key));
 				pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size() - 1));

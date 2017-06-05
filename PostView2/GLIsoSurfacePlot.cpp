@@ -63,7 +63,9 @@ private:
 CGLIsoSurfacePlot::CGLIsoSurfacePlot(CGLModel* po) : CGLPlot(po)
 {
 	static int n = 1;
-	sprintf(m_szname, "Isosurface.%02d", n++);
+	char szname[128] = { 0 };
+	sprintf(szname, "Isosurface.%02d", n++);
+	SetName(szname);
 
 	m_nslices = 5;
 	m_bsmooth = true;

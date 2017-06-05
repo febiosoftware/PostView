@@ -177,7 +177,8 @@ bool CDocument::SaveSession(const char* szfile)
 						v = q.GetVector()*w;
 						XMLElement Key;
 						Key.name("Key");
-						Key.add_attribute("name", key.GetName());
+						string keyName = key.GetName();
+						Key.add_attribute("name", keyName.c_str());
 						xml.add_branch(Key);
 						{
 							xml.add_leaf("x-angle", v.x);

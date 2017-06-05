@@ -88,40 +88,31 @@ void CImportLinesTool::OnApply()
 		string fileName = ui->fileName->text().toStdString();
 		string name = ui->name->text().toStdString();
 
-		FILE* fp = fopen(fileName.c_str(), "rt");
-		if (fp == 0)
+		const char* szfile = fileName.c_str();
+		const char* szext = strrchr(szfile, '.');
+		if (strcmp(szext, ".ang2") == 0)
 		{
-			QMessageBox::critical(0, "PostView2", "Failed opening data file.");
-			return;
-		}
-
-		FEModel& fem = *m_doc->GetFEModel();
-
-		char szline[256] = {0};
-		while (!feof(fp))
-		{
-			if (fgets(szline, 255, fp))
+			// Read AngioFE2 format
+			if (ReadAng2Format(szfile) == false)
 			{
-				int nstate;
-				float x0, y0, z0, x1, y1, z1;
-				int n = sscanf(szline, "%d%*g%g%g%g%g%g%g", &nstate, &x0, &y0, &z0, &x1, &y1, &z1);
-				if (n == 7)
-				{
-					if ((nstate >= 0) && (nstate < fem.GetStates()))
-					{
-						FEState& s = *fem.GetState(nstate);
-						s.AddLine(vec3f(x0, y0, z0), vec3f(x1, y1, z1));
-					}
-				}
+				QMessageBox::critical(0, "PostView2", "Failed reading ang2 file.");
+				return;
+			}
+		}
+		else
+		{
+			// read old format (this assumes this is a text file)
+			if (ReadOldFormat(szfile) == false)
+			{
+				QMessageBox::critical(0, "PostView2", "Failed reading line data file.");
+				return;
 			}
 		}
 
-		fclose(fp);
-
-		// add a line plot
+		// add a line plot for visualizing the line data
 		CGLLinePlot* pgl = new CGLLinePlot(m_doc->GetGLModel());
 		m_doc->AddPlot(pgl);
-		pgl->SetName(name.c_str());
+		pgl->SetName(fileName);
 
 		ui->m_ncount++;
 		ui->name->setText(QString("Lines%1").arg(ui->m_ncount));
@@ -138,6 +129,108 @@ void CImportLinesTool::OnBrowse()
 		ui->fileName->setText(filename);
 	}
 }
+
+bool CImportLinesTool::ReadOldFormat(const char* szfile)
+{
+	FILE* fp = fopen(szfile, "rt");
+	if (fp == 0) return false;
+
+	FEModel& fem = *m_doc->GetFEModel();
+
+	char szline[256] = { 0 };
+	while (!feof(fp))
+	{
+		if (fgets(szline, 255, fp))
+		{
+			int nstate;
+			float x0, y0, z0, x1, y1, z1;
+			int n = sscanf(szline, "%d%*g%g%g%g%g%g%g", &nstate, &x0, &y0, &z0, &x1, &y1, &z1);
+			if (n == 7)
+			{
+				if ((nstate >= 0) && (nstate < fem.GetStates()))
+				{
+					FEState& s = *fem.GetState(nstate);
+					s.AddLine(vec3f(x0, y0, z0), vec3f(x1, y1, z1));
+				}
+			}
+		}
+	}
+
+	fclose(fp);
+
+	return true;
+}
+
+bool CImportLinesTool::ReadAng2Format(const char* szfile)
+{
+	FILE* fp = fopen(szfile, "rb");
+	if (fp == 0) return false;
+
+	FEModel& fem = *m_doc->GetFEModel();
+
+	// read the magic number
+	unsigned int magic = 0;
+	if (fread(&magic, sizeof(unsigned int), 1, fp) != 1) { fclose(fp); return false; };
+	if (magic != 0xfdb97531) { fclose(fp); return false; }
+
+	// read the version number
+	unsigned int version = 0;
+	if (fread(&version, sizeof(unsigned int), 1, fp) != 1) { fclose(fp); return false; }
+	if (version != 0) { fclose(fp); return false; }
+
+	int nstate = 0;
+	while (!feof(fp) && !ferror(fp))
+	{
+		if (nstate >= fem.GetStates()) break;
+		FEState& s = *fem.GetState(nstate);
+
+		// this file format only stores incremental changes to the network
+		// so we need to copy all the data from the previous state as well
+		if (nstate > 0)
+		{
+			// get previous state
+			FEState& sp = *fem.GetState(nstate - 1);
+
+			// copy line data
+			int nlines = sp.Lines();
+			for (int i=0; i<nlines; ++i)
+			{
+				LINEDATA& lineData = sp.Line(i);
+				s.AddLine(lineData.m_r0, lineData.m_r1);
+			}
+		}
+
+		// read number of segments 
+		unsigned int segs = 0;
+		if (fread(&segs, sizeof(unsigned int), 1, fp) != 1) { fclose(fp); return false; }
+
+		// read time stamp (is not used right now)
+		float ftime = 0.0f;
+		if (fread(&ftime, sizeof(float), 1, fp) != 1) { fclose(fp); return false; }
+
+		// read the segments
+		for (int i=0; i<segs; ++i)
+		{
+			float d[6] = {0.0f};
+			if (fread(d, sizeof(float), 6, fp) != 6) { fclose(fp); return false; }
+
+			// the coordinates are in reference frame so convert them to global coordinates
+			vec3f r0 = fem.NodePosition(vec3f(d[0], d[1], d[2]), nstate);
+			vec3f r1 = fem.NodePosition(vec3f(d[3], d[4], d[5]), nstate);
+
+			// add the line data
+			s.AddLine(r0, r1);
+		}
+
+		// next state
+		nstate++;
+	}
+
+	fclose(fp);
+
+	return true;
+}
+
 
 //=============================================================================
 

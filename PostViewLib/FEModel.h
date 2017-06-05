@@ -149,6 +149,8 @@ public:
 	vec3f NodePosition(int n, int ntime);
 	vec3f FaceNormal(FEFace& f, int ntime);
 
+	vec3f NodePosition(const vec3f& r, int ntime);
+
 	// checks if the field code is valid for the given state
 	bool IsValidFieldCode(int nfield, int nstate);
 

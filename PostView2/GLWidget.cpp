@@ -674,7 +674,8 @@ void GLLegendBar::draw_discrete_horz(QPainter* painter)
 
 		if (m_nrot == HORIZONTAL)
 		{
-			painter->drawText(x(), y(), w(), h(), Qt::AlignCenter | Qt::AlignBottom, m_po->GetName());
+			string name = m_po->GetName();
+			painter->drawText(x(), y(), w(), h(), Qt::AlignCenter | Qt::AlignBottom, name.c_str());
 		}
 	}
 

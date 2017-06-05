@@ -4,7 +4,7 @@
 
 CGView::CGView()
 { 
-	sprintf(m_szname, "View"); 
+	SetName("View"); 
 	m_nkey = -1;
 }
 

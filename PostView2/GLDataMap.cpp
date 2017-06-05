@@ -19,7 +19,10 @@ CGLDataMap::~CGLDataMap(void)
 
 CGLDisplacementMap::CGLDisplacementMap(CGLObject* po) : CGLDataMap(po)
 {
-	sprintf(m_szname, "Displacement Map");
+	char szname[128] = { 0 };
+	sprintf(szname, "Displacement Map");
+	SetName(szname);
+
 	m_scl = 1.f;
 }
 
@@ -135,7 +138,7 @@ CGLColorMap::CGLColorMap(CGLModel *po) : CGLDataMap(po)
 	m_bDispNodeVals = true;
 
 	m_Col.SetColorMap(ColorMapManager::JET);
-	sprintf(m_szname, "Color Map");
+	SetName("Color Map");
 
 	m_pbar = new GLLegendBar(this, &m_Col, 0, 0, 120, 600);
 	m_pbar->align(GLW_ALIGN_RIGHT | GLW_ALIGN_VCENTER);

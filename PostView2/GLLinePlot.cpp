@@ -10,7 +10,7 @@ public:
 	{
 		addProperty("line width" , CProperty::Float);
 		addProperty("color"      , CProperty::Color);
-		addProperty("render mode", CProperty::Enum )->setEnumValues(QStringList() << "lines" << "fancy lines" << "3D lines");
+		addProperty("render mode", CProperty::Enum )->setEnumValues(QStringList() << "lines" << "3D lines");
 	}
 
 	QVariant GetPropertyValue(int i)
@@ -42,9 +42,12 @@ private:
 CGLLinePlot::CGLLinePlot(CGLModel* po) : CGLPlot(po)
 {
 	static int n = 1;
-	sprintf(m_szname, "Line.%02d", n++);
+	char szname[128] = { 0 };
+	sprintf(szname, "Line.%02d", n++);
+	SetName(szname);
+
 	m_line = 4.f;
-	m_nmode = 1;
+	m_nmode = 0;
 	m_col = GLCOLOR(255, 0, 0);
 }
 
@@ -81,24 +84,10 @@ void CGLLinePlot::Render(CGLContext& rc)
 				switch (m_nmode)
 				{
 				case 0: 
-					// glDisable(GL_DEPTH_TEST);
 					glDisable(GL_LIGHTING);
 					RenderLines(s); 
 					break;
-				case 1: 
-					// glDisable(GL_DEPTH_TEST);
-					glDisable(GL_LIGHTING);
-					RenderLines(s);
-
-					glLineWidth(m_line*0.75f);
-					glColor4ub(255, 255, 255, 128);
-					RenderLines(s);
-
-					glLineWidth(m_line*0.25f);
-					glColor4ub(255, 255, 255, 196);
-					RenderLines(s);
-					break;
-				case 2:
+				case 1:
 					Render3DLines(s);
 					break;
 				}
@@ -133,10 +122,11 @@ void glxCylinder(float H, float R)
 	for (int i=0; i<=N; ++i)
 	{
 		double w = 2*PI*i/(double)N;
-		double x = R*cos(w);
-		double y = R*sin(w);
-		glVertex3d(x, y, H);
-		glVertex3d(x, y, 0);
+		double x = cos(w);
+		double y = sin(w);
+		glNormal3d(x, y, 0.0);
+		glVertex3d(R*x, R*y, H);
+		glVertex3d(R*x, R*y, 0);
 	}
 	glEnd();
 }
@@ -150,25 +140,26 @@ void CGLLinePlot::Render3DLines(FEState& s)
 		LINEDATA& l = s.Line(i);
 		vec3f n = l.m_r1 - l.m_r0;
 		float L = n.Length();
+		n.Normalize();
 
 		glPushMatrix();
 		{
 			glTranslatef(l.m_r0.x, l.m_r0.y, l.m_r0.z);
 
-			quat4f q(n, vec3f(0,0,1));
+			quat4f q(vec3f(0,0,1), n);
 			vec3f r = q.GetVector();
 			double angle = 180*q.GetAngle()/PI;
-			if ((angle > 0) && (r.Length() > 0))
+			if ((angle != 0.0) && (r.Length() > 0))
 				glRotatef((float) angle, (float) r.x, (float) r.y, (float) r.z);	
 
-			// render bottom cap
-
 			// render cylinder
-			glxCylinder(L, 0.01*m_line);
+			glxCylinder(L, m_line);
 		}
 		glPopMatrix();
 	}
 }
+
+//=============================================================================
 
 class CPointProps : public CPropertyList
 {
@@ -209,7 +200,10 @@ private:
 CGLPointPlot::CGLPointPlot(CGLModel* po) : CGLPlot(po)
 {
 	static int n = 1;
-	sprintf(m_szname, "Points.%02d", n++);
+	char szname[128] = { 0 };
+	sprintf(szname, "Points.%02d", n++);
+	SetName(szname);
+
 	for (int i=0; i<MAX_SETTINGS; ++i)
 	{
 		m_set[i].size = 8.f;

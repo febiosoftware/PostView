@@ -18,6 +18,7 @@ class C3DImage;
 class CVolRender;
 class CImageSlicer;
 class CPalette;
+class CDocument;
 
 class FEModel;
 class FEState;
@@ -159,6 +160,17 @@ protected:
 	DISPLACEMENTMAP				m_dmap;	// DisplacementMap data
 	std::vector<FEMaterial>		m_mat;	// material list
 	std::vector<std::string>	m_data;	// data field strings
+};
+
+//-----------------------------------------------------------------------------
+// Class that can be used to monitor changes to the document
+class CDocObserver
+{
+public:
+	CDocObserver(){}
+	virtual ~CDocObserver(){}
+
+	virtual void DocumentUpdate(CDocument* doc) {}
 };
 
 //-----------------------------------------------------------------------------
@@ -341,9 +353,15 @@ public:
 
 	CMainWindow* GetWindow() { return m_wnd; }
 
+public:
+	void AddObserver(CDocObserver* observer);
+	void RemoveObserver(CDocObserver* observer);
+
 protected:
 	void ClearPlots();
 	void ClearObjects();
+
+	void UpdateObservers();
 
 protected:
 	FEModel*		m_fem;	// the FE model
@@ -375,4 +393,7 @@ protected:
 	// --- Selection ---
 	int		m_selectMode;		//!< current selection mode (node, edge, face, elem)
 	int		m_selectStyle;		//!< selection style (box, circle, rect)
+
+private:
+	std::vector<CDocObserver*>	m_Observers;
 };

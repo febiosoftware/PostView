@@ -1,11 +1,12 @@
 #pragma once
 #include <QWidget>
+#include "Document.h"
 
 //-----------------------------------------------------------------------------
 class CMainWindow;
 
 //-----------------------------------------------------------------------------
-class CCommandPanel : public QWidget
+class CCommandPanel : public QWidget, public CDocObserver
 {
 public:
 	CCommandPanel(CMainWindow* pwnd, QWidget* parent = 0);
