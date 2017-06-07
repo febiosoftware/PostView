@@ -303,6 +303,8 @@ CGraphWindow::CGraphWindow(CMainWindow* pwnd) : m_wnd(pwnd), QMainWindow(pwnd, Q
 	m_dataXPrev = -1;
 	m_dataYPrev = -1;
 
+	m_xtype = m_xtypeprev = -1;
+
 	ui->setupUi(this);
 	ui->ops->setUserRange(m_nUserMin, m_nUserMax);
 	setMinimumWidth(500);
@@ -359,12 +361,6 @@ void CGraphWindow::Update(bool breset, bool bfit)
 	if (nmax >= nsteps) nmax = nsteps - 1;
 	if (nmax <    nmin) nmax = nmin;
 
-	// When a reset is not required, see if the range has actually changed
-	if (breset == false)
-	{
-		if ((nmin == m_firstState) && (nmax == m_lastState)) return;
-	}
-
 	// plot type
 	int ntype = ui->selectPlot->currentIndex();
 	int ncx = ui->selectTime->currentIndex();
@@ -380,6 +376,12 @@ void CGraphWindow::Update(bool breset, bool bfit)
 	m_dataY = ui->selectY->currentValue();
 	if ((ntype!=LINE_PLOT) && (m_dataX<=0)) return;
 	if (m_dataY<=0) return;
+
+	// When a reset is not required, see if we actually need to update anything
+	if (breset == false)
+	{
+		if ((nmin == m_firstState) && (nmax == m_lastState) && (m_dataX == m_dataXPrev) && (m_dataY == m_dataYPrev) && (m_xtype == m_xtypeprev)) return;
+	}
 
 	// set current time point index (TODO: Not sure if this is still used)
 //	pview->SetCurrentTimeIndex(ntime);
@@ -423,12 +425,15 @@ void CGraphWindow::Update(bool breset, bool bfit)
 	addSelectedElems();
 
 	// redraw
-	if ((m_dataX != m_dataXPrev) || (m_dataY != m_dataYPrev) || bfit)
+	if ((m_dataX != m_dataXPrev) || (m_dataY != m_dataYPrev) || (m_xtype != m_xtypeprev) || bfit)
 	{
 		ui->plot->fitToData();
-		m_dataXPrev = m_dataX;
-		m_dataYPrev = m_dataY;
 	}
+
+	m_dataXPrev = m_dataX;
+	m_dataYPrev = m_dataY;
+	m_xtypeprev = m_xtype;
+
 	ui->plot->Update();
 }
 

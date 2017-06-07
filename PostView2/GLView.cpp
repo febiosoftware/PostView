@@ -2004,31 +2004,30 @@ void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 	int X = x0*m_dpr;
 	int Y = y0*m_dpr;
 
-	int S = 4*m_dpr;
-	QRect rt(X - S, Y - S, 2*S, 2*S);
+	// convert the point to a ray
+	Ray ray = PointToRay(X, Y);
 
-	makeCurrent();
-	WorldToScreen transform(this);
-
+	// find the intersection
+	Intersection q;
 	int index = -1;
-	float zmin = 0.f;
-	int NN = pm->Nodes();
-	for (int i=0; i<NN; ++i)
+	if (FindFaceIntersection(ray, *pm, q))
 	{
-		FENode& node = pm->Node(i);
-		if (node.IsVisible() && ((view.m_bext == false) || node.m_bext))
+		FEFace& face = pm->Face(q.m_index);
+
+		int S = 4 * m_dpr;
+		QRect rt(X - S, Y - S, 2 * S, 2 * S);
+		WorldToScreen transform(this);
+
+		for (int i=0; i<face.Nodes(); ++i)
 		{
-			vec3f r = pm->Node(i).m_rt;
+			vec3f r = pm->Node(face.node[i]).m_rt;
 
 			vec3f p = transform.Apply(r);
 
-			if (rt.contains(QPoint((int) p.x, (int) p.y)))
+			if (rt.contains((int) p.x, (int) p.y))
 			{
-				if ((index == -1) || (p.z < zmin))
-				{
-					index = i;
-					zmin = p.z;
-				}
+				index = face.node[i];
+				break;
 			}
 		}
 	}

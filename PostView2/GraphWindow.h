@@ -151,7 +151,7 @@ private:
 	int		m_nUserMin, m_nUserMax;	//!< manual time step range
 
 private: // temporary variables used during update
-	int	m_xtype;						// x-plot field option (0=time, 1=steps, 2=data field)
+	int	m_xtype, m_xtypeprev;			// x-plot field option (0=time, 1=steps, 2=data field)
 	int	m_firstState, m_lastState;		// first and last time step to be evaluated
 	int	m_dataX, m_dataY;				// X and Y data field IDs
 	int	m_dataXPrev, m_dataYPrev;		// Previous X, Y data fields
