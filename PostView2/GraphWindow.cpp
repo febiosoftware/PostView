@@ -29,10 +29,18 @@ OptionsUi::OptionsUi(CGraphWidget* graph, QWidget* parent) : CPlotTool(parent)
 	l->addWidget(a[1] = new QRadioButton("Current time step"));
 	l->addWidget(a[2] = new QRadioButton("User range:"));
 	l->addWidget(range = new QLineEdit);
-	l->addWidget(smoothLines = new QCheckBox("Smooth lines")); smoothLines->setChecked(true);
-	l->addWidget(dataMarks   = new QCheckBox("Show data marks")); dataMarks->setChecked(true);
+	l->addWidget(smoothLines = new QCheckBox("Smooth lines"));
+	l->addWidget(dataMarks   = new QCheckBox("Show data marks"));
 	l->addStretch();
 	setLayout(l);
+
+#ifdef __APPLE__
+	smoothLines->setChecked(false);
+	dataMarks->setChecked(false);
+#else
+	smoothLines->setChecked(true);
+	dataMarks->setChecked(true);
+#endif
 
 	a[0]->setChecked(true);
 
