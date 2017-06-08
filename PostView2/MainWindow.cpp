@@ -1137,7 +1137,6 @@ void CMainWindow::on_actionGraph_triggered()
 		pg = new CGraphWindow(this);
 		pg->setWindowTitle(QString("PostView2 : Graph%1").arg(ui->graphList.size()+1));
 		ui->graphList.push_back(pg);
-		pg->Update();
 	}
 
 	if (pg)
@@ -1145,6 +1144,7 @@ void CMainWindow::on_actionGraph_triggered()
 		pg->show();
 		pg->raise();
 		pg->activateWindow();
+		pg->Update();
 	}
 }
 

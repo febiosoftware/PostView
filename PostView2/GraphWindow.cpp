@@ -289,7 +289,11 @@ public:
 	}
 };
 
+#ifdef __APPLE__
 CGraphWindow::CGraphWindow(CMainWindow* pwnd) : m_wnd(pwnd), QMainWindow(pwnd, Qt::WindowStaysOnTopHint), ui(new Ui::CGraphWindow)
+#else
+CGraphWindow::CGraphWindow(CMainWindow* pwnd) : m_wnd(pwnd), QMainWindow(pwnd), ui(new Ui::CGraphWindow)
+#endif
 {
 	m_nTrackTime = TRACK_TIME;
 	m_nUserMin = 0;
@@ -374,11 +378,15 @@ void CGraphWindow::Update(bool breset, bool bfit)
 	// get the field data
 	m_dataX = ui->selectX->currentValue();
 	m_dataY = ui->selectY->currentValue();
-	if ((ntype!=LINE_PLOT) && (m_dataX<=0)) return;
+	if ((ntype!=LINE_PLOT) && (m_dataX<=0))
+	{
+		ui->plot->clear();
+		return;
+	}
 	if (m_dataY<=0) return;
 
 	// When a reset is not required, see if we actually need to update anything
-	if (breset == false)
+	if ((breset == false) && (bfit == false))
 	{
 		if ((nmin == m_firstState) && (nmax == m_lastState) && (m_dataX == m_dataXPrev) && (m_dataY == m_dataYPrev) && (m_xtype == m_xtypeprev)) return;
 	}

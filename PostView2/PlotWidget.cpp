@@ -217,8 +217,13 @@ CPlotWidget::CPlotWidget(QWidget* parent, int w, int h) : QWidget(parent)
 	m_bdrawXAxis = true;
 	m_bdrawYAxis = true;
 
+#ifdef __APPLE__
+	m_bsmoothLines = false;
+	m_bshowDataMarks = false;
+#else
 	m_bsmoothLines = true;
 	m_bshowDataMarks = true;
+#endif
 
 	m_chartStyle = CPlotWidget::LineChart;
 
