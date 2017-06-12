@@ -995,6 +995,7 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 					}
 
 					m_wnd->UpdateTools();
+					m_wnd->UpdateGraphs(false, true);
 				}
 			}
 		}
@@ -1003,7 +1004,6 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 
 //	m_wnd->UpdateUi();
 	m_wnd->UpdateView();
-	m_wnd->UpdateGraphs(false, true);
 	repaint();
 }
 
