@@ -10,6 +10,7 @@
 #include <QFileDialog>
 #include <QFormLayout>
 #include <QAction>
+#include <QMenu>
 #include <QComboBox>
 #include <QDialogButtonBox>
 #include <QStackedWidget>
@@ -108,11 +109,13 @@ public:
 		QAction* addActionStd  = new QAction("Standard ...", parent); addActionStd ->setObjectName("AddStandard");
 		QAction* addActionFile = new QAction("From file ...", parent); addActionFile->setObjectName("AddFromFile");
 
-		QToolButton* pbAdd = new QToolButton(); //pbAdd->setFixedSize(BW, BH);
+		QPushButton* pbAdd = new QPushButton(); //pbAdd->setFixedSize(BW, BH);
 		pbAdd->setText("Add");
-		pbAdd->setPopupMode(QToolButton::InstantPopup);
-		pbAdd->addAction(addActionStd);
-		pbAdd->addAction(addActionFile);
+
+		QMenu* menu = new QMenu(parent);
+		menu->addAction(addActionStd);
+		menu->addAction(addActionFile);
+		pbAdd->setMenu(menu);
 
 		QPushButton* pbCpy = new QPushButton("Copy"     ); pbCpy->setObjectName("CopyButton"  ); //pbCpy->setFixedSize(BW, BH); 
 		QPushButton* pbDel = new QPushButton("Delete"   ); pbDel->setObjectName("DeleteButton"); //pbDel->setFixedSize(BW, BH); 
