@@ -43,6 +43,9 @@ public:
 	bool GetAutoScale() { return m_bautoscale; }
 	void SetAutoScale(bool b) { m_bautoscale = b; }
 
+	bool ShowHidden() const { return m_bshowHidden; }
+	void ShowHidden(bool b) { m_bshowHidden = b; }
+
 	CColorTexture* GetColorMap() { return &m_Col; }
 
 	void Update(int ntime, float dt, bool breset);
@@ -60,6 +63,7 @@ protected:
 
 	bool	m_bnorm;		// normalize vectors or not
 	bool	m_bautoscale;	// auto scale the vectors
+	bool	m_bshowHidden;	// show vectors on hidden materials
 
 	GLCOLOR			m_gcl;	// glyph color (for GLYPH_COL_SOLID)
 	CColorTexture	m_Col;	// glyph color (for not GLYPH_COL_SOLID)

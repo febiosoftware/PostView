@@ -28,6 +28,7 @@ public:
 	{
 		addProperty("Data field"    , CProperty::DataVec3);
 		addProperty("Allow clipping", CProperty::Bool );
+		addProperty("Show hidden"   , CProperty::Bool );
 		addProperty("Density"       , CProperty::Float)->setFloatRange(0.0, 1.0).setFloatStep(0.0001);
 		addProperty("Glyph"         , CProperty::Enum )->setEnumValues(QStringList() << "Arrow" << "Cone" << "Cylinder" << "Sphere" << "Box" << "Line");
 		addProperty("Glyph Color"   , CProperty::Enum )->setEnumValues(QStringList() << "Solid" << "Length" << "Orientation");
@@ -43,13 +44,14 @@ public:
 		{
 		case 0: return m_vec->GetVectorType(); break;
 		case 1: return m_vec->AllowClipping(); break;
-		case 2: return m_vec->GetDensity(); break;
-		case 3: return m_vec->GetGlyphType(); break;
-		case 4: return m_vec->GetColorType(); break;
-		case 5: return toQColor(m_vec->GetGlyphColor()); break;
-		case 6: return m_vec->NormalizeVectors(); break;
-		case 7: return m_vec->GetAutoScale(); break;
-		case 8: return m_vec->GetScaleFactor(); break;
+		case 2: return m_vec->ShowHidden(); break;
+		case 3: return m_vec->GetDensity(); break;
+		case 4: return m_vec->GetGlyphType(); break;
+		case 5: return m_vec->GetColorType(); break;
+		case 6: return toQColor(m_vec->GetGlyphColor()); break;
+		case 7: return m_vec->NormalizeVectors(); break;
+		case 8: return m_vec->GetAutoScale(); break;
+		case 9: return m_vec->GetScaleFactor(); break;
 		}
 		return QVariant();
 	}
@@ -60,13 +62,14 @@ public:
 		{
 		case 0: m_vec->SetVectorType(v.toInt()); break;
 		case 1: m_vec->AllowClipping(v.toBool()); break;
-		case 2: m_vec->SetDensity(v.toFloat()); break;
-		case 3: m_vec->SetGlyphType(v.toInt()); break;
-		case 4: m_vec->SetColorType(v.toInt()); break;
-		case 5: m_vec->SetGlyphColor(toGLColor(v.value<QColor>())); break;
-		case 6: m_vec->NormalizeVectors(v.toBool()); break;
-		case 7: m_vec->SetAutoScale(v.toBool()); break;
-		case 8: m_vec->SetScaleFactor(v.toFloat()); break;
+		case 2: m_vec->ShowHidden(v.toBool()); break;
+		case 3: m_vec->SetDensity(v.toFloat()); break;
+		case 4: m_vec->SetGlyphType(v.toInt()); break;
+		case 5: m_vec->SetColorType(v.toInt()); break;
+		case 6: m_vec->SetGlyphColor(toGLColor(v.value<QColor>())); break;
+		case 7: m_vec->NormalizeVectors(v.toBool()); break;
+		case 8: m_vec->SetAutoScale(v.toBool()); break;
+		case 9: m_vec->SetScaleFactor(v.toFloat()); break;
 		}
 	}
 
@@ -102,6 +105,7 @@ CGLVectorPlot::CGLVectorPlot(CGLModel* po) : CGLPlot(po)
 
 	m_bnorm = false;
 	m_bautoscale = false;
+	m_bshowHidden = true;
 
 	m_seed = rand();
 
@@ -174,15 +178,15 @@ void CGLVectorPlot::Render(CGLContext& rc)
 		glLightfv(GL_LIGHT0, GL_AMBIENT, dif);
 	}
 
-	int i, j, n;
-	for (i=0; i<pm->Nodes(); ++i) pm->Node(i).m_ntag = 0;
-	for (i=0; i<pm->Elements(); ++i)
+	pm->SetNodeTags(0);
+	for (int i=0; i<pm->Elements(); ++i)
 	{
 		FEElement& e = pm->Element(i);
-		if (ps->GetMaterial(e.m_MatID)->benable)
+		FEMaterial* mat = ps->GetMaterial(e.m_MatID);
+		if (mat->benable && (m_bshowHidden || mat->visible()))
 		{
-			n = e.Nodes();
-			for (j=0; j<n; ++j) pm->Node(e.m_node[j]).m_ntag = 1;
+			int n = e.Nodes();
+			for (int j =0; j<n; ++j) pm->Node(e.m_node[j]).m_ntag = 1;
 		}
 	}
 
@@ -190,7 +194,7 @@ void CGLVectorPlot::Render(CGLContext& rc)
 	if (m_bautoscale)
 	{
 		float Lmax = 0.f;
-		for (i=0; i<pm->Nodes(); ++i)
+		for (int i=0; i<pm->Nodes(); ++i)
 		{
 			float L = m_val[i].Length();
 			if (L > Lmax) Lmax = L;
@@ -205,7 +209,7 @@ void CGLVectorPlot::Render(CGLContext& rc)
 
 	CColorMap& map = ColorMapManager::GetColorMap(m_Col.GetColorMap());
 
-	for (i=0; i<pm->Nodes(); ++i)
+	for (int i=0; i<pm->Nodes(); ++i)
 	{
 		FENode& node = pm->Node(i);
 		if ((frand() <= m_dens) && node.m_ntag)
