@@ -270,9 +270,9 @@ void CMainWindow::UpdateView()
 	ui->modelViewer->UpdateView();
 }
 
-void CMainWindow::UpdateTools()
+void CMainWindow::UpdateTools(bool reset)
 {
-	ui->toolsPanel->Update(false);
+	ui->toolsPanel->Update(reset);
 }
 
 void CMainWindow::UpdateGraphs(bool breset, bool bfit)
@@ -1248,6 +1248,8 @@ void CMainWindow::SetCurrentTime(int n)
 //	GetDocument()->SetCurrentTime(n);
 	RedrawGL();
 //	UpdateGraphs(false);
+
+	UpdateTools(false);
 }
 
 void CMainWindow::StopAnimation()

@@ -42,12 +42,13 @@ private:
 
 CPointDistanceTool::Props::Props(CPointDistanceTool* ptool) : tool(ptool)
 {
-	addProperty("node 1", CProperty::Int);
-	addProperty("node 2", CProperty::Int);
-	addProperty("Dx"    , CProperty::Float)->setFlags(CProperty::Visible);
-	addProperty("Dy"    , CProperty::Float)->setFlags(CProperty::Visible);
-	addProperty("Dz"    , CProperty::Float)->setFlags(CProperty::Visible);
-	addProperty("Length", CProperty::Float)->setFlags(CProperty::Visible);
+	addProperty("node 1" , CProperty::Int);
+	addProperty("node 2" , CProperty::Int);
+	addProperty("Dx"     , CProperty::Float)->setFlags(CProperty::Visible);
+	addProperty("Dy"     , CProperty::Float)->setFlags(CProperty::Visible);
+	addProperty("Dz"     , CProperty::Float)->setFlags(CProperty::Visible);
+	addProperty("Length" , CProperty::Float)->setFlags(CProperty::Visible);
+	addProperty("Stretch", CProperty::Float)->setFlags(CProperty::Visible);
 }
 
 QVariant CPointDistanceTool::Props::GetPropertyValue(int i)
@@ -60,6 +61,7 @@ QVariant CPointDistanceTool::Props::GetPropertyValue(int i)
 	case 3: return fabs(tool->m_d.y); break;
 	case 4: return fabs(tool->m_d.z); break;
 	case 5: return tool->m_d.Length(); break;
+	case 6: return (tool->m_bvalid ? tool->m_d.Length() / tool->m_d0.Length() : 1.f); break;
 	}
 	return QVariant();
 }
@@ -77,7 +79,8 @@ CPointDistanceTool::CPointDistanceTool() : CBasicTool("Pt.Distance")
 	m_node2 = 0; 
 	m_d = vec3f(0,0,0); 
 	m_doc = 0; 
-	m_deco = 0; 
+	m_deco = 0;
+	m_bvalid = false;
 }
 
 CPropertyList* CPointDistanceTool::getPropertyList()
@@ -88,33 +91,7 @@ CPropertyList* CPointDistanceTool::getPropertyList()
 void CPointDistanceTool::activate(CDocument* pdoc)
 {
 	m_doc = pdoc;
-	if (pdoc && pdoc->IsValid())
-	{
-		FEMeshBase& mesh = *m_doc->GetActiveMesh();
-		const vector<FENode*> selectedNodes = m_doc->GetGLModel()->GetNodeSelection();
-		int N = selectedNodes.size();
-		for (int i=0; i<N; ++i)
-		{
-			int nid = selectedNodes[i]->GetID();
-			if (m_node1 == 0) m_node1 = nid;
-			else if (m_node2 == 0) m_node2 = nid;
-			else
-			{
-				m_node1 = m_node2;
-				m_node2 = nid;
-			}
-		}
-
-		if (m_deco)
-		{
-			m_doc->GetGLModel()->RemoveDecoration(m_deco);
-			delete m_deco;
-			m_deco = 0;
-		}
-		m_deco = new CPointDistanceDecoration;
-		m_doc->GetGLModel()->AddDecoration(m_deco);
-		updateLength();
-	}
+	update(true);
 }
 
 void CPointDistanceTool::deactivate()
@@ -134,6 +111,7 @@ void CPointDistanceTool::updateUi()
 
 void CPointDistanceTool::updateLength()
 {
+	m_bvalid = false;
 	m_d = vec3f(0.f,0.f,0.f);
 	if (m_deco) m_deco->setVisible(false);
 	if (m_doc && m_doc->IsValid())
@@ -144,16 +122,55 @@ void CPointDistanceTool::updateLength()
 		int NN = mesh.Nodes();
 		if ((m_node1 > 0)&&(m_node2 > 0)&&(m_node1 <= NN)&&(m_node2 <= NN))
 		{
-			vec3f a = fem.NodePosition(m_node1-1, ntime);
-			vec3f b = fem.NodePosition(m_node2-1, ntime);
-			m_d = b - a;
-
+			vec3f a0 = mesh.Node(m_node1 - 1).m_r0;
+			vec3f b0 = mesh.Node(m_node2 - 1).m_r0;
+			m_d0 = b0 - a0;
+			vec3f at = fem.NodePosition(m_node1 - 1, ntime);
+			vec3f bt = fem.NodePosition(m_node2 - 1, ntime);
+			m_d = bt - at;
+			m_bvalid = true;
 			if (m_deco) 
 			{
-				m_deco->setPosition(a, b);
+				m_deco->setPosition(at, bt);
 				m_deco->setVisible(true);
 			}
 		}
 	}
+}
+
+void CPointDistanceTool::update(bool reset)
+{
+	if (reset)
+	{
+		if (m_doc && m_doc->IsValid())
+		{
+			FEMeshBase& mesh = *m_doc->GetActiveMesh();
+			const vector<FENode*> selectedNodes = m_doc->GetGLModel()->GetNodeSelection();
+			int N = (int) selectedNodes.size();
+			for (int i = 0; i<N; ++i)
+			{
+				int nid = selectedNodes[i]->GetID();
+				if (m_node1 == 0) m_node1 = nid;
+				else if (m_node2 == 0) m_node2 = nid;
+				else
+				{
+					m_node1 = m_node2;
+					m_node2 = nid;
+				}
+			}
+
+			if (m_deco)
+			{
+				m_doc->GetGLModel()->RemoveDecoration(m_deco);
+				delete m_deco;
+				m_deco = 0;
+			}
+			m_deco = new CPointDistanceDecoration;
+			m_doc->GetGLModel()->AddDecoration(m_deco);
+			updateLength();
+		}
+	}
+	else updateLength();
+
 	updateUi();
 }

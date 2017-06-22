@@ -109,9 +109,10 @@ void CToolsPanel::Update(bool breset)
 {
 	if (activeTool)
 	{
-		activeTool->deactivate();
+		activeTool->update(breset);
 
-		activeTool->activate(m_wnd->GetDocument());
+		// repaint parent
+		m_wnd->RedrawGL();
 	}
 }
 
@@ -155,6 +156,9 @@ void CToolsPanel::on_buttons_buttonClicked(int id)
 
 	// show the tab
 	ui->stack->setCurrentIndex(id);
+
+	// repaint parent
+	m_wnd->RedrawGL();
 }
 
 void CToolsPanel::hideEvent(QHideEvent* ev)
@@ -164,6 +168,9 @@ void CToolsPanel::hideEvent(QHideEvent* ev)
 		activeTool->deactivate();
 	}
 	ev->accept();
+
+	// repaint parent
+	m_wnd->RedrawGL();
 }
 
 void CToolsPanel::showEvent(QShowEvent* ev)
@@ -173,4 +180,7 @@ void CToolsPanel::showEvent(QShowEvent* ev)
 		activeTool->activate(m_wnd->GetDocument());
 	}
 	ev->accept();
+
+	// repaint parent
+	m_wnd->RedrawGL();
 }

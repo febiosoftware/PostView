@@ -994,7 +994,7 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 						delete preg;
 					}
 
-					m_wnd->UpdateTools();
+					m_wnd->UpdateTools(true);
 					m_wnd->UpdateGraphs(false, true);
 				}
 			}

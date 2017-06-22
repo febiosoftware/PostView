@@ -68,7 +68,7 @@ public:
 
 	// update the tool window
 	// (e.g. when selection was changed)
-	void UpdateTools();
+	void UpdateTools(bool reset = false);
 
 	// set the data field on the toolbar
 	void SetCurrentDataField(int nfield);

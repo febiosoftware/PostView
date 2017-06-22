@@ -30,6 +30,9 @@ public:
 	// the ui is no longer shown
 	virtual void deactivate() {}
 
+	// update tool contents
+	virtual void update(bool reset) {}
+
 	// update the Ui
 	virtual void updateUi();
 
