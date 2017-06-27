@@ -472,13 +472,16 @@ void FEModel::UpdateDependants()
 void FEModel::RemoveDependant(FEModelDependant* pc)
 {
 	int N = m_Dependants.size();
-	vector<FEModelDependant*>::iterator it = m_Dependants.begin();
-	for (int i=0; i<N; ++i) 
+	if (N > 0)
 	{
-		if (m_Dependants[i] == pc) 
+		vector<FEModelDependant*>::iterator it = m_Dependants.begin();
+		for (int i=0; i<N; ++i) 
 		{
-			m_Dependants.erase(it);
-			break;
+			if (m_Dependants[i] == pc) 
+			{
+				m_Dependants.erase(it);
+				break;
+			}
 		}
 	}
 }

@@ -314,6 +314,9 @@ void CMainWindow::SetCurrentFolder(const QString& folder)
 
 void CMainWindow::OpenFile(const QString& fileName, int nfilter)
 {
+	// Stop the timer if it's running
+	if (m_timer.isActive()) StopAnimation();
+
 	std::string sfile = fileName.toStdString();
 
 	ui->actionColorMap->setDisabled(true);
@@ -395,6 +398,9 @@ void CMainWindow::OpenFile(const QString& fileName, int nfilter)
 
 	// set the window title
 	setWindowTitle(QString("PostView2 - %1").arg(QString(stitle.c_str())));
+
+	// deactivate the play tool bar
+	ui->playToolBar->setEnabled(false);
 
 	// create the file reading thread and run it
 	m_fileThread = new CFileThread(this, reader, fileName);
@@ -1229,16 +1235,20 @@ void CMainWindow::on_selectData_currentIndexChanged(int index)
 
 void CMainWindow::on_actionPlay_toggled(bool bchecked)
 {
-	TIMESETTINGS& time = GetDocument()->GetTimeSettings();
-	double fps = time.m_fps;
-	if (fps < 1.0) fps = 1.0;
-	double msec_per_frame = 1000.0 / fps;
-
-	if (bchecked)
+	CDocument* doc = GetDocument();
+	if (doc->IsValid())
 	{
-		m_timer.start(msec_per_frame, this);
+		TIMESETTINGS& time = GetDocument()->GetTimeSettings();
+		double fps = time.m_fps;
+		if (fps < 1.0) fps = 1.0;
+		double msec_per_frame = 1000.0 / fps;
+
+		if (bchecked)
+		{
+			m_timer.start(msec_per_frame, this);
+		}
+		else m_timer.stop();
 	}
-	else m_timer.stop();
 }
 
 void CMainWindow::SetCurrentTime(int n)
