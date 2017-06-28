@@ -10,6 +10,9 @@
 		D51114421ECC973100B8849F /* AVIAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D511143C1ECC973100B8849F /* AVIAnimation.cpp */; };
 		D51114431ECC973100B8849F /* ImgAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D511143E1ECC973100B8849F /* ImgAnimation.cpp */; };
 		D51114441ECC973100B8849F /* MPEGAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D51114401ECC973100B8849F /* MPEGAnimation.cpp */; };
+		D5215F731F0314BB00838680 /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5215F721F0314BB00838680 /* QtCore.framework */; };
+		D5215F751F0314CF00838680 /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5215F741F0314CF00838680 /* QtGui.framework */; };
+		D5215F771F0314E400838680 /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5215F761F0314E400838680 /* QtWidgets.framework */; };
 		D52C6FB01D75DCA300DF804B /* moc_TimeController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D52C6FA91D75DCA300DF804B /* moc_TimeController.cpp */; };
 		D52C6FB11D75DCA300DF804B /* moc_TimePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D52C6FAA1D75DCA300DF804B /* moc_TimePanel.cpp */; };
 		D52C6FB21D75DCA300DF804B /* TimeController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D52C6FAB1D75DCA300DF804B /* TimeController.cpp */; };
@@ -17,13 +20,7 @@
 		D52C6FB51D75DCE900DF804B /* libPostViewLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D52C6FB41D75DCE900DF804B /* libPostViewLib.a */; };
 		D53292BB1E453447002798B3 /* DlgExportAscii.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53292B91E453447002798B3 /* DlgExportAscii.cpp */; };
 		D53598C01E901C0500584A4F /* DragBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53598BE1E901C0500584A4F /* DragBox.cpp */; };
-		D55150721E5270830041C45B /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D551506F1E5270830041C45B /* QtCore.framework */; };
-		D55150731E5270830041C45B /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D55150701E5270830041C45B /* QtGui.framework */; };
-		D55150741E5270830041C45B /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D55150711E5270830041C45B /* QtWidgets.framework */; };
 		D55AC5011E61EB6E00BBA0D1 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D55AC5001E61EB6E00BBA0D1 /* OpenGL.framework */; };
-		D5727B7E1EB38F7000712275 /* QtCore.framework in Resources */ = {isa = PBXBuildFile; fileRef = D551506F1E5270830041C45B /* QtCore.framework */; };
-		D5727B7F1EB38F7000712275 /* QtGui.framework in Resources */ = {isa = PBXBuildFile; fileRef = D55150701E5270830041C45B /* QtGui.framework */; };
-		D5727B801EB38F7000712275 /* QtWidgets.framework in Resources */ = {isa = PBXBuildFile; fileRef = D55150711E5270830041C45B /* QtWidgets.framework */; };
 		D5A65E0F1DBFA53F00B44009 /* DlgFileInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */; };
 		D5E0E6A71E72390D006FE591 /* moc_DataFieldSelector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5E0E6A61E72390D006FE591 /* moc_DataFieldSelector.cpp */; };
 		D5FF7A401D72756B003D2CBD /* 3PointAngleTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79AA1D72756B003D2CBD /* 3PointAngleTool.cpp */; };
@@ -117,6 +114,18 @@
 		D5FF7AA31D72778E003D2CBD /* PostView.icns in Resources */ = {isa = PBXBuildFile; fileRef = D5FF7AA21D72778E003D2CBD /* PostView.icns */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		D5215F6E1F030BB000838680 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 8;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		D511143C1ECC973100B8849F /* AVIAnimation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AVIAnimation.cpp; sourceTree = "<group>"; };
 		D511143D1ECC973100B8849F /* AVIAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVIAnimation.h; sourceTree = "<group>"; };
@@ -124,6 +133,9 @@
 		D511143F1ECC973100B8849F /* ImgAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImgAnimation.h; sourceTree = "<group>"; };
 		D51114401ECC973100B8849F /* MPEGAnimation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MPEGAnimation.cpp; sourceTree = "<group>"; };
 		D51114411ECC973100B8849F /* MPEGAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPEGAnimation.h; sourceTree = "<group>"; };
+		D5215F721F0314BB00838680 /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt/5.9.0_1/lib/QtCore.framework; sourceTree = "<group>"; };
+		D5215F741F0314CF00838680 /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt/5.9.0_1/lib/QtGui.framework; sourceTree = "<group>"; };
+		D5215F761F0314E400838680 /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt/5.9.0_1/lib/QtWidgets.framework; sourceTree = "<group>"; };
 		D52C6FA91D75DCA300DF804B /* moc_TimeController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_TimeController.cpp; sourceTree = "<group>"; };
 		D52C6FAA1D75DCA300DF804B /* moc_TimePanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_TimePanel.cpp; sourceTree = "<group>"; };
 		D52C6FAB1D75DCA300DF804B /* TimeController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimeController.cpp; sourceTree = "<group>"; };
@@ -136,9 +148,6 @@
 		D53292BA1E453447002798B3 /* DlgExportAscii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgExportAscii.h; sourceTree = "<group>"; };
 		D53598BE1E901C0500584A4F /* DragBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DragBox.cpp; sourceTree = "<group>"; };
 		D53598BF1E901C0500584A4F /* DragBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DragBox.h; sourceTree = "<group>"; };
-		D551506F1E5270830041C45B /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt5/5.8.0_1/lib/QtCore.framework; sourceTree = "<group>"; };
-		D55150701E5270830041C45B /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt5/5.8.0_1/lib/QtGui.framework; sourceTree = "<group>"; };
-		D55150711E5270830041C45B /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt5/5.8.0_1/lib/QtWidgets.framework; sourceTree = "<group>"; };
 		D55AC5001E61EB6E00BBA0D1 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgFileInfo.cpp; sourceTree = "<group>"; };
 		D5A65E0E1DBFA53F00B44009 /* DlgFileInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgFileInfo.h; sourceTree = "<group>"; };
@@ -303,11 +312,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5215F771F0314E400838680 /* QtWidgets.framework in Frameworks */,
+				D5215F751F0314CF00838680 /* QtGui.framework in Frameworks */,
+				D5215F731F0314BB00838680 /* QtCore.framework in Frameworks */,
 				D55AC5011E61EB6E00BBA0D1 /* OpenGL.framework in Frameworks */,
 				D52C6FB51D75DCE900DF804B /* libPostViewLib.a in Frameworks */,
-				D55150721E5270830041C45B /* QtCore.framework in Frameworks */,
-				D55150731E5270830041C45B /* QtGui.framework in Frameworks */,
-				D55150741E5270830041C45B /* QtWidgets.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -523,11 +532,11 @@
 		D5FF7AA61D727B52003D2CBD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D5215F761F0314E400838680 /* QtWidgets.framework */,
+				D5215F741F0314CF00838680 /* QtGui.framework */,
+				D5215F721F0314BB00838680 /* QtCore.framework */,
 				D52C6FB41D75DCE900DF804B /* libPostViewLib.a */,
 				D55AC5001E61EB6E00BBA0D1 /* OpenGL.framework */,
-				D551506F1E5270830041C45B /* QtCore.framework */,
-				D55150701E5270830041C45B /* QtGui.framework */,
-				D55150711E5270830041C45B /* QtWidgets.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -542,6 +551,7 @@
 				D5FF79911D72750E003D2CBD /* Sources */,
 				D5FF79921D72750E003D2CBD /* Frameworks */,
 				D5FF79931D72750E003D2CBD /* Resources */,
+				D5215F6E1F030BB000838680 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -558,7 +568,7 @@
 		D5FF798D1D72750E003D2CBD /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = febio.org;
 				TargetAttributes = {
 					D5FF79941D72750E003D2CBD = {
@@ -589,9 +599,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D5727B7E1EB38F7000712275 /* QtCore.framework in Resources */,
-				D5727B7F1EB38F7000712275 /* QtGui.framework in Resources */,
-				D5727B801EB38F7000712275 /* QtWidgets.framework in Resources */,
 				D5FF7AA31D72778E003D2CBD /* PostView.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -721,8 +728,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
@@ -754,6 +763,7 @@
 					/Applications/Qt5.6.1/5.6/clang_64/lib,
 					"$(inherited)",
 					/usr/local/Cellar/qt5/5.8.0_1/lib,
+					/usr/local/Cellar/qt/5.9.0_1/lib,
 				);
 				HEADER_SEARCH_PATHS = (
 					/Applications/Qt5.6.1/5.6/clang_64/lib/QtWidgets.framework/Headers,
@@ -785,8 +795,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
@@ -808,7 +820,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
@@ -829,8 +841,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
@@ -846,7 +860,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				SDKROOT = macosx;
@@ -860,11 +874,12 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/usr/local/Cellar/qt5/5.8.0_1/lib,
+					/usr/local/Cellar/qt/5.9.0_1/lib,
 				);
 				HEADER_SEARCH_PATHS = (
 					/usr/local/opt/qt5/include/QtWidgets,
 					/usr/local/opt/qt5/include/QtGui,
+					/usr/local/opt/qt5/include/QtCore,
 				);
 				INFOPLIST_FILE = PostView2/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -886,11 +901,12 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/usr/local/Cellar/qt5/5.8.0_1/lib,
+					/usr/local/Cellar/qt/5.9.0_1/lib,
 				);
 				HEADER_SEARCH_PATHS = (
 					/usr/local/opt/qt5/include/QtWidgets,
 					/usr/local/opt/qt5/include/QtGui,
+					/usr/local/opt/qt5/include/QtCore,
 					/usr/local/include/GL,
 				);
 				INFOPLIST_FILE = PostView2/Info.plist;
