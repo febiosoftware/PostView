@@ -32,6 +32,7 @@ public:
 	double	fmin, fmax;			// range for floats
 	double	fstep;				// step for floats
 	double	bauto;
+	bool	brange;				// true if range was set
 
 	QString			name;		// the name of the property
 	QString			info;		// description of the property
@@ -42,9 +43,9 @@ public:
 	CProperty(const CProperty& p) { *this = p; }
 	CProperty& operator = (const CProperty& p);
 
-	CProperty& setIntRange(int Min, int Max) { imin = Min; imax = Max; return *this; }
-	CProperty& setFloatRange(double Min, double Max) { fmin = Min; fmax = Max; return *this; }
-	CProperty& setFloatStep(double fStep) { fstep = fStep; return *this; }
+	CProperty& setIntRange(int Min, int Max) { imin = Min; imax = Max; brange = true; return *this; }
+	CProperty& setFloatRange(double Min, double Max) { fmin = Min; fmax = Max; brange = true; return *this; }
+	CProperty& setFloatStep(double fStep) { fstep = fStep; brange = true; return *this; }
 	CProperty& setEnumValues(QStringList& val) { values = val; return *this; }
 	CProperty& setAutoValue(bool b) { bauto = b; return *this; }
 

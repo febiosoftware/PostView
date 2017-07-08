@@ -31,7 +31,7 @@ public:
 		addProperty("X-normal"  , CProperty::Float)->setFloatRange(-1.0, 1.0);
 		addProperty("Y-normal"  , CProperty::Float)->setFloatRange(-1.0, 1.0);
 		addProperty("Z-normal"  , CProperty::Float)->setFloatRange(-1.0, 1.0);
-		addProperty("offset"    , CProperty::Float);
+		addProperty("offset"    , CProperty::Float)->setFloatStep(0.01);
 	}
 
 	QVariant GetPropertyValue(int i)

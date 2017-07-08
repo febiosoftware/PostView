@@ -241,14 +241,27 @@ public:
 		}
 		else if ((data.type() == QVariant::Double)||(data.type() == QMetaType::Float))
 		{
+			QWidget* pw = 0;
 			const CProperty& prop = model->getPropertyList().Property(index.row());
-			CDragBox* pc = new CDragBox(parent);
-			pc->SetSingleStep(prop.fstep);
-			pc->setRange(prop.fmin, prop.fmax);
-			pc->textFromValue(data.value<double>());
-			pc->setAccelerated(true);
-			m_view->connect(pc, SIGNAL(valueChanged(double)), m_view, SLOT(onDataChanged()));
-			return pc;
+			if (prop.brange)
+			{
+				CDragBox* pc = new CDragBox(parent);
+				pc->SetSingleStep(prop.fstep);
+				pc->setRange(prop.fmin, prop.fmax);
+				pc->textFromValue(data.value<double>());
+				pc->setAccelerated(true);
+				m_view->connect(pc, SIGNAL(valueChanged(double)), m_view, SLOT(onDataChanged()));
+				pw = pc;
+			}
+			else
+			{
+				QDoubleValidator* val = new QDoubleValidator;
+				val->setDecimals(6);
+				QLineEdit* pe = new QLineEdit(parent); pe->setValidator(val);
+				m_view->connect(pe, SIGNAL(textEdited(const QString&)), m_view, SLOT(onDataChanged()));
+				pw = pe;
+			}
+			return pw;
 		}
 		else if (data.type() == QVariant::Int)
 		{
