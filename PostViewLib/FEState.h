@@ -48,7 +48,7 @@ struct ELEMDATA
 {
 	float	m_val;		// current element value
 	int		m_ntag;		// active flag
-	float	m_h[4];	// shell thickness (TODO: Can we move this to the face data?)
+	float	m_h[FEGenericElement::MAX_NODES];		// shell thickness (TODO: Can we move this to the face data?)
 };
 
 struct FACEDATA
