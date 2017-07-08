@@ -1644,7 +1644,7 @@ void CGLView::RegionSelectFaces(const SelectRegion& region, int mode)
 	for (int i = 0; i<NF; ++i)
 	{
 		FEFace& face = pm->Face(i);
-		if (face.m_ntag == 0)
+		if (face.IsVisible() && (face.m_ntag == 0))
 		{
 			if (regionFaceIntersect(transform, region, face, pm, m_dpr))
 			{
@@ -1690,7 +1690,7 @@ void CGLView::RegionSelectNodes(const SelectRegion& region, int mode)
 	for (int i = 0; i<NN; ++i)
 	{
 		FENode& node = pm->Node(i);
-		if (node.m_ntag == 0)
+		if (node.IsVisible() && (node.m_ntag == 0))
 		{
 			vec3f r = node.m_rt;
 
@@ -1735,7 +1735,7 @@ void CGLView::RegionSelectEdges(const SelectRegion& region, int mode)
 	{
 		FEEdge& edge = pm->Edge(i);
 
-		if (edge.m_ntag == 0)
+		if (edge.IsVisible() && (edge.m_ntag == 0))
 		{
 			vec3f r0 = pm->Node(edge.node[0]).m_rt;
 			vec3f r1 = pm->Node(edge.node[1]).m_rt;
