@@ -161,12 +161,37 @@ bool CImportLinesTool::ReadOldFormat(const char* szfile)
 	return true;
 }
 
+// helper structure for finding position of vessel fragments
+struct FRAG
+{
+	int		iel;	// element in which tip lies
+	double	r[3];	// iso-coords of tip
+	vec3f	r0;		// reference position of tip
+};
+
+vec3f GetCoordinatesFromFrag(FEModel& fem, int nstate, FRAG& a)
+{
+	FEMeshBase& mesh = *fem.GetFEMesh(0);
+	vec3f x[FEGenericElement::MAX_NODES];
+
+	vec3f r0 = a.r0;
+	if (a.iel >= 0)
+	{
+		FEElement& el = mesh.Element(a.iel);
+		for (int i=0; i<el.Nodes(); ++i) x[i] = fem.NodePosition(el.m_node[i], nstate);
+		r0 = el.eval(x, a.r[0], a.r[1], a.r[2]);
+	}
+
+	return r0;
+}
+
 bool CImportLinesTool::ReadAng2Format(const char* szfile)
 {
 	FILE* fp = fopen(szfile, "rb");
 	if (fp == 0) return false;
 
 	FEModel& fem = *m_doc->GetFEModel();
+	FEMeshBase& mesh = *fem.GetFEMesh(0);
 
 	// read the magic number
 	unsigned int magic = 0;
@@ -178,6 +203,9 @@ bool CImportLinesTool::ReadAng2Format(const char* szfile)
 	if (fread(&version, sizeof(unsigned int), 1, fp) != 1) { fclose(fp); return false; }
 	if (version != 0) { fclose(fp); return false; }
 
+	// store the raw data
+	vector<pair<FRAG, FRAG> > raw;
+
 	int nstate = 0;
 	while (!feof(fp) && !ferror(fp))
 	{
@@ -188,15 +216,14 @@ bool CImportLinesTool::ReadAng2Format(const char* szfile)
 		// so we need to copy all the data from the previous state as well
 		if (nstate > 0)
 		{
-			// get previous state
-			FEState& sp = *fem.GetState(nstate - 1);
-
 			// copy line data
-			int nlines = sp.Lines();
-			for (int i=0; i<nlines; ++i)
+			for (int i=0; i<raw.size(); ++i)
 			{
-				LINEDATA& lineData = sp.Line(i);
-				s.AddLine(lineData.m_r0, lineData.m_r1);
+				vec3f r0 = GetCoordinatesFromFrag(fem, nstate, raw[i].first );
+				vec3f r1 = GetCoordinatesFromFrag(fem, nstate, raw[i].second);
+
+				// add the line
+				s.AddLine(r0, r1);
 			}
 		}
 
@@ -214,9 +241,18 @@ bool CImportLinesTool::ReadAng2Format(const char* szfile)
 			float d[6] = {0.0f};
 			if (fread(d, sizeof(float), 6, fp) != 6) { fclose(fp); return false; }
 
-			// the coordinates are in reference frame so convert them to global coordinates
-			vec3f r0 = fem.NodePosition(vec3f(d[0], d[1], d[2]), nstate);
-			vec3f r1 = fem.NodePosition(vec3f(d[3], d[4], d[5]), nstate);
+			// store the raw coordinates
+			vec3f a0 = vec3f(d[0], d[1], d[2]);
+			vec3f b0 = vec3f(d[3], d[4], d[5]);
+
+			FRAG a, b;
+			if (FindElementInReferenceFrame(mesh, a0, a.iel, a.r) == false) a.iel = -1;
+			if (FindElementInReferenceFrame(mesh, b0, b.iel, b.r) == false) b.iel = -1;
+			raw.push_back(pair<FRAG, FRAG>(a, b));
+
+			// convert them to global coordinates
+			vec3f r0 = GetCoordinatesFromFrag(fem, nstate, a);
+			vec3f r1 = GetCoordinatesFromFrag(fem, nstate, b);
 
 			// add the line data
 			s.AddLine(r0, r1);

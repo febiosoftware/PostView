@@ -68,6 +68,16 @@ void CGLLinePlot::Render(CGLContext& rc)
 	FEModel& fem = *glm.GetFEModel();;
 	int ns = glm.currentTimeIndex();
 
+	GLfloat zero[4] = { 0.f };
+	GLfloat one[4] = { 1.f, 1.f, 1.f, 1.f };
+	GLfloat col[4] = { m_col.r, m_col.g, m_col.b, 1.f};
+	GLfloat amb[4] = { 0.1f, 0.1f, 0.1f, 1.f };
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, col);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, amb);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, one);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, zero);
+	glMateriali(GL_FRONT_AND_BACK, GL_SHININESS, 64);
+
 	GLfloat line_old;
 	glGetFloatv(GL_LINE_WIDTH, &line_old);
 	glLineWidth(m_line);
