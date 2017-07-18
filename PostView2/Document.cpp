@@ -218,9 +218,6 @@ CDocument::CDocument(CMainWindow* pwnd) : m_wnd(pwnd)
 
 	m_szfile[0] = 0;
 
-	m_selectMode  = SELECT_ELEMS;
-	m_selectStyle = SELECT_RECT;
-
 	m_pImg = 0;
 	m_pVR = 0;
 	m_pIS = 0;
@@ -796,15 +793,19 @@ bool CDocument::AddStandardDataField(int ndata, bool bselection_only)
 
 	FEModel& fem = *GetFEModel();
 
-	// NOTE: This only works with curvatures
-	if (bselection_only && (GetSelectionMode() == SELECT_FACES))
+	CGLModel* model = GetGLModel();
+	if (model)
 	{
-		vector<int> L;
-		GetSelectionList(L, GetSelectionMode());
-		if (L.empty() == false) fem.AddDataField(pdf, L);
+		// NOTE: This only works with curvatures
+		if (bselection_only && (model->GetSelectionMode() == SELECT_FACES))
+		{
+			vector<int> L;
+			model->GetSelectionList(L, model->GetSelectionMode());
+			if (L.empty() == false) fem.AddDataField(pdf, L);
+			else fem.AddDataField(pdf);
+		}
 		else fem.AddDataField(pdf);
 	}
-	else fem.AddDataField(pdf);
 
 	return true;
 }
@@ -1580,94 +1581,8 @@ void CDocument::UpdateAllStates()
 	SetCurrentTime(ntime);
 }
 
-//-----------------------------------------------------------------------------
-void CDocument::GetSelectionList(vector<int>& L, int mode)
-{
-	L.clear();
-	FEMeshBase& m = *GetActiveMesh();
-	switch (mode)
-	{
-	case SELECT_NODES:
-		{
-			for (int i=0; i<m.Nodes(); ++i) if (m.Node(i).IsSelected()) L.push_back(i);
-		}
-		break;
-	case SELECT_EDGES:
-		{
-			for (int i=0; i<m.Edges(); ++i) if (m.Edge(i).IsSelected()) L.push_back(i);
-		}
-		break;
-	case SELECT_FACES:
-		{
-			for (int i=0; i<m.Faces(); ++i) if (m.Face(i).IsSelected()) L.push_back(i);
-		}
-		break;
-	case SELECT_ELEMS:
-		{
-			for (int i=0; i<m.Elements(); ++i) if (m.Element(i).IsSelected()) L.push_back(i);
-		}
-		break;
-	}
-}
-
 // get the number of time steps
 int CDocument::GetTimeSteps() { return (m_fem?m_fem->GetStates():0); }
 
 const char* CDocument::GetTitle() { return (m_fem?m_fem->GetTitle():0); }
 void CDocument::SetTitle(const char* sztitle) { if (m_fem) m_fem->SetTitle(sztitle); }
-
-void CDocument::ConvertSelection(int oldMode, int newMode)
-{
-	if (newMode == SELECT_NODES)
-	{
-		FEMeshBase& mesh = *GetFEModel()->GetFEMesh(0);
-
-		if (oldMode == SELECT_EDGES)
-		{
-			int NE = mesh.Edges();
-			for (int i=0; i<NE; ++i)
-			{
-				FEEdge& e = mesh.Edge(i);
-				if (e.IsSelected())
-				{
-					e.Unselect();
-					int ne = e.Nodes();
-					for (int j = 0; j<ne; ++j)
-						mesh.Node(e.node[j]).Select();
-				}
-			}
-		}
-		if (oldMode == SELECT_FACES)
-		{
-			int NF = mesh.Faces();
-			for (int i = 0; i<NF; ++i)
-			{
-				FEFace& f = mesh.Face(i);
-				if (f.IsSelected())
-				{
-					f.Unselect();
-					int nf = f.Nodes();
-					for (int j=0; j<nf; ++j)
-						mesh.Node(f.node[j]).Select();
-				}
-			}
-		}
-		if (oldMode == SELECT_ELEMS)
-		{
-			int NE = mesh.Elements();
-			for (int i = 0; i<NE; ++i)
-			{
-				FEElement& e = mesh.Element(i);
-				if (e.IsSelected())
-				{
-					e.Unselect();
-					int ne = e.Nodes();
-					for (int j = 0; j<ne; ++j)
-						mesh.Node(e.m_node[j]).Select();
-				}
-			}
-		}
-	}
-
-	GetGLModel()->UpdateSelectionLists();
-}

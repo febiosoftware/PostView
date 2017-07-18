@@ -42,11 +42,6 @@ class FEDataField;
 #define BG_FADE_DIAG	4
 
 //-----------------------------------------------------------------------------
-// Selection Styles
-#define SELECT_RECT		1
-#define SELECT_CIRCLE	2
-#define SELECT_FREE		3
-
 // projection modes
 #define RENDER_ORTHO	0
 #define RENDER_PERSP	1
@@ -298,27 +293,6 @@ public:
 	// reset camera
 	void ZoomExtents(bool bhit = false);
 
-	// --- S E L E C T I O N ---
-
-	// get selection mode
-	int GetSelectionMode() const { return m_selectMode; }
-
-	// set selection mode
-	void SetSelectionMode(int mode) { m_selectMode = mode; }
-
-	// get a list of selected items
-	void GetSelectionList(vector<int>& L, int mode);
-
-	// get selection style
-	int GetSelectionStyle() const { return m_selectStyle; }
-
-	// set selection style
-	void SetSelectionStyle(int n) { m_selectStyle = n; }
-
-	// convert between selections
-	void ConvertSelection(int oldMode, int newMode);
-
-
 	// --- O B J E C T   M A N A G M E N T ---
 
 	// get the GL model
@@ -389,10 +363,6 @@ protected:
 
 	// miscellenaeous
 	bool	m_bValid;	// the document is loaded and valid
-
-	// --- Selection ---
-	int		m_selectMode;		//!< current selection mode (node, edge, face, elem)
-	int		m_selectStyle;		//!< selection style (box, circle, rect)
 
 private:
 	std::vector<CDocObserver*>	m_Observers;

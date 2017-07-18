@@ -261,7 +261,7 @@ public:
 		QAction* actionSlicePlot       = addAction("Slice plot"      , "actionSlicePlot"      , ":icons/slice.png");
 		QAction* actionDisplacementMap = addAction("Displacement map", "actionDisplacementMap", ":/icons/distort.png");
 		QAction* actionGraph           = addAction("New Graph ..."   , "actionGraph"          , ":/icons/chart.png"); actionGraph->setShortcut(Qt::Key_F3);
-		QAction* actionSummary         = addAction("Summary ..."     , "actionSummary"        );
+		QAction* actionSummary         = addAction("Summary ..."     , "actionSummary"        ); actionSummary->setShortcut(Qt::Key_F4);
 		QAction* actionStats           = addAction("Statistics  ..." , "actionStats"          );
 		QAction* actionIntegrate       = addAction("Integrate ..."   , "actionIntegrate"      , ":/icons/integrate.png");
 

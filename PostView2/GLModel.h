@@ -13,6 +13,11 @@
 #define SELECT_ADD		16
 #define SELECT_SUB		32
 
+// Selection Styles
+#define SELECT_RECT		1
+#define SELECT_CIRCLE	2
+#define SELECT_FREE		3
+
 class GLSurface
 {
 public:
@@ -116,12 +121,6 @@ public:
 	void RenderShadows(FEModel* ps, vec3f lp, float inf);
 	void RenderNodes(FEModel* ps, CGLContext& rc);
 	void RenderEdges(FEModel* ps, CGLContext& rc);
-
-	// more efficien rendering functions for selection
-	void RenderAllElements();
-	void RenderAllFaces();
-	void RenderAllEdges();
-	void RenderAllNodes();
 
 	void AddDecoration(GDecoration* pd);
 	void RemoveDecoration(GDecoration* pd);
@@ -240,6 +239,26 @@ public: // Selection
 	//! Invert selected elements
 	void InvertSelectedElements();
 
+	// --- S E L E C T I O N ---
+
+	// get selection mode
+	int GetSelectionMode() const { return m_selectMode; }
+
+	// set selection mode
+	void SetSelectionMode(int mode) { m_selectMode = mode; }
+
+	// get a list of selected items
+	void GetSelectionList(vector<int>& L, int mode);
+
+	// get selection style
+	int GetSelectionStyle() const { return m_selectStyle; }
+
+	// set selection style
+	void SetSelectionStyle(int n) { m_selectStyle = n; }
+
+	// convert between selections
+	void ConvertSelection(int oldMode, int newMode);
+
 protected:
 	void UpdateInternalSurfaces();
 	void ClearInternalSurfaces();
@@ -277,4 +296,8 @@ protected:
 
 	// TODO: move to document?
 	std::list<GDecoration*>	m_decor;
+
+	// --- Selection ---
+	int		m_selectMode;		//!< current selection mode (node, edge, face, elem)
+	int		m_selectStyle;		//!< selection style (box, circle, rect)
 };

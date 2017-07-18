@@ -339,8 +339,6 @@ void CGLPlaneCutPlot::RenderMesh()
 		FEMaterial* pmat = ps->GetMaterial(el.m_MatID);
 		if ((el.m_ntag > 0) && (pmat->bmesh) && (pmat->bvisible || m_bcut_hidden) && (pmat->bclip))
 		{
-			glLoadName(i+1);
-
 			switch (el.Type())
 			{
 			case FE_HEX8   : nt = HEX_NT; break;

@@ -95,6 +95,9 @@ void CIntegrateWindow::UpdateIntegral()
 
 	// get the source object
 	CDocument* pdoc = m_wnd->GetDocument();
+
+	CGLModel* model = pdoc->GetGLModel();
+
 	char sztitle[256] = {0};
 	CPlotData data;
 	CGLPlaneCutPlot* pp = m_src[m_nsrc];
@@ -103,7 +106,7 @@ void CIntegrateWindow::UpdateIntegral()
 		// update based on current selection
 		IntegrateSelection(data);
 
-		int nview = pdoc->GetSelectionMode();
+		int nview = model->GetSelectionMode();
 		sprintf(sztitle, "%s of %s", (nview == SELECT_NODES? "Sum" : "Integral"), pdoc->GetFieldString().c_str());
 	}
 	else 
@@ -162,7 +165,7 @@ void CIntegrateWindow::IntegrateSelection(CPlotData& data)
 	data.clear();
 
 	// get view mode
-	int nview = pdoc->GetSelectionMode();
+	int nview = po->GetSelectionMode();
 
 	// make sure the color map is active
 	if (po->GetColorMap()->IsActive())

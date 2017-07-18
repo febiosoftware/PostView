@@ -467,6 +467,12 @@ public:
 	CColormapWidget*	m_map;
 	QDialogButtonBox*	buttonBox;
 
+	::CPropertyListView* pw1;
+	::CPropertyListView* pw2;
+	::CPropertyListView* pw3;
+	::CPropertyListView* pw4;
+	::CPropertyListView* pw5;
+
 public:
 	void setupUi(::CDlgViewSettings* pwnd)
 	{
@@ -474,11 +480,11 @@ public:
 	
 		QTabWidget* pt = new QTabWidget;
 
-		::CPropertyListView* pw1 = new ::CPropertyListView; pw1->Update(m_render);
-		::CPropertyListView* pw2 = new ::CPropertyListView; pw2->Update(m_bg    );
-		::CPropertyListView* pw3 = new ::CPropertyListView; pw3->Update(m_light );
-		::CPropertyListView* pw4 = new ::CPropertyListView; pw4->Update(m_cam   );
-		::CPropertyListView* pw5 = new ::CPropertyListView; pw5->Update(m_select);
+		pw1 = new ::CPropertyListView; pw1->Update(m_render);
+		pw2 = new ::CPropertyListView; pw2->Update(m_bg    );
+		pw3 = new ::CPropertyListView; pw3->Update(m_light );
+		pw4 = new ::CPropertyListView; pw4->Update(m_cam   );
+		pw5 = new ::CPropertyListView; pw5->Update(m_select);
 
 		m_pal = new CPaletteWidget;
 		m_map = new CColormapWidget;
@@ -492,13 +498,70 @@ public:
 		pt->addTab(m_map, "Colormap");
 		pg->addWidget(pt);
 
-		buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Apply); 
+		buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Apply | QDialogButtonBox::Reset); 
 		pg->addWidget(buttonBox);
 
 		QObject::connect(buttonBox, SIGNAL(accepted()), pwnd, SLOT(accept()));
 		QObject::connect(buttonBox, SIGNAL(rejected()), pwnd, SLOT(reject()));
 		QObject::connect(buttonBox, SIGNAL(clicked(QAbstractButton*)), pwnd, SLOT(onClicked(QAbstractButton*)));
 		QMetaObject::connectSlotsByName(pwnd);
+	}
+
+	void Set(VIEWSETTINGS& view)
+	{
+		m_render->m_bproj = view.m_nproj == RENDER_PERSP;
+		m_render->m_bline = view.m_blinesmooth;
+		m_render->m_thick = view.m_flinethick;
+		m_render->m_point = view.m_fpointsize;
+
+		m_bg->m_col1 = view.bgcol1;
+		m_bg->m_col2 = view.bgcol2;
+		m_bg->m_nstyle = view.bgstyle;
+
+		m_light->m_blight = view.m_bLighting;
+		m_light->m_diffuse = view.m_diffuse;
+		m_light->m_ambient = view.m_ambient;
+		m_light->m_bshadow = view.m_bShadows;
+		m_light->m_shadow = view.m_shadow_intensity;
+
+		m_select->m_bconnect = view.m_bconn;
+		m_select->m_ntagInfo = view.m_ntagInfo;
+		m_select->m_backface = view.m_bignoreBackfacingItems;
+		m_select->m_binterior = view.m_bext;
+	}
+
+	void Get(VIEWSETTINGS& view)
+	{
+		view.m_nproj       = (m_render->m_bproj ? RENDER_PERSP : RENDER_ORTHO);
+		view.m_blinesmooth = m_render->m_bline;
+		view.m_flinethick  = m_render->m_thick;
+		view.m_fpointsize  = m_render->m_point;
+
+		view.bgcol1  = m_bg->m_col1;
+		view.bgcol2  = m_bg->m_col2;
+		view.bgstyle = m_bg->m_nstyle;
+
+		view.m_bLighting = m_light->m_blight;
+		view.m_diffuse   = m_light->m_diffuse;
+		view.m_ambient   = m_light->m_ambient;
+		view.m_bShadows  = m_light->m_bshadow;
+		view.m_shadow_intensity = m_light->m_shadow;
+
+		view.m_bconn    = m_select->m_bconnect;
+		view.m_ntagInfo = m_select->m_ntagInfo;
+		view.m_bignoreBackfacingItems = m_select->m_backface;
+		view.m_bext     = m_select->m_binterior;
+
+		update();
+	}
+
+	void update()
+	{
+		pw1->Update(m_render);
+		pw2->Update(m_bg);
+		pw3->Update(m_light);
+		pw4->Update(m_cam);
+		pw5->Update(m_select);
 	}
 };
 
@@ -520,30 +583,12 @@ CDlgViewSettings::CDlgViewSettings(CMainWindow* pwnd) : ui(new Ui::CDlgViewSetti
 	ui->m_cam    = new CCameraProps;
 	ui->m_select = new CSelectionProps;
 
-	ui->m_render->m_bproj = view.m_nproj == RENDER_PERSP;
-	ui->m_render->m_bline = view.m_blinesmooth;
-	ui->m_render->m_thick = view.m_flinethick;
-	ui->m_render->m_point = view.m_fpointsize;
-
-	ui->m_bg->m_col1 = view.bgcol1;
-	ui->m_bg->m_col2 = view.bgcol2;
-	ui->m_bg->m_nstyle = view.bgstyle;
-
-	ui->m_light->m_blight = view.m_bLighting;
-	ui->m_light->m_diffuse = view.m_diffuse;
-	ui->m_light->m_ambient = view.m_ambient;
-	ui->m_light->m_bshadow = view.m_bShadows;
-	ui->m_light->m_shadow = view.m_shadow_intensity;
-
 	ui->m_cam->m_speed = cam.GetCameraSpeed();
-	ui->m_cam->m_bias  = cam.GetCameraBias();
-
-	ui->m_select->m_bconnect = view.m_bconn;
-	ui->m_select->m_ntagInfo = view.m_ntagInfo;
-	ui->m_select->m_backface = view.m_bignoreBackfacingItems;
-	ui->m_select->m_binterior = view.m_bext;
+	ui->m_cam->m_bias = cam.GetCameraBias();
 
 	ui->setupUi(this);
+
+	ui->Set(view);
 
 	// fill the palette list
 	UpdatePalettes();
@@ -577,28 +622,10 @@ void CDlgViewSettings::apply()
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
 	CGLCamera& cam = pdoc->GetView()->GetCamera();
 
-	view.m_nproj = (ui->m_render->m_bproj ? RENDER_PERSP : RENDER_ORTHO);
-	view.m_blinesmooth = ui->m_render->m_bline;
-	view.m_flinethick  = ui->m_render->m_thick;
-	view.m_fpointsize  = ui->m_render->m_point;
-
-	view.bgcol1 = ui->m_bg->m_col1;
-	view.bgcol2 = ui->m_bg->m_col2;
-	view.bgstyle = ui->m_bg->m_nstyle;
-
-	view.m_bLighting = ui->m_light->m_blight;
-	view.m_diffuse = ui->m_light->m_diffuse;
-	view.m_ambient = ui->m_light->m_ambient;
-	view.m_bShadows = ui->m_light->m_bshadow;
-	view.m_shadow_intensity = ui->m_light->m_shadow;
+	ui->Get(view);
 
 	cam.SetCameraSpeed(ui->m_cam->m_speed);
 	cam.SetCameraBias(ui->m_cam->m_bias);
-
-	view.m_bconn    = ui->m_select->m_bconnect;
-	view.m_ntagInfo = ui->m_select->m_ntagInfo;
-	view.m_bignoreBackfacingItems = ui->m_select->m_backface;
-	view.m_bext     = ui->m_select->m_binterior;
 
 	CPaletteManager& PM = CPaletteManager::GetInstance();
 	PM.SetCurrentIndex(ui->m_pal->pal->currentIndex());
@@ -615,6 +642,7 @@ void CDlgViewSettings::accept()
 void CDlgViewSettings::onClicked(QAbstractButton* button)
 {
 	if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::ApplyRole) apply();
+	if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::ResetRole) OnReset();
 }
 
 void CDlgViewSettings::on_load_clicked()
@@ -706,4 +734,14 @@ void CDlgViewSettings::on_apply_clicked()
 	doc.ApplyPalette(pal);
 
 	m_pwnd->UpdateUi(true);
+}
+
+void CDlgViewSettings::OnReset()
+{
+	CDocument& doc = *m_pwnd->GetDocument();
+	VIEWSETTINGS& view = doc.GetViewSettings();
+
+	view.Defaults();
+
+	ui->Set(view);
 }

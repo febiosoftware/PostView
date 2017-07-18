@@ -206,8 +206,6 @@ void CGLMesh::RenderFaces(bool bsmooth)
 
 	for (i=0; i<m_nFaces; i++, pf++)
 	{
-		glLoadName(pf->m_nref);
-
 		n = pf->Nodes();
 
 		r1 = m_pNode[pf->m_node[0]].m_pos;
@@ -248,7 +246,6 @@ void CGLMesh::RenderFaces(bool bsmooth)
 		}
 		glEnd();
 	}
-	glLoadName((unsigned int) -1);
 }
 
 void CGLMesh::RenderLines()
@@ -288,8 +285,6 @@ void CGLMesh::RenderNodes()
 	for (i=0; i<m_nNodes; i++, pn++)
 		if (pn->m_nref >= 0)
 		{
-			glLoadName(pn->m_nref);
-
 			glBegin(GL_POINTS);
 			{
 				vec3f& r = pn->m_pos;

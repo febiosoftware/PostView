@@ -84,20 +84,19 @@ void CSummaryWindow::Update(bool breset)
 		else return;
 	}
 
-	// get the selection mode
-	int nmode = doc->GetSelectionMode();
-
 	CGLModel* po = doc->GetGLModel();
 	FEModel* pfem = doc->GetFEModel();
 	FEMeshBase* pfe = po->GetActiveMesh();
 	int nodes = pfe->Nodes();
 
+	// get the selection mode
+	int nmode = po->GetSelectionMode();
+
 	// get the current data field
 	int ndata = ui->selectData->currentValue();
 	if (ndata <= 0) return;
 
-	// only update if the data was changed
-	if ((ndata == m_ncurrentData) && (breset == false)) return;
+	// store current data
 	m_ncurrentData = ndata;
 
 	// get the text and make it the plot title

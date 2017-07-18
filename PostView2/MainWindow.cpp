@@ -112,7 +112,7 @@ void CMainWindow::UpdateStatusMessage()
 		FEMeshBase* mesh = m_doc->GetActiveMesh();
 		if (mesh)
 		{
-			int selectionMode = m_doc->GetSelectionMode();
+			int selectionMode = mdl.GetSelectionMode();
 
 			int N = 0;
 			char sz[128] = {0};
@@ -289,6 +289,12 @@ void CMainWindow::UpdateGraphs(bool breset, bool bfit)
 
 	if (ui->statsWindow && ui->statsWindow->isVisible()) 
 		ui->statsWindow->Update(false);
+}
+
+void CMainWindow::UpdateSummary(bool breset)
+{
+	if (ui->summaryWindow && ui->summaryWindow->isVisible())
+		ui->summaryWindow->Update(breset);
 }
 
 QMenu* CMainWindow::BuildContextMenu()
@@ -781,46 +787,67 @@ void CMainWindow::on_actionQuit_triggered()
 
 void CMainWindow::on_selectNodes_triggered()
 {
-	int oldMode = m_doc->GetSelectionMode();
+	CGLModel* model = m_doc->GetGLModel(); assert(model);
+	if (model == 0) return;
+	
+	int oldMode = model->GetSelectionMode();
 
-	m_doc->ConvertSelection(oldMode, SELECT_NODES);
+	model->ConvertSelection(oldMode, SELECT_NODES);
 
-	m_doc->SetSelectionMode(SELECT_NODES);
+	model->SetSelectionMode(SELECT_NODES);
 
 	RedrawGL();
 }
 
 void CMainWindow::on_selectEdges_triggered()
 {
-	m_doc->SetSelectionMode(SELECT_EDGES);
+	CGLModel* model = m_doc->GetGLModel(); assert(model);
+	if (model == 0) return;
+
+	model->SetSelectionMode(SELECT_EDGES);
 	RedrawGL();
 }
 
 void CMainWindow::on_selectFaces_triggered()
 {
-	m_doc->SetSelectionMode(SELECT_FACES);
+	CGLModel* model = m_doc->GetGLModel(); assert(model);
+	if (model == 0) return;
+
+	model->SetSelectionMode(SELECT_FACES);
 	RedrawGL();
 }
 
 void CMainWindow::on_selectElems_triggered()
 {
-	m_doc->SetSelectionMode(SELECT_ELEMS);
+	CGLModel* model = m_doc->GetGLModel(); assert(model);
+	if (model == 0) return;
+
+	model->SetSelectionMode(SELECT_ELEMS);
 	RedrawGL();
 }
 
 void CMainWindow::on_actionSelectRect_triggered()
 {
-	GetDocument()->SetSelectionStyle(SELECT_RECT);
+	CGLModel* model = m_doc->GetGLModel(); assert(model);
+	if (model == 0) return;
+
+	model->SetSelectionStyle(SELECT_RECT);
 }
 
 void CMainWindow::on_actionSelectCircle_triggered()
 {
-	GetDocument()->SetSelectionStyle(SELECT_CIRCLE);
+	CGLModel* model = m_doc->GetGLModel(); assert(model);
+	if (model == 0) return;
+
+	model->SetSelectionStyle(SELECT_CIRCLE);
 }
 
 void CMainWindow::on_actionSelectFree_triggered()
 {
-	GetDocument()->SetSelectionStyle(SELECT_FREE);
+	CGLModel* model = m_doc->GetGLModel(); assert(model);
+	if (model == 0) return;
+
+	model->SetSelectionStyle(SELECT_FREE);
 }
 
 void CMainWindow::on_actionZoomSelected_triggered()
@@ -850,7 +877,7 @@ void CMainWindow::on_actionHideSelected_triggered()
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 
-	switch (pdoc->GetSelectionMode())
+	switch (mdl.GetSelectionMode())
 	{
 	case SELECT_NODES: mdl.HideSelectedNodes(); break;
 	case SELECT_EDGES: mdl.HideSelectedEdges(); break;
@@ -924,6 +951,9 @@ void CMainWindow::on_actionSelectRange_triggered()
 	CDocument* pdoc = GetDocument();
 	if (!pdoc->IsValid()) return;
 
+	CGLModel* model = m_doc->GetGLModel(); assert(model);
+	if (model == 0) return;
+
 	CGLColorMap* pcol = pdoc->GetGLModel()->GetColorMap();
 	if (pcol == 0) return;
 
@@ -936,7 +966,7 @@ void CMainWindow::on_actionSelectRange_triggered()
 
 	if (dlg.exec())
 	{
-		switch (pdoc->GetSelectionMode())
+		switch (model->GetSelectionMode())
 		{
 		case SELECT_NODES: pdoc->SelectNodesInRange(dlg.m_min, dlg.m_max, dlg.m_brange); break;
 		case SELECT_EDGES: pdoc->SelectEdgesInRange(dlg.m_min, dlg.m_max, dlg.m_brange); break;
@@ -968,7 +998,10 @@ void CMainWindow::on_actionFind_triggered()
 	CDocument& doc = *GetDocument();
 	if (doc.IsValid() == false) return;
 
-	int nview = doc.GetSelectionMode();
+	CGLModel* model = m_doc->GetGLModel(); assert(model);
+	if (model == 0) return;
+
+	int nview = model->GetSelectionMode();
 	int nsel = 0;
 	if (nview == SELECT_NODES) nsel = 0;
 	if (nview == SELECT_EDGES) nsel = 1;

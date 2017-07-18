@@ -67,6 +67,9 @@ CGLModel::CGLModel(FEModel* ps)
 
 	m_nrender = RENDER_MODE_SOLID;
 
+	m_selectMode = SELECT_ELEMS;
+	m_selectStyle = SELECT_RECT;
+
 	UpdateEdge();
 	UpdateInternalSurfaces();
 }
@@ -320,8 +323,9 @@ void CGLModel::RenderFaces(CGLContext& rc)
 
 void CGLModel::RenderSelection(CGLContext &rc)
 {
-	int i;
 	bool bnode = m_pcol->DisplayNodalValues();
+
+	int mode = GetSelectionMode();
 
 	// get the mesh
 	FEModel* ps = m_ps;
@@ -338,117 +342,137 @@ void CGLModel::RenderSelection(CGLContext &rc)
 	int ndivs = GetSubDivisions();
 
 	// render the selected faces
-	for ( i=0; i<pm->Faces(); ++i)
+	if (mode == SELECT_FACES)
 	{
-		FEFace& face = pm->Face(i);
-		FEElement& el = pm->Element(face.m_elem[0]);
-		if (el.IsSelected() || face.IsSelected())
+		for (int i=0; i<pm->Faces(); ++i)
 		{
-			// okay, we got one, so let's render it
-			glLoadName(face.m_elem[0]+1);
-			RenderFace(face, pm, ndivs, bnode);
+			FEFace& face = pm->Face(i);
+			if (face.IsSelected())
+			{
+				// okay, we got one, so let's render it
+				RenderFace(face, pm, ndivs, bnode);
+			}
 		}
 	}
-	glEnable(GL_LIGHTING);
+
+	// render the selected elements
+	if (mode == SELECT_ELEMS)
+	{
+		for (int i = 0; i<pm->Faces(); ++i)
+		{
+			FEFace& face = pm->Face(i);
+			FEElement& el = pm->Element(face.m_elem[0]);
+			if (el.IsSelected())
+			{
+				// okay, we got one, so let's render it
+				RenderFace(face, pm, ndivs, bnode);
+			}
+		}
+	}
 
 	// render the outline of the selected elements
-	glDisable(GL_LIGHTING);
 	glDisable(GL_DEPTH_TEST);
 	glColor3ub(255,255,0);
 	glLineWidth(1.5f);
 
 	// do the selected elements first
-	const vector<FEElement*> elemSelection = GetElementSelection();
-	for (i=0; i<(int)elemSelection.size(); ++i)
+	if (mode == SELECT_ELEMS)
 	{
-		FEElement& el = *elemSelection[i]; assert(el.IsSelected());
-		RenderElementOutline(el, pm);
+		const vector<FEElement*> elemSelection = GetElementSelection();
+		for (int i = 0; i<(int)elemSelection.size(); ++i)
+		{
+			FEElement& el = *elemSelection[i]; assert(el.IsSelected());
+			RenderElementOutline(el, pm);
+		}
 	}
 
 	// now do the selected faces
-	vec3f r[FEFace::MAX_NODES];
-	const vector<FEFace*> faceSelection = GetFaceSelection();
-	for (i=0; i<(int)faceSelection.size(); ++i)
+	if (mode == SELECT_FACES)
 	{
-		FEFace& f = *faceSelection[i]; assert(f.IsSelected());
-
-		int n = f.Nodes();
-		for (int j=0; j<n; ++j) r[j] = pm->Node(f.node[j]).m_rt;
-		switch (f.m_ntype)
+		vec3f r[FEFace::MAX_NODES];
+		const vector<FEFace*> faceSelection = GetFaceSelection();
+		for (int i = 0; i<(int)faceSelection.size(); ++i)
 		{
-		case FACE_TRI3:
-			glBegin(GL_LINE_LOOP);
+			FEFace& f = *faceSelection[i]; assert(f.IsSelected());
+
+			int n = f.Nodes();
+			for (int j=0; j<n; ++j) r[j] = pm->Node(f.node[j]).m_rt;
+			switch (f.m_ntype)
 			{
-				glVertex3f(r[0].x, r[0].y, r[0].z);
-				glVertex3f(r[1].x, r[1].y, r[1].z);
-				glVertex3f(r[2].x, r[2].y, r[2].z);
+			case FACE_TRI3:
+				glBegin(GL_LINE_LOOP);
+				{
+					glVertex3f(r[0].x, r[0].y, r[0].z);
+					glVertex3f(r[1].x, r[1].y, r[1].z);
+					glVertex3f(r[2].x, r[2].y, r[2].z);
+				}
+				glEnd();
+				break;
+			case FACE_QUAD4:
+				glBegin(GL_LINE_LOOP);
+				{
+					glVertex3f(r[0].x, r[0].y, r[0].z);
+					glVertex3f(r[1].x, r[1].y, r[1].z);
+					glVertex3f(r[2].x, r[2].y, r[2].z);
+					glVertex3f(r[3].x, r[3].y, r[3].z);
+				}
+				glEnd();
+				break;
+			case FACE_TRI6:
+				glBegin(GL_LINE_LOOP);
+				{
+					glVertex3f(r[0].x, r[0].y, r[0].z);
+					glVertex3f(r[3].x, r[3].y, r[3].z);
+					glVertex3f(r[1].x, r[1].y, r[1].z);
+					glVertex3f(r[4].x, r[4].y, r[4].z);
+					glVertex3f(r[2].x, r[2].y, r[2].z);
+					glVertex3f(r[5].x, r[5].y, r[5].z);
+				}
+				glEnd();
+				break;
+			case FACE_TRI7:
+				glBegin(GL_LINE_LOOP);
+				{
+					glVertex3f(r[0].x, r[0].y, r[0].z);
+					glVertex3f(r[3].x, r[3].y, r[3].z);
+					glVertex3f(r[1].x, r[1].y, r[1].z);
+					glVertex3f(r[4].x, r[4].y, r[4].z);
+					glVertex3f(r[2].x, r[2].y, r[2].z);
+					glVertex3f(r[5].x, r[5].y, r[5].z);
+				}
+				glEnd();
+				break;
+			case FACE_QUAD8:
+				glBegin(GL_LINE_LOOP);
+				{
+					glVertex3f(r[0].x, r[0].y, r[0].z);
+					glVertex3f(r[4].x, r[4].y, r[4].z);
+					glVertex3f(r[1].x, r[1].y, r[1].z);
+					glVertex3f(r[5].x, r[5].y, r[5].z);
+					glVertex3f(r[2].x, r[2].y, r[2].z);
+					glVertex3f(r[6].x, r[6].y, r[6].z);
+					glVertex3f(r[3].x, r[3].y, r[3].z);
+					glVertex3f(r[7].x, r[7].y, r[7].z);
+				}
+				glEnd();
+				break;
+			case FACE_QUAD9:
+				glBegin(GL_LINE_LOOP);
+				{
+					glVertex3f(r[0].x, r[0].y, r[0].z);
+					glVertex3f(r[4].x, r[4].y, r[4].z);
+					glVertex3f(r[1].x, r[1].y, r[1].z);
+					glVertex3f(r[5].x, r[5].y, r[5].z);
+					glVertex3f(r[2].x, r[2].y, r[2].z);
+					glVertex3f(r[6].x, r[6].y, r[6].z);
+					glVertex3f(r[3].x, r[3].y, r[3].z);
+					glVertex3f(r[7].x, r[7].y, r[7].z);
+				}
+				glEnd();
+				break;
+			default:
+				assert(false);
 			}
-			glEnd();
-			break;
-		case FACE_QUAD4:
-			glBegin(GL_LINE_LOOP);
-			{
-				glVertex3f(r[0].x, r[0].y, r[0].z);
-				glVertex3f(r[1].x, r[1].y, r[1].z);
-				glVertex3f(r[2].x, r[2].y, r[2].z);
-				glVertex3f(r[3].x, r[3].y, r[3].z);
-			}
-			glEnd();
-			break;
-		case FACE_TRI6:
-			glBegin(GL_LINE_LOOP);
-			{
-				glVertex3f(r[0].x, r[0].y, r[0].z);
-				glVertex3f(r[3].x, r[3].y, r[3].z);
-				glVertex3f(r[1].x, r[1].y, r[1].z);
-				glVertex3f(r[4].x, r[4].y, r[4].z);
-				glVertex3f(r[2].x, r[2].y, r[2].z);
-				glVertex3f(r[5].x, r[5].y, r[5].z);
-			}
-			glEnd();
-			break;
-		case FACE_TRI7:
-			glBegin(GL_LINE_LOOP);
-			{
-				glVertex3f(r[0].x, r[0].y, r[0].z);
-				glVertex3f(r[3].x, r[3].y, r[3].z);
-				glVertex3f(r[1].x, r[1].y, r[1].z);
-				glVertex3f(r[4].x, r[4].y, r[4].z);
-				glVertex3f(r[2].x, r[2].y, r[2].z);
-				glVertex3f(r[5].x, r[5].y, r[5].z);
-			}
-			glEnd();
-			break;
-		case FACE_QUAD8:
-			glBegin(GL_LINE_LOOP);
-			{
-				glVertex3f(r[0].x, r[0].y, r[0].z);
-				glVertex3f(r[4].x, r[4].y, r[4].z);
-				glVertex3f(r[1].x, r[1].y, r[1].z);
-				glVertex3f(r[5].x, r[5].y, r[5].z);
-				glVertex3f(r[2].x, r[2].y, r[2].z);
-				glVertex3f(r[6].x, r[6].y, r[6].z);
-				glVertex3f(r[3].x, r[3].y, r[3].z);
-				glVertex3f(r[7].x, r[7].y, r[7].z);
-			}
-			glEnd();
-			break;
-		case FACE_QUAD9:
-			glBegin(GL_LINE_LOOP);
-			{
-				glVertex3f(r[0].x, r[0].y, r[0].z);
-				glVertex3f(r[4].x, r[4].y, r[4].z);
-				glVertex3f(r[1].x, r[1].y, r[1].z);
-				glVertex3f(r[5].x, r[5].y, r[5].z);
-				glVertex3f(r[2].x, r[2].y, r[2].z);
-				glVertex3f(r[6].x, r[6].y, r[6].z);
-				glVertex3f(r[3].x, r[3].y, r[3].z);
-				glVertex3f(r[7].x, r[7].y, r[7].z);
-			}
-			glEnd();
-			break;
-		default:
-			assert(false);
 		}
 	}
 
@@ -506,13 +530,15 @@ void CGLModel::RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m)
 
 	int ndivs = GetSubDivisions();
 
+	int mode = GetSelectionMode();
+
 	glCullFace(GL_FRONT);
 	for ( i=0; i<NF; ++i)
 	{
 		FEFace& face = dom.Face(i);
 		FEElement& el = pm->Element(face.m_elem[0]);
 
-		if (!el.IsSelected() && face.IsVisible())
+		if (((mode != SELECT_ELEMS) || !el.IsSelected()) && face.IsVisible())
 		{
 			GLubyte a[4];
 			if (m_bsmooth)
@@ -549,7 +575,6 @@ void CGLModel::RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m)
 			}
 
 			// okay, we got one, so let's render it
-			glLoadName(face.m_elem[0]+1);
 			RenderFace(face, pm, c, ndivs, bnode);
 		}
 	}
@@ -561,7 +586,7 @@ void CGLModel::RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m)
 		FEFace& face = dom.Face(i);
 		FEElement& el = pm->Element(face.m_elem[0]);
 
-		if (!el.IsSelected() && face.IsVisible())
+		if (((mode != SELECT_ELEMS) || !el.IsSelected()) && face.IsVisible())
 		{
 			GLubyte a[4];
 			if (m_bsmooth)
@@ -598,7 +623,6 @@ void CGLModel::RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m)
 			}
 
 			// okay, we got one, so let's render it
-			glLoadName(face.m_elem[0]+1);
 			RenderFace(face, pm, c, ndivs, bnode);
 		}
 	}
@@ -613,7 +637,7 @@ void CGLModel::RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m)
 	for (i=0; i<surf.Faces(); ++i)
 	{
 		FEFace& face = surf.Face(i);
-		if (face.m_nId != nid) { glLoadName(face.m_nId + 1); nid = face.m_nId; }
+		if (face.m_nId != nid) nid = face.m_nId;
 		RenderFEFace(face, pm);
 	}
 
@@ -664,6 +688,8 @@ void CGLModel::RenderSolidMaterial(FEModel* ps, int m)
 
 	int ndivs = GetSubDivisions();
 
+	int mode = GetSelectionMode();
+
 	if (pmat->transparency > .999f)
 	{
 		if (btex) glEnable(GL_TEXTURE_1D);
@@ -672,10 +698,9 @@ void CGLModel::RenderSolidMaterial(FEModel* ps, int m)
 		{
 			FEFace& face = dom.Face(i);
 			FEElement& el = pm->Element(face.m_elem[0]);
-			if (!el.IsSelected() && !face.IsSelected() && face.IsVisible() && face.IsActive())
+			if (((mode != SELECT_ELEMS) || !el.IsSelected()) && ((mode != SELECT_FACES) || !face.IsSelected()) && face.IsVisible() && face.IsActive())
 			{
 				// okay, we got one, so let's render it
-				glLoadName(face.m_elem[0]+1);
 				RenderFace(face, pm, ndivs, bnode);
 			}
 		}
@@ -687,10 +712,9 @@ void CGLModel::RenderSolidMaterial(FEModel* ps, int m)
 		{
 			FEFace& face = dom.Face(i);
 			FEElement& el = pm->Element(face.m_elem[0]);
-			if (!el.IsSelected() && !face.IsSelected() && face.IsVisible() && !face.IsActive())
+			if (((mode != SELECT_ELEMS) || !el.IsSelected()) && ((mode != SELECT_FACES) || !face.IsSelected()) && face.IsVisible() && !face.IsActive())
 			{
 				// okay, we got one, so let's render it
-				glLoadName(face.m_elem[0]+1);
 				RenderFace(face, pm, ndivs, bnode);
 			}
 		}
@@ -709,10 +733,9 @@ void CGLModel::RenderSolidMaterial(FEModel* ps, int m)
 			FEFace& face = dom.Face(i);
 			FEElement& el = pm->Element(face.m_elem[0]);
 
-			if (!el.IsSelected() && !face.IsSelected() && face.IsVisible())
+			if (((mode != SELECT_ELEMS) || !el.IsSelected()) && !face.IsSelected() && face.IsVisible())
 			{
 				// okay, we got one, so let's render it
-				glLoadName(face.m_elem[0]+1);
 				RenderFace(face, pm, ndivs, bnode);
 			}
 		}
@@ -724,10 +747,9 @@ void CGLModel::RenderSolidMaterial(FEModel* ps, int m)
 			FEFace& face = dom.Face(i);
 			FEElement& el = pm->Element(face.m_elem[0]);
 
-			if (!el.IsSelected() && !face.IsSelected() && face.IsVisible())
+			if (((mode != SELECT_ELEMS) || !el.IsSelected()) && !face.IsSelected() && face.IsVisible())
 			{
 				// okay, we got one, so let's render it
-				glLoadName(face.m_elem[0]+1);
 				RenderFace(face, pm, ndivs, bnode);
 			}
 		}
@@ -739,14 +761,15 @@ void CGLModel::RenderSolidMaterial(FEModel* ps, int m)
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	// render the internal surfaces
-	if (btex) glColor3ub(255,255,255);
-	GLSurface& surf = *m_innerSurface[m];
-	int nid = -1;
-	for (i=0; i<surf.Faces(); ++i)
+	if (mode == SELECT_ELEMS)
 	{
-		FEFace& face = surf.Face(i);
-		if (face.m_nId != nid) { glLoadName(face.m_nId + 1); nid = face.m_nId; }
-		RenderFEFace(face, pm);
+		if (btex) glColor3ub(255,255,255);
+		GLSurface& surf = *m_innerSurface[m];
+		for (i=0; i<surf.Faces(); ++i)
+		{
+			FEFace& face = surf.Face(i);
+			RenderFEFace(face, pm);
+		}
 	}
 
 	if (pmat->benable && m_pcol->IsActive())
@@ -1282,8 +1305,7 @@ void CGLModel::RenderMeshLines(FEModel* ps, int nmat)
 		for (int i=0; i<dom.Faces(); ++i)
 		{
 			FEFace& face = dom.Face(i);
-			FEElement& el = pm->Element(face.m_elem[0]);
-			if (face.IsVisible() && (el.IsSelected() == false))
+			if (face.IsVisible())
 			{
 				// okay, we got one, so let's render it
 				RenderFaceOutline(face, pm, ndivs);
@@ -1453,8 +1475,6 @@ void CGLModel::RenderShadows(FEModel* ps, vec3f n, float inf)
 
 void CGLModel::RenderNodes(FEModel* ps, CGLContext& rc)
 {
-	int i, j;
-
 	FEMeshBase* pm = GetActiveMesh();
 
 	// store attributes
@@ -1463,7 +1483,7 @@ void CGLModel::RenderNodes(FEModel* ps, CGLContext& rc)
 	glDisable(GL_LIGHTING);
 
 	// reset tags and check visibility
-	for (i=0; i<pm->Nodes(); ++i)
+	for (int i=0; i<pm->Nodes(); ++i)
 	{
 		FENode& n = pm->Node(i);
 		n.m_ntag = (n.IsVisible() ? 1 : 0);
@@ -1477,11 +1497,11 @@ void CGLModel::RenderNodes(FEModel* ps, CGLContext& rc)
 		quat4f q = rc.m_pview->GetCamera().GetOrientation();
 		vec3f f;
 		int NF = pm->Faces();
-		for (i=0; i<NF; ++i)
+		for (int i = 0; i<NF; ++i)
 		{
 			FEFace& face = pm->Face(i);
 			int n = face.Nodes();
-			for (j=0; j<n; ++j) 
+			for (int j = 0; j<n; ++j)
 			{
 				vec3f f = face.m_nn[j];
 				q.RotateVector(f);
@@ -1490,29 +1510,41 @@ void CGLModel::RenderNodes(FEModel* ps, CGLContext& rc)
 		}
 	}
 
-	// render all tagged nodes
-	for (i=0; i<pm->Nodes(); ++i)
+	// render all unselected tagged nodes
+	glColor3ub(m_node_col.r, m_node_col.g, m_node_col.b);
+	glBegin(GL_POINTS);
+	for (int i = 0; i<pm->Nodes(); ++i)
 	{
 		FENode& node = pm->Node(i);
-		if (node.m_ntag)
+		if (node.m_ntag && (node.IsSelected() == false))
 		{
 			// get the nodal coordinate
-			vec3f r = node.m_rt;
-
-			// set the color
-			GLCOLOR c;
-			if (node.IsSelected()) c = m_sel_col;
-			else c = m_node_col;
-			glColor3ub(c.r,c.g,c.b);
+			vec3f& r = node.m_rt;
 
 			// render the point
-			glLoadName(i+1);
-			glBegin(GL_POINTS);
+			glVertex3f(r.x, r.y, r.z);
+		}
+	}
+	glEnd();
+
+	// render selected tagged nodes
+	if (GetSelectionMode() == SELECT_NODES)
+	{
+		glColor3ub(m_sel_col.r, m_sel_col.g, m_sel_col.b);
+		glBegin(GL_POINTS);
+		for (int i = 0; i<pm->Nodes(); ++i)
+		{
+			FENode& node = pm->Node(i);
+			if (node.m_ntag && node.IsSelected())
 			{
+				// get the nodal coordinate
+				vec3f r = node.m_rt;
+
+				// render the point
 				glVertex3f(r.x, r.y, r.z);
 			}
-			glEnd();
 		}
+		glEnd();
 	}
 
 	// restore attributes
@@ -2377,16 +2409,15 @@ void CGLModel::RenderEdges(FEModel* ps, CGLContext& rc)
 
 	FEMeshBase& mesh = *GetActiveMesh();
 	int NE = mesh.Edges();
-	for (int i=0; i<NE; ++i)
-	{
-		FEEdge& edge = mesh.Edge(i);
-		if (edge.IsVisible())
-		{
-			if (edge.IsSelected()) glColor3ub(255, 0, 0);
-			else glColor3ub(0,0,255);
 
-			glLoadName(i+1);
-			glBegin(GL_LINES);
+	// render unselected edges
+	glColor3ub(0, 0, 255);
+	glBegin(GL_LINES);
+	{
+		for (int i = 0; i<NE; ++i)
+		{
+			FEEdge& edge = mesh.Edge(i);
+			if (edge.IsVisible() && (edge.IsSelected() == false))
 			{
 				switch (edge.Type())
 				{
@@ -2407,240 +2438,47 @@ void CGLModel::RenderEdges(FEModel* ps, CGLContext& rc)
 					break;
 				}
 			}
-			glEnd();
 		}
+	}
+	glEnd();
+
+	// render selected edges
+	if (GetSelectionMode() == SELECT_EDGES)
+	{
+		glColor3ub(255, 0, 0);
+		glBegin(GL_LINES);
+		{
+			for (int i = 0; i<NE; ++i)
+			{
+				FEEdge& edge = mesh.Edge(i);
+				if (edge.IsVisible() && edge.IsSelected())
+				{
+					switch (edge.Type())
+					{
+					case EDGE_LINE2:
+						r[0] = mesh.Node(edge.node[0]).m_rt;
+						r[1] = mesh.Node(edge.node[1]).m_rt;
+						glVertex3d(r[0].x, r[0].y, r[0].z);
+						glVertex3d(r[1].x, r[1].y, r[1].z);
+						break;
+					case EDGE_LINE3:
+						r[0] = mesh.Node(edge.node[0]).m_rt;
+						r[1] = mesh.Node(edge.node[1]).m_rt;
+						r[2] = mesh.Node(edge.node[2]).m_rt;
+						glVertex3d(r[0].x, r[0].y, r[0].z);
+						glVertex3d(r[1].x, r[1].y, r[1].z);
+						glVertex3d(r[1].x, r[1].y, r[1].z);
+						glVertex3d(r[2].x, r[2].y, r[2].z);
+						break;
+					}
+				}
+			}
+		}
+		glEnd();
 	}
 
 	// restore attributes
 	glPopAttrib();
-}
-
-void CGLModel::RenderAllNodes()
-{
-	FEMeshBase* pm = GetActiveMesh();
-
-	// reset tags and check visibility
-	for (int i=0; i<pm->Nodes(); ++i)
-	{
-		FENode& node = pm->Node(i);
-		if (node.IsVisible() && (node.m_bext))
-		{
-			// get the nodal coordinate
-			vec3f& r = node.m_rt;
-
-			// render the point
-			glLoadName(i+1);
-			glPassThrough((GLfloat) i);
-			glBegin(GL_POINTS);
-			{
-				glVertex3f(r.x, r.y, r.z);
-			}
-			glEnd();
-		}
-	}
-}
-
-//-----------------------------------------------------------------------------
-// Render the edges of the model.
-void CGLModel::RenderAllEdges()
-{
-	vec3f r[3];
-	FEMeshBase& mesh = *GetActiveMesh();
-	int NE = mesh.Edges();
-	for (int i=0; i<NE; ++i)
-	{
-		FEEdge& edge = mesh.Edge(i);
-		if (edge.IsVisible())
-		{
-			glLoadName(i+1);
-			glPassThrough((GLfloat) i);
-			glBegin(GL_LINES);
-			{
-				switch (edge.Type())
-				{
-				case EDGE_LINE2:
-					r[0] = mesh.Node(edge.node[0]).m_rt;
-					r[1] = mesh.Node(edge.node[1]).m_rt;
-					glVertex3d(r[0].x, r[0].y, r[0].z);
-					glVertex3d(r[1].x, r[1].y, r[1].z);
-					break;
-				case EDGE_LINE3:
-					r[0] = mesh.Node(edge.node[0]).m_rt;
-					r[1] = mesh.Node(edge.node[1]).m_rt;
-					r[2] = mesh.Node(edge.node[2]).m_rt;
-					glVertex3d(r[0].x, r[0].y, r[0].z);
-					glVertex3d(r[1].x, r[1].y, r[1].z);
-					glVertex3d(r[1].x, r[1].y, r[1].z);
-					glVertex3d(r[2].x, r[2].y, r[2].z);
-					break;
-				}
-			}
-			glEnd();
-		}
-	}
-}
-
-//-----------------------------------------------------------------------------
-// Render all the visible faces (used for selection)
-void CGLModel::RenderAllFaces()
-{
-	// get the mesh
-	FEMeshBase* pm = GetActiveMesh();
-
-	vec3f r0, r1, r2, r3;
-
-	for (int i=0; i<pm->Faces(); ++i)
-	{
-		FEFace& face = pm->Face(i);
-		if (face.IsVisible())
-		{
-			glLoadName(i+1);
-			glPassThrough((GLfloat) i);
-
-			r0 = pm->Node(face.node[0]).m_rt;
-			r1 = pm->Node(face.node[1]).m_rt;
-			r2 = pm->Node(face.node[2]).m_rt;
-
-			switch (face.m_ntype)
-			{
-			case FACE_QUAD4:
-			case FACE_QUAD8:
-			case FACE_QUAD9:
-				{
-					r3 = pm->Node(face.node[3]).m_rt;
-
-					glBegin(GL_QUADS);
-					{
-						glVertex3d(r0.x, r0.y, r0.z);
-						glVertex3d(r1.x, r1.y, r1.z);
-						glVertex3d(r2.x, r2.y, r2.z);
-						glVertex3d(r3.x, r3.y, r3.z);
-					}
-					glEnd();
-				}
-				break;
-			case FACE_TRI3:
-			case FACE_TRI6:
-			case FACE_TRI7:
-				glBegin(GL_TRIANGLES);
-				{
-					glVertex3d(r0.x, r0.y, r0.z);
-					glVertex3d(r1.x, r1.y, r1.z);
-					glVertex3d(r2.x, r2.y, r2.z);
-				}
-				glEnd();
-				break;
-			default:
-				assert(false);
-			}
-		}
-	}
-}
-
-//-----------------------------------------------------------------------------
-// Render all the elements (used for selection)
-void CGLModel::RenderAllElements()
-{
-	// get the mesh
-	FEFace f;
-	FEMeshBase* pm = GetActiveMesh();
-	for (int i=0; i<pm->Elements(); ++i)
-	{
-		FEElement& el = pm->Element(i);
-		if (el.IsVisible())
-		{
-			glPassThrough((GLfloat)i);
-
-			// solid elements
-			int NF = el.Faces();
-			for (int j=0; j<NF; ++j)
-			{
-				el.GetFace(j, f);
-				switch (f.m_ntype)
-				{
-				case FACE_QUAD4:
-				case FACE_QUAD8:
-				case FACE_QUAD9:
-					{
-						vec3f r0 = pm->Node(f.node[0]).m_rt;
-						vec3f r1 = pm->Node(f.node[1]).m_rt;
-						vec3f r2 = pm->Node(f.node[2]).m_rt;
-						vec3f r3 = pm->Node(f.node[3]).m_rt;
-
-						glLoadName(i+1);
-						glBegin(GL_QUADS);
-						{
-							glVertex3f(r0.x, r0.y, r0.z);
-							glVertex3f(r1.x, r1.y, r1.z);
-							glVertex3f(r2.x, r2.y, r2.z);
-							glVertex3f(r3.x, r3.y, r3.z);
-						}
-						glEnd();
-					}
-					break;
-				case FACE_TRI3:
-				case FACE_TRI6:
-				case FACE_TRI7:
-				case FACE_TRI10:
-					{
-						vec3f r0 = pm->Node(f.node[0]).m_rt;
-						vec3f r1 = pm->Node(f.node[1]).m_rt;
-						vec3f r2 = pm->Node(f.node[2]).m_rt;
-
-						glLoadName(i+1);
-						glBegin(GL_TRIANGLES);
-						{
-							glVertex3f(r0.x, r0.y, r0.z);
-							glVertex3f(r1.x, r1.y, r1.z);
-							glVertex3f(r2.x, r2.y, r2.z);
-						}
-						glEnd();
-					}
-					break;
-				default:
-					assert(false);
-				}
-			}
-
-			// shell elements
-			int NE = el.Edges();
-			if (NE > 0)
-			{
-				if (el.Nodes() == 4)
-				{
-					vec3f r0 = pm->Node(el.m_node[0]).m_rt;
-					vec3f r1 = pm->Node(el.m_node[1]).m_rt;
-					vec3f r2 = pm->Node(el.m_node[2]).m_rt;
-					vec3f r3 = pm->Node(el.m_node[3]).m_rt;
-
-					glLoadName(i+1);
-					glBegin(GL_QUADS);
-					{
-						glVertex3f(r0.x, r0.y, r0.z);
-						glVertex3f(r1.x, r1.y, r1.z);
-						glVertex3f(r2.x, r2.y, r2.z);
-						glVertex3f(r3.x, r3.y, r3.z);
-					}
-					glEnd();
-				}
-				else
-				{
-					vec3f r0 = pm->Node(el.m_node[0]).m_rt;
-					vec3f r1 = pm->Node(el.m_node[1]).m_rt;
-					vec3f r2 = pm->Node(el.m_node[2]).m_rt;
-
-					glLoadName(i+1);
-					glBegin(GL_TRIANGLES);
-					{
-						glVertex3f(r0.x, r0.y, r0.z);
-						glVertex3f(r1.x, r1.y, r1.z);
-						glVertex3f(r2.x, r2.y, r2.z);
-					}
-					glEnd();
-				}
-			}
-		}
-	}
 }
 
 void CGLModel::RenderDecorations()
@@ -3597,4 +3435,90 @@ void CGLModel::UpdateInternalSurfaces()
 			}
 		}
 	}
+}
+
+//-----------------------------------------------------------------------------
+void CGLModel::GetSelectionList(vector<int>& L, int mode)
+{
+	L.clear();
+	FEMeshBase& m = *GetActiveMesh();
+	switch (mode)
+	{
+	case SELECT_NODES:
+	{
+		for (int i = 0; i<m.Nodes(); ++i) if (m.Node(i).IsSelected()) L.push_back(i);
+	}
+	break;
+	case SELECT_EDGES:
+	{
+		for (int i = 0; i<m.Edges(); ++i) if (m.Edge(i).IsSelected()) L.push_back(i);
+	}
+	break;
+	case SELECT_FACES:
+	{
+		for (int i = 0; i<m.Faces(); ++i) if (m.Face(i).IsSelected()) L.push_back(i);
+	}
+	break;
+	case SELECT_ELEMS:
+	{
+		for (int i = 0; i<m.Elements(); ++i) if (m.Element(i).IsSelected()) L.push_back(i);
+	}
+	break;
+	}
+}
+
+void CGLModel::ConvertSelection(int oldMode, int newMode)
+{
+	if (newMode == SELECT_NODES)
+	{
+		FEMeshBase& mesh = *GetFEModel()->GetFEMesh(0);
+
+		if (oldMode == SELECT_EDGES)
+		{
+			int NE = mesh.Edges();
+			for (int i = 0; i<NE; ++i)
+			{
+				FEEdge& e = mesh.Edge(i);
+				if (e.IsSelected())
+				{
+					e.Unselect();
+					int ne = e.Nodes();
+					for (int j = 0; j<ne; ++j)
+						mesh.Node(e.node[j]).Select();
+				}
+			}
+		}
+		if (oldMode == SELECT_FACES)
+		{
+			int NF = mesh.Faces();
+			for (int i = 0; i<NF; ++i)
+			{
+				FEFace& f = mesh.Face(i);
+				if (f.IsSelected())
+				{
+					f.Unselect();
+					int nf = f.Nodes();
+					for (int j = 0; j<nf; ++j)
+						mesh.Node(f.node[j]).Select();
+				}
+			}
+		}
+		if (oldMode == SELECT_ELEMS)
+		{
+			int NE = mesh.Elements();
+			for (int i = 0; i<NE; ++i)
+			{
+				FEElement& e = mesh.Element(i);
+				if (e.IsSelected())
+				{
+					e.Unselect();
+					int ne = e.Nodes();
+					for (int j = 0; j<ne; ++j)
+						mesh.Node(e.m_node[j]).Select();
+				}
+			}
+		}
+	}
+
+	UpdateSelectionLists();
 }

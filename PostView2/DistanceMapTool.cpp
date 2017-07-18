@@ -78,7 +78,7 @@ void CDistanceMapTool::deactivate()
 void CDistanceMapTool::OnAssign1()
 {
 	vector<int> sel;
-	m_doc->GetSelectionList(sel, SELECT_FACES);
+	m_doc->GetGLModel()->GetSelectionList(sel, SELECT_FACES);
 	ui->m_map.SetSelection1(sel);
 	int n = (int) sel.size();
 	ui->p1->setText(QString("Assign to surface 1 (%1 faces)").arg(n));
@@ -87,7 +87,7 @@ void CDistanceMapTool::OnAssign1()
 void CDistanceMapTool::OnAssign2()
 {
 	vector<int> sel;
-	m_doc->GetSelectionList(sel, SELECT_FACES);
+	m_doc->GetGLModel()->GetSelectionList(sel, SELECT_FACES);
 	ui->m_map.SetSelection2(sel);
 	int n = (int) sel.size();
 	ui->p2->setText(QString("Assign to surface 2 (%1 faces)").arg(n));
@@ -163,7 +163,7 @@ void CCurvatureMapTool::deactivate()
 void CCurvatureMapTool::OnAssign1()
 {
 	vector<int> sel;
-	m_doc->GetSelectionList(sel, SELECT_FACES);
+	m_doc->GetGLModel()->GetSelectionList(sel, SELECT_FACES);
 	ui->m_map.SetSelection1(sel);
 	int n = (int) sel.size();
 	ui->p1->setText(QString("Assign to surface 1 (%1 faces)").arg(n));
@@ -172,7 +172,7 @@ void CCurvatureMapTool::OnAssign1()
 void CCurvatureMapTool::OnAssign2()
 {
 	vector<int> sel;
-	m_doc->GetSelectionList(sel, SELECT_FACES);
+	m_doc->GetGLModel()->GetSelectionList(sel, SELECT_FACES);
 	ui->m_map.SetSelection2(sel);
 	int n = (int) sel.size();
 	ui->p2->setText(QString("Assign to surface 2 (%1 faces)").arg(n));

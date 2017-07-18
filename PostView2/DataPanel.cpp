@@ -40,7 +40,7 @@ public:
 		return dm.DataFields();
 	}
 
-	int columnCount(const QModelIndex& index) const { return 3; }
+	int columnCount(const QModelIndex& index) const { return 4; }
 
 	QVariant headerData(int section, Qt::Orientation orient, int role) const
 	{
@@ -51,6 +51,7 @@ public:
 			case 0: return QVariant(QString("Data field")); break;
 			case 1: return QVariant(QString("Type")); break;
 			case 2: return QVariant(QString("Class")); break;
+			case 3: return QVariant(QString("Format")); break;
 			}
 		}
 		return QAbstractTableModel::headerData(section, orient, role);
@@ -81,6 +82,18 @@ public:
 				default:
 					assert(false);
 					return QString("(unknown");
+				}
+			}
+			else if (ncol == 3)
+			{
+				switch (pd->Format())
+				{
+				case DATA_NODE: return QString("NODE"); break;
+				case DATA_ITEM: return QString("ITEM"); break;
+				case DATA_COMP: return QString("MIXED"); break;
+				default:
+					assert(false);
+					return QString("(unknown)");
 				}
 			}
 		}

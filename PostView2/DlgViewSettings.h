@@ -51,6 +51,8 @@ public:
 
 	void apply();
 
+	void OnReset();
+
 public slots:
 	void accept();
 	void onClicked(QAbstractButton*);

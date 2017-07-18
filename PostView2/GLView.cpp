@@ -934,7 +934,10 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 
 	// get the view mode
 	CDocument* pdoc = GetDocument();
-	int view_mode = pdoc->GetSelectionMode();
+	CGLModel* model = pdoc->GetGLModel();
+
+	int view_mode = -1;
+	if (model) view_mode = model->GetSelectionMode();
 
 	if (but3)
 	{
@@ -972,7 +975,8 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 					else
 					{
 						// allocate selection region
-						int nsel = pdoc->GetSelectionStyle();
+						int nsel = -1;
+						if (model) nsel = model->GetSelectionStyle();
 						SelectRegion* preg = 0;
 						switch (nsel)
 						{
@@ -996,6 +1000,7 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 
 					m_wnd->UpdateTools(true);
 					m_wnd->UpdateGraphs(false, true);
+					m_wnd->UpdateSummary(false);
 				}
 			}
 		}
@@ -1162,8 +1167,11 @@ void CGLView::RenderTags()
 {
 	CDocument* pdoc = m_wnd->GetDocument();
 	BOUNDINGBOX box = pdoc->GetBoundingBox();
+	CGLModel* model = pdoc->GetGLModel();
 
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
+
+	int mode = model->GetSelectionMode();
 
 	double radius = box.Radius();
 	vec3f rc = box.Center();
@@ -1184,64 +1192,93 @@ void CGLView::RenderTags()
 	for (int i=0; i<NN; ++i) mesh.Node(i).m_ntag = 0;
 
 	// process elements
-	const vector<FEElement*> selectedElements = pdoc->GetGLModel()->GetElementSelection();
-	for (int i=0; i<(int)selectedElements.size(); i++)
+	if (mode == SELECT_ELEMS)
 	{
-		FEElement& el = *selectedElements[i]; assert(el.IsSelected());
+		const vector<FEElement*> selectedElements = pdoc->GetGLModel()->GetElementSelection();
+		for (int i=0; i<(int)selectedElements.size(); i++)
+		{
+			FEElement& el = *selectedElements[i]; assert(el.IsSelected());
 
-		tag.r = mesh.ElementCenter(el);
-		tag.bvis = false;
-		tag.ntag = 0;
-		sprintf(tag.sztag, "E%d", el.GetID());
-		vtag.push_back(tag);
+			tag.r = mesh.ElementCenter(el);
+			tag.bvis = false;
+			tag.ntag = 0;
+			sprintf(tag.sztag, "E%d", el.GetID());
+			vtag.push_back(tag);
 
-		int ne = el.Nodes();
-		for (int j=0; j<ne; ++j) mesh.Node(el.m_node[j]).m_ntag = 1;
+			int ne = el.Nodes();
+			for (int j=0; j<ne; ++j) mesh.Node(el.m_node[j]).m_ntag = 1;
+		}
 	}
 
 	// process faces
-	const vector<FEFace*> selectedFaces = pdoc->GetGLModel()->GetFaceSelection();
-	for (int i=0; i<(int)selectedFaces.size(); ++i)
+	if (mode == SELECT_FACES)
 	{
-		FEFace& f = *selectedFaces[i]; assert(f.IsSelected());
+		const vector<FEFace*> selectedFaces = pdoc->GetGLModel()->GetFaceSelection();
+		for (int i=0; i<(int)selectedFaces.size(); ++i)
+		{
+			FEFace& f = *selectedFaces[i]; assert(f.IsSelected());
 
-		tag.r = mesh.FaceCenter(f);
-		tag.bvis = false;
-		tag.ntag = 0;
-		sprintf(tag.sztag, "F%d", f.GetID());
-		vtag.push_back(tag);
+			tag.r = mesh.FaceCenter(f);
+			tag.bvis = false;
+			tag.ntag = 0;
+			sprintf(tag.sztag, "F%d", f.GetID());
+			vtag.push_back(tag);
 
-		int nf = f.Nodes();
-		for (int j=0; j<nf; ++j) mesh.Node(f.node[j]).m_ntag = 1;
+			int nf = f.Nodes();
+			for (int j=0; j<nf; ++j) mesh.Node(f.node[j]).m_ntag = 1;
+		}
 	}
 
 	// process edges
-	const vector<FEEdge*> selectedEdges = pdoc->GetGLModel()->GetEdgeSelection();
-	for (int i=0; i<(int)selectedEdges.size(); i++)
+	if (mode == SELECT_EDGES)
 	{
-		FEEdge& edge = *selectedEdges[i]; assert(edge.IsSelected());
+		const vector<FEEdge*> selectedEdges = pdoc->GetGLModel()->GetEdgeSelection();
+		for (int i=0; i<(int)selectedEdges.size(); i++)
+		{
+			FEEdge& edge = *selectedEdges[i]; assert(edge.IsSelected());
 
-		tag.r = mesh.EdgeCenter(edge);
-		tag.bvis = false;
-		tag.ntag = 0;
-		sprintf(tag.sztag, "L%d", edge.GetID());
-		vtag.push_back(tag);
+			tag.r = mesh.EdgeCenter(edge);
+			tag.bvis = false;
+			tag.ntag = 0;
+			sprintf(tag.sztag, "L%d", edge.GetID());
+			vtag.push_back(tag);
 
-		int ne = edge.Nodes();
-		for (int j=0; j<ne; ++j) mesh.Node(edge.node[j]).m_ntag = 1;
+			int ne = edge.Nodes();
+			for (int j=0; j<ne; ++j) mesh.Node(edge.node[j]).m_ntag = 1;
+		}
 	}
 
 	// process nodes
-	for (int i=0; i<NN; i++)
+	if (mode == SELECT_NODES)
 	{
-		FENode& node = mesh.Node(i);
-		if (node.IsSelected() || ((node.m_ntag == 1)&&(view.m_ntagInfo==1)))
+		for (int i=0; i<NN; i++)
 		{
-			tag.r = node.m_rt;
-			tag.bvis = false;
-			tag.ntag = (node.m_bext?0:1);
-			sprintf(tag.sztag, "N%d", node.GetID());
-			vtag.push_back(tag);
+			FENode& node = mesh.Node(i);
+			if (node.IsSelected())
+			{
+				tag.r = node.m_rt;
+				tag.bvis = false;
+				tag.ntag = (node.m_bext?0:1);
+				sprintf(tag.sztag, "N%d", node.GetID());
+				vtag.push_back(tag);
+			}
+		}
+	}
+
+	// add additional nodes
+	if (view.m_ntagInfo == 1)
+	{
+		for (int i = 0; i<NN; i++)
+		{
+			FENode& node = mesh.Node(i);
+			if (node.m_ntag == 1)
+			{
+				tag.r = node.m_rt;
+				tag.bvis = false;
+				tag.ntag = (node.m_bext ? 0 : 1);
+				sprintf(tag.sztag, "N%d", node.GetID());
+				vtag.push_back(tag);
+			}
 		}
 	}
 
@@ -2191,7 +2228,9 @@ void CGLView::RenderRubberBand()
 	int y1 = m_p1.y;
 
 	CDocument* pdoc = GetDocument();
-	int nstyle = pdoc->GetSelectionStyle();
+	CGLModel* model = pdoc->GetGLModel();
+	int nstyle = -1;
+	if (model) nstyle = model->GetSelectionStyle();
 	switch (nstyle)
 	{
 	case SELECT_RECT: glRecti(x0, y0, x1, y1); break;
@@ -2338,13 +2377,13 @@ void CGLView::RenderDoc()
 	CDocument* pdoc = GetDocument();
 	if (pdoc->IsValid() == false) return;
 
+	CGLModel* model = pdoc->GetGLModel();
+
 	glPushAttrib(GL_ENABLE_BIT);
 	{
-		int i;
-
 		CGLCamera& cam = GetCamera();
 		VIEWSETTINGS& view = pdoc->GetViewSettings();
-		int mode = pdoc->GetSelectionMode();
+		int mode = model->GetSelectionMode();
 
 		// never do backface culling as it hides shells, iso-surface, slice plots, etc.
 		glDisable(GL_CULL_FACE);
@@ -2411,7 +2450,7 @@ void CGLView::RenderDoc()
 		// render the other objects
 		list<CGLVisual*>& OL = pdoc->GetObjectList();
 		list<CGLVisual*>::iterator ot = OL.begin();
-		for (i=0; i<(int) OL.size(); ++i, ++ot)
+		for (int i=0; i<(int) OL.size(); ++i, ++ot)
 		{
 			if ((*ot)->IsActive()) (*ot)->Render(rc);
 		}
@@ -2734,7 +2773,9 @@ void CGLView::TrackSelection(bool b)
 		CDocument* pdoc = GetDocument();
 		if (pdoc->IsValid())
 		{
-			int nmode = pdoc->GetSelectionMode();
+			CGLModel* model = pdoc->GetGLModel(); assert(model);
+
+			int nmode = model->GetSelectionMode();
 			FEMeshBase* pm = pdoc->GetActiveMesh();
 			if (nmode == SELECT_ELEMS)
 			{
