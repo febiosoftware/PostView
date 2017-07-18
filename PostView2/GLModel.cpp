@@ -209,13 +209,33 @@ bool CGLModel::AddDisplacementMap()
 }
 
 //-----------------------------------------------------------------------------
-void CGLModel::Render(CGLContext& rc)
+void CGLModel::Render(CGLContext& rc, bool showMesh, bool showOutline)
 {
-	// render the springs
+	// get the FE model
+	FEModel* fem = GetFEModel();
+
+	// Render discrete elements
 	RenderDiscrete(rc);
 
+	// Render the model
+	glPolygonOffset(1.0, 1.0);
+
+	int mode = GetSelectionMode();
+
 	// render the faces
-	RenderFaces(rc);
+	if (mode == SELECT_FACES)
+	{
+		RenderFaces(m_ps, rc);
+	}
+	else if (mode == SELECT_ELEMS)
+	{
+		RenderElems(m_ps, rc);
+	}
+	else
+	{
+		// for nodes, edges, draw the faces as well
+		RenderSurface(m_ps, rc);
+	}
 
 	// render the selected elements and faces
 	RenderSelection(rc);
@@ -225,6 +245,43 @@ void CGLModel::Render(CGLContext& rc)
 
 	// render the ghost
 	if (m_bghost) RenderGhost(rc);
+
+	glPolygonOffset(0.0, 0.0);
+
+	// render the lines
+	// Notice that we change the depth range for rendering the lines
+	// We do this to prevent z-fighting between the mesh' lines and the
+	// the mesh polygons. I could have used glPolygonOffset but I found
+	// that this approach gave better results. Furthermore, this way works
+	// with more than just polygons.
+	if (showMesh && (mode != SELECT_EDGES))
+	{
+		RenderMeshLines(fem);
+	}
+
+	if (showOutline)
+	{
+		RenderOutline(rc);
+	}
+
+	// render the edges
+	if (mode == SELECT_EDGES)
+	{
+		glDepthRange(0, 0.999999);
+		RenderEdges(fem, rc);
+		glDepthRange(0, 1);
+	}
+
+	// render the nodes
+	if (mode == SELECT_NODES)
+	{
+		glDepthRange(0, 0.999985);
+		RenderNodes(fem, rc);
+		glDepthRange(0, 1);
+	}
+
+	// render decorations
+	RenderDecorations();
 }
 
 //-----------------------------------------------------------------------------
@@ -257,12 +314,11 @@ void CGLModel::RenderDiscrete(CGLContext& rc)
 }
 
 //-----------------------------------------------------------------------------
-void CGLModel::RenderFaces(CGLContext& rc)
+void CGLModel::RenderFaces(FEModel* ps, CGLContext& rc)
 {
 	glPushAttrib(GL_ENABLE_BIT);
 
 	// get the mesh
-	FEModel* ps = m_ps;
 	FEMeshBase* pm = GetActiveMesh();
 
 	// we render the mesh by looping over the materials
@@ -275,7 +331,6 @@ void CGLModel::RenderFaces(CGLContext& rc)
 		// make sure the material is visible
 		if (pmat->bvisible && (pmat->transparency>.99f)) 
 		{
-
 			// set the rendering mode
 			int nmode = m_nrender;
 			if (pmat->m_nrender != RENDER_MODE_DEFAULT) nmode = pmat->m_nrender;
@@ -299,6 +354,130 @@ void CGLModel::RenderFaces(CGLContext& rc)
 
 		// make sure the material is visible
 		if (pmat->bvisible && (pmat->transparency<=.99f) && (pmat->transparency>0.001f)) 
+		{
+			// set the rendering mode
+			int nmode = m_nrender;
+			if (pmat->m_nrender != RENDER_MODE_DEFAULT) nmode = pmat->m_nrender;
+
+			if (nmode == RENDER_MODE_SOLID)
+			{
+				if (pmat->m_ntransmode == RENDER_TRANS_CONSTANT) RenderSolidMaterial(ps, m);
+				else RenderTransparentMaterial(rc, ps, m);
+			}
+			else
+			{
+				RenderOutline(rc, m);
+			}
+		}
+	}
+
+	glPopAttrib();
+}
+
+//-----------------------------------------------------------------------------
+void CGLModel::RenderElems(FEModel* ps, CGLContext& rc)
+{
+	glPushAttrib(GL_ENABLE_BIT);
+
+	// get the mesh
+	FEMeshBase* pm = GetActiveMesh();
+
+	// we render the mesh by looping over the materials
+	// first we render the opaque meshes
+	for (int m = 0; m<ps->Materials(); ++m)
+	{
+		// get the material
+		FEMaterial* pmat = ps->GetMaterial(m);
+
+		// make sure the material is visible
+		if (pmat->bvisible && (pmat->transparency>.99f))
+		{
+
+			// set the rendering mode
+			int nmode = m_nrender;
+			if (pmat->m_nrender != RENDER_MODE_DEFAULT) nmode = pmat->m_nrender;
+
+			if (nmode == RENDER_MODE_SOLID)
+			{
+				RenderSolidMaterial(ps, m);
+			}
+			else
+			{
+				RenderOutline(rc, m);
+			}
+		}
+	}
+
+	// next, we render the transparent meshes
+	for (int m = 0; m<ps->Materials(); ++m)
+	{
+		// get the material
+		FEMaterial* pmat = ps->GetMaterial(m);
+
+		// make sure the material is visible
+		if (pmat->bvisible && (pmat->transparency <= .99f) && (pmat->transparency>0.001f))
+		{
+			// set the rendering mode
+			int nmode = m_nrender;
+			if (pmat->m_nrender != RENDER_MODE_DEFAULT) nmode = pmat->m_nrender;
+
+			if (nmode == RENDER_MODE_SOLID)
+			{
+				if (pmat->m_ntransmode == RENDER_TRANS_CONSTANT) RenderSolidMaterial(ps, m);
+				else RenderTransparentMaterial(rc, ps, m);
+			}
+			else
+			{
+				RenderOutline(rc, m);
+			}
+		}
+	}
+
+	glPopAttrib();
+}
+
+//-----------------------------------------------------------------------------
+void CGLModel::RenderSurface(FEModel* ps, CGLContext& rc)
+{
+	glPushAttrib(GL_ENABLE_BIT);
+
+	// get the mesh
+	FEMeshBase* pm = GetActiveMesh();
+
+	// we render the mesh by looping over the materials
+	// first we render the opaque meshes
+	for (int m = 0; m<ps->Materials(); ++m)
+	{
+		// get the material
+		FEMaterial* pmat = ps->GetMaterial(m);
+
+		// make sure the material is visible
+		if (pmat->bvisible && (pmat->transparency>.99f))
+		{
+
+			// set the rendering mode
+			int nmode = m_nrender;
+			if (pmat->m_nrender != RENDER_MODE_DEFAULT) nmode = pmat->m_nrender;
+
+			if (nmode == RENDER_MODE_SOLID)
+			{
+				RenderSolidMaterial(ps, m);
+			}
+			else
+			{
+				RenderOutline(rc, m);
+			}
+		}
+	}
+
+	// next, we render the transparent meshes
+	for (int m = 0; m<ps->Materials(); ++m)
+	{
+		// get the material
+		FEMaterial* pmat = ps->GetMaterial(m);
+
+		// make sure the material is visible
+		if (pmat->bvisible && (pmat->transparency <= .99f) && (pmat->transparency>0.001f))
 		{
 			// set the rendering mode
 			int nmode = m_nrender;
@@ -638,7 +817,7 @@ void CGLModel::RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m)
 	{
 		FEFace& face = surf.Face(i);
 		if (face.m_nId != nid) nid = face.m_nId;
-		RenderFEFace(face, pm);
+		RenderTexFace(face, pm);
 	}
 
 	if (pmat->benable && m_pcol->IsActive())
@@ -650,7 +829,6 @@ void CGLModel::RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m)
 }
 
 //-----------------------------------------------------------------------------
-
 void CGLModel::RenderSolidMaterial(FEModel* ps, int m)
 {
 	FEMaterial* pmat = ps->GetMaterial(m);
@@ -768,7 +946,7 @@ void CGLModel::RenderSolidMaterial(FEModel* ps, int m)
 		for (i=0; i<surf.Faces(); ++i)
 		{
 			FEFace& face = surf.Face(i);
-			RenderFEFace(face, pm);
+			RenderTexFace(face, pm);
 		}
 	}
 
@@ -1037,8 +1215,6 @@ void CGLModel::RenderOutline(CGLContext& rc, int nmat)
 
 void CGLModel::RenderNormals(CGLContext& rc)
 {
-	int i, j, n;
-
 	// get the mesh
 	FEModel* ps = m_ps;
 	FEMeshBase* pm = GetActiveMesh();
@@ -1053,12 +1229,10 @@ void CGLModel::RenderNormals(CGLContext& rc)
 	// disable lighting
 	glDisable(GL_LIGHTING);
 
-	GLfloat r, g, b;
-
 	glBegin(GL_LINES);
 	{
 		// render the normals
-		for (i=0; i<pm->Faces(); ++i)
+		for (int i=0; i<pm->Faces(); ++i)
 		{	
 			FEFace& face = pm->Face(i);
 
@@ -1067,13 +1241,13 @@ void CGLModel::RenderNormals(CGLContext& rc)
 			{
 				vec3f r1(0,0,0);
 
-				n = face.Nodes();
-				for (j=0; j<n; ++j) r1 += pm->Node(face.node[j]).m_rt;
+				int n = face.Nodes();
+				for (int j = 0; j<n; ++j) r1 += pm->Node(face.node[j]).m_rt;
 				r1 /= (float) n;
 
-				r = (GLfloat) fabs(face.m_fn.x);
-				g = (GLfloat) fabs(face.m_fn.y);
-				b = (GLfloat) fabs(face.m_fn.z);
+				GLfloat r = (GLfloat)fabs(face.m_fn.x);
+				GLfloat g = (GLfloat)fabs(face.m_fn.y);
+				GLfloat b = (GLfloat)fabs(face.m_fn.z);
 
 				vec3f r2 = r1 + face.m_fn*scale;
 
@@ -1090,203 +1264,21 @@ void CGLModel::RenderNormals(CGLContext& rc)
 
 
 //-----------------------------------------------------------------------------
-// Render an element. This function will only render a face of an element
-// whose neighbor is not visible. That is, it only renders interior faces.
-// 
-void CGLModel::RenderFEFace(FEFace& face, FEMeshBase* pm)
+// Render a textured face.
+void CGLModel::RenderTexFace(FEFace& face, FEMeshBase* pm)
 {
 	switch (face.m_ntype)
 	{
-	case FACE_QUAD4:
-		glBegin(GL_QUADS);
-		{
-			vec3f r1 = pm->Node( face.node[0] ).m_rt;
-			vec3f r2 = pm->Node( face.node[1] ).m_rt;
-			vec3f r3 = pm->Node( face.node[2] ).m_rt;
-			vec3f r4 = pm->Node( face.node[3] ).m_rt;
-
-			vec3f nf = (r2-r1)^(r3-r1);
-			nf.Normalize();
-			glNormal3f(nf.x, nf.y, nf.z);
-
-			float t1 = pm->Node(face.node[0]).m_tex;
-			float t2 = pm->Node(face.node[1]).m_tex;
-			float t3 = pm->Node(face.node[2]).m_tex;
-			float t4 = pm->Node(face.node[3]).m_tex;
-
-			glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
-			glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
-			glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
-			glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
-		}
-		glEnd();
-		break;
+	case FACE_QUAD4: RenderTexQUAD4(face, pm); break;
 	case FACE_QUAD8:
-	case FACE_QUAD9:
-		glBegin(GL_TRIANGLES);
-		{
-			vec3f r1 = pm->Node( face.node[0] ).m_rt;
-			vec3f r2 = pm->Node( face.node[1] ).m_rt;
-			vec3f r3 = pm->Node( face.node[2] ).m_rt;
-			vec3f r4 = pm->Node( face.node[3] ).m_rt;
-			vec3f r5 = pm->Node( face.node[4] ).m_rt;
-			vec3f r6 = pm->Node( face.node[5] ).m_rt;
-			vec3f r7 = pm->Node( face.node[6] ).m_rt;
-			vec3f r8 = pm->Node( face.node[7] ).m_rt;
-
-			vec3f nf = (r2-r1)^(r3-r1);
-			nf.Normalize();
-			glNormal3f(nf.x, nf.y, nf.z);
-
-			float t1 = pm->Node(face.node[0]).m_tex;
-			float t2 = pm->Node(face.node[1]).m_tex;
-			float t3 = pm->Node(face.node[2]).m_tex;
-			float t4 = pm->Node(face.node[3]).m_tex;
-			float t5 = pm->Node(face.node[4]).m_tex;
-			float t6 = pm->Node(face.node[5]).m_tex;
-			float t7 = pm->Node(face.node[6]).m_tex;
-			float t8 = pm->Node(face.node[7]).m_tex;
-
-			glTexCoord1f(t8); glVertex3f(r8.x, r8.y, r8.z);
-			glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
-			glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
-
-			glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
-			glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
-			glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
-
-			glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
-			glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
-			glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
-
-			glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
-			glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
-			glTexCoord1f(t8); glVertex3f(r8.x, r8.y, r8.z);
-
-			glTexCoord1f(t8); glVertex3f(r8.x, r8.y, r8.z);
-			glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
-			glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
-
-			glTexCoord1f(t8); glVertex3f(r8.x, r8.y, r8.z);
-			glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
-			glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
-		}
-		glEnd();
-		break;
-	case FACE_TRI3:
-		glBegin(GL_TRIANGLES);
-		{
-			vec3f r1 = pm->Node( face.node[0] ).m_rt;
-			vec3f r2 = pm->Node( face.node[1] ).m_rt;
-			vec3f r3 = pm->Node( face.node[2] ).m_rt;
-
-			vec3f nf = (r2-r1)^(r3-r1);
-			nf.Normalize();
-			glNormal3f(nf.x, nf.y, nf.z);
-
-			float t1 = pm->Node(face.node[0]).m_tex;
-			float t2 = pm->Node(face.node[1]).m_tex;
-			float t3 = pm->Node(face.node[2]).m_tex;
-
-			glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
-			glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
-			glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
-		}
-		glEnd();
-		break;
-	case FACE_TRI6:
-		glBegin(GL_TRIANGLES);
-		{
-			vec3f r1 = pm->Node( face.node[0] ).m_rt;
-			vec3f r2 = pm->Node( face.node[1] ).m_rt;
-			vec3f r3 = pm->Node( face.node[2] ).m_rt;
-			vec3f r4 = pm->Node( face.node[3] ).m_rt;
-			vec3f r5 = pm->Node( face.node[4] ).m_rt;
-			vec3f r6 = pm->Node( face.node[5] ).m_rt;
-
-			vec3f nf = (r2-r1)^(r3-r1);
-			nf.Normalize();
-			glNormal3f(nf.x, nf.y, nf.z);
-
-			float t1 = pm->Node(face.node[0]).m_tex;
-			float t2 = pm->Node(face.node[1]).m_tex;
-			float t3 = pm->Node(face.node[2]).m_tex;
-			float t4 = pm->Node(face.node[3]).m_tex;
-			float t5 = pm->Node(face.node[4]).m_tex;
-			float t6 = pm->Node(face.node[5]).m_tex;
-
-			glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
-			glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
-			glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
-
-			glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
-			glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
-			glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
-
-			glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
-			glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
-			glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
-
-			glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
-			glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
-			glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
-		}
-		glEnd();
-		break;
-	case FACE_TRI7:
-		glBegin(GL_TRIANGLES);
-		{
-			vec3f r1 = pm->Node( face.node[0] ).m_rt;
-			vec3f r2 = pm->Node( face.node[1] ).m_rt;
-			vec3f r3 = pm->Node( face.node[2] ).m_rt;
-			vec3f r4 = pm->Node( face.node[3] ).m_rt;
-			vec3f r5 = pm->Node( face.node[4] ).m_rt;
-			vec3f r6 = pm->Node( face.node[5] ).m_rt;
-			vec3f r7 = pm->Node( face.node[6] ).m_rt;
-
-			vec3f nf = (r2-r1)^(r3-r1);
-			nf.Normalize();
-			glNormal3f(nf.x, nf.y, nf.z);
-
-			float t1 = pm->Node(face.node[0]).m_tex;
-			float t2 = pm->Node(face.node[1]).m_tex;
-			float t3 = pm->Node(face.node[2]).m_tex;
-			float t4 = pm->Node(face.node[3]).m_tex;
-			float t5 = pm->Node(face.node[4]).m_tex;
-			float t6 = pm->Node(face.node[5]).m_tex;
-			float t7 = pm->Node(face.node[6]).m_tex;
-
-			glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
-			glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
-			glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
-
-			glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
-			glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
-			glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
-
-			glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
-			glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
-			glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
-
-			glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
-			glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
-			glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
-
-			glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
-			glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
-			glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
-
-			glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
-			glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
-			glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
-		}
-		glEnd();
-		break;				
+	case FACE_QUAD9: RenderTexQUAD8(face, pm); break;
+	case FACE_TRI3 : RenderTexTRI3(face, pm); break;
+	case FACE_TRI6 : RenderTexTRI6(face, pm); break;
+	case FACE_TRI7 : RenderTexTRI7(face, pm); break;
 	default:
 		assert(false);
 	}
 }
-
 
 //-----------------------------------------------------------------------------
 // Render the mesh lines for a specific material
@@ -1851,73 +1843,13 @@ void CGLModel::RenderFaceOutline(FEFace& face, FEMeshBase* pm, int ndivs)
 	// render the edges of the fae
 	switch (face.m_ntype)
 	{
-	case FACE_TRI3:
-	case FACE_QUAD4:
-		{
-			glBegin(GL_LINE_LOOP);
-			{
-				int NF = face.Nodes();
-				for (int i=0; i<NF; ++i) 
-				{
-					vec3f r = pm->Node(face.node[i]).m_rt;
-					glVertex3f(r.x, r.y, r.z);
-				}
-			}
-			glEnd();
-		}
-		break;
+	case FACE_TRI3 :
+	case FACE_QUAD4: RenderFace1Outline(face, pm); break;
 	case FACE_TRI6:
 	case FACE_TRI7:
 	case FACE_QUAD8:
-	case FACE_QUAD9:
-		{
-			vec3f a[3];
-			glBegin(GL_LINE_LOOP);
-			{
-				int NE = face.Edges();
-				for (int i=0; i<NE; ++i)
-				{
-					FEEdge e = face.Edge(i);
-					a[0] = pm->Node(e.node[0]).m_rt;
-					a[1] = pm->Node(e.node[1]).m_rt;
-					a[2] = pm->Node(e.node[2]).m_rt;
-					const int M = 2*ndivs;
-					for (int n=0; n<M; ++n)
-					{
-						double t = n / (double) M;
-						vec3f p = e.eval(a, t);
-						glVertex3f(p.x, p.y, p.z);
-					}
-				}
-			}
-			glEnd();
-		}
-		break;
-	case FACE_TRI10:
-		{
-			vec3f a[4];
-			glBegin(GL_LINE_LOOP);
-			{
-				int NE = face.Edges();
-				for (int i=0; i<NE; ++i)
-				{
-					FEEdge e = face.Edge(i);
-					a[0] = pm->Node(e.node[0]).m_rt;
-					a[1] = pm->Node(e.node[1]).m_rt;
-					a[2] = pm->Node(e.node[2]).m_rt;
-					a[3] = pm->Node(e.node[3]).m_rt;
-					const int M = 2 * ndivs;
-					for (int n=0; n<M; ++n)
-					{
-						double t = n / (double) M;
-						vec3f p = e.eval(a, t);
-						glVertex3f(p.x, p.y, p.z);
-					}
-				}
-			}
-			glEnd();
-		}
-		break;
+	case FACE_QUAD9: RenderFace2Outline(face, pm, ndivs); break;
+	case FACE_TRI10: RenderFace3Outline(face, pm, ndivs); break;
 	default:
 		assert(false);
 	}
@@ -2333,69 +2265,6 @@ void CGLModel::RenderThickShellOutline(FEFace &face, FEMeshBase* pm)
 
 	if (btex) glEnable(GL_TEXTURE_1D);
 }
-
-///////////////////////////////////////////////////////////////////////////////
-/*
-void CGLModel::RenderFeatureEdges(FEModel* ps)
-{
-	int i, j, n;
-	int a, b;
-	vec3f r1, r2, r3;
-
-	FEMeshBase* pm = ps->GetMesh();
-
-	glPushAttrib(GL_ENABLE_BIT);
-
-	glDisable(GL_LIGHTING);
-
-	glColor3ub(0,0,0);
-
-	for (i=0; i<pm->Faces(); ++i)
-	{
-		FEFace& f = pm->Face(i);
-
-		n = f.Edges();
-		for (j=0; j<n; ++j)
-		{
-			if (f.m_nbr[j] < 0)
-			{
-				a = f.node[j];
-				b = f.node[(j+1)%n];
-
-				if (a > b) { a ^= b; b ^= a; a ^= b; }
-
-				if (f.m_ntype != FACE_QUAD8)
-				{
-					r1 = pm->Node(a).m_rt;
-					r2 = pm->Node(b).m_rt;
-
-					glBegin(GL_LINES);
-					{
-						glVertex3f(r1.x, r1.y, r1.z);
-						glVertex3f(r2.x, r2.y, r2.z);
-					}
-					glEnd();
-				}
-				else
-				{
-					r1 = pm->Node(a).m_rt;
-					r2 = pm->Node(b).m_rt;
-					r3 = pm->Node(f.node[j+4]).m_rt;
-
-					glBegin(GL_LINES);
-					{
-						glVertex3f(r1.x, r1.y, r1.z); glVertex3f(r3.x, r3.y, r3.z);
-						glVertex3f(r3.x, r3.y, r3.z); glVertex3f(r2.x, r2.y, r2.z);
-					}
-					glEnd();
-				}
-			}
-		}
-	}
-
-	glPopAttrib();
-}
-*/
 
 //-----------------------------------------------------------------------------
 // Render the edges of the model.

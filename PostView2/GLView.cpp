@@ -2377,13 +2377,10 @@ void CGLView::RenderDoc()
 	CDocument* pdoc = GetDocument();
 	if (pdoc->IsValid() == false) return;
 
-	CGLModel* model = pdoc->GetGLModel();
-
 	glPushAttrib(GL_ENABLE_BIT);
 	{
 		CGLCamera& cam = GetCamera();
 		VIEWSETTINGS& view = pdoc->GetViewSettings();
-		int mode = model->GetSelectionMode();
 
 		// never do backface culling as it hides shells, iso-surface, slice plots, etc.
 		glDisable(GL_CULL_FACE);
@@ -2401,47 +2398,8 @@ void CGLView::RenderDoc()
 		CGLModel* po = pdoc->GetGLModel();
 		if (po && po->IsActive())
 		{
-			// Render the model
-			glPolygonOffset(1.0, 1.0);
-			po->Render(rc);
-			glPolygonOffset(0.0, 0.0);
-
-			// render the lines
-			// Notice that we change the depth range for rendering the lines
-			// We do this to prevent z-fighting between the mesh' lines and the
-			// the mesh polygons. I could have used glPolygonOffset but I found
-			// that this approach gave better results. Furthermore, this way works
-			// with more than just polygons.
-			if (view.m_bmesh && (mode != SELECT_EDGES))
-			{
-//				glDepthRange(0, 0.999999);
-				po->RenderMeshLines(pdoc->GetFEModel());
-//				glDepthRange(0, 1);
-			}
-
-			if (view.m_boutline)
-			{
-				po->RenderOutline(rc);
-			}
-
-			// render the edges
-			if (mode == SELECT_EDGES)
-			{
-				glDepthRange(0, 0.999999);
-				po->RenderEdges(pdoc->GetFEModel(), rc);
-				glDepthRange(0, 1);
-			}
-
-			// render the nodes
-			if (mode == SELECT_NODES) 
-			{
-				glDepthRange(0, 0.999985);
-				po->RenderNodes(pdoc->GetFEModel(), rc);
-				glDepthRange(0, 1);
-			}
-
-			// render decorations
-			po->RenderDecorations();
+			// render the GL model
+			po->Render(rc, view.m_bmesh, view.m_boutline);
 
 			// render the bounding box
 			if (view.m_bBox) RenderBox();

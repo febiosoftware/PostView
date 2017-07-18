@@ -874,3 +874,260 @@ void CGLModel::RenderSmoothTRI10(vec3f x[10], vec3f n[10], float q[10], int ndiv
 	}
 	glEnd();
 }
+
+void CGLModel::RenderTexQUAD4(FEFace& face, FEMeshBase* pm)
+{
+	glBegin(GL_QUADS);
+	{
+		vec3f r1 = pm->Node(face.node[0]).m_rt;
+		vec3f r2 = pm->Node(face.node[1]).m_rt;
+		vec3f r3 = pm->Node(face.node[2]).m_rt;
+		vec3f r4 = pm->Node(face.node[3]).m_rt;
+
+		vec3f nf = (r2 - r1) ^ (r3 - r1);
+		nf.Normalize();
+		glNormal3f(nf.x, nf.y, nf.z);
+
+		float t1 = pm->Node(face.node[0]).m_tex;
+		float t2 = pm->Node(face.node[1]).m_tex;
+		float t3 = pm->Node(face.node[2]).m_tex;
+		float t4 = pm->Node(face.node[3]).m_tex;
+
+		glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
+		glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
+		glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
+		glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
+	}
+	glEnd();
+}
+
+void CGLModel::RenderTexQUAD8(FEFace& face, FEMeshBase* pm)
+{
+	glBegin(GL_TRIANGLES);
+	{
+		vec3f r1 = pm->Node(face.node[0]).m_rt;
+		vec3f r2 = pm->Node(face.node[1]).m_rt;
+		vec3f r3 = pm->Node(face.node[2]).m_rt;
+		vec3f r4 = pm->Node(face.node[3]).m_rt;
+		vec3f r5 = pm->Node(face.node[4]).m_rt;
+		vec3f r6 = pm->Node(face.node[5]).m_rt;
+		vec3f r7 = pm->Node(face.node[6]).m_rt;
+		vec3f r8 = pm->Node(face.node[7]).m_rt;
+
+		vec3f nf = (r2 - r1) ^ (r3 - r1);
+		nf.Normalize();
+		glNormal3f(nf.x, nf.y, nf.z);
+
+		float t1 = pm->Node(face.node[0]).m_tex;
+		float t2 = pm->Node(face.node[1]).m_tex;
+		float t3 = pm->Node(face.node[2]).m_tex;
+		float t4 = pm->Node(face.node[3]).m_tex;
+		float t5 = pm->Node(face.node[4]).m_tex;
+		float t6 = pm->Node(face.node[5]).m_tex;
+		float t7 = pm->Node(face.node[6]).m_tex;
+		float t8 = pm->Node(face.node[7]).m_tex;
+
+		glTexCoord1f(t8); glVertex3f(r8.x, r8.y, r8.z);
+		glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
+		glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
+
+		glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
+		glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
+		glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
+
+		glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
+		glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
+		glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
+
+		glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
+		glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
+		glTexCoord1f(t8); glVertex3f(r8.x, r8.y, r8.z);
+
+		glTexCoord1f(t8); glVertex3f(r8.x, r8.y, r8.z);
+		glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
+		glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
+
+		glTexCoord1f(t8); glVertex3f(r8.x, r8.y, r8.z);
+		glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
+		glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
+	}
+	glEnd();
+}
+
+void CGLModel::RenderTexTRI3(FEFace& face, FEMeshBase* pm)
+{
+	glBegin(GL_TRIANGLES);
+	{
+		vec3f r1 = pm->Node(face.node[0]).m_rt;
+		vec3f r2 = pm->Node(face.node[1]).m_rt;
+		vec3f r3 = pm->Node(face.node[2]).m_rt;
+
+		vec3f nf = (r2 - r1) ^ (r3 - r1);
+		nf.Normalize();
+		glNormal3f(nf.x, nf.y, nf.z);
+
+		float t1 = pm->Node(face.node[0]).m_tex;
+		float t2 = pm->Node(face.node[1]).m_tex;
+		float t3 = pm->Node(face.node[2]).m_tex;
+
+		glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
+		glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
+		glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
+	}
+	glEnd();
+}
+
+void CGLModel::RenderTexTRI6(FEFace& face, FEMeshBase* pm)
+{
+	glBegin(GL_TRIANGLES);
+	{
+		vec3f r1 = pm->Node(face.node[0]).m_rt;
+		vec3f r2 = pm->Node(face.node[1]).m_rt;
+		vec3f r3 = pm->Node(face.node[2]).m_rt;
+		vec3f r4 = pm->Node(face.node[3]).m_rt;
+		vec3f r5 = pm->Node(face.node[4]).m_rt;
+		vec3f r6 = pm->Node(face.node[5]).m_rt;
+
+		vec3f nf = (r2 - r1) ^ (r3 - r1);
+		nf.Normalize();
+		glNormal3f(nf.x, nf.y, nf.z);
+
+		float t1 = pm->Node(face.node[0]).m_tex;
+		float t2 = pm->Node(face.node[1]).m_tex;
+		float t3 = pm->Node(face.node[2]).m_tex;
+		float t4 = pm->Node(face.node[3]).m_tex;
+		float t5 = pm->Node(face.node[4]).m_tex;
+		float t6 = pm->Node(face.node[5]).m_tex;
+
+		glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
+		glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
+		glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
+
+		glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
+		glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
+		glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
+
+		glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
+		glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
+		glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
+
+		glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
+		glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
+		glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
+	}
+	glEnd();
+}
+
+void CGLModel::RenderTexTRI7(FEFace& face, FEMeshBase* pm)
+{
+	glBegin(GL_TRIANGLES);
+	{
+		vec3f r1 = pm->Node(face.node[0]).m_rt;
+		vec3f r2 = pm->Node(face.node[1]).m_rt;
+		vec3f r3 = pm->Node(face.node[2]).m_rt;
+		vec3f r4 = pm->Node(face.node[3]).m_rt;
+		vec3f r5 = pm->Node(face.node[4]).m_rt;
+		vec3f r6 = pm->Node(face.node[5]).m_rt;
+		vec3f r7 = pm->Node(face.node[6]).m_rt;
+
+		vec3f nf = (r2 - r1) ^ (r3 - r1);
+		nf.Normalize();
+		glNormal3f(nf.x, nf.y, nf.z);
+
+		float t1 = pm->Node(face.node[0]).m_tex;
+		float t2 = pm->Node(face.node[1]).m_tex;
+		float t3 = pm->Node(face.node[2]).m_tex;
+		float t4 = pm->Node(face.node[3]).m_tex;
+		float t5 = pm->Node(face.node[4]).m_tex;
+		float t6 = pm->Node(face.node[5]).m_tex;
+		float t7 = pm->Node(face.node[6]).m_tex;
+
+		glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
+		glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
+		glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
+
+		glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
+		glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
+		glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
+
+		glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
+		glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
+		glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
+
+		glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
+		glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
+		glTexCoord1f(t5); glVertex3f(r5.x, r5.y, r5.z);
+
+		glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
+		glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
+		glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
+
+		glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
+		glTexCoord1f(t7); glVertex3f(r7.x, r7.y, r7.z);
+		glTexCoord1f(t6); glVertex3f(r6.x, r6.y, r6.z);
+	}
+	glEnd();
+}
+
+void CGLModel::RenderFace1Outline(FEFace& face, FEMeshBase* pm)
+{
+	glBegin(GL_LINE_LOOP);
+	{
+		int N = face.Nodes();
+		for (int i = 0; i < N; ++i)
+		{
+			vec3f r = pm->Node(face.node[i]).m_rt; glVertex3f(r.x, r.y, r.z);
+		}
+	}
+	glEnd();
+}
+
+void CGLModel::RenderFace2Outline(FEFace& face, FEMeshBase* pm, int ndivs)
+{
+	vec3f a[3];
+	glBegin(GL_LINE_LOOP);
+	{
+		int NE = face.Edges();
+		for (int i = 0; i<NE; ++i)
+		{
+			FEEdge e = face.Edge(i);
+			a[0] = pm->Node(e.node[0]).m_rt;
+			a[1] = pm->Node(e.node[1]).m_rt;
+			a[2] = pm->Node(e.node[2]).m_rt;
+			const int M = 2 * ndivs;
+			for (int n = 0; n<M; ++n)
+			{
+				double t = n / (double)M;
+				vec3f p = e.eval(a, t);
+				glVertex3f(p.x, p.y, p.z);
+			}
+		}
+	}
+	glEnd();
+
+}
+
+void CGLModel::RenderFace3Outline(FEFace& face, FEMeshBase* pm, int ndivs)
+{
+	vec3f a[4];
+	glBegin(GL_LINE_LOOP);
+	{
+		int NE = face.Edges();
+		for (int i = 0; i<NE; ++i)
+		{
+			FEEdge e = face.Edge(i);
+			a[0] = pm->Node(e.node[0]).m_rt;
+			a[1] = pm->Node(e.node[1]).m_rt;
+			a[2] = pm->Node(e.node[2]).m_rt;
+			a[3] = pm->Node(e.node[3]).m_rt;
+			const int M = 2 * ndivs;
+			for (int n = 0; n<M; ++n)
+			{
+				double t = n / (double)M;
+				vec3f p = e.eval(a, t);
+				glVertex3f(p.x, p.y, p.z);
+			}
+		}
+	}
+	glEnd();
+}

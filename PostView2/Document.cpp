@@ -12,6 +12,7 @@
 #include <PostViewLib/constants.h>
 #include <PostViewLib/Palette.h>
 #include <PostViewLib/FEAsciiExport.h>
+#include "GLModel.h"
 
 #ifdef WIN32
 	#include "direct.h"	// for getcwd, chdir

@@ -58,7 +58,6 @@ public:
 	CGLModel(FEModel* ps);
 	~CGLModel(void);
 
-	void Render(CGLContext& rc);
 	CGLDisplacementMap* GetDisplacementMap() { return m_pdis; }
 	CGLColorMap* GetColorMap() { return m_pcol; }
 	FEModel* GetFEModel() { return m_ps; }
@@ -101,7 +100,17 @@ public:
 	void SetRenderMode(int nmode) { m_nrender = nmode; }
 
 public:
-	void RenderFaces  (CGLContext& rc);
+	// call this to render the model
+	void Render(CGLContext& rc, bool showMesh, bool showOutline);
+
+public:
+	void RenderNodes(FEModel* ps, CGLContext& rc);
+	void RenderEdges(FEModel* ps, CGLContext& rc);
+	void RenderFaces(FEModel* ps, CGLContext& rc);
+	void RenderElems(FEModel* ps, CGLContext& rc);
+	void RenderSurface(FEModel* ps, CGLContext& rc);
+
+public:
 	void RenderOutline(CGLContext& rc, int nmat = -1);
 	void RenderNormals(CGLContext& rc);
 	void RenderGhost  (CGLContext& rc);
@@ -119,8 +128,6 @@ public:
 	void RenderThickTri(FEFace& face, FEMeshBase* pm);
 	void RenderThickShellOutline(FEFace& face, FEMeshBase* pm);
 	void RenderShadows(FEModel* ps, vec3f lp, float inf);
-	void RenderNodes(FEModel* ps, CGLContext& rc);
-	void RenderEdges(FEModel* ps, CGLContext& rc);
 
 	void AddDecoration(GDecoration* pd);
 	void RemoveDecoration(GDecoration* pd);
@@ -128,7 +135,7 @@ public:
 protected:
 	void RenderFace(FEFace& face, FEMeshBase* pm, int ndivs, bool bnode);
 	void RenderFace(FEFace& face, FEMeshBase* pm, GLCOLOR c[4], int ndivs, bool bnode);
-	void RenderFEFace(FEFace& el, FEMeshBase* pm);
+	void RenderTexFace(FEFace& el, FEMeshBase* pm);
 	void RenderElementOutline(FEElement& el, FEMeshBase* pm);
 	void RenderFaceOutline(FEFace& face, FEMeshBase* pm, int ndivs);
 	void RenderSolidMaterial(FEModel* ps, int m);
@@ -156,6 +163,20 @@ protected:
 	void RenderTRI6 (FEFace& f, bool bsmooth, bool bnode);
 	void RenderTRI7 (FEFace& f, bool bsmooth, bool bnode);
 	void RenderTRI10(FEFace& f, bool bsmooth, bool bnode);
+
+	void RenderTexQUAD4(FEFace& face, FEMeshBase* pm);
+	void RenderTexQUAD8(FEFace& face, FEMeshBase* pm);
+	void RenderTexTRI3 (FEFace& face, FEMeshBase* pm);
+	void RenderTexTRI6 (FEFace& face, FEMeshBase* pm);
+	void RenderTexTRI7 (FEFace& face, FEMeshBase* pm);
+
+	void RenderFace1Outline(FEFace& face, FEMeshBase* pm);
+	void RenderFace2Outline(FEFace& face, FEMeshBase* pm, int ndivs);
+	void RenderFace3Outline(FEFace& face, FEMeshBase* pm, int ndivs);
+
+private:
+	// Needed by CGLVisual but not used
+	void Render(CGLContext& rc) {}
 
 public:
 	float currentTime() const { return m_fTime; }
