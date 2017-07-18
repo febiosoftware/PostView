@@ -26,8 +26,17 @@ class CVectorPlotProps : public CPropertyList
 public:
 	CVectorPlotProps(CGLVectorPlot* v) : m_vec(v)
 	{
+		QStringList cols;
+
+		for (int i = 0; i<ColorMapManager::ColorMaps(); ++i)
+		{
+			string name = ColorMapManager::GetColorMapName(i);
+			cols << name.c_str();
+		}
+
 		addProperty("Data field"    , CProperty::DataVec3);
-		addProperty("Allow clipping", CProperty::Bool );
+		addProperty("Color map"     , CProperty::Enum)->setEnumValues(cols);
+		addProperty("Allow clipping", CProperty::Bool);
 		addProperty("Show hidden"   , CProperty::Bool );
 		addProperty("Density"       , CProperty::Float)->setFloatRange(0.0, 1.0).setFloatStep(0.0001);
 		addProperty("Glyph"         , CProperty::Enum )->setEnumValues(QStringList() << "Arrow" << "Cone" << "Cylinder" << "Sphere" << "Box" << "Line");
@@ -43,15 +52,16 @@ public:
 		switch (i)
 		{
 		case 0: return m_vec->GetVectorType(); break;
-		case 1: return m_vec->AllowClipping(); break;
-		case 2: return m_vec->ShowHidden(); break;
-		case 3: return m_vec->GetDensity(); break;
-		case 4: return m_vec->GetGlyphType(); break;
-		case 5: return m_vec->GetColorType(); break;
-		case 6: return toQColor(m_vec->GetGlyphColor()); break;
-		case 7: return m_vec->NormalizeVectors(); break;
-		case 8: return m_vec->GetAutoScale(); break;
-		case 9: return m_vec->GetScaleFactor(); break;
+		case 1: return m_vec->GetColorMap()->GetColorMap();
+		case 2: return m_vec->AllowClipping(); break;
+		case 3: return m_vec->ShowHidden(); break;
+		case 4: return m_vec->GetDensity(); break;
+		case 5: return m_vec->GetGlyphType(); break;
+		case 6: return m_vec->GetColorType(); break;
+		case 7: return toQColor(m_vec->GetGlyphColor()); break;
+		case 8: return m_vec->NormalizeVectors(); break;
+		case 9: return m_vec->GetAutoScale(); break;
+		case 10: return m_vec->GetScaleFactor(); break;
 		}
 		return QVariant();
 	}
@@ -61,15 +71,16 @@ public:
 		switch (i)
 		{
 		case 0: m_vec->SetVectorType(v.toInt()); break;
-		case 1: m_vec->AllowClipping(v.toBool()); break;
-		case 2: m_vec->ShowHidden(v.toBool()); break;
-		case 3: m_vec->SetDensity(v.toFloat()); break;
-		case 4: m_vec->SetGlyphType(v.toInt()); break;
-		case 5: m_vec->SetColorType(v.toInt()); break;
-		case 6: m_vec->SetGlyphColor(toGLColor(v.value<QColor>())); break;
-		case 7: m_vec->NormalizeVectors(v.toBool()); break;
-		case 8: m_vec->SetAutoScale(v.toBool()); break;
-		case 9: m_vec->SetScaleFactor(v.toFloat()); break;
+		case 1: m_vec->GetColorMap()->SetColorMap(v.toInt()); break;
+		case 2: m_vec->AllowClipping(v.toBool()); break;
+		case 3: m_vec->ShowHidden(v.toBool()); break;
+		case 4: m_vec->SetDensity(v.toFloat()); break;
+		case 5: m_vec->SetGlyphType(v.toInt()); break;
+		case 6: m_vec->SetColorType(v.toInt()); break;
+		case 7: m_vec->SetGlyphColor(toGLColor(v.value<QColor>())); break;
+		case 8: m_vec->NormalizeVectors(v.toBool()); break;
+		case 9: m_vec->SetAutoScale(v.toBool()); break;
+		case 10: m_vec->SetScaleFactor(v.toFloat()); break;
 		}
 	}
 

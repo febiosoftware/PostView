@@ -17,7 +17,16 @@ class CIsoSurfaceProps : public CPropertyList
 public:
 	CIsoSurfaceProps(CGLIsoSurfacePlot* p) : m_iso(p)
 	{
+		QStringList cols;
+
+		for (int i = 0; i<ColorMapManager::ColorMaps(); ++i)
+		{
+			string name = ColorMapManager::GetColorMapName(i);
+			cols << name.c_str();
+		}
+
 		addProperty("Data field", CProperty::DataScalar);
+		addProperty("Color map", CProperty::Enum)->setEnumValues(cols);
 		addProperty("Allow clipping", CProperty::Bool);
 		addProperty("Slice hidden"  , CProperty::Bool);
 		addProperty("Slices"        , CProperty::Int );
@@ -30,11 +39,12 @@ public:
 		switch (i)
 		{
 		case 0: return m_iso->GetEvalField(); break;
-		case 1: return m_iso->AllowClipping(); break;
-		case 2: return m_iso->CutHidden(); break;
-		case 3: return m_iso->GetSlices(); break;
-		case 4: return m_iso->ShowLegend(); break;
-		case 5: return m_iso->RenderSmooth(); break;
+		case 1: return m_iso->GetColorMap()->GetColorMap();
+		case 2: return m_iso->AllowClipping(); break;
+		case 3: return m_iso->CutHidden(); break;
+		case 4: return m_iso->GetSlices(); break;
+		case 5: return m_iso->ShowLegend(); break;
+		case 6: return m_iso->RenderSmooth(); break;
 		}
 		return QVariant();
 	}
@@ -44,11 +54,12 @@ public:
 		switch (i)
 		{
 		case 0: m_iso->SetEvalField(v.toInt()); break;
-		case 1: m_iso->AllowClipping(v.toBool()); break;
-		case 2: m_iso->CutHidden(v.toBool()); break;
-		case 3: m_iso->SetSlices(v.toInt()); break;
-		case 4: m_iso->ShowLegend(v.toBool()); break;
-		case 5: m_iso->RenderSmooth(v.toBool()); break;
+		case 1: m_iso->GetColorMap()->SetColorMap(v.toInt()); break;
+		case 2: m_iso->AllowClipping(v.toBool()); break;
+		case 3: m_iso->CutHidden(v.toBool()); break;
+		case 4: m_iso->SetSlices(v.toInt()); break;
+		case 5: m_iso->ShowLegend(v.toBool()); break;
+		case 6: m_iso->RenderSmooth(v.toBool()); break;
 		}
 	}
 
