@@ -5,6 +5,7 @@
 #include <vector>
 
 class CMainWindow;
+class QModelIndex;
 
 namespace Ui {
 	class CDataPanel;
@@ -28,6 +29,7 @@ private slots:
 	void on_DeleteButton_clicked();
 	void on_FilterButton_clicked();
 	void on_ExportButton_clicked();
+	void on_dataList_clicked(const QModelIndex&);
 
 private:
 	Ui::CDataPanel* ui;

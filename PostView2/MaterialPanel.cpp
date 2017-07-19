@@ -191,17 +191,17 @@ void CMaterialPanel::UpdateStates()
 		if (mat.visible())
 		{
 			pi->setForeground(Qt::black);
-			font.setBold(true);
+			font.setBold(mat.enabled());
 			pi->setFont(font);
 		}
 		else 
 		{
 			pi->setForeground(Qt::gray);
-			font.setBold(false);
+			font.setBold(mat.enabled());
 			pi->setFont(font);
 		}
 
-		pi->setBackgroundColor((mat.enabled() ? Qt::white : Qt::yellow));
+//		pi->setBackgroundColor((mat.enabled() ? Qt::white : Qt::yellow));
 	}
 }
 

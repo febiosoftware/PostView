@@ -14,12 +14,14 @@
 #include <QComboBox>
 #include <QDialogButtonBox>
 #include <QStackedWidget>
+#include <QSplitter>
 #include "MainWindow.h"
 #include "Document.h"
 #include <PostViewLib/FEModel.h>
 #include "GLModel.h"
 #include <QtCore/QAbstractTableModel>
 #include <PostViewLib/DataFilter.h>
+#include "PropertyListView.h"
 
 class CDataModel : public QAbstractTableModel
 {
@@ -100,8 +102,7 @@ public:
 		return QVariant();
 	}
 
-
-private:
+public:
 	FEModel*	m_fem;
 };
 
@@ -110,6 +111,7 @@ class Ui::CDataPanel
 public:
 	CDataModel*	data;
 	QTableView*	list;
+	::CPropertyListView*	m_prop;
 
 public:
 	void setupUi(::CDataPanel* parent)
@@ -146,6 +148,11 @@ public:
 
 		pg->addLayout(ph);
 
+		QSplitter* psplitter = new QSplitter;
+		psplitter->setOrientation(Qt::Vertical);
+		pg->addWidget(psplitter);
+
+
 		list = new QTableView;
 		list->setObjectName(QStringLiteral("dataList"));
 		list->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -158,7 +165,12 @@ public:
 		data = new CDataModel(list);
 		list->setModel(data);
 
-		pg->addWidget(list);
+		psplitter->addWidget(list);
+
+		m_prop = new ::CPropertyListView;
+		m_prop->setObjectName("props");
+
+		psplitter->addWidget(m_prop);
 
 		QMetaObject::connectSlotsByName(parent);
 	}
@@ -579,4 +591,10 @@ void CDataPanel::on_ExportButton_clicked()
 		}
 	}
 	else QMessageBox::warning(this, "Export Data", "Please select a data field first.");
+}
+
+void CDataPanel::on_dataList_clicked(const QModelIndex& index)
+{
+	FEDataManager& dm = *ui->data->m_fem->GetDataManager();
+	int n = index.row();
 }

@@ -1189,7 +1189,7 @@ void CGLModel::RenderOutline(CGLContext& rc, int nmat)
 					{
 						bdraw = true;
 					}
-					else
+/*					else
 					{
 						vec3f n1 = f.m_fn;
 						vec3f n2 = f2.m_fn;
@@ -1200,7 +1200,7 @@ void CGLModel::RenderOutline(CGLContext& rc, int nmat)
 							bdraw = true;
 						}
 					}
-				}
+*/				}
 
 				if (bdraw) RenderFaceEdge(f, j, pm, ndivs);
 			}
