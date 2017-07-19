@@ -4,6 +4,7 @@
 #include <QListWidget>
 #include <QSplitter>
 #include <QLabel>
+#include <QCheckBox>
 #include "MainWindow.h"
 #include "Document.h"
 #include "PropertyListView.h"
@@ -86,11 +87,16 @@ class Ui::CMaterialPanel
 public:
 	QListWidget*		m_list;
 	::CPropertyListView*	m_prop;
-	QLineEdit* name;
+	QLineEdit*	name;
+	QCheckBox*	enable;
+
+	bool update;
 
 public:
 	void setupUi(::CMaterialPanel* parent)
 	{
+		update = true;
+
 		QVBoxLayout* pg = new QVBoxLayout(parent);
 
 		QSplitter* psplitter = new QSplitter;
@@ -106,19 +112,15 @@ public:
 		pvl->setMargin(0);
 		w->setLayout(pvl);
 
+		enable = new QCheckBox; enable->setObjectName("enableBox");
 		QPushButton* phide = new QPushButton("Hide"); phide->setObjectName("hideButton");
 		QPushButton* pshow = new QPushButton("Show"); pshow->setObjectName("showButton");
-		QPushButton* pactiv= new QPushButton("Enable" ); pactiv->setObjectName("enableButton" );
-		QPushButton* pdeact= new QPushButton("Disable"); pdeact->setObjectName("disableButton");
 		QHBoxLayout* ph = new QHBoxLayout;
-		ph->setSpacing(0);
-		QLabel* label = new QLabel("Name:");
-		ph->addWidget(label);
-		ph->addWidget(name = new QLineEdit, 2); label->setBuddy(name); name->setObjectName("editName");
+//		ph->setSpacing(0);
+		ph->addWidget(enable);
+		ph->addWidget(name = new QLineEdit, 2); name->setObjectName("editName");
 		ph->addWidget(phide);
 		ph->addWidget(pshow);
-		ph->addWidget(pactiv);
-		ph->addWidget(pdeact);
 		ph->addStretch();
 		pvl->addLayout(ph);
 
@@ -212,6 +214,10 @@ void CMaterialPanel::on_materialList_currentRowChanged(int nrow)
 		m_pmat->SetMaterial(pmat);
 		ui->m_prop->Update(m_pmat);
 		ui->name->setText(QString(pmat->GetName()));
+
+		ui->update = false;
+		ui->enable->setChecked(pmat->enabled());
+		ui->update = true;
 	}
 }
 
@@ -267,8 +273,10 @@ void CMaterialPanel::on_showButton_clicked()
 	m_wnd->RedrawGL();
 }
 
-void CMaterialPanel::on_enableButton_clicked()
+void CMaterialPanel::on_enableBox_stateChanged(int state)
 {
+	if (ui->update == false) return;
+
 	CDocument& doc = *m_wnd->GetDocument();
 	if (doc.IsValid() == false) return;
 
@@ -285,36 +293,11 @@ void CMaterialPanel::on_enableButton_clicked()
 		int nmat = index.row();
 
 		FEMaterial& mat = *fem.GetMaterial(nmat);
-		mat.enable();
+
+		if (state == Qt::Checked) mat.enable();
+		else mat.disable();
 
 		mdl.EnableMaterial(nmat);
-	}
-
-	UpdateStates();
-	m_wnd->RedrawGL();
-}
-
-void CMaterialPanel::on_disableButton_clicked()
-{
-	CDocument& doc = *m_wnd->GetDocument();
-	if (doc.IsValid() == false) return;
-
-	CGLModel& mdl = *doc.GetGLModel();
-	FEModel& fem = *doc.GetFEModel();
-	FEMeshBase& mesh = *fem.GetFEMesh(0);
-
-	QItemSelectionModel* pselect = ui->m_list->selectionModel();
-	QModelIndexList selection = pselect->selectedRows();
-	int ncount = selection.count();
-	for (int i=0; i<ncount; ++i)
-	{
-		QModelIndex index = selection.at(i);
-		int nmat = index.row();
-
-		FEMaterial& mat = *fem.GetMaterial(nmat);
-		mat.disable();
-
-		mdl.DisableMaterial(nmat);
 	}
 
 	UpdateStates();

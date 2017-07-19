@@ -535,10 +535,8 @@ public:
 		QHBoxLayout* phl = new QHBoxLayout;
 		enabled = new QCheckBox; enabled->setObjectName("enabled");
 
-		QLabel* label = new QLabel("name");
 		phl->addWidget(enabled);
-		phl->addWidget(label);
-		phl->addWidget(name = new QLineEdit); name->setObjectName("nameEdit"); label->setBuddy(name);
+		phl->addWidget(name = new QLineEdit); name->setObjectName("nameEdit");
 		QPushButton* del = new QPushButton("Delete"); del->setObjectName("deleteButton");
 		phl->addWidget(del);
 		phl->addStretch();

@@ -201,9 +201,6 @@
     <ClInclude Include="..\..\PostView2\Tool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PostView2\ToolsPanel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\PostView2\TimePanel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -527,6 +524,9 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\PostView2\DataFieldSelector.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\ToolsPanel.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
