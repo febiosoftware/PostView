@@ -16,10 +16,10 @@ public:
 	{
 		m_mat = 0;
 		addProperty("Render mode"      , CProperty::Enum, "Render mode")->setEnumValues(QStringList() << "default" << "wireframe" << "solid");
-		addProperty("Diffuse"          , CProperty::Color );
-		addProperty("Ambient"          , CProperty::Color );
-		addProperty("Specular"         , CProperty::Color );
-		addProperty("Emission"         , CProperty::Color );
+		addProperty("Color"            , CProperty::Color );
+//		addProperty("Ambient"          , CProperty::Color );
+		addProperty("Specular color"   , CProperty::Color );
+		addProperty("Emission color"   , CProperty::Color );
 		addProperty("Mesh color"       , CProperty::Color );
 		addProperty("Shininess"        , CProperty::Float)->setFloatRange(0.0, 1.0);
 		addProperty("Transparency"     , CProperty::Float)->setFloatRange(0.0, 1.0);
@@ -40,16 +40,16 @@ public:
 			{
 			case 0: v = m_mat->m_nrender; break;
 			case 1: v = toQColor(m_mat->diffuse); break;
-			case 2: v = toQColor(m_mat->ambient); break;
-			case 3: v = toQColor(m_mat->specular); break;
-			case 4: v = toQColor(m_mat->emission); break;
-			case 5: v = toQColor(m_mat->meshcol); break;
-			case 6: v = m_mat->shininess; break;
-			case 7: v = m_mat->transparency; break;
-			case 8: v = m_mat->m_ntransmode; break;
-			case 9: v = m_mat->bmesh; break;
-			case 10: v = m_mat->bcast_shadows; break;
-			case 11: v = m_mat->bclip; break;
+//			case 2: v = toQColor(m_mat->ambient); break;
+			case 2: v = toQColor(m_mat->specular); break;
+			case 3: v = toQColor(m_mat->emission); break;
+			case 4: v = toQColor(m_mat->meshcol); break;
+			case 5: v = m_mat->shininess; break;
+			case 6: v = m_mat->transparency; break;
+			case 7: v = m_mat->m_ntransmode; break;
+			case 8: v = m_mat->bmesh; break;
+			case 9: v = m_mat->bcast_shadows; break;
+			case 10: v = m_mat->bclip; break;
 			}
 		}
 		return v;
@@ -62,17 +62,17 @@ public:
 			switch (i)
 			{
 			case 0: m_mat->m_nrender = v.toInt(); break;
-			case 1: m_mat->diffuse  = toGLColor(v.value<QColor>()); break;
-			case 2: m_mat->ambient  = toGLColor(v.value<QColor>()); break;
-			case 3: m_mat->specular = toGLColor(v.value<QColor>()); break;
-			case 4: m_mat->emission = toGLColor(v.value<QColor>()); break;
-			case 5: m_mat->meshcol  = toGLColor(v.value<QColor>()); break;
-			case 6: m_mat->shininess = v.toFloat(); break;
-			case 7: m_mat->transparency = v.toFloat(); break;
-			case 8: m_mat->m_ntransmode = v.toInt(); break;
-			case 9: m_mat->bmesh = v.toBool(); break;
-			case 10: m_mat->bcast_shadows = v.toBool(); break;
-			case 11: m_mat->bclip = v.toBool(); break;
+			case 1: m_mat->diffuse  = m_mat->ambient = toGLColor(v.value<QColor>()); break;
+//			case 2: m_mat->ambient  = toGLColor(v.value<QColor>()); break;
+			case 2: m_mat->specular = toGLColor(v.value<QColor>()); break;
+			case 3: m_mat->emission = toGLColor(v.value<QColor>()); break;
+			case 4: m_mat->meshcol  = toGLColor(v.value<QColor>()); break;
+			case 5: m_mat->shininess = v.toFloat(); break;
+			case 6: m_mat->transparency = v.toFloat(); break;
+			case 7: m_mat->m_ntransmode = v.toInt(); break;
+			case 8: m_mat->bmesh = v.toBool(); break;
+			case 9: m_mat->bcast_shadows = v.toBool(); break;
+			case 10: m_mat->bclip = v.toBool(); break;
 			}
 		}
 	}
@@ -131,6 +131,13 @@ public:
 
 		QMetaObject::connectSlotsByName(parent);
 	}
+
+	void setColor(QListWidgetItem* item, GLCOLOR c)
+	{
+		QPixmap pix(24, 24);
+		pix.fill(QColor(c.r, c.g, c.b));
+		item->setIcon(QIcon(pix));
+	}
 };
 
 CMaterialPanel::CMaterialPanel(CMainWindow* pwnd, QWidget* parent) : CCommandPanel(pwnd, parent), ui(new Ui::CMaterialPanel)
@@ -156,7 +163,11 @@ void CMaterialPanel::Update(bool breset)
 		for (int i=0; i<nmat; ++i)
 		{
 			FEMaterial& mat = *fem->GetMaterial(i);
-			ui->m_list->addItem(mat.GetName());
+
+			QListWidgetItem* it = new QListWidgetItem(mat.GetName());
+			ui->m_list->addItem(it);
+
+			ui->setColor(it, mat.diffuse);
 		}
 
 		UpdateStates();
@@ -330,5 +341,19 @@ void CMaterialPanel::on_editName_editingFinished()
 
 void CMaterialPanel::on_props_dataChanged()
 {
+	// update color
+	CDocument& doc = *m_wnd->GetDocument();
+	QModelIndex n = ui->m_list->currentIndex();
+	if (n.isValid())
+	{
+		int nmat = n.row();
+
+		FEModel& fem = *doc.GetFEModel();
+		FEMaterial& mat = *fem.GetMaterial(nmat);
+
+		QListWidgetItem* item = ui->m_list->item(nmat);
+		ui->setColor(item, mat.diffuse);
+	}
+
 	m_wnd->RedrawGL();
 }
