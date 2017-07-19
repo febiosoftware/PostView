@@ -106,15 +106,15 @@ public:
 		pvl->setMargin(0);
 		w->setLayout(pvl);
 
-		QPushButton* phide = new QPushButton("Hide"); phide->setObjectName("hideButton"); phide->setFixedWidth(50);
-		QPushButton* pshow = new QPushButton("Show"); pshow->setObjectName("showButton"); pshow->setFixedWidth(50);
-		QPushButton* pactiv= new QPushButton("Enable" ); pactiv->setObjectName("enableButton" ); pactiv->setFixedWidth(50);
-		QPushButton* pdeact= new QPushButton("Disable"); pdeact->setObjectName("disableButton"); pdeact->setFixedWidth(50);
+		QPushButton* phide = new QPushButton("Hide"); phide->setObjectName("hideButton");
+		QPushButton* pshow = new QPushButton("Show"); pshow->setObjectName("showButton");
+		QPushButton* pactiv= new QPushButton("Enable" ); pactiv->setObjectName("enableButton" );
+		QPushButton* pdeact= new QPushButton("Disable"); pdeact->setObjectName("disableButton");
 		QHBoxLayout* ph = new QHBoxLayout;
 		ph->setSpacing(0);
 		QLabel* label = new QLabel("Name:");
 		ph->addWidget(label);
-		ph->addWidget(name = new QLineEdit); label->setBuddy(name); name->setObjectName("editName");
+		ph->addWidget(name = new QLineEdit, 2); label->setBuddy(name); name->setObjectName("editName");
 		ph->addWidget(phide);
 		ph->addWidget(pshow);
 		ph->addWidget(pactiv);
