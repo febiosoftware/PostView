@@ -182,6 +182,8 @@ public slots:
 
 	void onCancelFileRead();
 
+	void on_recentFiles_triggered(QAction* action);
+
 private:
 	void timerEvent(QTimerEvent* ev);
 	void closeEvent(QCloseEvent* ev);

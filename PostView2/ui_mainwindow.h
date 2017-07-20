@@ -40,6 +40,11 @@ class Ui_MainWindow
 		menuHeight = 21			// height of menu bar
 	};
 
+	enum
+	{
+		MAX_RECENT_FILES = 15		// max number of recent files
+	};
+
 private:
 	CMainWindow*	pwnd;
 
@@ -50,6 +55,9 @@ public:
 	QMenu* menuRecord;
 	QMenu* menuView;
 	QMenu* menuHelp; 
+	QMenu* menuRecentFiles;
+
+	QActionGroup* recentFilesActionGroup;
 
 	QAction* actionViewSettings;
 	QAction* actionViewCapture; 
@@ -102,6 +110,8 @@ public:
 	QPushButton*	stopFileReading;
 
 	QString currentPath;
+
+	QStringList	m_recentFiles;
 
 public:
 	// build the UI
@@ -357,6 +367,11 @@ public:
 		menuView   = new QMenu("View"  , menuBar);
 		menuHelp   = new QMenu("Help"  , menuBar);
 
+		menuRecentFiles = new QMenu("Recent Files");
+
+		recentFilesActionGroup = new QActionGroup(MainWindow);
+		recentFilesActionGroup->setObjectName("recentFiles");
+
 		QActionGroup* pag = new QActionGroup(MainWindow);
 		pag->addAction(selectNodes);
 		pag->addAction(selectEdges);
@@ -381,6 +396,7 @@ public:
 		menuFile->addAction(actionSave); 
 		menuFile->addAction(actionUpdate);
 		menuFile->addAction(actionFileInfo);
+		menuFile->addAction(menuRecentFiles->menuAction());
 		menuFile->addSeparator();
 		menuFile->addAction(actionSnapShot);
 		menuFile->addSeparator();
@@ -565,6 +581,43 @@ public:
 	void checkColormap(bool b)
 	{
 		actionColorMap->setChecked(b);
+	}
+
+	void setRecentFiles(QStringList& recentFiles)
+	{
+		m_recentFiles = recentFiles;
+
+		int N = m_recentFiles.count();
+		if (N > MAX_RECENT_FILES) N = MAX_RECENT_FILES;
+
+		for (int i = 0; i < N; ++i)
+		{
+			QString file = m_recentFiles.at(i);
+
+			QAction* pa = menuRecentFiles->addAction(file);
+
+			recentFilesActionGroup->addAction(pa);
+		}
+	}
+
+	void addToRecentFiles(const QString& file)
+	{
+		// see if the file already exists or not
+		if (m_recentFiles.contains(file)) return;
+
+		// add a new file item
+		m_recentFiles.append(file);
+		QAction* pa = menuRecentFiles->addAction(file);
+		recentFilesActionGroup->addAction(pa);
+
+		int N = m_recentFiles.count();
+		if (N > MAX_RECENT_FILES)
+		{
+			// remove the first one
+			m_recentFiles.removeAt(0);
+			QAction* pa = menuRecentFiles->actions().first();
+			menuRecentFiles->removeAction(pa);
+		}
 	}
 };
 

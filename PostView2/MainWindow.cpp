@@ -485,6 +485,9 @@ void CMainWindow::finishedReadingFile(bool success, const QString& errorString)
 	{
 		ui->playToolBar->setDisabled(true);
 	}
+
+	// add file to recent list
+	ui->addToRecentFiles(m_doc->GetFile());
 }
 
 bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
@@ -1745,6 +1748,8 @@ void CMainWindow::writeSettings()
 
 	QStringList folders = ui->fileViewer->FolderList();
 	if (folders.isEmpty() == false) settings.setValue("folders", folders);
+
+	if (ui->m_recentFiles.isEmpty() == false) settings.setValue("recentFiles", ui->m_recentFiles);
 }
 
 void CMainWindow::readSettings()
@@ -1827,6 +1832,9 @@ void CMainWindow::readSettings()
 	}
 
 	ui->fileViewer->setCurrentPath(ui->currentPath);
+
+	QStringList recentFiles = settings.value("recentFiles").toStringList();
+	ui->setRecentFiles(recentFiles);
 
 	// update the menu and toolbar to reflect the correct settings
 	UpdateMainToolbar();
@@ -1934,4 +1942,10 @@ void CMainWindow::on_actionRecordPause_triggered()
 void CMainWindow::on_actionRecordStop_triggered()
 {
 	ui->glview->StopAnimation();
+}
+
+void CMainWindow::on_recentFiles_triggered(QAction* action)
+{
+	QString fileName = action->text();
+	OpenFile(fileName, 0);
 }
