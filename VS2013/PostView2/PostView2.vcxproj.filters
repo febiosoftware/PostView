@@ -135,9 +135,6 @@
     <ClInclude Include="..\..\PostView2\CColorButton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PostView2\DataPanel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\PostView2\DistanceMapTool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -160,9 +157,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\PostView2\IntegrateWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PostView2\MaterialPanel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\PostView2\ModelViewer.h">
@@ -527,6 +521,12 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\PostView2\ToolsPanel.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\DataPanel.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\MaterialPanel.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

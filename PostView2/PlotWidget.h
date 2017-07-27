@@ -49,6 +49,12 @@ protected:
 	QColor			m_col;
 };
 
+struct CAxisFormat
+{
+	bool	visible;
+	int		labelPosition;
+};
+
 //-----------------------------------------------------------------------------
 //! This class implements a plotting widget. 
 class CPlotWidget : public QWidget
@@ -60,6 +66,14 @@ public:
 	{
 		LineChart,
 		BarChart
+	};
+
+	enum AxisLabelPosition
+	{
+		NEXT_TO_AXIS,
+		HIGH,
+		LOW,
+		NONE
 	};
 
 public:
@@ -127,8 +141,8 @@ public:
 	void showHorizontalGridLines(bool b) { m_bdrawYLines = b; }
 	void showVerticalGridLines(bool b) { m_bdrawXLines = b; }
 
-	void showXAxis(bool b) { m_bdrawXAxis = b; }
-	void ShowYAxis(bool b) { m_bdrawYAxis = b; }
+	void showXAxis(bool b) { m_xAxis.visible = b; }
+	void ShowYAxis(bool b) { m_yAxis.visible = b; }
 
 	bool lineSmoothing() const { return m_bsmoothLines; }
 	void setLineSmoothing(bool b) { m_bsmoothLines = b; }
@@ -136,8 +150,13 @@ public:
 	bool showDataMarks() const { return m_bshowDataMarks; }
 	void showDataMarks(bool b) { m_bshowDataMarks = b; }
 
+	void scaleAxisLabels(bool b) { m_bscaleAxisLabels = b; }
+
+	QPointF SnapToGrid(const QPointF& p);
+
 signals:
 	void doneZoomToRect();
+	void pointClicked(double x, double y);
 
 protected:
 	void mousePressEvent  (QMouseEvent* ev);
@@ -179,6 +198,7 @@ private: // drawing helper functions
 	void drawAllData(QPainter& p);
 	void drawData(QPainter& p, CPlotData& data);
 	void drawGrid(QPainter& p);
+	void drawAxesLabels(QPainter& p);
 	void drawTitle(QPainter& p);
 	void drawSelection(QPainter& p);
 	void drawLegend(QPainter& p);
@@ -193,10 +213,11 @@ private:
 	bool				m_bshowPopup;
 	bool				m_bdrawXLines;
 	bool				m_bdrawYLines;
-	bool				m_bdrawXAxis;
-	bool				m_bdrawYAxis;
+	bool				m_bscaleAxisLabels;
 
 	int		m_chartStyle;
+	CAxisFormat		m_xAxis;
+	CAxisFormat		m_yAxis;
 
 private:
 	QAction*	m_pZoomToFit;

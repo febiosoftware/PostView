@@ -16,6 +16,7 @@
 #include <QLineEdit>
 #include <QValidator>
 
+//-----------------------------------------------------------------------------
 class CDlgPlotWidgetProps_Ui
 {
 public:
@@ -214,8 +215,7 @@ CPlotWidget::CPlotWidget(QWidget* parent, int w, int h) : QWidget(parent)
 	m_bdrawXLines = true;
 	m_bdrawYLines = true;
 
-	m_bdrawXAxis = true;
-	m_bdrawYAxis = true;
+	m_bscaleAxisLabels = true;
 
 #ifdef __APPLE__
 	m_bsmoothLines = false;
@@ -224,6 +224,14 @@ CPlotWidget::CPlotWidget(QWidget* parent, int w, int h) : QWidget(parent)
 	m_bsmoothLines = true;
 	m_bshowDataMarks = true;
 #endif
+
+	// X-axis format
+	m_xAxis.visible = true;
+	m_xAxis.labelPosition = CPlotWidget::LOW;
+
+	// Y-axis format
+	m_yAxis.visible = true;
+	m_yAxis.labelPosition = CPlotWidget::LOW;
 
 	m_chartStyle = CPlotWidget::LineChart;
 
@@ -513,19 +521,28 @@ void CPlotWidget::mouseMoveEvent(QMouseEvent* ev)
 //-----------------------------------------------------------------------------
 void CPlotWidget::mouseReleaseEvent(QMouseEvent* ev)
 {
+	int X0 = m_mouseInitPos.x();
+	int Y0 = m_mouseInitPos.y();
+	int X1 = m_mousePos.x();
+	int Y1 = m_mousePos.y();
+	if (X1 < X0) { X0 ^= X1; X1 ^= X0; X0 ^= X1; }
+	if (Y1 < Y0) { Y0 ^= Y1; Y1 ^= Y0; Y0 ^= Y1; }
+
 	if (m_bzoomRect)
 	{
-		int X0 = m_mouseInitPos.x();
-		int Y0 = m_mouseInitPos.y();
-		int X1 = m_mousePos.x();
-		int Y1 = m_mousePos.y();
-		if (X1 < X0) { X0 ^= X1; X1 ^= X0; X0 ^= X1; }
-		if (Y1 < Y0) { Y0 ^= Y1; Y1 ^= Y0; Y0 ^= Y1; }
-		fitToRect(QRect(X0, Y0, X1-X0+1, Y1-Y0+1));
+		fitToRect(QRect(X0, Y0, X1 - X0 + 1, Y1 - Y0 + 1));
 		m_bzoomRect = false;
 		m_bvalidRect = false;
 		emit doneZoomToRect();
 		repaint();
+	}
+	else if ((X0 == X1) && (Y0 == Y1) && (m_select == false))
+	{
+		if (ev->button() == Qt::LeftButton)
+		{
+			QPointF fp = ScreenToView(m_mousePos);
+			emit pointClicked(fp.x(), fp.y());
+		}
 	}
 	ev->accept();
 }
@@ -622,6 +639,9 @@ void CPlotWidget::paintEvent(QPaintEvent* pe)
 
 	// draw the grid axes
 	drawAxes(p);
+
+	// draw the axes labels
+	drawAxesLabels(p);
 
 	// draw the legend
 	if (m_bshowLegend) drawLegend(p);
@@ -738,6 +758,114 @@ void CPlotWidget::drawTitle(QPainter& p)
 }
 
 //-----------------------------------------------------------------------------
+void CPlotWidget::drawAxesLabels(QPainter& p)
+{
+	char sz[256] = { 0 };
+	QFont f("Arial", 10);
+	QFontMetrics fm(f);
+	p.setFont(f);
+	p.setPen(QPen(Qt::black));
+
+	int x0 = m_screenRect.left();
+	int x1 = m_screenRect.right();
+	int y0 = m_screenRect.top();
+	int y1 = m_screenRect.bottom();
+
+	double xscale = m_xscale;
+	double yscale = m_yscale;
+
+	// determine the y-scale
+	double gy = 1;
+	if (m_bscaleAxisLabels)
+	{
+		int nydiv = (int)log10(yscale);
+		if (nydiv != 0)
+		{
+			gy = pow(10.0, nydiv);
+			sprintf(sz, "x 1e%03d", nydiv);
+			p.drawText(x0 - 30, y0 - fm.height() + fm.descent(), QString(sz));
+		}
+	}
+
+	// determine the x-scale
+	double gx = 1;
+	if (m_bscaleAxisLabels)
+	{
+		int nxdiv = (int)log10(xscale);
+		if (nxdiv != 0)
+		{
+			gx = pow(10.0, nxdiv);
+			sprintf(sz, "x 1e%03d", nxdiv);
+			p.drawText(x1 + 5, y1, QString(sz));
+		}
+	}
+
+	p.setPen(QPen(Qt::black, 1));
+
+	// draw the y-labels
+	if (m_yAxis.labelPosition != CPlotWidget::NONE)
+	{
+		int xPos = 0;
+		switch (m_yAxis.labelPosition)
+		{
+		case LOW: xPos = x0; break;
+		case HIGH: xPos = x1; break;
+		case NEXT_TO_AXIS:
+			xPos = ViewToScreen(QPointF(0., 0.)).x();
+			if (xPos < x0) xPos = x0; else if (xPos > x1) xPos = x1;
+			break;
+		}
+		double fy = yscale*(int)(m_viewRect.top() / yscale);
+		while (fy < m_viewRect.bottom())
+		{
+			int iy = ViewToScreen(QPointF(0.0, fy)).y();
+			if (iy < y1)
+			{
+				double g = fy / gy;
+				if (fabs(g) < 1e-7) g = 0;
+				sprintf(sz, "%lg", g);
+				QString s(sz);
+				int w = p.fontMetrics().width(s);
+				p.drawText(xPos - w - 5, iy + p.fontMetrics().height() / 3, s);
+				//			fl_line(x0-3, iy, x0+3, iy);
+			}
+			fy += yscale;
+		}
+	}
+
+	// draw the x-labels
+	if (m_xAxis.labelPosition != CPlotWidget::NONE)
+	{
+		int yPos = 0;
+		switch (m_yAxis.labelPosition)
+		{
+		case LOW: yPos = y1; break;
+		case HIGH: yPos = y0; break;
+		case NEXT_TO_AXIS:
+			yPos = ViewToScreen(QPointF(0., 0.)).y();
+			if (yPos < y0) yPos = y0; else if (yPos > y1) yPos = y1;
+			break;
+		}
+		double fx = xscale*(int)(m_viewRect.left() / xscale);
+		while (fx < m_viewRect.right())
+		{
+			int ix = ViewToScreen(QPointF(fx, 0.0)).x();
+			if (ix > x0)
+			{
+				double g = fx / gx;
+				if (fabs(g) < 1e-7) g = 0;
+				sprintf(sz, "%lg", g);
+				QString s(sz);
+				int w = p.fontMetrics().width(s);
+				p.drawText(ix - w / 2, yPos + p.fontMetrics().height(), s);
+				//			fl_line(ix, y1-3, ix, y1+3);
+			}
+			fx += xscale;
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
 void CPlotWidget::drawGrid(QPainter& p)
 {
 	char sz[256] = {0};
@@ -754,71 +882,13 @@ void CPlotWidget::drawGrid(QPainter& p)
 	double xscale = m_xscale;
 	double yscale = m_yscale;
 
-	// determine the y-scale
-	double gy = 1;
-	int nydiv = (int) log10(yscale);
-	if (nydiv != 0)
-	{
-		gy = pow(10.0, nydiv);
-		sprintf(sz, "x 1e%03d", nydiv);
-		p.drawText(x0-30, y0 - fm.height() + fm.descent(), QString(sz));
-	}
-
-	// determine the x-scale
-	double gx = 1;
-	int nxdiv = (int) log10(xscale);
-	if (nxdiv != 0)
-	{
-		gx = pow(10.0, nxdiv);
-		sprintf(sz, "x 1e%03d", nxdiv);
-		p.drawText(x1+5, y1, QString(sz));
-	}
-
-	p.setPen(QPen(Qt::black, 1));
-
-	// draw the y-labels
-	double fy = yscale*(int)(m_viewRect.top()/yscale);
-	while (fy < m_viewRect.bottom())
-	{
-		int iy = ViewToScreen(QPointF(0.0, fy)).y();
-		if (iy < y1)
-		{
-			double g = fy / gy;
-			if (fabs(g) < 1e-7) g = 0;
-			sprintf(sz, "%lg", g);
-			QString s(sz);
-			int w = p.fontMetrics().width(s);
-			p.drawText(x0 -w - 5, iy + p.fontMetrics().height()/3, s);
-//			fl_line(x0-3, iy, x0+3, iy);
-		}
-		fy += yscale;
-	}
-
-	// draw the x-labels
-	double fx = xscale*(int)(m_viewRect.left()/xscale);
-	while (fx < m_viewRect.right())
-	{
-		int ix = ViewToScreen(QPointF(fx, 0.0)).x();
-		if (ix > x0)
-		{
-			double g = fx / gx;
-			if (fabs(g) < 1e-7) g = 0;
-			sprintf(sz, "%lg", g);
-			QString s(sz);
-			int w = p.fontMetrics().width(s);
-			p.drawText(ix-w/2, y1+p.fontMetrics().height(), s);
-//			fl_line(ix, y1-3, ix, y1+3);
-		}
-		fx += xscale;
-	}
-
 	p.setPen(QPen(Qt::lightGray, 1));
 	p.setRenderHint(QPainter::Antialiasing, false);
 
 	// draw the y-grid lines
 	if (m_bdrawYLines)
 	{
-		fy = yscale*(int)(m_viewRect.top()/yscale);
+		double fy = yscale*(int)(m_viewRect.top()/yscale);
 		while (fy < m_viewRect.bottom())
 		{
 			int iy = ViewToScreen(QPointF(0.0, fy)).y();
@@ -836,7 +906,7 @@ void CPlotWidget::drawGrid(QPainter& p)
 	// draw the x-grid lines
 	if (m_bdrawXLines)
 	{
-		fx = xscale*(int)(m_viewRect.left()/xscale);
+		double fx = xscale*(int)(m_viewRect.left()/xscale);
 		while (fx < m_viewRect.right())
 		{
 			int ix = ViewToScreen(QPointF(fx, 0.0)).x();
@@ -862,24 +932,24 @@ void CPlotWidget::drawAxes(QPainter& p)
 	p.setPen(QPen(Qt::black, 2));
 
 	// render the X-axis
-	if (m_bdrawXAxis)
+	if (m_xAxis.visible)
 	{
-		if ((c.y() > m_screenRect.top   ()) && (c.y() < m_screenRect.bottom()))
+		if ((c.y() > m_screenRect.top()) && (c.y() < m_screenRect.bottom()))
 		{
 			QPainterPath xaxis;
-			xaxis.moveTo(m_screenRect.left (), c.y());
+			xaxis.moveTo(m_screenRect.left(), c.y());
 			xaxis.lineTo(m_screenRect.right(), c.y());
 			p.drawPath(xaxis);
 		}
 	}
 
 	// render the Y-axis
-	if (m_bdrawYAxis)
+	if (m_yAxis.visible)
 	{
-		if ((c.x() > m_screenRect.left ()) && (c.x() < m_screenRect.right()))
+		if ((c.x() > m_screenRect.left()) && (c.x() < m_screenRect.right()))
 		{
 			QPainterPath yaxis;
-			yaxis.moveTo(c.x(), m_screenRect.top   ());
+			yaxis.moveTo(c.x(), m_screenRect.top());
 			yaxis.lineTo(c.x(), m_screenRect.bottom());
 			p.drawPath(yaxis);
 		}
@@ -990,4 +1060,19 @@ bool CPlotWidget::Save(const QString& fileName)
 	}
 	fclose(fp);
 	return true;
+}
+
+//-----------------------------------------------------------------------------
+QPointF CPlotWidget::SnapToGrid(const QPointF& p)
+{
+	double fx = p.x();
+	double fy = p.y();
+
+	if (fx >= 0) fx = m_xscale*int((fx / m_xscale) + 0.5);
+	else fx = m_xscale*int((fx / m_xscale));
+
+	if (fy >= 0) fy = m_yscale*int((fy / m_yscale) + 0.5);
+	else fy = m_yscale*int((fy / m_yscale));
+
+	return QPointF(fx, fy);
 }
