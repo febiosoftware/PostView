@@ -20,8 +20,7 @@ FEModel* FEModel::m_pThis = 0;
 FEModel::FEModel()
 {
 	m_szTitle[0] = 0;
-	// TODO: Set the default to 0
-	m_ndisp = BUILD_FIELD(1,0,0);
+	m_ndisp = 0;
 	m_pDM = new FEDataManager(this);
 	m_ntime = 0;
 

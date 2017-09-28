@@ -149,6 +149,10 @@ bool FEVTKimport::Load(FEModel& fem, const char* szfile)
 	}
 	ch = fgets(szline, 255, m_fp);
 
+	// update the mesh
+	pm->Update();
+	m_pfem->UpdateBoundingBox();
+
 	// add a state
 	FEState* ps = new FEState(0.f, m_pfem, m_pfem->GetFEMesh(0));
 	m_pfem->AddState(ps);
@@ -235,10 +239,6 @@ bool FEVTKimport::Load(FEModel& fem, const char* szfile)
 	}
 
 	Close();
-
-	// update the mesh
-	pm->Update();
-	m_pfem->UpdateBoundingBox();
 
 	return true;
 }

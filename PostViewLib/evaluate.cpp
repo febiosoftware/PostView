@@ -579,6 +579,12 @@ void FEModel::EvaluateNode(int n, int ntime, int nfield, NODEDATA& d)
 	d.m_val = 0.f;
 	d.m_ntag = 1;
 
+	if (state.m_Data.size() == 0) 
+	{
+		d.m_val = 0.0f;
+		return;
+	}
+
 	if (IS_NODE_FIELD(nfield))
 	{
 		// get the data ID

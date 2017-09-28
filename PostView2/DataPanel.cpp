@@ -22,6 +22,40 @@
 #include <QtCore/QAbstractTableModel>
 #include <PostViewLib/DataFilter.h>
 #include "PropertyListView.h"
+#include <PostViewLib/FEMeshData_T.h>
+
+class CCurvatureProps : public CPropertyList
+{
+public:
+	CCurvatureProps()
+	{
+		addProperty("Smoothness", CProperty::Int);
+		addProperty("Max iterations", CProperty::Int);
+		addProperty("Use Extended Quadric", CProperty::Bool);
+	}
+
+	QVariant GetPropertyValue(int i) override
+	{
+		switch (i)
+		{
+		case 0: return FECurvature::m_nlevels; break;
+		case 1: return FECurvature::m_nmax; break;
+		case 2: return (FECurvature::m_bext != 0); break;
+		}
+
+		return QVariant();
+	}
+
+	void SetPropertyValue(int i, const QVariant& v) override
+	{
+		switch (i)
+		{
+		case 0: FECurvature::m_nlevels = v.toInt(); break;
+		case 1: FECurvature::m_nmax = v.toInt(); break;
+		case 2: FECurvature::m_bext = (v.toBool() ? 1 : 0); break;
+		}
+	}
+};
 
 class CDataModel : public QAbstractTableModel
 {
@@ -597,4 +631,16 @@ void CDataPanel::on_dataList_clicked(const QModelIndex& index)
 {
 	FEDataManager& dm = *ui->data->m_fem->GetDataManager();
 	int n = index.row();
+
+	FEDataField* p = *dm.DataField(n);
+
+	if ((p->TypeInfo() == typeid(FEPrincCurvature1)) ||
+		(p->TypeInfo() == typeid(FEPrincCurvature2)) ||
+		(p->TypeInfo() == typeid(FEGaussCurvature)) ||
+		(p->TypeInfo() == typeid(FEMeanCurvature)) ||
+		(p->TypeInfo() == typeid(FERMSCurvature)) ||
+		(p->TypeInfo() == typeid(FEDiffCurvature))) 
+	{
+		ui->m_prop->Update(new CCurvatureProps);
+	}
 }
