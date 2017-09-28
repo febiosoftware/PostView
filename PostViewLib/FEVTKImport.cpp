@@ -149,6 +149,10 @@ bool FEVTKimport::Load(FEModel& fem, const char* szfile)
 	}
 	ch = fgets(szline, 255, m_fp);
 
+	// add a state
+	FEState* ps = new FEState(0.f, m_pfem, m_pfem->GetFEMesh(0));
+	m_pfem->AddState(ps);
+
 	while (ch != NULL) //making sure the file doesn't ends here
 	{
 		//reading the point data
@@ -206,8 +210,6 @@ bool FEVTKimport::Load(FEModel& fem, const char* szfile)
 			FEDataManager& dm = *fem.GetDataManager();
 			dm.AddDataField(new FEDataField_T<FENodeData<float> >("data", EXPORT_DATA));
 
-			FEState* ps = new FEState(0.f, m_pfem, m_pfem->GetFEMesh(0));
-			m_pfem->AddState(ps);
 			FENodeData<float>& df = dynamic_cast<FENodeData<float>&>(ps->m_Data[0]);
 			for (int j=0; j<pm->Nodes(); ++j) df[j] = (float) data[j];
 		}
@@ -218,8 +220,6 @@ bool FEVTKimport::Load(FEModel& fem, const char* szfile)
 			FEDataManager& dm = *fem.GetDataManager();
 			dm.AddDataField(new FEDataField_T<FENodeData<float> >("data", EXPORT_DATA));
 
-			FEState* ps = new FEState(0.f, m_pfem, m_pfem->GetFEMesh(0));
-			m_pfem->AddState(ps);
 			FEElementData<float, DATA_ITEM>& ed = dynamic_cast<FEElementData<float, DATA_ITEM>&>(ps->m_Data[0]);
 
 			for (i=0; i<size; ++i)
