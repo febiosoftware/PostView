@@ -55,8 +55,8 @@ bool FEKinemat::ReadKine(const char* szfile)
 	if (fp == 0) return false;
 
 	STATE s; KINE d;
-	char szline[512] = {0};
-	while (fgets(szline, 511, fp))
+	char szline[2048] = {0};
+	while (fgets(szline, 2047, fp))
 	{
 		char* ch = szline;
 		int n = 0;

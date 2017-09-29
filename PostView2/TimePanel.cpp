@@ -19,11 +19,14 @@ void CTimePanel::Update(bool reset)
 			ui->timer->clearData();
 			FEModel& fem = *doc->GetFEModel();
 			vector<double> data(fem.GetStates());
-			for (int i=0; i<fem.GetStates(); ++i) data[i] = fem.GetState(i)->m_time;
+			int nstates = fem.GetStates();
+			for (int i=0; i<nstates; ++i) data[i] = fem.GetState(i)->m_time;
 
 			ui->timer->setTimePoints(data);
 
 			TIMESETTINGS& time = doc->GetTimeSettings();
+			time.m_start = 0;
+			time.m_end = nstates - 1;
 			ui->timer->setRange(time.m_start, time.m_end);
 		}
 

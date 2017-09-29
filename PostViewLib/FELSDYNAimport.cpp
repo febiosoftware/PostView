@@ -6,6 +6,7 @@
 #include "FELSDYNAimport.h"
 #include "FEDataManager.h"
 #include "FEMeshData_T.h"
+#include "constants.h"
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -355,7 +356,9 @@ bool FELSDYNAimport::BuildMesh(FEModel& fem)
 	if (m_bdispl)
 	{
 		pdm->AddDataField(new FEDataField_T<FENodeData<vec3f> >("Displacement", EXPORT_DATA));
-		ndata[1] = nd; nd++;
+		ndata[1] = nd; 
+		fem.SetDisplacementField(BUILD_FIELD(1, nd, 0));
+		nd++;
 	}
 
 	if (m_bshellthick)

@@ -168,9 +168,6 @@
     <ClInclude Include="..\..\PostView2\PlotMixTool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PostView2\PlotWidget.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\PostView2\PointCongruencyTool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -509,6 +506,9 @@
     <ClCompile Include="..\..\PostView2\MPEGAnimation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\PostView2\CIntInput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\PostView2\MainWindow.h">
@@ -527,6 +527,9 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\PostView2\MaterialPanel.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\PlotWidget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

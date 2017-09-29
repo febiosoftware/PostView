@@ -497,6 +497,7 @@
     <ClCompile Include="..\..\PostView2\AVIAnimation.cpp" />
     <ClCompile Include="..\..\PostView2\CColorButton.cpp" />
     <ClCompile Include="..\..\PostView2\CDlgImportXPLT.cpp" />
+    <ClCompile Include="..\..\PostView2\CIntInput.cpp" />
     <ClCompile Include="..\..\PostView2\CommandPanel.cpp" />
     <ClCompile Include="..\..\PostView2\DataFieldSelector.cpp" />
     <ClCompile Include="..\..\PostView2\DataPanel.cpp" />

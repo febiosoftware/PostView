@@ -168,11 +168,11 @@ public:
 
 		ph = new QHBoxLayout;
 		ph->addWidget(pl = new QLabel("From:"));
-		ph->addWidget(start = new CIntInput); pl->setBuddy(start); start->setFixedWidth(70);
+		ph->addWidget(start = new CIntInput); pl->setBuddy(start); start->setFixedWidth(70); start->setValue(1);
 		ph->addWidget(pl = new QLabel("To:"));
-		ph->addWidget(end = new CIntInput); pl->setBuddy(end); end->setFixedWidth(70);
+		ph->addWidget(end = new CIntInput); pl->setBuddy(end); end->setFixedWidth(70); end->setValue(999);
 		ph->addWidget(pl = new QLabel("Stride:"));
-		ph->addWidget(stride = new CIntInput); pl->setBuddy(stride); stride->setFixedWidth(70);
+		ph->addWidget(stride = new CIntInput); pl->setBuddy(stride); stride->setFixedWidth(70); stride->setValue(1);
 		pv->addLayout(ph);
 
 		QPushButton* apply = new QPushButton("Apply");

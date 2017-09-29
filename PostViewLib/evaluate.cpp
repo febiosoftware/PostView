@@ -1913,7 +1913,7 @@ vec3f FEModel::EvaluateNodeVector(int n, int ntime, int nvec)
 	}
 	else 
 	{
-		assert(false);
+//		assert(false);
 		r = vec3f(0,0,0);
 	}
 

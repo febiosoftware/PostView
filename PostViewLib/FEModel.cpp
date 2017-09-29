@@ -36,6 +36,8 @@ FEModel::~FEModel()
 	m_pThis = 0;
 
 	DeleteMeshes();
+
+	ClearDependants();
 }
 
 void FEModel::DeleteMeshes()
@@ -488,6 +490,12 @@ void FEModel::RemoveDependant(FEModelDependant* pc)
 //-----------------------------------------------------------------------------
 void FEModel::ClearDependants()
 {
-	m_Dependants.clear();
+	int N = m_Dependants.size();
+	if (N > 0)
+	{
+		// inform the dependents that the model is about to be deleted
+		vector<FEModelDependant*>::iterator it = m_Dependants.begin();
+		for (int i = 0; i<N; ++i) m_Dependants[i]->Update(0);
+		m_Dependants.clear();
+	}
 }
-

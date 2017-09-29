@@ -188,5 +188,5 @@ void CDataFieldSelector::setCurrentValue(int nfield)
 
 void CDataFieldSelector::Update(FEModel* pfem)
 {
-	if (m_fem) BuildMenu(pfem, m_class, m_bvec);
+	BuildMenu(pfem, m_class, m_bvec);
 }

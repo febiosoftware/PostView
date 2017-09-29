@@ -128,6 +128,7 @@ public:
 		addProperty("Ambient intensity", CProperty::Float)->setFloatRange(0.0, 1.0);
 		addProperty("Render shadows"   , CProperty::Bool );
 		addProperty("Shadow intensity" , CProperty::Float)->setFloatRange(0.0, 1.0);
+		addProperty("Light direction"  , CProperty::Vec3);
 
 		m_blight = true;
 		m_diffuse = 0.7f;
@@ -146,6 +147,7 @@ public:
 		case 2: return m_ambient; break;
 		case 3: return m_bshadow; break;
 		case 4: return m_shadow; break;
+		case 5: return vecToString(m_pos); break;
 		}
 		return v;
 	}
@@ -159,6 +161,7 @@ public:
 		case 2: m_ambient = v.toFloat(); break;
 		case 3: m_bshadow = v.toBool(); break;
 		case 4: m_shadow = v.toFloat(); break;
+		case 5: m_pos = stringToVec(v.toString()); break;
 		}
 	}
 
@@ -168,6 +171,7 @@ public:
 	float	m_ambient;
 	bool	m_bshadow;
 	float	m_shadow;
+	vec3f	m_pos;
 };
 
 //-----------------------------------------------------------------------------
@@ -507,8 +511,9 @@ public:
 		QMetaObject::connectSlotsByName(pwnd);
 	}
 
-	void Set(VIEWSETTINGS& view)
+	void Set(CDocument& doc)
 	{
+		VIEWSETTINGS& view = doc.GetViewSettings();
 		m_render->m_bproj = view.m_nproj == RENDER_PERSP;
 		m_render->m_bline = view.m_blinesmooth;
 		m_render->m_thick = view.m_flinethick;
@@ -523,6 +528,7 @@ public:
 		m_light->m_ambient = view.m_ambient;
 		m_light->m_bshadow = view.m_bShadows;
 		m_light->m_shadow = view.m_shadow_intensity;
+		m_light->m_pos = doc.GetLightPosition();
 
 		m_select->m_bconnect = view.m_bconn;
 		m_select->m_ntagInfo = view.m_ntagInfo;
@@ -530,8 +536,9 @@ public:
 		m_select->m_binterior = view.m_bext;
 	}
 
-	void Get(VIEWSETTINGS& view)
+	void Get(CDocument& doc)
 	{
+		VIEWSETTINGS& view = doc.GetViewSettings();
 		view.m_nproj       = (m_render->m_bproj ? RENDER_PERSP : RENDER_ORTHO);
 		view.m_blinesmooth = m_render->m_bline;
 		view.m_flinethick  = m_render->m_thick;
@@ -546,6 +553,7 @@ public:
 		view.m_ambient   = m_light->m_ambient;
 		view.m_bShadows  = m_light->m_bshadow;
 		view.m_shadow_intensity = m_light->m_shadow;
+		doc.SetLightPosition(m_light->m_pos);
 
 		view.m_bconn    = m_select->m_bconnect;
 		view.m_ntagInfo = m_select->m_ntagInfo;
@@ -588,7 +596,7 @@ CDlgViewSettings::CDlgViewSettings(CMainWindow* pwnd) : ui(new Ui::CDlgViewSetti
 
 	ui->setupUi(this);
 
-	ui->Set(view);
+	ui->Set(*pdoc);
 
 	// fill the palette list
 	UpdatePalettes();
@@ -622,7 +630,7 @@ void CDlgViewSettings::apply()
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
 	CGLCamera& cam = pdoc->GetView()->GetCamera();
 
-	ui->Get(view);
+	ui->Get(*pdoc);
 
 	cam.SetCameraSpeed(ui->m_cam->m_speed);
 	cam.SetCameraBias(ui->m_cam->m_bias);
@@ -743,5 +751,5 @@ void CDlgViewSettings::OnReset()
 
 	view.Defaults();
 
-	ui->Set(view);
+	ui->Set(doc);
 }

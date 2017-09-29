@@ -14,6 +14,7 @@ public:
 		String,
 		Enum,
 		Color,
+		Vec3,
 		DataScalar,
 		DataVec3,
 		DataMat3

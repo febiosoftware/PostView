@@ -21,7 +21,7 @@ using namespace std;
 class MetaData
 {
 public:
-	string	author;	// author of software
+	string	author;		// author of model file
 	string	software;	// software that generated the model file
 };
 
@@ -33,7 +33,8 @@ public:
 	FEModelDependant() {}
 	virtual ~FEModelDependant() {}
 
-	// this function is called whenever the model changes
+	// This function is called whenever the model changes
+	// When the model is deleted it will call this function with 0
 	virtual void Update(FEModel* pfem) = 0;
 };
 

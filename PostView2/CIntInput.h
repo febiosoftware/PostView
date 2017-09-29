@@ -1,6 +1,7 @@
 #pragma once
 #include <QLineEdit>
 #include <QValidator>
+#include <PostViewLib/math3d.h>
 
 //-----------------------------------------------------------------------------
 class CIntInput : public QLineEdit
@@ -29,3 +30,18 @@ public:
 	void setValue(double v) { setText(QString("%1").arg(v)); }
 	double value() const { return text().toDouble(); }
 };
+
+//-----------------------------------------------------------------------------
+class CVec3Input : public QLineEdit
+{
+public:
+	CVec3Input(QWidget* parent = 0);
+
+	void setValue(const vec3f& v);
+
+	vec3f value() const;
+};
+
+QString vecToString(const vec3f& f);
+
+vec3f stringToVec(const QString& s);
