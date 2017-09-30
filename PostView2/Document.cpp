@@ -1368,6 +1368,7 @@ void CDocument::SelectElemsInRange(float fmin, float fmax, bool bsel)
 			else el.Unselect();
 		}
 	}
+	m_pGLModel->UpdateSelectionLists();
 }
 
 //-----------------------------------------------------------------------------
@@ -1386,6 +1387,7 @@ void CDocument::SelectNodesInRange(float fmin, float fmax, bool bsel)
 			else node.Unselect();
 		}
 	}
+	m_pGLModel->UpdateSelectionLists();
 }
 
 //-----------------------------------------------------------------------------
@@ -1404,6 +1406,7 @@ void CDocument::SelectEdgesInRange(float fmin, float fmax, bool bsel)
 			else edge.Unselect();
 		}
 	}
+	m_pGLModel->UpdateSelectionLists();
 }
 
 //-----------------------------------------------------------------------------
@@ -1422,6 +1425,7 @@ void CDocument::SelectFacesInRange(float fmin, float fmax, bool bsel)
 			else f.Unselect();
 		}
 	}
+	m_pGLModel->UpdateSelectionLists();
 }
 
 //-----------------------------------------------------------------------------

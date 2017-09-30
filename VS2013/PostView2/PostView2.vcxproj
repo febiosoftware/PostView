@@ -254,6 +254,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </ClInclude>
+    <ClInclude Include="..\..\PostView2\DlgExportLSDYNA.h" />
     <ClInclude Include="..\..\PostView2\DlgExportXPLT.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
@@ -503,6 +504,7 @@
     <ClCompile Include="..\..\PostView2\DataPanel.cpp" />
     <ClCompile Include="..\..\PostView2\DistanceMapTool.cpp" />
     <ClCompile Include="..\..\PostView2\DlgExportAscii.cpp" />
+    <ClCompile Include="..\..\PostView2\DlgExportLSDYNA.cpp" />
     <ClCompile Include="..\..\PostView2\DlgExportXPLT.cpp" />
     <ClCompile Include="..\..\PostView2\DlgFind.cpp" />
     <ClCompile Include="..\..\PostView2\DlgSelectRange.cpp" />

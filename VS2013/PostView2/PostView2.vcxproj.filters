@@ -207,6 +207,9 @@
     <ClInclude Include="..\..\PostView2\MPEGAnimation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\PostView2\DlgExportLSDYNA.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\PostView2\3PointAngleTool.cpp">
@@ -507,6 +510,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\PostView2\CIntInput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PostView2\DlgExportLSDYNA.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

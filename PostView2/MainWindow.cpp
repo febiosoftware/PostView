@@ -33,6 +33,7 @@
 #include "GLVectorPlot.h"
 #include "DlgViewSettings.h"
 #include "DlgExportXPLT.h"
+#include "DlgExportLSDYNA.h"
 #include "DlgWidgetProps.h"
 #include "DlgFind.h"
 #include "DlgImportXPLT.h"
@@ -557,13 +558,13 @@ bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 		break;
 	case 4:
 		{
-//			CDlgExportLSDYNA dlg;
-//			if (dlg.DoModal() == FLX_OK)
+			CDlgExportLSDYNA dlg(this);
+			if (dlg.exec())
 			{
 				FELSDYNAExport w;
-//				w.m_bsel = dlg.m_bsel;
-//				w.m_bsurf = dlg.m_bsurf;
-//				w.m_bnode = dlg.m_bnode;
+				w.m_bsel = dlg.m_bsel;
+				w.m_bsurf = dlg.m_bsurf;
+				w.m_bnode = dlg.m_bnode;
 				bret = w.Save(fem, m_doc->currentTime(), szfilename);
 			}
 		}
