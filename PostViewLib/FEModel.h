@@ -110,7 +110,7 @@ public:
 	void DeleteDataField(FEDataField* pd);
 
 	//! Copy a data field
-	void CopyDataField(FEDataField* pd, const char* sznewname = 0);
+	FEDataField* CopyDataField(FEDataField* pd, const char* sznewname = 0);
 
 public:
 	//! get the bounding box

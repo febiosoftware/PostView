@@ -529,7 +529,7 @@ void DataArithmetic(FEModel& fem, int nfield, int nop, int noperand)
 
 		Data_Format fmt = d.GetFormat();
 		if (d.GetFormat() != s.GetFormat()) return;
-		if ((d.GetType() != s.GetType()) && (s.GetType() != DATA_SCALAR)) return;
+		if ((d.GetType() != s.GetType()) && (s.GetType() != DATA_FLOAT)) return;
 
 		if (IS_NODE_FIELD(nfield) && IS_NODE_FIELD(noperand))
 		{
@@ -661,6 +661,106 @@ void DataArithmetic(FEModel& fem, int nfield, int nop, int noperand)
 		{
 
 			return;
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+void DataGradient(FEModel& fem, int vecField, int sclField)
+{
+	int nvec = FIELD_CODE(vecField);
+	int nscl = FIELD_CODE(sclField);
+
+	// loop over all the states
+	for (int n=0; n<fem.GetStates(); ++n)
+	{
+		FEState& state = *fem.GetState(n);
+		FEMeshData& v = state.m_Data[nvec];
+		FEMeshData& s = state.m_Data[nscl];
+
+		// zero the vector field
+		if (IS_NODE_FIELD(vecField) && (v.GetType() == DATA_VEC3F))
+		{
+			FENodeData<vec3f>* pv = dynamic_cast<FENodeData<vec3f>*>(&v);
+			int N = pv->size();
+			for (int i = 0; i<N; ++i) (*pv)[i] = vec3f(0,0,0);
+		}
+		else return;
+
+		// get the mesh
+		FEMeshBase* mesh = state.GetFEMesh();
+
+		// evaluate the field over all the nodes
+		const int NN = mesh->Nodes();
+		vector<double> d(NN, 0.f);
+
+		if (s.GetType() == DATA_FLOAT)
+		{
+			if (IS_NODE_FIELD(sclField))
+			{
+				FENodeData<float>* ps = dynamic_cast<FENodeData<float>*>(&s);
+				for (int i=0; i<NN; ++i) d[i] = (*ps)[i];
+			}
+			else if (IS_ELEM_FIELD(sclField))
+			{
+				if (s.GetFormat() == DATA_NODE)
+				{
+					vector<int> tag(NN, 0);
+					FEElementData<float, DATA_NODE>* ps = dynamic_cast<FEElementData<float, DATA_NODE>*>(&s);
+
+					float ed[FEGenericElement::MAX_NODES] = {0.f};
+					for (int i=0; i<mesh->Elements(); ++i)
+					{
+						FEElement& el = mesh->Element(i);
+						if (ps->active(i))
+						{
+							ps->eval(i, ed);
+							for (int j=0; j<el.Nodes(); ++j)
+							{
+								d[el.m_node[j]] += ed[j];
+								tag[el.m_node[j]]++;
+							}
+						}
+					}
+					for (int i=0; i<NN; ++i)
+						if (tag[i] > 0) d[i] /= (double) tag[i];
+				}
+			}
+		}
+
+		// now, calculate the gradient for each element
+		vector<vec3f> G(NN, vec3f(0.f, 0.f, 0.f));
+		vec3f eg[FEGenericElement::MAX_NODES];
+		float ed[FEGenericElement::MAX_NODES];
+		vector<int> tag(NN, 0);
+		for (int i=0; i<mesh->Elements(); ++i)
+		{
+			FEElement& el = mesh->Element(i);
+
+			for (int j = 0; j<el.Nodes(); ++j) ed[j] = d[el.m_node[j]];
+
+			for (int j=0; j<el.Nodes(); ++j)
+			{
+				// get the iso-coords at the nodes
+				double q[3] = {0,0,0};
+				el.iso_coord(j, q);
+
+				// evaluate the gradient at the node
+				shape_grad(fem, i, q, n, eg);
+
+				vec3f grad(0.f, 0.f, 0.f);
+				for (int k=0; k<el.Nodes(); ++k) grad += eg[k] * ed[k];
+				
+				G[el.m_node[j]] += grad;
+				tag[el.m_node[j]]++;
+			}
+		}
+
+		FENodeData<vec3f>* pv = dynamic_cast<FENodeData<vec3f>*>(&v);
+		for (int i = 0; i<NN; ++i)
+		{
+			if (tag[i] > 0) G[i] /= (float) tag[i];
+			(*pv)[i] = G[i];
 		}
 	}
 }

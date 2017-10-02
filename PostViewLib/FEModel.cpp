@@ -198,7 +198,7 @@ template <typename Type, Data_Format Fmt> void copy_face_data(FEMeshData& d, FEM
 
 //-----------------------------------------------------------------------------
 // Copy a data field
-void FEModel::CopyDataField(FEDataField* pd, const char* sznewname)
+FEDataField* FEModel::CopyDataField(FEDataField* pd, const char* sznewname)
 {
 	// Clone the data field
 	FEDataField* pdcopy = pd->Clone();
@@ -289,6 +289,8 @@ void FEModel::CopyDataField(FEDataField* pd, const char* sznewname)
 			}
 		}
 	}
+
+	return pdcopy;
 }
 
 //-----------------------------------------------------------------------------

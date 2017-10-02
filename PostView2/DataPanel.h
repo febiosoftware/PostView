@@ -66,6 +66,10 @@ public:
 
 	void accept();
 
+	void setDefaultName(const QString& name);
+
+	QString getNewName();
+
 public:
 	int	m_nflt;
 

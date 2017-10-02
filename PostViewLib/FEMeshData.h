@@ -123,3 +123,6 @@ template <> class FEDataTypeTraits<DATA_MAT3F > { public: typedef mat3f dataType
 template <> class FEDataTypeTraits<DATA_MAT3FS> { public: typedef mat3fs dataType; };
 template <> class FEDataTypeTraits<DATA_MAT3FD> { public: typedef mat3fd dataType; };
 template <> class FEDataTypeTraits<DATA_TENS4FS>{ public: typedef tens4fs dataType; };
+
+
+void shape_grad(FEModel& fem, int elem, double q[3], int nstate, vec3f* G);

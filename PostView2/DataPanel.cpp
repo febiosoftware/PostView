@@ -286,6 +286,8 @@ void CDlgAddDataFile::onBrowse()
 class Ui::CDlgFilter
 {
 public:
+	QLineEdit*	name;
+
 	QComboBox* pselect;
 
 	// scale filter
@@ -302,10 +304,15 @@ public:
 public:
 	void setupUi(QDialog* parent)
 	{
+		QHBoxLayout* lname = new QHBoxLayout;
+		lname->addWidget(new QLabel("Name:"));
+		lname->addWidget(name = new QLineEdit);
+
 		pselect = new QComboBox;
 		pselect->addItem("Scale");
 		pselect->addItem("Smooth");
 		pselect->addItem("Arithmetic");
+		pselect->addItem("Gradient");
 
 		QLabel* label;
 		label = new QLabel("Filter:");
@@ -316,6 +323,7 @@ public:
 		ph->addWidget(pselect);
 
 		QVBoxLayout* pvl = new QVBoxLayout;
+		pvl->addLayout(lname);
 		pvl->addLayout(ph);
 
 		QWidget* scalePage = new QWidget;
@@ -335,6 +343,8 @@ public:
 		pform->addRow("Operand:"  , poperand   = new QComboBox);
 		mathPage->setLayout(pform);
 
+		QWidget* gradPage = new QLabel("");
+
 		poperation->addItem("add");
 		poperation->addItem("subtract");
 		poperation->addItem("multiply");
@@ -345,6 +355,7 @@ public:
 		stack->addWidget(scalePage );
 		stack->addWidget(smoothPage);
 		stack->addWidget(mathPage  );
+		stack->addWidget(gradPage  );
 		
 		pvl->addWidget(stack);
 
@@ -374,6 +385,16 @@ void CDlgFilter::setDataOperands(const std::vector<QString>& opNames)
 	{
 		ui->poperand->addItem(opNames[i]);
 	}
+}
+
+void CDlgFilter::setDefaultName(const QString& name)
+{
+	ui->name->setText(name);
+}
+
+QString CDlgFilter::getNewName()
+{
+	return ui->name->text();
 }
 
 void CDlgFilter::accept()
@@ -568,31 +589,51 @@ void CDataPanel::on_FilterButton_clicked()
 			CDlgFilter dlg(this);
 			dlg.setDataOperands(dataNames);
 
+			QString newName = QString("%0_flt").arg(pdf->GetName());
+			dlg.setDefaultName(newName);
+
 			if (dlg.exec())
 			{
+				// get the name for the new field
+				string sname = dlg.getNewName().toStdString();
+
 				int nfield = pdf->GetFieldID();
 				switch(dlg.m_nflt)
 				{
 				case 0:
 					{
-						DataScale(fem, nfield, dlg.m_scale);
+						FEDataField* newData = fem.CopyDataField(pdf, sname.c_str());
+						DataScale(fem, newData->GetFieldID(), dlg.m_scale);
 					}
 					break;
 				case 1:
 					{
-						DataSmooth(fem, nfield, dlg.m_theta, dlg.m_iters);
+						FEDataField* newData = fem.CopyDataField(pdf, sname.c_str());
+						DataSmooth(fem, newData->GetFieldID(), dlg.m_theta, dlg.m_iters);
 					}
 					break;
 				case 2:
 					{
+						FEDataField* newData = fem.CopyDataField(pdf, sname.c_str());
 						FEDataFieldPtr p = fem.GetDataManager()->DataField(dataIds[dlg.m_ndata]);
-						DataArithmetic(fem, nfield, dlg.m_nop, (*p)->GetFieldID());
+						DataArithmetic(fem, newData->GetFieldID(), dlg.m_nop, (*p)->GetFieldID());
+					}
+					break;
+				case 3:
+					{
+						// create new vector field for storing the gradient
+						FEDataField* newData = new FEDataField_T<FENodeData<vec3f  > >(sname.c_str(), EXPORT_DATA);
+						fem.AddDataField(newData);
+
+						// now, calculate gradient from scalar field
+						DataGradient(fem, newData->GetFieldID(), nfield);
 					}
 					break;
 				default:
 					QMessageBox::critical(this, "Data Filter", "Don't know this filter.");
 				}
 
+				Update(true);
 				doc.UpdateFEModel(true);
 				m_wnd->RedrawGL();
 			}
