@@ -77,6 +77,11 @@ public:
 	QAction* actionViewVPNext;   
 	QAction* actionViewShowTags;
 
+	QAction* selectNodes;
+	QAction* selectEdges;
+	QAction* selectFaces;
+	QAction* selectElems;
+
 	QAction*	actionColorMap;
 	QAction*	actionPlay;
 
@@ -248,10 +253,10 @@ public:
 		actionQuit->setWhatsThis("Quit PostView");
 
 		// --- Edit menu ---
-		QAction* selectNodes = addAction("Select Nodes"   , "selectNodes", ":/icons/node.png"   ); selectNodes->setCheckable(true);
-		QAction* selectEdges = addAction("Select Edges"   , "selectEdges", ":/icons/edge.png"   ); selectEdges->setCheckable(true);
-		QAction* selectFaces = addAction("Select Faces"   , "selectFaces", ":/icons/face.png"   ); selectFaces->setCheckable(true);
-		QAction* selectElems = addAction("Select Elements", "selectElems", ":/icons/element.png"); selectElems->setCheckable(true);
+		selectNodes = addAction("Select Nodes"   , "selectNodes", ":/icons/node.png"   ); selectNodes->setCheckable(true);
+		selectEdges = addAction("Select Edges"   , "selectEdges", ":/icons/edge.png"   ); selectEdges->setCheckable(true);
+		selectFaces = addAction("Select Faces"   , "selectFaces", ":/icons/face.png"   ); selectFaces->setCheckable(true);
+		selectElems = addAction("Select Elements", "selectElems", ":/icons/element.png"); selectElems->setCheckable(true);
 
 		selectNodes->setWhatsThis("Turn on node selection mode");
 		selectEdges->setWhatsThis("Turn on edge selection mode");

@@ -1930,53 +1930,96 @@ void CGLView::TagBackfacingElements(FEMeshBase& mesh)
 			// Note that NF = 0 for shells so shells are never considered back facing
 			int NF = el.Faces();
 
-			// check each face
-			// an element is backfacing if all its visible faces are back facing
 			bool backFacing = true;
-			el.m_ntag = 1;
-			for (int j=0; j<NF; ++j)
+			if (NF == 0)
 			{
-				if ((el.m_pElem[j] == 0) || (el.m_pElem[j]->IsVisible() == false))
+				switch (el.Type())
 				{
-					FEFace f = el.GetFace(j);
-					switch (f.m_ntype)
+				case FE_TRI3:
+				case FE_TRI6:
+				{
+					r[0] = mesh.Node(el.m_node[0]).m_rt;
+					r[1] = mesh.Node(el.m_node[1]).m_rt;
+					r[2] = mesh.Node(el.m_node[2]).m_rt;
+
+					p1[0] = transform.Apply(r[0]);
+					p1[1] = transform.Apply(r[1]);
+					p1[2] = transform.Apply(r[2]);
+
+					if (IsBackfacing(p1) == false) backFacing = false;
+				}
+				break;
+				case FE_QUAD4:
+				case FE_QUAD8:
+				case FE_QUAD9:
+				{
+					r[0] = mesh.Node(el.m_node[0]).m_rt;
+					r[1] = mesh.Node(el.m_node[1]).m_rt;
+					r[2] = mesh.Node(el.m_node[2]).m_rt;
+					r[3] = mesh.Node(el.m_node[3]).m_rt;
+
+					p1[0] = transform.Apply(r[0]);
+					p1[1] = transform.Apply(r[1]);
+					p1[2] = transform.Apply(r[2]);
+
+					p2[0] = p1[2];
+					p2[1] = transform.Apply(r[3]);
+					p2[2] = p1[0];
+
+					if (IsBackfacing(p1) == false) backFacing = false;
+				}
+				break;
+				}
+			}
+			else
+			{
+				// check each face
+				// an element is backfacing if all its visible faces are back facing
+				el.m_ntag = 1;
+				for (int j=0; j<NF; ++j)
+				{
+					if ((el.m_pElem[j] == 0) || (el.m_pElem[j]->IsVisible() == false))
 					{
-					case FACE_TRI3:
-					case FACE_TRI6:
-					case FACE_TRI7:
-					case FACE_TRI10:
-					{
-						r[0] = mesh.Node(f.node[0]).m_rt;
-						r[1] = mesh.Node(f.node[1]).m_rt;
-						r[2] = mesh.Node(f.node[2]).m_rt;
+						FEFace f = el.GetFace(j);
+						switch (f.m_ntype)
+						{
+						case FACE_TRI3:
+						case FACE_TRI6:
+						case FACE_TRI7:
+						case FACE_TRI10:
+						{
+							r[0] = mesh.Node(f.node[0]).m_rt;
+							r[1] = mesh.Node(f.node[1]).m_rt;
+							r[2] = mesh.Node(f.node[2]).m_rt;
 
-						p1[0] = transform.Apply(r[0]);
-						p1[1] = transform.Apply(r[1]);
-						p1[2] = transform.Apply(r[2]);
+							p1[0] = transform.Apply(r[0]);
+							p1[1] = transform.Apply(r[1]);
+							p1[2] = transform.Apply(r[2]);
 
-						if (IsBackfacing(p1) == false) backFacing = false;
-					}
-					break;
-					case FACE_QUAD4:
-					case FACE_QUAD8:
-					case FACE_QUAD9:
-					{
-						r[0] = mesh.Node(f.node[0]).m_rt;
-						r[1] = mesh.Node(f.node[1]).m_rt;
-						r[2] = mesh.Node(f.node[2]).m_rt;
-						r[3] = mesh.Node(f.node[3]).m_rt;
+							if (IsBackfacing(p1) == false) backFacing = false;
+						}
+						break;
+						case FACE_QUAD4:
+						case FACE_QUAD8:
+						case FACE_QUAD9:
+						{
+							r[0] = mesh.Node(f.node[0]).m_rt;
+							r[1] = mesh.Node(f.node[1]).m_rt;
+							r[2] = mesh.Node(f.node[2]).m_rt;
+							r[3] = mesh.Node(f.node[3]).m_rt;
 
-						p1[0] = transform.Apply(r[0]);
-						p1[1] = transform.Apply(r[1]);
-						p1[2] = transform.Apply(r[2]);
+							p1[0] = transform.Apply(r[0]);
+							p1[1] = transform.Apply(r[1]);
+							p1[2] = transform.Apply(r[2]);
 
-						p2[0] = p1[2];
-						p2[1] = transform.Apply(r[3]);
-						p2[2] = p1[0];
+							p2[0] = p1[2];
+							p2[1] = transform.Apply(r[3]);
+							p2[2] = p1[0];
 
-						if (IsBackfacing(p1) == false) backFacing = false;
-					}
-					break;
+							if (IsBackfacing(p1) == false) backFacing = false;
+						}
+						break;
+						}
 					}
 				}
 

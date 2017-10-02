@@ -1544,6 +1544,16 @@ void CMainWindow::UpdateMainToolbar()
 	ui->actionViewSmooth->setChecked(true);
 	UpdatePlayToolbar(true);
 
+	CGLModel* m = m_doc->GetGLModel();
+	if (m)
+	{
+		int mode = m->GetSelectionMode();
+		if (mode == SELECT_NODES) ui->selectNodes->setChecked(true);
+		if (mode == SELECT_EDGES) ui->selectEdges->setChecked(true);
+		if (mode == SELECT_FACES) ui->selectFaces->setChecked(true);
+		if (mode == SELECT_ELEMS) ui->selectElems->setChecked(true);
+	}
+
 	const VIEWSETTINGS& settings = GetDocument()->GetViewSettings();
 	ui->actionViewProjection->setChecked(settings.m_nproj == 0);
 	ui->actionViewOutline->setChecked(settings.m_boutline);
