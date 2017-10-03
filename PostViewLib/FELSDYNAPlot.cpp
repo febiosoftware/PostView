@@ -339,7 +339,7 @@ bool FELSDYNAPlotImport::ReadMesh(FEModel &fem)
 	for (i=0; i<mesh.Faces(); ++i)
 	{
 		FEFace& f = mesh.Face(i);
-		assert(f.m_elem >= 0);
+        assert(f.m_elem[0] >= 0);
 		FEElement& el = mesh.Element(f.m_elem[0]);
 	}
 

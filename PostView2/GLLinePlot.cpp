@@ -70,7 +70,7 @@ void CGLLinePlot::Render(CGLContext& rc)
 
 	GLfloat zero[4] = { 0.f };
 	GLfloat one[4] = { 1.f, 1.f, 1.f, 1.f };
-	GLfloat col[4] = { m_col.r, m_col.g, m_col.b, 1.f};
+	GLfloat col[4] = { (GLfloat)m_col.r, (GLfloat)m_col.g, (GLfloat)m_col.b, 1.f};
 	GLfloat amb[4] = { 0.1f, 0.1f, 0.1f, 1.f };
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, col);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, amb);

@@ -10,6 +10,8 @@
 		D51114421ECC973100B8849F /* AVIAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D511143C1ECC973100B8849F /* AVIAnimation.cpp */; };
 		D51114431ECC973100B8849F /* ImgAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D511143E1ECC973100B8849F /* ImgAnimation.cpp */; };
 		D51114441ECC973100B8849F /* MPEGAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D51114401ECC973100B8849F /* MPEGAnimation.cpp */; };
+		D518E6851F8436970028AA8F /* CIntInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D518E6831F8436970028AA8F /* CIntInput.cpp */; };
+		D518E6861F8436970028AA8F /* DlgExportLSDYNA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D518E6841F8436970028AA8F /* DlgExportLSDYNA.cpp */; };
 		D5215F731F0314BB00838680 /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5215F721F0314BB00838680 /* QtCore.framework */; };
 		D5215F751F0314CF00838680 /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5215F741F0314CF00838680 /* QtGui.framework */; };
 		D5215F771F0314E400838680 /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5215F761F0314E400838680 /* QtWidgets.framework */; };
@@ -133,6 +135,9 @@
 		D511143F1ECC973100B8849F /* ImgAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImgAnimation.h; sourceTree = "<group>"; };
 		D51114401ECC973100B8849F /* MPEGAnimation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MPEGAnimation.cpp; sourceTree = "<group>"; };
 		D51114411ECC973100B8849F /* MPEGAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPEGAnimation.h; sourceTree = "<group>"; };
+		D518E6821F8436970028AA8F /* DlgExportLSDYNA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgExportLSDYNA.h; sourceTree = "<group>"; };
+		D518E6831F8436970028AA8F /* CIntInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CIntInput.cpp; sourceTree = "<group>"; };
+		D518E6841F8436970028AA8F /* DlgExportLSDYNA.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgExportLSDYNA.cpp; sourceTree = "<group>"; };
 		D5215F721F0314BB00838680 /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt/5.9.0_1/lib/QtCore.framework; sourceTree = "<group>"; };
 		D5215F741F0314CF00838680 /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt/5.9.0_1/lib/QtGui.framework; sourceTree = "<group>"; };
 		D5215F761F0314E400838680 /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt/5.9.0_1/lib/QtWidgets.framework; sourceTree = "<group>"; };
@@ -367,6 +372,7 @@
 				D5FF79B21D72756B003D2CBD /* CColorButton.cpp */,
 				D5FF79B31D72756B003D2CBD /* CColorButton.h */,
 				D5FF79B41D72756B003D2CBD /* CDlgImportXPLT.cpp */,
+				D518E6831F8436970028AA8F /* CIntInput.cpp */,
 				D5FF79B51D72756B003D2CBD /* CIntInput.h */,
 				D5FF79B61D72756B003D2CBD /* CommandPanel.cpp */,
 				D5FF79B71D72756B003D2CBD /* CommandPanel.h */,
@@ -379,6 +385,8 @@
 				D5FF79BE1D72756B003D2CBD /* DistanceMapTool.h */,
 				D53292B91E453447002798B3 /* DlgExportAscii.cpp */,
 				D53292BA1E453447002798B3 /* DlgExportAscii.h */,
+				D518E6841F8436970028AA8F /* DlgExportLSDYNA.cpp */,
+				D518E6821F8436970028AA8F /* DlgExportLSDYNA.h */,
 				D5FF79BF1D72756B003D2CBD /* DlgExportXPLT.cpp */,
 				D5FF79C01D72756B003D2CBD /* DlgExportXPLT.h */,
 				D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */,
@@ -658,6 +666,7 @@
 				D5FF7A881D72756B003D2CBD /* PostView2.cpp in Sources */,
 				D5FF7A851D72756B003D2CBD /* PlotWidget.cpp in Sources */,
 				D5FF7A861D72756B003D2CBD /* PointCongruencyTool.cpp in Sources */,
+				D518E6861F8436970028AA8F /* DlgExportLSDYNA.cpp in Sources */,
 				D5FF7A4E1D72756B003D2CBD /* DlgViewSettings.cpp in Sources */,
 				D5FF7A581D72756B003D2CBD /* GLModel.cpp in Sources */,
 				D5FF7A501D72756B003D2CBD /* Document.cpp in Sources */,
@@ -682,6 +691,7 @@
 				D53598C01E901C0500584A4F /* DragBox.cpp in Sources */,
 				D5FF7A651D72756B003D2CBD /* MaterialPanel.cpp in Sources */,
 				D5FF7A4A1D72756B003D2CBD /* DlgExportXPLT.cpp in Sources */,
+				D518E6851F8436970028AA8F /* CIntInput.cpp in Sources */,
 				D5FF7A631D72756B003D2CBD /* IntegrateWindow.cpp in Sources */,
 				D5FF7A931D72756B003D2CBD /* stdafx.cpp in Sources */,
 				D5FF7A591D72756B003D2CBD /* GLPlane.cpp in Sources */,
