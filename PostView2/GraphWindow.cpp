@@ -20,6 +20,8 @@
 #include "GLDataMap.h"
 #include "GLModel.h"
 #include "version.h"
+#include <QValidator>
+#include <QComboBox>
 #include <PostViewLib/LinearRegression.h>
 
 OptionsUi::OptionsUi(CGraphWidget* graph, QWidget* parent) : CPlotTool(parent)
@@ -410,12 +412,12 @@ void CGraphWindow::Update(bool breset, bool bfit)
 	// get the title
 	if (ntype == LINE_PLOT)
 	{
-		ui->plot->setTitle(ui->selectY->currentText());
+		ui->plot->setTitle(ui->selectY->text());
 	}
 	else
 	{
-		QString xtext = ui->selectX->currentText();
-		QString ytext = ui->selectY->currentText();
+		QString xtext = ui->selectX->text();
+		QString ytext = ui->selectY->text();
 
 		ui->plot->setTitle(QString("%1 --- %2").arg(xtext).arg(ytext));
 	}

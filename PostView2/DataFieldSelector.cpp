@@ -1,38 +1,19 @@
 #include "DataFieldSelector.h"
-#include <QTreeWidget>
-#include <QHeaderView>
 #include <PostViewLib/FEModel.h>
 #include <PostViewLib/constants.h>
-#include <QtCore/QTimer>
+#include <QPainter>
 
-CDataFieldSelector::CDataFieldSelector(QWidget* parent) : QComboBox(parent)
+CDataFieldSelector::CDataFieldSelector(QWidget* parent) : QPushButton(parent)
 {
-	m_tree = new QTreeWidget;
-	m_tree->header()->hide();
-	m_tree->setMouseTracking(true);
-	setModel(m_tree->model());
-	setView(m_tree);
-//	setMinimumWidth(200);
-//	view()->setMinimumWidth(300);
-	view()->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
-	setCurrentIndex(-1);
-
-/*    QString styleSheet = "QComboBox \
-        {  \
-            background-color:           white; \
-        }";
-
-    setStyleSheet(styleSheet); 
-*/
+	m_menu = new QMenu(this);
+	m_currentValue = -1;
 	m_fem = 0;
 
-	m_sel = 0;
-	m_ntimer = 0;
+	setStyleSheet("QPushButton { text-align : left; }");
 
-	setMaxVisibleItems(50);
+	setMenu(m_menu);
 
-//	QObject::connect(m_tree, SIGNAL(itemEntered(QTreeWidgetItem*,int)), this, SLOT(onItemEntered(QTreeWidgetItem*,int)));
-	QObject::connect(m_tree, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(onItemClicked(QTreeWidgetItem*,int)));
+	QObject::connect(m_menu, SIGNAL(triggered(QAction*)), this, SLOT(onAction(QAction*)));
 }
 
 CDataFieldSelector::~CDataFieldSelector()
@@ -40,58 +21,30 @@ CDataFieldSelector::~CDataFieldSelector()
 	if (m_fem) m_fem->RemoveDependant(this);
 }
 
-void CDataFieldSelector::onTimer()
-{
-	m_ntimer--;
-	if (m_ntimer == 0)
-	{
-		if (m_sel && (m_sel->isExpanded() == false)) m_sel->setExpanded(true);
-		this->view()->updateGeometry();
-		m_sel = 0;
-	}
-}
-
-void CDataFieldSelector::onItemEntered(QTreeWidgetItem* item, int)
-{
-	m_ntimer++;
-	m_sel = item;
-	QTimer::singleShot(250, this, SLOT(onTimer()));
-}
-
-void CDataFieldSelector::onItemClicked(QTreeWidgetItem* item, int)
-{
-	if (item)
-	{
-		if (item->isExpanded() == false) item->setExpanded(true);
-		else item->setExpanded(false);
-		this->view()->updateGeometry();
-	}
-}
-
 void CDataFieldSelector::BuildMenu(FEModel* fem, Data_Tensor_Type nclass, bool btvec)
 {
+	// make sure the field selector is a dependant of the model 
 	if (m_fem != fem)
 	{
 		m_fem = fem;
 		if (fem) fem->AddDependant(this);
 	}
 
+	// store the parameters
 	m_class = nclass;
 	m_bvec = btvec;
 
 	// get the current field
+	// we'll use it to restore the current selected option
 	int noldField = currentValue();
-
-	// get the tree view and clear it
-	QTreeWidget* pw = qobject_cast<QTreeWidget*>(view());
-	pw->clear();
+	m_currentValue = -1;
 
 	// get the datamanager
 	if (fem == 0) return;
-
 	FEDataManager& dm = *fem->GetDataManager();
 
-	QTreeWidgetItem* pi;
+	// clear the menu
+	m_menu->clear();
 
 	// loop over all data fields
 	int N = dm.DataFields();
@@ -106,24 +59,22 @@ void CDataFieldSelector::BuildMenu(FEModel* fem, Data_Tensor_Type nclass, bool b
 			if (dataComponents == 1)
 			{
 				int nfield = BUILD_FIELD(dataClass, i, 0);
-				pi = new QTreeWidgetItem(pw); pi->setText(0, d.GetName());
-				pi->setData(0, Qt::UserRole, QVariant(nfield));
+
+				QAction* pa = m_menu->addAction(d.GetName());
+				pa->setData(QVariant(nfield));
 			}
 			else
 			{
-				pi = new QTreeWidgetItem(pw); pi->setText(0, d.GetName());
-				pi->setFlags(pi->flags() & ~Qt::ItemIsSelectable); 
-				pi->setExpanded(false);
-
-				QFont font = pi->font(0);
-				font.setBold(true);
-				pi->setFont(0, font);
+				QMenu* sub = new QMenu(d.GetName(), m_menu);
+				m_menu->addMenu(sub);
 
 				for (int n=0; n<dataComponents; ++n)
 				{
 					int nfield = BUILD_FIELD(dataClass, i, n);
 					std::string s = d.componentName(n, nclass);
-					addComponent(pi, s.c_str(), nfield);
+
+					QAction* pa = sub->addAction(QString::fromStdString(s));
+					pa->setData(QVariant(nfield));
 				}
 			}
 		}
@@ -133,60 +84,72 @@ void CDataFieldSelector::BuildMenu(FEModel* fem, Data_Tensor_Type nclass, bool b
 	setCurrentValue(noldField);
 }
 
-void CDataFieldSelector::addComponent(QTreeWidgetItem* parent, const char* szname, int ndata)
-{
-	QTreeWidgetItem* pi = new QTreeWidgetItem(parent);
-	pi->setText(0, szname);
-	pi->setData(0, Qt::UserRole, QVariant(ndata));
-}
-
 int CDataFieldSelector::currentValue() const
 {
-	int index = currentIndex();
-	if (index >= 0) return currentData(Qt::UserRole).toInt();
-	return -1;
+	return m_currentValue;
 }
 
-void CDataFieldSelector::setCurrentValue(int nfield)
+void CDataFieldSelector::setCurrentValue(int newField)
 {
-	if (nfield == -1) { setCurrentIndex(-1); return; }
-
-	int ncode = FIELD_CODE(nfield);
-	int ncomp = FIELD_COMP(nfield);
-
-	QTreeWidgetItemIterator it(m_tree);
-	while (*it)
+	if (m_fem)
 	{
-		int nitemValue = (*it)->data(0, Qt::UserRole).toInt();
-		if (nitemValue == nfield)
+		string fieldName;
+		FEDataManager& dm = *m_fem->GetDataManager();
+		int N = dm.DataFields();
+		FEDataFieldPtr pd = dm.FirstDataField();
+		for (int i = 0; i<N; ++i, ++pd)
 		{
-			if ((*it)->parent() == 0)
+			FEDataField& d = *(*pd);
+			int dataClass = d.DataClass();
+			int dataComponents = d.components(m_class);
+			if (dataComponents > 0)
 			{
-				// we must reset the current index, since if ncode is the current index 
-				// this won't trigger an update of the FEModel resulting in a gargabe state.
-				setCurrentIndex(-1);
-
-				// now set the current index
-				setCurrentIndex(ncode);
+				if (dataComponents == 1)
+				{
+					int nfield = BUILD_FIELD(dataClass, i, 0);
+					if (nfield == newField)
+					{
+						fieldName = d.GetName();
+						break;
+					}
+				}
+				else
+				{
+					for (int n = 0; n<dataComponents; ++n)
+					{
+						int nfield = BUILD_FIELD(dataClass, i, n);
+						if (nfield == newField)
+						{
+							fieldName = d.componentName(n, m_class);
+							break;
+						}
+					}
+				}
 			}
-			else
-			{
-				m_tree->setCurrentItem((*it)->parent(), 0);
-				setRootModelIndex(m_tree->currentIndex());
-				setCurrentIndex(ncomp);
-				m_tree->setCurrentItem(m_tree->invisibleRootItem(), 0);
-				setRootModelIndex(m_tree->currentIndex());
-			}
-			return;
 		}
 
-		++it;
+		if (fieldName.empty() == false)
+		{
+			m_currentValue = newField;
+			setText(QString::fromStdString(fieldName));
+		}
+		else
+		{
+			m_currentValue = -1;
+			setText("");
+		}
 	}
-
-	setCurrentIndex(-1);
 }
 
 void CDataFieldSelector::Update(FEModel* pfem)
 {
 	BuildMenu(pfem, m_class, m_bvec);
+}
+
+void CDataFieldSelector::onAction(QAction* pa)
+{
+	setText(pa->text());
+	m_currentValue = pa->data().toInt();
+
+	emit currentValueChanged(m_currentValue);
 }

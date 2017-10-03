@@ -25,7 +25,7 @@ public:
 	void Update(bool breset = true);
 
 private slots:
-	void on_selectData_currentIndexChanged(int);
+	void on_selectData_currentValueChanged(int);
 	void on_actionSave_triggered();
 	void on_actionClip_triggered();
 	void on_actionProps_triggered();

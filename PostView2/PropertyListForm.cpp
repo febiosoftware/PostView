@@ -231,13 +231,13 @@ void CPropertyListForm::onDataChanged()
 					case CProperty::DataScalar:
 						{
 							CDataFieldSelector* pc = dynamic_cast<CDataFieldSelector*>(pw);
-							if (pc) m_list->SetPropertyValue(i, pc->currentData(Qt::UserRole));
+							if (pc) m_list->SetPropertyValue(i, pc->currentValue());
 						}
 						break;
 					case CProperty::DataVec3:
 						{
 							CDataFieldSelector* pc = dynamic_cast<CDataFieldSelector*>(pw);
-							if (pc) m_list->SetPropertyValue(i, pc->currentData(Qt::UserRole));
+							if (pc) m_list->SetPropertyValue(i, pc->currentValue());
 						}
 						break;
 					}

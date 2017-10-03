@@ -135,7 +135,7 @@ public slots:
 	void on_actionProperties_triggered();
 
 	void on_actionColorMap_toggled(bool bchecked);
-	void on_selectData_currentIndexChanged(int i);
+	void on_selectData_currentValueChanged(int i);
 	void on_actionPlay_toggled(bool bchecked);
 	void on_actionFirst_triggered();
 	void on_actionPrev_triggered();

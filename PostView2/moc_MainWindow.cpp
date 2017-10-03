@@ -73,7 +73,7 @@ QT_MOC_LITERAL(38, 1054, 25), // "on_actionDelete_triggered"
 QT_MOC_LITERAL(39, 1080, 29), // "on_actionProperties_triggered"
 QT_MOC_LITERAL(40, 1110, 25), // "on_actionColorMap_toggled"
 QT_MOC_LITERAL(41, 1136, 8), // "bchecked"
-QT_MOC_LITERAL(42, 1145, 33), // "on_selectData_currentIndexCha..."
+QT_MOC_LITERAL(42, 1145, 33), // "on_selectData_currentValueCha..."
 QT_MOC_LITERAL(43, 1179, 1), // "i"
 QT_MOC_LITERAL(44, 1181, 21), // "on_actionPlay_toggled"
 QT_MOC_LITERAL(45, 1203, 24), // "on_actionFirst_triggered"
@@ -160,7 +160,7 @@ QT_MOC_LITERAL(87, 2244, 6) // "action"
     "on_actionDelete_triggered\0"
     "on_actionProperties_triggered\0"
     "on_actionColorMap_toggled\0bchecked\0"
-    "on_selectData_currentIndexChanged\0i\0"
+    "on_selectData_currentValueChanged\0i\0"
     "on_actionPlay_toggled\0on_actionFirst_triggered\0"
     "on_actionPrev_triggered\0on_actionNext_triggered\0"
     "on_actionLast_triggered\0"
@@ -420,7 +420,7 @@ void CMainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         case 36: _t->on_actionDelete_triggered(); break;
         case 37: _t->on_actionProperties_triggered(); break;
         case 38: _t->on_actionColorMap_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 39: _t->on_selectData_currentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 39: _t->on_selectData_currentValueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 40: _t->on_actionPlay_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 41: _t->on_actionFirst_triggered(); break;
         case 42: _t->on_actionPrev_triggered(); break;

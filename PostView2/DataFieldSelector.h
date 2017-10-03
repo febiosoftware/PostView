@@ -1,12 +1,10 @@
 #pragma once
-#include <QComboBox>
+#include <QPushButton>
+#include <QMenu>
 #include <PostViewLib/FEMeshData.h>
 #include <PostViewLib/FEModel.h>
 
-class QTreeWidgetItem;
-class QTreeWidget;
-
-class CDataFieldSelector : public QComboBox, public FEModelDependant
+class CDataFieldSelector : public QPushButton, public FEModelDependant
 {
 	Q_OBJECT
 
@@ -14,27 +12,32 @@ public:
 	CDataFieldSelector(QWidget* parent = 0);
 	~CDataFieldSelector();
 
+	// build the menu
 	void BuildMenu(FEModel* fem, Data_Tensor_Type ntype, bool btvec = false);
 
+	// return the field ID of the selected menu
 	int currentValue() const;
 
+	// set the current field ID
 	void setCurrentValue(int n);
 
 public:
-	// from FEModelDependant
+	// inherited from FEModelDependant
 	void Update(FEModel* pfem);
 
-private slots:
-	void onItemEntered(QTreeWidgetItem*, int);
-	void onTimer();
-	void onItemClicked(QTreeWidgetItem*, int);
+protected slots:
+	void onAction(QAction* pa);
+
+signals:
+	void currentValueChanged(int n);
 
 private:
-	void addComponent(QTreeWidgetItem* parent, const char* szname, int ndata);
-	FEModel*	m_fem;
+	FEModel*			m_fem;
 	Data_Tensor_Type	m_class;
-	QTreeWidget*	m_tree;
-	QTreeWidgetItem*	m_sel;
 	bool m_bvec;
 	int	m_ntimer;
+
+private:
+	QMenu*	m_menu;
+	int		m_currentValue;
 };

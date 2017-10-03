@@ -1241,7 +1241,7 @@ void CMainWindow::SetCurrentDataField(int nfield)
 	ui->selectData->setCurrentValue(nfield);
 }
 
-void CMainWindow::on_selectData_currentIndexChanged(int index)
+void CMainWindow::on_selectData_currentValueChanged(int index)
 {
 	if (index == -1)
 		ui->actionColorMap->setDisabled(true);
@@ -1250,7 +1250,7 @@ void CMainWindow::on_selectData_currentIndexChanged(int index)
 		if (ui->actionColorMap->isEnabled() == false)
 			ui->actionColorMap->setEnabled(true);
 
-		int nfield = ui->selectData->currentData(Qt::UserRole).toInt();
+		int nfield = ui->selectData->currentValue();
 		CDocument* pdoc = GetDocument();
 		CGLModel* pm = pdoc->GetGLModel();
 		pm->GetColorMap()->SetEvalField(nfield);

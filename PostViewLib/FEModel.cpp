@@ -461,6 +461,16 @@ void FEModel::UpdateBoundingBox()
 //-----------------------------------------------------------------------------
 void FEModel::AddDependant(FEModelDependant* pc)
 {
+	// make sure we have not added this dependant yet
+	if (m_Dependants.empty() == false)
+	{
+		for (size_t i=0; i<m_Dependants.size(); ++i)
+		{
+			if (m_Dependants[i] == pc) return;
+		}
+	}
+
+	// if we get here, the depedant was not added yet, so add it
 	m_Dependants.push_back(pc);
 }
 

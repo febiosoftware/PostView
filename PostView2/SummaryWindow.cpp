@@ -100,7 +100,7 @@ void CSummaryWindow::Update(bool breset)
 	m_ncurrentData = ndata;
 
 	// get the text and make it the plot title
-	ui->plot->setTitle(ui->selectData->currentText());
+	ui->plot->setTitle(ui->selectData->text());
 
 	// see if selection only box is checked
 	bool bsel = ui->selectionOnly->isChecked();
@@ -314,7 +314,7 @@ CSummaryWindow::RANGE CSummaryWindow::EvalFaceRange(FEModel& fem, int nstate, bo
 }
 
 //-----------------------------------------------------------------------------
-void CSummaryWindow::on_selectData_currentIndexChanged(int index)
+void CSummaryWindow::on_selectData_currentValueChanged(int index)
 {
 	Update(false);
 }

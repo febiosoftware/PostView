@@ -32,7 +32,7 @@ struct qt_meta_stringdata_CSummaryWindow_t {
 static const qt_meta_stringdata_CSummaryWindow_t qt_meta_stringdata_CSummaryWindow = {
     {
 QT_MOC_LITERAL(0, 0, 14), // "CSummaryWindow"
-QT_MOC_LITERAL(1, 15, 33), // "on_selectData_currentIndexCha..."
+QT_MOC_LITERAL(1, 15, 33), // "on_selectData_currentValueCha..."
 QT_MOC_LITERAL(2, 49, 0), // ""
 QT_MOC_LITERAL(3, 50, 23), // "on_actionSave_triggered"
 QT_MOC_LITERAL(4, 74, 23), // "on_actionClip_triggered"
@@ -47,7 +47,7 @@ QT_MOC_LITERAL(12, 276, 24), // "on_selectionOnly_clicked"
 QT_MOC_LITERAL(13, 301, 24) // "on_volumeAverage_clicked"
 
     },
-    "CSummaryWindow\0on_selectData_currentIndexChanged\0"
+    "CSummaryWindow\0on_selectData_currentValueChanged\0"
     "\0on_actionSave_triggered\0"
     "on_actionClip_triggered\0"
     "on_actionProps_triggered\0"
@@ -109,7 +109,7 @@ void CSummaryWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
         CSummaryWindow *_t = static_cast<CSummaryWindow *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->on_selectData_currentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 0: _t->on_selectData_currentValueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 1: _t->on_actionSave_triggered(); break;
         case 2: _t->on_actionClip_triggered(); break;
         case 3: _t->on_actionProps_triggered(); break;
