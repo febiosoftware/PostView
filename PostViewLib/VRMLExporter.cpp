@@ -20,7 +20,7 @@ void VRMLExporter::inctab()
 
 void VRMLExporter::dectab()
 {
-	int l = strlen(m_sztab);
+	int l = (int)strlen(m_sztab);
 	if (l > 0) m_sztab[l-1] = 0;
 }
 

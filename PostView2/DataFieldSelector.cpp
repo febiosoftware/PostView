@@ -60,12 +60,12 @@ void CDataFieldSelector::BuildMenu(FEModel* fem, Data_Tensor_Type nclass, bool b
 			{
 				int nfield = BUILD_FIELD(dataClass, i, 0);
 
-				QAction* pa = m_menu->addAction(d.GetName());
+				QAction* pa = m_menu->addAction(QString::fromStdString(d.GetName()));
 				pa->setData(QVariant(nfield));
 			}
 			else
 			{
-				QMenu* sub = new QMenu(d.GetName(), m_menu);
+				QMenu* sub = new QMenu(QString::fromStdString(d.GetName()), m_menu);
 				m_menu->addMenu(sub);
 
 				for (int n=0; n<dataComponents; ++n)

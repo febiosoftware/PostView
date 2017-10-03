@@ -97,7 +97,7 @@ bool FEKinemat::BuildStates()
 	int ND = -1;
 	for (int i=0; i<N; ++i, ++pt)
 	{
-		 if (strcmp((*pt)->GetName(), "Displacement") == 0)
+		 if ((*pt)->GetName() == "Displacement")
 		 {
 			 ND = i;
 			 break;
@@ -105,7 +105,7 @@ bool FEKinemat::BuildStates()
 	}
 	if (ND == -1) return false;
 
-	int NS = m_State.size();
+	int NS = (int)m_State.size();
 	if (m_n0 >= NS) return false;
 	if (m_n1 - m_n0 +1 > NS) m_n1 = NS - 1;
 	float t = 0.f;
@@ -133,7 +133,7 @@ bool FEKinemat::BuildStates()
 		for (int i=0; i<NN; ++i) d[i] = vec3f(0.f, 0.f, 0.f);
 
 		int N = NMAT;
-		if (s.D.size() < NMAT) N = s.D.size();
+		if ((int)s.D.size() < NMAT) N = (int)s.D.size();
 		for (int n=0; n<N; ++n)
 		{
 			KINE& kine = s.D[n];

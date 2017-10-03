@@ -40,7 +40,7 @@ CGLModel::CGLModel(FEModel* ps)
 	for (int i=0; i<pdm->DataFields(); ++i, ++pd)
 	{
 		if ((*pd)->Type() == DATA_VEC3F) ++nv;
-		if (strcmp((*pd)->GetName(), "displacement") == 0) ndisp = i;
+		if ((*pd)->GetName() == "displacement") ndisp = i;
 	}
 
 	m_pdis = (nv ? new CGLDisplacementMap(this) : 0);
@@ -194,7 +194,7 @@ bool CGLModel::AddDisplacementMap()
 	for (int i=0; i<pdm->DataFields(); ++i, ++pd)
 	{
 		if ((*pd)->Type() == DATA_VEC3F) ++nv;
-		if (strcmp((*pd)->GetName(), "displacement") == 0) ndisp = i;
+		if ((*pd)->GetName() == "displacement") ndisp = i;
 	}
 
 	if (nv == 0) return false;

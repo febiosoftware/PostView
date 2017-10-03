@@ -127,8 +127,8 @@ bool GMeshImport::BuildMesh(FEModel& fem)
 {
 	int i;
 
-	int nodes = m_Node.size();
-	int elems = m_Elem.size();
+	int nodes = (int)m_Node.size();
+	int elems = (int)m_Elem.size();
 
 	if (nodes == 0) return errf("FATAL ERROR: No nodal data defined in file.");
 	if (elems == 0) return errf("FATAL ERROR: No element data defined in file.");

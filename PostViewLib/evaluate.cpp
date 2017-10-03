@@ -662,7 +662,7 @@ void FEModel::EvaluateNode(int n, int ntime, int nfield, NODEDATA& d)
 		vector<NodeFaceRef>& nfl = mesh->NodeFaceList(n);
 		if (!nfl.empty())
 		{
-			int nf = nfl.size(), n=0;
+			int nf = (int)nfl.size(), n = 0;
 			float data[FEFace::MAX_NODES], val;
 			for (int i=0; i<nf; ++i)
 			{
@@ -680,7 +680,7 @@ void FEModel::EvaluateNode(int n, int ntime, int nfield, NODEDATA& d)
 		// we take the average of the elements that contain this element
 		vector<NodeElemRef>& nel = mesh->NodeElemList(n);
 		float data[FEGenericElement::MAX_NODES] = {0.f}, val;
-		int ne = nel.size(),n=0;
+		int ne = (int)nel.size(), n = 0;
 		if (!nel.empty())
 		{
 			for (int i=0; i<ne; ++i)

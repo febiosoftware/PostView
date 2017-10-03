@@ -209,7 +209,7 @@ bool XpltReader2::ReadDictionary(FEModel& fem)
 
 	// read nodal variables
 	int i;
-	int nv = m_dic.m_Node.size();
+	int nv = (int)m_dic.m_Node.size();
 	for (i=0; i<nv; ++i)
 	{
 		DICT_ITEM& it = m_dic.m_Node[i];
@@ -229,7 +229,7 @@ bool XpltReader2::ReadDictionary(FEModel& fem)
 	}
 
 	// read solid variables
-	nv = m_dic.m_Elem.size();
+	nv = (int) m_dic.m_Elem.size();
 	for (i=0; i<nv; ++i)
 	{
 		DICT_ITEM& it = m_dic.m_Elem[i];
@@ -307,7 +307,7 @@ bool XpltReader2::ReadDictionary(FEModel& fem)
 	}
 
 	// read face variables
-	nv = m_dic.m_Face.size();
+	nv = (int) m_dic.m_Face.size();
 	for (i=0; i<nv; ++i)
 	{
 		DICT_ITEM& it = m_dic.m_Face[i];
@@ -561,7 +561,7 @@ void XpltReader2::CreateMaterials(FEModel& fem)
 {
 	// initialize material properties
 	fem.ClearMaterials();
-	int nmat = m_Mat.size();
+	int nmat = (int) m_Mat.size();
 	for (int i=0; i<nmat; i++)
 	{
 		FEMaterial m;
@@ -873,7 +873,7 @@ bool XpltReader2::BuildMesh(FEModel &fem)
 	int NN = (int) m_Node.size();
 
 	// count all elements
-	int ND = m_Dom.size();
+	int ND = (int) m_Dom.size();
 	int NE = 0;
 	for (int i=0; i<ND; ++i) NE += m_Dom[i].ne;
 

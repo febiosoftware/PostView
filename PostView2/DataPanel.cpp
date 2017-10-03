@@ -106,7 +106,7 @@ public:
 			FEDataManager& dm = *m_fem->GetDataManager();
 			FEDataField* pd = *dm.DataField(nrow);
 
-			if      (ncol == 0) return QString(pd->GetName());
+			if      (ncol == 0) return QString::fromStdString(pd->GetName());
 			else if (ncol == 1) return QString(pd->TypeStr());
 			else if (ncol == 2) 
 			{
@@ -523,7 +523,8 @@ void CDataPanel::on_CopyButton_clicked()
 		if (pdf)
 		{
 			bool bret = false;
-			QString text = QInputDialog::getText(this, "Copy Data Field", "Name:", QLineEdit::Normal, QString("%1_copy").arg(pdf->GetName()), &bret);
+			QString name = QString::fromStdString(pdf->GetName());
+			QString text = QInputDialog::getText(this, "Copy Data Field", "Name:", QLineEdit::Normal, QString("%1_copy").arg(name), &bret);
 			if (bret)
 			{
 				std::string sname = text.toStdString();
@@ -547,7 +548,8 @@ void CDataPanel::on_DeleteButton_clicked()
 		FEDataField* pdf = *dm.DataField(nsel);
 		if (pdf)
 		{
-			QString sz(QString("Are you sure you want to delete the \"%1\" data field?").arg(pdf->GetName()));
+			QString name = QString::fromStdString(pdf->GetName());
+			QString sz(QString("Are you sure you want to delete the \"%1\" data field?").arg(name));
 			if (QMessageBox::question(this, "Delete Data Field", sz) == QMessageBox::Yes)
 			{
 				fem.DeleteDataField(pdf);
@@ -576,12 +578,13 @@ void CDataPanel::on_FilterButton_clicked()
 			for (int i = 0; i<dm.DataFields(); ++i)
 			{
 				FEDataField* pdi = *dm.DataField(i);
-				if ((pdi != pdf)&&
+				QString name = QString::fromStdString(pdi->GetName());
+				if ((pdi != pdf) &&
 					(pdi->DataClass() == pdf->DataClass())&&
 					(pdi->Format() == pdf->Format())&&
 					((pdi->Type() == pdf->Type()) || (pdi->Type() == DATA_FLOAT)))
 					{
-						dataNames.push_back(pdi->GetName());
+						dataNames.push_back(name);
 						dataIds.push_back(i);
 					}
 			}
@@ -589,7 +592,8 @@ void CDataPanel::on_FilterButton_clicked()
 			CDlgFilter dlg(this);
 			dlg.setDataOperands(dataNames);
 
-			QString newName = QString("%0_flt").arg(pdf->GetName());
+			QString name = QString::fromStdString(pdf->GetName());
+			QString newName = QString("%0_flt").arg(name);
 			dlg.setDefaultName(newName);
 
 			if (dlg.exec())

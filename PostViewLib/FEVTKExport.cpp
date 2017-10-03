@@ -34,8 +34,6 @@ FEVTKExport::~FEVTKExport(void)
 
 bool FEVTKExport::Save(FEModel& fem, const char* szfile)
 {
-    int i, j, k;
-    
     FEState* ps;
     int ns = fem.GetStates();
     if (ns == 0) return false;
@@ -61,7 +59,7 @@ bool FEVTKExport::Save(FEModel& fem, const char* szfile)
     int nodes = m.Nodes();
     
     // save each state in a separate file
-    int l0 = log10((double)ns) + 1;
+    int l0 = (int) log10((double)ns) + 1;
     for (int is=0; is<ns; ++is) {
         ps = fem.GetState(is);
         if (sprintf(szname, "%st%0*d%s",szroot,l0,is,szext) < 0) return false;
@@ -77,7 +75,7 @@ bool FEVTKExport::Save(FEModel& fem, const char* szfile)
         fprintf(fp, "%s %d %s\n" ,"POINTS", nodes ,"float");
         
         // --- N O D E S ---
-        for (j=0; j<nodes; )
+        for (int j=0; j<nodes; )
         {
             for (int k =0; k<3 && j+k<nodes;k++)
             {
@@ -90,9 +88,8 @@ bool FEVTKExport::Save(FEModel& fem, const char* szfile)
         fprintf(fp, "%s\n" ,"");
         
         // --- E L E M E N T S ---
-        int nn[FEGenericElement::MAX_NODES];
         int nsize = 0;
-        for (j=0; j<m.Elements(); ++j)
+		for (int j = 0; j<m.Elements(); ++j)
             nsize += m.Element(j).Nodes() + 1;
         
         fprintf(fp, "%s %d %d\n" ,"CELLS", m.Elements(), nsize);
@@ -106,7 +103,7 @@ bool FEVTKExport::Save(FEModel& fem, const char* szfile)
         }
         
         fprintf(fp, "\n%s %d\n" ,"CELL_TYPES", m.Elements());
-        for (j=0; j<m.Elements(); ++j)
+		for (int j = 0; j<m.Elements(); ++j)
         {
             FEElement& el = m.Element(j);
             int vtk_type;
@@ -147,7 +144,7 @@ bool FEVTKExport::Save(FEModel& fem, const char* szfile)
                 {
                     FEMeshData& meshData = ps->m_Data[n];
                     char szname[256];
-                    strcpy(szname, data.GetName());
+                    strcpy(szname, data.GetName().c_str());
                     Space2_(szname);
                     
                     // value array
@@ -204,7 +201,7 @@ bool FEVTKExport::Save(FEModel& fem, const char* szfile)
                     if (dfmt == DATA_NODE) {
                         FEDataField& data = *(*pd);
                         char szname[256];
-                        strcpy(szname, data.GetName());
+						strcpy(szname, data.GetName().c_str());
                         Space2_(szname);
                         
                         // value array
@@ -278,7 +275,7 @@ bool FEVTKExport::Save(FEModel& fem, const char* szfile)
                     if (dfmt == DATA_ITEM) {
                         FEDataField& data = *(*pd);
                         char szname[256];
-                        strcpy(szname, data.GetName());
+						strcpy(szname, data.GetName().c_str());
                         Space2_(szname);
                         
                         // value array
@@ -342,7 +339,7 @@ bool FEVTKExport::Save(FEModel& fem, const char* szfile)
 
 void FEVTKExport::Space2_(char* szname)
 {
-    int n = strlen(szname);
+    int n = (int)strlen(szname);
     for (int i=0; i<n; ++i)
         if (szname[i] == ' ') szname[i] = '_';
 }

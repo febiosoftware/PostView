@@ -71,9 +71,9 @@ bool FEVTKimport::Load(FEModel& fem, const char* szfile)
 		{
 			FENode& n= pm->Node(i*nodes_each_row+j);
 			vec3f r;
-			r.x = temp[k];
-			r.y = temp[k+1];
-			r.z = temp[k+2];
+			r.x = (float)temp[k];
+			r.y = (float)temp[k + 1];
+			r.z = (float)temp[k + 2];
 			n.m_r0 = n.m_rt = r;
 			k +=3;
 		}
@@ -192,7 +192,7 @@ bool FEVTKimport::Load(FEModel& fem, const char* szfile)
 			if (nodes_each_row>9) 
 				return errf("An error occured while reading the nodal coordinates.");
 			double temp2 = double(size)/nodes_each_row;
-			rows = ceil(temp2);
+			rows = (int)ceil(temp2);
 			for (i=0; i<rows; ++i)
 			{	
 				for (j=0;j<nodes_each_row && i*nodes_each_row+j <size;j++)

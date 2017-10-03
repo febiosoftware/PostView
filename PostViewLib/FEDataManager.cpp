@@ -5,7 +5,35 @@
 #include <string>
 #include <cstdio>
 
-void FEDataField::SetName(const char* szname) { strcpy(m_szname, szname); }
+FEDataField::FEDataField(Data_Type ntype, Data_Format nfmt, Data_Class ncls, unsigned int flag)
+{
+	m_ntype = ntype;
+	m_nfmt = nfmt;
+	m_nclass = ncls;
+	m_nref = 0;
+	m_flag = flag;
+}
+
+
+void FEDataField::SetName(const std::string& newName)
+{ 
+	m_name = newName; 
+}
+
+const char* FEDataField::TypeStr() const
+{
+	switch (m_ntype)
+	{
+	case DATA_FLOAT: return "float"; break;
+	case DATA_VEC3F: return "vec3f"; break;
+	case DATA_MAT3F: return "mat3f"; break;
+	case DATA_MAT3D: return "mat3d"; break;
+	case DATA_MAT3FS: return "mat3fs"; break;
+	case DATA_MAT3FD: return "mat3fd"; break;
+	case DATA_TENS4FS: return "tens4fs"; break;
+	};
+	return "unknown";
+}
 
 int FEDataField::components(Data_Tensor_Type ntype)
 {
@@ -53,14 +81,16 @@ int FEDataField::components(Data_Tensor_Type ntype)
 
 std::string FEDataField::componentName(int ncomp, Data_Tensor_Type ntype)
 {
-	const char* sz = GetName();
+	const std::string& name = GetName();
+	const char* sz = name.c_str();
+
 	char szline[256] = {0};
 
 	if (ntype == DATA_SCALAR)
 	{
 		switch (m_ntype)
 		{
-		case DATA_FLOAT: return string(sz); break;
+		case DATA_FLOAT: return name; break;
 		case DATA_VEC3F:
 			{
 				if      (ncomp == 0) sprintf(szline, "X - %s"  , sz);
@@ -215,12 +245,12 @@ void FEDataManager::DeleteDataField(FEDataField* pd)
 	}
 }
 
-int FEDataManager::FindDataField(const char* szname)
+int FEDataManager::FindDataField(const std::string& fieldName)
 {
 	vector<FEDataField*>::iterator pe = m_Data.begin();
 	for (int i=0; i<(int) m_Data.size(); ++i, ++pe)
 	{
-		if (strcmp((*pe)->GetName(), szname) == 0) return i;
+		if ((*pe)->GetName() == fieldName) return i;
 	}
 
 	return -1;

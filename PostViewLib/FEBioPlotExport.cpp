@@ -250,7 +250,7 @@ bool FEBioPlotExport::WriteDataField(FEDataField& data)
 	}
 
 	// we need to cast away the const on the name
-	char* szname = const_cast<char*>(data.GetName());
+	char* szname = const_cast<char*>(data.GetName().c_str());
 
 	// store the dictionary entry
 	m_ar.BeginChunk(PLT_DIC_ITEM);
@@ -278,7 +278,7 @@ bool FEBioPlotExport::WriteMaterials(FEModel& fem)
 
 			// Make sure that the material name fits in the buffer
 			const char* sz = pm->GetName();
-			int l = strlen(sz);
+			int l = (int)strlen(sz);
 			if (l >= STR_SIZE) l = STR_SIZE - 1;
 			strncpy(szname, sz, l);
 

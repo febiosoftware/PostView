@@ -25,22 +25,15 @@ public:
 	enum { MAX_DATA_NAME = 64 };
 
 public:
-	FEDataField(Data_Type ntype, Data_Format nfmt, Data_Class ncls, unsigned int flag = 0)
-	{ 
-		m_szname[0] = 0; 
-		m_ntype = ntype; 
-		m_nfmt = nfmt; 
-		m_nclass = ncls; 
-		m_nref = 0;
-		m_flag = flag;
-	}
+	FEDataField(Data_Type ntype, Data_Format nfmt, Data_Class ncls, unsigned int flag);
+
 	virtual ~FEDataField(){}
 
 	//! get the name of the field
-	const char* GetName() const { return m_szname; }
+	const std::string& GetName() const { return m_name; }
 
 	//! set the name of the field
-	void SetName(const char* szname);
+	void SetName(const std::string& newName);
 
 	//! Create a copy
 	virtual FEDataField* Clone() const = 0;
@@ -64,20 +57,7 @@ public:
 	int GetFieldID() const { return m_nfield; }
 
 	//! type string
-	const char* TypeStr()
-	{
-		switch(m_ntype)
-		{
-		case DATA_FLOAT  : return "float"  ; break;
-		case DATA_VEC3F  : return "vec3f"  ; break;
-		case DATA_MAT3F  : return "mat3f"  ; break;
-		case DATA_MAT3D  : return "mat3d"  ; break;
-		case DATA_MAT3FS : return "mat3fs" ; break;
-		case DATA_MAT3FD : return "mat3fd" ; break;
-        case DATA_TENS4FS: return "tens4fs"; break;
-		};
-		return "unknown";
-	}
+	const char* TypeStr() const;
 
 	//! number of components
 	int components(Data_Tensor_Type ntype);
@@ -90,12 +70,12 @@ public:
 	unsigned int Flags() const { return m_flag; }
 
 protected:
-	char		m_szname[MAX_DATA_NAME];	//!< field name
-	int			m_nfield;					//!< field ID
-	Data_Type	m_ntype;					//!< data type
-	Data_Format	m_nfmt;						//!< data format
-	Data_Class  m_nclass;					//!< data class
-	unsigned int	m_flag;					//!< flags
+	int				m_nfield;	//!< field ID
+	Data_Type		m_ntype;	//!< data type
+	Data_Format		m_nfmt;		//!< data format
+	Data_Class		m_nclass;	//!< data class
+	unsigned int	m_flag;		//!< flags
+	std::string		m_name;		//!< data field name
 
 public:
 	// TODO: Add properties list for data fields (e.g. strains and curvature could use this)
@@ -110,7 +90,7 @@ public:
 template<typename T> class FEDataField_T : public FEDataField
 {
 public:
-	FEDataField_T(const char* szname, unsigned int flag = 0) : FEDataField(T::Type(), T::Format(), T::Class(), flag) { SetName(szname); }
+	FEDataField_T(const std::string& name, unsigned int flag = 0) : FEDataField(T::Type(), T::Format(), T::Class(), flag) { SetName(name); }
 	FEMeshData* CreateData(FEState* pstate) { return new T(pstate, this); }
 
 	virtual FEDataField* Clone() const 
@@ -149,7 +129,7 @@ public:
 	void Clear();
 
 	//! find the index of a datafield
-	int FindDataField(const char* sz);
+	int FindDataField(const std::string& fieldName);
 
 	//! find the data field given an index
 	FEDataFieldPtr DataField(int i);
