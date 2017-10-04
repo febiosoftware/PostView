@@ -29,7 +29,10 @@
 class CCurvatureProps : public CPropertyList
 {
 public:
-	CCurvatureProps()
+	FECurvatureField*	m_pf;
+
+public:
+	CCurvatureProps(FECurvatureField* pf) : m_pf(pf)
 	{
 		addProperty("Smoothness", CProperty::Int);
 		addProperty("Max iterations", CProperty::Int);
@@ -40,9 +43,9 @@ public:
 	{
 		switch (i)
 		{
-		case 0: return FECurvature::m_nlevels; break;
-		case 1: return FECurvature::m_nmax; break;
-		case 2: return (FECurvature::m_bext != 0); break;
+		case 0: return m_pf->m_nlevels; break;
+		case 1: return m_pf->m_nmax; break;
+		case 2: return (m_pf->m_bext != 0); break;
 		}
 
 		return QVariant();
@@ -52,10 +55,31 @@ public:
 	{
 		switch (i)
 		{
-		case 0: FECurvature::m_nlevels = v.toInt(); break;
-		case 1: FECurvature::m_nmax = v.toInt(); break;
-		case 2: FECurvature::m_bext = (v.toBool() ? 1 : 0); break;
+		case 0: m_pf->m_nlevels = v.toInt(); break;
+		case 1: m_pf->m_nmax = v.toInt(); break;
+		case 2: m_pf->m_bext = (v.toBool() ? 1 : 0); break;
 		}
+	}
+};
+
+class CMathDataProps : public CPropertyList
+{
+public:
+	FEMathDataField*	m_pd;
+
+	CMathDataProps(FEMathDataField* pd) : m_pd(pd)
+	{
+		addProperty("Equation", CProperty::String);
+	}
+
+	QVariant GetPropertyValue(int i) override
+	{
+		return QString::fromStdString(m_pd->EquationString());
+	}
+
+	void SetPropertyValue(int i, const QVariant& v) override
+	{
+		m_pd->SetEquationString((v.toString()).toStdString());
 	}
 };
 
@@ -148,10 +172,15 @@ public:
 	CDataModel*	data;
 	QTableView*	list;
 	::CPropertyListView*	m_prop;
+	QLineEdit*	name;
+
+	FEDataField*	m_activeField;
 
 public:
 	void setupUi(::CDataPanel* parent)
 	{
+		m_activeField = 0;
+
 		QVBoxLayout* pg = new QVBoxLayout(parent);
 
 		const int BW = 60;
@@ -208,7 +237,15 @@ public:
 		m_prop = new ::CPropertyListView;
 		m_prop->setObjectName("props");
 
-		psplitter->addWidget(m_prop);
+		QWidget* w = new QWidget;
+		QVBoxLayout* l = new QVBoxLayout;
+		l->setMargin(0);
+		w->setLayout(l);
+
+		l->addWidget(name = new QLineEdit); name->setObjectName("fieldName");
+		l->addWidget(m_prop);
+
+		psplitter->addWidget(w);
 
 		QMetaObject::connectSlotsByName(parent);
 	}
@@ -710,13 +747,31 @@ void CDataPanel::on_dataList_clicked(const QModelIndex& index)
 
 	FEDataField* p = *dm.DataField(n);
 
-	if ((p->TypeInfo() == typeid(FEPrincCurvature1)) ||
-		(p->TypeInfo() == typeid(FEPrincCurvature2)) ||
-		(p->TypeInfo() == typeid(FEGaussCurvature)) ||
-		(p->TypeInfo() == typeid(FEMeanCurvature)) ||
-		(p->TypeInfo() == typeid(FERMSCurvature)) ||
-		(p->TypeInfo() == typeid(FEDiffCurvature))) 
+	if ((dynamic_cast<FECurvatureField*>(p))) 
 	{
-		ui->m_prop->Update(new CCurvatureProps);
+		FECurvatureField* pf = dynamic_cast<FECurvatureField*>(p);
+		ui->m_prop->Update(new CCurvatureProps(pf));
+	}
+	else if (dynamic_cast<FEMathDataField*>(p))
+	{
+		FEMathDataField* pm = dynamic_cast<FEMathDataField*>(p);
+		ui->m_prop->Update(new CMathDataProps(pm));
+	}
+	else ui->m_prop->Update(0);
+
+	ui->m_activeField = p;
+
+	ui->name->setText(QString::fromStdString(p->GetName()));
+}
+
+void CDataPanel::on_fieldName_editingFinished()
+{
+	QString t = ui->name->text();
+	if (ui->m_activeField && (t.isEmpty() == false))
+	{
+		ui->m_activeField->SetName(t.toStdString());
+		Update(true);
+		CDocument& doc = *m_wnd->GetDocument();
+		doc.GetFEModel()->UpdateDependants();
 	}
 }

@@ -421,11 +421,16 @@ public:
 // Additional face data fields
 //=============================================================================
 
+class FECurvatureField;
+
 class FECurvature : public FEFaceData_T<float, DATA_NODE>
 {
 public:
-	FECurvature(FEState* state, FEDataField* pdf) : FEFaceData_T<float, DATA_NODE>(state, pdf) { m_face.assign(state->GetFEMesh()->Faces(), 1); }
+	FECurvature(FEState* state, FECurvatureField* pdf);
+
 	void eval_curvature(int, float* f, int m);
+
+	void eval(int n, float* f);
 
 	bool active(int n) { return (m_face[n] == 1); }
 
@@ -437,59 +442,51 @@ private:
 	float nodal_curvature(int n, int m);
 
 public: // parameters
-	static int	m_nlevels;	// neighbor search radius
-	static int	m_nmax;		// max iterations
-	static int  m_bext;		// use extended quadric method
-
+	FECurvatureField*	m_pdf;
 	vector<int> m_face;
 };
 
-//-----------------------------------------------------------------------------
-class FEGaussCurvature : public FECurvature
+class FECurvatureField : public FEDataField
 {
 public:
-	FEGaussCurvature(FEState* state, FEDataField* pdf) : FECurvature(state, pdf){}
-	void eval(int n, float* f) { FECurvature::eval_curvature(n, f, 0); }
-};
+	enum CURVATURE_TYPE
+	{
+		GAUSS_CURVATURE,
+		MEAN_CURVATURE,
+		PRINC1_CURVATURE,
+		PRINC2_CURVATURE,
+		RMS_CURVATURE,
+		DIFF_CURVATURE
+	};
 
-//-----------------------------------------------------------------------------
-class FEMeanCurvature : public FECurvature
-{
 public:
-	FEMeanCurvature(FEState* state, FEDataField* pdf) : FECurvature(state, pdf){}
-	void eval(int n, float* f) { FECurvature::eval_curvature(n, f, 1); }
-};
+	FECurvatureField(const std::string& name, int measure) : FEDataField(name, DATA_FLOAT, DATA_NODE, CLASS_FACE, 0)
+	{
+		m_measure = measure;
+		m_nlevels = 1;
+		m_nmax = 10;
+		m_bext = false;
+	}
 
-//-----------------------------------------------------------------------------
-class FEPrincCurvature1 : public FECurvature
-{
-public:
-	FEPrincCurvature1(FEState* state, FEDataField* pdf) : FECurvature(state, pdf){}
-	void eval(int n, float* f) { FECurvature::eval_curvature(n, f, 2); }
-};
+	FEDataField* Clone() const override
+	{
+		FECurvatureField* pd = new FECurvatureField(GetName(), m_measure);
+		pd->m_nlevels = m_nlevels;
+		pd->m_nmax = m_nmax;
+		pd->m_bext = m_bext;
+		return pd;
+	}
 
-//-----------------------------------------------------------------------------
-class FEPrincCurvature2 : public FECurvature
-{
-public:
-	FEPrincCurvature2(FEState* state, FEDataField* pdf) : FECurvature(state, pdf){}
-	void eval(int n, float* f) { FECurvature::eval_curvature(n, f, 3); }
-};
+	FEMeshData* CreateData(FEState* pstate) override
+	{
+		return new FECurvature(pstate, this);
+	}
 
-//-----------------------------------------------------------------------------
-class FERMSCurvature : public FECurvature
-{
 public:
-	FERMSCurvature(FEState* state, FEDataField* pdf) : FECurvature(state, pdf){}
-	void eval(int n, float* f) { FECurvature::eval_curvature(n, f, 4); }
-};
-
-//-----------------------------------------------------------------------------
-class FEDiffCurvature : public FECurvature
-{
-public:
-	FEDiffCurvature(FEState* state, FEDataField* pdf) : FECurvature(state, pdf){}
-	void eval(int n, float* f) { FECurvature::eval_curvature(n, f, 5); }
+	int	m_measure;	// curvature measure to evaluate
+	int	m_nlevels;	// neighbor search radius
+	int	m_nmax;		// max iterations
+	int m_bext;		// use extended quadric method
 };
 
 //-----------------------------------------------------------------------------

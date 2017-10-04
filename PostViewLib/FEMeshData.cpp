@@ -1047,9 +1047,16 @@ void FENodeInitPos::eval(int n, vec3f* pv)
 }
 
 //=============================================================================
-int FECurvature::m_nlevels = 1;
-int FECurvature::m_nmax    = 1;
-int FECurvature::m_bext    = 0;
+
+FECurvature::FECurvature(FEState* state, FECurvatureField* pdf) : FEFaceData_T<float, DATA_NODE>(state, pdf), m_pdf(pdf)
+{ 
+	m_face.assign(state->GetFEMesh()->Faces(), 1); 
+}
+
+void FECurvature::eval(int n, float* f)
+{ 
+	eval_curvature(n, f, m_pdf->m_measure); 
+}
 
 //-----------------------------------------------------------------------------
 void FECurvature::level(int n, int l, set<int>& nl1)
@@ -1168,7 +1175,7 @@ float FECurvature::nodal_curvature(int n, int m)
 	vector<vec3f> y; y.reserve(128);
 
 	// number of levels
-	int nlevels = m_nlevels - 1;
+	int nlevels = m_pdf->m_nlevels - 1;
 	if (nlevels <  0) nlevels = 0;
 	if (nlevels > 10) nlevels = 10;
 
@@ -1188,7 +1195,7 @@ float FECurvature::nodal_curvature(int n, int m)
 	// for less than three neighbors, we assume K = 0
 	double K;
 	if (nn < 3) K = 0;
-	else if ((nn < 5) || (m_bext == 0))
+	else if ((nn < 5) || (m_pdf->m_bext == 0))
 	{
 		// for less than 5 points, or if the extended quadric flag is zero,
 		// we use the quadric method
@@ -1271,10 +1278,11 @@ float FECurvature::nodal_curvature(int n, int m)
 	{
 		// loop until converged
 		const int NMAX = 100;
-		if (m_nmax > NMAX) m_nmax = NMAX;
-		if (m_nmax < 1) m_nmax = 1;
+		int nmax = m_pdf->m_nmax;
+		if (nmax > NMAX) nmax = NMAX;
+		if (nmax < 1) nmax = 1;
 		int niter = 0;
-		while (niter < m_nmax)
+		while (niter < nmax)
 		{
 			// construct local coordinate system
 			vec3f e3 = sn;

@@ -31,6 +31,7 @@ private slots:
 	void on_FilterButton_clicked();
 	void on_ExportButton_clicked();
 	void on_dataList_clicked(const QModelIndex&);
+	void on_fieldName_editingFinished();
 
 private:
 	Ui::CDataPanel* ui;
