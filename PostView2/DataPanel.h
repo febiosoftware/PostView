@@ -25,6 +25,7 @@ public:
 private slots:
 	void on_AddStandard_triggered();
 	void on_AddFromFile_triggered();
+	void on_AddEquation_triggered();
 	void on_CopyButton_clicked();
 	void on_DeleteButton_clicked();
 	void on_FilterButton_clicked();

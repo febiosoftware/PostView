@@ -602,13 +602,13 @@ void FEModel::EvaluateNode(int n, int ntime, int nfield, NODEDATA& d)
 		{
 		case DATA_FLOAT: 
 			{
-				FENodeData_T<float,DATA_ITEM>& df = dynamic_cast<FENodeData_T<float,DATA_ITEM>&>(rd);
+				FENodeData_T<float>& df = dynamic_cast<FENodeData_T<float>&>(rd);
 				df.eval(n, &d.m_val);
 			}
 			break;
 		case DATA_VEC3F:
 			{
-				FENodeData_T<vec3f,DATA_ITEM>& dv = dynamic_cast<FENodeData_T<vec3f,DATA_ITEM>&>(rd);
+				FENodeData_T<vec3f>& dv = dynamic_cast<FENodeData_T<vec3f>&>(rd);
 				vec3f v;
 				dv.eval(n,&v);
 				d.m_val = component(v, ncomp);
@@ -616,7 +616,7 @@ void FEModel::EvaluateNode(int n, int ntime, int nfield, NODEDATA& d)
 			break;
 		case DATA_MAT3F:
 			{
-				FENodeData_T<mat3f,DATA_ITEM>& dm = dynamic_cast<FENodeData_T<mat3f,DATA_ITEM>&>(rd);
+				FENodeData_T<mat3f>& dm = dynamic_cast<FENodeData_T<mat3f>&>(rd);
 				mat3f m;
 				dm.eval(n, &m);
 				d.m_val = component(m, ncomp);
@@ -624,7 +624,7 @@ void FEModel::EvaluateNode(int n, int ntime, int nfield, NODEDATA& d)
 			break;
 		case DATA_MAT3D:
 			{
-				FENodeData_T<mat3d,DATA_ITEM>& dm = dynamic_cast<FENodeData_T<mat3d,DATA_ITEM>&>(rd);
+				FENodeData_T<mat3d>& dm = dynamic_cast<FENodeData_T<mat3d>&>(rd);
 				mat3d m;
 				dm.eval(n, &m);
 				d.m_val = component(m, ncomp);
@@ -632,7 +632,7 @@ void FEModel::EvaluateNode(int n, int ntime, int nfield, NODEDATA& d)
 			break;
 		case DATA_MAT3FS:
 			{
-				FENodeData_T<mat3fs,DATA_ITEM>& dm = dynamic_cast<FENodeData_T<mat3fs,DATA_ITEM>&>(rd);
+				FENodeData_T<mat3fs>& dm = dynamic_cast<FENodeData_T<mat3fs>&>(rd);
 				mat3fs m;
 				dm.eval(n, &m);
 				d.m_val = component(m, ncomp);
@@ -640,7 +640,7 @@ void FEModel::EvaluateNode(int n, int ntime, int nfield, NODEDATA& d)
 			break;
 		case DATA_MAT3FD:
 			{
-				FENodeData_T<mat3fd,DATA_ITEM>& dm = dynamic_cast<FENodeData_T<mat3fd,DATA_ITEM>&>(rd);
+				FENodeData_T<mat3fd>& dm = dynamic_cast<FENodeData_T<mat3fd>&>(rd);
 				mat3fd m;
 				dm.eval(n, &m);
 				d.m_val = component(m, ncomp);
@@ -648,7 +648,7 @@ void FEModel::EvaluateNode(int n, int ntime, int nfield, NODEDATA& d)
 			break;
         case DATA_TENS4FS:
 			{
-				FENodeData_T<tens4fs,DATA_ITEM>& dm = dynamic_cast<FENodeData_T<tens4fs,DATA_ITEM>&>(rd);
+				FENodeData_T<tens4fs>& dm = dynamic_cast<FENodeData_T<tens4fs>&>(rd);
 				tens4fs m;
 				dm.eval(n, &m);
 				d.m_val = component(m, ncomp);
@@ -1870,13 +1870,13 @@ vec3f FEModel::EvaluateNodeVector(int n, int ntime, int nvec)
 		{
 		case DATA_VEC3F:
 			{
-				FENodeData_T<vec3f,DATA_ITEM>& dv = dynamic_cast<FENodeData_T<vec3f,DATA_ITEM>&>(rd);
+				FENodeData_T<vec3f>& dv = dynamic_cast<FENodeData_T<vec3f>&>(rd);
 				dv.eval(n, &r);
 			}
 			break;
 		case DATA_MAT3FS:
 			{
-				FENodeData_T<mat3fs,DATA_ITEM>& dm = dynamic_cast<FENodeData_T<mat3fs,DATA_ITEM>&>(rd);
+				FENodeData_T<mat3fs>& dm = dynamic_cast<FENodeData_T<mat3fs>&>(rd);
 				mat3fs m;
 				dm.eval(n, &m);
 				r = m.PrincDirection(ncomp+1);
@@ -2153,7 +2153,7 @@ mat3fs FEModel::EvaluateNodeTensor(int n, int ntime, int nten)
 
 		assert(rd.GetType() == DATA_MAT3FS);
 
-		FENodeData_T<mat3fs,DATA_ITEM>& dm = dynamic_cast<FENodeData_T<mat3fs,DATA_ITEM>&>(rd);
+		FENodeData_T<mat3fs>& dm = dynamic_cast<FENodeData_T<mat3fs>&>(rd);
 		dm.eval(n, &m);
 	}
 	else 

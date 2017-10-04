@@ -22,25 +22,25 @@ public:
 
 //-----------------------------------------------------------------------------
 // template base class for defining the data value
-template <typename T, Data_Format fmt> class FENodeData_T : public FENodeItemData
+template <typename T> class FENodeData_T : public FENodeItemData
 {
 public:
-	FENodeData_T(FEState* state, FEDataField* pdf) : FENodeItemData(state, FEMeshDataTraits<T>::Type(), fmt) {}
+	FENodeData_T(FEState* state, FEDataField* pdf) : FENodeItemData(state, FEMeshDataTraits<T>::Type(), DATA_ITEM) {}
 	virtual void eval(int n, T* pv) = 0;
 	virtual bool active(int n) { return true; }
 
 	static Data_Type Type  () { return FEMeshDataTraits<T>::Type  (); }
-	static Data_Format Format() { return fmt; }
+	static Data_Format Format() { return DATA_ITEM; }
 	static Data_Class Class() { return CLASS_NODE; }
 };
 
 //-----------------------------------------------------------------------------
 // template class for nodal data stored in vectors
 // \todo rename this class to FENodeDataArray or something
-template <typename T> class FENodeData : public FENodeData_T<T, DATA_ITEM>
+template <typename T> class FENodeData : public FENodeData_T<T>
 {
 public:
-	FENodeData(FEState* state, FEDataField* pdf) : FENodeData_T<T, DATA_ITEM>(state, pdf) { m_data.resize(state->GetFEMesh()->Nodes()); }
+	FENodeData(FEState* state, FEDataField* pdf) : FENodeData_T<T>(state, pdf) { m_data.resize(state->GetFEMesh()->Nodes()); }
 	void eval(int n, T* pv) { (*pv) = m_data[n]; }
 	void copy(FENodeData<T>& d) { m_data = d.m_data; }
 
@@ -402,18 +402,18 @@ protected:
 //=============================================================================
 
 //-----------------------------------------------------------------------------
-class FENodePosition : public FENodeData_T<vec3f, DATA_ITEM>
+class FENodePosition : public FENodeData_T<vec3f>
 {
 public:
-	FENodePosition(FEState* state, FEDataField* pdf) : FENodeData_T<vec3f, DATA_ITEM>(state, pdf){}
+	FENodePosition(FEState* state, FEDataField* pdf) : FENodeData_T<vec3f>(state, pdf){}
 	void eval(int n, vec3f* pv);
 };
 
 //-----------------------------------------------------------------------------
-class FENodeInitPos : public FENodeData_T<vec3f, DATA_ITEM>
+class FENodeInitPos : public FENodeData_T<vec3f>
 {
 public:
-	FENodeInitPos(FEState* state, FEDataField* pdf) : FENodeData_T<vec3f, DATA_ITEM>(state, pdf){}
+	FENodeInitPos(FEState* state, FEDataField* pdf) : FENodeData_T<vec3f>(state, pdf){}
 	void eval(int n, vec3f* pv);
 };
 

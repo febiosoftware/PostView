@@ -5,13 +5,14 @@
 #include <string>
 #include <cstdio>
 
-FEDataField::FEDataField(Data_Type ntype, Data_Format nfmt, Data_Class ncls, unsigned int flag)
+FEDataField::FEDataField(const std::string& name, Data_Type ntype, Data_Format nfmt, Data_Class ncls, unsigned int flag)
 {
 	m_ntype = ntype;
 	m_nfmt = nfmt;
 	m_nclass = ncls;
 	m_nref = 0;
 	m_flag = flag;
+	m_name = name;
 }
 
 

@@ -407,7 +407,7 @@ bool DataSmoothStep(FEModel& fem, int nfield, double theta)
 				for (int i=0; i<NN; ++i) if (tag[i]>0) D[i] /= (float) tag[i];
 
 				// assign to data field
-				for (int i = 0; i<NN; ++i) { data[i] = (1.f - theta)*data[i] + theta*D[i];  }
+				for (int i = 0; i<NN; ++i) { data[i] = (1.0 - theta)*data[i] + theta*D[i];  }
 			}
 			break;
 			case DATA_VEC3F:
@@ -439,7 +439,7 @@ bool DataSmoothStep(FEModel& fem, int nfield, double theta)
 				for (int i = 0; i<NN; ++i) if (tag[i]>0) D[i] /= (float)tag[i];
 
 				// assign to data field
-				for (int i = 0; i<NN; ++i) { data[i] = data[i] * (1.f - theta) + D[i]*theta; }
+				for (int i = 0; i<NN; ++i) { data[i] = data[i] * (1.0 - theta) + D[i]*theta; }
 			}
 			break;
 			default:
@@ -486,7 +486,7 @@ bool DataSmoothStep(FEModel& fem, int nfield, double theta)
 					{
 						float f;
 						data.eval(i, &f);
-						D[i] = (1.f - theta)*f + theta*D[i];
+						D[i] = (1.0 - theta)*f + theta*D[i];
 						data.set(i, D[i]);
 					}
 			}
@@ -549,7 +549,7 @@ void DataArithmetic(FEModel& fem, int nfield, int nop, int noperand)
 				FENodeData<float>* pd = dynamic_cast<FENodeData<float>*>(&d);
 				FENodeData<float>* ps = dynamic_cast<FENodeData<float>*>(&s);
 				int N = pd->size();
-				for (int i = 0; i<N; ++i) (*pd)[i] = f((*pd)[i], (*ps)[i]);
+				for (int i = 0; i<N; ++i) (*pd)[i] = (float)f((*pd)[i], (*ps)[i]);
 			}
 			else if (d.GetType() == DATA_VEC3F)
 			{
@@ -599,7 +599,7 @@ void DataArithmetic(FEModel& fem, int nfield, int nop, int noperand)
 					if (pd && ps)
 					{
 						int N = pd->size();
-						for (int i = 0; i<N; ++i) (*pd)[i] = f((*pd)[i], (*ps)[i]); break;
+						for (int i = 0; i<N; ++i) (*pd)[i] = (float)f((*pd)[i], (*ps)[i]); break;
 					}
 				}
 				else
@@ -698,8 +698,13 @@ void DataGradient(FEModel& fem, int vecField, int sclField)
 		{
 			if (IS_NODE_FIELD(sclField))
 			{
-				FENodeData<float>* ps = dynamic_cast<FENodeData<float>*>(&s);
-				for (int i=0; i<NN; ++i) d[i] = (*ps)[i];
+				FENodeData_T<float>* ps = dynamic_cast<FENodeData_T<float>*>(&s); assert(ps);
+				for (int i=0; i<NN; ++i) 
+				{	
+					float f;	
+					ps->eval(i, &f);
+					d[i] = (double) f;
+				}
 			}
 			else if (IS_ELEM_FIELD(sclField))
 			{

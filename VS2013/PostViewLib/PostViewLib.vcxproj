@@ -198,9 +198,11 @@
     <ClInclude Include="..\..\PostViewLib\color.h" />
     <ClInclude Include="..\..\PostViewLib\ColorMap.h" />
     <ClInclude Include="..\..\PostViewLib\FEAsciiExport.h" />
+    <ClInclude Include="..\..\PostViewLib\FEMathData.h" />
     <ClInclude Include="..\..\PostViewLib\FENodeEdgeList.h" />
     <ClInclude Include="..\..\PostViewLib\Intersect.h" />
     <ClInclude Include="..\..\PostViewLib\LinearRegression.h" />
+    <ClInclude Include="..\..\PostViewLib\MathParser.h" />
     <ClInclude Include="..\..\PostViewLib\Palette.h" />
     <ClInclude Include="..\..\PostViewLib\constants.h" />
     <ClInclude Include="..\..\PostViewLib\DataFilter.h" />
@@ -285,6 +287,7 @@
     <ClCompile Include="..\..\PostViewLib\FELSDYNAimport.cpp" />
     <ClCompile Include="..\..\PostViewLib\FELSDYNAPlot.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEMaterial.cpp" />
+    <ClCompile Include="..\..\PostViewLib\FEMathData.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEMesh.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEMeshData.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEModel.cpp" />
@@ -317,6 +320,7 @@
     <ClCompile Include="..\..\PostViewLib\lusolver.cpp" />
     <ClCompile Include="..\..\PostViewLib\lut.cpp" />
     <ClCompile Include="..\..\PostViewLib\math3d.cpp" />
+    <ClCompile Include="..\..\PostViewLib\MathParser.cpp" />
     <ClCompile Include="..\..\PostViewLib\Palette.cpp" />
     <ClCompile Include="..\..\PostViewLib\PltArchive.cpp" />
     <ClCompile Include="..\..\PostViewLib\SphereFit.cpp" />

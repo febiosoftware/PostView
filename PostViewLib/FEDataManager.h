@@ -25,7 +25,7 @@ public:
 	enum { MAX_DATA_NAME = 64 };
 
 public:
-	FEDataField(Data_Type ntype, Data_Format nfmt, Data_Class ncls, unsigned int flag);
+	FEDataField(const std::string& name, Data_Type ntype, Data_Format nfmt, Data_Class ncls, unsigned int flag);
 
 	virtual ~FEDataField(){}
 
@@ -90,7 +90,7 @@ public:
 template<typename T> class FEDataField_T : public FEDataField
 {
 public:
-	FEDataField_T(const std::string& name, unsigned int flag = 0) : FEDataField(T::Type(), T::Format(), T::Class(), flag) { SetName(name); }
+	FEDataField_T(const std::string& name, unsigned int flag = 0) : FEDataField(name, T::Type(), T::Format(), T::Class(), flag) {}
 	FEMeshData* CreateData(FEState* pstate) { return new T(pstate, this); }
 
 	virtual FEDataField* Clone() const 

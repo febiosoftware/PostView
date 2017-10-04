@@ -186,9 +186,6 @@
     <ClInclude Include="..\..\PostView2\StatsWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PostView2\SummaryWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\PostView2\Tool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -208,6 +205,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\PostView2\DlgExportLSDYNA.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PostView2\DlgAddEquation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -515,6 +515,9 @@
     <ClCompile Include="..\..\PostView2\DlgExportLSDYNA.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\PostView2\DlgAddEquation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\PostView2\MainWindow.h">
@@ -536,6 +539,9 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\PostView2\PlotWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\SummaryWindow.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

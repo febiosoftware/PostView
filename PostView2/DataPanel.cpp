@@ -23,6 +23,8 @@
 #include <PostViewLib/DataFilter.h>
 #include "PropertyListView.h"
 #include <PostViewLib/FEMeshData_T.h>
+#include <PostViewLib/FEMathData.h>
+#include "DlgAddEquation.h"
 
 class CCurvatureProps : public CPropertyList
 {
@@ -155,8 +157,9 @@ public:
 		const int BW = 60;
 		const int BH = 23;
 
-		QAction* addActionStd  = new QAction("Standard ...", parent); addActionStd ->setObjectName("AddStandard");
+		QAction* addActionStd  = new QAction("Standard ..." , parent); addActionStd ->setObjectName("AddStandard");
 		QAction* addActionFile = new QAction("From file ...", parent); addActionFile->setObjectName("AddFromFile");
+		QAction* addEquation   = new QAction("Equation ..." , parent); addEquation  ->setObjectName("AddEquation");
 
 		QPushButton* pbAdd = new QPushButton(); //pbAdd->setFixedSize(BW, BH);
 		pbAdd->setText("Add");
@@ -164,6 +167,7 @@ public:
 		QMenu* menu = new QMenu(parent);
 		menu->addAction(addActionStd);
 		menu->addAction(addActionFile);
+		menu->addAction(addEquation);
 		pbAdd->setMenu(menu);
 
 		QPushButton* pbCpy = new QPushButton("Copy"     ); pbCpy->setObjectName("CopyButton"  ); //pbCpy->setFixedSize(BW, BH); 
@@ -504,6 +508,33 @@ void CDataPanel::on_AddFromFile_triggered()
 			QMessageBox::critical(this, "Add Data From File", "Failed reading data from file.");
 		}
 
+		// update the data list
+		Update(true);
+	}
+}
+
+void CDataPanel::on_AddEquation_triggered()
+{
+	CDocument& doc = *m_wnd->GetDocument();
+	if (doc.IsValid() == false) return;
+
+	CDlgAddEquation dlg(this);
+	if (dlg.exec())
+	{
+		QString name = dlg.GetDataName();
+		QString eq = dlg.GetEquation();
+		if (eq.isEmpty()) eq = "";
+		if (name.isEmpty()) name = eq;
+		if (name.isEmpty()) name = "(empty)";
+
+		// create new math data field
+		FEMathDataField* pd = new FEMathDataField(name.toStdString());
+		pd->SetEquationString(eq.toStdString());
+
+		// add it to the model
+		FEModel& fem = *doc.GetFEModel();
+		fem.AddDataField(pd);
+		
 		// update the data list
 		Update(true);
 	}
