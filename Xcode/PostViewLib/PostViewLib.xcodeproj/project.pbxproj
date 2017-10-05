@@ -19,6 +19,10 @@
 		D5A65E151DBFA55800B44009 /* xpltFileReader.h in Headers */ = {isa = PBXBuildFile; fileRef = D5A65E111DBFA55800B44009 /* xpltFileReader.h */; };
 		D5A65E161DBFA55800B44009 /* xpltReader2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E121DBFA55800B44009 /* xpltReader2.cpp */; };
 		D5A65E171DBFA55800B44009 /* xpltReader2.h in Headers */ = {isa = PBXBuildFile; fileRef = D5A65E131DBFA55800B44009 /* xpltReader2.h */; };
+		D5C53DB11F86D95F0014FA22 /* FEMathData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5C53DAD1F86D9580014FA22 /* FEMathData.cpp */; };
+		D5C53DB21F86D95F0014FA22 /* MathParser.h in Headers */ = {isa = PBXBuildFile; fileRef = D5C53DAE1F86D9580014FA22 /* MathParser.h */; };
+		D5C53DB31F86D95F0014FA22 /* FEMathData.h in Headers */ = {isa = PBXBuildFile; fileRef = D5C53DAF1F86D9590014FA22 /* FEMathData.h */; };
+		D5C53DB41F86D95F0014FA22 /* MathParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5C53DB01F86D9590014FA22 /* MathParser.cpp */; };
 		D5D410271DAD891F007BBA0D /* ImageSlicer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5D410231DAD891F007BBA0D /* ImageSlicer.cpp */; };
 		D5D410281DAD891F007BBA0D /* ImageSlicer.h in Headers */ = {isa = PBXBuildFile; fileRef = D5D410241DAD891F007BBA0D /* ImageSlicer.h */; };
 		D5D410291DAD891F007BBA0D /* Palette.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5D410251DAD891F007BBA0D /* Palette.cpp */; };
@@ -157,6 +161,10 @@
 		D5A65E111DBFA55800B44009 /* xpltFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xpltFileReader.h; sourceTree = "<group>"; };
 		D5A65E121DBFA55800B44009 /* xpltReader2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xpltReader2.cpp; sourceTree = "<group>"; };
 		D5A65E131DBFA55800B44009 /* xpltReader2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xpltReader2.h; sourceTree = "<group>"; };
+		D5C53DAD1F86D9580014FA22 /* FEMathData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FEMathData.cpp; sourceTree = "<group>"; };
+		D5C53DAE1F86D9580014FA22 /* MathParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MathParser.h; sourceTree = "<group>"; };
+		D5C53DAF1F86D9590014FA22 /* FEMathData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FEMathData.h; sourceTree = "<group>"; };
+		D5C53DB01F86D9590014FA22 /* MathParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MathParser.cpp; sourceTree = "<group>"; };
 		D5D410231DAD891F007BBA0D /* ImageSlicer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImageSlicer.cpp; sourceTree = "<group>"; };
 		D5D410241DAD891F007BBA0D /* ImageSlicer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageSlicer.h; sourceTree = "<group>"; };
 		D5D410251DAD891F007BBA0D /* Palette.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Palette.cpp; sourceTree = "<group>"; };
@@ -362,6 +370,8 @@
 				D5F308C71CFBB65700F76762 /* FELSDYNAPlot.h */,
 				D5F308C81CFBB65700F76762 /* FEMaterial.cpp */,
 				D5F308C91CFBB65700F76762 /* FEMaterial.h */,
+				D5C53DAD1F86D9580014FA22 /* FEMathData.cpp */,
+				D5C53DAF1F86D9590014FA22 /* FEMathData.h */,
 				D5F308CA1CFBB65700F76762 /* FEMesh.cpp */,
 				D5F308CB1CFBB65700F76762 /* FEMesh.h */,
 				D5F308CE1CFBB65700F76762 /* FEMeshData_T.h */,
@@ -425,6 +435,8 @@
 				D5F308FE1CFBB65700F76762 /* lut.cpp */,
 				D5F308FF1CFBB65700F76762 /* math3d.cpp */,
 				D5F309001CFBB65700F76762 /* math3d.h */,
+				D5C53DB01F86D9590014FA22 /* MathParser.cpp */,
+				D5C53DAE1F86D9580014FA22 /* MathParser.h */,
 				D5D410251DAD891F007BBA0D /* Palette.cpp */,
 				D5D410261DAD891F007BBA0D /* Palette.h */,
 				D5F309011CFBB65700F76762 /* PltArchive.cpp */,
@@ -462,6 +474,7 @@
 			files = (
 				D5F3091C1CFBB65700F76762 /* color.h in Headers */,
 				D5A65E151DBFA55800B44009 /* xpltFileReader.h in Headers */,
+				D5C53DB21F86D95F0014FA22 /* MathParser.h in Headers */,
 				D5F309511CFBB65700F76762 /* FENodeFaceList.h in Headers */,
 				D5F309631CFBB65700F76762 /* FEVTKImport.h in Headers */,
 				D5F309401CFBB65700F76762 /* FELSDYNAPlot.h in Headers */,
@@ -524,6 +537,7 @@
 				D5F309491CFBB65700F76762 /* FEModel.h in Headers */,
 				D5F3097E1CFBB65700F76762 /* stdafx.h in Headers */,
 				D5F309261CFBB65700F76762 /* FEASCIIImport.h in Headers */,
+				D5C53DB31F86D95F0014FA22 /* FEMathData.h in Headers */,
 				D5842FE21EC2BC95004FC215 /* FENodeEdgeList.h in Headers */,
 				D5F309821CFBB65700F76762 /* VolRender.h in Headers */,
 				D5D410281DAD891F007BBA0D /* ImageSlicer.h in Headers */,
@@ -597,6 +611,7 @@
 				D5F3093B1CFBB65700F76762 /* FELSDYNAExport.cpp in Sources */,
 				D5F3095C1CFBB65700F76762 /* FESTLimport.cpp in Sources */,
 				D5F309411CFBB65700F76762 /* FEMaterial.cpp in Sources */,
+				D5C53DB11F86D95F0014FA22 /* FEMathData.cpp in Sources */,
 				D5F309541CFBB65700F76762 /* FEPlotMix.cpp in Sources */,
 				D5F309141CFBB65700F76762 /* Animation.cpp in Sources */,
 				D5F3093D1CFBB65700F76762 /* FELSDYNAimport.cpp in Sources */,
@@ -628,6 +643,7 @@
 				D5842FE31EC2BC95004FC215 /* Intersect.cpp in Sources */,
 				D5F309121CFBB65700F76762 /* 3DImage.cpp in Sources */,
 				D5F309481CFBB65700F76762 /* FEModel.cpp in Sources */,
+				D5C53DB41F86D95F0014FA22 /* MathParser.cpp in Sources */,
 				D5F309871CFBB65700F76762 /* XMLWriter.cpp in Sources */,
 				D5F3092D1CFBB65700F76762 /* FEDataManager.cpp in Sources */,
 				D5F3095A1CFBB65700F76762 /* FEState.cpp in Sources */,

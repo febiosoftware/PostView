@@ -207,7 +207,7 @@ FEDataField* FEModel::CopyDataField(FEDataField* pd, const char* sznewname)
 	if (sznewname == 0)
 	{
 		char szname[256] = {0};
-		sprintf(szname, "%s_copy", pd->GetName());
+		sprintf(szname, "%s_copy", pd->GetName().c_str());
 		pdcopy->SetName(szname);
 	}
 	else pdcopy->SetName(sznewname);
