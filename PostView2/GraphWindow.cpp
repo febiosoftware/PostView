@@ -789,13 +789,13 @@ void CGraphWindow::on_selectTime_currentIndexChanged(int)
 }
 
 //-----------------------------------------------------------------------------
-void CGraphWindow::on_selectX_currentIndexChanged(int)
+void CGraphWindow::on_selectX_currentValueChanged(int)
 {
 	Update(false);
 }
 
 //-----------------------------------------------------------------------------
-void CGraphWindow::on_selectY_currentIndexChanged(int)
+void CGraphWindow::on_selectY_currentValueChanged(int)
 {
 	Update(false);
 }

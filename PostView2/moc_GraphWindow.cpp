@@ -238,8 +238,8 @@ static const qt_meta_stringdata_CGraphWindow_t qt_meta_stringdata_CGraphWindow =
 QT_MOC_LITERAL(0, 0, 12), // "CGraphWindow"
 QT_MOC_LITERAL(1, 13, 33), // "on_selectTime_currentIndexCha..."
 QT_MOC_LITERAL(2, 47, 0), // ""
-QT_MOC_LITERAL(3, 48, 30), // "on_selectX_currentIndexChanged"
-QT_MOC_LITERAL(4, 79, 30), // "on_selectY_currentIndexChanged"
+QT_MOC_LITERAL(3, 48, 30), // "on_selectX_currentValueChanged"
+QT_MOC_LITERAL(4, 79, 30), // "on_selectY_currentValueChanged"
 QT_MOC_LITERAL(5, 110, 33), // "on_selectPlot_currentIndexCha..."
 QT_MOC_LITERAL(6, 144, 23), // "on_actionSave_triggered"
 QT_MOC_LITERAL(7, 168, 28), // "on_actionClipboard_triggered"
@@ -254,8 +254,8 @@ QT_MOC_LITERAL(15, 368, 25) // "on_options_optionsChanged"
 
     },
     "CGraphWindow\0on_selectTime_currentIndexChanged\0"
-    "\0on_selectX_currentIndexChanged\0"
-    "on_selectY_currentIndexChanged\0"
+    "\0on_selectX_currentValueChanged\0"
+    "on_selectY_currentValueChanged\0"
     "on_selectPlot_currentIndexChanged\0"
     "on_actionSave_triggered\0"
     "on_actionClipboard_triggered\0"
@@ -321,8 +321,8 @@ void CGraphWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->on_selectTime_currentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 1: _t->on_selectX_currentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 2: _t->on_selectY_currentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 1: _t->on_selectX_currentValueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 2: _t->on_selectY_currentValueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 3: _t->on_selectPlot_currentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 4: _t->on_actionSave_triggered(); break;
         case 5: _t->on_actionClipboard_triggered(); break;

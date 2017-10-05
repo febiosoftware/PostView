@@ -124,8 +124,8 @@ private:
 
 private slots:
 	void on_selectTime_currentIndexChanged(int);
-	void on_selectX_currentIndexChanged(int);
-	void on_selectY_currentIndexChanged(int);
+	void on_selectX_currentValueChanged(int);
+	void on_selectY_currentValueChanged(int);
 	void on_selectPlot_currentIndexChanged(int);
 	void on_actionSave_triggered();
 	void on_actionClipboard_triggered();
