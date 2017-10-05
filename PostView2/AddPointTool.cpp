@@ -33,11 +33,9 @@ void CAddPointTool::Props::SetPropertyValue(int i, const QVariant& v)
 }
 
 //-----------------------------------------------------------------------------
-CAddPointTool::CAddPointTool() : CBasicTool("Add Point")
+CAddPointTool::CAddPointTool(CDocument* doc) : CBasicTool("Add Point", doc)
 {
-	m_doc = 0;
 	m_deco = 0;
-
 	m_pos = vec3f(0.f, 0.f, 0.f);
 }
 
@@ -48,10 +46,9 @@ CPropertyList* CAddPointTool::getPropertyList()
 }
 
 //-----------------------------------------------------------------------------
-void CAddPointTool::activate(CDocument* pdoc)
+void CAddPointTool::activate()
 {
-	m_doc = pdoc;
-	if (pdoc && pdoc->IsValid())
+	if (m_doc && m_doc->IsValid())
 	{
 		if (m_deco)
 		{

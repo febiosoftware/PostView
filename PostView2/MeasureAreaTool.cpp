@@ -27,10 +27,8 @@ void CMeasureAreaTool::Props::SetPropertyValue(int i, const QVariant& v)
 }
 
 //-----------------------------------------------------------------------------
-CMeasureAreaTool::CMeasureAreaTool() : CBasicTool("Measure Area", CBasicTool::HAS_APPLY_BUTTON)
+CMeasureAreaTool::CMeasureAreaTool(CDocument* doc) : CBasicTool("Measure Area", doc, CBasicTool::HAS_APPLY_BUTTON)
 {
-	m_doc = 0;
-
 	m_nsel = 0;
 	m_area = 0.0;
 }
@@ -39,17 +37,6 @@ CMeasureAreaTool::CMeasureAreaTool() : CBasicTool("Measure Area", CBasicTool::HA
 CPropertyList* CMeasureAreaTool::getPropertyList()
 { 
 	return new Props(this); 
-}
-
-//-----------------------------------------------------------------------------
-void CMeasureAreaTool::activate(CDocument* pdoc)
-{
-	m_doc = pdoc;
-}
-
-//-----------------------------------------------------------------------------
-void CMeasureAreaTool::deactivate()
-{
 }
 
 //-----------------------------------------------------------------------------

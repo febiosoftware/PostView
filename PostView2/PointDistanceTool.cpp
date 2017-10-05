@@ -61,7 +61,18 @@ QVariant CPointDistanceTool::Props::GetPropertyValue(int i)
 	case 3: return fabs(tool->m_d.y); break;
 	case 4: return fabs(tool->m_d.z); break;
 	case 5: return tool->m_d.Length(); break;
-	case 6: return (tool->m_bvalid ? tool->m_d.Length() / tool->m_d0.Length() : 1.f); break;
+	case 6: 
+		{
+			double s = 0.0;
+			if (tool->m_bvalid)
+			{
+				double L = tool->m_d.Length();
+				double L0 = tool->m_d0.Length();
+				if (L0 != 0.0) s = L / L0;
+			}
+			return s;
+		}
+		break;
 	}
 	return QVariant();
 }
@@ -73,12 +84,11 @@ void CPointDistanceTool::Props::SetPropertyValue(int i, const QVariant& v)
 	tool->updateLength();
 }
 
-CPointDistanceTool::CPointDistanceTool() : CBasicTool("Pt.Distance")
+CPointDistanceTool::CPointDistanceTool(CDocument* doc) : CBasicTool("Pt.Distance", doc)
 { 
 	m_node1 = 0; 
 	m_node2 = 0; 
 	m_d = vec3f(0,0,0); 
-	m_doc = 0; 
 	m_deco = 0;
 	m_bvalid = false;
 }
@@ -88,9 +98,8 @@ CPropertyList* CPointDistanceTool::getPropertyList()
 	return new Props(this); 
 }
 
-void CPointDistanceTool::activate(CDocument* pdoc)
+void CPointDistanceTool::activate()
 {
-	m_doc = pdoc;
 	update(true);
 }
 

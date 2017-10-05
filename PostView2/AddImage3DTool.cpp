@@ -67,9 +67,8 @@ public:
 	}
 };
 
-CAddImage3DTool::CAddImage3DTool(): CAbstractTool("Add 3D image")
+CAddImage3DTool::CAddImage3DTool(CDocument* doc) : CAbstractTool("Add 3D image", doc)
 {
-	m_doc = 0;
 	ui = 0;
 };
 
@@ -77,18 +76,6 @@ CAddImage3DTool::CAddImage3DTool(): CAbstractTool("Add 3D image")
 QWidget* CAddImage3DTool::createUi()
 {
 	return ui = new CAddImage3DToolUI(this);
-}
-
-// activate the tool
-void CAddImage3DTool::activate(CDocument* pdoc)
-{
-	m_doc = pdoc;
-}
-
-// deactive the tool
-void CAddImage3DTool::deactivate()
-{
-	m_doc = 0;
 }
 
 void CAddImage3DTool::OnBrowse()

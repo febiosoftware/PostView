@@ -2,7 +2,6 @@
 #include "Tool.h"
 #include <PostViewLib/math3d.h>
 
-class CDocument;
 class CPointDistanceDecoration;
 
 class CPointDistanceTool : public CBasicTool
@@ -18,11 +17,11 @@ class CPointDistanceTool : public CBasicTool
 	};
 
 public:
-	CPointDistanceTool();
+	CPointDistanceTool(CDocument* doc);
 
 	CPropertyList* getPropertyList();
 
-	void activate(CDocument* pdoc);
+	void activate();
 
 	void deactivate();
 
@@ -37,7 +36,6 @@ private:
 	int			m_node1, m_node2;	// mesh nodes
 	vec3f		m_d0;				// initial separation vector
 	vec3f		m_d;				// separation vector
-	CDocument*	m_doc;
 	CPointDistanceDecoration*	m_deco;
 
 	friend class Props;

@@ -35,10 +35,8 @@ void CTransformTool::Props::SetPropertyValue(int i, const QVariant& v)
 }
 
 //-----------------------------------------------------------------------------
-CTransformTool::CTransformTool() : CBasicTool("Transform", CBasicTool::HAS_APPLY_BUTTON)
+CTransformTool::CTransformTool(CDocument* doc) : CBasicTool("Transform", doc, CBasicTool::HAS_APPLY_BUTTON)
 {
-	m_doc = 0;
-
 	m_dr = vec3f(0.f, 0.f, 0.f);
 }
 
@@ -46,17 +44,6 @@ CTransformTool::CTransformTool() : CBasicTool("Transform", CBasicTool::HAS_APPLY
 CPropertyList* CTransformTool::getPropertyList()
 { 
 	return new Props(this); 
-}
-
-//-----------------------------------------------------------------------------
-void CTransformTool::activate(CDocument* pdoc)
-{
-	m_doc = pdoc;
-}
-
-//-----------------------------------------------------------------------------
-void CTransformTool::deactivate()
-{
 }
 
 //-----------------------------------------------------------------------------

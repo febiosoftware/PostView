@@ -22,13 +22,13 @@ class CAddPointTool : public CBasicTool
 
 public:
 	// constructor
-	CAddPointTool();
+	CAddPointTool(CDocument* doc);
 
 	// get the property list
 	CPropertyList*	getPropertyList();
 
 	// activate the tool
-	void activate(CDocument* pdoc);
+	void activate();
 
 	// deactive the tool
 	void deactivate();
@@ -39,7 +39,6 @@ private:
 private:
 	vec3f	m_pos;
 
-	CDocument*				m_doc;
 	GPointDecoration*	m_deco;
 
 	friend class Props;

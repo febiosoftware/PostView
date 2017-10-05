@@ -57,9 +57,8 @@ public:
 };
 
 // constructor
-CImportLinesTool::CImportLinesTool() : CAbstractTool("Import lines")
+CImportLinesTool::CImportLinesTool(CDocument* doc) : CAbstractTool("Import lines", doc)
 {
-	m_doc = 0;
 	ui = 0;
 }
 
@@ -67,18 +66,6 @@ CImportLinesTool::CImportLinesTool() : CAbstractTool("Import lines")
 QWidget* CImportLinesTool::createUi()
 {
 	return ui = new CImportLinesToolUI(this);
-}
-
-// activate the tool
-void CImportLinesTool::activate(CDocument* pdoc)
-{
-	m_doc = pdoc;
-}
-
-// deactive the tool
-void CImportLinesTool::deactivate()
-{
-	m_doc = 0;
 }
 
 void CImportLinesTool::OnApply()
@@ -312,9 +299,8 @@ public:
 };
 
 // constructor
-CImportPointsTool::CImportPointsTool() : CAbstractTool("Import points")
+CImportPointsTool::CImportPointsTool(CDocument* doc) : CAbstractTool("Import points", doc)
 {
-	m_doc = 0;
 	ui = 0;
 }
 
@@ -322,18 +308,6 @@ CImportPointsTool::CImportPointsTool() : CAbstractTool("Import points")
 QWidget* CImportPointsTool::createUi()
 {
 	return ui = new CImportPointsToolUI(this);
-}
-
-// activate the tool
-void CImportPointsTool::activate(CDocument* pdoc)
-{
-	m_doc = pdoc;
-}
-
-// deactive the tool
-void CImportPointsTool::deactivate()
-{
-	m_doc = 0;
 }
 
 void CImportPointsTool::OnBrowse()

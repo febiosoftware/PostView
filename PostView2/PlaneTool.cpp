@@ -109,7 +109,7 @@ public:
 	}
 };
 
-CPlaneTool::CPlaneTool() : CAbstractTool("Plane tool")
+CPlaneTool::CPlaneTool(CDocument* doc) : CAbstractTool("Plane tool", doc)
 {
 	m_dec = 0;
 }
@@ -121,15 +121,13 @@ QWidget* CPlaneTool::createUi()
 }
 
 // activate the tool
-void CPlaneTool::activate(CDocument* pdoc)
+void CPlaneTool::activate()
 {
-	m_doc = pdoc;
-
 	ui->node1->setValue(ui->m_node[0]);
 	ui->node2->setValue(ui->m_node[1]);
 	ui->node3->setValue(ui->m_node[2]);
 
-	if (pdoc && pdoc->IsValid())
+	if (m_doc && m_doc->IsValid())
 	{
 		if (m_dec)
 		{

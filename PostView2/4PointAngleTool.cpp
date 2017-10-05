@@ -86,9 +86,8 @@ void C4PointAngleTool::Props::SetPropertyValue(int i, const QVariant& v)
 }
 
 //-----------------------------------------------------------------------------
-C4PointAngleTool::C4PointAngleTool() : CBasicTool("4Point Angle")
+C4PointAngleTool::C4PointAngleTool(CDocument* doc) : CBasicTool("4Point Angle", doc)
 {
-	m_doc = 0;
 	m_deco = 0;
 
 	m_node[0] = 0;
@@ -105,10 +104,9 @@ CPropertyList* C4PointAngleTool::getPropertyList()
 }
 
 //-----------------------------------------------------------------------------
-void C4PointAngleTool::activate(CDocument* pdoc)
+void C4PointAngleTool::activate()
 {
-	m_doc = pdoc;
-	if (pdoc && pdoc->IsValid())
+	if (m_doc && m_doc->IsValid())
 	{
 		FEMeshBase& mesh = *m_doc->GetActiveMesh();
 		const vector<FENode*> selectedNodes = m_doc->GetGLModel()->GetNodeSelection();

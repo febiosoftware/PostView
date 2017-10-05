@@ -51,9 +51,8 @@ public:
 };
 
 // constructor
-CDistanceMapTool::CDistanceMapTool() : CAbstractTool("Distance Map")
+CDistanceMapTool::CDistanceMapTool(CDocument* doc) : CAbstractTool("Distance Map", doc)
 {
-	m_doc = 0;
 	ui = 0;
 }
 
@@ -61,18 +60,6 @@ CDistanceMapTool::CDistanceMapTool() : CAbstractTool("Distance Map")
 QWidget* CDistanceMapTool::createUi()
 {
 	return ui = new CDistanceMapToolUI(this);
-}
-
-// activate the tool
-void CDistanceMapTool::activate(CDocument* pdoc)
-{
-	m_doc = pdoc;
-}
-
-// deactive the tool
-void CDistanceMapTool::deactivate()
-{
-	m_doc = 0;
 }
 
 void CDistanceMapTool::OnAssign1()
@@ -136,9 +123,8 @@ public:
 };
 
 // constructor
-CCurvatureMapTool::CCurvatureMapTool() : CAbstractTool("Curvature Map")
+CCurvatureMapTool::CCurvatureMapTool(CDocument* doc) : CAbstractTool("Curvature Map", doc)
 {
-	m_doc = 0;
 	ui = 0;
 }
 
@@ -146,18 +132,6 @@ CCurvatureMapTool::CCurvatureMapTool() : CAbstractTool("Curvature Map")
 QWidget* CCurvatureMapTool::createUi()
 {
 	return ui = new CCurvatureMapToolUI(this);
-}
-
-// activate the tool
-void CCurvatureMapTool::activate(CDocument* pdoc)
-{
-	m_doc = pdoc;
-}
-
-// deactive the tool
-void CCurvatureMapTool::deactivate()
-{
-	m_doc = 0;
 }
 
 void CCurvatureMapTool::OnAssign1()

@@ -20,24 +20,16 @@ class CTransformTool : public CBasicTool
 
 public:
 	// constructor
-	CTransformTool();
+	CTransformTool(CDocument* doc);
 
 	// get the property list
 	CPropertyList*	getPropertyList();
-
-	// activate the tool
-	void activate(CDocument* pdoc);
-
-	// deactive the tool
-	void deactivate();
 
 	// Apply button
 	void OnApply();
 
 private:
 	vec3f	m_dr;
-
-	CDocument*				m_doc;
 
 	friend class Props;
 };

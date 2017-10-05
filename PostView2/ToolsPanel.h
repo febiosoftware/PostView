@@ -20,13 +20,9 @@ public:
 private:
 	void initTools();
 
-	void hideEvent(QHideEvent* event);
-	void showEvent(QShowEvent* event);
-
 private slots:
 	void on_buttons_buttonClicked(int id);
 
 private:
 	Ui::CToolsPanel*	ui;
-	CAbstractTool*		activeTool;
 };

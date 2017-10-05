@@ -1859,8 +1859,13 @@ void CMainWindow::on_actionHelp_triggered()
 
 void CMainWindow::on_actionAbout_triggered()
 {
-	QString txt = QString("<h1>PostView</h1><p>version %1.%2.%3</p><p>Musculoskeletal Research Laboratories, University of Utah</p><p> Copyright (c) 2005 - 2017, All rights reserved</p>").arg(VERSION).arg(SUBVERSION).arg(SUBSUBVERSION);
-	QMessageBox::information(this, "About PostView2", txt, QMessageBox::Close);
+	QString txt = QString("<h1>PostView</h1><p>Version %1.%2.%3</p><p>Musculoskeletal Research Laboratories, University of Utah</p><p> Copyright (c) 2005 - 2017, All rights reserved</p>").arg(VERSION).arg(SUBVERSION).arg(SUBSUBVERSION);
+
+	QMessageBox about(this);
+	about.setWindowTitle("About PostView");
+	about.setText(txt);
+	about.setIconPixmap(QPixmap(":/icons/postview_medium.png"));
+	about.exec();
 }
 
 void CMainWindow::on_actionRecordNew_triggered()

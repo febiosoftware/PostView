@@ -20,16 +20,10 @@ class CShellThicknessTool : public CBasicTool
 
 public:
 	// constructor
-	CShellThicknessTool();
+	CShellThicknessTool(CDocument* doc);
 
 	// get the property list
 	CPropertyList*	getPropertyList();
-
-	// activate the tool
-	void activate(CDocument* pdoc);
-
-	// deactive the tool
-	void deactivate();
 
 	// Apply button
 	void OnApply();
@@ -37,8 +31,5 @@ public:
 private:
 	double	m_h;		// shell thickness
 
-	CDocument*				m_doc;
-
 	friend class Props;
 };
-

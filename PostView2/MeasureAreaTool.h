@@ -20,16 +20,10 @@ class CMeasureAreaTool : public CBasicTool
 
 public:
 	// constructor
-	CMeasureAreaTool();
+	CMeasureAreaTool(CDocument* doc);
 
 	// get the property list
 	CPropertyList*	getPropertyList();
-
-	// activate the tool
-	void activate(CDocument* pdoc);
-
-	// deactive the tool
-	void deactivate();
 
 	// Apply button
 	void OnApply();
@@ -37,8 +31,6 @@ public:
 private:
 	int		m_nsel;		// selected faces
 	double	m_area;		// area of selection
-
-	CDocument*				m_doc;
 
 	friend class Props;
 };

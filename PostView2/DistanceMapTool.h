@@ -16,16 +16,10 @@ class CDistanceMapTool : public CAbstractTool
 
 public:
 	// constructor
-	CDistanceMapTool();
+	CDistanceMapTool(CDocument* doc);
 
 	// get the property list
 	QWidget* createUi();
-
-	// activate the tool
-	void activate(CDocument* pdoc);
-
-	// deactive the tool
-	void deactivate();
 
 private slots:
 	void OnAssign1();
@@ -33,7 +27,6 @@ private slots:
 	void OnApply();
 
 private:
-	CDocument*				m_doc;
 	CDistanceMapToolUI*		ui;
 	friend class Props;
 };
@@ -45,16 +38,10 @@ class CCurvatureMapTool : public CAbstractTool
 
 public:
 	// constructor
-	CCurvatureMapTool();
+	CCurvatureMapTool(CDocument* doc);
 
 	// get the property list
 	QWidget* createUi();
-
-	// activate the tool
-	void activate(CDocument* pdoc);
-
-	// deactive the tool
-	void deactivate();
 
 private slots:
 	void OnAssign1();
@@ -62,7 +49,6 @@ private slots:
 	void OnApply();
 
 private:
-	CDocument*				m_doc;
 	CCurvatureMapToolUI*	ui;
 	friend class Props;
 };

@@ -12,16 +12,10 @@ class CPlotMixTool : public CAbstractTool
 
 public:
 	// constructor
-	CPlotMixTool();
+	CPlotMixTool(CDocument* doc);
 
 	// get the property list
 	QWidget* createUi();
-
-	// activate the tool
-	void activate(CDocument* pdoc);
-
-	// deactive the tool
-	void deactivate();
 
 private slots:
 	void OnBrowse();
@@ -31,7 +25,6 @@ private slots:
 	void OnApply();
 
 private:
-	CDocument*			m_doc;
 	CPlotMixToolUI*		ui;
 	friend class Props;
 };
@@ -42,16 +35,10 @@ class CKinematTool : public CAbstractTool
 
 public:
 	// constructor
-	CKinematTool();
+	CKinematTool(CDocument* doc);
 
 	// get the property list
 	QWidget* createUi();
-
-	// activate the tool
-	void activate(CDocument* pdoc);
-
-	// deactive the tool
-	void deactivate();
 
 private slots:
 	void OnBrowse1();
@@ -59,7 +46,6 @@ private slots:
 	void OnApply();
 
 private:
-	CDocument*			m_doc;
 	CKinematToolUI*		ui;
 	friend class Props;
 };

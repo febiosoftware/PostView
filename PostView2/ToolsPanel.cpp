@@ -38,10 +38,16 @@ class Ui::CToolsPanel
 {
 public:
 	QStackedWidget*	stack;
+	QButtonGroup*	group;
+	CAbstractTool*		activeTool;
+	int					activeID;
 
 public:
 	void setupUi(::CToolsPanel* parent)
 	{
+		activeID = -1;
+		activeTool = 0;
+
 		QVBoxLayout* pg = new QVBoxLayout(parent);
 		pg->setMargin(2);
 		
@@ -51,7 +57,7 @@ public:
 		box->setLayout(grid);
 		grid->setSpacing(2);
 
-		QButtonGroup* group = new QButtonGroup(box);
+		group = new QButtonGroup(box);
 		group->setObjectName("buttons");
 
 		int ntools = tools.size();
@@ -100,16 +106,15 @@ public:
 
 CToolsPanel::CToolsPanel(CMainWindow* window, QWidget* parent) : CCommandPanel(window, parent), ui(new Ui::CToolsPanel)
 {
-	activeTool = 0;
 	initTools();
 	ui->setupUi(this);
 }
 
 void CToolsPanel::Update(bool breset)
 {
-	if (activeTool)
+	if (ui->activeTool)
 	{
-		activeTool->update(breset);
+		ui->activeTool->update(breset);
 
 		// repaint parent
 		m_wnd->RedrawGL();
@@ -118,68 +123,47 @@ void CToolsPanel::Update(bool breset)
 
 void CToolsPanel::initTools()
 {
-	tools.push_back(new CPointDistanceTool  );
-	tools.push_back(new C3PointAngleTool    );
-	tools.push_back(new C4PointAngleTool    );
-	tools.push_back(new CPlaneTool          );
-	tools.push_back(new CPlotMixTool        );
-	tools.push_back(new CMeasureAreaTool    );
-	tools.push_back(new CImportLinesTool    );
-	tools.push_back(new CKinematTool        );
-	tools.push_back(new CDistanceMapTool    );
-	tools.push_back(new CCurvatureMapTool   );
-	tools.push_back(new CPointCongruencyTool);
-	tools.push_back(new CAddImage3DTool     );
-	tools.push_back(new CSphereFitTool      );
-	tools.push_back(new CTransformTool      );
-	tools.push_back(new CShellThicknessTool );
-	tools.push_back(new CAddPointTool       );
-	tools.push_back(new CImportPointsTool   );
+	CDocument* doc = m_wnd->GetDocument();
+
+	tools.push_back(new CPointDistanceTool  (doc));
+	tools.push_back(new C3PointAngleTool    (doc));
+	tools.push_back(new C4PointAngleTool    (doc));
+	tools.push_back(new CPlaneTool          (doc));
+	tools.push_back(new CPlotMixTool        (doc));
+	tools.push_back(new CMeasureAreaTool    (doc));
+	tools.push_back(new CImportLinesTool    (doc));
+	tools.push_back(new CKinematTool        (doc));
+	tools.push_back(new CDistanceMapTool    (doc));
+	tools.push_back(new CCurvatureMapTool   (doc));
+	tools.push_back(new CPointCongruencyTool(doc));
+	tools.push_back(new CAddImage3DTool     (doc));
+	tools.push_back(new CSphereFitTool      (doc));
+	tools.push_back(new CTransformTool      (doc));
+	tools.push_back(new CShellThicknessTool (doc));
+	tools.push_back(new CAddPointTool       (doc));
+	tools.push_back(new CImportPointsTool   (doc));
 }
 
 void CToolsPanel::on_buttons_buttonClicked(int id)
 {
-	// deactivate the active tool
-	if (activeTool) activeTool->deactivate();
-	activeTool = 0;
-
-	// find the tool
-	QList<CAbstractTool*>::iterator it = tools.begin();
-	for (int i=0; i<id-1; ++i, ++it);
-
-	// get the active document
-	CDocument* doc = m_wnd->GetDocument();
-
-	// activate the tool
-	activeTool = *it;
-	activeTool->activate(doc);
-
-	// show the tab
-	ui->stack->setCurrentIndex(id);
-
-	// repaint parent
-	m_wnd->RedrawGL();
-}
-
-void CToolsPanel::hideEvent(QHideEvent* ev)
-{
-	if (activeTool)
+	if (ui->activeID == id)
 	{
-		activeTool->deactivate();
+		ui->stack->setCurrentIndex(0);
+		ui->activeTool = 0;
+		ui->activeID = -1;
 	}
-	ev->accept();
-
-	// repaint parent
-	m_wnd->RedrawGL();
-}
-
-void CToolsPanel::showEvent(QShowEvent* ev)
-{
-	if (activeTool)
+	else
 	{
-		activeTool->activate(m_wnd->GetDocument());
+		// deactivate the active tool
+		ui->activeTool = 0;
+		ui->activeID = id;
+
+		// find the tool
+		ui->activeTool = tools.at(id - 1); assert(ui->activeTool);
+
+		// show the tab
+		ui->stack->setCurrentIndex(id);
 	}
-	ev->accept();
 
 	// repaint parent
 	m_wnd->RedrawGL();

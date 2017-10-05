@@ -10,13 +10,13 @@ class CPlaneTool : public CAbstractTool
 	Q_OBJECT
 
 public:
-	CPlaneTool();
+	CPlaneTool(CDocument* doc);
 
 	// get the UI widget
 	QWidget* createUi();
 
 	// activate the tool
-	void activate(CDocument* pdoc);
+	void activate();
 
 	// deactive the tool
 	void deactivate();
@@ -31,7 +31,6 @@ private slots:
 	void onAlignView();
 
 private:
-	CDocument*			m_doc;
 	CPlaneToolUI*		ui;
 	CPlaneDecoration*	m_dec;
 };

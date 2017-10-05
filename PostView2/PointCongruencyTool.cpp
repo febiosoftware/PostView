@@ -62,9 +62,8 @@ public:
 };
 
 // constructor
-CPointCongruencyTool::CPointCongruencyTool() : CAbstractTool("Pt. Congruency")
+CPointCongruencyTool::CPointCongruencyTool(CDocument* doc) : CAbstractTool("Pt. Congruency", doc)
 {
-	m_doc = 0;
 	ui = 0;
 }
 
@@ -72,18 +71,6 @@ CPointCongruencyTool::CPointCongruencyTool() : CAbstractTool("Pt. Congruency")
 QWidget* CPointCongruencyTool::createUi()
 {
 	return ui = new CPointCongruencyToolUI(this);
-}
-
-// activate the tool
-void CPointCongruencyTool::activate(CDocument* pdoc)
-{
-	m_doc = pdoc;
-}
-
-// deactive the tool
-void CPointCongruencyTool::deactivate()
-{
-	m_doc = 0;
 }
 
 void CPointCongruencyTool::OnApply()

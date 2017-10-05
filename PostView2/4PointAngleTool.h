@@ -2,7 +2,6 @@
 #include "Tool.h"
 
 //-----------------------------------------------------------------------------
-class CDocument;
 class C4PointAngleDecoration;
 
 //-----------------------------------------------------------------------------
@@ -21,13 +20,13 @@ class C4PointAngleTool : public CBasicTool
 
 public:
 	// constructor
-	C4PointAngleTool();
+	C4PointAngleTool(CDocument* doc);
 
 	// get the property list
 	CPropertyList*	getPropertyList();
 
 	// activate the tool
-	void activate(CDocument* pdoc);
+	void activate();
 
 	// deactive the tool
 	void deactivate();
@@ -39,7 +38,6 @@ private:
 	int		m_node[4];
 	double	m_angle;
 
-	CDocument*				m_doc;
 	C4PointAngleDecoration*	m_deco;
 
 	friend class Props;

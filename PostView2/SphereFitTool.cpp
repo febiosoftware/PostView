@@ -46,9 +46,8 @@ public:
 };
 
 // constructor
-CSphereFitTool::CSphereFitTool() : CAbstractTool("Sphere Fit")
+CSphereFitTool::CSphereFitTool(CDocument* doc) : CAbstractTool("Sphere Fit", doc)
 {
-	m_doc = 0;
 	ui = 0;
 }
 
@@ -56,18 +55,6 @@ CSphereFitTool::CSphereFitTool() : CAbstractTool("Sphere Fit")
 QWidget* CSphereFitTool::createUi()
 {
 	return ui = new CSphereFitToolUI(this);
-}
-
-// activate the tool
-void CSphereFitTool::activate(CDocument* pdoc)
-{
-	m_doc = pdoc;
-}
-
-// deactive the tool
-void CSphereFitTool::deactivate()
-{
-	m_doc = 0;
 }
 
 void CSphereFitTool::OnFit()

@@ -13,23 +13,16 @@ class CAddImage3DTool : public CAbstractTool
 
 public:
 	// constructor
-	CAddImage3DTool();
+	CAddImage3DTool(CDocument* doc);
 
 	// get the property list
 	QWidget* createUi();
-
-	// activate the tool
-	void activate(CDocument* pdoc);
-
-	// deactive the tool
-	void deactivate();
 
 private slots:
 	void OnApply();
 	void OnBrowse();
 
 private:
-	CDocument*				m_doc;
 	CAddImage3DToolUI*		ui;
 	friend class Props;
 };

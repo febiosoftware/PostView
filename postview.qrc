@@ -25,6 +25,7 @@
 		<file>icons/properties.png</file>
 		<file>icons/cut.png</file>
 		<file>icons/vectors.png</file>
+		<file>icons/postview_medium.png</file>
 		<file>icons/postview_small.png</file>
 		<file>icons/view.png</file>
 		<file>icons/mesh.png</file>
@@ -45,5 +46,7 @@
 		<file>icons/select_free.png</file>
 		<file>icons/select_item.png</file>
 		<file>icons/select_connected.png</file>
+		<file>icons/eye.png</file>
+		<file>icons/check.png</file>
     </qresource>
 </RCC>

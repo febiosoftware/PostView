@@ -7,11 +7,22 @@
 //-----------------------------------------------------------------------------
 void CAbstractTool::updateUi()
 {
-	QApplication::activeWindow()->repaint();
+	QWidget* w = QApplication::activeWindow();
+	if (w) w->repaint();
+}
+
+void CToolUI::hideEvent(QHideEvent* ev)
+{
+	if (m_tool) m_tool->deactivate();
+}
+
+void CToolUI::showEvent(QShowEvent* ev)
+{
+	if (m_tool) m_tool->activate();
 }
 
 //-----------------------------------------------------------------------------
-CBasicTool::CBasicTool(const QString& s, unsigned int flags) : CAbstractTool(s)
+CBasicTool::CBasicTool(const QString& s, CDocument* doc, unsigned int flags) : CAbstractTool(s, doc)
 {
 	m_list = 0;
 	m_form = 0;
@@ -24,7 +35,7 @@ QWidget* CBasicTool::createUi()
 	m_list = getPropertyList();
 	if (m_list == 0) return 0;
 
-	QWidget* pw = new QWidget;
+	CToolUI* pw = new CToolUI(this);
 	QVBoxLayout* pl = new QVBoxLayout(pw);
 	pw->setLayout(pl);
 

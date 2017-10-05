@@ -50,9 +50,8 @@ public:
 	}
 };
 
-CPlotMixTool::CPlotMixTool() : CAbstractTool("Plot Mix")
+CPlotMixTool::CPlotMixTool(CDocument* doc) : CAbstractTool("Plot Mix", doc)
 {
-	m_doc = 0;
 	ui = 0;
 }
 
@@ -61,16 +60,6 @@ QWidget* CPlotMixTool::createUi()
 {
 	ui = new CPlotMixToolUI(this);
 	return ui;
-}
-
-// activate the tool
-void CPlotMixTool::activate(CDocument* pdoc)
-{
-}
-
-// deactive the tool
-void CPlotMixTool::deactivate()
-{
 }
 
 void CPlotMixTool::OnBrowse()
@@ -187,9 +176,8 @@ public:
 	}
 };
 
-CKinematTool::CKinematTool() : CAbstractTool("Kinemat")
+CKinematTool::CKinematTool(CDocument* doc) : CAbstractTool("Kinemat", doc)
 {
-	m_doc = 0;
 	ui = 0;
 }
 
@@ -198,17 +186,6 @@ QWidget* CKinematTool::createUi()
 {
 	ui = new CKinematToolUI(this);
 	return ui;
-}
-
-// activate the tool
-void CKinematTool::activate(CDocument* pdoc)
-{
-	m_doc = pdoc;
-}
-
-// deactive the tool
-void CKinematTool::deactivate()
-{
 }
 
 void CKinematTool::OnBrowse1()

@@ -1,9 +1,11 @@
 #pragma once
 #include "PropertyList.h"
+#include <QWidget>
 
-class QWidget;
 class CDocument;
 class CPropertyListForm;
+class QHideEvent;
+class QShowEvent;
 
 //-----------------------------------------------------------------------------
 // A tool implements a general purpose extension to PostView.
@@ -13,7 +15,7 @@ class CAbstractTool : public QObject
 {
 public:
 	// constructor. Requires a name for the plugin
-	CAbstractTool(const QString& s) : m_name(s) {}
+	CAbstractTool(const QString& s, CDocument* doc) : m_name(s), m_doc(doc) {}
 
 	// retrieve attributes
 	const QString& name() { return m_name; }
@@ -24,7 +26,7 @@ public:
 
 	// activate the tool
 	// The ui is about to be shown
-	virtual void activate(CDocument* doc) {}
+	virtual void activate() {}
 
 	// deactivate the tool
 	// the ui is no longer shown
@@ -36,8 +38,23 @@ public:
 	// update the Ui
 	virtual void updateUi();
 
+protected:
+	QString		m_name;
+	CDocument*	m_doc;
+};
+
+//-----------------------------------------------------------------------------
+class CToolUI : public QWidget
+{
+public:
+	CToolUI(CAbstractTool* tool, QWidget* parent = 0) : QWidget(parent), m_tool(tool){}
+
+	void hideEvent(QHideEvent* ev);
+
+	void showEvent(QShowEvent* ev);
+
 private:
-	QString	m_name;
+	CAbstractTool*	m_tool;
 };
 
 //-----------------------------------------------------------------------------
@@ -54,7 +71,7 @@ public:
 	};
 
 public:
-	CBasicTool(const QString& s, unsigned int flags = 0);
+	CBasicTool(const QString& s, CDocument* doc, unsigned int flags = 0);
 
 	// A form will be created based on the property list
 	QWidget* createUi();

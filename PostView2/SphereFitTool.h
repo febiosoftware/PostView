@@ -13,22 +13,15 @@ class CSphereFitTool : public CAbstractTool
 
 public:
 	// constructor
-	CSphereFitTool();
+	CSphereFitTool(CDocument* doc);
 
 	// get the property list
 	QWidget* createUi();
-
-	// activate the tool
-	void activate(CDocument* pdoc);
-
-	// deactive the tool
-	void deactivate();
 
 private slots:
 	void OnFit();
 
 private:
-	CDocument*				m_doc;
 	CSphereFitToolUI*	ui;
 	friend class Props;
 };

@@ -79,9 +79,8 @@ void C3PointAngleTool::Props::SetPropertyValue(int i, const QVariant& v)
 }
 
 //-----------------------------------------------------------------------------
-C3PointAngleTool::C3PointAngleTool() : CBasicTool("3Point Angle")
+C3PointAngleTool::C3PointAngleTool(CDocument* doc) : CBasicTool("3Point Angle", doc)
 {
-	m_doc = 0;
 	m_deco = 0;
 
 	m_node[0] = 0;
@@ -97,10 +96,9 @@ CPropertyList* C3PointAngleTool::getPropertyList()
 }
 
 //-----------------------------------------------------------------------------
-void C3PointAngleTool::activate(CDocument* pdoc)
+void C3PointAngleTool::activate()
 {
-	m_doc = pdoc;
-	if (pdoc && pdoc->IsValid())
+	if (m_doc && m_doc->IsValid())
 	{
 		FEMeshBase& mesh = *m_doc->GetActiveMesh();
 		const vector<FENode*> selectedNodes = m_doc->GetGLModel()->GetNodeSelection();

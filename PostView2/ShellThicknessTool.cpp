@@ -26,9 +26,8 @@ void CShellThicknessTool::Props::SetPropertyValue(int i, const QVariant& v)
 }
 
 //-----------------------------------------------------------------------------
-CShellThicknessTool::CShellThicknessTool() : CBasicTool("Shell Thickness", CBasicTool::HAS_APPLY_BUTTON)
+CShellThicknessTool::CShellThicknessTool(CDocument* doc) : CBasicTool("Shell Thickness", doc, CBasicTool::HAS_APPLY_BUTTON)
 {
-	m_doc = 0;
 	m_h = 0.0;
 }
 
@@ -36,17 +35,6 @@ CShellThicknessTool::CShellThicknessTool() : CBasicTool("Shell Thickness", CBasi
 CPropertyList* CShellThicknessTool::getPropertyList()
 { 
 	return new Props(this); 
-}
-
-//-----------------------------------------------------------------------------
-void CShellThicknessTool::activate(CDocument* pdoc)
-{
-	m_doc = pdoc;
-}
-
-//-----------------------------------------------------------------------------
-void CShellThicknessTool::deactivate()
-{
 }
 
 //-----------------------------------------------------------------------------

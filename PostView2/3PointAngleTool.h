@@ -2,7 +2,6 @@
 #include "Tool.h"
 
 //-----------------------------------------------------------------------------
-class CDocument;
 class C3PointAngleDecoration;
 
 //-----------------------------------------------------------------------------
@@ -21,13 +20,13 @@ class C3PointAngleTool : public CBasicTool
 
 public:
 	// constructor
-	C3PointAngleTool();
+	C3PointAngleTool(CDocument* doc);
 
 	// get the property list
 	CPropertyList*	getPropertyList();
 
 	// activate the tool
-	void activate(CDocument* pdoc);
+	void activate();
 
 	// deactive the tool
 	void deactivate();
@@ -39,7 +38,6 @@ private:
 	int		m_node[3];
 	double	m_angle;
 
-	CDocument*				m_doc;
 	C3PointAngleDecoration*	m_deco;
 
 	friend class Props;
