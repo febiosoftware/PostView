@@ -651,7 +651,12 @@ void CMainWindow::on_actionUpdate_triggered()
 	{
 		int N = m_doc->GetFEModel()->GetStates();
 		if (N > 1) ui->playToolBar->setEnabled(true);
+
+		FEModel* fem = m_doc->GetFEModel();
+		int nfield = m_doc->GetEvalField();
 		ui->selectData->BuildMenu(m_doc->GetFEModel(), DATA_SCALAR);
+		ui->selectData->setCurrentValue(nfield);
+		ui->actionColorMap->setDisabled(false);
 
 		// update the UI
 		UpdatePlayToolbar(true);

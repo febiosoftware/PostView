@@ -36,7 +36,7 @@ void CDataFieldSelector::BuildMenu(FEModel* fem, Data_Tensor_Type nclass, bool b
 
 	// get the current field
 	// we'll use it to restore the current selected option
-	int noldField = currentValue();
+	int noldField = m_currentValue;
 	m_currentValue = -1;
 
 	// get the datamanager
@@ -62,6 +62,12 @@ void CDataFieldSelector::BuildMenu(FEModel* fem, Data_Tensor_Type nclass, bool b
 
 				QAction* pa = m_menu->addAction(QString::fromStdString(d.GetName()));
 				pa->setData(QVariant(nfield));
+
+				if (nfield == noldField)
+				{
+					setText(pa->text());
+					m_currentValue = noldField;
+				}
 			}
 			else
 			{
@@ -75,13 +81,20 @@ void CDataFieldSelector::BuildMenu(FEModel* fem, Data_Tensor_Type nclass, bool b
 
 					QAction* pa = sub->addAction(QString::fromStdString(s));
 					pa->setData(QVariant(nfield));
+
+					if (nfield == noldField)
+					{
+						setText(pa->text());
+						m_currentValue = noldField;
+					}
 				}
 			}
 		}
 	}
 
-	// reset the current selection
-	setCurrentValue(noldField);
+	// if the old field was not found, send out a signal
+	if (m_currentValue == -1)
+		emit currentValueChanged(m_currentValue);
 }
 
 int CDataFieldSelector::currentValue() const
@@ -91,6 +104,9 @@ int CDataFieldSelector::currentValue() const
 
 void CDataFieldSelector::setCurrentValue(int newField)
 {
+	// make sure there is something to change
+	if (newField == m_currentValue) return;
+
 	if (m_fem)
 	{
 		string fieldName;
@@ -138,6 +154,8 @@ void CDataFieldSelector::setCurrentValue(int newField)
 			m_currentValue = -1;
 			setText("");
 		}
+
+		emit currentValueChanged(m_currentValue);
 	}
 }
 
