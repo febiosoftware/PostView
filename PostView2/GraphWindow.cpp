@@ -482,9 +482,9 @@ void CGraphWindow::addSelectedNodes()
 					// evaluate y-field
 					TrackNodeHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
 
-					CPlotData plot;
-					plot.setLabel(QString("N%1").arg(i+1));
-					for (int j=0; j<nsteps; ++j) plot.addPoint(xdata[j], ydata[j]);
+					CLineChartData* plot = new CLineChartData;
+					plot->setLabel(QString("N%1").arg(i+1));
+					for (int j=0; j<nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
 					ui->plot->addPlotData(plot);
 				}
 			}
@@ -502,9 +502,9 @@ void CGraphWindow::addSelectedNodes()
 					// evaluate y-field
 					TrackNodeHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
 
-					CPlotData plot;
-					plot.setLabel(QString("N%1").arg(i + 1));
-					for (int j = 0; j<nsteps; ++j) plot.addPoint(xdata[j], ydata[j]);
+					CLineChartData* plot = new CLineChartData;
+					plot->setLabel(QString("N%1").arg(i + 1));
+					for (int j = 0; j<nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
 					ui->plot->addPlotData(plot);
 				}
 			}
@@ -522,9 +522,9 @@ void CGraphWindow::addSelectedNodes()
 					// evaluate y-field
 					TrackNodeHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
 
-					CPlotData plot;
-					plot.setLabel(QString("N%1").arg(i+1));
-					for (int j=0; j<nsteps; ++j) plot.addPoint(xdata[j], ydata[j]);
+					CLineChartData* plot = new CLineChartData;
+					plot->setLabel(QString("N%1").arg(i+1));
+					for (int j=0; j<nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
 					ui->plot->addPlotData(plot);
 				}
 			}
@@ -536,8 +536,8 @@ void CGraphWindow::addSelectedNodes()
 			if (nsteps > 32) nsteps = 32;
 			for (int i=m_firstState; i<m_firstState + nsteps; ++i)
 			{
-				CPlotData plot;
-				plot.setLabel(QString("%1").arg(fem.GetState(i)->m_time));
+				CLineChartData* plot = new CLineChartData;
+				plot->setLabel(QString("%1").arg(fem.GetState(i)->m_time));
 				ui->plot->addPlotData(plot);
 			}
 
@@ -606,9 +606,9 @@ void CGraphWindow::addSelectedEdges()
 			// evaluate y-field
 			TrackEdgeHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
 
-			CPlotData plot;
-			plot.setLabel(QString("L%1").arg(i+1));
-			for (int j=0; j<nsteps; ++j) plot.addPoint(xdata[j], ydata[j]);
+			CLineChartData* plot = new CLineChartData;
+			plot->setLabel(QString("L%1").arg(i+1));
+			for (int j=0; j<nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
 			ui->plot->addPlotData(plot);
 		}
 	}
@@ -648,9 +648,9 @@ void CGraphWindow::addSelectedFaces()
 			// evaluate y-field
 			TrackFaceHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
 
-			CPlotData plot;
-			plot.setLabel(QString("F%1").arg(i+1));
-			for (int j=0; j<nsteps; ++j) plot.addPoint(xdata[j], ydata[j]);
+			CLineChartData* plot = new CLineChartData;
+			plot->setLabel(QString("F%1").arg(i+1));
+			for (int j=0; j<nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
 			ui->plot->addPlotData(plot);
 		}
 	}
@@ -690,9 +690,9 @@ void CGraphWindow::addSelectedElems()
 			// evaluate y-field
 			TrackElementHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
 
-			CPlotData plot;
-			for (int j=0; j<nsteps; ++j) plot.addPoint(xdata[j], ydata[j]);
-			plot.setLabel(QString("E%1").arg(i+1));
+			CLineChartData* plot = new CLineChartData;
+			for (int j=0; j<nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
+			plot->setLabel(QString("E%1").arg(i+1));
 			ui->plot->addPlotData(plot);
 		}
 	}

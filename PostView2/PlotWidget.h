@@ -7,15 +7,19 @@ using namespace std;
 //-----------------------------------------------------------------------------
 class QPainter;
 class QAction;
+class CPlotWidget;
 
 //-----------------------------------------------------------------------------
-// manages a set of (x,y) value pairs
+// Manages a set of (x,y) value pairs
+// Derived classes must implement drawing function.
 class CPlotData
 {
 public:
 	CPlotData();
 	CPlotData(const CPlotData& d);
 	CPlotData& operator = (const CPlotData& d);
+
+	virtual ~CPlotData();
 
 	//! clear data
 	void clear();
@@ -43,16 +47,35 @@ public:
 	// sort the data
 	void sort();
 
+public:
+	virtual	void draw(QPainter& painter, CPlotWidget& plt) = 0;
+
 protected:
 	vector<QPointF>	m_data;
 	QString			m_label;
 	QColor			m_col;
 };
 
+//-----------------------------------------------------------------------------
+class CLineChartData : public CPlotData
+{
+public:
+	void draw(QPainter& painter, CPlotWidget& plt);
+};
+
+//-----------------------------------------------------------------------------
+class CBarChartData : public CPlotData
+{
+public:
+	void draw(QPainter& painter, CPlotWidget& plt);
+};
+
+//-----------------------------------------------------------------------------
 struct CAxisFormat
 {
 	bool	visible;
 	int		labelPosition;
+	int		labelAlignment;
 };
 
 //-----------------------------------------------------------------------------
@@ -62,12 +85,6 @@ class CPlotWidget : public QWidget
 	Q_OBJECT
 
 public:
-	enum ChartStyle
-	{
-		LineChart,
-		BarChart
-	};
-
 	enum AxisLabelPosition
 	{
 		NEXT_TO_AXIS,
@@ -76,11 +93,19 @@ public:
 		NONE
 	};
 
+	enum AxisLabelAlignment
+	{
+		ALIGN_LABEL_LEFT,
+		ALIGN_LABEL_RIGHT,
+		ALIGN_LABEL_TOP,
+		ALIGN_LABEL_BOTTOM
+	};
+
 public:
 	struct Selection
 	{
 		int			ndataIndex;
-		QPointF		point;
+		int			npointIndex;
 	};
 
 public:
@@ -116,11 +141,11 @@ public:
 	void setViewRect(const QRectF& rt);
 
 	// add a data field
-	void addPlotData(CPlotData& p);
+	void addPlotData(CPlotData* p);
 
 	// get a data field
 	int plots() { return (int) m_data.size(); }
-	CPlotData& getPlotData(int i) { return m_data[i]; }
+	CPlotData& getPlotData(int i) { return *m_data[i]; }
 
 	// turn on/off zoom-to-rect mode
 	void ZoomToRect(bool b = true);
@@ -131,6 +156,9 @@ public:
 
 	// popup menu
 	void showPopup(bool b) { m_bshowPopup = b; }
+
+	// tool tip (showing selected data point)
+	void showToolTip(bool b) { m_bshowToolTip = b; }
 
 	// save data to file
 	bool Save(const QString& fileName);
@@ -154,9 +182,30 @@ public:
 
 	QPointF SnapToGrid(const QPointF& p);
 
+	QPointF dataPoint(int ndata, int npoint);
+
+	void setFullScreenMode(bool b) { m_bfullScreenMode = b; }
+
+	void setXAxisLabelAlignment(AxisLabelAlignment a);
+	void setYAxisLabelAlignment(AxisLabelAlignment a);
+
+	void setBackgroundColor(const QColor& c) { m_bgCol = c; }
+	void setGridColor(const QColor& c) { m_gridCol = c; }
+	void setXAxisColor(const QColor& c) { m_xCol = c; }
+	void setYAxisColor(const QColor& c) { m_yCol = c; }
+	void setSelectionColor(const QColor& c) { m_selCol = c; }
+
+	void selectPoint(int ndata, int npoint);
+
+	QRect ScreenRect() const { return m_screenRect; }
+
 signals:
 	void doneZoomToRect();
-	void pointClicked(double x, double y);
+	void pointClicked(QPointF p, bool bshift);
+	void pointSelected(int n);
+	void pointDragged(QPoint p);
+	void draggingStart(QPoint p);
+	void draggingEnd(QPoint p);
 
 protected:
 	void mousePressEvent  (QMouseEvent* ev);
@@ -168,13 +217,20 @@ protected:
 public:
 	QString	m_title;
 	QRectF	m_viewRect;
-	QRect	m_screenRect;
+	QRect	m_screenRect, m_titleRect;
 	QPoint	m_mousePos, m_mouseInitPos;
+	QColor	m_bgCol;
+	QColor	m_gridCol;
+	QColor	m_xCol;
+	QColor	m_yCol;
+	QColor	m_selCol;
 	double	m_xscale, m_yscale;
 
 	bool		m_bzoomRect;
 	bool		m_bvalidRect;
 	bool		m_select;
+	bool		m_newSelect;
+	bool		m_bdragging;
 	bool		m_bsmoothLines;
 	bool		m_bshowDataMarks;
 	Selection	m_selection;
@@ -203,17 +259,16 @@ private: // drawing helper functions
 	void drawSelection(QPainter& p);
 	void drawLegend(QPainter& p);
 
-	void drawLineChartData(QPainter& p, CPlotData& data);
-	void drawBarChartData(QPainter& p, CPlotData& data);
-
 private:
-	vector<CPlotData>	m_data;
+	vector<CPlotData*>	m_data;
 	bool				m_bshowLegend;
 	bool				m_bviewLocked;
 	bool				m_bshowPopup;
+	bool				m_bshowToolTip;
 	bool				m_bdrawXLines;
 	bool				m_bdrawYLines;
 	bool				m_bscaleAxisLabels;
+	bool				m_bfullScreenMode;
 
 	int		m_chartStyle;
 	CAxisFormat		m_xAxis;
@@ -242,7 +297,7 @@ public:
 
 public:
 	double	m_xmin, m_xmax;
-	double	m_ymin,	m_ymax;
+	double	m_ymin, m_ymax;
 
 private:
 	CDlgPlotWidgetProps_Ui*	ui;

@@ -131,10 +131,12 @@ void CSummaryWindow::Update(bool breset)
 	// add the data series
 	for (int i=0; i<nsteps; i++) x[i] = pfem->GetState(i)->m_time;
 
-	CPlotData dataMax, dataMin, dataAvg;
-	dataMax.setLabel("Max");
-	dataAvg.setLabel("Avg");
-	dataMin.setLabel("Min");
+	CLineChartData* dataMax = new CLineChartData;
+	CLineChartData* dataMin = new CLineChartData;
+	CLineChartData* dataAvg = new CLineChartData;
+	dataMax->setLabel("Max");
+	dataAvg->setLabel("Avg");
+	dataMin->setLabel("Min");
 
 	// get the displacemet map
 	CGLDisplacementMap* pdm = po->GetDisplacementMap();
@@ -165,9 +167,9 @@ void CSummaryWindow::Update(bool breset)
 		case 2: rng = EvalFaceRange(*pfem, i, bsel, bvol); break;
 		case 3: rng = EvalElemRange(*pfem, i, bsel, bvol); break;
 		}
-		dataMax.addPoint(x[i], rng.fmax);
-		dataMin.addPoint(x[i], rng.fmin);
-		dataAvg.addPoint(x[i], rng.favg);
+		dataMax->addPoint(x[i], rng.fmax);
+		dataMin->addPoint(x[i], rng.fmin);
+		dataAvg->addPoint(x[i], rng.favg);
 		
 		// reset the field data
 		if (nfield >= 0) pfem->Evaluate(nfield, i);

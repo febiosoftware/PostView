@@ -33,7 +33,6 @@ public:
 		plot->showVerticalGridLines(false);
 		plot->showXAxis(false);
 		plot->ShowYAxis(false);
-		plot->setChartStyle(CPlotWidget::BarChart);
 		parent->setCentralWidget(plot);
 
 		toolBar = new QToolBar(parent);
@@ -145,13 +144,13 @@ void CStatsWindow::Update(bool breset)
 	
 	if (bin.empty() == false)
 	{
-		CPlotData data;
-		data.setLabel("data");
+		CBarChartData* data = new CBarChartData;
+		data->setLabel("data");
 		for (int i=0; i<(int)bin.size(); ++i)
 		{
 			double x = minv + i*(maxv - minv)/(bin.size() - 1);
 			double y = bin[i];
-			data.addPoint(x, y);
+			data->addPoint(x, y);
 		}
 		ui->plot->addPlotData(data);
 

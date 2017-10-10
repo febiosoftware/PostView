@@ -99,12 +99,12 @@ void CIntegrateWindow::UpdateIntegral()
 	CGLModel* model = pdoc->GetGLModel();
 
 	char sztitle[256] = {0};
-	CPlotData data;
+	CLineChartData* data = new CLineChartData;
 	CGLPlaneCutPlot* pp = m_src[m_nsrc];
 	if (pp == 0) 
 	{
 		// update based on current selection
-		IntegrateSelection(data);
+		IntegrateSelection(*data);
 
 		int nview = model->GetSelectionMode();
 		sprintf(sztitle, "%s of %s", (nview == SELECT_NODES? "Sum" : "Integral"), pdoc->GetFieldString().c_str());
@@ -112,10 +112,10 @@ void CIntegrateWindow::UpdateIntegral()
 	else 
 	{
 		// update based on plane cut plot
-		IntegratePlaneCut(pp, data);
+		IntegratePlaneCut(pp, *data);
 		sprintf(sztitle, "%s of %s", "Integral", pdoc->GetFieldString().c_str());
 	}
-	data.setLabel("Value");
+	data->setLabel("Value");
 	ui->plot->setTitle(sztitle);
 	ui->plot->addPlotData(data);
 	ui->plot->fitToData();
@@ -154,7 +154,7 @@ void CIntegrateWindow::UpdateSourceOptions()
 }
 
 //-----------------------------------------------------------------------------
-void CIntegrateWindow::IntegrateSelection(CPlotData& data)
+void CIntegrateWindow::IntegrateSelection(CLineChartData& data)
 {
 	// get the document
 	CDocument* pdoc = m_wnd->GetDocument();
@@ -297,7 +297,7 @@ double CIntegrateWindow::IntegrateElems(FEMeshBase& mesh, FEState* ps)
 }
 
 //-----------------------------------------------------------------------------
-void CIntegrateWindow::IntegratePlaneCut(CGLPlaneCutPlot* pp, CPlotData& data)
+void CIntegrateWindow::IntegratePlaneCut(CGLPlaneCutPlot* pp, CLineChartData& data)
 {
 	// get the document
 	CDocument* pdoc = m_wnd->GetDocument();

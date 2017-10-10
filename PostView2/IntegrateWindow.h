@@ -12,7 +12,7 @@ namespace Ui {
 };
 
 class FEModel;
-class CPlotData;
+class CLineChartData;
 
 class CIntegrateWindow : public QMainWindow
 {
@@ -32,8 +32,8 @@ private:
 	void UpdateSourceOptions();
 
 	void UpdateIntegral();
-	void IntegrateSelection(CPlotData& data);
-	void IntegratePlaneCut (CGLPlaneCutPlot* pp, CPlotData& data);
+	void IntegrateSelection(CLineChartData& data);
+	void IntegratePlaneCut(CGLPlaneCutPlot* pp, CLineChartData& data);
 
 private slots:
 	void on_actionSave_triggered();

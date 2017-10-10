@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_CPlotWidget_t {
-    QByteArrayData data[11];
-    char stringdata0[116];
+    QByteArrayData data[16];
+    char stringdata0[176];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -35,18 +35,25 @@ QT_MOC_LITERAL(0, 0, 11), // "CPlotWidget"
 QT_MOC_LITERAL(1, 12, 14), // "doneZoomToRect"
 QT_MOC_LITERAL(2, 27, 0), // ""
 QT_MOC_LITERAL(3, 28, 12), // "pointClicked"
-QT_MOC_LITERAL(4, 41, 1), // "x"
-QT_MOC_LITERAL(5, 43, 1), // "y"
-QT_MOC_LITERAL(6, 45, 13), // "OnZoomToWidth"
-QT_MOC_LITERAL(7, 59, 14), // "OnZoomToHeight"
-QT_MOC_LITERAL(8, 74, 11), // "OnZoomToFit"
-QT_MOC_LITERAL(9, 86, 11), // "OnShowProps"
-QT_MOC_LITERAL(10, 98, 17) // "OnCopyToClipboard"
+QT_MOC_LITERAL(4, 41, 1), // "p"
+QT_MOC_LITERAL(5, 43, 6), // "bshift"
+QT_MOC_LITERAL(6, 50, 13), // "pointSelected"
+QT_MOC_LITERAL(7, 64, 1), // "n"
+QT_MOC_LITERAL(8, 66, 12), // "pointDragged"
+QT_MOC_LITERAL(9, 79, 13), // "draggingStart"
+QT_MOC_LITERAL(10, 93, 11), // "draggingEnd"
+QT_MOC_LITERAL(11, 105, 13), // "OnZoomToWidth"
+QT_MOC_LITERAL(12, 119, 14), // "OnZoomToHeight"
+QT_MOC_LITERAL(13, 134, 11), // "OnZoomToFit"
+QT_MOC_LITERAL(14, 146, 11), // "OnShowProps"
+QT_MOC_LITERAL(15, 158, 17) // "OnCopyToClipboard"
 
     },
     "CPlotWidget\0doneZoomToRect\0\0pointClicked\0"
-    "x\0y\0OnZoomToWidth\0OnZoomToHeight\0"
-    "OnZoomToFit\0OnShowProps\0OnCopyToClipboard"
+    "p\0bshift\0pointSelected\0n\0pointDragged\0"
+    "draggingStart\0draggingEnd\0OnZoomToWidth\0"
+    "OnZoomToHeight\0OnZoomToFit\0OnShowProps\0"
+    "OnCopyToClipboard"
 };
 #undef QT_MOC_LITERAL
 
@@ -56,27 +63,35 @@ static const uint qt_meta_data_CPlotWidget[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       7,   14, // methods
+      11,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       2,       // signalCount
+       6,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    0,   49,    2, 0x06 /* Public */,
-       3,    2,   50,    2, 0x06 /* Public */,
+       1,    0,   69,    2, 0x06 /* Public */,
+       3,    2,   70,    2, 0x06 /* Public */,
+       6,    1,   75,    2, 0x06 /* Public */,
+       8,    1,   78,    2, 0x06 /* Public */,
+       9,    1,   81,    2, 0x06 /* Public */,
+      10,    1,   84,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       6,    0,   55,    2, 0x0a /* Public */,
-       7,    0,   56,    2, 0x0a /* Public */,
-       8,    0,   57,    2, 0x0a /* Public */,
-       9,    0,   58,    2, 0x0a /* Public */,
-      10,    0,   59,    2, 0x0a /* Public */,
+      11,    0,   87,    2, 0x0a /* Public */,
+      12,    0,   88,    2, 0x0a /* Public */,
+      13,    0,   89,    2, 0x0a /* Public */,
+      14,    0,   90,    2, 0x0a /* Public */,
+      15,    0,   91,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Double, QMetaType::Double,    4,    5,
+    QMetaType::Void, QMetaType::QPointF, QMetaType::Bool,    4,    5,
+    QMetaType::Void, QMetaType::Int,    7,
+    QMetaType::Void, QMetaType::QPoint,    4,
+    QMetaType::Void, QMetaType::QPoint,    4,
+    QMetaType::Void, QMetaType::QPoint,    4,
 
  // slots: parameters
     QMetaType::Void,
@@ -95,12 +110,16 @@ void CPlotWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->doneZoomToRect(); break;
-        case 1: _t->pointClicked((*reinterpret_cast< double(*)>(_a[1])),(*reinterpret_cast< double(*)>(_a[2]))); break;
-        case 2: _t->OnZoomToWidth(); break;
-        case 3: _t->OnZoomToHeight(); break;
-        case 4: _t->OnZoomToFit(); break;
-        case 5: _t->OnShowProps(); break;
-        case 6: _t->OnCopyToClipboard(); break;
+        case 1: _t->pointClicked((*reinterpret_cast< QPointF(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2]))); break;
+        case 2: _t->pointSelected((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 3: _t->pointDragged((*reinterpret_cast< QPoint(*)>(_a[1]))); break;
+        case 4: _t->draggingStart((*reinterpret_cast< QPoint(*)>(_a[1]))); break;
+        case 5: _t->draggingEnd((*reinterpret_cast< QPoint(*)>(_a[1]))); break;
+        case 6: _t->OnZoomToWidth(); break;
+        case 7: _t->OnZoomToHeight(); break;
+        case 8: _t->OnZoomToFit(); break;
+        case 9: _t->OnShowProps(); break;
+        case 10: _t->OnCopyToClipboard(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -114,9 +133,37 @@ void CPlotWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
             }
         }
         {
-            typedef void (CPlotWidget::*_t)(double , double );
+            typedef void (CPlotWidget::*_t)(QPointF , bool );
             if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&CPlotWidget::pointClicked)) {
                 *result = 1;
+                return;
+            }
+        }
+        {
+            typedef void (CPlotWidget::*_t)(int );
+            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&CPlotWidget::pointSelected)) {
+                *result = 2;
+                return;
+            }
+        }
+        {
+            typedef void (CPlotWidget::*_t)(QPoint );
+            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&CPlotWidget::pointDragged)) {
+                *result = 3;
+                return;
+            }
+        }
+        {
+            typedef void (CPlotWidget::*_t)(QPoint );
+            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&CPlotWidget::draggingStart)) {
+                *result = 4;
+                return;
+            }
+        }
+        {
+            typedef void (CPlotWidget::*_t)(QPoint );
+            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&CPlotWidget::draggingEnd)) {
+                *result = 5;
                 return;
             }
         }
@@ -148,13 +195,13 @@ int CPlotWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 7)
+        if (_id < 11)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 7;
+        _id -= 11;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 7)
+        if (_id < 11)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 7;
+        _id -= 11;
     }
     return _id;
 }
@@ -166,10 +213,38 @@ void CPlotWidget::doneZoomToRect()
 }
 
 // SIGNAL 1
-void CPlotWidget::pointClicked(double _t1, double _t2)
+void CPlotWidget::pointClicked(QPointF _t1, bool _t2)
 {
     void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
     QMetaObject::activate(this, &staticMetaObject, 1, _a);
+}
+
+// SIGNAL 2
+void CPlotWidget::pointSelected(int _t1)
+{
+    void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 2, _a);
+}
+
+// SIGNAL 3
+void CPlotWidget::pointDragged(QPoint _t1)
+{
+    void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 3, _a);
+}
+
+// SIGNAL 4
+void CPlotWidget::draggingStart(QPoint _t1)
+{
+    void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 4, _a);
+}
+
+// SIGNAL 5
+void CPlotWidget::draggingEnd(QPoint _t1)
+{
+    void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 5, _a);
 }
 struct qt_meta_stringdata_CDlgPlotWidgetProps_t {
     QByteArrayData data[1];
