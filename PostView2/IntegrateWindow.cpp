@@ -202,7 +202,7 @@ double CIntegrateWindow::IntegrateNodes(FEMeshBase& mesh, FEState* ps)
 	for (int i=0; i<N; ++i)
 	{
 		FENode& node = mesh.Node(i);
-		if (node.IsSelected())
+		if (node.IsSelected() && node.IsActive())
 		{
 			res += ps->m_NODE[i].m_val;
 		}
@@ -228,7 +228,7 @@ double CIntegrateWindow::IntegrateFaces(FEMeshBase& mesh, FEState* ps)
 	for (int i=0; i<mesh.Faces(); ++i)
 	{
 		FEFace& f = mesh.Face(i);
-		if (f.IsSelected())
+		if (f.IsSelected() && f.IsActive())
 		{
 			int nn = f.Nodes();
 
@@ -258,7 +258,7 @@ double CIntegrateWindow::IntegrateElems(FEMeshBase& mesh, FEState* ps)
 	for (int i=0; i<mesh.Elements(); ++i)
 	{
 		FEElement& e = mesh.Element(i);
-		if (e.IsSelected() && (e.IsSolid()))
+		if (e.IsSelected() && (e.IsSolid()) && e.IsActive())
 		{
 			int nn = e.Nodes();
 

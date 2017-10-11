@@ -244,21 +244,21 @@ public:
 		return false;
 	}
 
-	bool HasNode(int n)
+	bool HasNode(int n) const
 	{
 		int N = Nodes();
 		for (int i=0; i<N; ++i) if (node[i] == n) return true;
 		return false;
 	}
 
-	int Nodes() 
+	int Nodes() const
 	{
 		const int n[7] = {3, 4, 8, 6, 7, 9, 10};
 		assert((m_ntype >= 0) && (m_ntype <= 6));
 		return n[m_ntype]; 
 	}
 
-	int Edges()
+	int Edges() const
 	{
 		const int n[7] = {3, 4, 4, 3, 3, 4, 3};
 		assert((m_ntype >= 0) && (m_ntype <= 6));

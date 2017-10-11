@@ -150,9 +150,6 @@
     <ClInclude Include="..\..\PostView2\GLView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PostView2\GraphWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\PostView2\ImportLinesTool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -518,6 +515,12 @@
     <ClCompile Include="..\..\PostView2\DlgAddEquation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\PostView2\AreaCoverageTool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PostView2\moc_AreaCoverageTool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\PostView2\MainWindow.h">
@@ -542,6 +545,12 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\PostView2\SummaryWindow.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\GraphWindow.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\AreaCoverageTool.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

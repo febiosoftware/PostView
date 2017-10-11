@@ -218,6 +218,11 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </ClInclude>
     <ClInclude Include="..\..\PostView2\AddPointTool.h" />
+    <CustomBuild Include="..\..\PostView2\AreaCoverageTool.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </CustomBuild>
     <ClInclude Include="..\..\PostView2\AVIAnimation.h" />
     <ClInclude Include="..\..\PostView2\CColorButton.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
@@ -496,6 +501,7 @@
     <ClCompile Include="..\..\PostView2\4PointAngleTool.cpp" />
     <ClCompile Include="..\..\PostView2\AddImage3DTool.cpp" />
     <ClCompile Include="..\..\PostView2\AddPointTool.cpp" />
+    <ClCompile Include="..\..\PostView2\AreaCoverageTool.cpp" />
     <ClCompile Include="..\..\PostView2\AVIAnimation.cpp" />
     <ClCompile Include="..\..\PostView2\CColorButton.cpp" />
     <ClCompile Include="..\..\PostView2\CDlgImportXPLT.cpp" />
@@ -539,6 +545,7 @@
     <ClCompile Include="..\..\PostView2\MaterialPanel.cpp" />
     <ClCompile Include="..\..\PostView2\MeasureAreaTool.cpp" />
     <ClCompile Include="..\..\PostView2\moc_AddImage3DTool.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_AreaCoverageTool.cpp" />
     <ClCompile Include="..\..\PostView2\moc_CColorButton.cpp" />
     <ClCompile Include="..\..\PostView2\moc_DataFieldSelector.cpp" />
     <ClCompile Include="..\..\PostView2\moc_DataPanel.cpp" />

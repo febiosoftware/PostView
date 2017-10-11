@@ -138,12 +138,44 @@ bool IntersectQuad(const Ray& ray, const Quad& quad, Intersection& intersect)
 }
 
 //-----------------------------------------------------------------------------
+bool FindFaceIntersection(const Ray& ray, const FEMeshBase& mesh, const FEFace& face, Intersection& q)
+{
+	q.m_index = -1;
+
+	vec3f rn[10];
+	mesh.FaceNodePosition(face, rn);
+
+	bool bfound = false;
+	switch (face.m_ntype)
+	{
+	case FACE_TRI3:
+	case FACE_TRI6:
+	case FACE_TRI7:
+	case FACE_TRI10:
+	{
+		Triangle tri = { rn[0], rn[1], rn[2] };
+		bfound = IntersectTriangle(ray, tri, q);
+	}
+	break;
+	case FACE_QUAD4:
+	case FACE_QUAD8:
+	case FACE_QUAD9:
+	{
+		Quad quad = { rn[0], rn[1], rn[2], rn[3] };
+		bfound = FastIntersectQuad(ray, quad, q);
+	}
+	break;
+	}
+
+	return bfound;
+}
+
+
+//-----------------------------------------------------------------------------
 bool FindFaceIntersection(const Ray& ray, const FEMeshBase& mesh, Intersection& q)
 {
-	vec3f rn[10];
-
 	int faces = mesh.Faces();
-	vec3f r, rmin;
+	vec3f rmin;
 	double gmin = 1e99;
 	bool b = false;
 
@@ -154,29 +186,7 @@ bool FindFaceIntersection(const Ray& ray, const FEMeshBase& mesh, Intersection& 
 		const FEFace& face = mesh.Face(i);
 		if (face.IsVisible())
 		{
-			mesh.FaceNodePosition(face, rn);
-
-			bool bfound = false;
-			switch (face.m_ntype)
-			{
-			case FACE_TRI3:
-			case FACE_TRI6:
-			case FACE_TRI7:
-			case FACE_TRI10:
-			{
-				Triangle tri = {rn[0], rn[1], rn[2]};
-				bfound = IntersectTriangle(ray, tri, tmp);
-			}
-			break;
-			case FACE_QUAD4:
-			case FACE_QUAD8:
-			case FACE_QUAD9:
-			{
-				Quad quad = { rn[0], rn[1], rn[2], rn[3] };
-				bfound = FastIntersectQuad(ray, quad, tmp);
-			}
-			break;
-			}
+			bool bfound = FindFaceIntersection(ray, mesh, face, tmp);
 
 			if (bfound)
 			{
