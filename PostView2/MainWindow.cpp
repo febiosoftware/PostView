@@ -1569,15 +1569,16 @@ void CMainWindow::UpdateMainToolbar()
 
 void CMainWindow::UpdatePlayToolbar(bool breset)
 {
-	FEModel* pfem = m_doc->GetFEModel();
-	if (pfem == 0) ui->playToolBar->setDisabled(true);
+	CGLModel* mdl = m_doc->GetGLModel();
+	if (mdl == 0) ui->playToolBar->setDisabled(true);
 	else
 	{
-		int ntime = pfem->currentTime() + 1;
+		int ntime = mdl->currentTime() + 1;
 
 		if (breset)
 		{
-			int states = pfem->GetStates();
+			FEModel* fem = mdl->GetFEModel();
+			int states = fem->GetStates();
 			QString suff = QString("/%1").arg(states);
 			ui->pspin->setSuffix(suff);
 
@@ -1591,7 +1592,9 @@ void CMainWindow::UpdatePlayToolbar(bool breset)
 void CMainWindow::on_selectTime_valueChanged(int i)
 {
 	GetDocument()->SetCurrentTime(i - 1);
+	ui->timePanel->SetCurrentTime(i - 1);
 	RedrawGL();
+	UpdateTools(false);
 	UpdateGraphs(false);
 }
 
