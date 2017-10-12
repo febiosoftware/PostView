@@ -572,7 +572,8 @@ void CGLModel::RenderSelection(CGLContext &rc)
 		const vector<FEFace*> faceSelection = GetFaceSelection();
 		for (int i = 0; i<(int)faceSelection.size(); ++i)
 		{
-			FEFace& f = *faceSelection[i]; assert(f.IsSelected());
+			FEFace& f = *faceSelection[i]; 
+			if (f.IsSelected() == false) continue;
 
 			int n = f.Nodes();
 			for (int j=0; j<n; ++j) r[j] = pm->Node(f.node[j]).m_rt;

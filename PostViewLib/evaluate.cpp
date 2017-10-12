@@ -239,53 +239,101 @@ void FEModel::EvalFaceField(int ntime, int nfield)
 	FEState& state = *m_State[ntime];
 	FEMeshBase* mesh = state.GetFEMesh();
 
-	// first evaluate all faces
-	float data[FEFace::MAX_NODES], val;
-	int i, j;
-	for (i=0; i<mesh->Faces(); ++i)
+	// get the data ID
+	int ndata = FIELD_CODE(nfield);
+	assert((ndata >= 0) && (ndata < state.m_Data.size()));
+
+	// get the component
+	int ncomp = FIELD_COMP(nfield);
+
+	FEMeshData& rd = state.m_Data[ndata];
+	Data_Format fmt = rd.GetFormat();
+
+	// for float/node face data we evaluate the nodal values directly.
+	if ((rd.GetType() == DATA_FLOAT) && (fmt == DATA_NODE))
 	{
-		FEFace& f = mesh->Face(i);
-		state.m_FACE[i].m_val = 0.f;
-		state.m_FACE[i].m_ntag = 0;
-		if (f.IsEnabled()) 
+		// clear node data
+		for (int i=0; i<mesh->Nodes(); ++i)
 		{
-			if (EvaluateFace(i, ntime, nfield, data, val))
+			state.m_NODE[i].m_val = 0.f;
+			state.m_NODE[i].m_ntag = 0;
+		}
+
+		// get the data field
+		FEFaceData_T<float, DATA_NODE>& df = dynamic_cast<FEFaceData_T<float, DATA_NODE>&>(rd);
+
+		// evaluate nodes and faces
+		float tmp[FEGenericElement::MAX_NODES] = {0.f};
+		for (int i=0; i<mesh->Faces(); ++i)
+		{
+			FEFace& face = mesh->Face(i);
+			if (df.active(i))
 			{
+				df.eval(i, tmp);
+
+				float avg = 0.f;
+				for (int j = 0; j<face.Nodes(); ++j)
+				{
+					avg += tmp[j];
+					state.m_NODE[face.node[j]].m_val = tmp[j];
+					state.m_NODE[face.node[j]].m_ntag = 1;
+				}
+
+				state.m_FACE[i].m_val = avg / face.Nodes();
 				state.m_FACE[i].m_ntag = 1;
-				state.m_FACE[i].m_val = val;
-				for (int j=0; j<f.Nodes(); ++j) state.m_FaceData.value(i, j) = data[j];
 			}
 		}
 	}
-
-	// now evaluate the nodes
-	ValArray& faceData = state.m_FaceData;
-	for (i=0; i<mesh->Nodes(); ++i)
+	else
 	{
-		NODEDATA& node = state.m_NODE[i];
-		vector<NodeFaceRef>& nfl = mesh->NodeFaceList(i);
-		node.m_val = 0.f; 
-		node.m_ntag = 0;
-		int n = 0;
-		for (j=0; j<(int) nfl.size(); ++j)
+		// first evaluate all faces
+		float data[FEFace::MAX_NODES], val;
+		int i, j;
+		for (i=0; i<mesh->Faces(); ++i)
 		{
-			FACEDATA& f = state.m_FACE[nfl[j].first];
-			if (f.m_ntag > 0)
+			FEFace& f = mesh->Face(i);
+			state.m_FACE[i].m_val = 0.f;
+			state.m_FACE[i].m_ntag = 0;
+			if (f.IsEnabled()) 
 			{
-				node.m_val += faceData.value(nfl[j].first, nfl[j].second);
-				++n;
+				if (EvaluateFace(i, ntime, nfield, data, val))
+				{
+					state.m_FACE[i].m_ntag = 1;
+					state.m_FACE[i].m_val = val;
+					for (int j=0; j<f.Nodes(); ++j) state.m_FaceData.value(i, j) = data[j];
+				}
 			}
 		}
-		if (n > 0)
+
+		// now evaluate the nodes
+		ValArray& faceData = state.m_FaceData;
+		for (i=0; i<mesh->Nodes(); ++i)
 		{
-			node.m_val /= (float) n;
-			node.m_ntag = 1;
+			NODEDATA& node = state.m_NODE[i];
+			vector<NodeFaceRef>& nfl = mesh->NodeFaceList(i);
+			node.m_val = 0.f; 
+			node.m_ntag = 0;
+			int n = 0;
+			for (j=0; j<(int) nfl.size(); ++j)
+			{
+				FACEDATA& f = state.m_FACE[nfl[j].first];
+				if (f.m_ntag > 0)
+				{
+					node.m_val += faceData.value(nfl[j].first, nfl[j].second);
+					++n;
+				}
+			}
+			if (n > 0)
+			{
+				node.m_val /= (float) n;
+				node.m_ntag = 1;
+			}
 		}
 	}
 
 	// evaluate the elements (to zero)
 	// Face data is not projected onto the elements
-	for (i=0; i<mesh->Elements(); ++i) 
+	for (int i=0; i<mesh->Elements(); ++i) 
 	{
 		state.m_ELEM[i].m_val = 0.f;
 		state.m_ELEM[i].m_ntag = 0;

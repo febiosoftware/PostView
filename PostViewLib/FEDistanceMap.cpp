@@ -141,7 +141,7 @@ void FEDistanceMap::Apply(FEModel& fem)
 			}
 		}
 		vector<int> nf1(m_surf1.Faces());
-		for (int i=0; i<m_surf1.Faces(); ++i) nf1[i] = mesh.Face(m_surf1.m_face[i]).Nodes();
+		for (int i=0; i<m_surf1.Faces(); ++i) nf1[i] = 4; //mesh.Face(m_surf1.m_face[i]).Nodes();
 		df.add(a, m_surf1.m_face, m_surf1.m_lnode, nf1);
 
 		// loop over all nodes of surface 2
@@ -160,7 +160,7 @@ void FEDistanceMap::Apply(FEModel& fem)
 			}
 		}
 		vector<int> nf2(m_surf2.Faces());
-		for (int i = 0; i<m_surf2.Faces(); ++i) nf2[i] = mesh.Face(m_surf2.m_face[i]).Nodes();
+		for (int i = 0; i<m_surf2.Faces(); ++i) nf2[i] = 4; //mesh.Face(m_surf2.m_face[i]).Nodes();
 		df.add(b, m_surf2.m_face, m_surf2.m_lnode, nf2);
 	}
 }
