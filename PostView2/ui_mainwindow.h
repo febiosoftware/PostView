@@ -286,7 +286,7 @@ public:
 		QAction* actionHideSelected    = addAction("Hide selected"   , "actionHideSelected"   ); actionHideSelected->setShortcut(Qt::Key_H);
 		QAction* actionHideUnselected  = addAction("Hide unselected" , "actionHideUnselected" );
 		QAction* actionInvertSelection = addAction("Invert selection", "actionInvertSelection");
-		QAction* actionUnhideAll       = addAction("Unhide all      ", "actionUnhideAll"      ); actionHideSelected->setShortcut(Qt::Key_U);
+		QAction* actionUnhideAll       = addAction("Unhide all      ", "actionUnhideAll"      ); actionUnhideAll->setShortcut(Qt::Key_U);
 		QAction* actionSelectAll       = addAction("Select all      ", "actionSelectAll"      );
 		QAction* actionSelectRange     = addAction("Select range ...", "actionSelectRange"    );
 		QAction* actionClearSelection  = addAction("Clear selection" , "actionClearSelection" ); actionClearSelection->setShortcut(Qt::Key_Escape);
