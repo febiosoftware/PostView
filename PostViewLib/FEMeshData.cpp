@@ -181,66 +181,6 @@ void FEDeformationGradient::eval(int n, mat3d* pv)
 }
 
 //-----------------------------------------------------------------------------
-// Green-Lagrange strain
-//
-
-FELagrangeStrain::FELagrangeStrain(FEState* pm, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_COMP>(pm, pdf)
-{
-	
-}
-
-void FELagrangeStrain::eval(int n, mat3fs* pv)
-{
-	// get the element
-	FEState* state = GetFEState();
-	FEElement& e = state->GetFEMesh()->Element(n);
-
-	// if this is not a solid element, return 0
-	if (e.IsSolid() == false)
-	{
-		mat3fs z(0.f, 0.f, 0.f, 0.f, 0.f, 0.f);
-		int N = e.Nodes();
-		for (int i=0; i<N; ++i) pv[i] = z;
-		return;
-	}
-
-	// get the current state
-	int nstate = state->GetID();
-
-	// loop over all the element nodes
-	int N = e.Nodes();
-	for (int i=0; i<N; ++i)
-	{
-		// get the iso-parameteric coordinates
-		double q[3];
-		e.iso_coord(i, q);
-
-		// get the deformation gradient
-		mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
-
-		// evaluate Green strain m = (Ft*F - 1)/2
-		double C[3][3] = {0};
-		for (int k=0; k<3; k++)
-		{
-			C[0][0] += F[k][0]*F[k][0]; C[0][1] += F[k][0]*F[k][1]; C[0][2] += F[k][0]*F[k][2];
-			C[1][0] += F[k][1]*F[k][0]; C[1][1] += F[k][1]*F[k][1]; C[1][2] += F[k][1]*F[k][2];
-			C[2][0] += F[k][2]*F[k][0]; C[2][1] += F[k][2]*F[k][1]; C[2][2] += F[k][2]*F[k][2];
-		}
-
-		// calculate the strain
-		mat3fs E;
-		E.x = (float) (0.5*(C[0][0] - 1)); 
-		E.y = (float) (0.5*(C[1][1] - 1));
-		E.z = (float) (0.5*(C[2][2] - 1));
-		E.xy = (float) (0.5*(C[0][1]));
-		E.yz = (float) (0.5*(C[1][2]));
-		E.xz = (float) (0.5*(C[0][2]));
-
-		pv[i] = E;
-	}
-}
-
-//-----------------------------------------------------------------------------
 // infinitesimal strain
 //
 void FEInfStrain::eval(int n, mat3fs* pv)
@@ -374,7 +314,7 @@ void FERightStretch::eval(int n, mat3fs* pv)
 //-----------------------------------------------------------------------------
 // Green-Lagrange strain evaluated at element center
 //
-void FEGLStrain::eval(int n, mat3fs* pv)
+void FELagrangeStrain::eval(int n, mat3fs* pv)
 {
 	// get the element
 	FEElement& e = GetFEState()->GetFEMesh()->Element(n);

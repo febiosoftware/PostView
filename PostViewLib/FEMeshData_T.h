@@ -575,14 +575,6 @@ public:
 };
 
 //-----------------------------------------------------------------------------
-class FELagrangeStrain : public FEElemData_T<mat3fs, DATA_COMP>, public FEStrain
-{
-public:
-	FELagrangeStrain(FEState* pstate, FEDataField* pdf);
-	void eval(int n, mat3fs* pv);
-};
-
-//-----------------------------------------------------------------------------
 class FEInfStrain : public FEElemData_T<mat3fs, DATA_ITEM>, public FEStrain
 {
 public:
@@ -607,10 +599,10 @@ public:
 };
 
 //-----------------------------------------------------------------------------
-class FEGLStrain : public FEElemData_T<mat3fs, DATA_ITEM>, public FEStrain
+class FELagrangeStrain : public FEElemData_T<mat3fs, DATA_ITEM>, public FEStrain
 {
 public:
-	FEGLStrain(FEState* state, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(state, pdf) {}
+	FELagrangeStrain(FEState* state, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(state, pdf) {}
 	void eval(int n, mat3fs* pv);
 };
 

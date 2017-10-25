@@ -73,7 +73,7 @@ bool FELSDYNAPlotImport::Load(FEModel &fem, const char *szfile)
 // otherwise, the data is concatenated.
 int FELSDYNAPlotImport::ReadData(void* pd, size_t nsize, size_t ncnt, bool bdump)
 {
-	int nread = fread(pd, nsize, ncnt, m_fp);
+	int nread = (int)fread(pd, nsize, ncnt, m_fp);
 	while (nread < ncnt)
 	{
 		// if we get here, there was a problem reading the data.
@@ -92,9 +92,9 @@ int FELSDYNAPlotImport::ReadData(void* pd, size_t nsize, size_t ncnt, bool bdump
 		// try to read the rest of the data
 		if (bdump)
 		{
-			nread = fread(pd, nsize, ncnt, m_fp);
+			nread = (int)fread(pd, nsize, ncnt, m_fp);
 		}
-		else nread += fread((char*)pd+nread*nsize,nsize,ncnt-nread, m_fp);
+		else nread += (int)fread((char*)pd + nread*nsize, nsize, ncnt - nread, m_fp);
 
 		// always concatenate if a single state is spread across multiple files.
 		bdump = false;
@@ -102,7 +102,7 @@ int FELSDYNAPlotImport::ReadData(void* pd, size_t nsize, size_t ncnt, bool bdump
 	}
 
 	// do a byte swap if necessary
-	if (m_bswap) byteswap((int*) pd, ncnt);
+	if (m_bswap) byteswap((int*)pd, (int)ncnt);
 
 	return nread;
 }
@@ -164,7 +164,7 @@ bool FELSDYNAPlotImport::ReadHeader(FEModel& fem)
 		pdm->AddDataField(new FEDataField_T<FEInfStrain       >("Inf strain"        ));
 		pdm->AddDataField(new FEDataField_T<FERightCauchyGreen>("Right Cauchy-Green"));
 		pdm->AddDataField(new FEDataField_T<FERightStretch    >("Right stretch"     ));
-		pdm->AddDataField(new FEDataField_T<FEGLStrain        >("GL strain"         ));
+		pdm->AddDataField(new FEDataField_T<FELagrangeStrain  >("Lagrange strain"   ));
 		pdm->AddDataField(new FEDataField_T<FEBiotStrain      >("Biot strain"       ));
 		pdm->AddDataField(new FEDataField_T<FERightHencky     >("Right Hencky"      ));
         pdm->AddDataField(new FEDataField_T<FELeftCauchyGreen >("Left Cauchy-Green" ));

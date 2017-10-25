@@ -150,9 +150,10 @@ public:
 			{
 				switch (pd->Format())
 				{
-				case DATA_NODE: return QString("NODE"); break;
-				case DATA_ITEM: return QString("ITEM"); break;
-				case DATA_COMP: return QString("MIXED"); break;
+				case DATA_NODE  : return QString("NODE"); break;
+				case DATA_ITEM  : return QString("ITEM"); break;
+				case DATA_COMP  : return QString("MIXED"); break;
+				case DATA_REGION: return QString("REGION"); break;
 				default:
 					assert(false);
 					return QString("(unknown)");
@@ -482,7 +483,6 @@ void CDataPanel::on_AddStandard_triggered()
 	items.push_back("Lagrange strain"           );
 	items.push_back("Right Cauchy-Green"        );
 	items.push_back("Right stretch"             );
-	items.push_back("GL strain"                 );
 	items.push_back("Biot strain"               );
 	items.push_back("Right Hencky"              );   
 	items.push_back("Left Cauchy-Green"         );
