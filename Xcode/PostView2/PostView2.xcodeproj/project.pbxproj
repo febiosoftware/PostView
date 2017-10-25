@@ -23,6 +23,8 @@
 		D53292BB1E453447002798B3 /* DlgExportAscii.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53292B91E453447002798B3 /* DlgExportAscii.cpp */; };
 		D53598C01E901C0500584A4F /* DragBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53598BE1E901C0500584A4F /* DragBox.cpp */; };
 		D55AC5011E61EB6E00BBA0D1 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D55AC5001E61EB6E00BBA0D1 /* OpenGL.framework */; };
+		D56731621F9FD85200C87BC1 /* AreaCoverageTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D56731611F9FD85200C87BC1 /* AreaCoverageTool.cpp */; };
+		D56731681F9FF5A700C87BC1 /* moc_AreaCoverageTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D56731671F9FF5A700C87BC1 /* moc_AreaCoverageTool.cpp */; };
 		D5A65E0F1DBFA53F00B44009 /* DlgFileInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */; };
 		D5C53DB71F86D97E0014FA22 /* DlgAddEquation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5C53DB61F86D97E0014FA22 /* DlgAddEquation.cpp */; };
 		D5E0E6A71E72390D006FE591 /* moc_DataFieldSelector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5E0E6A61E72390D006FE591 /* moc_DataFieldSelector.cpp */; };
@@ -155,6 +157,9 @@
 		D53598BE1E901C0500584A4F /* DragBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DragBox.cpp; sourceTree = "<group>"; };
 		D53598BF1E901C0500584A4F /* DragBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DragBox.h; sourceTree = "<group>"; };
 		D55AC5001E61EB6E00BBA0D1 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		D56731601F9FD85200C87BC1 /* AreaCoverageTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AreaCoverageTool.h; sourceTree = "<group>"; };
+		D56731611F9FD85200C87BC1 /* AreaCoverageTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AreaCoverageTool.cpp; sourceTree = "<group>"; };
+		D56731671F9FF5A700C87BC1 /* moc_AreaCoverageTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_AreaCoverageTool.cpp; sourceTree = "<group>"; };
 		D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgFileInfo.cpp; sourceTree = "<group>"; };
 		D5A65E0E1DBFA53F00B44009 /* DlgFileInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgFileInfo.h; sourceTree = "<group>"; };
 		D5C53DB51F86D97E0014FA22 /* DlgAddEquation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgAddEquation.h; sourceTree = "<group>"; };
@@ -370,6 +375,8 @@
 				D5FF79AF1D72756B003D2CBD /* AddImage3DTool.h */,
 				D5FF79B01D72756B003D2CBD /* AddPointTool.cpp */,
 				D5FF79B11D72756B003D2CBD /* AddPointTool.h */,
+				D56731611F9FD85200C87BC1 /* AreaCoverageTool.cpp */,
+				D56731601F9FD85200C87BC1 /* AreaCoverageTool.h */,
 				D511143C1ECC973100B8849F /* AVIAnimation.cpp */,
 				D511143D1ECC973100B8849F /* AVIAnimation.h */,
 				D5FF79B21D72756B003D2CBD /* CColorButton.cpp */,
@@ -458,6 +465,7 @@
 				D5FF79F81D72756B003D2CBD /* MeasureAreaTool.cpp */,
 				D5FF79F91D72756B003D2CBD /* MeasureAreaTool.h */,
 				D5FF79FA1D72756B003D2CBD /* moc_AddImage3DTool.cpp */,
+				D56731671F9FF5A700C87BC1 /* moc_AreaCoverageTool.cpp */,
 				D5FF79FB1D72756B003D2CBD /* moc_CColorButton.cpp */,
 				D5E0E6A61E72390D006FE591 /* moc_DataFieldSelector.cpp */,
 				D5FF79FC1D72756B003D2CBD /* moc_DataPanel.cpp */,
@@ -638,6 +646,7 @@
 				D5A65E0F1DBFA53F00B44009 /* DlgFileInfo.cpp in Sources */,
 				D5FF7A941D72756B003D2CBD /* SummaryWindow.cpp in Sources */,
 				D5FF7A5C1D72756B003D2CBD /* GLSlicePLot.cpp in Sources */,
+				D56731621F9FD85200C87BC1 /* AreaCoverageTool.cpp in Sources */,
 				D5FF7A691D72756B003D2CBD /* moc_DataPanel.cpp in Sources */,
 				D5FF7A871D72756B003D2CBD /* PointDistanceTool.cpp in Sources */,
 				D5FF7A731D72756B003D2CBD /* moc_MainWindow.cpp in Sources */,
@@ -680,6 +689,7 @@
 				D5FF7A7F1D72756B003D2CBD /* moc_SummaryWindow.cpp in Sources */,
 				D5FF7A681D72756B003D2CBD /* moc_CColorButton.cpp in Sources */,
 				D5FF7A721D72756B003D2CBD /* moc_IntegrateWindow.cpp in Sources */,
+				D56731681F9FF5A700C87BC1 /* moc_AreaCoverageTool.cpp in Sources */,
 				D5FF7A4F1D72756B003D2CBD /* DlgWidgetProps.cpp in Sources */,
 				D5FF7A621D72756B003D2CBD /* ImportLinesTool.cpp in Sources */,
 				D5FF7A761D72756B003D2CBD /* moc_PlaneTool.cpp in Sources */,
@@ -765,7 +775,10 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-DNDEBUG",
+				);
 				SDKROOT = macosx;
 			};
 			name = "Release-Dave";
@@ -839,7 +852,10 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-DNDEBUG",
+				);
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -878,7 +894,10 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-DNDEBUG",
+				);
 				SDKROOT = macosx;
 			};
 			name = Release;

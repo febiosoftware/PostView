@@ -22,7 +22,7 @@ public:
 	void setName(const QString& s) { m_name = s; }
 
 	// override this to create a custum UI widget
-	virtual QWidget* createUi() = 0;
+    virtual QWidget* createUi() = 0;
 
 	// activate the tool
 	// The ui is about to be shown

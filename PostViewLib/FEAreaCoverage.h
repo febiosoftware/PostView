@@ -2,6 +2,7 @@
 #include "FEMesh.h"
 #include "Intersect.h"
 #include <vector>
+#include <string>
 using namespace std;
 
 class FEModel;
@@ -50,5 +51,5 @@ protected:
 	Surface		m_surf1;
 	Surface		m_surf2;
 	FEModel*	m_fem;
-	std::string	m_name;
+	string  	m_name;
 };

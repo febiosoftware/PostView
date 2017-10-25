@@ -11,6 +11,8 @@
 		D53292BF1E453471002798B3 /* FEAsciiExport.h in Headers */ = {isa = PBXBuildFile; fileRef = D53292BD1E453471002798B3 /* FEAsciiExport.h */; };
 		D5481BD91E2EC3F300BD2BFE /* LinearRegression.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5481BD71E2EC3F300BD2BFE /* LinearRegression.cpp */; };
 		D5481BDA1E2EC3F300BD2BFE /* LinearRegression.h in Headers */ = {isa = PBXBuildFile; fileRef = D5481BD81E2EC3F300BD2BFE /* LinearRegression.h */; };
+		D56731651F9FD87A00C87BC1 /* FEAreaCoverage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D56731631F9FD87A00C87BC1 /* FEAreaCoverage.cpp */; };
+		D56731661F9FD87A00C87BC1 /* FEAreaCoverage.h in Headers */ = {isa = PBXBuildFile; fileRef = D56731641F9FD87A00C87BC1 /* FEAreaCoverage.h */; };
 		D5842FE11EC2BC95004FC215 /* FENodeEdgeList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5842FDD1EC2BC95004FC215 /* FENodeEdgeList.cpp */; };
 		D5842FE21EC2BC95004FC215 /* FENodeEdgeList.h in Headers */ = {isa = PBXBuildFile; fileRef = D5842FDE1EC2BC95004FC215 /* FENodeEdgeList.h */; };
 		D5842FE31EC2BC95004FC215 /* Intersect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5842FDF1EC2BC95004FC215 /* Intersect.cpp */; };
@@ -153,6 +155,8 @@
 		D53292BD1E453471002798B3 /* FEAsciiExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FEAsciiExport.h; sourceTree = "<group>"; };
 		D5481BD71E2EC3F300BD2BFE /* LinearRegression.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LinearRegression.cpp; sourceTree = "<group>"; };
 		D5481BD81E2EC3F300BD2BFE /* LinearRegression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinearRegression.h; sourceTree = "<group>"; };
+		D56731631F9FD87A00C87BC1 /* FEAreaCoverage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FEAreaCoverage.cpp; sourceTree = "<group>"; };
+		D56731641F9FD87A00C87BC1 /* FEAreaCoverage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FEAreaCoverage.h; sourceTree = "<group>"; };
 		D5842FDD1EC2BC95004FC215 /* FENodeEdgeList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FENodeEdgeList.cpp; sourceTree = "<group>"; };
 		D5842FDE1EC2BC95004FC215 /* FENodeEdgeList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FENodeEdgeList.h; sourceTree = "<group>"; };
 		D5842FDF1EC2BC95004FC215 /* Intersect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Intersect.cpp; sourceTree = "<group>"; };
@@ -338,6 +342,8 @@
 				D5F308A91CFBB65700F76762 /* DataMap.cpp */,
 				D5F308AA1CFBB65700F76762 /* DataMap.h */,
 				D5F308AB1CFBB65700F76762 /* evaluate.cpp */,
+				D56731631F9FD87A00C87BC1 /* FEAreaCoverage.cpp */,
+				D56731641F9FD87A00C87BC1 /* FEAreaCoverage.h */,
 				D53292BC1E453471002798B3 /* FEAsciiExport.cpp */,
 				D53292BD1E453471002798B3 /* FEAsciiExport.h */,
 				D5F308AC1CFBB65700F76762 /* FEASCIIImport.cpp */,
@@ -531,6 +537,7 @@
 				D5F309211CFBB65700F76762 /* DataFilter.h in Headers */,
 				D5F3093E1CFBB65700F76762 /* FELSDYNAimport.h in Headers */,
 				D5F3092C1CFBB65700F76762 /* FECurvatureMap.h in Headers */,
+				D56731661F9FD87A00C87BC1 /* FEAreaCoverage.h in Headers */,
 				D5F3092E1CFBB65700F76762 /* FEDataManager.h in Headers */,
 				D5F3091F1CFBB65700F76762 /* constants.h in Headers */,
 				D5F309341CFBB65700F76762 /* FEFEBioExport.h in Headers */,
@@ -622,6 +629,7 @@
 				D5F309311CFBB65700F76762 /* FEElement.cpp in Sources */,
 				D5F3096A1CFBB65700F76762 /* GLTexture1D.cpp in Sources */,
 				D5F3097F1CFBB65700F76762 /* U3DFile.cpp in Sources */,
+				D56731651F9FD87A00C87BC1 /* FEAreaCoverage.cpp in Sources */,
 				D5F3094E1CFBB65700F76762 /* FENodeElemList.cpp in Sources */,
 				D5F309681CFBB65700F76762 /* GLObject.cpp in Sources */,
 				D5A65E141DBFA55800B44009 /* xpltFileReader.cpp in Sources */,
@@ -708,6 +716,10 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-DNDEBUG",
+				);
 				SDKROOT = macosx;
 			};
 			name = "Release-Dave";
@@ -761,6 +773,10 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-DNDEBUG",
+				);
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -797,6 +813,10 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-DNDEBUG",
+				);
 				SDKROOT = macosx;
 			};
 			name = Release;

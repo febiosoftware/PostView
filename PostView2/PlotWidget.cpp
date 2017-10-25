@@ -472,7 +472,7 @@ void CPlotWidget::clearData()
 void CPlotWidget::clear()
 {
 	m_select = false;
-	for each (CPlotData* var in m_data) delete var;
+    for (CPlotData* var : m_data) delete var;
 	m_data.clear();
 	repaint();
 }
