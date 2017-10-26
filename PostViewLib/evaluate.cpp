@@ -267,6 +267,8 @@ void FEModel::EvalFaceField(int ntime, int nfield)
 		for (int i=0; i<mesh->Faces(); ++i)
 		{
 			FEFace& face = mesh->Face(i);
+			state.m_FACE[i].m_val = 0.f;
+			state.m_FACE[i].m_ntag = 0;
 			if (df.active(i))
 			{
 				df.eval(i, tmp);
