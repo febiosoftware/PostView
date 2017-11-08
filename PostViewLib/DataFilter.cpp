@@ -599,7 +599,7 @@ void DataArithmetic(FEModel& fem, int nfield, int nop, int noperand)
 					if (pd && ps)
 					{
 						int N = pd->size();
-						for (int i = 0; i<N; ++i) (*pd)[i] = (float)f((*pd)[i], (*ps)[i]); break;
+						for (int i = 0; i<N; ++i) (*pd)[i] = (float)f((*pd)[i], (*ps)[i]); 
 					}
 				}
 				else
