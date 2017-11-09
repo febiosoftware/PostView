@@ -202,7 +202,7 @@ double CIntegrateWindow::IntegrateNodes(FEMeshBase& mesh, FEState* ps)
 	for (int i=0; i<N; ++i)
 	{
 		FENode& node = mesh.Node(i);
-		if (node.IsSelected() && node.IsActive())
+		if (node.IsSelected() && (ps->m_NODE[i].m_ntag > 0))
 		{
 			res += ps->m_NODE[i].m_val;
 		}
