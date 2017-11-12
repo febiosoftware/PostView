@@ -1,5 +1,6 @@
 #pragma once
 #include <QMainWindow>
+#include <PostViewLib/MathParser.h>
 #include "PlotWidget.h"
 
 class CMainWindow;
@@ -12,6 +13,8 @@ namespace Ui {
 	class CGraphWindow;
 };
 
+//=================================================================================================
+// Base class for graph tools
 class CPlotTool : public QWidget
 {
 public:
@@ -23,6 +26,8 @@ public:
 	virtual void Update() {}
 };
 
+//=================================================================================================
+// Graph options
 class OptionsUi : public CPlotTool
 {
 	Q_OBJECT
@@ -52,6 +57,8 @@ public:
 	OptionsUi(CGraphWidget* graph, QWidget* parent = 0);
 };
 
+//=================================================================================================
+// Linear regression tool
 class RegressionUi : public CPlotTool
 {
 	Q_OBJECT
@@ -75,6 +82,33 @@ private:
 	bool	m_bvalid;
 };
 
+//=================================================================================================
+// Mathematical plotting tool
+class MathPlot : public CPlotTool
+{
+	Q_OBJECT
+
+public:
+	MathPlot(CGraphWidget* graph, QWidget* parent = 0);
+
+	void draw(QPainter& p);
+
+	void Update();
+
+	void hideEvent(QHideEvent* ev) override;
+
+public slots:
+	void onCalculate();
+
+private:
+	CGraphWidget*	m_graph;
+	QLineEdit*		m_edit;
+
+	bool			m_bvalid;
+	std::string		m_math;
+};
+
+//=================================================================================================
 class CGraphWidget : public CPlotWidget
 {
 public:
@@ -90,7 +124,7 @@ public:
 	vector<CPlotTool*>	m_tools;
 };
 
-
+//=================================================================================================
 class CGraphWindow : public QMainWindow
 {
 	Q_OBJECT

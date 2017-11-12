@@ -97,6 +97,8 @@ void OptionsUi::getUserRange(int& imin, int& imax)
 	}
 }
 
+//=================================================================================================
+
 RegressionUi::RegressionUi(CGraphWidget* graph, QWidget* parent) : CPlotTool(parent), m_graph(graph)
 {
 	QVBoxLayout* l = new QVBoxLayout;
@@ -179,6 +181,87 @@ void RegressionUi::Update()
 	b->clear();
 }
 
+//=================================================================================================
+MathPlot::MathPlot(CGraphWidget* graph, QWidget* parent) : CPlotTool(parent), m_graph(graph)
+{
+	m_bvalid = false;
+
+	QVBoxLayout* l = new QVBoxLayout;
+
+	m_edit = new QLineEdit;
+
+	QHBoxLayout* h = new QHBoxLayout;
+	h->addWidget(new QLabel("y(x) = "));
+	h->addWidget(m_edit);
+
+	l->addLayout(h);
+
+	QPushButton* b = new QPushButton("Plot");
+	l->addWidget(b);
+	l->addStretch();
+	setLayout(l);
+
+	QObject::connect(b, SIGNAL(clicked()), this, SLOT(onCalculate()));
+}
+
+void MathPlot::onCalculate()
+{
+	Update();
+
+	QString t = m_edit->text();
+	if (t.isEmpty() == false)
+	{
+		m_math = t.toStdString();
+		m_bvalid = true;
+		if (m_bvalid) m_graph->repaint();
+	}
+}
+
+void MathPlot::draw(QPainter& p)
+{
+	if (m_bvalid == false) return;
+
+	p.setPen(QPen(Qt::black, 2));
+
+	CMathParser mp;
+
+	QRectF vr = m_graph->m_viewRect;
+	QRect sr = m_graph->ScreenRect();
+
+	QPoint p0, p1;
+	int ierr = 0;
+	for (int i=sr.left(); i < sr.right(); i += 2)
+	{
+		double x = vr.left() + (i - sr.left())*(vr.right() - vr.left())/ (sr.right() - sr.left());
+		mp.set_variable("x", x);
+
+		double y = mp.eval(m_math.c_str(), ierr);
+		
+		p1 = m_graph->ViewToScreen(QPointF(x,y));
+
+		if (i != sr.left())
+		{
+			p.drawLine(p0, p1);
+		}
+
+		p0 = p1;
+	}
+}
+
+void MathPlot::Update()
+{
+	m_bvalid = false;
+}
+
+void MathPlot::hideEvent(QHideEvent* ev)
+{
+	if (m_bvalid)
+	{
+		m_bvalid = false;
+		m_graph->repaint();
+	}
+}
+
 //=============================================================================
 void CGraphWidget::paintEvent(QPaintEvent* pe)
 {
@@ -240,6 +323,10 @@ public:
 
 		CPlotTool* tool = new RegressionUi(plot);
 		tools->addItem(tool, "Linear Regression");
+		plot->addTool(tool);
+
+		tool = new MathPlot(plot);
+		tools->addItem(tool, "Math plot");
 		plot->addTool(tool);
 
 		toolBar = new QToolBar(parent);
