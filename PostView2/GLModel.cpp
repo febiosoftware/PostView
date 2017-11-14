@@ -2496,7 +2496,7 @@ void CGLModel::SelectElements(vector<int>& items, bool bclear)
 	for (int i=0; i<(int) items.size(); ++i)
 	{
 		int eid = items[i];
-		if ((eid <= 0) && (eid < N)) m.Element(eid).Select();
+		if ((eid >= 0) && (eid < N)) m.Element(eid).Select();
 	}
 	UpdateSelectionLists(SELECT_ELEMS);
 }
