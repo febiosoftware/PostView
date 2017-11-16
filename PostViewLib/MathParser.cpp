@@ -125,13 +125,14 @@ double CMathParser::prim()
 
 				double (*fnc)(double) = 0;
 
-				if (strcmp(string_value, "cos" )==0) fnc = cos;
-				if (strcmp(string_value, "sin" )==0) fnc = sin;
-				if (strcmp(string_value, "tan" )==0) fnc = tan;
-				if (strcmp(string_value, "ln"  )==0) fnc = log;
-				if (strcmp(string_value, "log" )==0) fnc = log10;
-				if (strcmp(string_value, "sqrt")==0) fnc = sqrt;
-				if (strcmp(string_value, "exp" )==0) fnc = exp;
+				if      (strcmp(string_value, "cos" )==0) fnc = cos;
+				else if (strcmp(string_value, "sin" )==0) fnc = sin;
+				else if (strcmp(string_value, "tan") == 0) fnc = tan;
+				else if (strcmp(string_value, "ln") == 0) fnc = log;
+				else if (strcmp(string_value, "log") == 0) fnc = log10;
+				else if (strcmp(string_value, "sqrt") == 0) fnc = sqrt;
+				else if (strcmp(string_value, "exp") == 0) fnc = exp;
+				else if (strcmp(string_value, "atan") == 0) fnc = atan;
 
 				get_token();
 
