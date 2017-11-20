@@ -21,6 +21,8 @@ public:
 	// deactive the tool
 	void deactivate();
 
+	void update(bool breset);
+
 private:
 	void UpdateNormal();
 

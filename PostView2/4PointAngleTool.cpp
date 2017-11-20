@@ -106,28 +106,7 @@ CPropertyList* C4PointAngleTool::getPropertyList()
 //-----------------------------------------------------------------------------
 void C4PointAngleTool::activate()
 {
-	if (m_doc && m_doc->IsValid())
-	{
-		FEMeshBase& mesh = *m_doc->GetActiveMesh();
-		const vector<FENode*> selectedNodes = m_doc->GetGLModel()->GetNodeSelection();
-		int N = selectedNodes.size();
-		int nsel = 0;
-		for (int i=0; i<N; ++i)
-		{
-			m_node[nsel++] = selectedNodes[i]->GetID();
-			if (nsel >= 4) break;
-		}
-
-		if (m_deco)
-		{
-			m_doc->GetGLModel()->RemoveDecoration(m_deco);
-			delete m_deco;
-			m_deco = 0;
-		}
-		m_deco = new C4PointAngleDecoration;
-		m_doc->GetGLModel()->AddDecoration(m_deco);
-		UpdateAngle();
-	}
+	update(true);
 }
 
 //-----------------------------------------------------------------------------
@@ -173,4 +152,45 @@ void C4PointAngleTool::UpdateAngle()
 		}
 	}
 	updateUi();
+}
+
+//-----------------------------------------------------------------------------
+void C4PointAngleTool::update(bool breset)
+{
+	if (breset)
+	{
+		if (m_doc && m_doc->IsValid())
+		{
+			FEMeshBase& mesh = *m_doc->GetActiveMesh();
+			const vector<FENode*> selectedNodes = m_doc->GetGLModel()->GetNodeSelection();
+			int N = selectedNodes.size();
+			int nsel = 0;
+			for (int i = 0; i<N; ++i)
+			{
+				int nid = selectedNodes[i]->GetID();
+				if      (m_node[0] == 0) m_node[0] = nid;
+				else if (m_node[1] == 0) m_node[1] = nid;
+				else if (m_node[2] == 0) m_node[2] = nid;
+				else if (m_node[3] == 0) m_node[3] = nid;
+				else
+				{
+					m_node[0] = m_node[1];
+					m_node[1] = m_node[2];
+					m_node[2] = m_node[3];
+					m_node[3] = nid;
+				}
+			}
+
+			if (m_deco)
+			{
+				m_doc->GetGLModel()->RemoveDecoration(m_deco);
+				delete m_deco;
+				m_deco = 0;
+			}
+			m_deco = new C4PointAngleDecoration;
+			m_doc->GetGLModel()->AddDecoration(m_deco);
+			UpdateAngle();
+		}
+	}
+	else UpdateAngle();
 }

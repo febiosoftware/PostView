@@ -98,28 +98,7 @@ CPropertyList* C3PointAngleTool::getPropertyList()
 //-----------------------------------------------------------------------------
 void C3PointAngleTool::activate()
 {
-	if (m_doc && m_doc->IsValid())
-	{
-		FEMeshBase& mesh = *m_doc->GetActiveMesh();
-		const vector<FENode*> selectedNodes = m_doc->GetGLModel()->GetNodeSelection();
-		int N = selectedNodes.size();
-		int nsel = 0;
-		for (int i=0; i<N; ++i)
-		{
-			m_node[nsel++] = selectedNodes[i]->GetID();
-			if (nsel >= 3) break;
-		}
-
-		if (m_deco)
-		{
-			m_doc->GetGLModel()->RemoveDecoration(m_deco);
-			delete m_deco;
-			m_deco = 0;
-		}
-		m_deco = new C3PointAngleDecoration;
-		m_doc->GetGLModel()->AddDecoration(m_deco);
-		UpdateAngle();
-	}
+	update(true);
 }
 
 //-----------------------------------------------------------------------------
@@ -131,6 +110,45 @@ void C3PointAngleTool::deactivate()
 		delete m_deco;
 		m_deco = 0;
 	}
+}
+
+//-----------------------------------------------------------------------------
+void C3PointAngleTool::update(bool breset)
+{
+	if (breset)
+	{
+		if (m_doc && m_doc->IsValid())
+		{
+			FEMeshBase& mesh = *m_doc->GetActiveMesh();
+			const vector<FENode*> selectedNodes = m_doc->GetGLModel()->GetNodeSelection();
+			int N = selectedNodes.size();
+			int nsel = 0;
+			for (int i = 0; i<N; ++i)
+			{
+				int nid = selectedNodes[i]->GetID();
+				if      (m_node[0] == 0) m_node[0] = nid;
+				else if (m_node[1] == 0) m_node[1] = nid;
+				else if (m_node[2] == 0) m_node[2] = nid;
+				else
+				{
+					m_node[0] = m_node[1];
+					m_node[1] = m_node[2];
+					m_node[2] = nid;
+				}
+			}
+
+			if (m_deco)
+			{
+				m_doc->GetGLModel()->RemoveDecoration(m_deco);
+				delete m_deco;
+				m_deco = 0;
+			}
+			m_deco = new C3PointAngleDecoration;
+			m_doc->GetGLModel()->AddDecoration(m_deco);
+			UpdateAngle();
+		}
+	}
+	else UpdateAngle();
 }
 
 //-----------------------------------------------------------------------------
@@ -151,8 +169,8 @@ void C3PointAngleTool::UpdateAngle()
 			vec3f b = fem.NodePosition(m_node[1]-1, ntime);
 			vec3f c = fem.NodePosition(m_node[2]-1, ntime);
 			
-			vec3f e1 = b - a; e1.Normalize();
-			vec3f e2 = c - a; e2.Normalize();
+			vec3f e1 = a - b; e1.Normalize();
+			vec3f e2 = c - b; e2.Normalize();
 
 			m_angle = 180.0*acos(e1*e2)/PI;
 

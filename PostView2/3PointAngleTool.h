@@ -31,6 +31,8 @@ public:
 	// deactive the tool
 	void deactivate();
 
+	void update(bool reset);
+
 private:
 	void UpdateAngle();
 

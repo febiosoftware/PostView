@@ -123,23 +123,7 @@ QWidget* CPlaneTool::createUi()
 // activate the tool
 void CPlaneTool::activate()
 {
-	ui->node1->setValue(ui->m_node[0]);
-	ui->node2->setValue(ui->m_node[1]);
-	ui->node3->setValue(ui->m_node[2]);
-
-	if (m_doc && m_doc->IsValid())
-	{
-		if (m_dec)
-		{
-			m_doc->GetGLModel()->RemoveDecoration(m_dec);
-			delete m_dec;
-			m_dec = 0;
-		}
-		m_dec = new CPlaneDecoration;
-		m_doc->GetGLModel()->AddDecoration(m_dec);
-	}
-
-	UpdateNormal();
+	update(true);
 }
 
 // deactive the tool
@@ -232,4 +216,44 @@ void CPlaneTool::onAlignView()
 
 		updateUi();
 	}
+}
+
+void CPlaneTool::update(bool breset)
+{
+	if (breset)
+	{
+		int* node = ui->m_node;
+		FEMeshBase& mesh = *m_doc->GetActiveMesh();
+		const vector<FENode*> selectedNodes = m_doc->GetGLModel()->GetNodeSelection();
+		int N = selectedNodes.size();
+		int nsel = 0;
+		for (int i = 0; i<N; ++i)
+		{
+			int nid = selectedNodes[i]->GetID();
+			if      (node[0] == 0) node[0] = nid;
+			else if (node[1] == 0) node[1] = nid;
+			else if (node[2] == 0) node[2] = nid;
+			else
+			{
+				node[0] = node[1];
+				node[1] = node[2];
+				node[2] = nid;
+			}
+
+			ui->node1->setValue(node[0]);
+			ui->node2->setValue(node[1]);
+			ui->node3->setValue(node[2]);
+		}
+		
+		if (m_dec)
+		{
+			m_doc->GetGLModel()->RemoveDecoration(m_dec);
+			delete m_dec;
+			m_dec = 0;
+		}
+		m_dec = new CPlaneDecoration;
+		m_doc->GetGLModel()->AddDecoration(m_dec);
+		UpdateNormal();
+	}
+	else UpdateNormal();
 }
