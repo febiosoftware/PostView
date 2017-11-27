@@ -1,0 +1,50 @@
+========================================================================
+= PostView Release Notes                                               =
+========================================================================
+
+Version 2.1 - 11/20/2017
+========================
+
+- A new, user-defined data field can now be defined via a mathematical expression. Select Add\Equation... from the 
+data panel to access the corresponding dialog box. Currently, only scalar expressions are supported and the variables 
+x, y, z for nodal position, and t for time are recognized.
+
+- Mathematical expressions can now be overlayed on the Graph window. Press the "Tools" button on a Graph
+window and then click the "Math plot" option of the tools panel to enter the expression. In the edit field a scalar
+expression with the variable x as the ordinate can be entered. Press Plot to show the expression on the Graph. 
+
+- A new "Area coverage" tool was added, which calculates the coverage of two surfaces. It can be found on the Tools panel.
+It assigns a value of 1 or zero of each node of a surface depending on whether it is covered by a second surface. 
+The total covered area can then be calculated using the Integration tool. 
+
+- A bug that prevented node and element data from being displayed correctly in the Integration window was fixed. 
+
+- A bug was fixed in the arithmetic data filter for element data fields. 
+
+- A shortcut 'U' was added for unhiding all hidden mesh items. 
+
+- A bug was fixed in the distance map tools for triangle surfaces. 
+
+- The data field selector was redesigned and uses a selection menu (like in PostView 1.x)
+
+- The show and enable buttons on the Material Panel are replaced with icons (like it was in PostView 1.x). 
+
+- A gradient filter was added that calculates the gradient of a scalar field. To use it, select a scalar data field in the 
+Data panel, click the "Filter..." button, and select Gradient from the "Filter" list in the corresponding dialog box. 
+
+- The dialog box for exporting .k files was added back. This dialog box allows users to customize what will be output to
+the .k file. 
+
+- An minor issue with the Kinemat tool was fixed that always showed the second step, instead of the first, by default. 
+
+- The direction of the light can now be set from the Settings window. Select the View/Settings.. menu and then click the Lighting tab.
+
+- A bug in the VTK import was fixed. 
+
+- A recent file list was added to the File menu. A maximum of 15 recently accessed files will be displayed in this menu for easy access. 
+
+- An icon that displays the color of each material was added the material list on the Material panel. 
+
+- Added colormap options for iso-surface, slice, and vector plots. 
+
+- A reset button was added to the Settings window that restores all the display settings back to their default values. 
