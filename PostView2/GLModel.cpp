@@ -88,7 +88,7 @@ FEMeshBase* CGLModel::GetActiveMesh()
 {
 	FEModel* pfem = GetFEModel();
 	if (pfem && (pfem->GetStates() > 0)) return pfem->GetState(m_nTime)->GetFEMesh();
-	return 0;
+	return pfem->GetFEMesh(0);
 }
 
 //-----------------------------------------------------------------------------
