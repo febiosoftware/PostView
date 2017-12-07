@@ -32,13 +32,11 @@ void CTimePanel::Update(bool reset)
 
 		int ntime = doc->currentTime();
 		ui->timer->setSelection(ntime);
+
+		double ftime = doc->GetTimeValue();
+		ui->timer->setCurrentTime(ftime);
 	}
 	else ui->timer->clearData();
-}
-
-void CTimePanel::SetCurrentTime(int n)
-{
-	ui->timer->setSelection(n);
 }
 
 void CTimePanel::SetRange(int nmin, int nmax)

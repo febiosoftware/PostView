@@ -217,9 +217,13 @@ public:
 
 	// set the active state
 	void SetCurrentTime(int ntime);
+	void SetCurrentTimeValue(float ftime);
 
 	// get the of active state
 	float GetTimeValue();
+
+	// get the time value of a state
+	float GetTimeValue(int n);
 
 	// get the time range
 	void GetTimeRange(double& t0, double& t1);

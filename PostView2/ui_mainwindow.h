@@ -118,6 +118,8 @@ public:
 
 	QStringList	m_recentFiles;
 
+	bool	m_update_spin;
+
 public:
 	// build the UI
 	void setupUi(CMainWindow* MainWindow)
@@ -126,6 +128,8 @@ public:
 		integrateWindow = 0;
 		statsWindow = 0;
 		pwnd = MainWindow;
+
+		m_update_spin = true;
 
 		currentPath = QDir::currentPath();
 

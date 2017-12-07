@@ -15,9 +15,6 @@ public:
 		QHBoxLayout* mainLayout = new QHBoxLayout;
 		mainLayout->setMargin(0);
 		mainLayout->setSpacing(0);
-//		QLabel* tmp = new QLabel("Hello");
-//		tmp->setFixedWidth(100);
-//		mainLayout->addWidget(tmp);
 		mainLayout->addWidget(timer = new CTimeController); timer->setObjectName("timer");
 		parent->setLayout(mainLayout);
 

@@ -9,6 +9,7 @@ CTimeController::CTimeController(QWidget* parent) : QWidget(parent)
 	m_min = m_max = 0.0;
 	m_nselect = -1;
 	m_first = m_last = 0;
+	m_ftime = 0.0;
 	m_ndrag = -1;
 
 	setMinimumHeight(50);
@@ -27,6 +28,12 @@ void CTimeController::setSelection(int i)
 	{
 		if ((i >= m_first) && (i<= m_last)) m_nselect = i;
 	}
+	update();
+}
+
+void CTimeController::setCurrentTime(float ftime)
+{
+	m_ftime = ftime;
 	update();
 }
 
@@ -303,6 +310,8 @@ void CTimeController::paintEvent(QPaintEvent* ev)
 	m_dataRect = rt; m_dataRect.setBottom(m_timeRect.top() - 1);
 	int x0 = rt.left();
 	int x1 = rt.right();
+	int y0 = rt.top();
+	int y1 = rt.right();
 	int W = x1 - x0;
 
 	int xf = x0 + (int)((m_data[m_first] - m_min) / (m_max - m_min) * W);
@@ -323,6 +332,11 @@ void CTimeController::paintEvent(QPaintEvent* ev)
 	drawBox(painter, m_rightBox, (m_ndrag == 1 ? Qt::white : Qt::lightGray));
 
 	painter.setRenderHint(QPainter::Antialiasing, true);
+
+	// draw the current time value
+	int x = x0 + (int)((m_ftime - m_min) / (m_max - m_min) * W);
+	painter.setPen(Qt::black);
+	painter.drawLine(x, y0, x, y1);
 
 	// draw the data
 	const int R = 9;

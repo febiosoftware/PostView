@@ -86,6 +86,9 @@ public:
 
 	void Activate(bool b) { CGLObject::Activate(b); ShowLegend(b); }
 
+private:
+	void UpdateState(int ntime, bool breset);
+
 protected:
 	int		m_nfield;
 	bool	m_breset;	// reset the range when the field has changed

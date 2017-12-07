@@ -2,9 +2,12 @@
 #include <QWidget>
 #include <vector>
 
+//-----------------------------------------------------------------------------
+// Class that shows the time points, current time point, and current time
 class CTimeController : public QWidget
 {
 	Q_OBJECT
+
 public:
 	CTimeController(QWidget* parent = 0);
 
@@ -16,6 +19,7 @@ public:
 	void UpdateScale();
 
 	void setSelection(int i);
+	void setCurrentTime(float ftime);
 	void setRange(int nmin, int nmax);
 
 protected:
@@ -33,6 +37,7 @@ private:
 	std::vector<double>	m_data;
 	double	m_dataMin, m_dataMax;
 	double	m_min, m_max, m_inc;
+	double	m_ftime;
 	int	    m_first, m_last;
 	QRect	m_dataRect, m_timeRect;
 	QRect	m_leftBox, m_rightBox;

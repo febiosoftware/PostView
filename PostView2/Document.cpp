@@ -353,6 +353,13 @@ float CDocument::GetTimeValue()
 }
 
 //-----------------------------------------------------------------------------
+float CDocument::GetTimeValue(int n)
+{
+	if (m_pGLModel) return m_pGLModel->GetTimeValue(n);
+	else return 0.f;
+}
+
+//-----------------------------------------------------------------------------
 void CDocument::UpdateFEModel(bool breset)
 {
 	if (!m_bValid) return;
@@ -552,6 +559,16 @@ void CDocument::SetCurrentTime(int ntime)
 	if (m_bValid && m_pGLModel)
 	{
 		m_pGLModel->setCurrentTimeIndex(ntime);
+		UpdateFEModel();
+	}
+}
+
+//-----------------------------------------------------------------------------
+void CDocument::SetCurrentTimeValue(float ftime)
+{
+	if (m_bValid && m_pGLModel)
+	{
+		m_pGLModel->SetTimeValue(ftime);
 		UpdateFEModel();
 	}
 }

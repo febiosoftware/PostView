@@ -521,6 +521,12 @@
     <ClCompile Include="..\..\PostView2\moc_AreaCoverageTool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\PostView2\FileThread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PostView2\moc_FileThread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\PostView2\MainWindow.h">
@@ -551,6 +557,9 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\PostView2\AreaCoverageTool.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\FileThread.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

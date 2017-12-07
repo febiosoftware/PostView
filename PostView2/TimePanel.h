@@ -16,7 +16,6 @@ public:
 
 	void Update(bool reset = false);
 
-	void SetCurrentTime(int n);
 	void SetRange(int nmin, int nmax);
 
 private slots:

@@ -48,31 +48,6 @@
 #include "MPEGAnimation.h"
 #include <string>
 
-CFileThread::CFileThread(CMainWindow* wnd, FEFileReader* file, const QString& fileName) : m_wnd(wnd), m_fileReader(file), m_fileName(fileName)
-{
-	QObject::connect(this, SIGNAL(resultReady(bool,const QString&)), wnd, SLOT(finishedReadingFile(bool, const QString&)));
-	QObject::connect(this, SIGNAL(finished())   , this, SLOT(deleteLater()));
-}
-
-void CFileThread::run()
-{
-	if (m_fileReader)
-	{
-		std::string sfile = m_fileName.toStdString();
-		CDocument& doc = *m_wnd->GetDocument();
-		bool ret = doc.LoadFEModel(m_fileReader, sfile.c_str());
-		std::string err = m_fileReader->GetErrorMessage();
-		emit resultReady(ret, QString(err.c_str()));
-	}
-	else emit resultReady(false, "No file reader");
-}
-
-float CFileThread::getFileProgress() const
-{
-	if (m_fileReader) return m_fileReader->GetFileProgress();
-	return 0.f;
-}
-
 CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMainWindow)
 {
 	m_doc = new CDocument(this);
@@ -1295,13 +1270,41 @@ void CMainWindow::on_actionPlay_toggled(bool bchecked)
 
 void CMainWindow::SetCurrentTime(int n)
 {
-	ui->pspin->setValue(n + 1);
-	ui->timePanel->SetCurrentTime(n);
-//	GetDocument()->SetCurrentTime(n);
-	RedrawGL();
-//	UpdateGraphs(false);
+	GetDocument()->SetCurrentTime(n);
 
+	// update the spinbox value
+	// Changing the value will trigger a signal, which will call this function again
+	// To avoid this recursive call, we set a flag
+	ui->m_update_spin = false;
+	ui->pspin->setValue(n + 1);
+	ui->m_update_spin = true;
+
+	// update the rest
+	ui->timePanel->Update(false);
 	UpdateTools(false);
+	UpdateGraphs(false);
+	RedrawGL();
+}
+
+void CMainWindow::SetCurrentTimeValue(float ftime)
+{
+	CDocument* doc = GetDocument();
+	int n0 = doc->currentTime();
+	doc->SetCurrentTimeValue(ftime);
+	int n1 = doc->currentTime();
+
+	if (n0 != n1)
+	{
+		ui->m_update_spin = false;
+		ui->pspin->setValue(n1 + 1);
+		ui->m_update_spin = true;
+	}
+
+	// update the rest
+	ui->timePanel->Update(false);
+	UpdateTools(false);
+	UpdateGraphs(false);
+	RedrawGL();
 }
 
 void CMainWindow::StopAnimation()
@@ -1319,43 +1322,65 @@ void CMainWindow::timerEvent(QTimerEvent* ev)
 	int N0 = time.m_start;
 	int N1 = time.m_end;
 
+	float f0 = pdoc->GetTimeValue(N0);
+	float f1 = pdoc->GetTimeValue(N1);
+
 	int nstep = pdoc->currentTime();
 
-	if (time.m_mode == MODE_FORWARD)
+	if (time.m_bfix)
 	{
-		nstep++;
-		if (nstep > N1)
+		float ftime = pdoc->GetTimeValue();
+		
+		if (time.m_mode == MODE_FORWARD)
 		{
-			if (time.m_bloop) nstep = N0;
-			else { nstep = N1; StopAnimation(); }
+			ftime += time.m_dt;
+			if (ftime > f1)
+			{
+				if (time.m_bloop) ftime = f0;
+				else { ftime = f1; StopAnimation(); }
+			}
 		}
+
+		SetCurrentTimeValue(ftime);
 	}
-	else if (time.m_mode == MODE_REVERSE)
+	else
 	{
-		nstep--;
-		if (nstep < N0) 
+		if (time.m_mode == MODE_FORWARD)
 		{
-			if (time.m_bloop) nstep = N1;
-			else { nstep = N0; StopAnimation(); }
+			nstep++;
+			if (nstep > N1)
+			{
+				if (time.m_bloop) nstep = N0;
+				else { nstep = N1; StopAnimation(); }
+			}
 		}
+		else if (time.m_mode == MODE_REVERSE)
+		{
+			nstep--;
+			if (nstep < N0) 
+			{
+				if (time.m_bloop) nstep = N1;
+				else { nstep = N0; StopAnimation(); }
+			}
+		}
+		else if (time.m_mode == MODE_CYLCE)
+		{
+			nstep += time.m_inc;
+			if (nstep > N1)
+			{
+				time.m_inc = -1;
+				nstep = N1;
+				if (time.m_bloop == false) StopAnimation();
+			}
+			else if (nstep < N0)
+			{
+				time.m_inc = 1;
+				nstep = N0;
+				if (time.m_bloop == false) StopAnimation();
+			}
+		}
+		SetCurrentTime(nstep);
 	}
-	else if (time.m_mode == MODE_CYLCE)
-	{
-		nstep += time.m_inc;
-		if (nstep > N1)
-		{
-			time.m_inc = -1;
-			nstep = N1;
-			if (time.m_bloop == false) StopAnimation();
-		}
-		else if (nstep < N0)
-		{
-			time.m_inc = 1;
-			nstep = N0;
-			if (time.m_bloop == false) StopAnimation();
-		}
-	}
-	SetCurrentTime(nstep);
 	RedrawGL();
 }
 
@@ -1591,11 +1616,7 @@ void CMainWindow::UpdatePlayToolbar(bool breset)
 
 void CMainWindow::on_selectTime_valueChanged(int i)
 {
-	GetDocument()->SetCurrentTime(i - 1);
-	ui->timePanel->SetCurrentTime(i - 1);
-	RedrawGL();
-	UpdateTools(false);
-	UpdateGraphs(false);
+	if (ui->m_update_spin) SetCurrentTime(i - 1);
 }
 
 void CMainWindow::UpdateFontToolbar()

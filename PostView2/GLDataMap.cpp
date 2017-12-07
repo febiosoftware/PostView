@@ -185,37 +185,42 @@ void CGLColorMap::Update(int ntime, float dt, bool breset)
 	FEMeshBase* pm = po->GetActiveMesh();
 	FEModel* pfem = po->GetFEModel();
 
-	// make sure the field variable is still valid
-	if (pfem->IsValidFieldCode(m_nfield, ntime) == false)
-	{
-		// This may happen after an update if fields are deleted.
-		// reset the field code
-		m_nfield = BUILD_FIELD(1,0,0);
-		breset = true;
-	}
+	int N = pfem->GetStates();
+	if (N == 0) return;
 
-	// evaluate the mesh
-	pfem->Evaluate(m_nfield, ntime, breset);
+	int n0 = ntime;
+	int n1 = (ntime + 1 >= N ? ntime : ntime + 1);
+	if (dt == 0.f) n1 = n0;
+
+	UpdateState(n0, breset);
+	if (n0 != n1) UpdateState(n1, breset);
 
 	// get the state
-	FEState& s = *pfem->GetState(ntime);
- 
+	FEState& s0 = *pfem->GetState(n0);
+	FEState& s1 = *pfem->GetState(n1);
+
 	// update the range
 	float fmin = 1e29f, fmax = -1e29f;
-	ValArray& faceData = s.m_FaceData;
-	if (IS_ELEM_FIELD(m_nfield) && (m_bDispNodeVals==false))
+	ValArray& faceData0 = s0.m_FaceData;
+	ValArray& faceData1 = s1.m_FaceData;
+	if (IS_ELEM_FIELD(m_nfield) && (m_bDispNodeVals == false))
 	{
 		int NF = pm->Faces();
 		for (int i=0; i<NF; ++i)
 		{
 			FEFace& face = pm->Face(i);
-			FACEDATA& fd = s.m_FACE[i];
-//			if (face.IsEnabled() && (face.m_ntag > 0))
+			FACEDATA& fd0 = s0.m_FACE[i];
+			FACEDATA& fd1 = s1.m_FACE[i];
+			//			if (face.IsEnabled() && (face.m_ntag > 0))
 			{
+				face.m_ntag = 1;
 				int nf = face.Nodes();
 				for (int j=0; j<nf; ++j)
 				{
-					float f = faceData.value(i, j);
+					float f0 = faceData0.value(i, j);
+					float f1 = (n0==n1 ? f0 : faceData1.value(i, j));
+					float f = f0 + (f1 - f0)*dt;
+					face.m_tex[j] = f;
 					if (f > fmax) fmax = f;
 					if (f < fmin) fmin = f;
 				}
@@ -226,12 +231,20 @@ void CGLColorMap::Update(int ntime, float dt, bool breset)
 	{
 		for (int i=0; i<pm->Nodes(); ++i)
 		{
-			NODEDATA& node = s.m_NODE[i];
-			if ((pm->Node(i).IsEnabled()) && (node.m_ntag > 0))
+			FENode& node = pm->Node(i);
+			NODEDATA& d0 = s0.m_NODE[i];
+			NODEDATA& d1 = s1.m_NODE[i];
+			if ((pm->Node(i).IsEnabled()) && (d0.m_ntag > 0) && (d1.m_ntag > 0))
 			{
-				if (node.m_val > fmax) fmax = node.m_val;
-				if (node.m_val < fmin) fmin = node.m_val;
+				float f0 = d0.m_val;
+				float f1 = d1.m_val;
+				float f = f0 + (f1 - f0)*dt;
+				node.m_tex = f;
+				node.m_ntag = 1;
+				if (f > fmax) fmax = f;
+				if (f < fmin) fmin = f;
 			}
+			else node.m_ntag = 0;
 		}
 	}
 
@@ -269,9 +282,8 @@ void CGLColorMap::Update(int ntime, float dt, bool breset)
 	for (int i=0; i<pm->Nodes(); ++i)
 	{
 		FENode& node = pm->Node(i);
-		NODEDATA& data = s.m_NODE[i];
-		if (node.IsEnabled() && (data.m_ntag > 0))
-			node.m_tex = (s.m_NODE[i].m_val - min) / (max - min);
+		if (node.IsEnabled() && (node.m_ntag > 0))
+			node.m_tex = (node.m_tex - min) / (max - min);
 		else node.m_tex = 0;
 	}
 
@@ -279,13 +291,12 @@ void CGLColorMap::Update(int ntime, float dt, bool breset)
 	for (int i=0; i<pm->Faces(); ++i)
 	{
 		FEFace& face = pm->Face(i);
+		FACEDATA& fd = s0.m_FACE[i];
 		if (face.IsEnabled())
 		{
-//			for (int j=0; j<face.Nodes(); ++j) face.m_tex[j] = (s.m_NODE[face.node[j]].m_val - min)*dti;
-			for (int j=0; j<face.Nodes(); ++j) face.m_tex[j] = (s.m_FaceData.value(i, j) - min)*dti;
-			if (s.m_FACE[i].m_ntag > 0) face.Activate(); else face.Deactivate();
+			for (int j=0; j<face.Nodes(); ++j) face.m_tex[j] = (face.m_tex[j] - min)*dti;
+			if (fd.m_ntag > 0) face.Activate(); else face.Deactivate();
 			face.m_texe = 0;
-	//		face.m_texe  = (pm->Element(face.m_elem).m_val - min )*dti;
 		}
 		else 
 		{
@@ -293,4 +304,23 @@ void CGLColorMap::Update(int ntime, float dt, bool breset)
 			face.m_texe = 0;
 		}
 	}
+}
+
+void CGLColorMap::UpdateState(int ntime, bool breset)
+{
+	// get the model
+	CGLModel* po = GetModel();
+	FEModel* pfem = po->GetFEModel();
+
+	// make sure the field variable is still valid
+	if (pfem->IsValidFieldCode(m_nfield, ntime) == false)
+	{
+		// This may happen after an update if fields are deleted.
+		// reset the field code
+		m_nfield = BUILD_FIELD(1, 0, 0);
+		breset = true;
+	}
+
+	// evaluate the mesh
+	pfem->Evaluate(m_nfield, ntime, breset);
 }
