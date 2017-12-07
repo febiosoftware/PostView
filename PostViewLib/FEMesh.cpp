@@ -1690,3 +1690,72 @@ void FEMeshBase::SetElementTags(int ntag)
 {
 	for (int i = 0; i<Elements(); ++i) Element(i).m_ntag = ntag;
 }
+
+//=================================================================================================
+FEFindElement::FEFindElement(FEMeshBase& mesh) : m_mesh(mesh)
+{
+	int NE = mesh.Elements();
+	m_box.resize(NE);
+	for (int i=0; i<NE; ++i)
+	{
+		FEElement& e = mesh.Element(i);
+		int ne = e.Nodes();
+
+		// do a quick bounding box test
+		vec3f r0 = mesh.Node(e.m_node[0]).m_r0;
+		vec3f r1 = r0;
+		for (int j = 1; j<ne; ++j)
+		{
+			vec3f& rj = mesh.Node(e.m_node[j]).m_r0;
+			if (rj.x < r0.x) r0.x = rj.x;
+			if (rj.y < r0.y) r0.y = rj.y;
+			if (rj.z < r0.z) r0.z = rj.z;
+			if (rj.x > r1.x) r1.x = rj.x;
+			if (rj.y > r1.y) r1.y = rj.y;
+			if (rj.z > r1.z) r1.z = rj.z;
+		}
+
+		float dx = fabs(r0.x - r1.x);
+		float dy = fabs(r0.y - r1.y);
+		float dz = fabs(r0.z - r1.z);
+
+		float R = dx;
+		if (dy > R) R = dy;
+		if (dz > R) R = dz;
+		float eps = R*0.001f;
+
+		r0.x -= eps;
+		r0.y -= eps;
+		r0.z -= eps;
+
+		r1.x += eps;
+		r1.y += eps;
+		r1.z += eps;
+
+		BOUNDINGBOX& box = m_box[i];
+		box = BOUNDINGBOX(r0, r1);
+	}
+}
+
+bool FEFindElement::FindInReferenceFrame(const vec3f& x, int& nelem, double r[3])
+{
+	vec3f y[FEGenericElement::MAX_NODES];
+	int NE = m_mesh.Elements();
+	for (int i = 0; i<NE; ++i)
+	{
+		FEElement& e = m_mesh.Element(i);
+		int ne = e.Nodes();
+		nelem = i;
+
+		// do a quick bounding box test
+		BOUNDINGBOX& box = m_box[i];
+		if (box.IsInside(x))
+		{
+			// do a more complete search
+			if (ProjectInsideReferenceElement(m_mesh, e, x, r)) return true;
+		}
+	}
+
+	nelem = -1;
+	return false;
+}

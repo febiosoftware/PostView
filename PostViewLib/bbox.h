@@ -46,4 +46,15 @@ public:
 
 	// inflate the box
 	void InflateTo(float fx, float fy, float fz);
+
+	// is a point inside or not
+	bool IsInside(const vec3f& r);
 };
+
+
+inline bool BOUNDINGBOX::IsInside(const vec3f& r)
+{
+	return	(r.x >= x0) && (r.x <= x1) &&
+			(r.y >= y0) && (r.y <= y1) &&
+			(r.z >= z0) && (r.z <= z1);
+}

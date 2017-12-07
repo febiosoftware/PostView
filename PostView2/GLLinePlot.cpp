@@ -128,7 +128,7 @@ void CGLLinePlot::RenderLines(FEState& s)
 void glxCylinder(float H, float R)
 {
 	glBegin(GL_QUAD_STRIP);
-	const int N = 16;
+	const int N = 8;
 	for (int i=0; i<=N; ++i)
 	{
 		double w = 2*PI*i/(double)N;
