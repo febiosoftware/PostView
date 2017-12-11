@@ -25,7 +25,7 @@ private slots:
 
 private:
 	bool ReadOldFormat(const char* szfile);
-	bool ReadAng2Format(const char* szfile);
+	int ReadAng2Format(const char* szfile);
 
 private:
 	CImportLinesToolUI*		ui;

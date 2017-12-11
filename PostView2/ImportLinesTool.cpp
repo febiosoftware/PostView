@@ -75,36 +75,41 @@ void CImportLinesTool::OnApply()
 		string fileName = ui->fileName->text().toStdString();
 		string name = ui->name->text().toStdString();
 
+		bool bsuccess = false;
 		const char* szfile = fileName.c_str();
 		const char* szext = strrchr(szfile, '.');
 		if (strcmp(szext, ".ang2") == 0)
 		{
 			// Read AngioFE2 format
-			if (ReadAng2Format(szfile) == false)
+			int nret = ReadAng2Format(szfile);
+			bsuccess = (nret != 0);
+			if (nret == 2)
 			{
-				QMessageBox::critical(0, "PostView2", "Failed reading ang2 file.");
-				return;
+				QMessageBox::warning(0, "PostView2", "End-of-file reached before all states were processed.");
 			}
 		}
 		else
 		{
 			// read old format (this assumes this is a text file)
-			if (ReadOldFormat(szfile) == false)
-			{
-				QMessageBox::critical(0, "PostView2", "Failed reading line data file.");
-				return;
-			}
+			bsuccess = ReadOldFormat(szfile);
 		}
 
-		// add a line plot for visualizing the line data
-		CGLLinePlot* pgl = new CGLLinePlot(m_doc->GetGLModel());
-		m_doc->AddPlot(pgl);
-		pgl->SetName(fileName);
+		if (bsuccess)
+		{
+			// add a line plot for visualizing the line data
+			CGLLinePlot* pgl = new CGLLinePlot(m_doc->GetGLModel());
+			m_doc->AddPlot(pgl);
+			pgl->SetName(fileName);
 
-		ui->m_ncount++;
-		ui->name->setText(QString("Lines%1").arg(ui->m_ncount));
+			ui->m_ncount++;
+			ui->name->setText(QString("Lines%1").arg(ui->m_ncount));
 
-		updateUi();
+			updateUi();
+		}
+		else
+		{
+			QMessageBox::critical(0, "PostView2", "Failed reading line data file.");
+		}
 	}
 }
 
@@ -172,23 +177,27 @@ vec3f GetCoordinatesFromFrag(FEModel& fem, int nstate, FRAG& a)
 	return r0;
 }
 
-bool CImportLinesTool::ReadAng2Format(const char* szfile)
+// return code:
+// 0 = failed
+// 1 = success
+// 2 = EOF reached before all states were read in
+int CImportLinesTool::ReadAng2Format(const char* szfile)
 {
 	FILE* fp = fopen(szfile, "rb");
-	if (fp == 0) return false;
+	if (fp == 0) return 0;
 
 	FEModel& fem = *m_doc->GetFEModel();
 	FEMeshBase& mesh = *fem.GetFEMesh(0);
 
 	// read the magic number
 	unsigned int magic = 0;
-	if (fread(&magic, sizeof(unsigned int), 1, fp) != 1) { fclose(fp); return false; };
-	if (magic != 0xfdb97531) { fclose(fp); return false; }
+	if (fread(&magic, sizeof(unsigned int), 1, fp) != 1) { fclose(fp); return 0; };
+	if (magic != 0xfdb97531) { fclose(fp); return 0; }
 
 	// read the version number
 	unsigned int version = 0;
-	if (fread(&version, sizeof(unsigned int), 1, fp) != 1) { fclose(fp); return false; }
-	if (version != 0) { fclose(fp); return false; }
+	if (fread(&version, sizeof(unsigned int), 1, fp) != 1) { fclose(fp); return 0; }
+	if (version != 0) { fclose(fp); return 0; }
 
 	// store the raw data
 	vector<pair<FRAG, FRAG> > raw;
@@ -218,17 +227,17 @@ bool CImportLinesTool::ReadAng2Format(const char* szfile)
 
 		// read number of segments 
 		unsigned int segs = 0;
-		if (fread(&segs, sizeof(unsigned int), 1, fp) != 1) { fclose(fp); return false; }
+		if (fread(&segs, sizeof(unsigned int), 1, fp) != 1) { fclose(fp); return 2; }
 
 		// read time stamp (is not used right now)
 		float ftime = 0.0f;
-		if (fread(&ftime, sizeof(float), 1, fp) != 1) { fclose(fp); return false; }
+		if (fread(&ftime, sizeof(float), 1, fp) != 1) { fclose(fp); return 2; }
 
 		// read the segments
 		for (int i=0; i<segs; ++i)
 		{
 			float d[6] = {0.0f};
-			if (fread(d, sizeof(float), 6, fp) != 6) { fclose(fp); return false; }
+			if (fread(d, sizeof(float), 6, fp) != 6) { fclose(fp); return 2; }
 
 			// store the raw coordinates
 			vec3f a0 = vec3f(d[0], d[1], d[2]);
@@ -253,7 +262,7 @@ bool CImportLinesTool::ReadAng2Format(const char* szfile)
 
 	fclose(fp);
 
-	return true;
+	return 1;
 }
 
 
