@@ -199,6 +199,11 @@ void CGLColorMap::Update(int ntime, float dt, bool breset)
 	FEState& s0 = *pfem->GetState(n0);
 	FEState& s1 = *pfem->GetState(n1);
 
+	float df = s1.m_time - s0.m_time;
+	if (df == 0) df = 1.f;
+
+	float w = dt / df;
+
 	// update the range
 	float fmin = 1e29f, fmax = -1e29f;
 	ValArray& faceData0 = s0.m_FaceData;
@@ -219,7 +224,7 @@ void CGLColorMap::Update(int ntime, float dt, bool breset)
 				{
 					float f0 = faceData0.value(i, j);
 					float f1 = (n0==n1 ? f0 : faceData1.value(i, j));
-					float f = f0 + (f1 - f0)*dt;
+					float f = f0 + (f1 - f0)*w;
 					face.m_tex[j] = f;
 					if (f > fmax) fmax = f;
 					if (f < fmin) fmin = f;
@@ -238,7 +243,7 @@ void CGLColorMap::Update(int ntime, float dt, bool breset)
 			{
 				float f0 = d0.m_val;
 				float f1 = d1.m_val;
-				float f = f0 + (f1 - f0)*dt;
+				float f = f0 + (f1 - f0)*w;
 				node.m_tex = f;
 				node.m_ntag = 1;
 				if (f > fmax) fmax = f;
