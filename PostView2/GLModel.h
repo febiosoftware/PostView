@@ -1,6 +1,7 @@
 #pragma once
 #include "PostViewLib/GLObject.h"
-#include "GLDataMap.h"
+#include "GLDisplacementMap.h"
+#include "GLColorMap.h"
 #include "PostViewLib/FEModel.h"
 #include <PostViewLib/GDecoration.h>
 #include <list>

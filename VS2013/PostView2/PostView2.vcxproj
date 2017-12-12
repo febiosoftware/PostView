@@ -307,8 +307,10 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </CustomBuild>
+    <ClInclude Include="..\..\PostView2\GLColorMap.h" />
     <ClInclude Include="..\..\PostView2\GLContext.h" />
     <ClInclude Include="..\..\PostView2\GLDataMap.h" />
+    <ClInclude Include="..\..\PostView2\GLDisplacementMap.h" />
     <ClInclude Include="..\..\PostView2\GLIsoSurfacePlot.h" />
     <ClInclude Include="..\..\PostView2\GLLinePlot.h" />
     <ClInclude Include="..\..\PostView2\GLMesh.h" />
@@ -529,8 +531,10 @@
     <ClCompile Include="..\..\PostView2\FEKinemat.cpp" />
     <ClCompile Include="..\..\PostView2\FileThread.cpp" />
     <ClCompile Include="..\..\PostView2\FileViewer.cpp" />
+    <ClCompile Include="..\..\PostView2\GLColorMap.cpp" />
     <ClCompile Include="..\..\PostView2\GLContext.cpp" />
     <ClCompile Include="..\..\PostView2\GLDataMap.cpp" />
+    <ClCompile Include="..\..\PostView2\GLDisplacementMap.cpp" />
     <ClCompile Include="..\..\PostView2\GLIsoSurfacePlot.cpp" />
     <ClCompile Include="..\..\PostView2\GLLinePlot.cpp" />
     <ClCompile Include="..\..\PostView2\GLMesh.cpp" />
