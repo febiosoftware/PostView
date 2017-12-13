@@ -57,10 +57,6 @@ void CGLDisplacementMap::Update(int ntime, float dt, bool breset)
 			FENode& node = pm->Node(i);
 			vec3f du = s1.m_NODE[i].m_rt - node.m_r0;
 
-			// the actual nodal position is stored in the state
-			// this is the field that will be used for strain calculations
-			s1.m_NODE[i].m_rt = node.m_r0 + du;
-
 			// the scaled displacement is stored on the mesh
 			node.m_rt = node.m_r0 + du*m_scl;
 		}
@@ -90,10 +86,6 @@ void CGLDisplacementMap::Update(int ntime, float dt, bool breset)
 
 			// evaluate current displacement
 			vec3f du = d2*w + d1*(1.f - w);
-
-			// the actual nodal position is stored in the state
-			// this is the field that will be used for strain calculations
-			s1.m_NODE[i].m_rt = node.m_r0 + du;
 
 			// the scaled displacement is stored on the mesh
 			node.m_rt = node.m_r0 + du*m_scl;
