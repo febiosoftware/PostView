@@ -470,6 +470,7 @@ public:
 	CPaletteWidget*		m_pal;
 	CColormapWidget*	m_map;
 	QDialogButtonBox*	buttonBox;
+	QTabWidget*			m_tab;
 
 	::CPropertyListView* pw1;
 	::CPropertyListView* pw2;
@@ -477,12 +478,14 @@ public:
 	::CPropertyListView* pw4;
 	::CPropertyListView* pw5;
 
+	static int m_ntab;
+
 public:
 	void setupUi(::CDlgViewSettings* pwnd)
 	{
 		QVBoxLayout* pg = new QVBoxLayout(pwnd);
 	
-		QTabWidget* pt = new QTabWidget;
+		m_tab = new QTabWidget;
 
 		pw1 = new ::CPropertyListView; pw1->Update(m_render);
 		pw2 = new ::CPropertyListView; pw2->Update(m_bg    );
@@ -493,14 +496,14 @@ public:
 		m_pal = new CPaletteWidget;
 		m_map = new CColormapWidget;
 
-		pt->addTab(pw1, "Rendering");
-		pt->addTab(pw2, "Background");
-		pt->addTab(pw3, "Lighting");
-		pt->addTab(pw4, "Camera");
-		pt->addTab(pw5, "Selection");
-		pt->addTab(m_pal, "Palette");
-		pt->addTab(m_map, "Colormap");
-		pg->addWidget(pt);
+		m_tab->addTab(pw1, "Rendering");
+		m_tab->addTab(pw2, "Background");
+		m_tab->addTab(pw3, "Lighting");
+		m_tab->addTab(pw4, "Camera");
+		m_tab->addTab(pw5, "Selection");
+		m_tab->addTab(m_pal, "Palette");
+		m_tab->addTab(m_map, "Colormap");
+		pg->addWidget(m_tab);
 
 		buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Apply | QDialogButtonBox::Reset); 
 		pg->addWidget(buttonBox);
@@ -573,6 +576,9 @@ public:
 	}
 };
 
+int Ui::CDlgViewSettings::m_ntab = 0;
+
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -594,9 +600,9 @@ CDlgViewSettings::CDlgViewSettings(CMainWindow* pwnd) : ui(new Ui::CDlgViewSetti
 	ui->m_cam->m_speed = cam.GetCameraSpeed();
 	ui->m_cam->m_bias = cam.GetCameraBias();
 
-	ui->setupUi(this);
-
 	ui->Set(*pdoc);
+
+	ui->setupUi(this);
 
 	// fill the palette list
 	UpdatePalettes();
@@ -622,6 +628,16 @@ void CDlgViewSettings::UpdatePalettes()
 CDlgViewSettings::~CDlgViewSettings()
 {
 
+}
+
+void CDlgViewSettings::showEvent(QShowEvent* ev)
+{
+	ui->m_tab->setCurrentIndex(ui->m_ntab);
+}
+
+void CDlgViewSettings::hideEvent(QHideEvent* ev)
+{
+	ui->m_ntab = ui->m_tab->currentIndex();
 }
 
 void CDlgViewSettings::apply()

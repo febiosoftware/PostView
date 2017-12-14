@@ -53,6 +53,9 @@ public:
 
 	void OnReset();
 
+	void showEvent(QShowEvent* ev) override;
+	void hideEvent(QHideEvent* ev) override;
+
 public slots:
 	void accept();
 	void onClicked(QAbstractButton*);

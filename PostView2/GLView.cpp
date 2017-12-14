@@ -1712,26 +1712,25 @@ void CGLView::RegionSelectNodes(const SelectRegion& region, int mode)
 	makeCurrent();
 	WorldToScreen transform(this);
 
+	// tag the nodes that are eligable for selection
+	pm->SetNodeTags(0);
 	if (view.m_bignoreBackfacingItems)
 	{
 		TagBackfacingNodes(*pm);
 	}
-	else if (view.m_bext)
+	if (view.m_bext)
 	{
-		pm->SetNodeTags(0);
 		for (int i=0; i<pm->Nodes(); ++i) 
 			if (pm->Node(i).m_bext == false) pm->Node(i).m_ntag = 1;
 	}
-	else pm->SetNodeTags(0);
 	
+	// select all nodes inside the region
 	for (int i = 0; i<NN; ++i)
 	{
 		FENode& node = pm->Node(i);
 		if (node.IsVisible() && (node.m_ntag == 0))
 		{
-			vec3f r = node.m_rt;
-
-			vec3f p = transform.Apply(r);
+			vec3f p = transform.Apply(node.m_rt);
 
 			if (region.IsInside((int) p.x / m_dpr, (int) p.y / m_dpr))
 			{
@@ -2036,19 +2035,26 @@ void CGLView::TagBackfacingElements(FEMeshBase& mesh)
 //-----------------------------------------------------------------------------
 void CGLView::TagBackfacingNodes(FEMeshBase& mesh)
 {
-	int NN = mesh.Nodes();
-	for (int i = 0; i<NN; ++i) mesh.Node(i).m_ntag = 1;
+	// first tag all surface nodes
+	int NF = mesh.Faces();
+	for (int i = 0; i<NF; ++i)
+	{
+		FEFace& face = mesh.Face(i);
+		int nn = face.Nodes();
+		for (int j = 0; j<nn; ++j) mesh.Node(face.node[j]).m_ntag = 1;
+	}
 
+	// tag all the backfacing tags
 	TagBackfacingFaces(mesh);
 
-	int NF = mesh.Faces();
+	// now, tag the visible nodes
 	for (int i = 0; i<NF; ++i)
 	{
 		FEFace& f = mesh.Face(i);
 		if (f.m_ntag == 0)
 		{
 			int nn = f.Nodes();
-			for (int i = 0; i<nn; ++i) mesh.Node(f.node[i]).m_ntag = 0;
+			for (int j = 0; j<nn; ++j) mesh.Node(f.node[j]).m_ntag = 0;
 		}
 	}
 }
