@@ -88,7 +88,7 @@ public:
 class BoxRegion : public SelectRegion
 {
 public:
-	BoxRegion(int x0, int x1, int y0, int y1);
+	BoxRegion(int x0, int y0, int x1, int y1);
 	bool IsInside(int x, int y) const;
 	bool LineIntersects(int x0, int y0, int x1, int y1) const;
 private:
@@ -99,7 +99,7 @@ private:
 class CircleRegion : public SelectRegion
 {
 public:
-	CircleRegion(int x0, int x1, int y0, int y1);
+	CircleRegion(int x0, int y0, int x1, int y1);
 	bool IsInside(int x, int y) const;
 	bool LineIntersects(int x0, int y0, int x1, int y1) const;
 private:
@@ -206,10 +206,10 @@ protected:
 
 	void SetupGL();
 
-	void SelectElements(int x0, int y0, int x1, int y1, int mode);
-	void SelectFaces   (int x0, int y0, int x1, int y1, int mode);
-	void SelectNodes   (int x0, int y0, int x1, int y1, int mode);
-	void SelectEdges   (int x0, int y0, int x1, int y1, int mode);
+	void SelectElements(int x0, int y0, int mode);
+	void SelectFaces   (int x0, int y0, int mode);
+	void SelectNodes   (int x0, int y0, int mode);
+	void SelectEdges   (int x0, int y0, int mode);
 
 	void RegionSelectElements(const SelectRegion& region, int mode);
 	void RegionSelectFaces   (const SelectRegion& region, int mode);

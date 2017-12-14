@@ -100,6 +100,9 @@ public:
 	int GetRenderMode() { return m_nrender; }
 	void SetRenderMode(int nmode) { m_nrender = nmode; }
 
+	bool RenderInteriorNodes() const { return m_brenderInteriorNodes; }
+	void RenderInteriorNodes(bool b) { m_brenderInteriorNodes = b; }
+
 public:
 	// call this to render the model
 	void Render(CGLContext& rc, bool showMesh, bool showOutline);
@@ -290,6 +293,7 @@ public:
 	bool		m_bnorm;		//!< calculate normals or not
 	bool		m_bsmooth;		//!< render smooth or not
 	bool		m_bghost;		//!< render the ghost (undeformed outline)
+	bool		m_brenderInteriorNodes;	//!< render interior nodes or not
 	bool		m_bShell2Hex;	//!< render shells as hexes
 	int			m_nshellref;	//!< shell reference surface
 	int			m_nDivs;		//!< nr of element subdivisions

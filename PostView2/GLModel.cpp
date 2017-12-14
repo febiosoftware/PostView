@@ -57,6 +57,7 @@ CGLModel::CGLModel(FEModel* ps)
 	m_bsmooth = true;
 	m_bghost = false;
 	m_nDivs = 0; // this means "auto"
+	m_brenderInteriorNodes = true;
 
 	m_bShell2Hex  = false;
 	m_nshellref   = 0;
@@ -1509,7 +1510,7 @@ void CGLModel::RenderNodes(FEModel* ps, CGLContext& rc)
 	for (int i = 0; i<pm->Nodes(); ++i)
 	{
 		FENode& node = pm->Node(i);
-		if (node.m_ntag && (node.IsSelected() == false))
+		if (node.m_bext && node.m_ntag && (node.IsSelected() == false))
 		{
 			// get the nodal coordinate
 			vec3f& r = node.m_rt;
@@ -1518,17 +1519,35 @@ void CGLModel::RenderNodes(FEModel* ps, CGLContext& rc)
 			glVertex3f(r.x, r.y, r.z);
 		}
 	}
+	if (m_brenderInteriorNodes)
+	{
+		for (int i = 0; i<pm->Nodes(); ++i)
+		{
+			FENode& node = pm->Node(i);
+			if ((node.m_bext == false) && node.m_ntag && (node.IsSelected() == false))
+			{
+				// get the nodal coordinate
+				vec3f& r = node.m_rt;
+
+				// render the point
+				glVertex3f(r.x, r.y, r.z);
+			}
+		}
+	}
 	glEnd();
 
 	// render selected tagged nodes
 	if (GetSelectionMode() == SELECT_NODES)
 	{
-		glColor3ub(m_sel_col.r, m_sel_col.g, m_sel_col.b);
+		glDisable(GL_DEPTH_TEST);
+
+		// render exterior selected nodes first
+		glColor3ub(255, 255, 0);
 		glBegin(GL_POINTS);
 		for (int i = 0; i<pm->Nodes(); ++i)
 		{
 			FENode& node = pm->Node(i);
-			if (node.m_ntag && node.IsSelected())
+			if (node.m_bext && node.m_ntag && node.IsSelected())
 			{
 				// get the nodal coordinate
 				vec3f r = node.m_rt;
@@ -1538,6 +1557,26 @@ void CGLModel::RenderNodes(FEModel* ps, CGLContext& rc)
 			}
 		}
 		glEnd();
+
+		// render interior nodes
+		if (m_brenderInteriorNodes)
+		{
+			glColor3ub(255, 0, 0);
+			glBegin(GL_POINTS);
+			for (int i = 0; i<pm->Nodes(); ++i)
+			{
+				FENode& node = pm->Node(i);
+				if ((node.m_bext == false) && node.m_ntag && node.IsSelected())
+				{
+					// get the nodal coordinate
+					vec3f r = node.m_rt;
+
+					// render the point
+					glVertex3f(r.x, r.y, r.z);
+				}
+			}
+			glEnd();
+		}
 	}
 
 	// restore attributes
@@ -2315,7 +2354,8 @@ void CGLModel::RenderEdges(FEModel* ps, CGLContext& rc)
 	// render selected edges
 	if (GetSelectionMode() == SELECT_EDGES)
 	{
-		glColor3ub(255, 0, 0);
+		glDisable(GL_DEPTH_TEST);
+		glColor3ub(255, 255, 0);
 		glBegin(GL_LINES);
 		{
 			for (int i = 0; i<NE; ++i)

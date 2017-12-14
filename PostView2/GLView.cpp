@@ -202,7 +202,7 @@ bool SelectRegion::TriangleIntersect(int x0, int y0, int x1, int y1, int x2, int
 }
 
 //=============================================================================
-BoxRegion::BoxRegion(int x0, int x1, int y0, int y1)
+BoxRegion::BoxRegion(int x0, int y0, int x1, int y1)
 {
 	m_x0 = (x0<x1?x0:x1); m_x1 = (x0<x1?x1:x0);
 	m_y0 = (y0<y1?y0:y1); m_y1 = (y0<y1?y1:y0);
@@ -218,7 +218,7 @@ bool BoxRegion::LineIntersects(int x0, int y0, int x1, int y1) const
 	return intersectsRect(QPoint(x0, y0), QPoint(x1, y1), QRect(m_x0, m_y0, m_x1 - m_x0, m_y1 - m_y0));
 }
 
-CircleRegion::CircleRegion(int x0, int x1, int y0, int y1)
+CircleRegion::CircleRegion(int x0, int y0, int x1, int y1)
 {
 	m_xc = x0;
 	m_yc = y0;
@@ -966,10 +966,10 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 					{
 						switch (view_mode)
 						{
-						case SELECT_ELEMS: SelectElements(m_p0.x, m_p0.y, m_p1.x, m_p1.y, mode); break;
-						case SELECT_FACES: SelectFaces   (m_p0.x, m_p0.y, m_p1.x, m_p1.y, mode); break;
-						case SELECT_NODES: SelectNodes   (m_p0.x, m_p0.y, m_p1.x, m_p1.y, mode); break;
-						case SELECT_EDGES: SelectEdges   (m_p0.x, m_p0.y, m_p1.x, m_p1.y, mode); break;
+						case SELECT_ELEMS: SelectElements(m_p0.x, m_p0.y, mode); break;
+						case SELECT_FACES: SelectFaces   (m_p0.x, m_p0.y, mode); break;
+						case SELECT_NODES: SelectNodes   (m_p0.x, m_p0.y, mode); break;
+						case SELECT_EDGES: SelectEdges   (m_p0.x, m_p0.y, mode); break;
 						}
 					}
 					else
@@ -980,8 +980,8 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 						SelectRegion* preg = 0;
 						switch (nsel)
 						{
-						case SELECT_RECT  : preg = new BoxRegion   (m_p0.x, m_p1.x, m_p0.y, m_p1.y); break;
-						case SELECT_CIRCLE: preg = new CircleRegion(m_p0.x, m_p1.x, m_p0.y, m_p1.y); break;
+						case SELECT_RECT  : preg = new BoxRegion   (m_p0.x, m_p0.y, m_p1.x, m_p1.y); break;
+						case SELECT_CIRCLE: preg = new CircleRegion(m_p0.x, m_p0.y, m_p1.x, m_p1.y); break;
 						case SELECT_FREE  : preg = new FreeRegion  (m_pl); break;
 						default:
 							assert(false);
@@ -1508,7 +1508,7 @@ void CGLView::ZoomRect(MyPoint p0, MyPoint p1)
 
 //-----------------------------------------------------------------------------
 
-void CGLView::SelectFaces(int x0, int y0, int x1, int y1, int mode)
+void CGLView::SelectFaces(int x0, int y0, int mode)
 {
 	// Make sure we have a valid model
 	CDocument* pdoc = GetDocument();
@@ -1798,7 +1798,7 @@ void CGLView::RegionSelectEdges(const SelectRegion& region, int mode)
 }
 
 //-----------------------------------------------------------------------------
-void CGLView::SelectElements(int x0, int y0, int x1, int y1, int mode)
+void CGLView::SelectElements(int x0, int y0, int mode)
 {
 	// Make sure we have a valid model
 	CDocument* pdoc = GetDocument();
@@ -2076,44 +2076,53 @@ void CGLView::TagBackfacingEdges(FEMeshBase& mesh)
 }
 
 //-----------------------------------------------------------------------------
-void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
+void CGLView::SelectNodes(int x0, int y0, int mode)
 {
 	CDocument* pdoc = GetDocument();
 	if (pdoc->IsValid() == false) return;
+
+	int S = 4 * m_dpr;
+	BoxRegion box(x0 - S, y0 - S, x0 + S, y0 + S);
 
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
 	FEMeshBase* pm = pdoc->GetActiveMesh();
+	int NN = pm->Nodes();
 
-	int X = x0*m_dpr;
-	int Y = y0*m_dpr;
+	makeCurrent();
+	WorldToScreen transform(this);
 
-	// convert the point to a ray
-	Ray ray = PointToRay(X, Y);
-
-	// find the intersection
-	Intersection q;
-	int index = -1;
-	if (FindFaceIntersection(ray, *pm, q))
+	// tag the nodes that are eligable for selection
+	pm->SetNodeTags(0);
+	if (view.m_bignoreBackfacingItems)
 	{
-		FEFace& face = pm->Face(q.m_index);
+		TagBackfacingNodes(*pm);
+	}
+	if (view.m_bext)
+	{
+		for (int i = 0; i<pm->Nodes(); ++i)
+			if (pm->Node(i).m_bext == false) pm->Node(i).m_ntag = 1;
+	}
 
-		int S = 4 * m_dpr;
-		QRect rt(X - S, Y - S, 2 * S, 2 * S);
-		WorldToScreen transform(this);
-
-		for (int i=0; i<face.Nodes(); ++i)
+	// select all nodes inside the region
+	int nindex = -1;
+	float zmin = 0.f;
+	for (int i = 0; i<NN; ++i)
+	{
+		FENode& node = pm->Node(i);
+		if (node.IsVisible() && (node.m_ntag == 0))
 		{
-			vec3f r = pm->Node(face.node[i]).m_rt;
+			vec3f p = transform.Apply(node.m_rt);
 
-			vec3f p = transform.Apply(r);
-
-			if (rt.contains((int) p.x, (int) p.y))
+			if (box.IsInside((int)p.x / m_dpr, (int)p.y / m_dpr))
 			{
-				index = face.node[i];
-				break;
+				if ((nindex == -1) || (p.z < zmin))
+				{
+					nindex = i;
+					zmin = p.z;
+				}
 			}
 		}
 	}
@@ -2127,9 +2136,9 @@ void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 	}
 
 	// parse the selection buffer
-	if (index >= 0) 
+	if (nindex >= 0) 
 	{
-		FENode& n = pm->Node(index);
+		FENode& n = pm->Node(nindex);
 		if (mode == SELECT_ADD) 
 		{
 			n.Select();
@@ -2137,9 +2146,9 @@ void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 			else 
 			{
 				if (view.m_bext)
-					mdl.SelectConnectedSurfaceNodes(index);
+					mdl.SelectConnectedSurfaceNodes(nindex);
 				else
-					mdl.SelectConnectedVolumeNodes(index);
+					mdl.SelectConnectedVolumeNodes(nindex);
 			}
 		}
 		else n.Unselect();
@@ -2150,7 +2159,7 @@ void CGLView::SelectNodes(int x0, int y0, int x1, int y1, int mode)
 	mdl.UpdateSelectionLists(SELECT_NODES);
 }
 
-void CGLView::SelectEdges(int x0, int y0, int x1, int y1, int mode)
+void CGLView::SelectEdges(int x0, int y0, int mode)
 {
 	CDocument* pdoc = GetDocument();
 	if (pdoc->IsValid() == false) return;
@@ -2443,8 +2452,13 @@ void CGLView::RenderDoc()
 		// activate all clipping planes
 		CGLPlaneCutPlot::EnableClipPlanes();
 
-		// render the mesh
+		// get the GL model
 		CGLModel* po = pdoc->GetGLModel();
+
+		// set the render interior nodes flag
+		po->RenderInteriorNodes(view.m_bext == false);
+
+		// render the mesh
 		if (po && po->IsActive())
 		{
 			// render the GL model
