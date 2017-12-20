@@ -13,15 +13,18 @@ class FEAreaCoverage
 	{
 	public:
 		int Faces() { return (int)m_face.size(); }
-		void BuildNodeList(FEMeshBase& m);
+
+		void Create(FEMeshBase& m);
 
 		int Nodes() { return (int)m_node.size(); }
 
 	public:
-		vector<int>	m_face;		// face list
-		vector<int>	m_node;		// node list
-		vector<int>	m_lnode;	// local node list
-		vector<vec3f> m_norm;	// node normals
+		vector<int>		m_face;		// face list
+		vector<int>		m_node;		// node list
+		vector<vec3f>	m_pos;		// node positions
+		vector<int>		m_lnode;	// local node list
+		vector<vec3f>	m_norm;		// node normals
+		vector<vec3f>	m_fnorm;	// face normals
 
 		vector<vector<int> >	m_NLT;	// node-facet look-up table
 	};
@@ -41,11 +44,11 @@ public:
 
 protected:
 	// build node normal list
-	void BuildNormalList(FEAreaCoverage::Surface& s);
+	void UpdateSurface(FEAreaCoverage::Surface& s, int nstate);
 
 	// see if a ray intersects with a surface
-	bool intersect(int nstate, const vec3f& r, const vec3f& N, FEAreaCoverage::Surface& surf);
-	bool faceIntersect(int nstate, const Ray& ray, const FEFace& face);
+	bool intersect(const vec3f& r, const vec3f& N, FEAreaCoverage::Surface& surf);
+	bool faceIntersect(FEAreaCoverage::Surface& surf, const Ray& ray, int nface);
 
 protected:
 	Surface		m_surf1;

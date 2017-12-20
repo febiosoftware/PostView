@@ -3,7 +3,7 @@
 
 //-----------------------------------------------------------------------------
 // Find intersection of a ray with a triangle
-bool IntersectTriangle(const Ray& ray, const Triangle& tri, Intersection& intersection)
+bool IntersectTriangle(const Ray& ray, const Triangle& tri, Intersection& intersection, bool evalNormal)
 {
 	const double tol = 0.01;
 
@@ -15,8 +15,8 @@ bool IntersectTriangle(const Ray& ray, const Triangle& tri, Intersection& inters
 	vec3f nn = ray.direction;
 
 	// calculate the triangle normal
-	vec3f fn = (n2 - n1)^(n3 - n1);
-	fn.Normalize();
+	vec3f fn = tri.fn;
+	if (evalNormal) { fn = (n2 - n1) ^ (n3 - n1); fn.Normalize(); }
 
 	// find the intersection of the point with the plane
 	if (fn*nn == 0.f) return false;

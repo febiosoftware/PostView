@@ -45,6 +45,11 @@ bool FEKinemat::Apply(const char* szfile, const char* szkine)
 	// build the states
 	if (BuildStates() == false) return false;
 
+	// update displacements on all states
+	CGLModel& mdl = *m_pDoc->GetGLModel();
+	int nstates = mdl.GetFEModel()->GetStates();
+	for (int i=0; i<nstates; ++i) mdl.UpdateDisplacements(i);
+
 	return true;
 }
 

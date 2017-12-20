@@ -23,6 +23,7 @@ struct Triangle
 	vec3f	r0;
 	vec3f	r1;
 	vec3f	r2;
+	vec3f	fn;	// face normal
 };
 
 //-----------------------------------------------------------------------------
@@ -36,7 +37,8 @@ struct Quad
 
 //-----------------------------------------------------------------------------
 // Find intersection of a ray with a triangle
-bool IntersectTriangle(const Ray& ray, const Triangle& tri, Intersection& q);
+// To evaluate the normal automatically, set evalNormal to true. Otherwise, the normal in Triangle is used
+bool IntersectTriangle(const Ray& ray, const Triangle& tri, Intersection& q, bool evalNormal = true);
 
 //-----------------------------------------------------------------------------
 // Find intersection of a ray with a quad

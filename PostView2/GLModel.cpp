@@ -154,6 +154,12 @@ void CGLModel::Update(bool breset)
 }
 
 //-----------------------------------------------------------------------------
+void CGLModel::UpdateDisplacements(int nstate)
+{
+	if (m_pdis && m_pdis->IsActive()) m_pdis->Update(nstate, 0.f, false);
+}
+
+//-----------------------------------------------------------------------------
 void CGLModel::SetMaterialParams(FEMaterial* pm)
 {
 	GLfloat fv[4] = {0,0,0,1};

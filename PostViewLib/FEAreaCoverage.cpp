@@ -6,8 +6,12 @@
 
 
 //-----------------------------------------------------------------------------
-void FEAreaCoverage::Surface::BuildNodeList(FEMeshBase& mesh)
+void FEAreaCoverage::Surface::Create(FEMeshBase& mesh)
 {
+	// this assumes that the m_face member has initialized
+	int NF = m_face.size();
+	m_fnorm.resize(NF, vec3f(0.f, 0.f, 0.f));
+
 	// tag all nodes that belong to this surface
 	int N = mesh.Nodes();
 	for (int i = 0; i<N; ++i) mesh.Node(i).m_ntag = -1;
@@ -30,6 +34,7 @@ void FEAreaCoverage::Surface::BuildNodeList(FEMeshBase& mesh)
 		FENode& node = mesh.Node(i);
 		if (node.m_ntag >= 0) m_node[node.m_ntag] = i;
 	}
+	m_pos.resize(nn);
 
 	// create the local node list
 	m_lnode.resize(Faces() * 4);
@@ -100,17 +105,17 @@ void FEAreaCoverage::Apply(FEModel& fem)
 	FEMeshBase& mesh = *fem.GetFEMesh(0);
 
 	// build the node lists
-	m_surf1.BuildNodeList(mesh);
-	m_surf2.BuildNodeList(mesh);
-
-	// build the normal lists
-	BuildNormalList(m_surf1);
-	BuildNormalList(m_surf2);
+	m_surf1.Create(mesh);
+	m_surf2.Create(mesh);
 
 	// repeat for all steps
 	int nstep = fem.GetStates();
 	for (int n = 0; n<nstep; ++n)
 	{
+		// build the normal lists
+		UpdateSurface(m_surf1, n);
+		UpdateSurface(m_surf2, n);
+
 		FEState* ps = fem.GetState(n);
 		FEFaceData<float, DATA_NODE>& df = dynamic_cast<FEFaceData<float, DATA_NODE>&>(ps->m_Data[NDATA]);
 
@@ -124,7 +129,7 @@ void FEAreaCoverage::Apply(FEModel& fem)
 			vec3f Ni = m_surf1.m_norm[i];
 
 			// see if it intersects the other surface
-			if (intersect(n, ri, Ni, m_surf2))
+			if (intersect(ri, Ni, m_surf2))
 			{
 				a[i] = 1.f;
 			}
@@ -144,7 +149,7 @@ void FEAreaCoverage::Apply(FEModel& fem)
 			vec3f Ni = m_surf2.m_norm[i];
 
 			// see if it intersects the other surface
-			if (intersect(n, ri, Ni, m_surf1))
+			if (intersect(ri, Ni, m_surf1))
 			{
 				b[i] = 1.f;
 			}
@@ -156,32 +161,51 @@ void FEAreaCoverage::Apply(FEModel& fem)
 }
 
 //-----------------------------------------------------------------------------
-void FEAreaCoverage::BuildNormalList(FEAreaCoverage::Surface& s)
+void FEAreaCoverage::UpdateSurface(FEAreaCoverage::Surface& s, int nstate)
 {
 	// get the mesh
 	FEMeshBase& mesh = *m_fem->GetFEMesh(0);
-
+	FEState& state = *m_fem->GetState(nstate);
 	int NF = s.Faces();
 	int NN = s.Nodes();
-	s.m_norm.resize(NN);
 
+	// update nodal positions
+	for (int i=0; i<NN; ++i)
+	{
+		s.m_pos[i] = m_fem->NodePosition(s.m_node[i], nstate);
+	}
+
+	// update face normals
+	s.m_fnorm.assign(NF, vec3f(0.f, 0.f, 0.f));
+	s.m_norm.assign(NN, vec3f(0.f,0.f,0.f));
+	vec3f r[3];
 	for (int i = 0; i<NF; ++i)
 	{
 		FEFace& f = mesh.Face(s.m_face[i]);
+
+		r[0] = s.m_pos[s.m_lnode[i*4    ]];
+		r[1] = s.m_pos[s.m_lnode[i*4 + 1]];
+		r[2] = s.m_pos[s.m_lnode[i*4 + 2]];
+
+		vec3f N = (r[1] - r[0])^(r[2] - r[0]);
+
+		s.m_fnorm[i] = N;
+		s.m_fnorm[i].Normalize();
+
 		int nf = f.Nodes();
 		for (int j = 0; j<nf; ++j)
 		{
+			assert(j<4);
 			int n = s.m_lnode[4 * i + j]; assert(n >= 0);
-			s.m_norm[n] = f.m_nn[j];
+			s.m_norm[n] += N;
 		}
 	}
+	for (int i=0; i<(int)s.m_norm.size(); ++i) s.m_norm[i].Normalize();
 }
 
 //-----------------------------------------------------------------------------
-bool FEAreaCoverage::intersect(int nstate, const vec3f& r, const vec3f& N, FEAreaCoverage::Surface& surf)
+bool FEAreaCoverage::intersect(const vec3f& r, const vec3f& N, FEAreaCoverage::Surface& surf)
 {
-	FEMeshBase& mesh = *m_fem->GetFEMesh(0);
-
 	// create the ray
 	Ray ray = {r, N};
 
@@ -189,11 +213,8 @@ bool FEAreaCoverage::intersect(int nstate, const vec3f& r, const vec3f& N, FEAre
 	Intersection q;
 	for (int i = 0; i<(int)surf.m_face.size(); ++i)
 	{
-		// get the i-th facet
-		FEFace& face = mesh.Face(surf.m_face[i]);
-
 		// see if the ray intersects this face
-		if (faceIntersect(nstate, ray, face))
+		if (faceIntersect(surf, ray, i))
 		{
 			return true;
 		}
@@ -204,16 +225,14 @@ bool FEAreaCoverage::intersect(int nstate, const vec3f& r, const vec3f& N, FEAre
 
 
 //-----------------------------------------------------------------------------
-bool FEAreaCoverage::faceIntersect(int nstate, const Ray& ray, const FEFace& face)
+bool FEAreaCoverage::faceIntersect(FEAreaCoverage::Surface& surf, const Ray& ray, int nface)
 {
 	Intersection q;
 	q.m_index = -1;
+	FEMeshBase& mesh = *m_fem->GetFEMesh(0);
 
-	vec3f rn[10];
-	for (int i = 0; i<face.Nodes(); ++i)
-	{
-		rn[i] = m_fem->NodePosition(face.node[i], nstate);
-	}
+	vec3f rn[4];
+	FEFace& face = mesh.Face(surf.m_face[nface]);
 
 	bool bfound = false;
 	switch (face.m_ntype)
@@ -223,14 +242,24 @@ bool FEAreaCoverage::faceIntersect(int nstate, const Ray& ray, const FEFace& fac
 	case FACE_TRI7:
 	case FACE_TRI10:
 	{
-		Triangle tri = { rn[0], rn[1], rn[2] };
-		bfound = IntersectTriangle(ray, tri, q);
+		for (int i = 0; i<3; ++i)
+		{
+			rn[i] = surf.m_pos[surf.m_lnode[4 * nface + i]];
+		}
+
+		Triangle tri = { rn[0], rn[1], rn[2], surf.m_fnorm[nface] };
+		bfound = IntersectTriangle(ray, tri, q, false);
 	}
 	break;
 	case FACE_QUAD4:
 	case FACE_QUAD8:
 	case FACE_QUAD9:
 	{
+		for (int i = 0; i<4; ++i)
+		{
+			rn[i] = surf.m_pos[surf.m_lnode[4 * nface + i]];
+		}
+
 		Quad quad = { rn[0], rn[1], rn[2], rn[3] };
 		bfound = FastIntersectQuad(ray, quad, q);
 	}
