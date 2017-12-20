@@ -14,7 +14,7 @@ protected:
 	{
 		float m[16];
 
-		vec3f apply(vec3f& r);
+		vec3f apply(const vec3f& r);
 	};
 
 	class STATE

@@ -154,9 +154,9 @@ void CGLModel::Update(bool breset)
 }
 
 //-----------------------------------------------------------------------------
-void CGLModel::UpdateDisplacements(int nstate)
+void CGLModel::UpdateDisplacements(int nstate, bool breset)
 {
-	if (m_pdis && m_pdis->IsActive()) m_pdis->Update(nstate, 0.f, false);
+	if (m_pdis && m_pdis->IsActive()) m_pdis->Update(nstate, 0.f, breset);
 }
 
 //-----------------------------------------------------------------------------

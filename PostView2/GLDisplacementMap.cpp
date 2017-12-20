@@ -105,6 +105,8 @@ void CGLDisplacementMap::UpdateState(int ntime, bool breset)
 	FEModel* pfem = po->GetFEModel();
 
 	int N = pfem->GetStates();
+
+	// TODO: This does not look right the correct place for this
 	if (breset || (N != m_ntag.size())) m_ntag.assign(N, -1);
 
 	int nfield = pfem->GetDisplacementField();

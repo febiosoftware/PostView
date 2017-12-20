@@ -5,7 +5,7 @@
 #include "PostViewLib/FEMeshData_T.h"
 
 //-----------------------------------------------------------------------------
-vec3f FEKinemat::KINE::apply(vec3f& r)
+vec3f FEKinemat::KINE::apply(const vec3f& r)
 {
 	float q[3] = {r.x, r.y, r.z};
 	float d[3];
@@ -48,7 +48,7 @@ bool FEKinemat::Apply(const char* szfile, const char* szkine)
 	// update displacements on all states
 	CGLModel& mdl = *m_pDoc->GetGLModel();
 	int nstates = mdl.GetFEModel()->GetStates();
-	for (int i=0; i<nstates; ++i) mdl.UpdateDisplacements(i);
+	for (int i=0; i<nstates; ++i) mdl.UpdateDisplacements(i, true);
 
 	return true;
 }
@@ -110,6 +110,10 @@ bool FEKinemat::BuildStates()
 	}
 	if (ND == -1) return false;
 
+	// get the initial coordinates
+	vector<vec3f> r0(NN);
+	for (int i=0; i<NN; ++i) r0[i] = mesh.Node(i).m_r0;
+
 	int NS = (int)m_State.size();
 	if (m_n0 >= NS) return false;
 	if (m_n1 - m_n0 +1 > NS) m_n1 = NS - 1;
@@ -158,14 +162,13 @@ bool FEKinemat::BuildStates()
 				FENode& nd = mesh.Node(i);
 				if (nd.m_ntag == 1)
 				{
-					vec3f& rt = nd.m_rt;
-					vec3f& r0 = nd.m_r0;
+					const vec3f& r0_i = r0[i];
 					if (t == 0.f)
 					{
-						 r0 = kine.apply(rt);
+						 nd.m_r0 = nd.m_rt = kine.apply(r0_i);
 						 d[i] = vec3f(0.f, 0.f, 0.f);
 					}
-					else d[i] = kine.apply(rt) - r0;
+					else d[i] = kine.apply(r0_i) - nd.m_r0;
 				}
 			}
 		}

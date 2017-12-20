@@ -225,6 +225,7 @@ void CKinematTool::OnApply()
 
 	m_doc->ZoomExtents();
 	CMainWindow* pwnd = m_doc->GetWindow();
+	pwnd->SetCurrentTime(0);
 	pwnd->UpdateMainToolbar();
 	pwnd->UpdateUi(true);
 }

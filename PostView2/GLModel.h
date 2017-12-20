@@ -64,7 +64,7 @@ public:
 	FEModel* GetFEModel() { return m_ps; }
 
 	void Update(bool breset);
-	void UpdateDisplacements(int nstate);
+	void UpdateDisplacements(int nstate, bool breset = false);
 
 	bool AddDisplacementMap();
 
