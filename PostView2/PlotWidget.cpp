@@ -7,7 +7,7 @@
 #include <QMessageBox>
 #include <QMenu>
 #include <QApplication>
-#include <QClipBoard>
+#include <QClipboard>
 #include <assert.h>
 #include <math.h>
 #include <QFormLayout>
