@@ -945,6 +945,7 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 		{
 			QMenu* menu = m_wnd->BuildContextMenu();
 			menu->exec(ev->globalPos());
+			delete menu;
 		}
 		ev->accept();
 	}
