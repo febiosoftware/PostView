@@ -775,3 +775,9 @@ void CDataPanel::on_fieldName_editingFinished()
 		doc.GetFEModel()->UpdateDependants();
 	}
 }
+
+void CDataPanel::on_props_dataChanged()
+{
+	m_wnd->GetDocument()->UpdateFEModel(true);
+	m_wnd->RedrawGL();
+}
