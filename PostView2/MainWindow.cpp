@@ -456,6 +456,9 @@ void CMainWindow::finishedReadingFile(bool success, const QString& errorString)
 
 	UpdateMainToolbar();
 
+	// show the model viewer
+	ui->modelViewer->parentWidget()->raise();
+
 	// This is already done in UpdateMainToolbar so I can probably remove this
 	FEModel* fem = m_doc->GetFEModel();
 	if (fem && fem->GetStates() > 0)
@@ -1217,6 +1220,7 @@ void CMainWindow::on_actionColorMap_toggled(bool bchecked)
 	CDocument* pdoc = GetDocument();
 	CGLModel* po = pdoc->GetGLModel();
 	po->GetColorMap()->Activate(bchecked);
+	UpdateModelViewer(false);
 	pdoc->UpdateFEModel();
 	RedrawGL();
 }
