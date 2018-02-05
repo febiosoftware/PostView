@@ -119,8 +119,6 @@ CGLVectorPlot::CGLVectorPlot(CGLModel* po) : CGLPlot(po)
 	m_bshowHidden = true;
 
 	m_seed = rand();
-
-	m_Col.SetColorMap(ColorMapManager::JET);
 }
 
 CGLVectorPlot::~CGLVectorPlot()

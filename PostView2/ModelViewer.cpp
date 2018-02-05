@@ -573,6 +573,8 @@ void CModelViewer::selectObject(CGLObject* po)
 		QTreeWidgetItemIterator it(ui->m_tree);
 		while (*it)
 		{
+			QString t = (*it)->text(0);
+			string st = t.toStdString();
 			if ((*it)->text(0) == s)
 			{
 				(*it)->setSelected(true);
@@ -598,6 +600,13 @@ void CModelViewer::Update(bool breset)
 {
 	if (breset)
 	{
+		CModelTreeItem* item = dynamic_cast<CModelTreeItem*>(ui->m_tree->currentItem());
+		CGLObject* po = 0;
+		if (item)
+		{
+			po = item->Object();
+		}
+
 		// clear all property lists
 		if (ui->m_list.isEmpty() == false)
 		{
@@ -643,7 +652,7 @@ void CModelViewer::Update(bool breset)
 			if (map)
 			{
 				pi2 = new CModelTreeItem(map, pi1);
-				pi2->setText(0, "Displacement map");
+				pi2->setText(0, QString::fromStdString(map->GetName()));
 				pi2->setTextColor(0, map && map->IsActive() ? Qt::black : Qt::gray);
 				pi2->setIcon(0, QIcon(QString(":/icons/distort.png")));
 				ui->m_list.push_back(new CDisplacementMapProps(m_wnd, map));
@@ -653,7 +662,7 @@ void CModelViewer::Update(bool breset)
 
 			CGLColorMap* col = mdl->GetColorMap();
 			pi2 = new CModelTreeItem(col, pi1);
-			pi2->setText(0, "Color map");
+			pi2->setText(0, QString::fromStdString(col->GetName()));
 			pi2->setTextColor(0, col->IsActive() ? Qt::black : Qt::gray);
 			pi2->setIcon(0, QIcon(QString(":/icons/colormap.png")));
 			ui->m_list.push_back(new CColorMapProps(m_wnd, col));
@@ -726,6 +735,8 @@ void CModelViewer::Update(bool breset)
 				m_obj.push_back(&key);
 			}
 		}
+
+		if (po) selectObject(po);
 	}
 	else
 	{

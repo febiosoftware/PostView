@@ -134,6 +134,9 @@ public:
 	// remove a color map template (can't delete default templates)
 	static bool RemoveColormap(int n);
 
+	// the default color map
+	static int GetDefaultMap() { return JET; }
+
 private:
 	// this is a singleton so don't try to instantiate this
 	ColorMapManager(){}

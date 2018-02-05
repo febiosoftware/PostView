@@ -49,6 +49,8 @@ public:
 
 	CPropertyList* propertyList();
 
+	void UpdateTexture() { m_Col.UpdateTexture(); }
+
 protected:
 	void RenderSlice(float ref);
 

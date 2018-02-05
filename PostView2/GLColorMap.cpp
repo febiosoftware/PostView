@@ -17,7 +17,6 @@ CGLColorMap::CGLColorMap(CGLModel *po) : CGLDataMap(po)
 	m_breset = true;
 	m_bDispNodeVals = true;
 
-	m_Col.SetColorMap(ColorMapManager::JET);
 	SetName("Color Map");
 
 	m_pbar = new GLLegendBar(this, &m_Col, 0, 0, 120, 600);

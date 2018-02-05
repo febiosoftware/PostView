@@ -52,6 +52,8 @@ public:
 
 	CPropertyList* propertyList();
 
+	void UpdateTexture() { m_Col.UpdateTexture(); }
+
 protected:
 	float	m_scale;
 	float	m_dens;

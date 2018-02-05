@@ -297,6 +297,9 @@ public:
 	// reset camera
 	void ZoomExtents(bool bhit = false);
 
+	// update all the color maps in use (called after the View Settings dialog)
+	void UpdateColorMaps();
+
 	// --- O B J E C T   M A N A G M E N T ---
 
 	// get the GL model

@@ -430,7 +430,7 @@ void CColormapWidget::updateMaps()
 
 void CColormapWidget::onNew()
 {
-	static int n = 1;
+	int n = ColorMapManager::UserColorMaps() + 1;
 	QString name = QString("user%1").arg(n);
 	bool bok = true;
 	QString newName = QInputDialog::getText(this, "New color map", "name:", QLineEdit::Normal, name, &bok);
@@ -748,6 +748,9 @@ void CDlgViewSettings::apply()
 	CPaletteManager& PM = CPaletteManager::GetInstance();
 	PM.SetCurrentIndex(ui->m_pal->pal->currentIndex());
 
+	// we need to update the color maps that are used in the model tree
+	pdoc->UpdateColorMaps();
+	m_pwnd->UpdateModelViewer(true);
 	m_pwnd->RedrawGL();
 }
 

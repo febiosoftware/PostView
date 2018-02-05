@@ -43,6 +43,9 @@ public:
 	// and also after a mouse release event
 	void UpdateUi(bool breset, QWidget* psender = 0);
 
+	// upate the Model Viewer
+	void UpdateModelViewer(bool breset);
+
 	// Build the context menu
 	// Called when user right-clicks on OpenGL view
 	QMenu* BuildContextMenu();

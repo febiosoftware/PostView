@@ -37,6 +37,8 @@ public:
 
 	virtual CPropertyList* propertyList() { return 0; }
 
+	virtual void UpdateTexture() {}
+
 protected:
 	CGLModel*	m_pObj;
 };

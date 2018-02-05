@@ -404,6 +404,24 @@ void CDocument::ZoomExtents(bool bhit)
 }
 
 //-----------------------------------------------------------------------------
+// update all the color maps in use (called after the View Settings dialog)
+void CDocument::UpdateColorMaps()
+{
+	if (m_pGLModel == 0) return;
+
+	CGLColorMap* map = m_pGLModel->GetColorMap();
+	map->GetColorMap()->UpdateTexture();
+
+	int N = (int)m_pPlot.size();
+	GPlotList::iterator it = m_pPlot.begin();
+	for (int i=0; i<N; ++i, ++it)
+	{
+		CGLPlot* p = *it;
+		p->UpdateTexture();
+	}
+}
+
+//-----------------------------------------------------------------------------
 void CDocument::ApplyPalette(const CPalette& pal)
 {
 	int NCOL = pal.Colors();
@@ -1461,7 +1479,7 @@ int CDocument::GetFileName(char* szfilename)
 
 	if (szfilename) strcpy(szfilename, ch); 
 
-	return strlen(ch);
+	return (int)strlen(ch);
 }
 
 int CDocument::GetFilePath(char *szpath)
@@ -1496,7 +1514,7 @@ int CDocument::GetDocTitle(char* sztitle)
 
 	int n;
 	char* ce = strrchr(m_szfile, '.');
-	if ((ce == 0) || (ce < ch)) n = strlen(ch);
+	if ((ce == 0) || (ce < ch)) n = (int)strlen(ch);
 	else n = (int)(ce-ch);
 
 	if (sztitle)

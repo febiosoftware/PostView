@@ -209,7 +209,7 @@ void CColorMap::Invert()
 //=============================================================================
 CColorTexture::CColorTexture()
 {
-	m_colorMap = 0;
+	m_colorMap = ColorMapManager::GetDefaultMap();
 	m_ndivs = 10;
 	m_bsmooth = true;
 
@@ -242,6 +242,8 @@ void CColorTexture::UpdateTexture()
 	int N = (m_bsmooth ? n : m_ndivs);
 	if (N < 2) N = 2;
 
+	// make sure the color map points to an existing map
+	if ((m_colorMap < 0) || (m_colorMap >= ColorMapManager::ColorMaps())) m_colorMap = ColorMapManager::GetDefaultMap();
 	CColorMap& map = ColorMapManager::GetColorMap(m_colorMap);
 
 	GLCOLOR c;
@@ -380,6 +382,7 @@ void ColorMapManager::SetColorMapName(int n, const std::string& newName)
 
 CColorMap& ColorMapManager::GetColorMap(int n)
 {
+	if ((n<0) || (n>=m_map.size())) n = 0;
 	return m_map[n].colormap();
 }
 

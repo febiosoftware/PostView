@@ -220,6 +220,11 @@ void CMainWindow::UpdateUi(bool breset, QWidget* psender)
 	RedrawGL();
 }
 
+void CMainWindow::UpdateModelViewer(bool breset)
+{
+	ui->modelViewer->Update(breset);
+}
+
 void CMainWindow::RedrawGL()
 {
 	ui->glview->repaint();

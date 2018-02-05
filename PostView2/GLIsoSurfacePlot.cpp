@@ -85,7 +85,6 @@ CGLIsoSurfacePlot::CGLIsoSurfacePlot(CGLModel* po) : CGLPlot(po)
 
 	m_Col.SetDivisions(m_nslices);
 	m_Col.SetSmooth(false);
-	m_Col.SetColorMap(ColorMapManager::JET);
 
 	m_pbar = new GLLegendBar(this, &m_Col, 0, 0, 600, 100, GLLegendBar::HORIZONTAL);
 	m_pbar->align(GLW_ALIGN_BOTTOM | GLW_ALIGN_HCENTER);

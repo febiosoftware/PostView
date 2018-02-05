@@ -97,7 +97,6 @@ CGLSlicePlot::CGLSlicePlot(CGLModel* po) : CGLPlot(po)
 
 	m_Col.SetDivisions(m_nslices);
 	m_Col.SetSmooth(false);
-	m_Col.SetColorMap(ColorMapManager::JET);
 
 	m_nrange = 0;
 	m_fmin = 0.f;
