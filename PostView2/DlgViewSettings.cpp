@@ -262,6 +262,58 @@ public:
 	bool	m_binterior;
 };
 
+//=================================================================================================
+ColorGradient::ColorGradient(QWidget* parent) : QWidget(parent)
+{
+	m_map.jet();
+}
+
+QSize ColorGradient::sizeHint() const
+{
+	return QSize(20, 20);
+}
+
+void ColorGradient::setColorMap(const CColorMap& m)
+{
+	m_map = m;
+	repaint();
+}
+
+void ColorGradient::paintEvent(QPaintEvent* ev)
+{
+	QRect rt = rect();
+	QPainter p(this);
+
+	int r = 3;
+	int x0 = rt.left();
+	int x1 = rt.right();
+	int y0 = rt.top();
+	int y1 = y0 + 2*r;
+	int y2 = rt.bottom();
+	int w = rt.width();
+
+	p.fillRect(x0, y0, w, y1 - y0, Qt::white);
+
+	int ncol = m_map.Colors();
+	for (int i=0; i<ncol; ++i)
+	{
+		float x = m_map.GetColorPos(i);
+		int xi = x0 + (int)(w*x) - r;
+		p.setPen(Qt::gray);
+		p.setBrush(Qt::gray);
+		p.drawEllipse(xi, y0, 2*r, 2*r);
+	}
+
+	for (int i=0; i<rt.width(); ++i)
+	{
+		float w = (float) i / rt.width();
+		GLCOLOR c = m_map.map(w);
+		p.setPen(QColor(c.r, c.g, c.b));
+		p.drawLine(x0 + i, y1, x0 + i, y2);
+	}
+}
+
+//=================================================================================================
 //-----------------------------------------------------------------------------
 class CPaletteWidget : public QWidget
 {
@@ -313,11 +365,13 @@ CColormapWidget::CColormapWidget(QWidget* parent) : QWidget(parent)
 	l->setCurrentIndex(0);
 
 	QPushButton* newButton = new QPushButton("New ...");
-	QPushButton* invertButton = new QPushButton("Invert");
+	QPushButton* delButton = new QPushButton("Delete");
+	QPushButton* editButton = new QPushButton("Edit ...");
 	h->addWidget(new QLabel("Select color map:"));
 	h->addWidget(l);
 	h->addWidget(newButton);
-	h->addWidget(invertButton);
+	h->addWidget(delButton);
+	h->addWidget(editButton);
 	h->addStretch();
 
 	QVBoxLayout* v = new QVBoxLayout;
@@ -338,13 +392,25 @@ CColormapWidget::CColormapWidget(QWidget* parent) : QWidget(parent)
 	m_grid = new QGridLayout;
 
 	v->addLayout(m_grid);
+
+	QPushButton* invertButton = new QPushButton("Invert");
+	h = new QHBoxLayout();
+	h->addStretch();
+	h->addWidget(invertButton);
+	v->addLayout(h);
 	v->addStretch();
+
+	h = new QHBoxLayout();
+	h->addWidget(m_grad = new ColorGradient);
+	v->addLayout(h);
 
 	setLayout(v);
 
 	QObject::connect(l, SIGNAL(currentIndexChanged(int)), this, SLOT(currentMapChanged(int)));
 	QObject::connect(m_spin, SIGNAL(valueChanged(int)), this, SLOT(onSpinValueChanged(int)));
 	QObject::connect(newButton, SIGNAL(clicked()), this, SLOT(onNew()));
+	QObject::connect(delButton, SIGNAL(clicked()), this, SLOT(onDelete()));
+	QObject::connect(editButton, SIGNAL(clicked()), this, SLOT(onEdit()));
 	QObject::connect(invertButton, SIGNAL(clicked()), this, SLOT(onInvert()));
 
 	updateMaps();
@@ -371,11 +437,36 @@ void CColormapWidget::onNew()
 	if (bok && (newName.isEmpty() == false))
 	{
 		CColorMap& map = ColorMapManager::GetColorMap(m_currentMap);
-		string sname = name.toStdString();
+		string sname = newName.toStdString();
 		ColorMapManager::AddColormap(sname, map);
 
 		updateMaps();
 		m_maps->setCurrentIndex(ColorMapManager::ColorMaps() - 1);
+	}
+}
+
+void CColormapWidget::onDelete()
+{
+	if (ColorMapManager::RemoveColormap(m_currentMap) == false)
+	{
+		QMessageBox::critical(this, "Delete Colormap", "Cannot delete default color maps.");
+	}
+	else
+	{
+		m_maps->removeItem(m_currentMap);
+	}
+}
+
+void CColormapWidget::onEdit()
+{
+	string sname = ColorMapManager::GetColorMapName(m_currentMap);
+	QString name = QString::fromStdString(sname);
+	bool bok = true;
+	QString newName = QInputDialog::getText(this, "Edit color map", "name:", QLineEdit::Normal, name, &bok);
+	if (bok && (newName.isEmpty() == false))
+	{
+		ColorMapManager::SetColorMapName(m_currentMap, newName.toStdString());
+		m_maps->setItemText(m_currentMap, newName);
 	}
 }
 
@@ -406,6 +497,8 @@ void CColormapWidget::updateColorMap(const CColorMap& map)
 		QObject::connect(l, SIGNAL(editingFinished()), this, SLOT(onDataChanged()));
 		QObject::connect(b, SIGNAL(colorChanged(QColor)), this, SLOT(onDataChanged()));
 	}
+
+	m_grad->setColorMap(map);
 }
 
 void CColormapWidget::clearGrid()
@@ -446,6 +539,7 @@ void CColormapWidget::onDataChanged()
 			map.SetColor(i, toGLColor(c));
 		}
 	}
+	m_grad->setColorMap(map);
 }
 
 void CColormapWidget::onSpinValueChanged(int n)

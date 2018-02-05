@@ -319,6 +319,8 @@ public:
 
 	const string& name() const { return m_name; }
 
+	void setName(const std::string& newName) { m_name = newName; }
+
 	CColorMap& colormap() { return m_map; }
 
 private: 
@@ -332,6 +334,11 @@ vector<class ColorMapTemplate>	ColorMapManager::m_map;
 int ColorMapManager::ColorMaps()
 {
 	return (int) m_map.size();
+}
+
+int ColorMapManager::UserColorMaps()
+{
+	return (int)m_map.size() - USER;
 }
 
 void ColorMapManager::Initialize()
@@ -365,6 +372,12 @@ string ColorMapManager::GetColorMapName(int n)
 	}
 }
 
+// set the colormap name
+void ColorMapManager::SetColorMapName(int n, const std::string& newName)
+{
+	m_map[n].setName(newName);
+}
+
 CColorMap& ColorMapManager::GetColorMap(int n)
 {
 	return m_map[n].colormap();
@@ -374,4 +387,12 @@ void ColorMapManager::AddColormap(const string& name, const CColorMap& map)
 {
 	ColorMapTemplate newTemplate(name, map);
 	m_map.push_back(newTemplate);	
+}
+
+// remove a color map template (can't delete default templates)
+bool ColorMapManager::RemoveColormap(int n)
+{
+	if (n < USER) return false;
+	m_map.erase(m_map.begin() + n);
+	return true;
 }

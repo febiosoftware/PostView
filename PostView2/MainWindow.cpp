@@ -1749,6 +1749,7 @@ void CMainWindow::writeSettings()
 	settings.setValue("m_blinesmooth"     , view.m_blinesmooth);
 	settings.setValue("m_flinethick"      , view.m_flinethick);
 	settings.setValue("m_fpointsize"      , view.m_fpointsize);
+	settings.setValue("colorMaps"         , ColorMapManager::UserColorMaps());
 	settings.endGroup();
 
 	settings.beginGroup("FolderSettings");
@@ -1800,6 +1801,7 @@ void CMainWindow::readSettings()
 	restoreState(settings.value("state").toByteArray());
 	settings.endGroup();
 
+	int userColorMaps = -1;
 	VIEWSETTINGS& view = GetDocument()->GetViewSettings();
 	view.Defaults();
 	settings.beginGroup("ViewSettings");
@@ -1826,6 +1828,7 @@ void CMainWindow::readSettings()
 	view.m_blinesmooth      = settings.value("m_blinesmooth", view.m_blinesmooth).toBool();
 	view.m_flinethick       = settings.value("m_flinethick" , view.m_flinethick).toFloat();
 	view.m_fpointsize       = settings.value("m_fpointsize" , view.m_fpointsize).toFloat();
+	userColorMaps = settings.value("colorMaps", -1).toInt();
 	settings.endGroup();
 
 	settings.beginGroup("FolderSettings");
@@ -1835,7 +1838,8 @@ void CMainWindow::readSettings()
 	// store the user color maps
 	int userMaps = settings.beginReadArray("colorMaps");
 	{
-		for (int i = 0; i < userMaps; ++i)
+		if ((userColorMaps == -1) || (userColorMaps > userMaps)) userColorMaps = userMaps;
+		for (int i = 0; i < userColorMaps; ++i)
 		{
 			settings.setArrayIndex(i);
 

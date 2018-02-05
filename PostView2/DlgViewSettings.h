@@ -12,6 +12,21 @@ namespace Ui {
 	class CDlgViewSettings;
 };
 
+class ColorGradient : public QWidget
+{
+public:
+	ColorGradient(QWidget* parent = 0);
+
+	QSize sizeHint() const override;
+
+	void paintEvent(QPaintEvent* ev) override;
+
+	void setColorMap(const CColorMap& m);
+
+private:
+	CColorMap	m_map;
+};
+
 class CColormapWidget : public QWidget
 {
 	Q_OBJECT
@@ -28,6 +43,8 @@ protected slots:
 	void onDataChanged();
 	void onSpinValueChanged(int n);
 	void onNew();
+	void onDelete();
+	void onEdit();
 	void onInvert();
 
 private:
@@ -37,9 +54,9 @@ private:
 	QGridLayout*	m_grid;
 	QSpinBox*		m_spin;
 	QComboBox*		m_maps;
+	ColorGradient*	m_grad;
 	int				m_currentMap;
 };
-
 
 class CDlgViewSettings : public QDialog
 {

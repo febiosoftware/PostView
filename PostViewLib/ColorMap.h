@@ -116,14 +116,23 @@ public:
 	// get the number of templates available
 	static int ColorMaps();
 
+	// get the number of user templates available
+	static int UserColorMaps();
+
 	// return the name of a template
 	static string GetColorMapName(int n);
+
+	// set the colormap name
+	static void SetColorMapName(int n, const std::string& newName);
 
 	// add a color map template
 	static void AddColormap(const string& name, const CColorMap& map);
 
 	// get a reference to the color map template
 	static CColorMap& GetColorMap(int n);
+
+	// remove a color map template (can't delete default templates)
+	static bool RemoveColormap(int n);
 
 private:
 	// this is a singleton so don't try to instantiate this
