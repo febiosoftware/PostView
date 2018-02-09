@@ -281,10 +281,10 @@ public:
 		actionSelectCircle->setWhatsThis("Use a circle for rubberbanding a selection");
 		actionSelectFree->setWhatsThis("Use a free-hand curve for rubberbanding selection");
 
-		QAction* actionSelectItem = addAction("Select item"     , "actionSelectItem", ":/icons/select_item.png"   ); actionSelectItem->setCheckable(true);
+//		QAction* actionSelectItem = addAction("Select item"     , "actionSelectItem", ":/icons/select_item.png"   ); actionSelectItem->setCheckable(true);
 		QAction* actionSelectConn = addAction("Select connected", "actionSelectConn", ":/icons/select_connected.png"); actionSelectConn->setCheckable(true);
 
-		actionSelectItem->setWhatsThis("Clicking this option will only allow a user to select a single item (node, edge, face, element) on the mesh");
+//		actionSelectItem->setWhatsThis("Clicking this option will only allow a user to select a single item (node, edge, face, element) on the mesh");
 		actionSelectConn->setWhatsThis("Clicking this option will select all items that are connected on the same partition of the last selected item");
 
 		QAction* actionHideSelected    = addAction("Hide selected"   , "actionHideSelected"   ); actionHideSelected->setShortcut(Qt::Key_H);
@@ -394,10 +394,10 @@ public:
 		pag->addAction(actionSelectFree);
 		actionSelectRect->setChecked(true);
 
-		pag = new QActionGroup(MainWindow);
-		pag->addAction(actionSelectItem);
-		pag->addAction(actionSelectConn);
-		actionSelectItem->setChecked(true);
+//		pag = new QActionGroup(MainWindow);
+	//	pag->addAction(actionSelectItem);
+//		pag->addAction(actionSelectConn);
+//		actionSelectItem->setChecked(true);
 
 		// build the menu
 		menuBar->addAction(menuFile->menuAction());
@@ -503,7 +503,7 @@ public:
 		mainToolBar->addAction(selectElems);
 		mainToolBar->addSeparator();
 
-		mainToolBar->addAction(actionSelectItem);
+//		mainToolBar->addAction(actionSelectItem);
 		mainToolBar->addAction(actionSelectConn);
 
 		mainToolBar->addAction(actionSelectRect  );

@@ -111,8 +111,7 @@ public slots:
 	void on_actionSelectCircle_triggered();
 	void on_actionSelectFree_triggered();
 
-	void on_actionSelectItem_triggered();
-	void on_actionSelectConn_triggered();
+	void on_actionSelectConn_toggled(bool b);
 
 	void on_actionZoomSelected_triggered();
 	void on_actionZoomExtents_triggered();

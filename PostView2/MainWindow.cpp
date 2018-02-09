@@ -852,14 +852,9 @@ void CMainWindow::on_actionZoomExtents_triggered()
 	ui->glview->OnZoomExtents();
 }
 
-void CMainWindow::on_actionSelectItem_triggered()
+void CMainWindow::on_actionSelectConn_toggled(bool b)
 {
-	GetDocument()->GetViewSettings().m_bconn = false;
-}
-
-void CMainWindow::on_actionSelectConn_triggered()
-{
-	GetDocument()->GetViewSettings().m_bconn = true;
+	GetDocument()->GetViewSettings().m_bconn = b;
 }
 
 void CMainWindow::on_actionHideSelected_triggered()
