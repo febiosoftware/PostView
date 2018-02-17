@@ -25,7 +25,11 @@
 		D55AC5011E61EB6E00BBA0D1 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D55AC5001E61EB6E00BBA0D1 /* OpenGL.framework */; };
 		D56731621F9FD85200C87BC1 /* AreaCoverageTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D56731611F9FD85200C87BC1 /* AreaCoverageTool.cpp */; };
 		D56731681F9FF5A700C87BC1 /* moc_AreaCoverageTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D56731671F9FF5A700C87BC1 /* moc_AreaCoverageTool.cpp */; };
+		D571E01120385DE700A7B96D /* GLColorMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D571E00E20385DE700A7B96D /* GLColorMap.cpp */; };
+		D571E01220385DE700A7B96D /* FileThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D571E00F20385DE700A7B96D /* FileThread.cpp */; };
+		D571E01320385DE700A7B96D /* GLDisplacementMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D571E01020385DE700A7B96D /* GLDisplacementMap.cpp */; };
 		D5A65E0F1DBFA53F00B44009 /* DlgFileInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */; };
+		D5C20C622038851000BFB643 /* moc_FileThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5C20C612038851000BFB643 /* moc_FileThread.cpp */; };
 		D5C53DB71F86D97E0014FA22 /* DlgAddEquation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5C53DB61F86D97E0014FA22 /* DlgAddEquation.cpp */; };
 		D5E0E6A71E72390D006FE591 /* moc_DataFieldSelector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5E0E6A61E72390D006FE591 /* moc_DataFieldSelector.cpp */; };
 		D5FF7A401D72756B003D2CBD /* 3PointAngleTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79AA1D72756B003D2CBD /* 3PointAngleTool.cpp */; };
@@ -160,8 +164,15 @@
 		D56731601F9FD85200C87BC1 /* AreaCoverageTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AreaCoverageTool.h; sourceTree = "<group>"; };
 		D56731611F9FD85200C87BC1 /* AreaCoverageTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AreaCoverageTool.cpp; sourceTree = "<group>"; };
 		D56731671F9FF5A700C87BC1 /* moc_AreaCoverageTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_AreaCoverageTool.cpp; sourceTree = "<group>"; };
+		D571E00B20385DE700A7B96D /* GLColorMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLColorMap.h; sourceTree = "<group>"; };
+		D571E00C20385DE700A7B96D /* FileThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileThread.h; sourceTree = "<group>"; };
+		D571E00D20385DE700A7B96D /* GLDisplacementMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLDisplacementMap.h; sourceTree = "<group>"; };
+		D571E00E20385DE700A7B96D /* GLColorMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLColorMap.cpp; sourceTree = "<group>"; };
+		D571E00F20385DE700A7B96D /* FileThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileThread.cpp; sourceTree = "<group>"; };
+		D571E01020385DE700A7B96D /* GLDisplacementMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLDisplacementMap.cpp; sourceTree = "<group>"; };
 		D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgFileInfo.cpp; sourceTree = "<group>"; };
 		D5A65E0E1DBFA53F00B44009 /* DlgFileInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgFileInfo.h; sourceTree = "<group>"; };
+		D5C20C612038851000BFB643 /* moc_FileThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_FileThread.cpp; sourceTree = "<group>"; };
 		D5C53DB51F86D97E0014FA22 /* DlgAddEquation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgAddEquation.h; sourceTree = "<group>"; };
 		D5C53DB61F86D97E0014FA22 /* DlgAddEquation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgAddEquation.cpp; sourceTree = "<group>"; };
 		D5E0E6A61E72390D006FE591 /* moc_DataFieldSelector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_DataFieldSelector.cpp; sourceTree = "<group>"; };
@@ -420,12 +431,18 @@
 				D53598BF1E901C0500584A4F /* DragBox.h */,
 				D5FF79CE1D72756B003D2CBD /* FEKinemat.cpp */,
 				D5FF79CF1D72756B003D2CBD /* FEKinemat.h */,
+				D571E00F20385DE700A7B96D /* FileThread.cpp */,
+				D571E00C20385DE700A7B96D /* FileThread.h */,
 				D5FF79D01D72756B003D2CBD /* FileViewer.cpp */,
 				D5FF79D11D72756B003D2CBD /* FileViewer.h */,
+				D571E00E20385DE700A7B96D /* GLColorMap.cpp */,
+				D571E00B20385DE700A7B96D /* GLColorMap.h */,
 				D5FF79D21D72756B003D2CBD /* GLContext.cpp */,
 				D5FF79D31D72756B003D2CBD /* GLContext.h */,
 				D5FF79D41D72756B003D2CBD /* GLDataMap.cpp */,
 				D5FF79D51D72756B003D2CBD /* GLDataMap.h */,
+				D571E01020385DE700A7B96D /* GLDisplacementMap.cpp */,
+				D571E00D20385DE700A7B96D /* GLDisplacementMap.h */,
 				D5FF79D61D72756B003D2CBD /* GLIsoSurfacePlot.cpp */,
 				D5FF79D71D72756B003D2CBD /* GLIsoSurfacePlot.h */,
 				D5FF79D81D72756B003D2CBD /* GLLinePlot.cpp */,
@@ -473,6 +490,7 @@
 				D5FF79FE1D72756B003D2CBD /* moc_DlgExportXPLT.cpp */,
 				D5FF79FF1D72756B003D2CBD /* moc_DlgViewSettings.cpp */,
 				D5FF7A001D72756B003D2CBD /* moc_DlgWidgetProps.cpp */,
+				D5C20C612038851000BFB643 /* moc_FileThread.cpp */,
 				D5FF7A011D72756B003D2CBD /* moc_FileViewer.cpp */,
 				D5FF7A021D72756B003D2CBD /* moc_GLView.cpp */,
 				D5FF7A031D72756B003D2CBD /* moc_GraphWindow.cpp */,
@@ -668,6 +686,7 @@
 				D5FF7A8D1D72756B003D2CBD /* render.cpp in Sources */,
 				D5FF7A6A1D72756B003D2CBD /* moc_DistanceMapTool.cpp in Sources */,
 				D5FF7A821D72756B003D2CBD /* ModelViewer.cpp in Sources */,
+				D571E01220385DE700A7B96D /* FileThread.cpp in Sources */,
 				D5FF7A6F1D72756B003D2CBD /* moc_GLView.cpp in Sources */,
 				D5FF7A7B1D72756B003D2CBD /* moc_PropertyListView.cpp in Sources */,
 				D52C6FB31D75DCA300DF804B /* TimePanel.cpp in Sources */,
@@ -688,6 +707,7 @@
 				D5FF7A741D72756B003D2CBD /* moc_MaterialPanel.cpp in Sources */,
 				D5FF7A7F1D72756B003D2CBD /* moc_SummaryWindow.cpp in Sources */,
 				D5FF7A681D72756B003D2CBD /* moc_CColorButton.cpp in Sources */,
+				D571E01120385DE700A7B96D /* GLColorMap.cpp in Sources */,
 				D5FF7A721D72756B003D2CBD /* moc_IntegrateWindow.cpp in Sources */,
 				D56731681F9FF5A700C87BC1 /* moc_AreaCoverageTool.cpp in Sources */,
 				D5FF7A4F1D72756B003D2CBD /* DlgWidgetProps.cpp in Sources */,
@@ -734,6 +754,8 @@
 				D5FF7A441D72756B003D2CBD /* CColorButton.cpp in Sources */,
 				D5FF7A4B1D72756B003D2CBD /* DlgFind.cpp in Sources */,
 				D5FF7A8A1D72756B003D2CBD /* PropertyListForm.cpp in Sources */,
+				D5C20C622038851000BFB643 /* moc_FileThread.cpp in Sources */,
+				D571E01320385DE700A7B96D /* GLDisplacementMap.cpp in Sources */,
 				D5FF7A4C1D72756B003D2CBD /* DlgSelectRange.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
