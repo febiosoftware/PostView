@@ -403,6 +403,18 @@ void CPlotWidget::OnCopyToClipboard()
 			max_size = (di.size() > max_size ? di.size() : max_size);
 			equalSize = false;
 		}
+		else if (equalSize)
+		{
+			// see if x-coordinates match
+			for (int j=0; j<max_size; ++j)
+			{
+				if (d.Point(j).x() != di.Point(j).x())
+				{
+					equalSize = false;
+					break;
+				}
+			}
+		}
 	}
 
 	// make sure there is data
