@@ -51,6 +51,29 @@ protected:
 	vector<T>	m_data;
 };
 
+//-----------------------------------------------------------------------------
+class FENodeArrayData : public FENodeItemData
+{
+public:
+	FENodeArrayData(FEState* state, int nsize) : FENodeItemData(state, DATA_ARRAY, DATA_ITEM)
+	{
+		int N = state->GetFEMesh()->Nodes();
+		m_stride = nsize;
+		m_data.resize(N*nsize, 0.f);
+	}
+
+	float eval(int n, int comp) { return m_data[n*m_stride + comp]; }
+	void setData(vector<float>& data)
+	{
+		assert(data.size() == m_data.size());
+		m_data = data;
+	}
+
+protected:
+	int				m_stride;
+	vector<float>	m_data;	
+};
+
 //=============================================================================
 // 
 //    F A C E   D A T A
@@ -232,6 +255,37 @@ class FEElemItemData : public FEMeshData
 {
 public:
 	FEElemItemData(FEState* state, Data_Type ntype, Data_Format nfmt) : FEMeshData(state, ntype, nfmt){}
+};
+
+//-----------------------------------------------------------------------------
+class FEElemArrayData : public FEElemItemData
+{
+public:
+	FEElemArrayData(FEState* state, int nsize, FEDataField* pdf) : FEElemItemData(state, DATA_ARRAY, DATA_ITEM), m_elem(pdf->m_item)
+	{
+		int NE = state->GetFEMesh()->Elements();
+		m_stride = nsize;
+		m_data.resize(NE*nsize, 0.f);
+	}
+
+	bool active(int n) { return (m_elem[n] >= 0); }
+
+	float eval(int n, int comp) 
+	{ 
+		return m_data[m_elem[n]*m_stride + comp];
+	}
+
+	void setData(vector<float>& data, vector<int>& elem)
+	{
+		assert(data.size() == m_data.size());
+		m_data = data;
+		m_elem = elem;
+	}
+
+protected:
+	int				m_stride;
+	vector<float>	m_data;
+	vector<int>&	m_elem;
 };
 
 //-----------------------------------------------------------------------------

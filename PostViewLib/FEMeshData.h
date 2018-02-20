@@ -23,6 +23,7 @@ enum Data_Class {
 // - DATA_MAT3FS: 3D symmetric matrix of floats (6 comp)
 // - DATA_MAT3FD: 3D diagonal matrix of floats (3 comp)
 // - DATA_TENS4FS: 6D symmetric matrix of floats (21 comp)
+// - DATA_ARRAY  : variable array (see FEDataField::GetArraySize())
 enum Data_Type {
 	DATA_FLOAT,
 	DATA_VEC3F,
@@ -30,7 +31,8 @@ enum Data_Type {
 	DATA_MAT3FD,
     DATA_TENS4FS,
 	DATA_MAT3D,
-	DATA_MAT3F
+	DATA_MAT3F,
+	DATA_ARRAY,
 };
 
 //-----------------------------------------------------------------------------
@@ -50,7 +52,7 @@ enum Data_Format {
 enum Data_Tensor_Type {
 	DATA_SCALAR,
 	DATA_VECTOR,
-	DATA_TENSOR2
+	DATA_TENSOR2,
 };
 
 //-----------------------------------------------------------------------------

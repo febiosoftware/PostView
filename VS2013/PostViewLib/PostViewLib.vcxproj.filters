@@ -231,6 +231,9 @@
     <ClInclude Include="..\..\PostViewLib\FEAreaCoverage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\PostViewLib\FEDataField.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\PostViewLib\3DImage.cpp">
@@ -441,6 +444,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\PostViewLib\FEAreaCoverage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PostViewLib\FEDataField.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

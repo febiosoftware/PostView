@@ -30,6 +30,26 @@ template <class Type> void ReadElemData_REGION(IArchive& ar, XpltReader::Domain&
 	df.add(elem, a);
 }
 
+//=================================================================================================
+
+XpltReader::DICT_ITEM::DICT_ITEM()
+{
+}
+
+XpltReader::DICT_ITEM::DICT_ITEM(const DICT_ITEM& item)
+{
+	ntype = item.ntype;
+	nfmt  = item.nfmt;
+	strcpy(szname, item.szname);
+
+	index = item.index;
+
+	arraySize = item.arraySize;
+	arrayNames = item.arrayNames;
+}
+
+//=================================================================================================
+
 //-----------------------------------------------------------------------------
 XpltReader::XpltReader(xpltFileReader* xplt) : xpltParser(xplt)
 {
@@ -164,8 +184,16 @@ bool XpltReader::ReadDictItem(DICT_ITEM& it)
 		int nid = m_ar.GetChunkID();
 		switch(nid)
 		{
-		case PLT_DIC_ITEM_TYPE: m_ar.read(it.ntype); break;
-		case PLT_DIC_ITEM_FMT : m_ar.read(it.nfmt ); break;
+		case PLT_DIC_ITEM_TYPE      : m_ar.read(it.ntype); break;
+		case PLT_DIC_ITEM_FMT       : m_ar.read(it.nfmt ); break;
+		case PLT_DIC_ITEM_ARRAYSIZE : m_ar.read(it.arraySize); break;
+		case PLT_DIC_ITEM_ARRAYNAME :
+			{
+				char tmp[DI_NAME_SIZE] = {0};
+				m_ar.read(tmp, DI_NAME_SIZE);
+				it.arrayNames.push_back(tmp);
+			}
+			break;
 		case PLT_DIC_ITEM_NAME: 
 			{
 				m_ar.read(szname, DI_NAME_SIZE);
@@ -179,6 +207,9 @@ bool XpltReader::ReadDictItem(DICT_ITEM& it)
 		}
 		m_ar.CloseChunk();
 	}
+
+	assert((it.arrayNames.size() == 0) || (it.arrayNames.size() == it.arraySize));
+
 	return true;
 }
 
@@ -223,8 +254,16 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 		case MAT3FD : pdm->AddDataField(new FEDataField_T<FENodeData<mat3fd > >(it.szname, EXPORT_DATA)); break;
         case TENS4FS: pdm->AddDataField(new FEDataField_T<FENodeData<tens4fs> >(it.szname, EXPORT_DATA)); break;
 		case MAT3F  : pdm->AddDataField(new FEDataField_T<FENodeData<mat3f  > >(it.szname, EXPORT_DATA)); break;
+		case ARRAY  : 
+			{
+				FEArrayDataField* data = new FEArrayDataField(it.szname, CLASS_NODE, EXPORT_DATA);
+				data->SetArraySize(it.arraySize);
+				data->SetArrayNames(it.arrayNames);
+				pdm->AddDataField(data);
+			}
+			break;
 		default:
-			return errf("Error while reading dictionar");
+			return errf("Error while reading dictionary");
 		}
 	}
 
@@ -263,6 +302,14 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fd ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
                 case TENS4FS: pdm->AddDataField(new FEDataField_T<FEElementData<tens4fs,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
 				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEElementData<mat3f  ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
+				case ARRAY  :
+					{
+						FEArrayDataField* data = new FEArrayDataField(it.szname, CLASS_ELEM, EXPORT_DATA);
+						data->SetArraySize(it.arraySize);
+						data->SetArrayNames(it.arrayNames);
+						pdm->AddDataField(data);
+					}
+					break;
 				default:
 					assert(false);
 					return false;
@@ -1282,10 +1329,18 @@ bool XpltReader::ReadNodeData(FEModel& fem, FEState* pstate)
 							FENodeData<mat3f>& dv = dynamic_cast<FENodeData<mat3f>&>(pstate->m_Data[nfield]);
 							for (int j=0; j<NN; ++j) dv[j] = a[j];
 						}
+						else if (it.ntype == ARRAY)
+						{
+							int D = it.arraySize; assert(D != 0);
+							vector<float> a(NN*D);
+							m_ar.read(a);
+							FENodeArrayData& dv = dynamic_cast<FENodeArrayData&>(pstate->m_Data[nfield]);
+							dv.setData(a);
+						}
 						else
 						{
 							assert(false);
-							return errf("Error while reading node data");;
+							return errf("Error while reading node data");
 						}
 						m_ar.CloseChunk();
 					}
@@ -1341,7 +1396,7 @@ bool XpltReader::ReadElemData(FEModel &fem, FEState* pstate)
 						switch (it.nfmt)
 						{
 						case FMT_NODE: ReadElemData_NODE(mesh, dom, ed, it.ntype); break;
-						case FMT_ITEM: ReadElemData_ITEM(dom, ed, it.ntype); break;
+						case FMT_ITEM: ReadElemData_ITEM(dom, ed, it.ntype, it.arraySize); break;
 						case FMT_MULT: ReadElemData_MULT(dom, ed, it.ntype); break;
 						case FMT_REGION: 
 							switch (it.ntype)
@@ -1496,7 +1551,7 @@ bool XpltReader::ReadElemData_NODE(FEMeshBase& m, XpltReader::Domain &d, FEMeshD
 }
 
 //-----------------------------------------------------------------------------
-bool XpltReader::ReadElemData_ITEM(XpltReader::Domain& dom, FEMeshData& s, int ntype)
+bool XpltReader::ReadElemData_ITEM(XpltReader::Domain& dom, FEMeshData& s, int ntype, int arrSize)
 {
 	int NE = dom.ne;
 	switch (ntype)
@@ -1547,6 +1602,18 @@ bool XpltReader::ReadElemData_ITEM(XpltReader::Domain& dom, FEMeshData& s, int n
 			m_ar.read(a);
 			FEElementData<mat3f,DATA_ITEM>& dm = dynamic_cast<FEElementData<mat3f,DATA_ITEM>&>(s);
 			for (int i=0; i<NE; ++i) dm.add(dom.elem[i].index, a[i]);
+		}
+		break;
+	case ARRAY:
+		{
+			vector<float> a(NE*arrSize);
+			m_ar.read(a);
+			FEElemArrayData& dm = dynamic_cast<FEElemArrayData&>(s);
+
+			vector<int> elem(NE);
+			for (int i=0; i<NE; ++i) elem[i] = dom.elem[i].index;
+
+			dm.setData(a, elem);
 		}
 		break;
 	default:

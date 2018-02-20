@@ -199,6 +199,7 @@
     <ClInclude Include="..\..\PostViewLib\ColorMap.h" />
     <ClInclude Include="..\..\PostViewLib\FEAreaCoverage.h" />
     <ClInclude Include="..\..\PostViewLib\FEAsciiExport.h" />
+    <ClInclude Include="..\..\PostViewLib\FEDataField.h" />
     <ClInclude Include="..\..\PostViewLib\FEMathData.h" />
     <ClInclude Include="..\..\PostViewLib\FENodeEdgeList.h" />
     <ClInclude Include="..\..\PostViewLib\Intersect.h" />
@@ -278,6 +279,7 @@
     <ClCompile Include="..\..\PostViewLib\FEBioImport.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEBioPlotExport.cpp" />
     <ClCompile Include="..\..\PostViewLib\FECurvatureMap.cpp" />
+    <ClCompile Include="..\..\PostViewLib\FEDataField.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEDataManager.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEDistanceMap.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEElement.cpp" />

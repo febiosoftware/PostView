@@ -704,6 +704,12 @@ void FEModel::EvaluateNode(int n, int ntime, int nfield, NODEDATA& d)
 				d.m_val = component(m, ncomp);
 			}
             break;
+		case DATA_ARRAY:
+			{
+				FENodeArrayData& dm = dynamic_cast<FENodeArrayData&>(rd);
+				d.m_val = dm.eval(n, ncomp); 
+			}
+			break;
 		}
 	}
 	else if (IS_FACE_FIELD(nfield))
@@ -1868,6 +1874,22 @@ bool FEModel::EvaluateElement(int n, int ntime, int nfield, float* data, float& 
 				}
 			}
             break;
+		case DATA_ARRAY:
+			{
+				if (fmt == DATA_ITEM)
+				{
+					FEElemArrayData& dm = dynamic_cast<FEElemArrayData&>(rd);
+					if (dm.active(n))
+					{
+						val = dm.eval(n, ncomp);
+						for (int i = 0; i<ne; ++i) data[i] = val;
+						ntag = 1;
+					}
+				}
+			}
+			break;
+		default:
+			assert(false);
 		}
 	}
 	else if (IS_NODE_FIELD(nfield))

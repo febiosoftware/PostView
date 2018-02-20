@@ -57,7 +57,7 @@ bool xpltFileReader::Load(FEModel& fem, const char* szfile)
 
 	// create a file parser
 	if (m_xplt) { delete m_xplt; m_xplt = 0; }
-	if (m_hdr.nversion <= 4) m_xplt = new XpltReader(this);
+	if (m_hdr.nversion <= 5) m_xplt = new XpltReader(this);
 	else m_xplt = new XpltReader2(this);
 
 	// load the rest of the file
