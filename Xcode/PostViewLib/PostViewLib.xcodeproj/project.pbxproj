@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D50F4D6F203DA9DD0088F756 /* FEDataField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D50F4D6D203DA9DC0088F756 /* FEDataField.cpp */; };
+		D50F4D70203DA9DD0088F756 /* FEDataField.h in Headers */ = {isa = PBXBuildFile; fileRef = D50F4D6E203DA9DC0088F756 /* FEDataField.h */; };
 		D53292BE1E453471002798B3 /* FEAsciiExport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53292BC1E453471002798B3 /* FEAsciiExport.cpp */; };
 		D53292BF1E453471002798B3 /* FEAsciiExport.h in Headers */ = {isa = PBXBuildFile; fileRef = D53292BD1E453471002798B3 /* FEAsciiExport.h */; };
 		D5481BD91E2EC3F300BD2BFE /* LinearRegression.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5481BD71E2EC3F300BD2BFE /* LinearRegression.cpp */; };
@@ -151,6 +153,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D50F4D6D203DA9DC0088F756 /* FEDataField.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FEDataField.cpp; sourceTree = "<group>"; };
+		D50F4D6E203DA9DC0088F756 /* FEDataField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FEDataField.h; sourceTree = "<group>"; };
 		D53292BC1E453471002798B3 /* FEAsciiExport.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FEAsciiExport.cpp; sourceTree = "<group>"; };
 		D53292BD1E453471002798B3 /* FEAsciiExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FEAsciiExport.h; sourceTree = "<group>"; };
 		D5481BD71E2EC3F300BD2BFE /* LinearRegression.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LinearRegression.cpp; sourceTree = "<group>"; };
@@ -354,6 +358,8 @@
 				D5F308B11CFBB65700F76762 /* FEBioPlotExport.h */,
 				D5F308B21CFBB65700F76762 /* FECurvatureMap.cpp */,
 				D5F308B31CFBB65700F76762 /* FECurvatureMap.h */,
+				D50F4D6D203DA9DC0088F756 /* FEDataField.cpp */,
+				D50F4D6E203DA9DC0088F756 /* FEDataField.h */,
 				D5F308B41CFBB65700F76762 /* FEDataManager.cpp */,
 				D5F308B51CFBB65700F76762 /* FEDataManager.h */,
 				D5F308B61CFBB65700F76762 /* FEDistanceMap.cpp */,
@@ -538,6 +544,7 @@
 				D5F3093E1CFBB65700F76762 /* FELSDYNAimport.h in Headers */,
 				D5F3092C1CFBB65700F76762 /* FECurvatureMap.h in Headers */,
 				D56731661F9FD87A00C87BC1 /* FEAreaCoverage.h in Headers */,
+				D50F4D70203DA9DD0088F756 /* FEDataField.h in Headers */,
 				D5F3092E1CFBB65700F76762 /* FEDataManager.h in Headers */,
 				D5F3091F1CFBB65700F76762 /* constants.h in Headers */,
 				D5F309341CFBB65700F76762 /* FEFEBioExport.h in Headers */,
@@ -673,6 +680,7 @@
 				D5F309161CFBB65700F76762 /* Archive.cpp in Sources */,
 				D5F309271CFBB65700F76762 /* FEBioImport.cpp in Sources */,
 				D5F309731CFBB65700F76762 /* Interpolator.cpp in Sources */,
+				D50F4D6F203DA9DD0088F756 /* FEDataField.cpp in Sources */,
 				D5F309831CFBB65700F76762 /* VRMLExporter.cpp in Sources */,
 				D5F309501CFBB65700F76762 /* FENodeFaceList.cpp in Sources */,
 				D5F3096E1CFBB65700F76762 /* GView.cpp in Sources */,
