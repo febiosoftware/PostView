@@ -92,7 +92,7 @@ int FEDataField::components(Data_Tensor_Type ntype)
 	return 0;
 }
 
-std::string FEDataField::componentName(int ncomp, Data_Tensor_Type ntype)
+std::string FEDataField::componentName(int ncomp, Data_Tensor_Type ntype, bool bshort)
 {
 	const std::string& name = GetName();
 	const char* sz = name.c_str();
@@ -189,7 +189,10 @@ std::string FEDataField::componentName(int ncomp, Data_Tensor_Type ntype)
 			const string& var = GetName();
 			if (m_arrayNames.size() == m_arraySize)
 			{
-				sprintf(szline, "%s - %s", m_arrayNames[ncomp].c_str(), var.c_str());
+				if (bshort)
+					sprintf(szline, "%s", m_arrayNames[ncomp].c_str());
+				else
+					sprintf(szline, "%s (%s)", var.c_str(), m_arrayNames[ncomp].c_str());
 			}
 			else
 			{

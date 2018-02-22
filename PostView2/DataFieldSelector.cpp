@@ -57,7 +57,7 @@ void CDataFieldSelector::BuildMenu(FEModel* fem, Data_Tensor_Type nclass, bool b
 		int dataComponents = d.components(nclass);
 		if (dataComponents > 0)
 		{
-			if (dataComponents == 1)
+			if ((dataComponents == 1) && (d.Type() != DATA_ARRAY))
 			{
 				int nfield = BUILD_FIELD(dataClass, i, 0);
 
@@ -78,7 +78,7 @@ void CDataFieldSelector::BuildMenu(FEModel* fem, Data_Tensor_Type nclass, bool b
 				for (int n=0; n<dataComponents; ++n)
 				{
 					int nfield = BUILD_FIELD(dataClass, i, n);
-					std::string s = d.componentName(n, nclass);
+					std::string s = d.componentName(n, nclass, true);
 
 					QAction* pa = sub->addAction(QString::fromStdString(s));
 					pa->setData(QVariant(nfield));

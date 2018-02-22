@@ -59,7 +59,7 @@ public:
 	int components(Data_Tensor_Type ntype);
 
 	//! return the name of a component
-	std::string componentName(int ncomp, Data_Tensor_Type ntype);
+	std::string componentName(int ncomp, Data_Tensor_Type ntype, bool bshort = false);
 
 	virtual const std::type_info& TypeInfo() { return typeid(FEDataField); }
 
