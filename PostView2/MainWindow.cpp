@@ -642,6 +642,7 @@ void CMainWindow::on_actionUpdate_triggered()
 		ui->actionColorMap->setDisabled(false);
 
 		// update the UI
+		UpdateMainToolbar();
 		UpdatePlayToolbar(true);
 		UpdateUi(true);
 	}
