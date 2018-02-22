@@ -213,7 +213,7 @@ void CMainWindow::UpdateUi(bool breset, QWidget* psender)
 	if (psender != ui->timePanel  ) ui->timePanel->Update(breset);
 
 	// update all graph windows
-	UpdateGraphs();
+	UpdateGraphs(breset, breset);
 
 	// update the gl view
 	ui->glview->GetCamera().Update(true);
@@ -1602,7 +1602,7 @@ void CMainWindow::UpdatePlayToolbar(bool breset)
 	if (mdl == 0) ui->playToolBar->setDisabled(true);
 	else
 	{
-		int ntime = mdl->currentTime() + 1;
+		int ntime = mdl->currentTimeIndex() + 1;
 
 		if (breset)
 		{

@@ -424,6 +424,9 @@ void CGraphWindow::Update(bool breset, bool bfit)
 	{
 		ui->selectX->BuildMenu(doc->GetFEModel(), DATA_SCALAR);
 		ui->selectY->BuildMenu(doc->GetFEModel(), DATA_SCALAR);
+
+		m_dataXPrev = -1;
+		m_dataYPrev = -1;
 	}
 
 	// Currently, when the time step changes, Update is called with breset set to false.
@@ -480,7 +483,11 @@ void CGraphWindow::Update(bool breset, bool bfit)
 		ui->plot->clear();
 		return;
 	}
-	if (m_dataY<=0) return;
+	if (m_dataY<=0) 
+	{
+		ui->plot->clear();
+		return;
+	}
 
 	// When a reset is not required, see if we actually need to update anything
 	if ((breset == false) && (bfit == false))

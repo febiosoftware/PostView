@@ -38,6 +38,7 @@ void CDataFieldSelector::BuildMenu(FEModel* fem, Data_Tensor_Type nclass, bool b
 	// we'll use it to restore the current selected option
 	int noldField = m_currentValue;
 	m_currentValue = -1;
+	setText("");
 
 	// get the datamanager
 	if (fem == 0) return;
