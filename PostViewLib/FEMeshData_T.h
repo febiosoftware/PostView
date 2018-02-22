@@ -288,6 +288,43 @@ protected:
 	vector<int>&	m_elem;
 };
 
+
+//-----------------------------------------------------------------------------
+class FEElemArrayVec3Data : public FEElemItemData
+{
+public:
+	FEElemArrayVec3Data(FEState* state, int nsize, FEDataField* pdf) : FEElemItemData(state, DATA_ARRAY_VEC3F, DATA_ITEM), m_elem(pdf->m_item)
+	{
+		int NE = state->GetFEMesh()->Elements();
+		m_stride = nsize;
+		m_data.resize(NE*nsize*3, 0.f);
+	}
+
+	bool active(int n) { return (m_elem[n] >= 0); }
+
+	// evaluate the field for an element
+	// n = element index
+	// index = array index (0 ... stride-1)
+	vec3f eval(int n, int index)
+	{
+		float* d = &m_data[3*(m_elem[n] * m_stride + index)];
+		return vec3f(d[0], d[1], d[2]);
+	}
+
+	void setData(vector<float>& data, vector<int>& elem)
+	{
+		assert(data.size() == m_data.size());
+		m_data = data;
+		m_elem = elem;
+	}
+
+protected:
+	int				m_stride;
+	vector<float>	m_data;
+	vector<int>&	m_elem;
+};
+
+
 //-----------------------------------------------------------------------------
 // template base class for defining the data value
 template <typename T, Data_Format fmt> class FEElemData_T : public FEElemItemData

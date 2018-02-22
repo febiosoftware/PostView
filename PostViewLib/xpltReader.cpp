@@ -310,6 +310,14 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 						pdm->AddDataField(data);
 					}
 					break;
+				case ARRAY_VEC3F:
+					{
+						FEArrayVec3DataField* data = new FEArrayVec3DataField(it.szname, CLASS_ELEM, EXPORT_DATA);
+						data->SetArraySize(it.arraySize);
+						data->SetArrayNames(it.arrayNames);
+						pdm->AddDataField(data);
+					}
+					break;
 				default:
 					assert(false);
 					return false;
@@ -1612,6 +1620,18 @@ bool XpltReader::ReadElemData_ITEM(XpltReader::Domain& dom, FEMeshData& s, int n
 
 			vector<int> elem(NE);
 			for (int i=0; i<NE; ++i) elem[i] = dom.elem[i].index;
+
+			dm.setData(a, elem);
+		}
+		break;
+	case ARRAY_VEC3F:
+		{
+			vector<float> a(NE*arrSize*3);
+			m_ar.read(a);
+			FEElemArrayVec3Data& dm = dynamic_cast<FEElemArrayVec3Data&>(s);
+
+			vector<int> elem(NE);
+			for (int i = 0; i<NE; ++i) elem[i] = dom.elem[i].index;
 
 			dm.setData(a, elem);
 		}

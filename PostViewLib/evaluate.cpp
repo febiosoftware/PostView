@@ -30,6 +30,20 @@ float component(const vec3f& v, int n)
 	return g;
 }
 
+float component2(const vec3f& v, int n)
+{
+	float g = 0.f;
+	switch (n)
+	{
+	case 0: g = v.x; break;
+	case 1: g = v.y; break;
+	case 2: g = v.z; break;
+	case 3: g = sqrt(v.x*v.x + v.y*v.y + v.z*v.z); break;
+	}
+	return g;
+}
+
+
 //-----------------------------------------------------------------------------
 // extract a component from a mat3d
 float component(const mat3d& m, int n)
@@ -1888,6 +1902,21 @@ bool FEModel::EvaluateElement(int n, int ntime, int nfield, float* data, float& 
 				}
 			}
 			break;
+		case DATA_ARRAY_VEC3F:
+			{
+				if (fmt == DATA_ITEM)
+				{
+					FEElemArrayVec3Data& dm = dynamic_cast<FEElemArrayVec3Data&>(rd);
+					if (dm.active(n))
+					{
+						vec3f v = dm.eval(n, ncomp / 4);
+						val = component2(v, ncomp % 4);
+						for (int i = 0; i<ne; ++i) data[i] = val;
+						ntag = 1;
+					}
+				}
+			}
+			break;
 		default:
 			assert(false);
 		}
@@ -2178,6 +2207,18 @@ vec3f FEModel::EvaluateElemVector(int n, int ntime, int nvec)
 						int ne = mesh->Element(n).Nodes();
 						for (int i=0; i<ne; ++i) r += m[i].PrincDirection(ncomp + 1);
 						r /= (float) ne;
+					}
+				}
+			}
+			break;
+		case DATA_ARRAY_VEC3F:
+			{
+				if (nfmt == DATA_ITEM)
+				{
+					FEElemArrayVec3Data& dm = dynamic_cast<FEElemArrayVec3Data&>(rd);
+					if (dm.active(n))
+					{
+						r = dm.eval(n, ncomp);
 					}
 				}
 			}

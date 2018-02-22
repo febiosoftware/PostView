@@ -59,7 +59,7 @@ public:
 	int components(Data_Tensor_Type ntype);
 
 	//! return the name of a component
-	std::string componentName(int ncomp, Data_Tensor_Type ntype, bool bshort = false);
+	std::string componentName(int ncomp, Data_Tensor_Type ntype);
 
 	virtual const std::type_info& TypeInfo() { return typeid(FEDataField); }
 
@@ -69,7 +69,7 @@ public:
 	int GetArraySize() const { return m_arraySize; }
 
 	void SetArrayNames(vector<string>& n);
-	vector<string> GetArrayNames();
+	vector<string> GetArrayNames() const;
 
 protected:
 	int				m_nfield;	//!< field ID
@@ -118,6 +118,17 @@ class FEArrayDataField : public FEDataField
 {
 public:
 	FEArrayDataField(const std::string& name, Data_Class c, unsigned int flag = 0);
+
+	FEDataField* Clone() const override;
+
+	FEMeshData* CreateData(FEState* pstate) override;
+};
+
+//-----------------------------------------------------------------------------
+class FEArrayVec3DataField : public FEDataField
+{
+public:
+	FEArrayVec3DataField(const std::string& name, Data_Class c, unsigned int flag = 0);
 
 	FEDataField* Clone() const override;
 

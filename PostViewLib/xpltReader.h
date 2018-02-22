@@ -80,7 +80,7 @@ protected:
 	enum {FEBIO_TAG = 0x00464542 };
 
 	// variable types
-	enum Var_Type { FLOAT, VEC3F, MAT3FS, MAT3FD, TENS4FS, MAT3F, ARRAY };
+	enum Var_Type { FLOAT, VEC3F, MAT3FS, MAT3FD, TENS4FS, MAT3F, ARRAY, ARRAY_VEC3F };
 
 	// variable format
 	enum Var_Fmt { FMT_NODE, FMT_ITEM, FMT_MULT, FMT_REGION };
@@ -123,7 +123,7 @@ public:
 
 		unsigned int	index;	// index into data manager list
 
-		unsigned int	arraySize;	// only used for ARRAY variables (plt version 0x05)
+		unsigned int	arraySize;	// only used for array variables (plt version 0x05)
 		vector<string>	arrayNames;	// (optional) names of array components
 	};
 

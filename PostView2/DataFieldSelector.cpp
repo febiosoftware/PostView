@@ -78,10 +78,18 @@ void CDataFieldSelector::BuildMenu(FEModel* fem, Data_Tensor_Type nclass, bool b
 				for (int n=0; n<dataComponents; ++n)
 				{
 					int nfield = BUILD_FIELD(dataClass, i, n);
-					std::string s = d.componentName(n, nclass, true);
+					std::string s = d.componentName(n, nclass);
 
 					QAction* pa = sub->addAction(QString::fromStdString(s));
 					pa->setData(QVariant(nfield));
+
+					if (d.Type() == DATA_ARRAY_VEC3F)
+					{
+						if ((n > 0) && ((n+1) % 4 == 0))
+						{
+							sub->addSeparator();
+						}
+					}
 
 					if (nfield == noldField)
 					{

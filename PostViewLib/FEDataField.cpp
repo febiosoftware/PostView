@@ -24,7 +24,7 @@ void FEDataField::SetArrayNames(vector<string>& n)
 	m_arrayNames = n;
 }
 
-vector<string> FEDataField::GetArrayNames()
+vector<string> FEDataField::GetArrayNames() const
 {
 	return m_arrayNames;
 }
@@ -41,6 +41,7 @@ const char* FEDataField::TypeStr() const
 	case DATA_MAT3FD: return "mat3fd"; break;
 	case DATA_TENS4FS: return "tens4fs"; break;
 	case DATA_ARRAY: return "array"; break;
+	case DATA_ARRAY_VEC3F: return "array<vec3>"; break;
 	};
 	return "unknown";
 }
@@ -59,6 +60,7 @@ int FEDataField::components(Data_Tensor_Type ntype)
 		case DATA_MAT3FD: return 3; break;
 		case DATA_TENS4FS: return 21; break;
 		case DATA_ARRAY: return GetArraySize(); break;
+		case DATA_ARRAY_VEC3F: return GetArraySize()*4; break;
 		}
 	}
 	else if (ntype == DATA_VECTOR)
@@ -73,6 +75,7 @@ int FEDataField::components(Data_Tensor_Type ntype)
 		case DATA_MAT3FD: return 0; break;
 		case DATA_TENS4FS: return 0; break;
 		case DATA_ARRAY: return 0; break;
+		case DATA_ARRAY_VEC3F: return GetArraySize(); break;
 		}
 	}
 	else if (ntype == DATA_TENSOR2)
@@ -87,12 +90,13 @@ int FEDataField::components(Data_Tensor_Type ntype)
 		case DATA_MAT3FD: return 1; break;
 		case DATA_TENS4FS: return 0; break;
 		case DATA_ARRAY: return 0; break;
+		case DATA_ARRAY_VEC3F: return 0; break;
 		}
 	}
 	return 0;
 }
 
-std::string FEDataField::componentName(int ncomp, Data_Tensor_Type ntype, bool bshort)
+std::string FEDataField::componentName(int ncomp, Data_Tensor_Type ntype)
 {
 	const std::string& name = GetName();
 	const char* sz = name.c_str();
@@ -185,22 +189,47 @@ std::string FEDataField::componentName(int ncomp, Data_Tensor_Type ntype, bool b
 		}
 		break;
 		case DATA_ARRAY:
-		{
-			const string& var = GetName();
-			if (m_arrayNames.size() == m_arraySize)
 			{
-				if (bshort)
-					sprintf(szline, "%s", m_arrayNames[ncomp].c_str());
+				if (m_arrayNames.size() == m_arraySize)
+				{
+					sprintf(szline, "%s (%s)", sz, m_arrayNames[ncomp].c_str());
+				}
 				else
-					sprintf(szline, "%s (%s)", var.c_str(), m_arrayNames[ncomp].c_str());
+				{
+					sprintf(szline, "%s[%d]", sz, ncomp);
+				}
+				return szline;
 			}
-			else
+			break;
+		case DATA_ARRAY_VEC3F:
 			{
-				sprintf(szline, "%s[%d]", var.c_str(), ncomp);
+				int index = ncomp / 4;
+				int m = ncomp % 4;
+
+				if (m_arrayNames.size() == m_arraySize)
+				{
+					const string& arr = m_arrayNames[index];
+					switch (m)
+					{
+					case 0: sprintf(szline, "X - %s (%s)", sz, arr.c_str()); break;
+					case 1: sprintf(szline, "Y - %s (%s)", sz, arr.c_str()); break;
+					case 2: sprintf(szline, "Z - %s (%s)", sz, arr.c_str()); break;
+					case 3: sprintf(szline, "Total %s (%s)", sz, arr.c_str()); break;
+					}
+				}
+				else
+				{
+					switch (m)
+					{
+					case 0: sprintf(szline, "X - %s [%d]", sz, index); break;
+					case 1: sprintf(szline, "Y - %s [%d]", sz, index); break;
+					case 2: sprintf(szline, "Z - %s [%d]", sz, index); break;
+					case 3: sprintf(szline, "Total %s [%d]", sz, index); break;
+					}
+				}
+				return szline;
 			}
-			return szline;
-		}
-		break;
+			break;
 		}
 	}
 	else if (ntype == DATA_VECTOR)
@@ -209,12 +238,26 @@ std::string FEDataField::componentName(int ncomp, Data_Tensor_Type ntype, bool b
 		{
 		case DATA_VEC3F: return string(sz); break;
 		case DATA_MAT3FS:
-		{
-			if (ncomp == 0) sprintf(szline, "1 Principal %s", sz);
-			else if (ncomp == 1) sprintf(szline, "2 Principal %s", sz);
-			else if (ncomp == 2) sprintf(szline, "3 Principal %s", sz);
-			return szline;
-		}
+			{
+				if      (ncomp == 0) sprintf(szline, "1 Principal %s", sz);
+				else if (ncomp == 1) sprintf(szline, "2 Principal %s", sz);
+				else if (ncomp == 2) sprintf(szline, "3 Principal %s", sz);
+				return szline;
+			}
+		break;
+		case DATA_ARRAY_VEC3F:
+			{
+				const string& arr = m_arrayNames[ncomp];
+				if (m_arrayNames.size() == m_arraySize)
+				{
+					sprintf(szline, "%s (%s)", sz, arr.c_str());
+				}
+				else
+				{
+					sprintf(szline, "%s [%d]", sz, ncomp);
+				}
+				return szline;
+			}
 		break;
 		}
 	}
@@ -238,6 +281,7 @@ FEDataField* FEArrayDataField::Clone() const
 {
 	FEArrayDataField* newData = new FEArrayDataField(GetName(), DataClass(), m_flag);
 	newData->SetArraySize(GetArraySize());
+	newData->SetArrayNames(GetArrayNames());
 	return newData;
 }
 
@@ -247,6 +291,29 @@ FEMeshData* FEArrayDataField::CreateData(FEState* pstate)
 	{
 	case CLASS_NODE: return new FENodeArrayData(pstate, GetArraySize()); break;
 	case CLASS_ELEM: return new FEElemArrayData(pstate, GetArraySize(), this); break;
+	}
+	assert(false);
+	return 0;
+}
+
+//=================================================================================================
+FEArrayVec3DataField::FEArrayVec3DataField(const std::string& name, Data_Class c, unsigned int flag) : FEDataField(name, DATA_ARRAY_VEC3F, DATA_ITEM, c, flag)
+{
+}
+
+FEDataField* FEArrayVec3DataField::Clone() const
+{
+	FEArrayVec3DataField* newData = new FEArrayVec3DataField(GetName(), DataClass(), m_flag);
+	newData->SetArraySize(GetArraySize());
+	newData->SetArrayNames(GetArrayNames());
+	return newData;
+}
+
+FEMeshData* FEArrayVec3DataField::CreateData(FEState* pstate)
+{
+	switch (DataClass())
+	{
+	case CLASS_ELEM: return new FEElemArrayVec3Data(pstate, GetArraySize(), this); break;
 	}
 	assert(false);
 	return 0;
