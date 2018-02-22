@@ -36,13 +36,8 @@ OptionsUi::OptionsUi(CGraphWidget* graph, QWidget* parent) : CPlotTool(parent)
 	l->addStretch();
 	setLayout(l);
 
-#ifdef __APPLE__
-	smoothLines->setChecked(false);
-	dataMarks->setChecked(false);
-#else
 	smoothLines->setChecked(true);
 	dataMarks->setChecked(true);
-#endif
 
 	a[0]->setChecked(true);
 
@@ -386,11 +381,7 @@ public:
 	}
 };
 
-#ifdef __APPLE__
-CGraphWindow::CGraphWindow(CMainWindow* pwnd) : m_wnd(pwnd), QMainWindow(pwnd, Qt::WindowStaysOnTopHint), ui(new Ui::CGraphWindow)
-#else
 CGraphWindow::CGraphWindow(CMainWindow* pwnd) : m_wnd(pwnd), QMainWindow(pwnd), ui(new Ui::CGraphWindow)
-#endif
 {
 	m_nTrackTime = TRACK_TIME;
 	m_nUserMin = 0;

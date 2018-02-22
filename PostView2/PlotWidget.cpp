@@ -274,13 +274,8 @@ CPlotWidget::CPlotWidget(QWidget* parent, int w, int h) : QWidget(parent)
 
 	m_bshowToolTip = true;
 
-#ifdef __APPLE__
-	m_bsmoothLines = false;
-	m_bshowDataMarks = false;
-#else
 	m_bsmoothLines = true;
 	m_bshowDataMarks = true;
-#endif
 
 	// set default colors
 	m_bgCol = QColor(255, 255, 255);
