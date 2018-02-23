@@ -23,6 +23,8 @@
 		D5A65E151DBFA55800B44009 /* xpltFileReader.h in Headers */ = {isa = PBXBuildFile; fileRef = D5A65E111DBFA55800B44009 /* xpltFileReader.h */; };
 		D5A65E161DBFA55800B44009 /* xpltReader2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E121DBFA55800B44009 /* xpltReader2.cpp */; };
 		D5A65E171DBFA55800B44009 /* xpltReader2.h in Headers */ = {isa = PBXBuildFile; fileRef = D5A65E131DBFA55800B44009 /* xpltReader2.h */; };
+		D5C29D64203C718900A84201 /* FEDataField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5C29D62203C718900A84201 /* FEDataField.cpp */; };
+		D5C29D65203C718900A84201 /* FEDataField.h in Headers */ = {isa = PBXBuildFile; fileRef = D5C29D63203C718900A84201 /* FEDataField.h */; };
 		D5C53DB11F86D95F0014FA22 /* FEMathData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5C53DAD1F86D9580014FA22 /* FEMathData.cpp */; };
 		D5C53DB21F86D95F0014FA22 /* MathParser.h in Headers */ = {isa = PBXBuildFile; fileRef = D5C53DAE1F86D9580014FA22 /* MathParser.h */; };
 		D5C53DB31F86D95F0014FA22 /* FEMathData.h in Headers */ = {isa = PBXBuildFile; fileRef = D5C53DAF1F86D9590014FA22 /* FEMathData.h */; };
@@ -169,6 +171,8 @@
 		D5A65E111DBFA55800B44009 /* xpltFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xpltFileReader.h; sourceTree = "<group>"; };
 		D5A65E121DBFA55800B44009 /* xpltReader2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xpltReader2.cpp; sourceTree = "<group>"; };
 		D5A65E131DBFA55800B44009 /* xpltReader2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xpltReader2.h; sourceTree = "<group>"; };
+		D5C29D62203C718900A84201 /* FEDataField.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FEDataField.cpp; sourceTree = "<group>"; };
+		D5C29D63203C718900A84201 /* FEDataField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FEDataField.h; sourceTree = "<group>"; };
 		D5C53DAD1F86D9580014FA22 /* FEMathData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FEMathData.cpp; sourceTree = "<group>"; };
 		D5C53DAE1F86D9580014FA22 /* MathParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MathParser.h; sourceTree = "<group>"; };
 		D5C53DAF1F86D9590014FA22 /* FEMathData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FEMathData.h; sourceTree = "<group>"; };

@@ -281,7 +281,8 @@ FEDataField* FEArrayDataField::Clone() const
 {
 	FEArrayDataField* newData = new FEArrayDataField(GetName(), DataClass(), m_flag);
 	newData->SetArraySize(GetArraySize());
-	newData->SetArrayNames(GetArrayNames());
+    vector<string> arrnames = GetArrayNames();
+	newData->SetArrayNames(arrnames);
 	return newData;
 }
 
@@ -305,7 +306,8 @@ FEDataField* FEArrayVec3DataField::Clone() const
 {
 	FEArrayVec3DataField* newData = new FEArrayVec3DataField(GetName(), DataClass(), m_flag);
 	newData->SetArraySize(GetArraySize());
-	newData->SetArrayNames(GetArrayNames());
+    vector<string> arrnames = GetArrayNames();
+    newData->SetArrayNames(arrnames);
 	return newData;
 }
 
