@@ -499,6 +499,8 @@ public:
 
 	CGLObject* Object() { return m_po; }
 
+	void SetObject(CGLObject* po) { m_po = po; }
+
 private:
 	CGLObject* m_po;
 };
@@ -797,7 +799,7 @@ void CModelViewer::on_nameEdit_editingFinished()
 
 void CModelViewer::on_deleteButton_clicked()
 {
-	QTreeWidgetItem* item = ui->m_tree->currentItem();
+	CModelTreeItem* item = dynamic_cast<CModelTreeItem*>(ui->m_tree->currentItem());
 	if (item)
 	{
 		QVariant v = item->data(0, Qt::UserRole);
@@ -806,6 +808,7 @@ void CModelViewer::on_deleteButton_clicked()
 		if (po)
 		{
 			m_wnd->GetDocument()->DeleteObject(po);
+			item->SetObject(0);
 			Update(true);
 			m_wnd->RedrawGL();
 		}
