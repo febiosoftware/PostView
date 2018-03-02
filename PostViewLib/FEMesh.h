@@ -247,13 +247,33 @@ bool FindElementInReferenceFrame(FEMeshBase& m, const vec3f& x, int& nelem, doub
 class FEFindElement
 {
 public:
+	class BOX
+	{
+	public:
+		BOUNDINGBOX		m_box;
+		vector<BOX*>	m_child;
+		int				m_elem;
+		int				m_level;
+
+	public:
+		BOX();
+		~BOX();
+
+		void split(int levels);
+
+		BOX* Find(const vec3f& r);
+
+		void Add(BOUNDINGBOX& b, int nelem);
+	};
+
+public:
 	FEFindElement(FEMeshBase& mesh);
 
 	bool FindInReferenceFrame(const vec3f& x, int& nelem, double r[3]);
 
 private:
+	BOX			m_bound;
 	FEMeshBase&	m_mesh;
-	vector<BOUNDINGBOX>	m_box;
 };
 
 #endif // !defined(AFX_FEMESH_H__4E540300_07D8_4732_BB8D_6570BB162180__INCLUDED_)

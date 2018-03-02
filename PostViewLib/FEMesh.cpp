@@ -1692,10 +1692,125 @@ void FEMeshBase::SetElementTags(int ntag)
 }
 
 //=================================================================================================
+
+FEFindElement::BOX::BOX()
+{
+	m_elem = -1;
+	m_level = -1;
+}
+
+FEFindElement::BOX::~BOX()
+{
+	for (size_t i=0; i<m_child.size(); ++i) delete m_child[i];
+	m_child.clear();
+}
+
+void FEFindElement::BOX::split(int levels)
+{
+	m_level = levels;
+	if (m_level == 0) return;
+
+	float x0 = m_box.x0, x1 = m_box.x1;
+	float y0 = m_box.y0, y1 = m_box.y1;
+	float z0 = m_box.z0, z1 = m_box.z1;
+
+	float dx = x1 - x0;
+	float dy = y1 - y0;
+	float dz = z1 - z0;
+
+	m_child.clear();
+	for (int i=0; i<2; i++)
+		for (int j = 0; j<2; j++)
+			for (int k = 0; k <2; k++)
+			{
+				float xa = x0 + i*dx*0.5f, xb = x0 + (i + 1)*dx*0.5f;
+				float ya = y0 + j*dy*0.5f, yb = y0 + (j + 1)*dy*0.5f;
+				float za = z0 + k*dz*0.5f, zb = z0 + (k + 1)*dz*0.5f;
+
+				BOUNDINGBOX b(xa, ya, za, xb, yb, zb);
+				float R = b.GetMaxExtent();
+				b.Inflate(R*0.0001f);
+
+				BOX* box = new BOX;
+				box->m_box = b;
+
+				m_child.push_back(box);
+			}
+
+	for (int i=0; i<(int)m_child.size(); ++i)
+	{
+		m_child[i]->split(levels - 1);
+	}
+}
+
+void FEFindElement::BOX::Add(BOUNDINGBOX& b, int nelem)
+{
+	if (m_level == 0)
+	{
+		if (m_box.IsInside(b) || (b.IsInside(m_box)))
+		{
+			BOX* box = new BOX;
+			box->m_box = b;
+			box->m_elem = nelem;
+			box->m_level = -1;
+			m_child.push_back(box);
+			return;
+		}
+	}
+	else
+	{
+		for (size_t i=0; i<m_child.size(); ++i)
+		{
+			m_child[i]->Add(b, nelem);
+		}
+	}
+}
+
+FEFindElement::BOX* FEFindElement::BOX::Find(const vec3f& r)
+{
+	if (m_level == 0)
+	{
+		bool inside = m_box.IsInside(r);
+		return (inside ? this : 0);
+	}
+
+	// try to find the child
+	for (size_t i = 0; i<m_child.size(); ++i)
+	{
+		BOX* c = m_child[i];
+		BOX* ret = c->Find(r);
+		if (ret) return ret;
+	}
+
+	return 0;
+}
+
 FEFindElement::FEFindElement(FEMeshBase& mesh) : m_mesh(mesh)
 {
+	// calculate bounding box for the entire mesh
+	int NN = mesh.Nodes();
 	int NE = mesh.Elements();
-	m_box.resize(NE);
+	if ((NN == 0) || (NE == 0)) return;
+
+	vec3f r = mesh.Node(0).m_r0;
+	BOUNDINGBOX box(r, r);
+	for (int i=1; i<mesh.Nodes(); ++i)
+	{
+		r = mesh.Node(i).m_r0;
+		box += r;
+	}
+	float R = box.GetMaxExtent();
+	box.Inflate(R*0.001f);
+
+	// split this box recursively
+	m_bound.m_box = box;
+
+	int l = (int) (log(NE) / log(8.0));
+	if (l < 0) l = 0;
+	if (l > 3) l = 3;
+	m_bound.split(l);
+
+	// calculate bounding boxes for all elements
 	for (int i=0; i<NE; ++i)
 	{
 		FEElement& e = mesh.Element(i);
@@ -1704,52 +1819,41 @@ FEFindElement::FEFindElement(FEMeshBase& mesh) : m_mesh(mesh)
 		// do a quick bounding box test
 		vec3f r0 = mesh.Node(e.m_node[0]).m_r0;
 		vec3f r1 = r0;
+		BOUNDINGBOX box(r0, r1);
 		for (int j = 1; j<ne; ++j)
 		{
 			vec3f& rj = mesh.Node(e.m_node[j]).m_r0;
-			if (rj.x < r0.x) r0.x = rj.x;
-			if (rj.y < r0.y) r0.y = rj.y;
-			if (rj.z < r0.z) r0.z = rj.z;
-			if (rj.x > r1.x) r1.x = rj.x;
-			if (rj.y > r1.y) r1.y = rj.y;
-			if (rj.z > r1.z) r1.z = rj.z;
+			box += rj;
 		}
+		float R = box.GetMaxExtent();
+		box.Inflate(R*0.001f);
 
-		float dx = fabs(r0.x - r1.x);
-		float dy = fabs(r0.y - r1.y);
-		float dz = fabs(r0.z - r1.z);
-
-		float R = dx;
-		if (dy > R) R = dy;
-		if (dz > R) R = dz;
-		float eps = R*0.001f;
-
-		r0.x -= eps;
-		r0.y -= eps;
-		r0.z -= eps;
-
-		r1.x += eps;
-		r1.y += eps;
-		r1.z += eps;
-
-		BOUNDINGBOX& box = m_box[i];
-		box = BOUNDINGBOX(r0, r1);
+		// add it to the octree
+		m_bound.Add(box, i);
 	}
 }
 
 bool FEFindElement::FindInReferenceFrame(const vec3f& x, int& nelem, double r[3])
 {
 	vec3f y[FEGenericElement::MAX_NODES];
-	int NE = m_mesh.Elements();
+	BOX* b = m_bound.Find(x);
+	if (b == 0) return false;
+	assert(b->m_level == 0);
+
+	int NE = (int)b->m_child.size();
 	for (int i = 0; i<NE; ++i)
 	{
-		FEElement& e = m_mesh.Element(i);
+		BOX* c = b->m_child[i];
+		assert(c->m_level == -1);
+
+		int nid = c->m_elem; assert(nid >= 0);
+
+		FEElement& e = m_mesh.Element(nid);
 		int ne = e.Nodes();
-		nelem = i;
+		nelem = nid;
 
 		// do a quick bounding box test
-		BOUNDINGBOX& box = m_box[i];
-		if (box.IsInside(x))
+		if (c->m_box.IsInside(x))
 		{
 			// do a more complete search
 			if (ProjectInsideReferenceElement(m_mesh, e, x, r)) return true;

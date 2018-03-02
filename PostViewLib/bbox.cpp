@@ -89,7 +89,7 @@ void BOUNDINGBOX::Range(vec3f& n, vec3f& r0, vec3f& r1)
 }
 
 //-----------------------------------------------------------------------------
-void BOUNDINGBOX::operator +=(vec3f r)
+void BOUNDINGBOX::operator +=(const vec3f& r)
 {
 	if (bvalid == false)
 	{
@@ -118,4 +118,54 @@ void BOUNDINGBOX::InflateTo(float fx, float fy, float fz)
 		y0 = (yc - fy)*0.5f; y1 = (yc + fy)*0.5f;
 		z0 = (zc - fz)*0.5f; z1 = (zc + fz)*0.5f;
 	}
+}
+
+//-----------------------------------------------------------------------------
+void BOUNDINGBOX::Inflate(float fx, float fy, float fz)
+{
+	if (bvalid)
+	{
+		x0 -= fx; x1 += fx;
+		y0 -= fy; y1 += fy;
+		z0 -= fz; z1 += fz;
+	}
+}
+
+//-----------------------------------------------------------------------------
+void BOUNDINGBOX::Inflate(float f)
+{
+	if (bvalid)
+	{
+		x0 -= f; x1 += f;
+		y0 -= f; y1 += f;
+		z0 -= f; z1 += f;
+	}
+}
+
+//-----------------------------------------------------------------------------
+vec3f BOUNDINGBOX::r0() const
+{
+	return vec3f(x0, y0, z0);
+}
+
+//-----------------------------------------------------------------------------
+vec3f BOUNDINGBOX::r1() const
+{
+	return vec3f(x1, y1, z1);
+}
+
+//-----------------------------------------------------------------------------
+// see if this box intersects another box
+bool BOUNDINGBOX::IsInside(BOUNDINGBOX& b)
+{
+	if (IsInside(b.x0, b.y0, b.z0)) return true;
+	if (IsInside(b.x1, b.y0, b.z0)) return true;
+	if (IsInside(b.x1, b.y1, b.z0)) return true;
+	if (IsInside(b.x0, b.y1, b.z0)) return true;
+	if (IsInside(b.x0, b.y0, b.z1)) return true;
+	if (IsInside(b.x1, b.y0, b.z1)) return true;
+	if (IsInside(b.x1, b.y1, b.z1)) return true;
+	if (IsInside(b.x0, b.y1, b.z1)) return true;
+
+	return false;
 }

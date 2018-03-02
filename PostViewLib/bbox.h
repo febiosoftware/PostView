@@ -42,13 +42,23 @@ public:
 	void Range(vec3f& n, vec3f& r0, vec3f& r1);
 
 	// add a point to the box
-	void operator += (vec3f r);
+	void operator += (const vec3f& r);
 
 	// inflate the box
 	void InflateTo(float fx, float fy, float fz);
+	void Inflate(float fx, float fy, float fz);
+	void Inflate(float f);
 
 	// is a point inside or not
 	bool IsInside(const vec3f& r);
+	bool IsInside(float x, float y, float z);
+
+	// see if this box intersects another box
+	bool IsInside(BOUNDINGBOX& b);
+
+	// get the coordinates of the box
+	vec3f r0() const;
+	vec3f r1() const;
 };
 
 
@@ -57,4 +67,11 @@ inline bool BOUNDINGBOX::IsInside(const vec3f& r)
 	return	(r.x >= x0) && (r.x <= x1) &&
 			(r.y >= y0) && (r.y <= y1) &&
 			(r.z >= z0) && (r.z <= z1);
+}
+
+inline bool BOUNDINGBOX::IsInside(float x, float y, float z)
+{
+	return	(x >= x0) && (x <= x1) &&
+			(y >= y0) && (y <= y1) &&
+			(z >= z0) && (z <= z1);
 }
