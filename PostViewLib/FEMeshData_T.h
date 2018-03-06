@@ -268,7 +268,7 @@ public:
 		m_data.resize(NE*nsize, 0.f);
 	}
 
-	bool active(int n) { return (m_elem[n] >= 0); }
+	bool active(int n) { return (m_elem.empty() == false) && (m_elem[n] >= 0); }
 
 	float eval(int n, int comp) 
 	{ 
@@ -300,7 +300,7 @@ public:
 		m_data.resize(NE*nsize*3, 0.f);
 	}
 
-	bool active(int n) { return (m_elem[n] >= 0); }
+	bool active(int n) { return (m_elem.empty() == false) && (m_elem[n] >= 0); }
 
 	// evaluate the field for an element
 	// n = element index
@@ -355,7 +355,7 @@ public:
 	void eval(int n, T* pv) { assert(m_elem[n] >= 0); (*pv) = m_data[m_elem[n]]; }
 	void set(int n, const T& v) { assert(m_elem[n] >= 0); m_data[m_elem[n]] = v; }
 	void copy(FEElementData<T, DATA_ITEM>& d) { m_data = d.m_data; }
-	bool active(int n) { return (m_elem[n] >= 0); }
+	bool active(int n) { return (m_elem.empty() == false) && (m_elem[n] >= 0); }
 	void add(int n, const T& v)
 	{ 
 		int m = m_elem[n]; 
@@ -385,7 +385,7 @@ public:
 	}
 	void eval(int n, T* pv) { assert(m_elem[n] >= 0); (*pv) = m_data[m_elem[n]]; }
 	void copy(FEElementData<T, DATA_REGION>& d) { m_data = d.m_data; }
-	bool active(int n) { return (m_elem[n] >= 0); }
+	bool active(int n) { return (m_elem.empty() == false) && (m_elem[n] >= 0); }
 	void add(vector<int>& item, const T& v) 
 	{ 
 		int m = (int) m_data.size(); 
@@ -427,7 +427,7 @@ public:
 		int m = m_elem[2*i+1];
 		for (int j=0; j<m; ++j) pv[j] = m_data[n + j];
 	}
-	bool active(int n) { return (m_elem[2*n+1] > 0); }
+	bool active(int n) { return (m_elem.empty() == false) && (m_elem[2 * n + 1] > 0); }
 	void copy(FEElementData<T,DATA_COMP>& d) { m_data = d.m_data; }
 	void add(int n, int m, T* d) 
 	{ 
@@ -466,7 +466,7 @@ public:
 		int m = m_elem[2*i+1];	// size of elem data (should be nr. of nodes)
 		for (int j=0; j<m; ++j) pv[j] = m_data[ m_indx[n + j] ];
 	}
-	bool active(int n) { return (m_elem[2*n] >= 0); }
+	bool active(int n) { return (m_elem.empty() == false) && (m_elem[2 * n] >= 0); }
 	void copy(FEElementData<T,DATA_NODE>& d) { m_data = d.m_data; m_indx = d.m_indx; }
 	void add(vector<T>& d, vector<int>& e, vector<int>& l, int ne) 
 	{ 
