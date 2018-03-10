@@ -1508,7 +1508,74 @@ void CGLView::ZoomRect(MyPoint p0, MyPoint p1)
 }
 
 //-----------------------------------------------------------------------------
+bool FaceInsideClipRegion(const FEFace& face, const FEMeshBase& mesh)
+{
+	int nf = face.Nodes();
+	for (int i = 0; i<nf; ++i)
+	{
+		vec3f ri = mesh.Node(face.node[i]).m_rt;
+		if (CGLPlaneCutPlot::IsInsideClipRegion(ri)) return true;
+	}
+	return false;
+}
 
+//-----------------------------------------------------------------------------
+bool ElementInsideClipRegion(const FEElement& elem, const FEMeshBase& mesh)
+{
+	int ne = elem.Nodes();
+	for (int i = 0; i<ne; ++i)
+	{
+		vec3f ri = mesh.Node(elem.m_node[i]).m_rt;
+		if (CGLPlaneCutPlot::IsInsideClipRegion(ri)) return true;
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+bool CGLView::FindFaceIntersection(const Ray& ray, const FEMeshBase& mesh, Intersection& q)
+{
+	int faces = mesh.Faces();
+	vec3f rmin;
+	double gmin = 1e99;
+	bool b = false;
+
+	q.m_index = -1;
+	Intersection tmp;
+	for (int i = 0; i<faces; ++i)
+	{
+		const FEFace& face = mesh.Face(i);
+		if (face.IsVisible())
+		{
+			bool bfound = ::FindFaceIntersection(ray, mesh, face, tmp);
+			if (bfound)
+			{
+				// make sure all nodes are inside the clipping region
+				bool b = FaceInsideClipRegion(face, mesh);
+
+				if (b)
+				{
+					// signed distance
+					float distance = ray.direction*(tmp.point - ray.origin);
+
+					if ((distance > 0.f) && (distance < gmin))
+					{
+						gmin = distance;
+						rmin = q.point;
+						b = true;
+						q.m_index = i;
+						q.point = tmp.point;
+						q.r[0] = tmp.r[0];
+						q.r[1] = tmp.r[1];
+					}
+				}
+			}
+		}
+	}
+
+	return b;
+}
+
+//-----------------------------------------------------------------------------
 void CGLView::SelectFaces(int x0, int y0, int mode)
 {
 	// Make sure we have a valid model
@@ -1644,7 +1711,7 @@ void CGLView::RegionSelectElements(const SelectRegion& region, int mode)
 				}
 			}
 
-			if (binside)
+			if (binside && ElementInsideClipRegion(el, *pm))
 			{
 				if (mode == SELECT_ADD) el.Select(); else el.Unselect();
 			}
@@ -1684,7 +1751,7 @@ void CGLView::RegionSelectFaces(const SelectRegion& region, int mode)
 		FEFace& face = pm->Face(i);
 		if (face.IsVisible() && (face.m_ntag == 0))
 		{
-			if (regionFaceIntersect(transform, region, face, pm, m_dpr))
+			if (regionFaceIntersect(transform, region, face, pm, m_dpr) && FaceInsideClipRegion(face, *pm))
 			{
 				if (mode == SELECT_ADD) face.Select(); else face.Unselect();
 			}
@@ -1733,7 +1800,7 @@ void CGLView::RegionSelectNodes(const SelectRegion& region, int mode)
 		{
 			vec3f p = transform.Apply(node.m_rt);
 
-			if (region.IsInside((int) p.x / m_dpr, (int) p.y / m_dpr))
+			if (region.IsInside((int) p.x / m_dpr, (int) p.y / m_dpr) && CGLPlaneCutPlot::IsInsideClipRegion(node.m_rt))
 			{
 				if (mode == SELECT_ADD) node.Select(); else node.Unselect();
 			}
@@ -1785,7 +1852,7 @@ void CGLView::RegionSelectEdges(const SelectRegion& region, int mode)
 			int x1 = (int) p1.x / m_dpr;
 			int y1 = (int) p1.y / m_dpr;
 
-			if (region.LineIntersects(x0, y0, x1, y1))
+			if (region.LineIntersects(x0, y0, x1, y1) && CGLPlaneCutPlot::IsInsideClipRegion(r0) && CGLPlaneCutPlot::IsInsideClipRegion(r1))
 			{
 				if (mode == SELECT_ADD) edge.Select(); else edge.Unselect();
 			}
@@ -1796,6 +1863,134 @@ void CGLView::RegionSelectEdges(const SelectRegion& region, int mode)
 	m_wnd->UpdateStatusMessage();
 
 	mdl.UpdateSelectionLists(SELECT_EDGES);
+}
+
+//-----------------------------------------------------------------------------
+bool CGLView::FindElementIntersection(const Ray& ray, const FEMeshBase& mesh, Intersection& q)
+{
+	vec3f rn[10];
+
+	int elems = mesh.Elements();
+	vec3f r, rmin;
+	double gmin = 1e99;
+	bool b = false;
+
+	FEFace face;
+	q.m_index = -1;
+	Intersection tmp;
+	for (int i = 0; i<elems; ++i)
+	{
+		const FEElement& elem = mesh.Element(i);
+		if (elem.IsVisible())
+		{
+			// solid elements
+			int NF = elem.Faces();
+			for (int j = 0; j<NF; ++j)
+			{
+				bool bfound = false;
+				elem.GetFace(j, face);
+				switch (face.m_ntype)
+				{
+				case FACE_QUAD4:
+				case FACE_QUAD8:
+				case FACE_QUAD9:
+				{
+					rn[0] = mesh.Node(face.node[0]).m_rt;
+					rn[1] = mesh.Node(face.node[1]).m_rt;
+					rn[2] = mesh.Node(face.node[2]).m_rt;
+					rn[3] = mesh.Node(face.node[3]).m_rt;
+
+					Quad quad = { rn[0], rn[1], rn[2], rn[3] };
+					bfound = FastIntersectQuad(ray, quad, tmp);
+				}
+				break;
+				case FACE_TRI3:
+				case FACE_TRI6:
+				case FACE_TRI7:
+				case FACE_TRI10:
+				{
+					rn[0] = mesh.Node(face.node[0]).m_rt;
+					rn[1] = mesh.Node(face.node[1]).m_rt;
+					rn[2] = mesh.Node(face.node[2]).m_rt;
+
+					Triangle tri = { rn[0], rn[1], rn[2] };
+					bfound = IntersectTriangle(ray, tri, tmp);
+				}
+				break;
+				default:
+					assert(false);
+				}
+
+				if (bfound)
+				{
+					if (ElementInsideClipRegion(elem, mesh))
+					{
+						// signed distance
+						float distance = ray.direction*(tmp.point - ray.origin);
+
+						if ((distance > 0.f) && (distance < gmin))
+						{
+							gmin = distance;
+							rmin = q.point;
+							b = true;
+							q.m_index = i;
+							q.point = tmp.point;
+							q.r[0] = tmp.r[0];
+							q.r[1] = tmp.r[1];
+						}
+					}
+				}
+			}
+
+			// shell elements
+			int NE = elem.Edges();
+			if (NE > 0)
+			{
+				bool bfound = false;
+				if (elem.Nodes() == 4)
+				{
+					rn[0] = mesh.Node(elem.m_node[0]).m_rt;
+					rn[1] = mesh.Node(elem.m_node[1]).m_rt;
+					rn[2] = mesh.Node(elem.m_node[2]).m_rt;
+					rn[3] = mesh.Node(elem.m_node[3]).m_rt;
+
+					Quad quad = { rn[0], rn[1], rn[2], rn[3] };
+					bfound = IntersectQuad(ray, quad, tmp);
+				}
+				else
+				{
+					rn[0] = mesh.Node(elem.m_node[0]).m_rt;
+					rn[1] = mesh.Node(elem.m_node[1]).m_rt;
+					rn[2] = mesh.Node(elem.m_node[2]).m_rt;
+
+					Triangle tri = { rn[0], rn[1], rn[2] };
+					bfound = IntersectTriangle(ray, tri, tmp);
+				}
+
+				if (bfound)
+				{
+					if (ElementInsideClipRegion(elem, mesh))
+					{
+						// signed distance
+						float distance = ray.direction*(tmp.point - ray.origin);
+
+						if ((distance > 0.f) && (distance < gmin))
+						{
+							gmin = distance;
+							rmin = q.point;
+							b = true;
+							q.m_index = i;
+							q.point = tmp.point;
+							q.r[0] = tmp.r[0];
+							q.r[1] = tmp.r[1];
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return b;
 }
 
 //-----------------------------------------------------------------------------
@@ -2117,7 +2312,7 @@ void CGLView::SelectNodes(int x0, int y0, int mode)
 		{
 			vec3f p = transform.Apply(node.m_rt);
 
-			if (box.IsInside((int)p.x / m_dpr, (int)p.y / m_dpr))
+			if (box.IsInside((int)p.x / m_dpr, (int)p.y / m_dpr) && CGLPlaneCutPlot::IsInsideClipRegion(node.m_rt))
 			{
 				if ((nindex == -1) || (p.z < zmin))
 				{
@@ -2192,7 +2387,8 @@ void CGLView::SelectEdges(int x0, int y0, int mode)
 		vec3f p0 = transform.Apply(r0);
 		vec3f p1 = transform.Apply(r1);
 
-		if (intersectsRect(QPoint((int)p0.x, (int)p0.y), QPoint((int)p1.x, (int)p1.y), rt))
+		if (intersectsRect(QPoint((int)p0.x, (int)p0.y), QPoint((int)p1.x, (int)p1.y), rt) &&
+			(CGLPlaneCutPlot::IsInsideClipRegion(r0) || CGLPlaneCutPlot::IsInsideClipRegion(r1)))
 		{
 			if ((index == -1) || (p0.z < zmin))
 			{
@@ -2636,6 +2832,16 @@ void CGLView::OnZoomSelect()
 
 	if (box.IsValid())
 	{
+		if (box.Radius() < 1e-8f)
+		{
+			float L = 1.f;
+			BOUNDINGBOX bb = pdoc->GetBoundingBox();
+			float R = bb.GetMaxExtent();
+			if (R < 1e-8f) L = 1.f; else L = 0.05f*R;
+
+			box.InflateTo(L, L, L);
+		}
+
 		CGLCamera* pcam = &GetCamera();
 		pcam->SetTarget(box.Center());
 		pcam->SetTargetDistance(3.f*box.Radius());

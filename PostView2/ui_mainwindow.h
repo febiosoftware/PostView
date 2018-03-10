@@ -267,7 +267,7 @@ public:
 		selectFaces->setWhatsThis("Turn on face selection mode");
 		selectElems->setWhatsThis("Turn on element selection mode");
 		
-		QAction* actionZoomSelected = addAction("Zoom selected", "actionZoomSelected", ":/icons/zoom_selected.png"); 
+		QAction* actionZoomSelected = addAction("Zoom selected", "actionZoomSelected", ":/icons/zoom_selected.png"); actionZoomSelected->setShortcut(Qt::Key_S);
 		QAction* actionZoomExtents  = addAction("Zoom extents" , "actionZoomExtents" , ":/icons/zoom_extents.png");
 
 		actionZoomSelected->setWhatsThis("Click this to zoom in on the current selection.\nIf nothing selected this will zoom to the entire model");

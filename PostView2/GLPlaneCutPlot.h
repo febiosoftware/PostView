@@ -24,6 +24,7 @@ class CGLPlaneCutPlot : public CGLPlot
 			vec3f	norm;
 			vec3f	r[3];
 			float	tex[3];
+			bool	bactive;
 		};
 
 		struct EDGE
@@ -72,6 +73,7 @@ public:
 	void GetNormalizedEquations(double a[4]);
 	vec3f GetPlaneNormal();
 	float GetPlaneOffset();
+	float GetPlaneReference() const { return m_ref; }
 
 	void Render(CGLContext& rc);
 	void RenderPlane();
@@ -95,8 +97,12 @@ protected:
 
 	void ReleasePlane();
 	static int GetFreePlane();
-
 	void UpdateSlice();
+
+public:
+	static int ClipPlanes();
+	static CGLPlaneCutPlot* GetClipPlane(int i);
+	static bool IsInsideClipRegion(const vec3f& r);
 
 public:
 	bool	m_bshowplane;	// show the plane or not
@@ -121,7 +127,8 @@ protected:
 	GLSlice	m_slice;
 
 	int		m_nclip;			// clip plane number
-	static	vector<int>	m_clip;	// avaialbe clip planes
+	static	vector<int>	m_clip;	// avaialabe clip planes
+	static	vector<CGLPlaneCutPlot*>	m_pcp;
 };
 
 #endif // !defined(AFX_GLPLANECUTPLOT_H__54EFA62A_204A_4739_A28C_25E120219FE9__INCLUDED_)

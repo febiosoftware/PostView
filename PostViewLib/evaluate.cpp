@@ -232,9 +232,11 @@ void FEModel::EvalNodeField(int ntime, int nfield)
 		ELEMDATA& d = state.m_ELEM[i];
 		d.m_val = 0.f;
 		d.m_ntag = 0;
+		e.Deactivate();
 		if (e.IsEnabled())
 		{
 			d.m_ntag = 1;
+			e.Activate();
 			for (j=0; j<e.Nodes(); ++j) { float val = state.m_NODE[e.m_node[j]].m_val; elemData.value(i,j) = val; d.m_val += val; }
 			d.m_val /= (float) e.Nodes();
 		}
@@ -351,6 +353,8 @@ void FEModel::EvalFaceField(int ntime, int nfield)
 	// Face data is not projected onto the elements
 	for (int i=0; i<mesh->Elements(); ++i) 
 	{
+		FEElement& el = mesh->Element(i);
+		el.Deactivate();
 		state.m_ELEM[i].m_val = 0.f;
 		state.m_ELEM[i].m_ntag = 0;
 	}
@@ -376,12 +380,14 @@ void FEModel::EvalElemField(int ntime, int nfield)
 		FEElement& el = mesh->Element(i);
 		state.m_ELEM[i].m_val = 0.f;
 		state.m_ELEM[i].m_ntag = 0;
+		el.Deactivate();
 		if (el.IsEnabled()) 
 		{
 			if (EvaluateElement(i, ntime, nfield, data, val))
 			{
 				state.m_ELEM[i].m_ntag = 1;
 				state.m_ELEM[i].m_val = val;
+				el.Activate();
 				int ne = el.Nodes();
 				for (int j=0; j<ne; ++j) state.m_ElemData.value(i, j) = data[j];
 			}

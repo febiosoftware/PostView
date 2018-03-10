@@ -169,6 +169,9 @@ public:
 	void PauseAnimation();
 	void SetVideoFormat(GLenum fmt) { m_video_fmt = fmt; }
 
+	bool FindFaceIntersection(const Ray& ray, const FEMeshBase& mesh, Intersection& q);
+	bool FindElementIntersection(const Ray& ray, const FEMeshBase& mesh, Intersection& q);
+
 protected:
 	void initializeGL();
 	void resizeGL(int w, int h);

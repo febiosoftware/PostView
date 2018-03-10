@@ -77,6 +77,7 @@ private:
 //////////////////////////////////////////////////////////////////////
 
 vector<int> CGLPlaneCutPlot::m_clip;
+vector<CGLPlaneCutPlot*> CGLPlaneCutPlot::m_pcp;
 
 
 CGLPlaneCutPlot::CGLPlaneCutPlot(CGLModel* po) : CGLPlot(po)
@@ -98,6 +99,7 @@ CGLPlaneCutPlot::CGLPlaneCutPlot(CGLModel* po) : CGLPlot(po)
 	m_bshow_mesh = false;
 
 	m_nclip = GetFreePlane();
+	if (m_nclip >= 0) m_pcp[m_nclip] = this;
 }
 
 CGLPlaneCutPlot::~CGLPlaneCutPlot()
@@ -135,6 +137,7 @@ void CGLPlaneCutPlot::InitClipPlanes()
 		glGetIntegerv(GL_MAX_CLIP_PLANES, &N);
 		assert(N);
 		m_clip.assign(N, 0);
+		m_pcp.assign(N, 0);
 	}
 }
 
@@ -266,12 +269,12 @@ void CGLPlaneCutPlot::RenderSlice()
 				m_pObj->SetMaterialParams(pmat);
 			}
 
-			// repeat over all faces
+			// repeat over all active faces
 			int NF = m_slice.Faces();
 			for (int i=0; i<NF; ++i)
 			{
 				GLSlice::FACE& face = m_slice.Face(i);
-				if (face.mat == n)
+				if ((face.mat == n) && (face.bactive))
 				{
 					vec3f& norm = face.norm;
 					glNormal3f(norm.x,norm.y,norm.z);
@@ -284,6 +287,29 @@ void CGLPlaneCutPlot::RenderSlice()
 						glTexCoord1f(tex[0]); glVertex3f(r[0].x, r[0].y, r[0].z);
 						glTexCoord1f(tex[1]); glVertex3f(r[1].x, r[1].y, r[1].z);
 						glTexCoord1f(tex[2]); glVertex3f(r[2].x, r[2].y, r[2].z);
+					}
+					glEnd();
+				}
+			}
+
+			// render inactive faces
+			glDisable(GL_TEXTURE_1D);
+			for (int i = 0; i<NF; ++i)
+			{
+				GLSlice::FACE& face = m_slice.Face(i);
+				if ((face.mat == n) && (!face.bactive))
+				{
+					vec3f& norm = face.norm;
+					glNormal3f(norm.x, norm.y, norm.z);
+
+					// render the face
+					vec3f* r = face.r;
+					float* tex = face.tex;
+					glBegin(GL_TRIANGLES);
+					{
+						glVertex3f(r[0].x, r[0].y, r[0].z);
+						glVertex3f(r[1].x, r[1].y, r[1].z);
+						glVertex3f(r[2].x, r[2].y, r[2].z);
 					}
 					glEnd();
 				}
@@ -612,6 +638,7 @@ void CGLPlaneCutPlot::UpdateSlice()
 								face.tex[0] = tex[0];
 								face.tex[1] = tex[1];
 								face.tex[2] = tex[2];
+								face.bactive = el.IsActive();
 
 								m_slice.AddFace(face);
 
@@ -851,6 +878,7 @@ void CGLPlaneCutPlot::Activate(bool bact)
 		if (bact)
 		{
 			m_nclip = GetFreePlane();
+			if (m_nclip >= 0) m_pcp[m_nclip] = this;
 		}
 		else
 		{
@@ -884,6 +912,39 @@ int CGLPlaneCutPlot::GetFreePlane()
 
 void CGLPlaneCutPlot::ReleasePlane()
 {
-	if ((m_clip.size() > 0) && (m_nclip != -1)) m_clip[m_nclip] = 0;
+	if ((m_clip.size() > 0) && (m_nclip != -1)) 
+	{
+		m_clip[m_nclip] = 0;
+		m_pcp[m_nclip] = 0;
+	}
 	m_nclip = -1;
+}
+
+int CGLPlaneCutPlot::ClipPlanes()
+{
+	return m_pcp.size();
+}
+
+CGLPlaneCutPlot* CGLPlaneCutPlot::GetClipPlane(int i)
+{
+	return m_pcp[i];
+}
+
+bool CGLPlaneCutPlot::IsInsideClipRegion(const vec3f& r)
+{
+	int N = CGLPlaneCutPlot::ClipPlanes();
+	for (int i = 0; i<N; ++i)
+	{
+		CGLPlaneCutPlot* pcp = CGLPlaneCutPlot::GetClipPlane(i);
+		if (pcp && pcp->IsActive())
+		{
+			double a[4];
+			pcp->GetNormalizedEquations(a);
+			a[3] = pcp->GetPlaneReference();
+
+			double q = a[0] * r.x + a[1] * r.y + a[2] * r.z - a[3];
+			if (q < 0) return false;
+		}
+	}
+	return true;
 }

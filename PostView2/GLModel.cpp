@@ -947,7 +947,7 @@ void CGLModel::RenderSolidMaterial(FEModel* ps, int m)
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	// render the internal surfaces
-	if (mode == SELECT_ELEMS)
+	if (mode != SELECT_FACES)
 	{
 		if (btex) glColor3ub(255,255,255);
 		GLSurface& surf = *m_innerSurface[m];
@@ -1313,12 +1313,16 @@ void CGLModel::RenderMeshLines(FEModel* ps, int nmat)
 		}
 	}
 
-	// draw elements
-	GLSurface& inSurf = *m_innerSurface[nmat];
-	for (int i=0; i<inSurf.Faces(); ++i)
+	int mode = GetSelectionMode();
+	if (mode != SELECT_FACES)
 	{
-		FEFace& facet = inSurf.Face(i);
-		RenderFaceOutline(facet, pm, ndivs);
+		// draw elements
+		GLSurface& inSurf = *m_innerSurface[nmat];
+		for (int i=0; i<inSurf.Faces(); ++i)
+		{
+			FEFace& facet = inSurf.Face(i);
+			RenderFaceOutline(facet, pm, ndivs);
+		}
 	}
 }
 
@@ -3336,11 +3340,11 @@ void CGLModel::UpdateInternalSurfaces()
 		for (int i=0; i<NE; ++i)
 		{
 			FEElement& el = dom.Element(i);
-			if (el.IsVisible() && !el.IsSelected())
+			if (el.IsVisible())
 			{
 				for (int j=0; j<el.Faces(); ++j)
 				{
-					if (el.m_pElem[j] && (el.m_pElem[j]->IsSelected() || !el.m_pElem[j]->IsVisible()))
+					if (el.m_pElem[j] && ((el.m_pElem[j]->IsSelected() != el.IsSelected()) || !el.m_pElem[j]->IsVisible()))
 					{
 						el.GetFace(j, face);
 						face.m_elem[0] = i; // store the element ID. This is used for selection ???
