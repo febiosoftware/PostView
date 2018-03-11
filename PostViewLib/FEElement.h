@@ -326,6 +326,7 @@ public:
 	int			m_lid;		// local ID (zero-based index into element array)
 	int			m_MatID;	// material id
 	int*		m_node;		// array of nodes ID
+	float		m_tex;		// element texture coordinate
 
 	FEElement*	m_pElem[6];		// array of pointers to neighbour elements
 

@@ -93,6 +93,20 @@ FEMeshBase* CGLModel::GetActiveMesh()
 }
 
 //-----------------------------------------------------------------------------
+void CGLModel::ResetAllStates()
+{
+	FEModel* fem = GetFEModel();
+	if ((fem == 0) || (fem->GetStates() == 0)) return;
+
+	int N = fem->GetStates();
+	for (int i=0; i<N; ++i)
+	{
+		FEState* ps = fem->GetState(i);
+		ps->m_nField = -1;
+	}
+}
+
+//-----------------------------------------------------------------------------
 float CGLModel::GetTimeValue(int ntime)
 { 
 	FEModel* pfem = GetFEModel();
@@ -818,15 +832,8 @@ void CGLModel::RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m)
 	// reset the polygon mode
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-	// render the internal surfaces
-	GLSurface& surf = *m_innerSurface[m];
-	int nid = -1;
-	for (i=0; i<surf.Faces(); ++i)
-	{
-		FEFace& face = surf.Face(i);
-		if (face.m_nId != nid) nid = face.m_nId;
-		RenderTexFace(face, pm);
-	}
+	// render the internal faces
+	RenderInnerSurface(m, bnode);
 
 	if (pmat->benable && m_pcol->IsActive())
 	{
@@ -834,6 +841,33 @@ void CGLModel::RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m)
 	}
 
 	glPopAttrib();
+}
+
+//-----------------------------------------------------------------------------
+void CGLModel::RenderInnerSurface(int m, bool bnode)
+{
+	bool old_smooth = m_bsmooth;
+	m_bsmooth = false;
+	FEMeshBase* pm = GetActiveMesh();
+	GLSurface& surf = *m_innerSurface[m];
+	for (int i = 0; i<surf.Faces(); ++i)
+	{
+		FEFace& face = surf.Face(i);
+		RenderFace(face, pm, 1, bnode);
+	}
+	m_bsmooth = old_smooth;
+}
+
+//-----------------------------------------------------------------------------
+void CGLModel::RenderInnerSurfaceOutline(int m, int ndivs)
+{
+	FEMeshBase* pm = GetActiveMesh();
+	GLSurface& inSurf = *m_innerSurface[m];
+	for (int i = 0; i<inSurf.Faces(); ++i)
+	{
+		FEFace& facet = inSurf.Face(i);
+		RenderFaceOutline(facet, pm, ndivs);
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -950,12 +984,7 @@ void CGLModel::RenderSolidMaterial(FEModel* ps, int m)
 	if (mode != SELECT_FACES)
 	{
 		if (btex) glColor3ub(255,255,255);
-		GLSurface& surf = *m_innerSurface[m];
-		for (i=0; i<surf.Faces(); ++i)
-		{
-			FEFace& face = surf.Face(i);
-			RenderTexFace(face, pm);
-		}
+		RenderInnerSurface(m, bnode);
 	}
 
 	if (pmat->benable && m_pcol->IsActive())
@@ -1317,12 +1346,7 @@ void CGLModel::RenderMeshLines(FEModel* ps, int nmat)
 	if (mode != SELECT_FACES)
 	{
 		// draw elements
-		GLSurface& inSurf = *m_innerSurface[nmat];
-		for (int i=0; i<inSurf.Faces(); ++i)
-		{
-			FEFace& facet = inSurf.Face(i);
-			RenderFaceOutline(facet, pm, ndivs);
-		}
+		RenderInnerSurfaceOutline(nmat, ndivs);
 	}
 }
 
@@ -2661,42 +2685,19 @@ void CGLModel::ShowMaterial(int nmat)
 
 //-----------------------------------------------------------------------------
 // Enable elements with a certain mat ID
-void CGLModel::EnableMaterial(int nmat)
+void CGLModel::UpdateMeshState()
 {
 	FEMeshBase& mesh = *GetActiveMesh();
+	FEModel& fem = *GetFEModel();
 
 	// update the elements
-	for (int i=0; i<mesh.Elements(); ++i) if (mesh.Element(i).m_MatID == nmat) mesh.Element(i).Enable();
-
-	// now we update the nodes
-	for (int i=0; i<mesh.Nodes(); ++i) mesh.Node(i).Disable();
 	for (int i=0; i<mesh.Elements(); ++i)
 	{
 		FEElement& el = mesh.Element(i);
-		if (el.IsEnabled())
-		{
-			int n = el.Nodes();
-			for (int j=0; j<n; ++j) mesh.Node(el.m_node[j]).Enable();
-		}
+		int nmat = el.m_MatID;
+		if (fem.GetMaterial(nmat)->enabled()) el.Enable();
+		else el.Disable();
 	}
-
-	// enable the faces
-	for (int i=0; i<mesh.Faces(); ++i) 
-	{
-		FEFace& f = mesh.Face(i);
-		f.Disable();
-		if (mesh.Element(f.m_elem[0]).IsEnabled()) f.Enable();
-	}
-}
-
-//-----------------------------------------------------------------------------
-// Disable elements with a certain mat ID
-void CGLModel::DisableMaterial(int nmat)
-{
-	FEMeshBase& mesh = *GetActiveMesh();
-
-	// update the elements
-	for (int i=0; i<mesh.Elements(); ++i) if (mesh.Element(i).m_MatID == nmat) mesh.Element(i).Disable();
 
 	// now we update the nodes
 	for (int i=0; i<mesh.Nodes(); ++i) mesh.Node(i).Disable();
@@ -3349,12 +3350,25 @@ void CGLModel::UpdateInternalSurfaces()
 						el.GetFace(j, face);
 						face.m_elem[0] = i; // store the element ID. This is used for selection ???
 						face.m_elem[1] = el.m_pElem[j]->m_lid;
+
+						// calculate the face normals
+						vec3f& r0 = mesh.Node(face.node[0]).m_r0;
+						vec3f& r1 = mesh.Node(face.node[1]).m_r0;
+						vec3f& r2 = mesh.Node(face.node[2]).m_r0;
+
+						face.m_fn = (r1 - r0) ^ (r2 - r0);
+						face.m_fn.Normalize();
+						face.m_nsg = 0;
+
 						m_innerSurface[m]->add(face);
 					}
 				}
 			}
 		}
 	}
+
+	// reevaluate model
+	Update(false);
 }
 
 //-----------------------------------------------------------------------------

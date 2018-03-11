@@ -82,6 +82,14 @@ public:
 	//! get the active mesh
 	FEMeshBase* GetActiveMesh();
 
+	//! Reset all the states so any update will force the state to be evaluated
+	void ResetAllStates();
+
+public:
+	// return internal surfaces
+	int InternalSurfaces() { return (int) m_innerSurface.size(); }
+	GLSurface& InteralSurface(int i) { return *m_innerSurface[i]; }
+
 public:
 	bool ShowNormals() { return m_bnorm; }
 	void ShowNormals(bool b) { m_bnorm = b; }
@@ -146,6 +154,9 @@ protected:
 	void RenderSolidMaterial(FEModel* ps, int m);
 	void RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m);
 	void RenderFaceEdge(FEFace& face, int j, FEMeshBase* pm, int ndivs);
+
+	void RenderInnerSurface(int m, bool bnode);
+	void RenderInnerSurfaceOutline(int m, int ndivs);
 
 	void RenderSmoothQUAD4(FEFace& f, FEMeshBase* pm, int ndivs, bool bnode);
 	void RenderSmoothQUAD4(vec3f r[4], vec3f n[4], float t[4], int ndivs);
@@ -243,11 +254,8 @@ public: // Selection
 	//! show elements by material ID
 	void ShowMaterial(int nmat);
 
-	//! enable elements by material ID
-	void EnableMaterial(int nmat);
-
-	//! disable elements by material ID
-	void DisableMaterial(int nmat);
+	//! enable or disable mesh items based on material's state
+	void UpdateMeshState();
 
 	//! hide selected elements
 	void HideSelectedElements();

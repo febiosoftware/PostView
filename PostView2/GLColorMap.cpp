@@ -47,7 +47,6 @@ void CGLColorMap::SetEvalField(int n)
 }
 
 //-----------------------------------------------------------------------------
-
 void CGLColorMap::Update(int ntime, float dt, bool breset)
 {
 	// get the object
@@ -179,6 +178,59 @@ void CGLColorMap::Update(int ntime, float dt, bool breset)
 		{
 			for (int j = 0; j<face.Nodes(); ++j) face.m_tex[j] = 0;
 			face.m_texe = 0;
+		}
+	}
+
+	// update element textures
+	for (int i = 0; i<pm->Elements(); ++i)
+	{
+		FEElement& el = pm->Element(i);
+		ELEMDATA& d0 = s0.m_ELEM[i];
+		ELEMDATA& d1 = s1.m_ELEM[i];
+		if ((d0.m_ntag > 0) && (d1.m_ntag > 0))
+		{
+			float f0 = d0.m_val;
+			float f1 = d1.m_val;
+			float f = f0 + (f1 - f0)*w;
+			el.m_tex = (f - min) / (max - min);
+
+			el.Activate();
+		}
+		else el.Deactivate();
+	}
+
+	// update the internal surfaces of the model
+	int NS = po->InternalSurfaces();
+	for (int i=0; i<NS; ++i)
+	{
+		GLSurface& surf = po->InteralSurface(i);
+		int NF = surf.Faces();
+		for (int j=0; j<NF; ++j)
+		{
+			FEFace& face = surf.Face(j);
+			if (face.m_elem[0] == -1) face.Deactivate();
+			else
+			{
+				face.Activate();
+				int iel = face.m_elem[0];
+				
+				ELEMDATA& d0 = s0.m_ELEM[iel];
+				ELEMDATA& d1 = s1.m_ELEM[iel];
+
+				if ((d0.m_ntag == 0) || (d1.m_ntag == 0)) face.Deactivate();
+				else
+				{
+					float v0 = d0.m_val;
+					float v1 = d1.m_val;
+					float v = v0 + (v1 - v0)*w;
+
+					float tex = (v - min) / (max - min);
+
+					int nf = face.Nodes();
+					face.m_texe = tex;
+					for (int k=0; k<nf; ++k) face.m_tex[k] = tex;
+				}
+			}
 		}
 	}
 }

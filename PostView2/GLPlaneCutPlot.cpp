@@ -544,6 +544,9 @@ void CGLPlaneCutPlot::UpdateSlice()
 	FEModel* ps = m_pObj->GetFEModel();
 	FEMeshBase* pm = m_pObj->GetActiveMesh();
 
+	CGLColorMap& colorMap = *m_pObj->GetColorMap();
+	bool bnode = colorMap.DisplayNodalValues();
+
 	m_slice.Clear();
 
 	// loop over all domains
@@ -587,7 +590,7 @@ void CGLPlaneCutPlot::UpdateSlice()
 								nf[k] = (node.m_bext?1:0);
 								ex[k] = node.m_rt;
 								en[k] = el.m_node[k];
-								ev[k] = node.m_tex;
+								ev[k] = (bnode ? node.m_tex : el.m_tex);
 							}
 
 							// calculate the case of the element

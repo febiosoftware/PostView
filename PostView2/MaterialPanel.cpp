@@ -293,10 +293,11 @@ void CMaterialPanel::on_enableButton_toggled(bool b)
 
 		if (b) mat.enable();
 		else mat.disable();
-
-		mdl.EnableMaterial(nmat);
 	}
+	mdl.UpdateMeshState();
+	mdl.ResetAllStates();
 
+	mdl.Update(true);
 	UpdateStates();
 	m_wnd->RedrawGL();
 }
