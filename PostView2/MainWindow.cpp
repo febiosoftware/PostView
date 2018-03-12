@@ -905,15 +905,8 @@ void CMainWindow::on_actionUnhideAll_triggered()
 {
 	CDocument* pdoc = GetDocument();
 	if (pdoc->IsValid() == false) return;
-
-	FEModel& fem = *pdoc->GetFEModel();
-	FEMeshBase& mesh = *pdoc->GetActiveMesh();
-
-	for (int i=0; i<mesh.Elements(); ++i) mesh.Element(i).Unhide();
-	for (int i=0; i<mesh.Faces   (); ++i) mesh.Face   (i).Unhide();
-	for (int i=0; i<mesh.Edges   (); ++i) mesh.Edge   (i).Unhide();
-	for (int i=0; i<mesh.Nodes   (); ++i) mesh.Node   (i).Unhide();
-
+	CGLModel& mdl = *pdoc->GetGLModel();
+	mdl.UnhideAll();
 	pdoc->UpdateFEModel();
 	RedrawGL();
 }
@@ -929,6 +922,8 @@ void CMainWindow::on_actionSelectAll_triggered()
 		if (e.IsVisible()) e.Select();
 	}
 
+	CGLModel& mdl = *pdoc->GetGLModel();
+	mdl.UpdateSelectionLists();
 	UpdateStatusMessage();
 	pdoc->UpdateFEModel();
 	RedrawGL();
@@ -962,6 +957,8 @@ void CMainWindow::on_actionSelectRange_triggered()
 		case SELECT_ELEMS: pdoc->SelectElemsInRange(dlg.m_min, dlg.m_max, dlg.m_brange); break;
 		}
 		
+		CGLModel& mdl = *pdoc->GetGLModel();
+		mdl.UpdateSelectionLists();
 		UpdateStatusMessage();
 		pdoc->UpdateFEModel();
 		UpdateUi(false);

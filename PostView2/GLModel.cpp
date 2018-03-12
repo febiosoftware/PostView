@@ -2576,6 +2576,18 @@ void CGLModel::SelectElements(vector<int>& items, bool bclear)
 }
 
 //-----------------------------------------------------------------------------
+//! unhide all items
+void CGLModel::UnhideAll()
+{
+	FEMeshBase& mesh = *GetActiveMesh();
+	for (int i = 0; i<mesh.Elements(); ++i) mesh.Element(i).Unhide();
+	for (int i = 0; i<mesh.Faces(); ++i) mesh.Face(i).Unhide();
+	for (int i = 0; i<mesh.Edges(); ++i) mesh.Edge(i).Unhide();
+	for (int i = 0; i<mesh.Nodes(); ++i) mesh.Node(i).Unhide();
+	UpdateInternalSurfaces();
+}
+
+//-----------------------------------------------------------------------------
 // Clear all selection
 void CGLModel::ClearSelection()
 {
@@ -3348,7 +3360,7 @@ void CGLModel::UpdateInternalSurfaces()
 					if (el.m_pElem[j] && ((el.m_pElem[j]->IsSelected() != el.IsSelected()) || !el.m_pElem[j]->IsVisible()))
 					{
 						el.GetFace(j, face);
-						face.m_elem[0] = i; // store the element ID. This is used for selection ???
+						face.m_elem[0] = el.m_lid; // store the element ID. This is used for selection ???
 						face.m_elem[1] = el.m_pElem[j]->m_lid;
 
 						// calculate the face normals

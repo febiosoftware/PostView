@@ -225,6 +225,9 @@ public: // Selection
 	void SelectFaces(vector<int>& items, bool bclear);
 	void SelectElements(vector<int>& items, bool bclear);
 
+	//! unhide all items
+	void UnhideAll();
+
 	//! clear selection
 	void ClearSelection();
 
