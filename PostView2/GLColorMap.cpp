@@ -81,6 +81,22 @@ void CGLColorMap::Update(int ntime, float dt, bool breset)
 	ValArray& faceData1 = s1.m_FaceData;
 	if (IS_ELEM_FIELD(m_nfield) && (m_bDispNodeVals == false))
 	{
+		int NE = pm->Elements();
+		for (int i=0; i<NE; ++i)
+		{
+			FEElement& el = pm->Element(i);
+			ELEMDATA& d0 = s0.m_ELEM[i];
+			ELEMDATA& d1 = s1.m_ELEM[i];
+			if ((d0.m_ntag > 0) && (d1.m_ntag > 0))
+			{
+				float f0 = d0.m_val;
+				float f1 = d1.m_val;
+				float f = f0 + (f1 - f0)*w;
+				if (f > fmax) fmax = f;
+				if (f < fmin) fmin = f;
+			}			
+		}
+
 		int NF = pm->Faces();
 		for (int i = 0; i<NF; ++i)
 		{
@@ -97,8 +113,6 @@ void CGLColorMap::Update(int ntime, float dt, bool breset)
 					float f1 = (n0 == n1 ? f0 : faceData1.value(i, j));
 					float f = f0 + (f1 - f0)*w;
 					face.m_tex[j] = f;
-					if (f > fmax) fmax = f;
-					if (f < fmin) fmin = f;
 				}
 			}
 		}
