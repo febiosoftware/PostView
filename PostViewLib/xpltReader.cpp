@@ -256,7 +256,7 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 		case MAT3F  : pdm->AddDataField(new FEDataField_T<FENodeData<mat3f  > >(it.szname, EXPORT_DATA)); break;
 		case ARRAY  : 
 			{
-				FEArrayDataField* data = new FEArrayDataField(it.szname, CLASS_NODE, EXPORT_DATA);
+				FEArrayDataField* data = new FEArrayDataField(it.szname, CLASS_NODE, DATA_ITEM, EXPORT_DATA);
 				data->SetArraySize(it.arraySize);
 				data->SetArrayNames(it.arrayNames);
 				pdm->AddDataField(data);
@@ -286,6 +286,14 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 				case MAT3FD : pdm->AddDataField(new FEDataField_T<FEElementData<mat3fd ,DATA_NODE> >(it.szname, EXPORT_DATA)); break;
                 case TENS4FS: pdm->AddDataField(new FEDataField_T<FEElementData<tens4fs,DATA_NODE> >(it.szname, EXPORT_DATA)); break;
 				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEElementData<mat3f  ,DATA_NODE> >(it.szname, EXPORT_DATA)); break;
+				case ARRAY  :
+					{
+						FEArrayDataField* data = new FEArrayDataField(it.szname, CLASS_ELEM, DATA_NODE, EXPORT_DATA);
+						data->SetArraySize(it.arraySize);
+						data->SetArrayNames(it.arrayNames);
+						pdm->AddDataField(data);
+					}
+					break;
 				default:
 					assert(false);
 					return false;
@@ -304,7 +312,7 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 				case MAT3F  : pdm->AddDataField(new FEDataField_T<FEElementData<mat3f  ,DATA_ITEM> >(it.szname, EXPORT_DATA)); break;
 				case ARRAY  :
 					{
-						FEArrayDataField* data = new FEArrayDataField(it.szname, CLASS_ELEM, EXPORT_DATA);
+						FEArrayDataField* data = new FEArrayDataField(it.szname, CLASS_ELEM, DATA_ITEM, EXPORT_DATA);
 						data->SetArraySize(it.arraySize);
 						data->SetArrayNames(it.arrayNames);
 						pdm->AddDataField(data);
@@ -1403,7 +1411,7 @@ bool XpltReader::ReadElemData(FEModel &fem, FEState* pstate)
 						FEElemItemData& ed = dynamic_cast<FEElemItemData&>(pstate->m_Data[nfield]);
 						switch (it.nfmt)
 						{
-						case FMT_NODE: ReadElemData_NODE(mesh, dom, ed, it.ntype); break;
+						case FMT_NODE: ReadElemData_NODE(mesh, dom, ed, it.ntype, it.arraySize); break;
 						case FMT_ITEM: ReadElemData_ITEM(dom, ed, it.ntype, it.arraySize); break;
 						case FMT_MULT: ReadElemData_MULT(dom, ed, it.ntype); break;
 						case FMT_REGION: 
@@ -1447,7 +1455,7 @@ bool XpltReader::ReadElemData(FEModel &fem, FEState* pstate)
 
 
 //-----------------------------------------------------------------------------
-bool XpltReader::ReadElemData_NODE(FEMeshBase& m, XpltReader::Domain &d, FEMeshData &data, int ntype)
+bool XpltReader::ReadElemData_NODE(FEMeshBase& m, XpltReader::Domain &d, FEMeshData &data, int ntype, int arrSize)
 {
 	int ne = 0;
 	switch (d.etype)
@@ -1550,6 +1558,14 @@ bool XpltReader::ReadElemData_NODE(FEMeshBase& m, XpltReader::Domain &d, FEMeshD
 			df.add(a, e, l, ne);
 		}
         break;
+	case ARRAY:
+		{
+			FEElemArrayDataNode& df = dynamic_cast<FEElemArrayDataNode&>(data);
+			vector<float> a(n*arrSize);
+			m_ar.read(a);
+			df.add(a, e, l, ne);
+		}
+		break;
 	default:
 		assert(false);
 		return errf("Error while reading element data");
@@ -1616,7 +1632,7 @@ bool XpltReader::ReadElemData_ITEM(XpltReader::Domain& dom, FEMeshData& s, int n
 		{
 			vector<float> a(NE*arrSize);
 			m_ar.read(a);
-			FEElemArrayData& dm = dynamic_cast<FEElemArrayData&>(s);
+			FEElemArrayDataItem& dm = dynamic_cast<FEElemArrayDataItem&>(s);
 
 			vector<int> elem(NE);
 			for (int i=0; i<NE; ++i) elem[i] = dom.elem[i].index;

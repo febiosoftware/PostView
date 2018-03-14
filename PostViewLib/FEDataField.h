@@ -117,7 +117,7 @@ typedef vector<FEDataField*>::iterator FEDataFieldPtr;
 class FEArrayDataField : public FEDataField
 {
 public:
-	FEArrayDataField(const std::string& name, Data_Class c, unsigned int flag = 0);
+	FEArrayDataField(const std::string& name, Data_Class c, Data_Format f, unsigned int flag = 0);
 
 	FEDataField* Clone() const override;
 

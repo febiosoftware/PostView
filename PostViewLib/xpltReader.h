@@ -254,7 +254,7 @@ protected:
 	bool ReadElemData    (FEModel& fem, FEState* pstate);
 	bool ReadFaceData    (FEModel& fem, FEState* pstate);
 
-	bool ReadElemData_NODE(FEMeshBase& m, Domain& d, FEMeshData& s, int ntype);
+	bool ReadElemData_NODE(FEMeshBase& m, Domain& d, FEMeshData& s, int ntype, int arrSize = 0);
 	bool ReadElemData_ITEM(Domain& d, FEMeshData& s, int ntype, int arrSize = 0);
 	bool ReadElemData_MULT(Domain& d, FEMeshData& s, int ntype);
 

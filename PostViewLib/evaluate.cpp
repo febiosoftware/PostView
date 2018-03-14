@@ -1898,11 +1898,23 @@ bool FEModel::EvaluateElement(int n, int ntime, int nfield, float* data, float& 
 			{
 				if (fmt == DATA_ITEM)
 				{
-					FEElemArrayData& dm = dynamic_cast<FEElemArrayData&>(rd);
+					FEElemArrayDataItem& dm = dynamic_cast<FEElemArrayDataItem&>(rd);
 					if (dm.active(n))
 					{
 						val = dm.eval(n, ncomp);
 						for (int i = 0; i<ne; ++i) data[i] = val;
+						ntag = 1;
+					}
+				}
+				else if (fmt == DATA_NODE)
+				{
+					FEElemArrayDataNode& df = dynamic_cast<FEElemArrayDataNode&>(rd);
+					if (df.active(n))
+					{
+						df.eval(n, ncomp, data);
+						val = 0.f;
+						for (int j = 0; j<ne; ++j) val += data[j];
+						val /= (float)ne;
 						ntag = 1;
 					}
 				}

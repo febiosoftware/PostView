@@ -273,13 +273,13 @@ std::string FEDataField::componentName(int ncomp, Data_Tensor_Type ntype)
 }
 
 //=================================================================================================
-FEArrayDataField::FEArrayDataField(const std::string& name, Data_Class c, unsigned int flag) : FEDataField(name, DATA_ARRAY, DATA_ITEM, c, flag)
+FEArrayDataField::FEArrayDataField(const std::string& name, Data_Class c, Data_Format f, unsigned int flag) : FEDataField(name, DATA_ARRAY, f, c, flag)
 {
 }
 
 FEDataField* FEArrayDataField::Clone() const
 {
-	FEArrayDataField* newData = new FEArrayDataField(GetName(), DataClass(), m_flag);
+	FEArrayDataField* newData = new FEArrayDataField(GetName(), DataClass(), Format(), m_flag);
 	newData->SetArraySize(GetArraySize());
     vector<string> arrnames = GetArrayNames();
 	newData->SetArrayNames(arrnames);
@@ -291,7 +291,13 @@ FEMeshData* FEArrayDataField::CreateData(FEState* pstate)
 	switch (DataClass())
 	{
 	case CLASS_NODE: return new FENodeArrayData(pstate, GetArraySize()); break;
-	case CLASS_ELEM: return new FEElemArrayData(pstate, GetArraySize(), this); break;
+	case CLASS_ELEM: 
+		switch (Format())
+		{
+		case DATA_ITEM: return new FEElemArrayDataItem(pstate, GetArraySize(), this); break;
+		case DATA_NODE: return new FEElemArrayDataNode(pstate, GetArraySize(), this); break;
+		}
+		break;
 	}
 	assert(false);
 	return 0;

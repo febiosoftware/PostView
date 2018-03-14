@@ -258,14 +258,15 @@ public:
 };
 
 //-----------------------------------------------------------------------------
-class FEElemArrayData : public FEElemItemData
+class FEElemArrayDataItem : public FEElemItemData
 {
 public:
-	FEElemArrayData(FEState* state, int nsize, FEDataField* pdf) : FEElemItemData(state, DATA_ARRAY, DATA_ITEM), m_elem(pdf->m_item)
+	FEElemArrayDataItem(FEState* state, int nsize, FEDataField* pdf) : FEElemItemData(state, DATA_ARRAY, DATA_ITEM), m_elem(pdf->m_item)
 	{
 		int NE = state->GetFEMesh()->Elements();
 		m_stride = nsize;
 		m_data.resize(NE*nsize, 0.f);
+		m_elem.resize(NE, -1);
 	}
 
 	bool active(int n) { return (m_elem.empty() == false) && (m_elem[n] >= 0); }
@@ -277,15 +278,63 @@ public:
 
 	void setData(vector<float>& data, vector<int>& elem)
 	{
-		assert(data.size() == m_data.size());
-		m_data = data;
-		m_elem = elem;
+		assert(data.size() == m_stride*elem.size());
+		for (int i=0; i<(int)elem.size(); ++i)
+		{
+			int m = elem[i];
+			for (int j=0; j<m_stride; ++j)
+			{
+				m_data[m*m_stride + j] = data[i*m_stride + j];
+			}
+			m_elem[m] = m;
+		}
 	}
 
 protected:
 	int				m_stride;
 	vector<float>	m_data;
 	vector<int>&	m_elem;
+};
+
+//-----------------------------------------------------------------------------
+class FEElemArrayDataNode : public FEElemItemData
+{
+public:
+	FEElemArrayDataNode(FEState* state, int nsize, FEDataField* pdf) : FEElemItemData(state, DATA_ARRAY, DATA_NODE), m_elem(pdf->m_item)
+	{
+		FEMeshBase& m = *state->GetFEMesh();
+		m_stride = nsize;
+		if (m_elem.empty())
+		{
+			int N = m.Elements();
+			m_elem.resize(2 * N);
+			for (int i = 0; i<N; ++i) { m_elem[2 * i] = -1; m_elem[2 * i + 1] = 0; }
+		}
+	}
+	void eval(int i, int comp, float* pv)
+	{
+		int n = m_elem[2 * i];	// start index in data array
+		int m = m_elem[2 * i + 1];	// size of elem data (should be nr. of nodes)
+		for (int j = 0; j<m; ++j) pv[j] = m_data[m_indx[n + j] + comp];
+	}
+	bool active(int n) { return (m_elem.empty() == false) && (m_elem[2 * n] >= 0); }
+	void add(vector<float>& d, vector<int>& e, vector<int>& l, int ne)
+	{
+		int n0 = (int)m_data.size();
+		m_data.insert(m_data.end(), d.begin(), d.end());
+		for (int i = 0; i<(int)e.size(); ++i)
+		{
+			m_elem[2 * e[i]] = (int)m_indx.size();
+			m_elem[2 * e[i] + 1] = ne;
+			for (int j = 0; j<ne; ++j) m_indx.push_back(m_stride*l[i*ne + j] + n0);
+		}
+	}
+
+protected:
+	int m_stride;
+	vector<float>	m_data;
+	vector<int>&	m_elem;
+	vector<int>		m_indx;
 };
 
 
@@ -298,6 +347,7 @@ public:
 		int NE = state->GetFEMesh()->Elements();
 		m_stride = nsize;
 		m_data.resize(NE*nsize*3, 0.f);
+		m_elem.resize(NE, -1);
 	}
 
 	bool active(int n) { return (m_elem.empty() == false) && (m_elem[n] >= 0); }
@@ -313,9 +363,18 @@ public:
 
 	void setData(vector<float>& data, vector<int>& elem)
 	{
-		assert(data.size() == m_data.size());
-		m_data = data;
-		m_elem = elem;
+		assert(data.size() == 3*m_stride*elem.size());
+		for (int i = 0; i<(int)elem.size(); ++i)
+		{
+			int m = elem[i];
+			for (int j = 0; j<m_stride; ++j)
+			{
+				m_data[3*(m*m_stride + j)    ] = data[3*(i*m_stride + j)  ];
+				m_data[3*(m*m_stride + j) + 1] = data[3*(i*m_stride + j)+1];
+				m_data[3*(m*m_stride + j) + 2] = data[3*(i*m_stride + j)+2];
+			}
+			m_elem[m] = m;
+		}
 	}
 
 protected:
