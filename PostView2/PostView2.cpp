@@ -35,6 +35,7 @@ int main(int argc, char* argv[])
 {
 #ifndef __APPLE__
 	QApplication app(argc, argv);
+	app.setWindowIcon(QIcon(":/icons/postview.png"));
 
 	// initialize glew
 	glewInit();

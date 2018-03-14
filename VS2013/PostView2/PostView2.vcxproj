@@ -218,6 +218,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </ClInclude>
     <ClInclude Include="..\..\PostView2\AddPointTool.h" />
+    <ClInclude Include="resource.h" />
     <CustomBuild Include="..\..\PostView2\AreaCoverageTool.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
@@ -612,6 +613,12 @@
     <ClCompile Include="..\..\PostView2\Tool.cpp" />
     <ClCompile Include="..\..\PostView2\ToolsPanel.cpp" />
     <ClCompile Include="..\..\PostView2\TransformTool.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="PostView2.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\PostView2.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
