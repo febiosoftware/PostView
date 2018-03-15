@@ -4,7 +4,7 @@
 \begin_header
 \save_transient_properties true
 \origin unavailable
-\textclass amsbook
+\textclass extbook
 \begin_preamble
 % Converted from Microsoft Word to LaTeX
 % by Chikrii Softlab Word2TeX converter (version 5.0)
@@ -19,18 +19,17 @@
 \begin_modules
 theorems-ams
 eqs-within-sections
-figs-within-sections
 \end_modules
 \maintain_unincluded_children false
 \language english
 \language_package none
 \inputencoding auto
-\fontencoding default
+\fontencoding global
 \font_roman "default" "default"
-\font_sans "default" "default"
+\font_sans "helvet" "default"
 \font_typewriter "default" "default"
 \font_math "auto" "auto"
-\font_default_family default
+\font_default_family sfdefault
 \use_non_tex_fonts false
 \font_sc false
 \font_osf false
@@ -41,7 +40,7 @@ figs-within-sections
 \output_sync 0
 \bibtex_command default
 \index_command default
-\paperfontsize 12
+\paperfontsize 11
 \spacing single
 \use_hyperref false
 \papersize default
@@ -91,7 +90,22 @@ figs-within-sections
 \begin_body
 
 \begin_layout Title
-PostView User Manual Version 2.1
+POSTVIEW USER MANUAL
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\end_inset
+
+ Version 2.2
 \begin_inset ERT
 status open
 
@@ -110,8 +124,25 @@ Last Updated: March 14, 2018
 \end_layout
 
 \begin_layout Standard
-\begin_inset CommandInset toc
-LatexCommand tableofcontents
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Contributors
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
 
 \end_inset
 
@@ -119,7 +150,301 @@ LatexCommand tableofcontents
 \end_layout
 
 \begin_layout Standard
-\begin_inset Newpage newpage
+Steve Maas (
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+href{mailto:steve.maas@utah.edu}{steve.maas@utah.edu}
+\end_layout
+
+\end_inset
+
+)
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\end_inset
+
+Dave Rawlins (
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+href{mailto:rawlins@sci.utah.edu}{rawlins@sci.utah.edu}
+\end_layout
+
+\end_inset
+
+)
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\end_inset
+
+Dr.
+ Jeffrey Weiss (
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+href{mailto:jeff.weiss@utah.edu}{jeff.weiss@utah.edu}
+\end_layout
+
+\end_inset
+
+)
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\end_inset
+
+Dr.
+ Gerard Ateshian (
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+href{mailto:ateshian@columbia.edu}{ateshian@columbia.edu}
+\end_layout
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Paragraph*
+Contact address
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Musculoskeletal Research Laboratories, University of Utah
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\end_inset
+
+72 S.
+ Central Campus Drive, Room 2646
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\end_inset
+
+Salt Lake City, Utah
+\end_layout
+
+\begin_layout Paragraph*
+Website
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+MRL: 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+url{http://mrl.sci.utah.edu}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\end_inset
+
+FEBio: 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+url{http://febio.org}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph*
+Forum
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+url{http://mrlforums.sci.utah.edu/forums/}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph*
+Acknowledgments
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Development of the FEBio project is supported in part by a grant from the
+ U.S.
+ National Institutes of Health (R01GM083925).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/NIHlogo.png
+	lyxscale 25
+	height 0.75in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
 \end_inset
 
 
