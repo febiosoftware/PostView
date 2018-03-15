@@ -42,7 +42,16 @@ eqs-within-sections
 \index_command default
 \paperfontsize 11
 \spacing single
-\use_hyperref false
+\use_hyperref true
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder true
+\pdf_colorlinks false
+\pdf_backref false
+\pdf_pdfusetitle true
 \papersize default
 \use_geometry true
 \use_package amsmath 2
@@ -431,8 +440,9 @@ Development of the FEBio project is supported in part by a grant from the
 \end_layout
 
 \begin_layout Standard
+\align center
 \begin_inset Graphics
-	filename Figures/NIHlogo.png
+	filename Figures/NIHlogo.bmp
 	lyxscale 25
 	height 0.75in
 
@@ -654,9 +664,10 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Graphics
-	filename Figures/PostView_21.pdf
-	width 6in
+	filename Figures/PostView_21.bmp
+	width 5in
 	height 9.65in
 	keepAspectRatio
 
@@ -723,9 +734,10 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Graphics
-	filename Figures/PostView_22.pdf
-	width 6in
+	filename Figures/PostView_22.bmp
+	width 5in
 	height 9.65in
 	keepAspectRatio
 
@@ -977,9 +989,10 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Graphics
-	filename Figures/PostView_23.pdf
-	width 6in
+	filename Figures/PostView_23.bmp
+	width 5in
 	height 9.65in
 	keepAspectRatio
 
@@ -1096,9 +1109,10 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Graphics
-	filename Figures/PostView_24.pdf
-	width 6in
+	filename Figures/PostView_24.bmp
+	width 5in
 	height 9.65in
 	keepAspectRatio
 
@@ -1887,7 +1901,7 @@ toolbar
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_25.pdf
+	filename Figures/PostView_25.bmp
 	width 5.89in
 	height 0.25in
 
@@ -1898,7 +1912,7 @@ toolbar
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_26.pdf
+	filename Figures/PostView_26.bmp
 	width 0.27in
 	height 0.27in
 
@@ -1909,7 +1923,7 @@ Opens an existing file.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_27.pdf
+	filename Figures/PostView_27.bmp
 	width 0.27in
 	height 0.27in
 
@@ -1920,7 +1934,7 @@ Saves the currently loaded model.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_28.pdf
+	filename Figures/PostView_28.bmp
 	width 0.26in
 	height 0.26in
 
@@ -1931,7 +1945,7 @@ Reloads the currently loaded file.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_29.pdf
+	filename Figures/PostView_29.bmp
 	width 0.26in
 	height 0.26in
 
@@ -1942,7 +1956,7 @@ Saves a screenshot to file.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_210.pdf
+	filename Figures/PostView_210.bmp
 	width 0.26in
 	height 0.26in
 
@@ -1953,7 +1967,7 @@ Switches to node-selection mode.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_211.pdf
+	filename Figures/PostView_211.bmp
 	width 0.27in
 	height 0.27in
 
@@ -1964,7 +1978,7 @@ Switches to edge-selection mode.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_212.pdf
+	filename Figures/PostView_212.bmp
 	width 0.26in
 	height 0.24in
 
@@ -1975,7 +1989,7 @@ Switches to face-selection mode.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_213.pdf
+	filename Figures/PostView_213.bmp
 	width 0.27in
 	height 0.25in
 
@@ -1986,7 +2000,7 @@ Switches to element-selection-mode.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_214.pdf
+	filename Figures/PostView_214.bmp
 	width 0.27in
 	height 0.25in
 
@@ -1997,7 +2011,7 @@ Activates single item selection mode
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_215.pdf
+	filename Figures/PostView_215.bmp
 	width 0.26in
 	height 0.25in
 
@@ -2008,7 +2022,7 @@ Activates connected item selection mode
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_216.pdf
+	filename Figures/PostView_216.bmp
 	width 0.29in
 	height 0.27in
 
@@ -2019,7 +2033,7 @@ Activates rectangular rubber banding selection
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_217.pdf
+	filename Figures/PostView_217.bmp
 	width 0.27in
 	height 0.25in
 
@@ -2030,7 +2044,7 @@ Activates circular rubber banding selection
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_218.pdf
+	filename Figures/PostView_218.bmp
 	width 0.27in
 	height 0.25in
 
@@ -2041,7 +2055,7 @@ Activates free rubber banding selection
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_219.pdf
+	filename Figures/PostView_219.bmp
 	width 0.27in
 	height 0.25in
 
@@ -2052,7 +2066,7 @@ Zooms in on the selection.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_220.pdf
+	filename Figures/PostView_220.bmp
 	width 0.26in
 	height 0.24in
 
@@ -2063,7 +2077,7 @@ Zooms to the extents of the model.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_221.pdf
+	filename Figures/PostView_221.bmp
 	width 0.25in
 	height 0.23in
 
@@ -2093,7 +2107,7 @@ toolbar offers various shortcuts to the Post menu items.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_222.pdf
+	filename Figures/PostView_222.bmp
 	width 2.87in
 	height 0.46in
 
@@ -2104,7 +2118,7 @@ toolbar offers various shortcuts to the Post menu items.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_223.pdf
+	filename Figures/PostView_223.bmp
 	width 0.28in
 	height 0.25in
 
@@ -2115,7 +2129,7 @@ Adds a plane cut plot to the model
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_224.pdf
+	filename Figures/PostView_224.bmp
 	width 0.28in
 	height 0.25in
 
@@ -2126,7 +2140,7 @@ Adds a vector plot to the model
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_225.pdf
+	filename Figures/PostView_225.bmp
 	width 0.28in
 	height 0.26in
 
@@ -2137,7 +2151,7 @@ Adds a isosurface plot to the model
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_226.pdf
+	filename Figures/PostView_226.bmp
 	width 0.3in
 	height 0.27in
 
@@ -2148,7 +2162,7 @@ Adds a slice plot to the model
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_227.pdf
+	filename Figures/PostView_227.bmp
 	width 0.32in
 	height 0.29in
 
@@ -2159,7 +2173,7 @@ Opens a new graph window
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_228.pdf
+	filename Figures/PostView_228.bmp
 	width 0.31in
 	height 0.28in
 
@@ -2186,7 +2200,7 @@ The font toolbar allows users to easily modify the font of the selected
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_229.pdf
+	filename Figures/PostView_229.bmp
 	width 4.38in
 	height 0.46in
 
@@ -2197,7 +2211,7 @@ The font toolbar allows users to easily modify the font of the selected
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_230.pdf
+	filename Figures/PostView_230.bmp
 	width 0.44in
 	height 0.37in
 
@@ -2210,7 +2224,7 @@ bold
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_231.pdf
+	filename Figures/PostView_231.bmp
 	width 0.44in
 	height 0.37in
 
@@ -2223,7 +2237,7 @@ italic
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_232.pdf
+	filename Figures/PostView_232.bmp
 	width 0.44in
 	height 0.37in
 
@@ -2254,7 +2268,7 @@ toolbar can be used to animate the model over time or step through the time
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_233.pdf
+	filename Figures/PostView_233.bmp
 	width 3.84in
 	height 0.46in
 
@@ -2265,7 +2279,7 @@ toolbar can be used to animate the model over time or step through the time
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_234.pdf
+	filename Figures/PostView_234.bmp
 	width 0.45in
 	height 0.38in
 
@@ -2276,7 +2290,7 @@ Return to the first time step
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_235.pdf
+	filename Figures/PostView_235.bmp
 	width 0.45in
 	height 0.38in
 
@@ -2287,7 +2301,7 @@ Step back by one step
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_236.pdf
+	filename Figures/PostView_236.bmp
 	width 0.45in
 	height 0.38in
 
@@ -2298,7 +2312,7 @@ Start (and stop) the animation
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_237.pdf
+	filename Figures/PostView_237.bmp
 	width 0.45in
 	height 0.38in
 
@@ -2309,7 +2323,7 @@ Step forward by one step
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_238.pdf
+	filename Figures/PostView_238.bmp
 	width 0.45in
 	height 0.38in
 
@@ -2320,7 +2334,7 @@ Go to the last time step
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_239.pdf
+	filename Figures/PostView_239.bmp
 	width 0.45in
 	height 0.38in
 
@@ -2377,9 +2391,10 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Graphics
-	filename Figures/PostView_240.pdf
-	width 6in
+	filename Figures/PostView_240.bmp
+	width 5in
 	height 8.27in
 	keepAspectRatio
 
@@ -2513,8 +2528,9 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Graphics
-	filename Figures/PostView_241.pdf
+	filename Figures/PostView_241.bmp
 	width 2.35in
 	height 2.77in
 
@@ -3468,8 +3484,9 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Graphics
-	filename Figures/PostView_242.pdf
+	filename Figures/PostView_242.bmp
 	width 4in
 	height 4.5in
 	keepAspectRatio
@@ -3835,6 +3852,27 @@ name "sec:mylabel4"
 \end_layout
 
 \begin_layout Standard
+\begin_inset Wrap figure
+lines 14
+placement o
+overhang 0in
+width "1.56in"
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/PostView_243.bmp
+	width 1.56in
+	height 3.05in
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
 The 
 \emph on
 Tab Window 
@@ -3843,18 +3881,6 @@ is the window on the left side of the screen that has several tabs at the
  top.
  These tabs give the user access to several other panels which will be described
  next.
-\end_layout
-
-\begin_layout Standard
-\align center
-\begin_inset Graphics
-	filename Figures/PostView_243.pdf
-	width 1.56in
-	height 3.05in
-
-\end_inset
-
- 
 \end_layout
 
 \begin_layout Section
@@ -3869,6 +3895,7 @@ name "subsec:mylabel10"
 \end_layout
 
 \begin_layout Standard
+\align block
 The 
 \emph on
 File Viewer
@@ -3879,6 +3906,7 @@ File Viewer
 \end_layout
 
 \begin_layout Standard
+\align block
 The largest area of the File Viewer presents a list of folders and files
  in the current folder.
  The user can move to a subfolder by double-clicking the folder name.
@@ -3924,18 +3952,7 @@ Model
 \end_layout
 
 \begin_layout Standard
-\align center
-\begin_inset Graphics
-	filename Figures/PostView_244.pdf
-	width 1.56in
-	height 3.05in
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
+\align block
 The top part of the Model Viewer shows a tree-view of the contents of the
  model.
  Each item can be selected, and when selected, the property window at the
@@ -3963,6 +3980,28 @@ button, the checkbox located next to the name field, can be used to activate
  What this precisely means will depend on the particular item, but in general
  this means that if enabled, the item will be displayed in the Graphics
  View, and if disabled it will be hidden.
+ 
+\begin_inset Wrap figure
+lines 15
+placement o
+overhang 0in
+width "1.56in"
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/PostView_244.bmp
+	width 1.56in
+	height 3.05in
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
  Note that if an item is disabled, its name will be drawn in italics in
  the model viewer.
 \end_layout
@@ -3979,18 +4018,7 @@ name "subsec:mylabel12"
 \end_layout
 
 \begin_layout Standard
-\align center
-\begin_inset Graphics
-	filename Figures/PostView_245.pdf
-	width 1.59in
-	height 3.81in
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
+\align block
 The 
 \emph on
 Material Viewer 
@@ -4008,6 +4036,7 @@ Materials
 \end_layout
 
 \begin_layout Standard
+\align block
 All the materials in the model are listed in the large window on the left.
  A material can be selected by clicking on the entry in the list.
  Multiple materials can be selected by holding down the shift button or
@@ -4015,6 +4044,7 @@ All the materials in the model are listed in the large window on the left.
 \end_layout
 
 \begin_layout Standard
+\align block
 The name of the material can be modified by first selecting it, and then
  editing the name field, which is located in the center of the material
  viewer.
@@ -4040,6 +4070,27 @@ button, can be used to toggle the visibility of the corresponding part in
 \end_layout
 
 \begin_layout Standard
+\begin_inset Wrap figure
+lines 15
+placement o
+overhang 0in
+width "1.59in"
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/PostView_245.bmp
+	width 1.59in
+	height 3.81in
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
 When a material is selected, the property window on the bottom of the material
  viewer, lists the available properties that the user can change.
  The options are:
@@ -4295,8 +4346,9 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Graphics
-	filename Figures/PostView_246.pdf
+	filename Figures/PostView_246.bmp
 	width 2.86in
 	height 1.92in
 
@@ -5726,8 +5778,9 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Graphics
-	filename Figures/PostView_247.pdf
+	filename Figures/PostView_247.bmp
 	width 5in
 	height 5.54in
 	keepAspectRatio
@@ -5845,10 +5898,12 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Graphics
-	filename Figures/PostView_248.pdf
+	filename Figures/PostView_248.bmp
 	width 4.68in
 	height 3.16in
+	keepAspectRatio
 
 \end_inset
 
@@ -5985,8 +6040,9 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Graphics
-	filename Figures/PostView_249.pdf
+	filename Figures/PostView_249.bmp
 	width 3.65in
 	height 2.84in
 
@@ -6073,7 +6129,7 @@ Toolbar
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_250.pdf
+	filename Figures/PostView_250.bmp
 	width 0.26in
 	height 0.26in
 
@@ -6084,7 +6140,7 @@ Switches to node-selection mode.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_251.pdf
+	filename Figures/PostView_251.bmp
 	width 0.27in
 	height 0.27in
 
@@ -6095,7 +6151,7 @@ Switches to edge-selection mode.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_252.pdf
+	filename Figures/PostView_252.bmp
 	width 0.26in
 	height 0.24in
 
@@ -6106,7 +6162,7 @@ Switches to face-selection mode.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_253.pdf
+	filename Figures/PostView_253.bmp
 	width 0.27in
 	height 0.25in
 
@@ -6209,10 +6265,12 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Graphics
-	filename Figures/PostView_254.pdf
-	width 5.23in
+	filename Figures/PostView_254.bmp
+	width 5in
 	height 3.98in
+	keepAspectRatio
 
 \end_inset
 
@@ -6287,6 +6345,7 @@ status open
 \begin_layout Plain Layout
 
 \series bold
+\size footnotesize
 Name
 \series default
  
@@ -6300,6 +6359,7 @@ Name
 \begin_layout Plain Layout
 
 \series bold
+\size footnotesize
 Description
 \series default
  
@@ -6313,6 +6373,7 @@ Description
 \begin_layout Plain Layout
 
 \series bold
+\size footnotesize
 Requires displacement map?
 \series default
  
@@ -6326,6 +6387,8 @@ Requires displacement map?
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Position
 \end_layout
 
@@ -6335,6 +6398,8 @@ Position
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 The current nodal position of the deformed model
 \end_layout
 
@@ -6344,6 +6409,8 @@ The current nodal position of the deformed model
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Yes 
 \end_layout
 
@@ -6355,6 +6422,8 @@ Yes
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Initial Position
 \end_layout
 
@@ -6364,6 +6433,8 @@ Initial Position
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 The initial nodal position of the model
 \end_layout
 
@@ -6373,6 +6444,8 @@ The initial nodal position of the model
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 No 
 \end_layout
 
@@ -6384,6 +6457,8 @@ No
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Deformation gradient
 \end_layout
 
@@ -6393,6 +6468,8 @@ Deformation gradient
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 The deformation gradient of the deformation map
 \end_layout
 
@@ -6402,6 +6479,8 @@ The deformation gradient of the deformation map
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Yes 
 \end_layout
 
@@ -6413,6 +6492,8 @@ Yes
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Infinitesimal strain
 \end_layout
 
@@ -6422,6 +6503,8 @@ Infinitesimal strain
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 The infinitesimal (engineering) strain tensor
 \end_layout
 
@@ -6431,6 +6514,8 @@ The infinitesimal (engineering) strain tensor
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Yes 
 \end_layout
 
@@ -6442,6 +6527,8 @@ Yes
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Lagrange strain
 \end_layout
 
@@ -6451,6 +6538,8 @@ Lagrange strain
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 The Euler-Lagrange strain tensor
 \end_layout
 
@@ -6460,6 +6549,8 @@ The Euler-Lagrange strain tensor
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Yes 
 \end_layout
 
@@ -6471,6 +6562,8 @@ Yes
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Right Cauchy-Green
 \end_layout
 
@@ -6480,6 +6573,8 @@ Right Cauchy-Green
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 The right Cauchy-Green deformation tensor
 \end_layout
 
@@ -6489,6 +6584,8 @@ The right Cauchy-Green deformation tensor
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Yes 
 \end_layout
 
@@ -6500,6 +6597,8 @@ Yes
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Right stretch
 \end_layout
 
@@ -6509,6 +6608,8 @@ Right stretch
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 The right stretch tensor
 \end_layout
 
@@ -6518,6 +6619,8 @@ The right stretch tensor
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Yes 
 \end_layout
 
@@ -6529,6 +6632,8 @@ Yes
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Biot strain
 \end_layout
 
@@ -6538,6 +6643,8 @@ Biot strain
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 The Biot strain tensor
 \end_layout
 
@@ -6547,6 +6654,8 @@ The Biot strain tensor
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Yes 
 \end_layout
 
@@ -6558,6 +6667,8 @@ Yes
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Right Hencky
 \end_layout
 
@@ -6567,6 +6678,8 @@ Right Hencky
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 The Right Hencky tensor
 \end_layout
 
@@ -6576,6 +6689,8 @@ The Right Hencky tensor
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Yes 
 \end_layout
 
@@ -6587,6 +6702,8 @@ Yes
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Left Cauchy-Green
 \end_layout
 
@@ -6596,6 +6713,8 @@ Left Cauchy-Green
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 The left Cauchy-Green strain tensor
 \end_layout
 
@@ -6605,6 +6724,8 @@ The left Cauchy-Green strain tensor
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Yes 
 \end_layout
 
@@ -6616,6 +6737,8 @@ Yes
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Left stretch
 \end_layout
 
@@ -6625,6 +6748,8 @@ Left stretch
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 The left stretch tensor
 \end_layout
 
@@ -6634,6 +6759,8 @@ The left stretch tensor
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Yes 
 \end_layout
 
@@ -6645,6 +6772,8 @@ Yes
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Left Hencky
 \end_layout
 
@@ -6654,6 +6783,8 @@ Left Hencky
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 The left Hencky tensr
 \end_layout
 
@@ -6663,6 +6794,8 @@ The left Hencky tensr
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Yes 
 \end_layout
 
@@ -6674,6 +6807,8 @@ Yes
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Almansi strain
 \end_layout
 
@@ -6683,6 +6818,8 @@ Almansi strain
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 The Almansi strain tensor
 \end_layout
 
@@ -6692,6 +6829,8 @@ The Almansi strain tensor
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Yes 
 \end_layout
 
@@ -6703,6 +6842,8 @@ Yes
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Volume
 \end_layout
 
@@ -6712,6 +6853,8 @@ Volume
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 The element's (approximate) volume 
 \end_layout
 
@@ -6721,6 +6864,8 @@ The element's (approximate) volume
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Yes 
 \end_layout
 
@@ -6732,6 +6877,8 @@ Yes
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Volume ratio
 \end_layout
 
@@ -6741,6 +6888,8 @@ Volume ratio
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 The ratio of current over initial element volume
 \end_layout
 
@@ -6750,6 +6899,8 @@ The ratio of current over initial element volume
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Yes 
 \end_layout
 
@@ -6761,6 +6912,8 @@ Yes
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Volume strain
 \end_layout
 
@@ -6770,6 +6923,8 @@ Volume strain
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 The volumetric strain
 \end_layout
 
@@ -6779,6 +6934,8 @@ The volumetric strain
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Yes 
 \end_layout
 
@@ -6790,6 +6947,8 @@ Yes
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Aspect ratio
 \end_layout
 
@@ -6799,6 +6958,8 @@ Aspect ratio
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 The element's aspect ratio
 \end_layout
 
@@ -6808,6 +6969,8 @@ The element's aspect ratio
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 No 
 \end_layout
 
@@ -6819,6 +6982,8 @@ No
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 1-Princ curvature
 \end_layout
 
@@ -6828,6 +6993,8 @@ No
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 The first principal curvature of the surface
 \end_layout
 
@@ -6837,6 +7004,8 @@ The first principal curvature of the surface
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 No 
 \end_layout
 
@@ -6848,6 +7017,8 @@ No
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 2-Princ curvature
 \end_layout
 
@@ -6857,6 +7028,8 @@ No
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 The second principal curvature of the surface
 \end_layout
 
@@ -6866,6 +7039,8 @@ The second principal curvature of the surface
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 No 
 \end_layout
 
@@ -6877,6 +7052,8 @@ No
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Gaussian curvature
 \end_layout
 
@@ -6886,6 +7063,8 @@ Gaussian curvature
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 The Gaussian curvature of the surface
 \end_layout
 
@@ -6895,6 +7074,8 @@ The Gaussian curvature of the surface
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 No 
 \end_layout
 
@@ -6906,6 +7087,8 @@ No
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Mean curvature
 \end_layout
 
@@ -6915,6 +7098,8 @@ Mean curvature
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 The mean curvature
 \end_layout
 
@@ -6924,6 +7109,8 @@ The mean curvature
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 No 
 \end_layout
 
@@ -6935,6 +7122,8 @@ No
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 RMS curvature
 \end_layout
 
@@ -6944,6 +7133,8 @@ RMS curvature
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 The Root-Mean-Square curvature
 \end_layout
 
@@ -6953,6 +7144,8 @@ The Root-Mean-Square curvature
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 No 
 \end_layout
 
@@ -6964,6 +7157,8 @@ No
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Princ Curvature difference
 \end_layout
 
@@ -6973,6 +7168,8 @@ Princ Curvature difference
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 The difference of the principal curvatures
 \end_layout
 
@@ -6982,6 +7179,8 @@ The difference of the principal curvatures
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 No 
 \end_layout
 
@@ -6993,6 +7192,8 @@ No
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 Congruency
 \end_layout
 
@@ -7002,6 +7203,8 @@ Congruency
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 The congruency
 \end_layout
 
@@ -7011,6 +7214,8 @@ The congruency
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 No 
 \end_layout
 
@@ -7022,6 +7227,8 @@ No
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 1-Princ curvature vector
 \end_layout
 
@@ -7031,6 +7238,8 @@ No
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 The first principal curvature vector
 \end_layout
 
@@ -7040,6 +7249,8 @@ The first principal curvature vector
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 No 
 \end_layout
 
@@ -7051,6 +7262,8 @@ No
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 2-Princ curvature vector
 \end_layout
 
@@ -7060,6 +7273,8 @@ No
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 The second principal curvature vector
 \end_layout
 
@@ -7069,6 +7284,8 @@ The second principal curvature vector
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\size footnotesize
 No 
 \end_layout
 
