@@ -1188,7 +1188,7 @@
 		<row><td>NetHoodFolder</td><td>TARGETDIR</td><td>.:NetHood</td><td/><td>0</td><td/></row>
 		<row><td>PLATFORMS</td><td>INSTALLDIR</td><td>PLATFO~1|platforms</td><td/><td>0</td><td/></row>
 		<row><td>POSTVIEW</td><td>MRL</td><td>PostView</td><td/><td>0</td><td/></row>
-		<row><td>POSTVIEW2</td><td>MRL</td><td>POSTVI~1|PostView2</td><td/><td>0</td><td/></row>
+		<row><td>POSTVIEW2</td><td>ProgramFiles64Folder</td><td>POSTVI~1|PostView2</td><td/><td>0</td><td/></row>
 		<row><td>PersonalFolder</td><td>TARGETDIR</td><td>.:Personal</td><td/><td>0</td><td/></row>
 		<row><td>PrimaryVolumePath</td><td>TARGETDIR</td><td>.:Primar~1|PrimaryVolumePath</td><td/><td>0</td><td/></row>
 		<row><td>PrintHoodFolder</td><td>TARGETDIR</td><td>.:PRINTH~1|PrintHood</td><td/><td>0</td><td/></row>
