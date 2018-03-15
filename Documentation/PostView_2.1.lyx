@@ -99,7 +99,16 @@ eqs-within-sections
 \begin_body
 
 \begin_layout Title
-POSTVIEW USER MANUAL
+\begin_inset Graphics
+	filename Figures/PostView.png
+	lyxscale 25
+	width 6in
+	height 4in
+	keepAspectRatio
+
+\end_inset
+
+
 \begin_inset ERT
 status open
 
@@ -114,21 +123,10 @@ status open
 
 \end_inset
 
- Version 2.2
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-
-\backslash
-
+USER MANUAL Version 2.2
 \end_layout
 
-\end_inset
-
+\begin_layout Date
 Last Updated: March 14, 2018
 \end_layout
 
@@ -666,7 +664,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename Figures/PostView_21.bmp
+	filename Figures/Figure1.png
 	width 5in
 	height 9.65in
 	keepAspectRatio
@@ -736,7 +734,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename Figures/PostView_22.bmp
+	filename Figures/Figure2.png
 	width 5in
 	height 9.65in
 	keepAspectRatio
@@ -991,7 +989,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename Figures/PostView_23.bmp
+	filename Figures/Figure3.png
 	width 5in
 	height 9.65in
 	keepAspectRatio
@@ -1111,7 +1109,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename Figures/PostView_24.bmp
+	filename Figures/Figure4.png
 	width 5in
 	height 9.65in
 	keepAspectRatio
@@ -1901,18 +1899,7 @@ toolbar
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_25.bmp
-	width 5.89in
-	height 0.25in
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Graphics
-	filename Figures/PostView_26.bmp
+	filename Figures/open.png
 	width 0.27in
 	height 0.27in
 
@@ -1923,7 +1910,7 @@ Opens an existing file.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_27.bmp
+	filename Figures/save.png
 	width 0.27in
 	height 0.27in
 
@@ -1934,7 +1921,7 @@ Saves the currently loaded model.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_28.bmp
+	filename Figures/refresh.png
 	width 0.26in
 	height 0.26in
 
@@ -1945,7 +1932,7 @@ Reloads the currently loaded file.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_29.bmp
+	filename Figures/snapshot.png
 	width 0.26in
 	height 0.26in
 
@@ -1956,7 +1943,7 @@ Saves a screenshot to file.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_210.bmp
+	filename Figures/node.png
 	width 0.26in
 	height 0.26in
 
@@ -1967,7 +1954,7 @@ Switches to node-selection mode.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_211.bmp
+	filename Figures/edge.png
 	width 0.27in
 	height 0.27in
 
@@ -1978,7 +1965,7 @@ Switches to edge-selection mode.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_212.bmp
+	filename Figures/face.png
 	width 0.26in
 	height 0.24in
 
@@ -1989,7 +1976,7 @@ Switches to face-selection mode.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_213.bmp
+	filename Figures/element.png
 	width 0.27in
 	height 0.25in
 
@@ -2000,7 +1987,7 @@ Switches to element-selection-mode.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_214.bmp
+	filename Figures/select_item.png
 	width 0.27in
 	height 0.25in
 
@@ -2011,7 +1998,7 @@ Activates single item selection mode
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_215.bmp
+	filename Figures/select_connected.png
 	width 0.26in
 	height 0.25in
 
@@ -2022,7 +2009,7 @@ Activates connected item selection mode
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_216.bmp
+	filename Figures/select_rect.png
 	width 0.29in
 	height 0.27in
 
@@ -2033,7 +2020,7 @@ Activates rectangular rubber banding selection
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_217.bmp
+	filename Figures/select_circle.png
 	width 0.27in
 	height 0.25in
 
@@ -2044,7 +2031,7 @@ Activates circular rubber banding selection
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_218.bmp
+	filename Figures/select_free.png
 	width 0.27in
 	height 0.25in
 
@@ -2055,7 +2042,7 @@ Activates free rubber banding selection
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_219.bmp
+	filename Figures/zoom_selected.png
 	width 0.27in
 	height 0.25in
 
@@ -2066,7 +2053,7 @@ Zooms in on the selection.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_220.bmp
+	filename Figures/zoom_extents.png
 	width 0.26in
 	height 0.24in
 
@@ -2077,7 +2064,7 @@ Zooms to the extents of the model.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_221.bmp
+	filename Figures/colormap.png
 	width 0.25in
 	height 0.23in
 
@@ -2107,18 +2094,7 @@ toolbar offers various shortcuts to the Post menu items.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_222.bmp
-	width 2.87in
-	height 0.46in
-
-\end_inset
-
- 
-\end_layout
-
-\begin_layout Standard
-\begin_inset Graphics
-	filename Figures/PostView_223.bmp
+	filename Figures/cut.png
 	width 0.28in
 	height 0.25in
 
@@ -2129,7 +2105,7 @@ Adds a plane cut plot to the model
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_224.bmp
+	filename Figures/vectors.png
 	width 0.28in
 	height 0.25in
 
@@ -2140,7 +2116,7 @@ Adds a vector plot to the model
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_225.bmp
+	filename Figures/isosurface.png
 	width 0.28in
 	height 0.26in
 
@@ -2151,7 +2127,7 @@ Adds a isosurface plot to the model
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_226.bmp
+	filename Figures/slice.png
 	width 0.3in
 	height 0.27in
 
@@ -2162,7 +2138,7 @@ Adds a slice plot to the model
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_227.bmp
+	filename Figures/chart.png
 	width 0.32in
 	height 0.29in
 
@@ -2173,7 +2149,7 @@ Opens a new graph window
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_228.bmp
+	filename Figures/integrate.png
 	width 0.31in
 	height 0.28in
 
@@ -2200,20 +2176,9 @@ The font toolbar allows users to easily modify the font of the selected
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_229.bmp
-	width 4.38in
-	height 0.46in
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Graphics
-	filename Figures/PostView_230.bmp
-	width 0.44in
-	height 0.37in
+	filename Figures/font_bold.png
+	width 0.27in
+	height 0.27in
 
 \end_inset
 
@@ -2224,9 +2189,9 @@ bold
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_231.bmp
-	width 0.44in
-	height 0.37in
+	filename Figures/font_italic.png
+	width 0.27in
+	height 0.27in
 
 \end_inset
 
@@ -2237,9 +2202,9 @@ italic
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_232.bmp
-	width 0.44in
-	height 0.37in
+	filename Figures/properties.png
+	width 0.27in
+	height 0.27in
 
 \end_inset
 
@@ -2268,20 +2233,9 @@ toolbar can be used to animate the model over time or step through the time
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_233.bmp
-	width 3.84in
-	height 0.46in
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Graphics
-	filename Figures/PostView_234.bmp
-	width 0.45in
-	height 0.38in
+	filename Figures/back.png
+	width 0.27in
+	height 0.27in
 
 \end_inset
 
@@ -2290,9 +2244,9 @@ Return to the first time step
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_235.bmp
-	width 0.45in
-	height 0.38in
+	filename Figures/prev.png
+	width 0.27in
+	height 0.27in
 
 \end_inset
 
@@ -2301,9 +2255,9 @@ Step back by one step
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_236.bmp
-	width 0.45in
-	height 0.38in
+	filename Figures/play.png
+	width 0.27in
+	height 0.27in
 
 \end_inset
 
@@ -2312,9 +2266,9 @@ Start (and stop) the animation
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_237.bmp
-	width 0.45in
-	height 0.38in
+	filename Figures/next.png
+	width 0.27in
+	height 0.27in
 
 \end_inset
 
@@ -2323,9 +2277,9 @@ Step forward by one step
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_238.bmp
-	width 0.45in
-	height 0.38in
+	filename Figures/forward.png
+	width 0.27in
+	height 0.27in
 
 \end_inset
 
@@ -2334,7 +2288,7 @@ Go to the last time step
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_239.bmp
+	filename Figures/properties.png
 	width 0.45in
 	height 0.38in
 
@@ -2393,7 +2347,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename Figures/PostView_240.bmp
+	filename Figures/Figure5.png
 	width 5in
 	height 8.27in
 	keepAspectRatio
@@ -2530,7 +2484,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename Figures/PostView_241.bmp
+	filename Figures/text properties.png
 	width 2.35in
 	height 2.77in
 
@@ -3486,7 +3440,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename Figures/PostView_242.bmp
+	filename Figures/settings.png
 	width 4in
 	height 4.5in
 	keepAspectRatio
@@ -3862,7 +3816,7 @@ status collapsed
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename Figures/PostView_243.bmp
+	filename Figures/file viewer.png
 	width 1.56in
 	height 3.05in
 
@@ -3991,7 +3945,7 @@ status collapsed
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename Figures/PostView_244.bmp
+	filename Figures/Model Viewer.png
 	width 1.56in
 	height 3.05in
 
@@ -4080,7 +4034,7 @@ status collapsed
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename Figures/PostView_245.bmp
+	filename Figures/Material Viewer.png
 	width 1.59in
 	height 3.81in
 
@@ -4348,7 +4302,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename Figures/PostView_246.bmp
+	filename Figures/Add_data_from_file.png
 	width 2.86in
 	height 1.92in
 
@@ -5780,7 +5734,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename Figures/PostView_247.bmp
+	filename Figures/summary.png
 	width 5in
 	height 5.54in
 	keepAspectRatio
@@ -5900,7 +5854,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename Figures/PostView_248.bmp
+	filename Figures/Graph.png
 	width 4.68in
 	height 3.16in
 	keepAspectRatio
@@ -6042,9 +5996,10 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename Figures/PostView_249.bmp
+	filename Figures/Graph_with_tools_panel.png
 	width 3.65in
 	height 2.84in
+	keepAspectRatio
 
 \end_inset
 
@@ -6129,7 +6084,7 @@ Toolbar
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_250.bmp
+	filename Figures/node.png
 	width 0.26in
 	height 0.26in
 
@@ -6140,7 +6095,7 @@ Switches to node-selection mode.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_251.bmp
+	filename Figures/edge.png
 	width 0.27in
 	height 0.27in
 
@@ -6151,7 +6106,7 @@ Switches to edge-selection mode.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_252.bmp
+	filename Figures/face.png
 	width 0.26in
 	height 0.24in
 
@@ -6162,7 +6117,7 @@ Switches to face-selection mode.
 
 \begin_layout Standard
 \begin_inset Graphics
-	filename Figures/PostView_253.bmp
+	filename Figures/element.png
 	width 0.27in
 	height 0.25in
 
@@ -6267,7 +6222,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename Figures/PostView_254.bmp
+	filename Figures/Integrate_window.png
 	width 5in
 	height 3.98in
 	keepAspectRatio
