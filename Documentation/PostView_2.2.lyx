@@ -137,7 +137,7 @@ Last Updated: March 14, 2018
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Paragraph*
 Contributors
 \begin_inset ERT
 status open
@@ -156,8 +156,9 @@ status open
 
 \end_layout
 
-\begin_layout Standard
-Steve Maas (
+\begin_layout Itemize
+Dr.
+ Steve Maas (
 \begin_inset ERT
 status open
 
@@ -171,48 +172,9 @@ href{mailto:steve.maas@utah.edu}{steve.maas@utah.edu}
 \end_inset
 
 )
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-
-\backslash
-
 \end_layout
 
-\end_inset
-
-Dave Rawlins (
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-href{mailto:rawlins@sci.utah.edu}{rawlins@sci.utah.edu}
-\end_layout
-
-\end_inset
-
-)
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-
-\backslash
-
-\end_layout
-
-\end_inset
-
+\begin_layout Itemize
 Dr.
  Jeffrey Weiss (
 \begin_inset ERT
@@ -228,20 +190,9 @@ href{mailto:jeff.weiss@utah.edu}{jeff.weiss@utah.edu}
 \end_inset
 
 )
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-
-\backslash
-
 \end_layout
 
-\end_inset
-
+\begin_layout Itemize
 Dr.
  Gerard Ateshian (
 \begin_inset ERT
@@ -252,6 +203,23 @@ status open
 
 \backslash
 href{mailto:ateshian@columbia.edu}{ateshian@columbia.edu}
+\end_layout
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+Dave Rawlins (
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+href{mailto:rawlins@sci.utah.edu}{rawlins@sci.utah.edu}
 \end_layout
 
 \end_inset
