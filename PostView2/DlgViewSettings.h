@@ -74,7 +74,7 @@ public:
 	void hideEvent(QHideEvent* ev) override;
 
 public slots:
-	void accept();
+	void accept() override;
 	void onClicked(QAbstractButton*);
 	void on_load_clicked();
 	void on_save_clicked();

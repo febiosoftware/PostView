@@ -91,9 +91,9 @@ class MathPlot : public CPlotTool
 public:
 	MathPlot(CGraphWidget* graph, QWidget* parent = 0);
 
-	void draw(QPainter& p);
+	void draw(QPainter& p) override;
 
-	void Update();
+	void Update() override;
 
 	void hideEvent(QHideEvent* ev) override;
 
