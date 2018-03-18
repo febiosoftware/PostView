@@ -176,7 +176,7 @@
 		D5C53DB51F86D97E0014FA22 /* DlgAddEquation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgAddEquation.h; sourceTree = "<group>"; };
 		D5C53DB61F86D97E0014FA22 /* DlgAddEquation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgAddEquation.cpp; sourceTree = "<group>"; };
 		D5E0E6A61E72390D006FE591 /* moc_DataFieldSelector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_DataFieldSelector.cpp; sourceTree = "<group>"; };
-		D5FF79951D72750E003D2CBD /* PostView2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PostView2.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D5FF79951D72750E003D2CBD /* PostView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PostView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5FF79A31D72750E003D2CBD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D5FF79AA1D72756B003D2CBD /* 3PointAngleTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = 3PointAngleTool.cpp; sourceTree = "<group>"; };
 		D5FF79AB1D72756B003D2CBD /* 3PointAngleTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = 3PointAngleTool.h; sourceTree = "<group>"; };
@@ -360,7 +360,7 @@
 		D5FF79961D72750E003D2CBD /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D5FF79951D72750E003D2CBD /* PostView2.app */,
+				D5FF79951D72750E003D2CBD /* PostView.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -583,9 +583,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		D5FF79941D72750E003D2CBD /* PostView2 */ = {
+		D5FF79941D72750E003D2CBD /* PostView */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D5FF79A61D72750E003D2CBD /* Build configuration list for PBXNativeTarget "PostView2" */;
+			buildConfigurationList = D5FF79A61D72750E003D2CBD /* Build configuration list for PBXNativeTarget "PostView" */;
 			buildPhases = (
 				D5FF79911D72750E003D2CBD /* Sources */,
 				D5FF79921D72750E003D2CBD /* Frameworks */,
@@ -596,9 +596,9 @@
 			);
 			dependencies = (
 			);
-			name = PostView2;
+			name = PostView;
 			productName = PostView2;
-			productReference = D5FF79951D72750E003D2CBD /* PostView2.app */;
+			productReference = D5FF79951D72750E003D2CBD /* PostView.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -628,7 +628,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D5FF79941D72750E003D2CBD /* PostView2 */,
+				D5FF79941D72750E003D2CBD /* PostView */,
 			);
 		};
 /* End PBXProject section */
@@ -1012,7 +1012,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D5FF79A61D72750E003D2CBD /* Build configuration list for PBXNativeTarget "PostView2" */ = {
+		D5FF79A61D72750E003D2CBD /* Build configuration list for PBXNativeTarget "PostView" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D5FF79A71D72750E003D2CBD /* Debug */,
