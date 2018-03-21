@@ -469,6 +469,7 @@ void CDataPanel::Update(bool breset)
 	if (breset)
 	{
 		CDocument* pdoc = m_wnd->GetDocument();
+		ui->m_prop->Update(0);
 		ui->data->SetFEModel(pdoc->GetFEModel());
 	}
 }
