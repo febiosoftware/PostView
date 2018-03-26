@@ -197,6 +197,22 @@ void CMainWindow::UpdateStatusMessage()
 	}
 }
 
+void CMainWindow::SetWindowTitle(const QString& t)
+{
+	QString title = "PostView2";
+	if (t.isEmpty() == false)
+	{
+		if (t.length() > 50)
+		{
+			QString txt = t.right(50);
+			title += QString(" - ...%1").arg(txt);
+		}
+		else title += QString(" - %1").arg(t);
+	}
+
+	setWindowTitle(title);
+}
+
 CGLView* CMainWindow::GetGLView()
 {
 	return ui->glview;
@@ -308,7 +324,7 @@ void CMainWindow::OpenFile(const QString& fileName, int nfilter)
 
 	ui->actionColorMap->setDisabled(true);
 
-	setWindowTitle(QString("PostView2"));
+	SetWindowTitle("");
 
 	// create a file reader
 	FEFileReader* reader = 0;
@@ -376,15 +392,15 @@ void CMainWindow::OpenFile(const QString& fileName, int nfilter)
 
 	// copy just the file title
 	std::string stitle = sfile;
-	int npos = sfile.rfind('/');
+/*	int npos = sfile.rfind('/');
 	if (npos == std::string::npos) npos = sfile.rfind('\\');
 	if (npos != std::string::npos)
 	{
 		stitle = sfile.substr(npos+1);
 	}
-
+*/
 	// set the window title
-	setWindowTitle(QString("PostView2 - %1").arg(QString(stitle.c_str())));
+	SetWindowTitle(QString(stitle.c_str()));
 
 	// deactivate the play tool bar
 	ui->playToolBar->setEnabled(false);
@@ -745,8 +761,8 @@ void CMainWindow::on_actionOpenSession_triggered()
 				if (ch == 0) ch = szfile; else ch++;
 			} else ch++;
 
-			QString title; title = QString("%1 - PostView").arg(ch);
-			setWindowTitle(title);
+			QString title; title = QString(ch);
+			SetWindowTitle(title);
 			
 			ui->selectData->BuildMenu(m_doc->GetFEModel(), DATA_SCALAR);
 			if (m_doc->GetFEModel()->GetStates() > 0) ui->playToolBar->setEnabled(true);

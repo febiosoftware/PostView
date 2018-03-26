@@ -92,6 +92,9 @@ public:
 	// sets the current folder
 	void SetCurrentFolder(const QString& folder);
 
+	// Set the window title
+	void SetWindowTitle(const QString& t);
+
 public slots:
 	void on_actionOpen_triggered();
 	void on_actionSave_triggered();
