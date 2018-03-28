@@ -1833,6 +1833,66 @@ FEFindElement::FEFindElement(FEMeshBase& mesh) : m_mesh(mesh)
 	}
 }
 
+FEFindElement::FEFindElement(FEMeshBase& mesh, vector<bool>& flags) : m_mesh(mesh)
+{
+	// calculate bounding box for the entire mesh
+	int NN = mesh.Nodes();
+	int NE = mesh.Elements();
+	if ((NN == 0) || (NE == 0)) return;
+
+	vec3f r = mesh.Node(0).m_r0;
+	BOUNDINGBOX box(r, r);
+	for (int i = 1; i<mesh.Nodes(); ++i)
+	{
+		r = mesh.Node(i).m_r0;
+		box += r;
+	}
+	float R = box.GetMaxExtent();
+	box.Inflate(R*0.001f);
+
+	// split this box recursively
+	m_bound.m_box = box;
+
+	int l = (int)(log(NE) / log(8.0));
+	if (l < 0) l = 0;
+	if (l > 3) l = 3;
+	m_bound.split(l);
+
+	// calculate bounding boxes for all elements
+	int cflags = flags.size();
+	for (int i = 0; i<NE; ++i)
+	{
+		FEElement& e = mesh.Element(i);
+
+		bool badd = true;
+		if (flags.empty() == false)
+		{
+			int mid = e.m_MatID;
+			if ((mid >= 0) && (mid < cflags)) badd = flags[mid];
+		}
+
+		if (badd)
+		{
+			int ne = e.Nodes();
+
+			// do a quick bounding box test
+			vec3f r0 = mesh.Node(e.m_node[0]).m_r0;
+			vec3f r1 = r0;
+			BOUNDINGBOX box(r0, r1);
+			for (int j = 1; j<ne; ++j)
+			{
+				vec3f& rj = mesh.Node(e.m_node[j]).m_r0;
+				box += rj;
+			}
+			float R = box.GetMaxExtent();
+			box.Inflate(R*0.001f);
+
+			// add it to the octree
+			m_bound.Add(box, i);
+		}
+	}
+}
+
 bool FEFindElement::FindInReferenceFrame(const vec3f& x, int& nelem, double r[3])
 {
 	vec3f y[FEGenericElement::MAX_NODES];

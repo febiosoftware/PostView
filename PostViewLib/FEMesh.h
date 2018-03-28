@@ -268,6 +268,7 @@ public:
 
 public:
 	FEFindElement(FEMeshBase& mesh);
+	FEFindElement(FEMeshBase& mesh, vector<bool>& flags);
 
 	bool FindInReferenceFrame(const vec3f& x, int& nelem, double r[3]);
 

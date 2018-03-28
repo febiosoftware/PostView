@@ -197,12 +197,42 @@ int CImportLinesTool::ReadAng2Format(const char* szfile)
 	// read the version number
 	unsigned int version = 0;
 	if (fread(&version, sizeof(unsigned int), 1, fp) != 1) { fclose(fp); return 0; }
-	if (version != 0) { fclose(fp); return 0; }
+
+	// the flags say if vessels can grow inside a material or not
+	int mats = fem.Materials();
+	vector<bool> flags(mats, true);
+
+	switch (version)
+	{
+	case 0: break;	// nothing to do (all materials are candidates)
+	case 1: 
+		{
+			// read masks
+			int n = 0;
+			unsigned int masks = 0;
+			if (fread(&masks, sizeof(unsigned int), 1, fp) != 1) { fclose(fp); return 0; }
+			for (int i=0; i<masks; ++i)
+			{
+				unsigned int mask = 0;
+				if (fread(&mask, sizeof(unsigned int), 1, fp) != 1) { fclose(fp); return 0; }
+				for (int j=0; j<32; ++j)
+				{
+					bool b = ((mask & (1 << j)) != 0);
+					flags[n++] = b;
+					if (n == mats) break;
+				}
+				if (n == mats) break;
+			}
+		}
+		break;
+	default:
+		fclose(fp); return 0;
+	}
 
 	// store the raw data
 	vector<pair<FRAG, FRAG> > raw;
 
-	FEFindElement find(mesh);
+	FEFindElement find(mesh, flags);
 
 	int nstate = 0;
 	while (!feof(fp) && !ferror(fp))
