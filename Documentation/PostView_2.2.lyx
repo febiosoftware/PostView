@@ -103,8 +103,6 @@ eqs-within-sections
 	filename Figures/PostView.png
 	lyxscale 25
 	width 6in
-	height 4in
-	keepAspectRatio
 
 \end_inset
 
@@ -634,8 +632,6 @@ status open
 \begin_inset Graphics
 	filename Figures/Figure1.png
 	width 5in
-	height 9.65in
-	keepAspectRatio
 
 \end_inset
 
@@ -704,8 +700,6 @@ status open
 \begin_inset Graphics
 	filename Figures/Figure2.png
 	width 5in
-	height 9.65in
-	keepAspectRatio
 
 \end_inset
 
@@ -959,8 +953,6 @@ status open
 \begin_inset Graphics
 	filename Figures/Figure3.png
 	width 5in
-	height 9.65in
-	keepAspectRatio
 
 \end_inset
 
@@ -1079,8 +1071,6 @@ status open
 \begin_inset Graphics
 	filename Figures/Figure4.png
 	width 5in
-	height 9.65in
-	keepAspectRatio
 
 \end_inset
 
@@ -2317,8 +2307,6 @@ status open
 \begin_inset Graphics
 	filename Figures/Figure5.png
 	width 5in
-	height 8.27in
-	keepAspectRatio
 
 \end_inset
 
@@ -2454,7 +2442,6 @@ status open
 \begin_inset Graphics
 	filename Figures/text properties.png
 	width 2.35in
-	height 2.77in
 
 \end_inset
 
@@ -3410,8 +3397,6 @@ status open
 \begin_inset Graphics
 	filename Figures/settings.png
 	width 4in
-	height 4.5in
-	keepAspectRatio
 
 \end_inset
 
@@ -4272,7 +4257,6 @@ status open
 \begin_inset Graphics
 	filename Figures/Add_data_from_file.png
 	width 2.86in
-	height 1.92in
 
 \end_inset
 
@@ -5704,8 +5688,6 @@ status open
 \begin_inset Graphics
 	filename Figures/summary.png
 	width 5in
-	height 5.54in
-	keepAspectRatio
 
 \end_inset
 
@@ -5824,8 +5806,6 @@ status open
 \begin_inset Graphics
 	filename Figures/Graph.png
 	width 4.68in
-	height 3.16in
-	keepAspectRatio
 
 \end_inset
 
@@ -5966,8 +5946,6 @@ status open
 \begin_inset Graphics
 	filename Figures/Graph_with_tools_panel.png
 	width 3.65in
-	height 2.84in
-	keepAspectRatio
 
 \end_inset
 
@@ -6192,8 +6170,6 @@ status open
 \begin_inset Graphics
 	filename Figures/Integrate_window.png
 	width 5in
-	height 3.98in
-	keepAspectRatio
 
 \end_inset
 
