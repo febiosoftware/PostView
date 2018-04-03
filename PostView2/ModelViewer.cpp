@@ -18,6 +18,7 @@
 #include "GLSlicePLot.h"
 #include "GLIsoSurfacePlot.h"
 #include "GLLinePlot.h"
+#include "GLStreamLinePlot.h"
 #include <PostViewLib/3DImage.h>
 #include <PostViewLib/VolRender.h>
 #include <PostViewLib/ImageSlicer.h>
@@ -603,12 +604,12 @@ void CModelViewer::Update(bool breset)
 	if (breset)
 	{
 		CModelTreeItem* item = dynamic_cast<CModelTreeItem*>(ui->m_tree->currentItem());
-		CGLObject* po = 0;
+/*		CGLObject* po = 0;
 		if (item)
 		{
 			po = item->Object();
 		}
-
+*/
 		// clear all property lists
 		if (ui->m_list.isEmpty() == false)
 		{
@@ -678,11 +679,12 @@ void CModelViewer::Update(bool breset)
 				CGLPlot& plot = *(*it);
 				CModelTreeItem* pi1 = new CModelTreeItem(&plot, ui->m_tree);
 
-				if      (dynamic_cast<CGLPlaneCutPlot  *>(&plot))  pi1->setIcon(0, QIcon(QString(":/icons/cut.png")));
-				else if (dynamic_cast<CGLVectorPlot    *>(&plot))  pi1->setIcon(0, QIcon(QString(":/icons/vectors.png")));
-				else if (dynamic_cast<CGLSlicePlot     *>(&plot))  pi1->setIcon(0, QIcon(QString(":/icons/slice.png")));
-				else if (dynamic_cast<CGLIsoSurfacePlot*>(&plot))  pi1->setIcon(0, QIcon(QString(":/icons/isosurface.png")));
-			
+				if      (dynamic_cast<CGLPlaneCutPlot  *>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/cut.png")));
+				else if (dynamic_cast<CGLVectorPlot    *>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/vectors.png")));
+				else if (dynamic_cast<CGLSlicePlot     *>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/slice.png")));
+				else if (dynamic_cast<CGLIsoSurfacePlot*>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/isosurface.png")));
+				else if (dynamic_cast<CGLStreamLinePlot*>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/streamlines.png")));
+							
 				string name = plot.GetName();
 
 				pi1->setText(0, name.c_str());
@@ -738,7 +740,8 @@ void CModelViewer::Update(bool breset)
 			}
 		}
 
-		if (po) selectObject(po);
+		// This can crash PostView if po no longer exists (e.g. after new file is read)
+//		if (po) selectObject(po);
 	}
 	else
 	{

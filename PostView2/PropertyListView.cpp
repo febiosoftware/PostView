@@ -380,6 +380,17 @@ public:
 CPropertyListView::CPropertyListView(QWidget* parent) : QWidget(parent), ui(new Ui::CPropertyListView)
 {
 	ui->setupUi(this);
+	ui->m_list = 0;
+}
+
+//-----------------------------------------------------------------------------
+void CPropertyListView::resizeEvent(QResizeEvent* ev)
+{
+	QWidget::resizeEvent(ev);
+	if (ui->m_list && ui->m_list->Properties() > 0)
+	{
+		ui->m_prop->setColumnWidth(0, ui->m_prop->width() / 2);
+	}
 }
 
 //-----------------------------------------------------------------------------

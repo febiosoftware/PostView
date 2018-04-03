@@ -54,7 +54,7 @@ public:
 	bool IsInside(float x, float y, float z);
 
 	// see if this box intersects another box
-	bool IsInside(BOUNDINGBOX& b);
+	bool Intersects(BOUNDINGBOX& b);
 
 	// get the coordinates of the box
 	vec3f r0() const;

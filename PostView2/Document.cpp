@@ -342,7 +342,9 @@ std::string CDocument::GetFieldString()
 //-----------------------------------------------------------------------------
 int CDocument::currentTime() 
 { 
-	return m_pGLModel->currentTimeIndex(); 
+	if (m_pGLModel)
+		return m_pGLModel->currentTimeIndex(); 
+	else return -1;
 }
 
 //-----------------------------------------------------------------------------

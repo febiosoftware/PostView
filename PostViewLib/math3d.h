@@ -53,6 +53,8 @@ public:
 
 	float Length() const { return (float) sqrt(x*x + y*y + z*z); }
 
+	float SqrLength() const { return (float) (x*x + y*y + z*z); }
+
 	vec3f& Normalize()
 	{
 		float L = Length();

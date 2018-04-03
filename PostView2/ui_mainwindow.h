@@ -310,15 +310,16 @@ public:
 		actionProperties->setWhatsThis("Opens dialog box with properties of the currently selected widget");
 
 		// --- Post menu ---
-		QAction* actionPlaneCut        = addAction("Plane cut"       , "actionPlaneCut"       , ":/icons/cut.png");
-		QAction* actionVectorPlot      = addAction("Vector plot"     , "actionVectorPlot"     , ":/icons/vectors.png");
-		QAction* actionIsosurfacePlot  = addAction("Isosurface plot" , "actionIsosurfacePlot" , ":/icons/isosurface.png");
-		QAction* actionSlicePlot       = addAction("Slice plot"      , "actionSlicePlot"      , ":icons/slice.png");
-		QAction* actionDisplacementMap = addAction("Displacement map", "actionDisplacementMap", ":/icons/distort.png");
-		QAction* actionGraph           = addAction("New Graph ..."   , "actionGraph"          , ":/icons/chart.png"); actionGraph->setShortcut(Qt::Key_F3);
-		QAction* actionSummary         = addAction("Summary ..."     , "actionSummary"        ); actionSummary->setShortcut(Qt::Key_F4);
-		QAction* actionStats           = addAction("Statistics  ..." , "actionStats"          );
-		QAction* actionIntegrate       = addAction("Integrate ..."   , "actionIntegrate"      , ":/icons/integrate.png");
+		QAction* actionPlaneCut        = addAction("Plane cut"        , "actionPlaneCut"       , ":/icons/cut.png");
+		QAction* actionVectorPlot      = addAction("Vector plot"      , "actionVectorPlot"     , ":/icons/vectors.png");
+		QAction* actionIsosurfacePlot  = addAction("Isosurface plot"  , "actionIsosurfacePlot" , ":/icons/isosurface.png");
+		QAction* actionSlicePlot       = addAction("Slice plot"       , "actionSlicePlot"      , ":icons/slice.png");
+		QAction* actionDisplacementMap = addAction("Displacement map" , "actionDisplacementMap", ":/icons/distort.png");
+		QAction* actionStreamLinePlot  = addAction("Stream lines plot", "actionStreamLinePlot" , ":/icons/streamlines.png");
+		QAction* actionGraph           = addAction("New Graph ..."    , "actionGraph"          , ":/icons/chart.png"); actionGraph->setShortcut(Qt::Key_F3);
+		QAction* actionSummary         = addAction("Summary ..."      , "actionSummary"        ); actionSummary->setShortcut(Qt::Key_F4);
+		QAction* actionStats           = addAction("Statistics  ..."  , "actionStats"          );
+		QAction* actionIntegrate       = addAction("Integrate ..."    , "actionIntegrate"      , ":/icons/integrate.png");
 
 		actionPlaneCut->setWhatsThis("<h3>Plane cut</h3>Add a plane cut plot to the model. A plane cut plot allows users to create a cross section of the mes.");
 		actionVectorPlot->setWhatsThis("<h3>Vector plot</h3>Add a vector plot to the model. Vectors plots can show vector data in the model");
@@ -439,6 +440,7 @@ public:
 		menuPost->addAction(actionIsosurfacePlot);
 		menuPost->addAction(actionSlicePlot);
 		menuPost->addAction(actionDisplacementMap);
+		menuPost->addAction(actionStreamLinePlot);
 		menuPost->addSeparator();
 		menuPost->addAction(actionGraph);
 		menuPost->addSeparator();
@@ -534,6 +536,7 @@ public:
 		postToolbar->addAction(actionVectorPlot    );
 		postToolbar->addAction(actionIsosurfacePlot);
 		postToolbar->addAction(actionSlicePlot     );
+		postToolbar->addAction(actionStreamLinePlot);
 		postToolbar->addSeparator();
 		postToolbar->addAction(actionGraph);
 		postToolbar->addAction(actionIntegrate);

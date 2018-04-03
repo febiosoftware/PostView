@@ -31,6 +31,7 @@
 #include "GLIsoSurfacePlot.h"
 #include "GLSlicePLot.h"
 #include "GLVectorPlot.h"
+#include "GLStreamLinePlot.h"
 #include "DlgViewSettings.h"
 #include "DlgExportXPLT.h"
 #include "DlgExportLSDYNA.h"
@@ -1101,6 +1102,20 @@ void CMainWindow::on_actionVectorPlot_triggered()
 	pdoc->AddPlot(pp);
 	pdoc->UpdateFEModel();
 	
+	ui->modelViewer->Update(true);
+	ui->modelViewer->selectObject(pp);
+	ui->modelViewer->parentWidget()->raise();
+
+	RedrawGL();
+}
+
+void CMainWindow::on_actionStreamLinePlot_triggered()
+{
+	CDocument* pdoc = GetDocument();
+	CGLStreamLinePlot* pp = new CGLStreamLinePlot(pdoc->GetGLModel());
+	pdoc->AddPlot(pp);
+	pdoc->UpdateFEModel();
+
 	ui->modelViewer->Update(true);
 	ui->modelViewer->selectObject(pp);
 	ui->modelViewer->parentWidget()->raise();

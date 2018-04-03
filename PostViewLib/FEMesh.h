@@ -244,6 +244,10 @@ bool FindElementRef(FEMeshBase& m, const vec3f& x, int& nelem, double r[3]);
 // the x coordinates is assumed to be in reference frame
 bool FindElementInReferenceFrame(FEMeshBase& m, const vec3f& x, int& nelem, double r[3]);
 
+// project the point p in the reference frame of element el. This returns the iso-parametric coordinates in r.
+// The return value is true or false depending if the point is actually inside the element
+bool ProjectInsideReferenceElement(FEMeshBase& m, FEElement& el, const vec3f& p, double r[3]);
+
 class FEFindElement
 {
 public:
@@ -271,6 +275,8 @@ public:
 	FEFindElement(FEMeshBase& mesh, vector<bool>& flags);
 
 	bool FindInReferenceFrame(const vec3f& x, int& nelem, double r[3]);
+
+	BOUNDINGBOX BoundingBox() const { return m_bound.m_box; }
 
 private:
 	BOX			m_bound;

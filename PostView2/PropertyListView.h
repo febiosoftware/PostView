@@ -29,6 +29,8 @@ public:
 
 	void Update(CPropertyList* plist);
 
+	void resizeEvent(QResizeEvent* ev) override;
+
 signals:
 	void dataChanged();
 

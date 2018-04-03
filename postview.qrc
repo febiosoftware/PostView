@@ -48,5 +48,6 @@
 		<file>icons/select_connected.png</file>
 		<file>icons/eye.png</file>
 		<file>icons/check.png</file>
+		<file>icons/streamlines.png</file>
     </qresource>
 </RCC>

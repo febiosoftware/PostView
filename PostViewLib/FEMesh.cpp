@@ -1747,7 +1747,7 @@ void FEFindElement::BOX::Add(BOUNDINGBOX& b, int nelem)
 {
 	if (m_level == 0)
 	{
-		if (m_box.IsInside(b) || (b.IsInside(m_box)))
+		if (m_box.Intersects(b))
 		{
 			BOX* box = new BOX;
 			box->m_box = b;
@@ -1826,7 +1826,7 @@ FEFindElement::FEFindElement(FEMeshBase& mesh) : m_mesh(mesh)
 			box += rj;
 		}
 		float R = box.GetMaxExtent();
-		box.Inflate(R*0.001f);
+		box.Inflate(R*0.0001f);
 
 		// add it to the octree
 		m_bound.Add(box, i);

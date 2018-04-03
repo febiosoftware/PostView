@@ -156,16 +156,16 @@ vec3f BOUNDINGBOX::r1() const
 
 //-----------------------------------------------------------------------------
 // see if this box intersects another box
-bool BOUNDINGBOX::IsInside(BOUNDINGBOX& b)
+bool BOUNDINGBOX::Intersects(BOUNDINGBOX& b)
 {
-	if (IsInside(b.x0, b.y0, b.z0)) return true;
-	if (IsInside(b.x1, b.y0, b.z0)) return true;
-	if (IsInside(b.x1, b.y1, b.z0)) return true;
-	if (IsInside(b.x0, b.y1, b.z0)) return true;
-	if (IsInside(b.x0, b.y0, b.z1)) return true;
-	if (IsInside(b.x1, b.y0, b.z1)) return true;
-	if (IsInside(b.x1, b.y1, b.z1)) return true;
-	if (IsInside(b.x0, b.y1, b.z1)) return true;
+	if (b.x0 > x1) return false;
+	if (b.x1 < x0) return false;
 
-	return false;
+	if (b.y0 > y1) return false;
+	if (b.y1 < y0) return false;
+
+	if (b.z0 > z1) return false;
+	if (b.z1 < z0) return false;
+
+	return true;
 }
