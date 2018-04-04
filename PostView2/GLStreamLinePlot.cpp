@@ -277,6 +277,7 @@ void CGLStreamLinePlot::UpdateStreamLines()
 					if (DR > 2.0f*maxStep) dt *= 0.5f; else break;
 				}
 				while (1);
+				if (ok == false) break;
 
 				cf += dr;
 
