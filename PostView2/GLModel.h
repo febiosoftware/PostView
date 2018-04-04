@@ -154,8 +154,9 @@ protected:
 	void RenderSolidMaterial(FEModel* ps, int m);
 	void RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m);
 	void RenderFaceEdge(FEFace& face, int j, FEMeshBase* pm, int ndivs);
+	void RenderSolidDomain(FEDomain& dom, bool btex);
 
-	void RenderInnerSurface(int m, bool bnode);
+	void RenderInnerSurface(int m);
 	void RenderInnerSurfaceOutline(int m, int ndivs);
 
 	void RenderSmoothQUAD4(FEFace& f, FEMeshBase* pm, int ndivs, bool bnode);

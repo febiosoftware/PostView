@@ -833,7 +833,7 @@ void CGLModel::RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m)
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	// render the internal faces
-	RenderInnerSurface(m, bnode);
+	RenderInnerSurface(m);
 
 	if (pmat->benable && m_pcol->IsActive())
 	{
@@ -844,8 +844,9 @@ void CGLModel::RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m)
 }
 
 //-----------------------------------------------------------------------------
-void CGLModel::RenderInnerSurface(int m, bool bnode)
+void CGLModel::RenderInnerSurface(int m)
 {
+	bool bnode = m_pcol->DisplayNodalValues();
 	bool old_smooth = m_bsmooth;
 	m_bsmooth = false;
 	FEMeshBase* pm = GetActiveMesh();
@@ -871,13 +872,50 @@ void CGLModel::RenderInnerSurfaceOutline(int m, int ndivs)
 }
 
 //-----------------------------------------------------------------------------
+void CGLModel::RenderSolidDomain(FEDomain& dom, bool btex)
+{
+	FEMeshBase* pm = GetActiveMesh();
+	int ndivs = GetSubDivisions();
+	bool bnode = m_pcol->DisplayNodalValues();
+
+	if (btex) glEnable(GL_TEXTURE_1D);
+
+	// render active faces
+	int NF = dom.Faces();
+	for (int i = 0; i<NF; ++i)
+	{
+		FEFace& face = dom.Face(i);
+		if (face.m_ntag == 1)
+		{
+			// okay, we got one, so let's render it
+			RenderFace(face, pm, ndivs, bnode);
+		}
+	}
+
+	// render inactive faces
+	if (btex) glDisable(GL_TEXTURE_1D);
+	if (m_pcol->IsActive()) glColor3ub(200, 200, 200);
+	for (int i = 0; i<NF; ++i)
+	{
+		FEFace& face = dom.Face(i);
+		if (face.m_ntag == 2)
+		{
+			// okay, we got one, so let's render it
+			RenderFace(face, pm, ndivs, bnode);
+		}
+	}
+	if (btex) glEnable(GL_TEXTURE_1D);
+}
+
+//-----------------------------------------------------------------------------
 void CGLModel::RenderSolidMaterial(FEModel* ps, int m)
 {
-	FEMaterial* pmat = ps->GetMaterial(m);
-	FEMeshBase* pm = GetActiveMesh();
-
 	// make sure a part with this material exists
+	FEMeshBase* pm = GetActiveMesh();
 	if (m >= pm->Domains()) return;
+
+	// get the material
+	FEMaterial* pmat = ps->GetMaterial(m);
 
 	// set the material properties
 	bool btex = false;
@@ -899,47 +937,34 @@ void CGLModel::RenderSolidMaterial(FEModel* ps, int m)
 	glPushAttrib(GL_ENABLE_BIT);
 	if (pmat->bclip == false) CGLPlaneCutPlot::DisableClipPlanes();
 
-	bool bnode = m_pcol->DisplayNodalValues();
-
-	// render the unselected faces
-	int i;
-	FEDomain& dom = pm->Domain(m);
-	int NF = dom.Faces();
-
-	int ndivs = GetSubDivisions();
-
+	// get selection mode
 	int mode = GetSelectionMode();
 
+	// determine which faces to draw 
+	// tag == 0 : no-draw
+	// tag == 1 : draw active
+	// tag == 2 : draw inactive
+	// TODO: It seems that this can be precomputed and stored somewhere in the domains
+	FEDomain& dom = pm->Domain(m);
+	int NF = dom.Faces();
+	for (int i = 0; i<NF; ++i)
+	{
+		FEFace& face = dom.Face(i);
+		FEElement& el = pm->Element(face.m_elem[0]);
+		// assume no-draw
+		face.m_ntag = 0;
+
+		// check render state
+		if (((mode != SELECT_ELEMS) || !el.IsSelected()) && ((mode != SELECT_FACES) || !face.IsSelected()) && face.IsVisible())
+		{
+			face.m_ntag = (face.IsActive() ? 1 : 2);
+		}
+	}
+
+	// do the rendering
 	if (pmat->transparency > .999f)
 	{
-		if (btex) glEnable(GL_TEXTURE_1D);
-		// render active faces
-		for ( i=0; i<NF; ++i)
-		{
-			FEFace& face = dom.Face(i);
-			FEElement& el = pm->Element(face.m_elem[0]);
-			if (((mode != SELECT_ELEMS) || !el.IsSelected()) && ((mode != SELECT_FACES) || !face.IsSelected()) && face.IsVisible() && face.IsActive())
-			{
-				// okay, we got one, so let's render it
-				RenderFace(face, pm, ndivs, bnode);
-			}
-		}
-
-		glDisable(GL_TEXTURE_1D);
-		// render inactive faces
-		if (m_pcol->IsActive()) glColor3ub(200, 200, 200);
-		for ( i=0; i<NF; ++i)
-		{
-			FEFace& face = dom.Face(i);
-			FEElement& el = pm->Element(face.m_elem[0]);
-			if (((mode != SELECT_ELEMS) || !el.IsSelected()) && ((mode != SELECT_FACES) || !face.IsSelected()) && face.IsVisible() && !face.IsActive())
-			{
-				// okay, we got one, so let's render it
-				RenderFace(face, pm, ndivs, bnode);
-			}
-		}
-
-		if (btex) glEnable(GL_TEXTURE_1D);
+		RenderSolidDomain(dom, btex);
 	}
 	else
 	{
@@ -948,43 +973,19 @@ void CGLModel::RenderSolidMaterial(FEModel* ps, int m)
 		glEnable(GL_CULL_FACE);
 
 		glCullFace(GL_FRONT);
-		for ( i=0; i<NF; ++i)
-		{
-			FEFace& face = dom.Face(i);
-			FEElement& el = pm->Element(face.m_elem[0]);
-
-			if (((mode != SELECT_ELEMS) || !el.IsSelected()) && !face.IsSelected() && face.IsVisible())
-			{
-				// okay, we got one, so let's render it
-				RenderFace(face, pm, ndivs, bnode);
-			}
-		}
+		RenderSolidDomain(dom, btex);
 
 		// and then we draw the front-facing ones.
-		glCullFace(GL_BACK);
-		for ( i=0; i<NF; ++i)
-		{
-			FEFace& face = dom.Face(i);
-			FEElement& el = pm->Element(face.m_elem[0]);
-
-			if (((mode != SELECT_ELEMS) || !el.IsSelected()) && !face.IsSelected() && face.IsVisible())
-			{
-				// okay, we got one, so let's render it
-				RenderFace(face, pm, ndivs, bnode);
-			}
-		}
+		RenderSolidDomain(dom, btex);
 
 		glPopAttrib();
 	}
-
-	// reset the polygon mode
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	// render the internal surfaces
 	if (mode != SELECT_FACES)
 	{
 		if (btex) glColor3ub(255,255,255);
-		RenderInnerSurface(m, bnode);
+		RenderInnerSurface(m);
 	}
 
 	if (pmat->benable && m_pcol->IsActive())
