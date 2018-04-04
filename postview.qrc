@@ -49,5 +49,6 @@
 		<file>icons/eye.png</file>
 		<file>icons/check.png</file>
 		<file>icons/streamlines.png</file>
+		<file>icons/cancel.png</file>
     </qresource>
 </RCC>

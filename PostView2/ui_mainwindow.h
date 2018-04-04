@@ -27,6 +27,7 @@
 #include <QProgressBar>
 #include <QtCore/qdir.h>
 #include <QPushButton>
+#include <QToolButton>
 #include <QWhatsThis>
 
 QT_BEGIN_NAMESPACE
@@ -112,7 +113,7 @@ public:
 
 	QStatusBar*		statusBar;
 	QProgressBar*	fileProgress;
-	QPushButton*	stopFileReading;
+	QToolButton*	stopFileReading;
 
 	QString currentPath;
 
@@ -160,7 +161,10 @@ public:
 		fileProgress->setMaximumWidth(200);
 //		fileProgress->setMaximumHeight(15);
 
-		stopFileReading = new QPushButton("Cancel");
+		stopFileReading = new QToolButton;
+		stopFileReading->setAutoRaise(true);
+		stopFileReading->setToolTip("Cancel");
+		stopFileReading->setIcon(QIcon(":/icons/cancel.png"));
 
 		// connect all the slots
 		QMetaObject::connectSlotsByName(MainWindow);

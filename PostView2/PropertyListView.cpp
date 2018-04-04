@@ -89,6 +89,7 @@ public:
 				{
 					FEModel& fem = *FEModel::GetInstance();
 					std::string s = fem.GetDataManager()->getDataString(v.toInt(), DATA_SCALAR);
+					if (s.empty()) s = "(please select)";
 					return QVariant(s.c_str());
 				}
 				else if (role == Qt::EditRole) return v;
@@ -99,6 +100,7 @@ public:
 				{
 					FEModel& fem = *FEModel::GetInstance();
 					std::string s = fem.GetDataManager()->getDataString(v.toInt(), DATA_VECTOR);
+					if (s.empty()) s = "(please select)";
 					return QVariant(s.c_str());
 				}
 				else if (role == Qt::EditRole) return v;
