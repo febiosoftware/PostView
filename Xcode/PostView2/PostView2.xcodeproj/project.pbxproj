@@ -22,6 +22,7 @@
 		D52C6FB51D75DCE900DF804B /* libPostViewLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D52C6FB41D75DCE900DF804B /* libPostViewLib.a */; };
 		D53292BB1E453447002798B3 /* DlgExportAscii.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53292B91E453447002798B3 /* DlgExportAscii.cpp */; };
 		D53598C01E901C0500584A4F /* DragBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53598BE1E901C0500584A4F /* DragBox.cpp */; };
+		D53A8DFB2074EC7C00BDDD2D /* GLStreamLinePlot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53A8DFA2074EC7C00BDDD2D /* GLStreamLinePlot.cpp */; };
 		D55AC5011E61EB6E00BBA0D1 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D55AC5001E61EB6E00BBA0D1 /* OpenGL.framework */; };
 		D56731621F9FD85200C87BC1 /* AreaCoverageTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D56731611F9FD85200C87BC1 /* AreaCoverageTool.cpp */; };
 		D56731681F9FF5A700C87BC1 /* moc_AreaCoverageTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D56731671F9FF5A700C87BC1 /* moc_AreaCoverageTool.cpp */; };
@@ -160,6 +161,8 @@
 		D53292BA1E453447002798B3 /* DlgExportAscii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgExportAscii.h; sourceTree = "<group>"; };
 		D53598BE1E901C0500584A4F /* DragBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DragBox.cpp; sourceTree = "<group>"; };
 		D53598BF1E901C0500584A4F /* DragBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DragBox.h; sourceTree = "<group>"; };
+		D53A8DF92074EC7B00BDDD2D /* GLStreamLinePlot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLStreamLinePlot.h; sourceTree = "<group>"; };
+		D53A8DFA2074EC7C00BDDD2D /* GLStreamLinePlot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLStreamLinePlot.cpp; sourceTree = "<group>"; };
 		D55AC5001E61EB6E00BBA0D1 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		D56731601F9FD85200C87BC1 /* AreaCoverageTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AreaCoverageTool.h; sourceTree = "<group>"; };
 		D56731611F9FD85200C87BC1 /* AreaCoverageTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AreaCoverageTool.cpp; sourceTree = "<group>"; };
@@ -459,6 +462,8 @@
 				D5FF79E31D72756B003D2CBD /* GLPlot.h */,
 				D5FF79E41D72756B003D2CBD /* GLSlicePLot.cpp */,
 				D5FF79E51D72756B003D2CBD /* GLSlicePLot.h */,
+				D53A8DFA2074EC7C00BDDD2D /* GLStreamLinePlot.cpp */,
+				D53A8DF92074EC7B00BDDD2D /* GLStreamLinePlot.h */,
 				D5FF79E61D72756B003D2CBD /* GLVectorPlot.cpp */,
 				D5FF79E71D72756B003D2CBD /* GLVectorPlot.h */,
 				D5FF79E81D72756B003D2CBD /* GLView.cpp */,
@@ -689,6 +694,7 @@
 				D571E01220385DE700A7B96D /* FileThread.cpp in Sources */,
 				D5FF7A6F1D72756B003D2CBD /* moc_GLView.cpp in Sources */,
 				D5FF7A7B1D72756B003D2CBD /* moc_PropertyListView.cpp in Sources */,
+				D53A8DFB2074EC7C00BDDD2D /* GLStreamLinePlot.cpp in Sources */,
 				D52C6FB31D75DCA300DF804B /* TimePanel.cpp in Sources */,
 				D52C6FB11D75DCA300DF804B /* moc_TimePanel.cpp in Sources */,
 				D5FF7A601D72756B003D2CBD /* GLWidgetManager.cpp in Sources */,
