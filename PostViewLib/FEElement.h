@@ -10,10 +10,14 @@
 #endif // _MSC_VER > 1000
 
 #include "math3d.h"
+#include "FEItem.h"
+#include "FEFace.h"
 #include <assert.h>
 
 //-----------------------------------------------------------------------------
 // Different element types
+// Add new elements to the bottom of the list. Do not change the order of these numbers
+// as they are used as indices into the FEElementLibrary element list.
 enum FEElemType {
 	FE_LINE2,
 	FE_LINE3,
@@ -35,246 +39,40 @@ enum FEElemType {
 };
 
 //-----------------------------------------------------------------------------
-// Different face types (do not change the order)
-enum FEFaceType {
-	FACE_TRI3,
-	FACE_QUAD4,
-	FACE_QUAD8,
-	FACE_TRI6,
-	FACE_TRI7,
-	FACE_QUAD9,
-	FACE_TRI10
+// Element shapes
+enum FEElemShape {
+	ELEM_LINE,
+	ELEM_TRI,
+	ELEM_QUAD,
+	ELEM_TET,
+	ELEM_PENTA,
+	ELEM_HEX,
+	ELEM_PYRA
 };
 
 //-----------------------------------------------------------------------------
-// Different edge types
-enum FEEdgeType {
-	EDGE_LINE2,
-	EDGE_LINE3,
-	EDGE_LINE4
+// Element class
+enum FEElemClass
+{
+	ELEM_BEAM,
+	ELEM_SHELL,
+	ELEM_SOLID
 };
-
-//-----------------------------------------------------------------------------
-// FE State Flags
-#define FE_HIDDEN		0x01		// was the item hidden by the user
-#define FE_SELECTED		0x02		// is the item currently selected ?
-#define FE_DISABLED		0x04		// should the item be evaluated ?
-#define FE_ACTIVE		0x08		// does the item contain data?
-#define FE_INVISIBLE	0x10		// is the item actually visible? 
-                                    // Even when not hidden, the item may not be shown since e.g. the material is hidden
 
 //-----------------------------------------------------------------------------
 // Forward declaration of the element class
 class FEElement;
 
 //-----------------------------------------------------------------------------
-// base class for mesh item classes.
-//
-class FEItem
+// Element traits
+struct ElemTraits
 {
-public:
-	FEItem() { m_state = 0; m_nId = -1; m_ntag = 0; }
-	virtual ~FEItem() {}
-
-	bool IsHidden   () const { return ((m_state & FE_HIDDEN   ) != 0); }
-	bool IsSelected () const { return ((m_state & FE_SELECTED ) != 0); }
-	bool IsDisabled () const { return ((m_state & FE_DISABLED ) != 0); }
-	bool IsActive   () const { return ((m_state & FE_ACTIVE   ) != 0); }
-	bool IsInvisible() const { return ((m_state & FE_INVISIBLE) != 0); }
-
-	void Select  () { m_state = m_state |  FE_SELECTED; }
-	void Unselect() { m_state = m_state & ~FE_SELECTED; }
-
-	void Hide  () { m_state = (m_state | FE_HIDDEN) & ~FE_SELECTED;  }
-	void Unhide() { m_state = m_state & ~FE_HIDDEN;  }
-
-	void Enable () { m_state = m_state & ~FE_DISABLED; }
-	void Disable() { m_state = m_state | FE_DISABLED; }
-
-	void Activate  () { m_state = m_state | FE_ACTIVE; }
-	void Deactivate() { m_state = m_state & ~FE_ACTIVE; }
-
-	bool IsEnabled() const { return (IsDisabled() == false); }
-
-	void Show(bool bshow)
-	{
-		if (bshow) m_state = m_state & ~FE_INVISIBLE;
-		else m_state = (m_state | FE_INVISIBLE) & ~FE_SELECTED; 
-	}
-
-	bool IsVisible() const { return (IsInvisible() == false) && (IsHidden() == false); }
-
-	unsigned int GetFEState() const { return m_state; }
-	void SetFEState(unsigned int state) { m_state = state; }
-
-	int GetID() const { return m_nId; }
-	void SetID(int nid) { m_nId = nid; }
-
-public:
-	int	m_ntag;
-	int	m_nId;
-
-	unsigned int m_state;	// the state flag of the mesh(-item)
-};
-
-//-----------------------------------------------------------------------------
-// Class describing a node of the mesh
-class FENode : public FEItem
-{
-public:
-	FENode() { m_tex = 0.f; }
-
-public:
-	vec3f	m_r0;	// initial coordinates of node // TODO: I would like to remove this variable
-	vec3f	m_rt;	// current coordinates of node
-	bool	m_bext;	// interior or exterior node
-	float	m_tex;	// nodal texture coordinate
-};
-
-//-----------------------------------------------------------------------------
-// Class describing an edge of the mesh. The edges identify the smooth boundaries
-class FEEdge : public FEItem
-{
-public:
-	enum {MAX_NODES = 4};
-
-	FEEdgeType Type() const { return m_type; }
-
-public:
-	int node[MAX_NODES];
-	FEEdgeType	m_type;
-
-public:
-	FEEdge();
-
-	bool operator == (const FEEdge& e)
-	{
-		if ((node[0] == e.node[0]) && (node[1] == e.node[1])) return true;
-		if ((node[0] == e.node[1]) && (node[1] == e.node[0])) return true;
-		return false;
-	}
-
-	int Nodes() const
-	{
-		const int N[] = {2,3,4}; 
-		return N[m_type];
-	}
-
-	// evaluate shape function at iso-parameteric point (r,s)
-	void shape(double* H, double r);
-
-	// evaluate a vector expression at iso-points (r,s)
-	double eval(double* d, double r);
-
-	// evaluate a vector expression at iso-points (r,s)
-	vec3f eval(vec3f* v, double r);
-};
-
-//-----------------------------------------------------------------------------
-// Class that describes an exterior face of the mesh
-class FEFace : public FEItem
-{
-public:
-	enum { MAX_NODES = 10 };
-
-public:
-	int	node[MAX_NODES];	// array of indices to the four nodes of a face
-	int	m_ntype;			// type of face
-
-	int	m_nsg;				// smoothing group ID
-	int	m_mat;				// material id
-	int	m_nbr[4];			// neighbour faces
-	int	m_elem[2];			// first index = element to which this face belongs, second index = local element face number
-
-	vec3f	m_fn;				// face normal
-	vec3f	m_nn[MAX_NODES];	// node normals
-	float	m_tex[MAX_NODES];	// nodal 1D-texture coordinates
-	float	m_texe;				// element texture coordinate
-
-public:
-	FEFace();
-
-	bool operator == (const FEFace& face)
-	{
-		const int* pn = face.node;
-		if (m_ntype != face.m_ntype) return false;
-		switch (m_ntype)
-		{
-		case FACE_TRI3:
-		case FACE_TRI6:
-		case FACE_TRI7:
-		case FACE_TRI10:
-			if ((pn[0] != node[0]) && (pn[0] != node[1]) && (pn[0] != node[2])) return false;
-			if ((pn[1] != node[0]) && (pn[1] != node[1]) && (pn[1] != node[2])) return false;
-			if ((pn[2] != node[0]) && (pn[2] != node[1]) && (pn[2] != node[2])) return false;
-			break;
-		case FACE_QUAD4:
-		case FACE_QUAD8:
-		case FACE_QUAD9:
-			if ((pn[0] != node[0]) && (pn[0] != node[1]) && (pn[0] != node[2]) && (pn[0] != node[3])) return false;
-			if ((pn[1] != node[0]) && (pn[1] != node[1]) && (pn[1] != node[2]) && (pn[1] != node[3])) return false;
-			if ((pn[2] != node[0]) && (pn[2] != node[1]) && (pn[2] != node[2]) && (pn[2] != node[3])) return false;
-			if ((pn[3] != node[0]) && (pn[3] != node[1]) && (pn[3] != node[2]) && (pn[3] != node[3])) return false;
-			break;
-		}
-		return true;
-	}
-
-	bool HasEdge(int n1, int n2)
-	{
-		switch (m_ntype)
-		{
-		case FACE_TRI3:
-		case FACE_TRI6:
-		case FACE_TRI7:
-		case FACE_TRI10:
-			if (((node[0]==n1) && (node[1]==n2)) || ((node[1]==n1) && (node[0]==n2))) return true;
-			if (((node[1]==n1) && (node[2]==n2)) || ((node[2]==n1) && (node[1]==n2))) return true;
-			if (((node[2]==n1) && (node[0]==n2)) || ((node[0]==n1) && (node[2]==n2))) return true;
-			break;
-		case FACE_QUAD4:
-		case FACE_QUAD8:
-		case FACE_QUAD9:
-			if (((node[0]==n1) && (node[1]==n2)) || ((node[1]==n1) && (node[0]==n2))) return true;
-			if (((node[1]==n1) && (node[2]==n2)) || ((node[2]==n1) && (node[1]==n2))) return true;
-			if (((node[2]==n1) && (node[3]==n2)) || ((node[3]==n1) && (node[2]==n2))) return true;
-			if (((node[3]==n1) && (node[0]==n2)) || ((node[0]==n1) && (node[3]==n2))) return true;
-			break;
-		}
-		return false;
-	}
-
-	bool HasNode(int n) const
-	{
-		int N = Nodes();
-		for (int i=0; i<N; ++i) if (node[i] == n) return true;
-		return false;
-	}
-
-	int Nodes() const
-	{
-		const int n[7] = {3, 4, 8, 6, 7, 9, 10};
-		assert((m_ntype >= 0) && (m_ntype <= 6));
-		return n[m_ntype]; 
-	}
-
-	int Edges() const
-	{
-		const int n[7] = {3, 4, 4, 3, 3, 4, 3};
-		assert((m_ntype >= 0) && (m_ntype <= 6));
-		return n[m_ntype]; 
-	}
-
-	FEEdge Edge(int i);
-
-	// evaluate shape function at iso-parameteric point (r,s)
-	void shape(double* H, double r, double s);
-
-	// evaluate a vector expression at iso-points (r,s)
-	double eval(double* d, double r, double s);
-
-	// evaluate a vector expression at iso-points (r,s)
-	vec3f eval(vec3f* v, double r, double s);
+	int		ntype;	// type of element
+	int		nshape;	// shape of element
+	int		nclass; // element class
+	int		nodes;	// number of nodes
+	int		faces;	// number of faces (only for solid elements)
+	int		edges;	// number of edges (only for shell elements)
 };
 
 //-----------------------------------------------------------------------------
@@ -287,19 +85,9 @@ public:
 	bool HasNode(int node) const;
 
 public:
-	// derived classes must implement these
-	virtual int Faces() const = 0;
-	virtual int Edges() const = 0;
-	virtual int Nodes() const = 0;
-
-public:
 	FEFace GetFace(int i) const;
 	void GetFace(int i, FEFace& face) const;
 	FEEdge GetEdge(int i) const;
-
-	bool IsSolid() { return ((m_ntype == FE_HEX8  ) || (m_ntype == FE_HEX20 ) || (m_ntype == FE_TET4) || (m_ntype == FE_PENTA6) || (m_ntype == FE_TET10) || (m_ntype == FE_TET15) || (m_ntype == FE_TET20) || (m_ntype == FE_HEX27) || (m_ntype == FE_PENTA15) || (m_ntype == FE_PYRA5)); }
-	bool IsShell() { return ((m_ntype == FE_QUAD4 ) || (m_ntype == FE_QUAD8 ) || (m_ntype == FE_QUAD9 ) || (m_ntype == FE_TRI3) || (m_ntype == FE_TRI6)); }
-	bool IsBeam () { return ((m_ntype == FE_LINE2) || (m_ntype == FE_LINE3)); }
 
 	bool operator != (FEElement& el);
 
@@ -318,9 +106,21 @@ public:
 	// get iso-param coordinates of the nodes
 	void iso_coord(int n, double q[3]);
 
-	FEElemType Type() const { return m_ntype; }
-
 	bool IsExterior() const;
+
+public:
+	void SetType(FEElemType type);
+	int Type() const { return m_traits->ntype; }
+	int Shape() const { return m_traits->nshape; }
+	int Class() const { return m_traits->nclass; }
+
+	bool IsSolid() const { return (m_traits->nclass == ELEM_SOLID); }
+	bool IsShell() const { return (m_traits->nclass == ELEM_SHELL); }
+	bool IsBeam () const { return (m_traits->nclass == ELEM_BEAM ); }
+
+	int Nodes() const { return m_traits->nodes; }
+	int Faces() const { return m_traits->faces; }
+	int Edges() const { return m_traits->edges; }
 
 public:
 	int			m_lid;		// local ID (zero-based index into element array)
@@ -331,7 +131,7 @@ public:
 	FEElement*	m_pElem[6];		// array of pointers to neighbour elements
 
 protected:
-	FEElemType	m_ntype;			// type of element
+	const ElemTraits* m_traits;	// element traits
 };
 
 //=============================================================================
@@ -365,7 +165,7 @@ template <class T> class FEElementBase : public FEElement
 public:
 	FEElementBase()
 	{
-		m_ntype = T::Type();
+		SetType(T::Type());
 		m_node = _node;
 		for (int i=0; i<T::Nodes; ++i) m_node[i] = -1;
 	}
@@ -381,11 +181,6 @@ public:
 		FEElement::operator = (el);
 		for (int i=0; i<T::Nodes; ++i) m_node[i] = el.m_node[i];
 	}
-
-public:
-	int Nodes() const { return T::Nodes; }
-	int Faces() const { return T::Faces; }
-	int Edges() const { return T::Edges; }
 
 public:
 	int	_node[T::Nodes];
@@ -421,14 +216,7 @@ public:
 	FEGenericElement(const FEGenericElement& e);
 	void operator = (const FEGenericElement& e);
 
-	void SetType(FEElemType type);
-
-	int Nodes() const { return m_nodes; }
-	int Faces() const { return m_faces; }
-	int Edges() const { return m_edges; }
-
 public:
-	int		m_nodes, m_faces, m_edges;
 	int		_node[MAX_NODES];	// array of nodes ID
 };
 
@@ -444,15 +232,26 @@ public:
 	FELinearElement(const FELinearElement& e);
 	void operator = (const FELinearElement& e);
 
-	void SetType(FEElemType type);
-
-	int Nodes() const { return m_nodes; }
-	int Faces() const { return m_faces; }
-	int Edges() const { return m_edges; }
-
 public:
-	int		m_nodes, m_faces, m_edges;
 	int		_node[MAX_NODES];	// array of nodes ID
+};
+
+//=============================================================================
+class FEElementLibrary
+{
+public:
+	static void InitLibrary();
+
+	static const ElemTraits* GetTraits(FEElemType type);
+
+private:
+	FEElementLibrary(){}
+	FEElementLibrary(const FEElementLibrary&){}
+
+	static void addElement(int ntype, int nshape, int nclass, int nodes, int faces, int edges);
+
+private:
+	static vector<ElemTraits>	m_lib;
 };
 
 #endif // !defined(AFX_FEELEMENT_H__F82D0D55_F582_4ABE_9D02_C9FC5FC72C6C__INCLUDED_)

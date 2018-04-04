@@ -230,6 +230,8 @@ CDocument::CDocument(CMainWindow* pwnd) : m_wnd(pwnd)
 	// initialize view settings
 	m_ops.Defaults();
 	m_time.Defaults();
+
+	FEElementLibrary::InitLibrary();
 }
 
 CDocument::~CDocument()
