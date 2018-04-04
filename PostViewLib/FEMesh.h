@@ -267,6 +267,8 @@ public:
 
 		BOX* Find(const vec3f& r);
 
+		bool IsInside(const vec3f& r) const { return m_box.IsInside(r); }
+
 		void Add(BOUNDINGBOX& b, int nelem);
 	};
 
@@ -277,6 +279,9 @@ public:
 	bool FindInReferenceFrame(const vec3f& x, int& nelem, double r[3]);
 
 	BOUNDINGBOX BoundingBox() const { return m_bound.m_box; }
+
+private:
+	BOX* FindBox(const vec3f& r);
 
 private:
 	BOX			m_bound;

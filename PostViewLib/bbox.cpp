@@ -153,19 +153,3 @@ vec3f BOUNDINGBOX::r1() const
 {
 	return vec3f(x1, y1, z1);
 }
-
-//-----------------------------------------------------------------------------
-// see if this box intersects another box
-bool BOUNDINGBOX::Intersects(BOUNDINGBOX& b)
-{
-	if (b.x0 > x1) return false;
-	if (b.x1 < x0) return false;
-
-	if (b.y0 > y1) return false;
-	if (b.y1 < y0) return false;
-
-	if (b.z0 > z1) return false;
-	if (b.z1 < z0) return false;
-
-	return true;
-}

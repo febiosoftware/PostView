@@ -50,11 +50,11 @@ public:
 	void Inflate(float f);
 
 	// is a point inside or not
-	bool IsInside(const vec3f& r);
-	bool IsInside(float x, float y, float z);
+	bool IsInside(const vec3f& r) const;
+	bool IsInside(float x, float y, float z) const;
 
 	// see if this box intersects another box
-	bool Intersects(BOUNDINGBOX& b);
+	bool Intersects(BOUNDINGBOX& b) const;
 
 	// get the coordinates of the box
 	vec3f r0() const;
@@ -62,16 +62,24 @@ public:
 };
 
 
-inline bool BOUNDINGBOX::IsInside(const vec3f& r)
+inline bool BOUNDINGBOX::IsInside(const vec3f& r) const
 {
 	return	(r.x >= x0) && (r.x <= x1) &&
 			(r.y >= y0) && (r.y <= y1) &&
 			(r.z >= z0) && (r.z <= z1);
 }
 
-inline bool BOUNDINGBOX::IsInside(float x, float y, float z)
+inline bool BOUNDINGBOX::IsInside(float x, float y, float z) const
 {
 	return	(x >= x0) && (x <= x1) &&
 			(y >= y0) && (y <= y1) &&
 			(z >= z0) && (z <= z1);
+}
+
+inline bool BOUNDINGBOX::Intersects(BOUNDINGBOX& b) const
+{
+	if ((b.x0 > x1) || (b.x1 < x0)) return false;
+	if ((b.y0 > y1) || (b.y1 < y0)) return false;
+	if ((b.z0 > z1) || (b.z1 < z0)) return false;
+	return true;
 }
