@@ -717,7 +717,6 @@ void CGLModel::RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m)
 	bool bnode = m_pcol->DisplayNodalValues();
 
 	// render the unselected faces
-	int i;
 	FEDomain& dom = pm->Domain(m);
 	int NF = dom.Faces();
 
@@ -734,7 +733,7 @@ void CGLModel::RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m)
 	int mode = GetSelectionMode();
 
 	glCullFace(GL_FRONT);
-	for ( i=0; i<NF; ++i)
+	for (int i=0; i<NF; ++i)
 	{
 		FEFace& face = dom.Face(i);
 		FEElement& el = pm->Element(face.m_elem[0]);
@@ -782,7 +781,7 @@ void CGLModel::RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m)
 
 	// and then we draw the front-facing ones.
 	glCullFace(GL_BACK);
-	for ( i=0; i<NF; ++i)
+	for (int i = 0; i<NF; ++i)
 	{
 		FEFace& face = dom.Face(i);
 		FEElement& el = pm->Element(face.m_elem[0]);
@@ -1699,15 +1698,8 @@ void CGLModel::RenderFace(FEFace& face, FEMeshBase* pm, GLCOLOR c[4], int ndivs,
 
 	vec3f& fn = face.m_fn;
 
-	float t1, t2, t3, t4;
-	if (bnode)
-	{
-		t1 = face.m_tex[0];
-		t2 = face.m_tex[1];
-		t3 = face.m_tex[2];
-		t4 = face.m_tex[3];
-	}
-	else t1 = t2 = t3 = t4 = face.m_texe;
+	float t[4];
+	pm->FaceNodeTexCoords(face, t, bnode);
 
 	if (m_bsmooth)
 	{
@@ -1720,10 +1712,10 @@ void CGLModel::RenderFace(FEFace& face, FEMeshBase* pm, GLCOLOR c[4], int ndivs,
 			{
 				glBegin(GL_QUADS);
 				{
-					glNormal3f(n1.x, n1.y, n1.z); glColor4ub(c[0].r, c[0].g, c[0].b, c[0].a); glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
-					glNormal3f(n2.x, n2.y, n2.z); glColor4ub(c[1].r, c[1].g, c[1].b, c[1].a); glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
-					glNormal3f(n3.x, n3.y, n3.z); glColor4ub(c[2].r, c[2].g, c[2].b, c[2].a); glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
-					glNormal3f(n4.x, n4.y, n4.z); glColor4ub(c[3].r, c[3].g, c[3].b, c[3].a); glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
+					glNormal3f(n1.x, n1.y, n1.z); glColor4ub(c[0].r, c[0].g, c[0].b, c[0].a); glTexCoord1f(t[0]); glVertex3f(r1.x, r1.y, r1.z);
+					glNormal3f(n2.x, n2.y, n2.z); glColor4ub(c[1].r, c[1].g, c[1].b, c[1].a); glTexCoord1f(t[1]); glVertex3f(r2.x, r2.y, r2.z);
+					glNormal3f(n3.x, n3.y, n3.z); glColor4ub(c[2].r, c[2].g, c[2].b, c[2].a); glTexCoord1f(t[2]); glVertex3f(r3.x, r3.y, r3.z);
+					glNormal3f(n4.x, n4.y, n4.z); glColor4ub(c[3].r, c[3].g, c[3].b, c[3].a); glTexCoord1f(t[3]); glVertex3f(r4.x, r4.y, r4.z);
 				}
 				glEnd();
 			}
@@ -1734,9 +1726,9 @@ void CGLModel::RenderFace(FEFace& face, FEMeshBase* pm, GLCOLOR c[4], int ndivs,
 		case FACE_TRI7:
 			glBegin(GL_TRIANGLES);
 			{
-				glNormal3f(n1.x, n1.y, n1.z); glColor4ub(c[0].r, c[0].g, c[0].b, c[0].a); glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
-				glNormal3f(n2.x, n2.y, n2.z); glColor4ub(c[1].r, c[1].g, c[1].b, c[1].a); glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
-				glNormal3f(n3.x, n3.y, n3.z); glColor4ub(c[2].r, c[2].g, c[2].b, c[2].a); glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
+				glNormal3f(n1.x, n1.y, n1.z); glColor4ub(c[0].r, c[0].g, c[0].b, c[0].a); glTexCoord1f(t[0]); glVertex3f(r1.x, r1.y, r1.z);
+				glNormal3f(n2.x, n2.y, n2.z); glColor4ub(c[1].r, c[1].g, c[1].b, c[1].a); glTexCoord1f(t[1]); glVertex3f(r2.x, r2.y, r2.z);
+				glNormal3f(n3.x, n3.y, n3.z); glColor4ub(c[2].r, c[2].g, c[2].b, c[2].a); glTexCoord1f(t[2]); glVertex3f(r3.x, r3.y, r3.z);
 			}
 			glEnd();
 			break;
@@ -1755,10 +1747,10 @@ void CGLModel::RenderFace(FEFace& face, FEMeshBase* pm, GLCOLOR c[4], int ndivs,
 		case FACE_QUAD9:
 			glBegin(GL_QUADS);
 			{
-				glColor4ub(c[0].r, c[0].g, c[0].b, c[0].a); glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
-				glColor4ub(c[1].r, c[1].g, c[1].b, c[1].a); glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
-				glColor4ub(c[2].r, c[2].g, c[2].b, c[2].a); glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
-				glColor4ub(c[3].r, c[3].g, c[3].b, c[3].a); glTexCoord1f(t4); glVertex3f(r4.x, r4.y, r4.z);
+				glColor4ub(c[0].r, c[0].g, c[0].b, c[0].a); glTexCoord1f(t[0]); glVertex3f(r1.x, r1.y, r1.z);
+				glColor4ub(c[1].r, c[1].g, c[1].b, c[1].a); glTexCoord1f(t[1]); glVertex3f(r2.x, r2.y, r2.z);
+				glColor4ub(c[2].r, c[2].g, c[2].b, c[2].a); glTexCoord1f(t[2]); glVertex3f(r3.x, r3.y, r3.z);
+				glColor4ub(c[3].r, c[3].g, c[3].b, c[3].a); glTexCoord1f(t[3]); glVertex3f(r4.x, r4.y, r4.z);
 			}
 			glEnd();
 			break;
@@ -1767,9 +1759,9 @@ void CGLModel::RenderFace(FEFace& face, FEMeshBase* pm, GLCOLOR c[4], int ndivs,
 		case FACE_TRI7:
 			glBegin(GL_TRIANGLES);
 			{
-				glColor4ub(c[0].r, c[0].g, c[0].b, c[0].a); glTexCoord1f(t1); glVertex3f(r1.x, r1.y, r1.z);
-				glColor4ub(c[1].r, c[1].g, c[1].b, c[1].a); glTexCoord1f(t2); glVertex3f(r2.x, r2.y, r2.z);
-				glColor4ub(c[2].r, c[2].g, c[2].b, c[2].a); glTexCoord1f(t3); glVertex3f(r3.x, r3.y, r3.z);
+				glColor4ub(c[0].r, c[0].g, c[0].b, c[0].a); glTexCoord1f(t[0]); glVertex3f(r1.x, r1.y, r1.z);
+				glColor4ub(c[1].r, c[1].g, c[1].b, c[1].a); glTexCoord1f(t[1]); glVertex3f(r2.x, r2.y, r2.z);
+				glColor4ub(c[2].r, c[2].g, c[2].b, c[2].a); glTexCoord1f(t[2]); glVertex3f(r3.x, r3.y, r3.z);
 			}
 			glEnd();
 			break;
