@@ -314,6 +314,7 @@ public:
 	GLCOLOR		m_line_col;		//!< line color
 	GLCOLOR		m_node_col;		//!< color for rendering (unselected) nodes
 	GLCOLOR		m_sel_col;		//!< selection color
+	GLCOLOR		m_col_inactive;	//!< color for inactive parts
 	double		m_stol;			//!< smoothing threshold
 
 	float	m_fTime;		// current time value

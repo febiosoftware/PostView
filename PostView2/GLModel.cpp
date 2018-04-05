@@ -894,7 +894,7 @@ void CGLModel::RenderSolidDomain(FEDomain& dom, bool btex)
 
 	// render inactive faces
 	if (btex) glDisable(GL_TEXTURE_1D);
-	if (m_pcol->IsActive()) glColor3ub(200, 200, 200);
+	if (m_pcol->IsActive()) glColor4ub(m_col_inactive.r, m_col_inactive.g, m_col_inactive.b, m_col_inactive.a);
 	for (int i = 0; i<NF; ++i)
 	{
 		FEFace& face = dom.Face(i);
@@ -917,15 +917,19 @@ void CGLModel::RenderSolidMaterial(FEModel* ps, int m)
 	// get the material
 	FEMaterial* pmat = ps->GetMaterial(m);
 
+	// get the transparency value
+	GLubyte alpha = (GLubyte)(255.f*pmat->transparency);
+
 	// set the material properties
+	m_col_inactive = GLCOLOR(200, 200, 200);
 	bool btex = false;
 	if (pmat->benable && m_pcol->IsActive())
 	{
 		btex = true;
 		glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-		GLubyte a = (GLubyte) (255.f*pmat->transparency);
-		glColor4ub(255,255,255,a);
+		glColor4ub(255,255,255, alpha);
 		m_pcol->GetColorMap()->GetTexture().MakeCurrent();
+		m_col_inactive.a = alpha;
 	}
 	else
 	{
@@ -976,6 +980,8 @@ void CGLModel::RenderSolidMaterial(FEModel* ps, int m)
 		RenderSolidDomain(dom, btex);
 
 		// and then we draw the front-facing ones.
+		glCullFace(GL_BACK);
+		if (btex) glColor4ub(255, 255, 255, alpha);
 		RenderSolidDomain(dom, btex);
 
 		glPopAttrib();
