@@ -32,6 +32,7 @@
 #include "GLSlicePLot.h"
 #include "GLVectorPlot.h"
 #include "GLStreamLinePlot.h"
+#include "GLParticleFlowPlot.h"
 #include "DlgViewSettings.h"
 #include "DlgExportXPLT.h"
 #include "DlgExportLSDYNA.h"
@@ -1113,6 +1114,20 @@ void CMainWindow::on_actionStreamLinePlot_triggered()
 {
 	CDocument* pdoc = GetDocument();
 	CGLStreamLinePlot* pp = new CGLStreamLinePlot(pdoc->GetGLModel());
+	pdoc->AddPlot(pp);
+	pdoc->UpdateFEModel();
+
+	ui->modelViewer->Update(true);
+	ui->modelViewer->selectObject(pp);
+	ui->modelViewer->parentWidget()->raise();
+
+	RedrawGL();
+}
+
+void CMainWindow::on_actionParticleFlowPlot_triggered()
+{
+	CDocument* pdoc = GetDocument();
+	CGLParticleFlowPlot* pp = new CGLParticleFlowPlot(pdoc->GetGLModel());
 	pdoc->AddPlot(pp);
 	pdoc->UpdateFEModel();
 

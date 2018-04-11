@@ -125,6 +125,7 @@ public slots:
 	void on_actionSlicePlot_triggered();
 	void on_actionDisplacementMap_triggered();
 	void on_actionStreamLinePlot_triggered();
+	void on_actionParticleFlowPlot_triggered();
 	void on_actionGraph_triggered();
 	void on_actionSummary_triggered();
 	void on_actionStats_triggered();

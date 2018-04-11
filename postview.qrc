@@ -50,5 +50,6 @@
 		<file>icons/check.png</file>
 		<file>icons/streamlines.png</file>
 		<file>icons/cancel.png</file>
+		<file>icons/particle.png</file>
     </qresource>
 </RCC>

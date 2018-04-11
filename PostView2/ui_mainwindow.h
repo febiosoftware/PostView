@@ -320,6 +320,7 @@ public:
 		QAction* actionSlicePlot       = addAction("Slice plot"       , "actionSlicePlot"      , ":icons/slice.png");
 		QAction* actionDisplacementMap = addAction("Displacement map" , "actionDisplacementMap", ":/icons/distort.png");
 		QAction* actionStreamLinePlot  = addAction("Stream lines plot", "actionStreamLinePlot" , ":/icons/streamlines.png");
+		QAction* actionParticleFlowPlot= addAction("Particle flow plot", "actionParticleFlowPlot" , ":/icons/particle.png");
 		QAction* actionGraph           = addAction("New Graph ..."    , "actionGraph"          , ":/icons/chart.png"); actionGraph->setShortcut(Qt::Key_F3);
 		QAction* actionSummary         = addAction("Summary ..."      , "actionSummary"        ); actionSummary->setShortcut(Qt::Key_F4);
 		QAction* actionStats           = addAction("Statistics  ..."  , "actionStats"          );
@@ -445,6 +446,7 @@ public:
 		menuPost->addAction(actionSlicePlot);
 		menuPost->addAction(actionDisplacementMap);
 		menuPost->addAction(actionStreamLinePlot);
+		menuPost->addAction(actionParticleFlowPlot);
 		menuPost->addSeparator();
 		menuPost->addAction(actionGraph);
 		menuPost->addSeparator();
@@ -541,6 +543,7 @@ public:
 		postToolbar->addAction(actionIsosurfacePlot);
 		postToolbar->addAction(actionSlicePlot     );
 		postToolbar->addAction(actionStreamLinePlot);
+		postToolbar->addAction(actionParticleFlowPlot);
 		postToolbar->addSeparator();
 		postToolbar->addAction(actionGraph);
 		postToolbar->addAction(actionIntegrate);

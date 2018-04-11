@@ -218,6 +218,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </ClInclude>
     <ClInclude Include="..\..\PostView2\AddPointTool.h" />
+    <ClInclude Include="..\..\PostView2\GLParticleFlowPlot.h" />
     <ClInclude Include="..\..\PostView2\GLStreamLinePlot.h" />
     <ClInclude Include="resource.h" />
     <CustomBuild Include="..\..\PostView2\AreaCoverageTool.h">
@@ -541,6 +542,7 @@
     <ClCompile Include="..\..\PostView2\GLLinePlot.cpp" />
     <ClCompile Include="..\..\PostView2\GLMesh.cpp" />
     <ClCompile Include="..\..\PostView2\GLModel.cpp" />
+    <ClCompile Include="..\..\PostView2\GLParticleFlowPlot.cpp" />
     <ClCompile Include="..\..\PostView2\GLPlane.cpp" />
     <ClCompile Include="..\..\PostView2\GLPlaneCutPlot.cpp" />
     <ClCompile Include="..\..\PostView2\GLPlot.cpp" />
