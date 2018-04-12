@@ -23,6 +23,7 @@
 		D53292BB1E453447002798B3 /* DlgExportAscii.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53292B91E453447002798B3 /* DlgExportAscii.cpp */; };
 		D53598C01E901C0500584A4F /* DragBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53598BE1E901C0500584A4F /* DragBox.cpp */; };
 		D53A8DFB2074EC7C00BDDD2D /* GLStreamLinePlot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53A8DFA2074EC7C00BDDD2D /* GLStreamLinePlot.cpp */; };
+		D53B031C207EF04B00E6B5F5 /* GLParticleFlowPlot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53B031B207EF04A00E6B5F5 /* GLParticleFlowPlot.cpp */; };
 		D55AC5011E61EB6E00BBA0D1 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D55AC5001E61EB6E00BBA0D1 /* OpenGL.framework */; };
 		D56731621F9FD85200C87BC1 /* AreaCoverageTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D56731611F9FD85200C87BC1 /* AreaCoverageTool.cpp */; };
 		D56731681F9FF5A700C87BC1 /* moc_AreaCoverageTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D56731671F9FF5A700C87BC1 /* moc_AreaCoverageTool.cpp */; };
@@ -163,6 +164,8 @@
 		D53598BF1E901C0500584A4F /* DragBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DragBox.h; sourceTree = "<group>"; };
 		D53A8DF92074EC7B00BDDD2D /* GLStreamLinePlot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLStreamLinePlot.h; sourceTree = "<group>"; };
 		D53A8DFA2074EC7C00BDDD2D /* GLStreamLinePlot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLStreamLinePlot.cpp; sourceTree = "<group>"; };
+		D53B031A207EF04A00E6B5F5 /* GLParticleFlowPlot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLParticleFlowPlot.h; sourceTree = "<group>"; };
+		D53B031B207EF04A00E6B5F5 /* GLParticleFlowPlot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLParticleFlowPlot.cpp; sourceTree = "<group>"; };
 		D55AC5001E61EB6E00BBA0D1 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		D56731601F9FD85200C87BC1 /* AreaCoverageTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AreaCoverageTool.h; sourceTree = "<group>"; };
 		D56731611F9FD85200C87BC1 /* AreaCoverageTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AreaCoverageTool.cpp; sourceTree = "<group>"; };
@@ -454,6 +457,8 @@
 				D5FF79DB1D72756B003D2CBD /* GLMesh.h */,
 				D5FF79DC1D72756B003D2CBD /* GLModel.cpp */,
 				D5FF79DD1D72756B003D2CBD /* GLModel.h */,
+				D53B031B207EF04A00E6B5F5 /* GLParticleFlowPlot.cpp */,
+				D53B031A207EF04A00E6B5F5 /* GLParticleFlowPlot.h */,
 				D5FF79DE1D72756B003D2CBD /* GLPlane.cpp */,
 				D5FF79DF1D72756B003D2CBD /* GLPlane.h */,
 				D5FF79E01D72756B003D2CBD /* GLPlaneCutPlot.cpp */,
@@ -747,6 +752,7 @@
 				D5FF7A791D72756B003D2CBD /* moc_PointCongruencyTool.cpp in Sources */,
 				D5FF7A521D72756B003D2CBD /* FileViewer.cpp in Sources */,
 				D5FF7A641D72756B003D2CBD /* MainWindow.cpp in Sources */,
+				D53B031C207EF04B00E6B5F5 /* GLParticleFlowPlot.cpp in Sources */,
 				D5FF7A451D72756B003D2CBD /* CDlgImportXPLT.cpp in Sources */,
 				D5FF7A611D72756B003D2CBD /* GraphWindow.cpp in Sources */,
 				D5FF7A711D72756B003D2CBD /* moc_ImportLinesTool.cpp in Sources */,
