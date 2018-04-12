@@ -73,7 +73,7 @@ CGLParticleFlowPlot::CGLParticleFlowPlot(CGLModel* mdl) : CGLPlot(mdl), m_find(*
 	m_density = 1.f;
 
 	m_maxtime = -1;
-	m_seedTime = 0;
+	m_seedTime = 1;
 	m_dt = 0.01f;
 }
 
@@ -395,7 +395,7 @@ void CGLParticleFlowPlot::AdvanceParticles(int n0, int n1)
 	}
 }
 
-float frand()
+static float frand()
 {
 	return rand() / (float) RAND_MAX;
 }

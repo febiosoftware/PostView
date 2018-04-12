@@ -19,6 +19,8 @@ public:
 		addProperty("Color map"     , CProperty::Enum)->setEnumValues(cols);
 		addProperty("Allow clipping", CProperty::Bool);
 		addProperty("Step size"     , CProperty::Float);
+		addProperty("Density"       , CProperty::Float)->setFloatRange(0.0, 1.0).setFloatStep(0.01);
+		addProperty("Velocity threshold", CProperty::Float);
 	}
 
 	QVariant GetPropertyValue(int i)
@@ -29,6 +31,8 @@ public:
 		case 1: return m_plt->GetColorMap()->GetColorMap();
 		case 2: return m_plt->AllowClipping(); break;
 		case 3: return m_plt->StepSize(); break;
+		case 4: return m_plt->Density(); break;
+		case 5: return m_plt->Threshold(); break;
 		}
 		return QVariant();
 	}
@@ -41,6 +45,8 @@ public:
 		case 1: m_plt->GetColorMap()->SetColorMap(v.toInt()); m_plt->ColorStreamLines(); break;
 		case 2: m_plt->AllowClipping(v.toBool()); break;
 		case 3: m_plt->SetStepSize(v.toFloat()); m_plt->UpdateStreamLines(); break; 
+		case 4: m_plt->SetDensity(v.toFloat()); m_plt->UpdateStreamLines(); break;
+		case 5: m_plt->SetThreshold(v.toFloat()); break;
 		}
 	}
 
@@ -56,6 +62,9 @@ CGLStreamLinePlot::CGLStreamLinePlot(CGLModel* fem) : CGLPlot(fem), m_find(*fem-
 	char szname[128] = { 0 };
 	sprintf(szname, "StreamLines.%02d", n++);
 	SetName(szname);
+
+	m_density = 1.f;
+	m_vtol = 1e-5f;
 
 	m_nvec = -1;
 	m_inc = 0.01f;
@@ -105,9 +114,14 @@ void CGLStreamLinePlot::Render(CGLContext& rc)
 	glPopAttrib();
 }
 
+static float frand()
+{
+	return rand() / (float)RAND_MAX;
+}
+
 void CGLStreamLinePlot::Update(int ntime, float dt, bool breset)
 {
-	if (breset) { m_map.Clear(); m_rng.clear(); m_val.clear(); }
+	if (breset) { m_map.Clear(); m_rng.clear(); m_val.clear(); m_prob.clear(); }
 
 	CGLModel* mdl = GetModel();
 	FEMeshBase* pm = mdl->GetActiveMesh();
@@ -121,6 +135,14 @@ void CGLStreamLinePlot::Update(int ntime, float dt, bool breset)
 		m_map.Create(NS, NN, vec3f(0, 0, 0), -1);
 		m_rng.resize(NS);
 		m_val.resize(NN);
+	}
+
+	if (m_prob.empty())
+	{
+		FEMeshBase& mesh = *pfem->GetFEMesh(0);
+		int NF = mesh.Faces();
+		m_prob.resize(NF);
+		for (int i=0; i<NF; ++i) m_prob[i] = frand();
 	}
 
 	// check the tag
@@ -196,6 +218,9 @@ void CGLStreamLinePlot::UpdateStreamLines()
 	int MAX_POINTS = 2*(int)(1.f / m_inc);
 	if (MAX_POINTS > 10000) MAX_POINTS = 10000;
 
+	// make sure vtol is positive
+	float vtol = fabs(m_vtol);
+
 	// get the mesh
 	FEMeshBase& mesh = *mdl->GetActiveMesh();
 
@@ -205,6 +230,9 @@ void CGLStreamLinePlot::UpdateStreamLines()
 
 	// tag all elements
 	mesh.SetElementTags(0);
+
+	// use the same seed
+	srand(0);
 
 	// loop over all the surface facts
 	double q[3];
@@ -221,7 +249,7 @@ void CGLStreamLinePlot::UpdateStreamLines()
 
 		// see if this is a valid candidate for a seed
 		vec3f fn = f.m_fn;
-		if (fn*vf < 0.f)
+		if ((fn*vf < -vtol) && (m_prob[i] <= m_density))
 		{
 			// calculate the face center, this will be the seed
 			// NOTE: We are using reference coordinates, therefore we assume that te mesh is not deforming!!

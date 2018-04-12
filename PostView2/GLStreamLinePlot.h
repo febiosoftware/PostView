@@ -53,6 +53,12 @@ public:
 	float StepSize() const { return m_inc; }
 	void SetStepSize(float v) { m_inc = v; }
 
+	float Density() const { return m_density; }
+	void SetDensity(float v) { m_density = v; }
+
+	float Threshold() const { return m_vtol; }
+	void SetThreshold(float v) { m_vtol = v; }
+
 protected:
 
 	vec3f Velocity(const vec3f& r, bool& ok);
@@ -61,6 +67,8 @@ private:
 	int	m_nvec;	// vector field
 
 	float	m_inc;
+	float	m_density;
+	float	m_vtol;	// seeding velocity tolerance
 
 	CColorTexture	m_Col;	// color map
 
@@ -72,6 +80,7 @@ private:
 	vec2f			m_crng;	// current range
 
 	vector<StreamLine>	m_streamLines;
+	vector<float>		m_prob;
 
 	FEFindElement	m_find;
 };
