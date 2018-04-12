@@ -109,8 +109,9 @@ void CGLStreamLinePlot::Update(int ntime, float dt, bool breset)
 {
 	if (breset) { m_map.Clear(); m_rng.clear(); m_val.clear(); }
 
-	FEMeshBase* pm = m_pObj->GetActiveMesh();
-	FEModel* pfem = m_pObj->GetFEModel();
+	CGLModel* mdl = GetModel();
+	FEMeshBase* pm = mdl->GetActiveMesh();
+	FEModel* pfem = mdl->GetFEModel();
 
 	if (m_map.States() == 0)
 	{

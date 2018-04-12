@@ -37,6 +37,8 @@ private slots:
 	void on_deleteButton_clicked();
 	void on_props_dataChanged();
 	void on_enabled_stateChanged(int nstate);
+//	void on_autoUpdate_toggled(bool b);
+//	void on_applyButton_clicked();
 
 private:
 	Ui::CModelViewer*			ui;

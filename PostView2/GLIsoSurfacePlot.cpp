@@ -159,10 +159,11 @@ void CGLIsoSurfacePlot::RenderSlice(float ref)
 	const int PEN_NT[8] = {0, 1, 2, 2, 3, 4, 5, 5};
 	const int TET_NT[8] = {0, 1, 2, 2, 3, 3, 3, 3};
 
-	FEModel* ps = m_pObj->GetFEModel();
+	CGLModel* mdl = GetModel();
+	FEModel* ps = mdl->GetFEModel();
 
 	// get the mesh
-	FEMeshBase* pm = m_pObj->GetActiveMesh();
+	FEMeshBase* pm = mdl->GetActiveMesh();
 
 	const int* nt;
 
@@ -272,8 +273,10 @@ void CGLIsoSurfacePlot::SetEvalField(int n)
 //-----------------------------------------------------------------------------
 void CGLIsoSurfacePlot::Update(int ntime, float dt, bool breset)
 {
-	FEMeshBase* pm = m_pObj->GetActiveMesh();
-	FEModel* pfem = m_pObj->GetFEModel();
+	CGLModel* mdl = GetModel();
+
+	FEMeshBase* pm = mdl->GetActiveMesh();
+	FEModel* pfem = mdl->GetFEModel();
 
 	int NN = pm->Nodes();
 	int NS = pfem->GetStates();

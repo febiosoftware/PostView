@@ -7,6 +7,7 @@
 #include <QCheckBox>
 #include <QSplitter>
 #include <QLabel>
+#include <QToolButton>
 #include "MainWindow.h"
 #include "Document.h"
 #include "PropertyListView.h"
@@ -518,6 +519,9 @@ public:
 	QLineEdit* name;
 	QCheckBox* enabled;
 
+	QPushButton* autoUpdate;
+	QPushButton* apply;
+
 public:
 	void setupUi(::CModelViewer* parent)
 	{
@@ -541,9 +545,26 @@ public:
 
 		phl->addWidget(enabled);
 		phl->addWidget(name = new QLineEdit); name->setObjectName("nameEdit");
+
 		QPushButton* del = new QPushButton("Delete"); del->setObjectName("deleteButton");
 		phl->addWidget(del);
 		phl->addStretch();
+
+/*		autoUpdate = new QPushButton; autoUpdate->setObjectName("autoUpdate"); autoUpdate->setToolTip("Auto-update");
+		autoUpdate->setIcon(QIcon(":/icons/auto.png")); autoUpdate->setFixedWidth(20); 
+		autoUpdate->setCheckable(true);
+
+		apply = new QPushButton; apply->setObjectName("applyButton"); autoUpdate->setToolTip("Update");
+		apply->setIcon(QIcon(":/icons/apply.png"));
+
+		QHBoxLayout* bl = new QHBoxLayout;
+		bl->setSpacing(0);
+		bl->addStretch();
+		bl->addWidget(autoUpdate);
+		bl->addWidget(apply);
+
+		phl->addLayout(bl);
+*/
 		pvl->addLayout(phl);
 		m_props = new ::CPropertyListView;
 		m_props->setObjectName("props");
@@ -554,6 +575,16 @@ public:
 		psplitter->addWidget(w);
 
 		QMetaObject::connectSlotsByName(parent);
+	}
+
+	CGLObject* currentObject()
+	{
+		QTreeWidgetItem* current = m_tree->currentItem();
+		CModelTreeItem* item = dynamic_cast<CModelTreeItem*>(current);
+		if (item == 0) return 0;
+
+		CGLObject* po = item->Object();
+		return po;
 	}
 };
 
@@ -849,3 +880,19 @@ void CModelViewer::on_enabled_stateChanged(int nstate)
 	m_wnd->CheckUi();
 	m_wnd->RedrawGL();
 }
+/*
+void CModelViewer::on_autoUpdate_toggled(bool b)
+{
+	ui->apply->setEnabled(!b);	
+}
+
+void CModelViewer::on_applyButton_clicked()
+{
+	CGLObject* po = ui->currentObject();
+	if (po)
+	{
+		CGLModel* mdl = po->GetModel();
+		if (mdl) po->Update(mdl->currentTimeIndex(), 0.f, true);
+	}
+}
+*/

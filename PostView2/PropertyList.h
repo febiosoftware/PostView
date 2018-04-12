@@ -23,7 +23,8 @@ public:
 	enum Flags
 	{
 		Editable = 1,		// property can be edited
-		Visible = 2			// property is visible
+		Visible = 2,		// property is visible
+		Modified = 4		// property is modified (but not applied)
 	};
 
 public:
@@ -55,6 +56,14 @@ public:
 
 	bool isEditable() const { return (flags & Editable); }
 	bool isVisible() const { return (flags & Visible); }
+	bool isModified() const { return (flags & Modified); }
+
+	void setModified(bool b)
+	{
+		unsigned int m = (unsigned int) Modified;
+		if (b) flags |= m;
+		else flags &= ~m;
+	}
 
 public:
 	CProperty(const QString& sname, CProperty::Type itype);
@@ -73,6 +82,7 @@ public:
 	CProperty* addProperty(const QString& sname, CProperty::Type itype) { addProperty(CProperty(sname, itype)); return &m_list[m_list.size()-1]; }
 	CProperty* addProperty(const QString& sname, CProperty::Type itype, const QString& sinfo) { addProperty(CProperty(sname, itype, sinfo)); return &m_list[m_list.size()-1]; }
 
+	CProperty& Property(int i) { return m_list[i]; }
 	const CProperty& Property(int i) const { return m_list[i]; }
 
 	virtual QVariant GetPropertyValue(int i) = 0;

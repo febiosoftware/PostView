@@ -2,7 +2,7 @@
 #include "GLObject.h"
 #include <string.h>
 
-CGLObject::CGLObject()
+CGLObject::CGLObject(CGLModel* mdl) : m_pModel(mdl)
 {
 	m_bactive = true;
 }

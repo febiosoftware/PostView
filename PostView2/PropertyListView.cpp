@@ -68,6 +68,10 @@ public:
 		if (index.column() == 0)
 		{
 			if ((role == Qt::DisplayRole)||(role==Qt::EditRole)) return prop.name;
+			if (role == Qt::BackgroundColorRole)
+			{
+				return (prop.isModified() ? QColor(255, 255,0) : QColor(255, 255, 255));
+			}
 		}
 		else if (index.column() == 1)
 		{

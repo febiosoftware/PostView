@@ -198,7 +198,7 @@ void CGLPlaneCutPlot::Render(CGLContext& rc)
 	// set the clip plane coefficients
 	glClipPlane(GL_CLIP_PLANE0 + m_nclip, a);
 
-	if (m_pObj->IsActive() == false) return;
+	if (GetModel()->IsActive() == false) return;
 
 	// make sure the current clip plane is not active
 	glDisable(GL_CLIP_PLANE0 + m_nclip);
@@ -242,10 +242,12 @@ void CGLPlaneCutPlot::Render(CGLContext& rc)
 // Render the plane cut slice 
 void CGLPlaneCutPlot::RenderSlice()
 {
-	FEModel* ps = m_pObj->GetFEModel();
-	FEMeshBase* pm = m_pObj->GetActiveMesh();
+	CGLModel* mdl = GetModel();
 
-	CGLColorMap* pcol = m_pObj->GetColorMap();
+	FEModel* ps = mdl->GetFEModel();
+	FEMeshBase* pm = mdl->GetActiveMesh();
+
+	CGLColorMap* pcol = mdl->GetColorMap();
 
 	GLTexture1D& tex = pcol->GetColorMap()->GetTexture();
 	glDisable(GL_CULL_FACE);
@@ -266,7 +268,7 @@ void CGLPlaneCutPlot::RenderSlice()
 			else
 			{
 				glDisable(GL_TEXTURE_1D);
-				m_pObj->SetMaterialParams(pmat);
+				mdl->SetMaterialParams(pmat);
 			}
 
 			// repeat over all active faces
@@ -328,8 +330,10 @@ void CGLPlaneCutPlot::RenderMesh()
 	int ncase;
 	int *pf;
 
-	FEModel* ps = m_pObj->GetFEModel();
-	FEMeshBase* pm = m_pObj->GetActiveMesh();
+	CGLModel* mdl = GetModel();
+
+	FEModel* ps = mdl->GetFEModel();
+	FEMeshBase* pm = mdl->GetActiveMesh();
 
 	glColor3ub(0,0,0);
 
@@ -475,8 +479,10 @@ void CGLPlaneCutPlot::RenderMesh()
 //		 In that case, all nodes are exterior and thus all the edges will be drawn.
 void CGLPlaneCutPlot::RenderOutline()
 {
-	FEModel* ps = m_pObj->GetFEModel();
-	FEMeshBase* pm = m_pObj->GetActiveMesh();
+	CGLModel* mdl = GetModel();
+
+	FEModel* ps = mdl->GetFEModel();
+	FEMeshBase* pm = mdl->GetActiveMesh();
 
 	// store attributes
 	glPushAttrib(GL_ENABLE_BIT);
@@ -533,18 +539,20 @@ void CGLPlaneCutPlot::UpdateSlice()
 	// set the plane normal
 	vec3f norm((float) a[0], (float) a[1], (float) a[2]);
 
+	CGLModel* mdl = GetModel();
+
 	// calculate the plane offset
-	m_box = m_pObj->GetFEModel()->GetBoundingBox();
+	m_box = mdl->GetFEModel()->GetBoundingBox();
 	float s = m_box.Radius();
 	vec3f r = m_box.Center();
 
 	m_ref = (float) a[3]*s + r*norm;
 	a[3] = -m_ref;
 
-	FEModel* ps = m_pObj->GetFEModel();
-	FEMeshBase* pm = m_pObj->GetActiveMesh();
+	FEModel* ps = mdl->GetFEModel();
+	FEMeshBase* pm = mdl->GetActiveMesh();
 
-	CGLColorMap& colorMap = *m_pObj->GetColorMap();
+	CGLColorMap& colorMap = *mdl->GetColorMap();
 	bool bnode = colorMap.DisplayNodalValues();
 
 	m_slice.Clear();
@@ -708,8 +716,10 @@ float CGLPlaneCutPlot::Integrate(FEState* ps)
 {
 	int k, l;
 
-	FEModel* pfem = m_pObj->GetFEModel();
-	FEMeshBase* pm = m_pObj->GetActiveMesh();
+	CGLModel* mdl = GetModel();
+
+	FEModel* pfem = mdl->GetFEModel();
+	FEMeshBase* pm = mdl->GetActiveMesh();
 
 	float ev[8];
 	vec3f ex[8];
@@ -808,7 +818,9 @@ void CGLPlaneCutPlot::RenderPlane()
 	GetNormalizedEquations(a);
 	vec3f norm((float) a[0], (float) a[1], (float) a[2]);
 
-	m_box = m_pObj->GetFEModel()->GetBoundingBox();
+	CGLModel* mdl = GetModel();
+
+	m_box = mdl->GetFEModel()->GetBoundingBox();
 	vec3f rc = m_box.Center();
 
 	// calculate reference value

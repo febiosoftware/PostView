@@ -18,7 +18,9 @@ public:
 		addProperty("Data field", CProperty::DataVec3);
 		addProperty("Color map", CProperty::Enum)->setEnumValues(cols);
 		addProperty("Allow clipping", CProperty::Bool);
-		addProperty("Seed time", CProperty::Int);
+		addProperty("Seed step", CProperty::Int);
+		addProperty("Velocity threshold", CProperty::Float);
+		addProperty("Seeding density", CProperty::Float)->setFloatRange(0.0, 1.0).setFloatStep(0.01);
 		addProperty("Step size", CProperty::Float);
 		addProperty("Show path lines", CProperty::Bool);
 	}
@@ -30,9 +32,11 @@ public:
 		case 0: return m_plt->GetVectorType(); break;
 		case 1: return m_plt->GetColorMap()->GetColorMap();
 		case 2: return m_plt->AllowClipping(); break;
-		case 3: return m_plt->SeedTime(); break;
-		case 4: return m_plt->StepSize(); break;
-		case 5: return m_plt->ShowPath(); break;
+		case 3: return m_plt->SeedTime() + 1; break;
+		case 4: return m_plt->Threshold(); break;
+		case 5: return m_plt->Density(); break;
+		case 6: return m_plt->StepSize(); break;
+		case 7: return m_plt->ShowPath(); break;
 		}
 		return QVariant();
 	}
@@ -44,9 +48,11 @@ public:
 		case 0: m_plt->SetVectorType(v.toInt()); break;
 		case 1: m_plt->GetColorMap()->SetColorMap(v.toInt()); m_plt->UpdateParticleColors(); break;
 		case 2: m_plt->AllowClipping(v.toBool()); break;
-		case 3: m_plt->SetSeedTime(v.toInt()); break;
-		case 4: m_plt->SetStepSize(v.toFloat()); break;
-		case 5: m_plt->ShowPath(v.toBool()); break;
+		case 3: m_plt->SetSeedTime(v.toInt() - 1); break;
+		case 4: m_plt->SetThreshold(v.toFloat()); break;
+		case 5: m_plt->SetDensity(v.toFloat()); break;
+		case 6: m_plt->SetStepSize(v.toFloat()); break;
+		case 7: m_plt->ShowPath(v.toBool()); break;
 		}
 	}
 
@@ -63,6 +69,8 @@ CGLParticleFlowPlot::CGLParticleFlowPlot(CGLModel* mdl) : CGLPlot(mdl), m_find(*
 
 	m_nvec = -1;
 	m_showPath = false;
+	m_vtol = 1e-5f;
+	m_density = 1.f;
 
 	m_maxtime = -1;
 	m_seedTime = 0;
@@ -88,7 +96,20 @@ void CGLParticleFlowPlot::SetStepSize(float v)
 
 void CGLParticleFlowPlot::SetSeedTime(int n)
 {
+	if (n < 0) n = 0;
 	m_seedTime = n;
+	Update(GetModel()->currentTimeIndex(), 0.0, true);
+}
+
+void CGLParticleFlowPlot::SetThreshold(float v)
+{
+	m_vtol = v;
+	Update(GetModel()->currentTimeIndex(), 0.0, true);
+}
+
+void CGLParticleFlowPlot::SetDensity(float v)
+{
+	m_density = v;
 	Update(GetModel()->currentTimeIndex(), 0.0, true);
 }
 
@@ -146,9 +167,11 @@ void CGLParticleFlowPlot::Update(int ntime, float dt, bool breset)
 {
 	if (breset) { m_map.Clear(); m_rng.clear(); m_maxtime = -1; m_particles.clear(); }
 	if (m_nvec == -1) return;
+	
+	CGLModel* mdl = GetModel();
 
-	FEMeshBase* pm = m_pObj->GetActiveMesh();
-	FEModel* pfem = m_pObj->GetFEModel();
+	FEMeshBase* pm = mdl->GetActiveMesh();
+	FEModel* pfem = mdl->GetFEModel();
 
 	if (m_map.States() == 0)
 	{
@@ -372,6 +395,11 @@ void CGLParticleFlowPlot::AdvanceParticles(int n0, int n1)
 	}
 }
 
+float frand()
+{
+	return rand() / (float) RAND_MAX;
+}
+
 void CGLParticleFlowPlot::SeedParticles()
 {
 	// clear current particles, if any
@@ -393,6 +421,9 @@ void CGLParticleFlowPlot::SeedParticles()
 
 	vector<vec3f>& val = m_map.State(m_seedTime);
 
+	// make sure vtol is positive
+	float vtol = fabs(m_vtol);
+
 	// loop over all the surface facts
 	int NF = mesh.Faces();
 	for (int i = 0; i<NF; ++i)
@@ -405,9 +436,12 @@ void CGLParticleFlowPlot::SeedParticles()
 		for (int j = 0; j<nf; ++j) vf += val[f.node[j]];
 		vf /= nf;
 
+		// generate random number
+		float w = frand();
+
 		// see if this is a valid candidate for a seed
 		vec3f fn = f.m_fn;
-		if (fn*vf < -1e-6)
+		if ((fn*vf < -vtol) && (w <= m_density))
 		{
 			// calculate the face center, this will be the seed
 			// NOTE: We are using reference coordinates, therefore we assume that the mesh is not deforming!!
@@ -422,9 +456,11 @@ void CGLParticleFlowPlot::SeedParticles()
 			p.m_balive = true;
 			p.m_ndeath = NS;	// assume the particle will live the entire time
 
+			// set initial position and velocity
 			p.m_pos[m_seedTime] = cf;
 			p.m_vel[m_seedTime] = vf;
 
+			// add it to the pile
 			m_particles.push_back(p);
 		}
 	}

@@ -161,7 +161,8 @@ void CGLVectorPlot::Render(CGLContext& rc)
 	quat4f q;
 	float w;
 
-	FEModel* ps = m_pObj->GetFEModel();
+	CGLModel* mdl = GetModel();
+	FEModel* ps = mdl->GetFEModel();
 
 	vec2f& rng = m_crng;
 
@@ -171,8 +172,8 @@ void CGLVectorPlot::Render(CGLContext& rc)
 
 	srand(m_seed);
 
-	FEModel* pfem = m_pObj->GetFEModel();
-	FEMeshBase* pm = m_pObj->GetActiveMesh();
+	FEModel* pfem = mdl->GetFEModel();
+	FEMeshBase* pm = mdl->GetActiveMesh();
 
 	float scale = 0.02f*m_scale*pfem->GetBoundingBox().Radius();
 
@@ -361,8 +362,9 @@ void CGLVectorPlot::Update(int ntime, float dt, bool breset)
 {
 	if (breset) { m_map.Clear(); m_rng.clear(); m_val.clear(); }
 
-	FEMeshBase* pm = m_pObj->GetActiveMesh();
-	FEModel* pfem = m_pObj->GetFEModel();
+	CGLModel* mdl = GetModel();
+	FEMeshBase* pm = mdl->GetActiveMesh();
+	FEModel* pfem = mdl->GetFEModel();
 
 	if (m_map.States() == 0)
 	{

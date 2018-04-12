@@ -126,7 +126,7 @@ void CGLSlicePlot::SetSlices(int nslices) { m_nslices = nslices; m_Col.SetDivisi
 
 void CGLSlicePlot::Render(CGLContext& rc)
 {
-	m_box = m_pObj->GetFEModel()->GetBoundingBox();
+	m_box = GetModel()->GetFEModel()->GetBoundingBox();
 
 	GLTexture1D& tex = m_Col.GetTexture();
 
@@ -166,8 +166,9 @@ void CGLSlicePlot::RenderSlice(float ref)
 	const int* nt;
 
 	// get the mesh
-	FEModel* ps = m_pObj->GetFEModel();
-	FEMeshBase* pm = m_pObj->GetActiveMesh();
+	CGLModel* mdl = GetModel();
+	FEModel* ps = mdl->GetFEModel();
+	FEMeshBase* pm = mdl->GetActiveMesh();
 
 	vec3f norm = m_norm;
 	norm.Normalize();
@@ -265,8 +266,10 @@ void CGLSlicePlot::SetEvalField(int n)
 //-----------------------------------------------------------------------------
 void CGLSlicePlot::Update(int ntime, float dt, bool breset)
 {
-	FEMeshBase* pm = m_pObj->GetActiveMesh();
-	FEModel* pfem = m_pObj->GetFEModel();
+	CGLModel* mdl = GetModel();
+
+	FEMeshBase* pm = mdl->GetActiveMesh();
+	FEModel* pfem = mdl->GetFEModel();
 
 	int NN = pm->Nodes();
 	int NS = pfem->GetStates();

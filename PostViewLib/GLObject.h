@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 class CGLContext;
+class CGLModel;
 
 //-----------------------------------------------------------------------------
 // This class is the base class for anything that affects what's get rendered
@@ -9,7 +10,7 @@ class CGLContext;
 class CGLObject
 {
 public:
-	CGLObject();
+	CGLObject(CGLModel* mdl = 0);
 	virtual ~CGLObject();
 
 	// update contents
@@ -23,9 +24,13 @@ public:
 	virtual void Activate(bool bact) { m_bactive = bact; }
 	bool IsActive() { return m_bactive; }
 
+	CGLModel* GetModel() { return m_pModel; }
+	void SetModel(CGLModel* pm) { m_pModel = pm; }
+
 protected:
 	std::string		m_name;
 	bool			m_bactive;
+	CGLModel*		m_pModel;
 };
 
 //-----------------------------------------------------------------------------
@@ -34,7 +39,7 @@ protected:
 class CGLVisual : public CGLObject
 {
 public:
-	CGLVisual() { m_bclip = true; }
+	CGLVisual(CGLModel* mdl = 0) : CGLObject(mdl) { m_bclip = true; }
 
 	// render the object to the 3D view
 	virtual void Render(CGLContext& rc) = 0;

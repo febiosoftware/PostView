@@ -62,6 +62,12 @@ public:
 	bool ShowPath() const { return m_showPath; }
 	void ShowPath(bool b) { m_showPath = b; }
 
+	float Threshold() const { return m_vtol; }
+	void SetThreshold(float v);
+
+	float Density() const { return m_density; }
+	void SetDensity(float v);
+
 protected:
 	void UpdateParticles(int ntime);
 
@@ -79,6 +85,8 @@ public:
 private:
 	int		m_nvec;	// vector field
 	float	m_dt;	// time increment
+	float	m_vtol;	// seeding velocity tolerance
+	float	m_density;	// seeding density
 	CColorTexture	m_Col;	// color map
 
 	bool	m_showPath;

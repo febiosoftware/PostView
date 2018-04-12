@@ -32,15 +32,9 @@ public:
 	CGLPlot(CGLModel* po = 0);
 	virtual ~CGLPlot();
 
-	CGLModel* GetModel() { return m_pObj; }
-	void SetModel(CGLModel* pm) { m_pObj = pm; }
-
 	virtual CPropertyList* propertyList() { return 0; }
 
 	virtual void UpdateTexture() {}
-
-protected:
-	CGLModel*	m_pObj;
 };
 
 #endif // !defined(AFX_GLPLOT_H__2FD9290B_968B_4C2C_AE36_933F5B0AE3D1__INCLUDED_)

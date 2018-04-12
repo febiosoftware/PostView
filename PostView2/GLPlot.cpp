@@ -11,12 +11,10 @@ extern int LUT[256][15];
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CGLPlot::CGLPlot(CGLModel* po)
+CGLPlot::CGLPlot(CGLModel* po) : CGLVisual(po)
 {
-	m_pObj = po;
 }
 
 CGLPlot::~CGLPlot()
 {
-	m_pObj = 0;
 }
