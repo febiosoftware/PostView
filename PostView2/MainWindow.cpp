@@ -669,10 +669,17 @@ void CMainWindow::on_actionUpdate_triggered()
 void CMainWindow::on_actionFileInfo_triggered()
 {
 	CDlgFileInfo dlg;
-	FEModel& fem = *GetDocument()->GetFEModel();
-	MetaData& md = fem.GetMetaData();
-	dlg.setSoftware(QString::fromStdString(md.software));
-	dlg.exec();
+	FEModel* fem = GetDocument()->GetFEModel();
+	if (fem)
+	{
+		MetaData& md = fem->GetMetaData();
+		dlg.setSoftware(QString::fromStdString(md.software));
+		dlg.exec();
+	}
+	else
+	{
+		QMessageBox::information(this, "Info", "No model has been loaded");
+	}
 }
 
 void CMainWindow::on_actionSave_triggered()
