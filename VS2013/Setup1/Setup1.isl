@@ -354,7 +354,7 @@
 		<row><td>Qt5Gui.dll</td><td>{C89F79AF-A246-4BC0-9055-279ABA786A78}</td><td>INSTALLDIR</td><td>258</td><td/><td>qt5gui.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Qt5Widgets.dll</td><td>{B2EA988D-E387-4B1A-AEFD-B0F6F56BEB5F}</td><td>INSTALLDIR</td><td>258</td><td/><td>qt5widgets.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>glew32.dll</td><td>{ED28F61A-5D51-4F4C-A9EC-F088746C7568}</td><td>INSTALLDIR</td><td>258</td><td/><td>glew32.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>qwindows.dll</td><td>{FAAEA5E1-2772-4711-87DB-8BD1791F28D5}</td><td>PLATFORMS</td><td>258</td><td/><td>qwindows.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>qwindows.dll</td><td>{BE4700FD-B6F5-4D40-AF2D-E512556AC123}</td><td>PLATFORMS</td><td>258</td><td/><td>qwindows.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
 	<table name="Condition">
@@ -1935,7 +1935,7 @@
 		<row><td>qt5core.dll</td><td>Qt5Core.dll</td><td>Qt5Core.dll</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Qt5.10\5.10.1\msvc2013_64\bin\Qt5Core.dll</td><td>1</td><td/></row>
 		<row><td>qt5gui.dll</td><td>Qt5Gui.dll</td><td>Qt5Gui.dll</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Qt5.10\5.10.1\msvc2013_64\bin\Qt5Gui.dll</td><td>1</td><td/></row>
 		<row><td>qt5widgets.dll</td><td>Qt5Widgets.dll</td><td>QT5WID~1.DLL|Qt5Widgets.dll</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Qt5.10\5.10.1\msvc2013_64\bin\Qt5Widgets.dll</td><td>1</td><td/></row>
-		<row><td>qwindows.dll</td><td>qwindows.dll</td><td>qwindows.dll</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Qt5.8\5.8\msvc2013_64\plugins\platforms\qwindows.dll</td><td>1</td><td/></row>
+		<row><td>qwindows.dll</td><td>qwindows.dll</td><td>qwindows.dll</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Qt5.10\5.10.1\msvc2013_64\plugins\platforms\qwindows.dll</td><td>1</td><td/></row>
 		<row><td>sample.xplt</td><td>ISX_DEFAULTCOMPONENT6</td><td>SAMPLE~1.XPL|sample.xplt</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\steve\Documents\Visual Studio 2013\Projects\PostView2\Documentation\Example\sample.xplt</td><td>1</td><td/></row>
 	</table>
 
@@ -2090,7 +2090,7 @@
 		<row><td>Qt5Gui.dll</td><td/><td/><td>_71C119D7_DB8F_4B07_8467_137DF6327957_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Qt5Widgets.dll</td><td/><td/><td>_3E0C758D_44CC_44DF_B1C0_72CCAC290BD5_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>glew32.dll</td><td/><td/><td>_AC298458_ED0A_402A_91CE_206E558DC611_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>qwindows.dll</td><td/><td/><td>_8EA46D3A_0E33_43FC_9E05_09C4068AF81C_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>qwindows.dll</td><td/><td/><td>_915C9C88_38EB_498E_91D6_C4611FFC8F37_FILTER</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISCustomActionReference">
