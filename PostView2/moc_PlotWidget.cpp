@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'PlotWidget.h'
 **
-** Created by: The Qt Meta Object Compiler version 67 (Qt 5.8.0)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.10.1)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -12,7 +12,7 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'PlotWidget.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
-#error "This file was generated using the moc from 5.8.0. It"
+#error "This file was generated using the moc from 5.10.1. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -124,45 +124,44 @@ void CPlotWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
         int *result = reinterpret_cast<int *>(_a[0]);
-        void **func = reinterpret_cast<void **>(_a[1]);
         {
             typedef void (CPlotWidget::*_t)();
-            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&CPlotWidget::doneZoomToRect)) {
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&CPlotWidget::doneZoomToRect)) {
                 *result = 0;
                 return;
             }
         }
         {
             typedef void (CPlotWidget::*_t)(QPointF , bool );
-            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&CPlotWidget::pointClicked)) {
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&CPlotWidget::pointClicked)) {
                 *result = 1;
                 return;
             }
         }
         {
             typedef void (CPlotWidget::*_t)(int );
-            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&CPlotWidget::pointSelected)) {
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&CPlotWidget::pointSelected)) {
                 *result = 2;
                 return;
             }
         }
         {
             typedef void (CPlotWidget::*_t)(QPoint );
-            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&CPlotWidget::pointDragged)) {
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&CPlotWidget::pointDragged)) {
                 *result = 3;
                 return;
             }
         }
         {
             typedef void (CPlotWidget::*_t)(QPoint );
-            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&CPlotWidget::draggingStart)) {
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&CPlotWidget::draggingStart)) {
                 *result = 4;
                 return;
             }
         }
         {
             typedef void (CPlotWidget::*_t)(QPoint );
-            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&CPlotWidget::draggingEnd)) {
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&CPlotWidget::draggingEnd)) {
                 *result = 5;
                 return;
             }
@@ -170,9 +169,9 @@ void CPlotWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
     }
 }
 
-const QMetaObject CPlotWidget::staticMetaObject = {
+QT_INIT_METAOBJECT const QMetaObject CPlotWidget::staticMetaObject = {
     { &QWidget::staticMetaObject, qt_meta_stringdata_CPlotWidget.data,
-      qt_meta_data_CPlotWidget,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
+      qt_meta_data_CPlotWidget,  qt_static_metacall, nullptr, nullptr}
 };
 
 
@@ -183,9 +182,9 @@ const QMetaObject *CPlotWidget::metaObject() const
 
 void *CPlotWidget::qt_metacast(const char *_clname)
 {
-    if (!_clname) return Q_NULLPTR;
+    if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_meta_stringdata_CPlotWidget.stringdata0))
-        return static_cast<void*>(const_cast< CPlotWidget*>(this));
+        return static_cast<void*>(this);
     return QWidget::qt_metacast(_clname);
 }
 
@@ -209,41 +208,41 @@ int CPlotWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 // SIGNAL 0
 void CPlotWidget::doneZoomToRect()
 {
-    QMetaObject::activate(this, &staticMetaObject, 0, Q_NULLPTR);
+    QMetaObject::activate(this, &staticMetaObject, 0, nullptr);
 }
 
 // SIGNAL 1
 void CPlotWidget::pointClicked(QPointF _t1, bool _t2)
 {
-    void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
+    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
     QMetaObject::activate(this, &staticMetaObject, 1, _a);
 }
 
 // SIGNAL 2
 void CPlotWidget::pointSelected(int _t1)
 {
-    void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 2, _a);
 }
 
 // SIGNAL 3
 void CPlotWidget::pointDragged(QPoint _t1)
 {
-    void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 3, _a);
 }
 
 // SIGNAL 4
 void CPlotWidget::draggingStart(QPoint _t1)
 {
-    void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 4, _a);
 }
 
 // SIGNAL 5
 void CPlotWidget::draggingEnd(QPoint _t1)
 {
-    void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 5, _a);
 }
 struct qt_meta_stringdata_CDlgPlotWidgetProps_t {
@@ -288,9 +287,9 @@ void CDlgPlotWidgetProps::qt_static_metacall(QObject *_o, QMetaObject::Call _c, 
     Q_UNUSED(_a);
 }
 
-const QMetaObject CDlgPlotWidgetProps::staticMetaObject = {
+QT_INIT_METAOBJECT const QMetaObject CDlgPlotWidgetProps::staticMetaObject = {
     { &QDialog::staticMetaObject, qt_meta_stringdata_CDlgPlotWidgetProps.data,
-      qt_meta_data_CDlgPlotWidgetProps,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
+      qt_meta_data_CDlgPlotWidgetProps,  qt_static_metacall, nullptr, nullptr}
 };
 
 
@@ -301,17 +300,15 @@ const QMetaObject *CDlgPlotWidgetProps::metaObject() const
 
 void *CDlgPlotWidgetProps::qt_metacast(const char *_clname)
 {
-    if (!_clname) return Q_NULLPTR;
+    if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_meta_stringdata_CDlgPlotWidgetProps.stringdata0))
-        return static_cast<void*>(const_cast< CDlgPlotWidgetProps*>(this));
+        return static_cast<void*>(this);
     return QDialog::qt_metacast(_clname);
 }
 
 int CDlgPlotWidgetProps::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = QDialog::qt_metacall(_c, _id, _a);
-    if (_id < 0)
-        return _id;
     return _id;
 }
 QT_WARNING_POP

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'GraphWindow.h'
 **
-** Created by: The Qt Meta Object Compiler version 67 (Qt 5.8.0)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.10.1)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -12,7 +12,7 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'GraphWindow.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
-#error "This file was generated using the moc from 5.8.0. It"
+#error "This file was generated using the moc from 5.10.1. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -81,10 +81,9 @@ void OptionsUi::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
         int *result = reinterpret_cast<int *>(_a[0]);
-        void **func = reinterpret_cast<void **>(_a[1]);
         {
             typedef void (OptionsUi::*_t)();
-            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&OptionsUi::optionsChanged)) {
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&OptionsUi::optionsChanged)) {
                 *result = 0;
                 return;
             }
@@ -93,9 +92,9 @@ void OptionsUi::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
     Q_UNUSED(_a);
 }
 
-const QMetaObject OptionsUi::staticMetaObject = {
+QT_INIT_METAOBJECT const QMetaObject OptionsUi::staticMetaObject = {
     { &CPlotTool::staticMetaObject, qt_meta_stringdata_OptionsUi.data,
-      qt_meta_data_OptionsUi,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
+      qt_meta_data_OptionsUi,  qt_static_metacall, nullptr, nullptr}
 };
 
 
@@ -106,9 +105,9 @@ const QMetaObject *OptionsUi::metaObject() const
 
 void *OptionsUi::qt_metacast(const char *_clname)
 {
-    if (!_clname) return Q_NULLPTR;
+    if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_meta_stringdata_OptionsUi.stringdata0))
-        return static_cast<void*>(const_cast< OptionsUi*>(this));
+        return static_cast<void*>(this);
     return CPlotTool::qt_metacast(_clname);
 }
 
@@ -132,7 +131,7 @@ int OptionsUi::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 // SIGNAL 0
 void OptionsUi::optionsChanged()
 {
-    QMetaObject::activate(this, &staticMetaObject, 0, Q_NULLPTR);
+    QMetaObject::activate(this, &staticMetaObject, 0, nullptr);
 }
 struct qt_meta_stringdata_RegressionUi_t {
     QByteArrayData data[3];
@@ -189,9 +188,9 @@ void RegressionUi::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
     Q_UNUSED(_a);
 }
 
-const QMetaObject RegressionUi::staticMetaObject = {
+QT_INIT_METAOBJECT const QMetaObject RegressionUi::staticMetaObject = {
     { &CPlotTool::staticMetaObject, qt_meta_stringdata_RegressionUi.data,
-      qt_meta_data_RegressionUi,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
+      qt_meta_data_RegressionUi,  qt_static_metacall, nullptr, nullptr}
 };
 
 
@@ -202,9 +201,9 @@ const QMetaObject *RegressionUi::metaObject() const
 
 void *RegressionUi::qt_metacast(const char *_clname)
 {
-    if (!_clname) return Q_NULLPTR;
+    if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_meta_stringdata_RegressionUi.stringdata0))
-        return static_cast<void*>(const_cast< RegressionUi*>(this));
+        return static_cast<void*>(this);
     return CPlotTool::qt_metacast(_clname);
 }
 
@@ -279,9 +278,9 @@ void MathPlot::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, vo
     Q_UNUSED(_a);
 }
 
-const QMetaObject MathPlot::staticMetaObject = {
+QT_INIT_METAOBJECT const QMetaObject MathPlot::staticMetaObject = {
     { &CPlotTool::staticMetaObject, qt_meta_stringdata_MathPlot.data,
-      qt_meta_data_MathPlot,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
+      qt_meta_data_MathPlot,  qt_static_metacall, nullptr, nullptr}
 };
 
 
@@ -292,9 +291,9 @@ const QMetaObject *MathPlot::metaObject() const
 
 void *MathPlot::qt_metacast(const char *_clname)
 {
-    if (!_clname) return Q_NULLPTR;
+    if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_meta_stringdata_MathPlot.stringdata0))
-        return static_cast<void*>(const_cast< MathPlot*>(this));
+        return static_cast<void*>(this);
     return CPlotTool::qt_metacast(_clname);
 }
 
@@ -428,9 +427,9 @@ void CGraphWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
     }
 }
 
-const QMetaObject CGraphWindow::staticMetaObject = {
+QT_INIT_METAOBJECT const QMetaObject CGraphWindow::staticMetaObject = {
     { &QMainWindow::staticMetaObject, qt_meta_stringdata_CGraphWindow.data,
-      qt_meta_data_CGraphWindow,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
+      qt_meta_data_CGraphWindow,  qt_static_metacall, nullptr, nullptr}
 };
 
 
@@ -441,9 +440,9 @@ const QMetaObject *CGraphWindow::metaObject() const
 
 void *CGraphWindow::qt_metacast(const char *_clname)
 {
-    if (!_clname) return Q_NULLPTR;
+    if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_meta_stringdata_CGraphWindow.stringdata0))
-        return static_cast<void*>(const_cast< CGraphWindow*>(this));
+        return static_cast<void*>(this);
     return QMainWindow::qt_metacast(_clname);
 }
 
