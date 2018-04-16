@@ -112,6 +112,9 @@ public:
 	//! Copy a data field
 	FEDataField* CopyDataField(FEDataField* pd, const char* sznewname = 0);
 
+	//! Create a cached copy of a data field
+	FEDataField* CreateCachedCopy(FEDataField* pd, const char* sznewname);
+
 public:
 	//! get the bounding box
 	BOUNDINGBOX GetBoundingBox() { return m_bbox; }

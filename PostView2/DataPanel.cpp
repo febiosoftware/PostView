@@ -675,19 +675,19 @@ void CDataPanel::on_FilterButton_clicked()
 				{
 				case 0:
 					{
-						FEDataField* newData = fem.CopyDataField(pdf, sname.c_str());
+						FEDataField* newData = fem.CreateCachedCopy(pdf, sname.c_str());
 						DataScale(fem, newData->GetFieldID(), dlg.m_scale);
 					}
 					break;
 				case 1:
 					{
-						FEDataField* newData = fem.CopyDataField(pdf, sname.c_str());
+						FEDataField* newData = fem.CreateCachedCopy(pdf, sname.c_str());
 						DataSmooth(fem, newData->GetFieldID(), dlg.m_theta, dlg.m_iters);
 					}
 					break;
 				case 2:
 					{
-						FEDataField* newData = fem.CopyDataField(pdf, sname.c_str());
+						FEDataField* newData = fem.CreateCachedCopy(pdf, sname.c_str());
 						FEDataFieldPtr p = fem.GetDataManager()->DataField(dataIds[dlg.m_ndata]);
 						DataArithmetic(fem, newData->GetFieldID(), dlg.m_nop, (*p)->GetFieldID());
 					}
