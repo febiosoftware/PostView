@@ -350,9 +350,9 @@
 		<row><td>ISX_DEFAULTCOMPONENT5</td><td>{0BDB2D41-5989-4087-8F0D-0350C6D29553}</td><td>DOCUMENTATION</td><td>258</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ISX_DEFAULTCOMPONENT6</td><td>{A978A519-0A6E-44FF-9FB3-FCA36D2392AF}</td><td>EXAMPLES</td><td>258</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>PostView2.Primary_Output</td><td>{1AC33199-3119-4AD0-BB52-06786920D708}</td><td>INSTALLDIR</td><td>258</td><td/><td>postview2.primary_output</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>Qt5Core.dll</td><td>{F7E2721A-8625-4C92-B6CD-949C7F2143BD}</td><td>INSTALLDIR</td><td>258</td><td/><td>qt5core.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>Qt5Gui.dll</td><td>{27AFFAD6-9D42-4DEA-968D-CE9D8298A2EF}</td><td>INSTALLDIR</td><td>258</td><td/><td>qt5gui.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>Qt5Widgets.dll</td><td>{8FAB67E4-68F5-43EC-BDAE-4DFF66A6C144}</td><td>INSTALLDIR</td><td>258</td><td/><td>qt5widgets.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>Qt5Core.dll</td><td>{E483D360-A23B-4A12-A3AF-F7BA091D153D}</td><td>INSTALLDIR</td><td>258</td><td/><td>qt5core.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>Qt5Gui.dll</td><td>{C89F79AF-A246-4BC0-9055-279ABA786A78}</td><td>INSTALLDIR</td><td>258</td><td/><td>qt5gui.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>Qt5Widgets.dll</td><td>{B2EA988D-E387-4B1A-AEFD-B0F6F56BEB5F}</td><td>INSTALLDIR</td><td>258</td><td/><td>qt5widgets.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>glew32.dll</td><td>{ED28F61A-5D51-4F4C-A9EC-F088746C7568}</td><td>INSTALLDIR</td><td>258</td><td/><td>glew32.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>qwindows.dll</td><td>{FAAEA5E1-2772-4711-87DB-8BD1791F28D5}</td><td>PLATFORMS</td><td>258</td><td/><td>qwindows.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
@@ -1932,9 +1932,9 @@
 		<row><td>postview2.primary_output</td><td>PostView2.Primary_Output</td><td>PostView2.Primary Output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PostView2&gt;|Built</td><td>3</td><td/></row>
 		<row><td>postview_2.2.pdf</td><td>ISX_DEFAULTCOMPONENT4</td><td>POSTVI~1.PDF|PostView_2.2.pdf</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\steve\Documents\Visual Studio 2013\Projects\PostView2\Documentation\PostView_2.2.pdf</td><td>1</td><td/></row>
 		<row><td>postview_eula.pdf</td><td>ISX_DEFAULTCOMPONENT5</td><td>POSTVI~1.PDF|PostView_EULA.pdf</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\steve\Documents\Visual Studio 2013\Projects\PostView2\Documentation\PostView_EULA.pdf</td><td>1</td><td/></row>
-		<row><td>qt5core.dll</td><td>Qt5Core.dll</td><td>Qt5Core.dll</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Qt5.8\5.8\msvc2013_64\bin\Qt5Core.dll</td><td>1</td><td/></row>
-		<row><td>qt5gui.dll</td><td>Qt5Gui.dll</td><td>Qt5Gui.dll</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Qt5.8\5.8\msvc2013_64\bin\Qt5Gui.dll</td><td>1</td><td/></row>
-		<row><td>qt5widgets.dll</td><td>Qt5Widgets.dll</td><td>QT5WID~1.DLL|Qt5Widgets.dll</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Qt5.8\5.8\msvc2013_64\bin\Qt5Widgets.dll</td><td>1</td><td/></row>
+		<row><td>qt5core.dll</td><td>Qt5Core.dll</td><td>Qt5Core.dll</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Qt5.10\5.10.1\msvc2013_64\bin\Qt5Core.dll</td><td>1</td><td/></row>
+		<row><td>qt5gui.dll</td><td>Qt5Gui.dll</td><td>Qt5Gui.dll</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Qt5.10\5.10.1\msvc2013_64\bin\Qt5Gui.dll</td><td>1</td><td/></row>
+		<row><td>qt5widgets.dll</td><td>Qt5Widgets.dll</td><td>QT5WID~1.DLL|Qt5Widgets.dll</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Qt5.10\5.10.1\msvc2013_64\bin\Qt5Widgets.dll</td><td>1</td><td/></row>
 		<row><td>qwindows.dll</td><td>qwindows.dll</td><td>qwindows.dll</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Qt5.8\5.8\msvc2013_64\plugins\platforms\qwindows.dll</td><td>1</td><td/></row>
 		<row><td>sample.xplt</td><td>ISX_DEFAULTCOMPONENT6</td><td>SAMPLE~1.XPL|sample.xplt</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\steve\Documents\Visual Studio 2013\Projects\PostView2\Documentation\Example\sample.xplt</td><td>1</td><td/></row>
 	</table>
@@ -2086,9 +2086,9 @@
 		<row><td>ISX_DEFAULTCOMPONENT5</td><td/><td/><td>_80CC63A8_7211_49E5_B2A3_E95BFAB73572_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ISX_DEFAULTCOMPONENT6</td><td/><td/><td>_220A876D_ED60_4841_9CDD_F3DEF14FEF52_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>PostView2.Primary_Output</td><td/><td/><td>_715FF563_0352_4860_B411_A52217EA9C4D_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>Qt5Core.dll</td><td/><td/><td>_9BF7E1CF_8DE8_4A18_B983_54849A54499D_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>Qt5Gui.dll</td><td/><td/><td>_4B3EE034_E44D_455B_88D4_089E9819C5B1_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>Qt5Widgets.dll</td><td/><td/><td>_EE9E6EB5_21CC_46C9_90F4_30C7CEA0DC2E_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>Qt5Core.dll</td><td/><td/><td>_2374A64D_FE27_4266_B0C1_9861F9DF1539_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>Qt5Gui.dll</td><td/><td/><td>_71C119D7_DB8F_4B07_8467_137DF6327957_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>Qt5Widgets.dll</td><td/><td/><td>_3E0C758D_44CC_44DF_B1C0_72CCAC290BD5_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>glew32.dll</td><td/><td/><td>_AC298458_ED0A_402A_91CE_206E558DC611_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>qwindows.dll</td><td/><td/><td>_8EA46D3A_0E33_43FC_9E05_09C4068AF81C_FILTER</td><td/><td/><td/><td/></row>
 	</table>
