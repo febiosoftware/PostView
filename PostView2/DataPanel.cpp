@@ -343,18 +343,23 @@ public:
 	QComboBox* poperation;
 	QComboBox* poperand;
 
+	QComboBox*	comp;
+
 public:
 	void setupUi(QDialog* parent)
 	{
+		// new name field
 		QHBoxLayout* lname = new QHBoxLayout;
 		lname->addWidget(new QLabel("Name:"));
 		lname->addWidget(name = new QLineEdit);
 
+		// filter choice
 		pselect = new QComboBox;
 		pselect->addItem("Scale");
 		pselect->addItem("Smooth");
 		pselect->addItem("Arithmetic");
 		pselect->addItem("Gradient");
+		pselect->addItem("Component");
 
 		QLabel* label;
 		label = new QLabel("Filter:");
@@ -368,24 +373,34 @@ public:
 		pvl->addLayout(lname);
 		pvl->addLayout(ph);
 
+		// scale filter
 		QWidget* scalePage = new QWidget;
 		QFormLayout* pform = new QFormLayout;
 		pform->addRow("scale:", pscale = new QLineEdit); pscale->setValidator(new QDoubleValidator(-1e99, 1e99, 6));
 		scalePage->setLayout(pform);
 
+		// smooth filter
 		QWidget* smoothPage = new QWidget;
 		pform = new QFormLayout;
 		pform->addRow("theta:", ptheta = new QLineEdit); ptheta->setValidator(new QDoubleValidator(0.0, 1.0, 6));
 		pform->addRow("iterations:", piters = new QLineEdit); piters->setValidator(new QIntValidator(1, 1000));
 		smoothPage->setLayout(pform);
 
+		// math filter
 		QWidget* mathPage = new QWidget;
 		pform = new QFormLayout;
 		pform->addRow("Operation:", poperation = new QComboBox);
 		pform->addRow("Operand:"  , poperand   = new QComboBox);
 		mathPage->setLayout(pform);
 
+		// gradient page (doesn't need options)
 		QWidget* gradPage = new QLabel("");
+
+		// array component
+		QWidget* compPage = new QWidget;
+		pform = new QFormLayout;
+		pform->addRow("Component:", comp = new QComboBox);
+		compPage->setLayout(pform);
 
 		poperation->addItem("add");
 		poperation->addItem("subtract");
@@ -398,6 +413,7 @@ public:
 		stack->addWidget(smoothPage);
 		stack->addWidget(mathPage  );
 		stack->addWidget(gradPage  );
+		stack->addWidget(compPage);
 		
 		pvl->addWidget(stack);
 
@@ -427,6 +443,22 @@ void CDlgFilter::setDataOperands(const std::vector<QString>& opNames)
 	{
 		ui->poperand->addItem(opNames[i]);
 	}
+}
+
+void CDlgFilter::setDataField(FEDataField* pdf)
+{
+	ui->comp->clear();
+	int n = pdf->components(DATA_SCALAR);
+	for (int i=0; i<n; ++i)
+	{
+		std::string cname = pdf->componentName(i, DATA_SCALAR);
+		ui->comp->addItem(QString::fromStdString(cname));
+	}
+}
+
+int CDlgFilter::getArrayComponent()
+{
+	return ui->comp->currentIndex();
 }
 
 void CDlgFilter::setDefaultName(const QString& name)
@@ -660,6 +692,7 @@ void CDataPanel::on_FilterButton_clicked()
 
 			CDlgFilter dlg(this);
 			dlg.setDataOperands(dataNames);
+			dlg.setDataField(pdf);
 
 			QString name = QString::fromStdString(pdf->GetName());
 			QString newName = QString("%0_flt").arg(name);
@@ -700,6 +733,16 @@ void CDataPanel::on_FilterButton_clicked()
 
 						// now, calculate gradient from scalar field
 						DataGradient(fem, newData->GetFieldID(), nfield);
+					}
+					break;
+				case 4:
+					{
+						// create new field for storing the component
+						FEDataField* newData = DataComponent(fem, pdf, dlg.getArrayComponent(), sname);
+						if (newData == 0)
+						{
+							QMessageBox::critical(this, "Data Filter", "Failed to extract component.");
+						}
 					}
 					break;
 				default:

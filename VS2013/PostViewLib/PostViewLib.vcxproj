@@ -197,6 +197,7 @@
     <ClInclude Include="..\..\PostViewLib\bbox.h" />
     <ClInclude Include="..\..\PostViewLib\color.h" />
     <ClInclude Include="..\..\PostViewLib\ColorMap.h" />
+    <ClInclude Include="..\..\PostViewLib\evaluate.h" />
     <ClInclude Include="..\..\PostViewLib\FEAreaCoverage.h" />
     <ClInclude Include="..\..\PostViewLib\FEAsciiExport.h" />
     <ClInclude Include="..\..\PostViewLib\FEDataField.h" />

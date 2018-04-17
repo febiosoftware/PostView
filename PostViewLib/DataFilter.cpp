@@ -3,6 +3,7 @@
 #include "FEModel.h"
 #include "constants.h"
 #include "FEMeshData_T.h"
+#include "evaluate.h"
 
 // TODO: Find a way to return errors
 void DataScale(FEModel& fem, int nfield, double scale)
@@ -768,4 +769,227 @@ void DataGradient(FEModel& fem, int vecField, int sclField)
 			(*pv)[i] = G[i];
 		}
 	}
+}
+
+//-----------------------------------------------------------------------------
+template <typename T> void extractNodeDataComponent_T(FEMeshData& dst, FEMeshData& src, int ncomp, FEMeshBase& mesh)
+{
+	FENodeData_T<T>& vec = dynamic_cast<FENodeData_T<T>&>(src);
+	FENodeData<float>& scl = dynamic_cast<FENodeData<float>&>(dst);
+
+	int NN = mesh.Nodes();
+	for (int i = 0; i<NN; ++i)
+	{
+		T v; vec.eval(i, &v);
+		scl[i] = component(v, ncomp);
+	}
+}
+
+void extractNodeDataComponent(Data_Type ntype, FEMeshData& dst, FEMeshData& src, int ncomp, FEMeshBase& mesh)
+{
+	switch (ntype)
+	{
+	case DATA_VEC3F  : extractNodeDataComponent_T<vec3f  >(dst, src, ncomp, mesh); break;
+	case DATA_MAT3FS : extractNodeDataComponent_T<mat3fs >(dst, src, ncomp, mesh); break;
+	case DATA_MAT3FD : extractNodeDataComponent_T<mat3fs >(dst, src, ncomp, mesh); break;
+	case DATA_TENS4FS: extractNodeDataComponent_T<tens4fs>(dst, src, ncomp, mesh); break;
+	case DATA_MAT3D  : extractNodeDataComponent_T<mat3d  >(dst, src, ncomp, mesh); break;
+	case DATA_MAT3F  : extractNodeDataComponent_T<mat3f  >(dst, src, ncomp, mesh); break;
+	}
+}
+
+template <typename T> void extractElemDataComponentITEM_T(FEMeshData& dst, FEMeshData& src, int ncomp, FEMeshBase& mesh)
+{
+	FEElemData_T<T, DATA_ITEM>& vec = dynamic_cast<FEElemData_T<T, DATA_ITEM>&>(src);
+	FEElementData<float, DATA_ITEM>& scl = dynamic_cast<FEElementData<float, DATA_ITEM>&>(dst);
+
+	int NE = mesh.Elements();
+	for (int i = 0; i<NE; ++i)
+	{
+		if (vec.active(i))
+		{
+			T v; vec.eval(i, &v);
+			scl.add(i, component(v, ncomp));
+		}
+	}
+}
+
+void extractElemDataComponentITEM_ARRAY_VEC3F(FEMeshData& dst, FEMeshData& src, int ncomp, FEMeshBase& mesh)
+{
+	FEElemArrayVec3Data& vec = dynamic_cast<FEElemArrayVec3Data&>(src);
+	FEElementData<float, DATA_ITEM>& scl = dynamic_cast<FEElementData<float, DATA_ITEM>&>(dst);
+
+	int index = ncomp / 4;
+	int veccomp = ncomp % 4;
+
+	int NE = mesh.Elements();
+	float val[FEGenericElement::MAX_NODES];
+	vector<float> data;
+	vector<int> elem(1);
+	vector<int> l;
+	for (int i = 0; i<NE; ++i)
+	{
+		FEElement& el = mesh.Element(i);
+		int ne = el.Nodes();
+		if (vec.active(i))
+		{
+			vec3f v = vec.eval(i, index);
+			float f = component2(v, veccomp);
+			scl.add(i, f);
+		}
+	}
+}
+
+void extractElemDataComponentITEM(Data_Type ntype, FEMeshData& dst, FEMeshData& src, int ncomp, FEMeshBase& mesh)
+{
+	switch(ntype)
+	{
+	case DATA_VEC3F  : extractElemDataComponentITEM_T<vec3f  >(dst, src, ncomp, mesh); break;
+	case DATA_MAT3FS : extractElemDataComponentITEM_T<mat3fs >(dst, src, ncomp, mesh); break;
+	case DATA_MAT3FD : extractElemDataComponentITEM_T<mat3fs >(dst, src, ncomp, mesh); break;
+	case DATA_TENS4FS: extractElemDataComponentITEM_T<tens4fs>(dst, src, ncomp, mesh); break;
+	case DATA_MAT3D  : extractElemDataComponentITEM_T<mat3d  >(dst, src, ncomp, mesh); break;
+	case DATA_MAT3F  : extractElemDataComponentITEM_T<mat3f  >(dst, src, ncomp, mesh); break;
+	case DATA_ARRAY_VEC3F: extractElemDataComponentITEM_ARRAY_VEC3F(dst, src, ncomp, mesh); break;
+	}
+}
+
+template <typename T> void extractElemDataComponentNODE_T(FEMeshData& dst, FEMeshData& src, int ncomp, FEMeshBase& mesh)
+{
+	FEElemData_T<T, DATA_NODE>& vec = dynamic_cast<FEElemData_T<T, DATA_NODE>&>(src);
+	FEElementData<float, DATA_NODE>& scl = dynamic_cast<FEElementData<float, DATA_NODE>&>(dst);
+
+	int NE = mesh.Elements();
+	T val[FEGenericElement::MAX_NODES];
+	vector<float> data;
+	vector<int> elem(1);
+	vector<int> l;
+	for (int i = 0; i<NE; ++i)
+	{
+		FEElement& el = mesh.Element(i);
+		int ne = el.Nodes();
+		if (vec.active(i))
+		{
+			vec.eval(i, val);
+
+			data.resize(ne);
+			for (int j=0; j<ne; ++j) data[j] = component(val[j], ncomp);
+
+			l.resize(ne);
+			for (int j=0; j<ne; ++j) l[j] = el.m_node[j];
+
+			elem[0] = i;
+			
+			scl.add(data, elem, l, ne);
+		}
+	}
+}
+
+void extractElemDataComponentNODE_ARRAY(FEMeshData& dst, FEMeshData& src, int ncomp, FEMeshBase& mesh)
+{
+	FEElemArrayDataNode& vec = dynamic_cast<FEElemArrayDataNode&>(src);
+	FEElementData<float, DATA_NODE>& scl = dynamic_cast<FEElementData<float, DATA_NODE>&>(dst);
+
+	int NE = mesh.Elements();
+	float val[FEGenericElement::MAX_NODES];
+	vector<float> data;
+	vector<int> elem(1);
+	vector<int> l;
+	for (int i = 0; i<NE; ++i)
+	{
+		FEElement& el = mesh.Element(i);
+		int ne = el.Nodes();
+		if (vec.active(i))
+		{
+			vec.eval(i, ncomp, val);
+
+			data.resize(ne);
+			for (int j = 0; j<ne; ++j) data[j] = val[j];
+
+			l.resize(ne);
+			for (int j = 0; j<ne; ++j) l[j] = j;
+
+			elem[0] = i;
+
+			scl.add(data, elem, l, ne);
+		}
+	}
+}
+
+void extractElemDataComponentNODE(Data_Type ntype, FEMeshData& dst, FEMeshData& src, int ncomp, FEMeshBase& mesh)
+{
+	switch(ntype)
+	{
+	case DATA_VEC3F  : extractElemDataComponentNODE_T<vec3f  >(dst, src, ncomp, mesh); break;
+	case DATA_MAT3FS : extractElemDataComponentNODE_T<mat3fs >(dst, src, ncomp, mesh); break;
+	case DATA_MAT3FD : extractElemDataComponentNODE_T<mat3fs >(dst, src, ncomp, mesh); break;
+	case DATA_TENS4FS: extractElemDataComponentNODE_T<tens4fs>(dst, src, ncomp, mesh); break;
+	case DATA_MAT3D  : extractElemDataComponentNODE_T<mat3d  >(dst, src, ncomp, mesh); break;
+	case DATA_MAT3F  : extractElemDataComponentNODE_T<mat3f  >(dst, src, ncomp, mesh); break;
+	case DATA_ARRAY  : extractElemDataComponentNODE_ARRAY(dst, src, ncomp, mesh); break;
+	}
+}
+
+FEDataField* DataComponent(FEModel& fem, FEDataField* pdf, int ncomp, const std::string& sname)
+{
+	if (pdf == 0) return 0;
+
+	int nclass = pdf->DataClass();
+	Data_Type ntype = pdf->Type();
+	int nfmt = pdf->Format();
+
+	FEMeshBase& mesh = *fem.GetFEMesh(0);
+
+	FEDataField* newField = 0;
+	if (nclass == CLASS_NODE)
+	{
+		newField = new FEDataField_T<FENodeData<float> >(sname);
+		fem.AddDataField(newField);
+
+		int nvec = pdf->GetFieldID(); nvec = FIELD_CODE(nvec);
+		int nscl = newField->GetFieldID(); nscl = FIELD_CODE(nscl);
+
+		for (int n=0; n<fem.GetStates(); ++n)
+		{
+			FEState* state = fem.GetState(n);
+			extractNodeDataComponent(ntype, state->m_Data[nscl], state->m_Data[nvec], ncomp, mesh);
+		}
+	}
+	else if (nclass == CLASS_FACE)
+	{
+		
+	}
+	else if (nclass == CLASS_ELEM)
+	{
+		if (nfmt == DATA_ITEM)
+		{
+			newField = new FEDataField_T<FEElementData<float, DATA_ITEM> >(sname);
+			fem.AddDataField(newField);
+
+			int nvec = pdf->GetFieldID(); nvec = FIELD_CODE(nvec);
+			int nscl = newField->GetFieldID(); nscl = FIELD_CODE(nscl);
+
+			for (int n = 0; n<fem.GetStates(); ++n)
+			{
+				FEState* state = fem.GetState(n);
+				extractElemDataComponentITEM(ntype, state->m_Data[nscl], state->m_Data[nvec], ncomp, mesh);
+			}
+		}
+		else if (nfmt == DATA_NODE)
+		{
+			newField = new FEDataField_T<FEElementData<float, DATA_NODE> >(sname);
+			fem.AddDataField(newField);
+
+			int nvec = pdf->GetFieldID(); nvec = FIELD_CODE(nvec);
+			int nscl = newField->GetFieldID(); nscl = FIELD_CODE(nscl);
+
+			for (int n = 0; n<fem.GetStates(); ++n)
+			{
+				FEState* state = fem.GetState(n);
+				extractElemDataComponentNODE(ntype, state->m_Data[nscl], state->m_Data[nvec], ncomp, mesh);
+			}
+		}
+	}
+
+	return newField;
 }
