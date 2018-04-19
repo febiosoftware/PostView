@@ -41,6 +41,7 @@ CGLModel::CGLModel(FEModel* ps)
 		if (((*pd)->Type() == DATA_VEC3F) && ((*pd)->GetName() == "displacement")) ndisp = i;
 	}
 
+	m_pdis = 0;
 	if (ndisp != -1)
 	{
 		m_pdis = new CGLDisplacementMap(this);
