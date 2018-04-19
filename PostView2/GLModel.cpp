@@ -35,20 +35,19 @@ CGLModel::CGLModel(FEModel* ps)
 	// which can be used for displacement maps
 	FEDataManager* pdm = ps->GetDataManager();
 	FEDataFieldPtr pd = pdm->FirstDataField();
-	int nv = 0;
 	int ndisp = -1;
 	for (int i=0; i<pdm->DataFields(); ++i, ++pd)
 	{
-		if ((*pd)->Type() == DATA_VEC3F) ++nv;
-		if ((*pd)->GetName() == "displacement") ndisp = i;
+		if (((*pd)->Type() == DATA_VEC3F) && ((*pd)->GetName() == "displacement")) ndisp = i;
 	}
 
-	m_pdis = (nv ? new CGLDisplacementMap(this) : 0);
 	if (ndisp != -1)
 	{
+		m_pdis = new CGLDisplacementMap(this);
 		ps->SetDisplacementField(BUILD_FIELD(1, ndisp, 0));
 	}
 
+	// add a default color map
 	m_pcol = new CGLColorMap(this);
 
 	SetName("Model");
@@ -225,8 +224,43 @@ bool CGLModel::AddDisplacementMap()
 	if (ndisp != -1)
 	{
 		ps->SetDisplacementField(BUILD_FIELD(1, ndisp, 0));
-	}	
+	}
+
+	ResetAllStates();
+
 	return true;
+}
+
+
+//-----------------------------------------------------------------------------
+void CGLModel::ResetMesh()
+{
+	FEModel& fem = *GetFEModel();
+	FEMeshBase& mesh = *fem.GetFEMesh(0);
+
+	int NN = mesh.Nodes();
+	for (int i = 0; i<NN; ++i)
+	{
+		FENode& node = mesh.Node(i);
+		node.m_rt = node.m_r0;
+	}
+
+	// reevaluate normals
+	mesh.UpdateNormals(RenderSmooth());
+}
+//-----------------------------------------------------------------------------
+void CGLModel::RemoveDisplacementMap()
+{
+	FEModel* ps = GetFEModel();
+	ps->SetDisplacementField(0);
+	delete m_pdis;
+	m_pdis = 0;
+
+	// reset the mesh
+	ResetMesh();
+
+	// just to be safe, let's reset all states to force them to reevaluate
+	ResetAllStates();
 }
 
 //-----------------------------------------------------------------------------

@@ -1539,12 +1539,11 @@ void CDocument::AddPlot(CGLPlot* pplot)
 
 void CDocument::DeleteObject(CGLObject *po)
 {
-	int i;
 	CGLPlot* pp = dynamic_cast<CGLPlot*>(po);
 	if (pp)
 	{
 		list<CGLPlot*>::iterator it = m_pPlot.begin();
-		for (i=0; i<(int) m_pPlot.size(); ++i, ++it)
+		for (int i=0; i<(int) m_pPlot.size(); ++i, ++it)
 		{
 			pp = (*it);
 			if (pp == po)
@@ -1558,7 +1557,7 @@ void CDocument::DeleteObject(CGLObject *po)
 	else if (dynamic_cast<CGLVisual*>(po))
 	{
 		list<CGLVisual*>::iterator it = m_pObj.begin();
-		for (i=0; i<(int) m_pObj.size(); ++i, ++it)
+		for (int i = 0; i<(int)m_pObj.size(); ++i, ++it)
 		{
 			CGLVisual* pv = (*it);
 			if (pv == po)
@@ -1584,6 +1583,14 @@ void CDocument::DeleteObject(CGLObject *po)
 	{
 		delete m_pVR;
 		m_pVR = 0;
+	}
+	else if (dynamic_cast<CGLDisplacementMap*>(po))
+	{
+		CGLDisplacementMap* map = dynamic_cast<CGLDisplacementMap*>(po);
+		CGLModel* m = GetGLModel();
+		assert(map == m->GetDisplacementMap());
+		m->RemoveDisplacementMap();
+		UpdateFEModel(true);
 	}
 }
 

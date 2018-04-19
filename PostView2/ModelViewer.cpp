@@ -692,7 +692,7 @@ void CModelViewer::Update(bool breset)
 				pi2->setIcon(0, QIcon(QString(":/icons/distort.png")));
 				ui->m_list.push_back(new CDisplacementMapProps(m_wnd, map));
 				pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
-				m_obj.push_back(0);
+				m_obj.push_back(map);
 			}
 
 			CGLColorMap* col = mdl->GetColorMap();

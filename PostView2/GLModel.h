@@ -68,6 +68,8 @@ public:
 
 	bool AddDisplacementMap();
 
+	void RemoveDisplacementMap();
+
 	void SetMaterialParams(FEMaterial* pm);
 
 	//! set the smoothing angle
@@ -84,6 +86,9 @@ public:
 
 	//! Reset all the states so any update will force the state to be evaluated
 	void ResetAllStates();
+
+	//! reset the mesh nodes
+	void ResetMesh();
 
 public:
 	// return internal surfaces

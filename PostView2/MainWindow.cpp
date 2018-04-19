@@ -1183,11 +1183,15 @@ void CMainWindow::on_actionDisplacementMap_triggered()
 		{
 			QMessageBox::warning(this, "PostView", "You need at least one vector field before you can define a displacement map.");
 		}
-//		else m_pCmdWnd->Update();
+		else
+		{
+			pdoc->UpdateFEModel(true);
+			ui->modelViewer->Update(true);
+		}
 	}
 	else
 	{
-		QMessageBox::information(this, "PostView", "You need at least one vector field before you can define a displacement map.");
+		QMessageBox::information(this, "PostView", "This model already has a displacement map.");
 	}
 }
 
