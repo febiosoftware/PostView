@@ -1446,70 +1446,13 @@ bool IsInsideElement(FEElement& el, double r[3], const double tol)
 }
 
 //-----------------------------------------------------------------------------
-bool ProjectInsideElement(FEMeshBase& m, FEElement& el, const vec3f& p, double r[3])
+void project_inside_element(FEElement& el, const vec3f& p, double r[3], vec3f* x)
 {
 	const double tol = 0.0001;
 	const int nmax = 10;
-	r[0] = r[1] = r[2] = 0.f;
-	double dr[3], R[3];
+
 	int ne = el.Nodes();
-	vec3f x[FEGenericElement::MAX_NODES];
-	for (int i=0; i<ne; ++i) x[i] = m.Node(el.m_node[i]).m_rt;
-	mat3d K, Ki;
-	double u2, N[FEGenericElement::MAX_NODES], G[3][FEGenericElement::MAX_NODES];
-	int n = 0;
-	do
-	{
-		el.shape(N, r[0], r[1], r[2]);
-		el.shape_deriv(G[0], G[1], G[2], r[0], r[1], r[2]);
-
-		R[0] = p.x;
-		R[1] = p.y;
-		R[2] = p.z;
-		for (int i=0; i<ne; ++i)
-		{
-			R[0] -= N[i]*x[i].x;
-			R[1] -= N[i]*x[i].y;
-			R[2] -= N[i]*x[i].z;
-		}
-
-		K.zero();
-		for (int i=0; i<ne; ++i)
-		{
-			K[0][0] -= G[0][i]*x[i].x; K[0][1] -= G[1][i]*x[i].x; K[0][2] -= G[2][i]*x[i].x;
-			K[1][0] -= G[0][i]*x[i].y; K[1][1] -= G[1][i]*x[i].y; K[1][2] -= G[2][i]*x[i].y;
-			K[2][0] -= G[0][i]*x[i].z; K[2][1] -= G[1][i]*x[i].z; K[2][2] -= G[2][i]*x[i].z;
-		}
-
-		Ki = K;
-		Ki.Invert();
-
-		dr[0] = Ki[0][0]*R[0] + Ki[0][1]*R[1] + Ki[0][2]*R[2];
-		dr[1] = Ki[1][0]*R[0] + Ki[1][1]*R[1] + Ki[1][2]*R[2];
-		dr[2] = Ki[2][0]*R[0] + Ki[2][1]*R[1] + Ki[2][2]*R[2];
-
-		r[0] -= dr[0];
-		r[1] -= dr[1];
-		r[2] -= dr[2];
-
-		u2 = dr[0]*dr[0] + dr[1]*dr[1] + dr[2]*dr[2];
-		++n;
-	}
-	while ((u2 > tol*tol)&&(n < nmax));
-
-	return IsInsideElement(el, r, 0.001);
-}
-
-//-----------------------------------------------------------------------------
-bool ProjectInsideReferenceElement(FEMeshBase& m, FEElement& el, const vec3f& p, double r[3])
-{
-	const double tol = 0.0001;
-	const int nmax = 10;
-	r[0] = r[1] = r[2] = 0.f;
 	double dr[3], R[3];
-	int ne = el.Nodes();
-	vec3f x[FEGenericElement::MAX_NODES];
-	for (int i = 0; i<ne; ++i) x[i] = m.Node(el.m_node[i]).m_r0;
 	mat3d K;
 	double u2, N[FEGenericElement::MAX_NODES], G[3][FEGenericElement::MAX_NODES];
 	int n = 0;
@@ -1548,12 +1491,35 @@ bool ProjectInsideReferenceElement(FEMeshBase& m, FEElement& el, const vec3f& p,
 
 		u2 = dr[0] * dr[0] + dr[1] * dr[1] + dr[2] * dr[2];
 		++n;
-	}
+	} 
 	while ((u2 > tol*tol) && (n < nmax));
+}
+
+//-----------------------------------------------------------------------------
+bool ProjectInsideReferenceElement(FEMeshBase& m, FEElement& el, const vec3f& p, double r[3])
+{
+	r[0] = r[1] = r[2] = 0.f;
+	int ne = el.Nodes();
+	vec3f x[FEGenericElement::MAX_NODES];
+	for (int i = 0; i<ne; ++i) x[i] = m.Node(el.m_node[i]).m_r0;
+
+	project_inside_element(el, p, r, x);
 
 	return IsInsideElement(el, r, 0.001);
 }
 
+//-----------------------------------------------------------------------------
+bool ProjectInsideElement(FEMeshBase& m, FEElement& el, const vec3f& p, double r[3])
+{
+	r[0] = r[1] = r[2] = 0.f;
+	int ne = el.Nodes();
+	vec3f x[FEGenericElement::MAX_NODES];
+	for (int i = 0; i<ne; ++i) x[i] = m.Node(el.m_node[i]).m_rt;
+
+	project_inside_element(el, p, r, x);
+
+	return IsInsideElement(el, r, 0.001);
+}
 
 //-----------------------------------------------------------------------------
 bool FindElementRef(FEMeshBase& m, const vec3f& p, int& nelem, double r[3])
@@ -1824,64 +1790,23 @@ FEFindElement::BOX* FEFindElement::FindBox(const vec3f& r)
 
 FEFindElement::FEFindElement(FEMeshBase& mesh) : m_mesh(mesh)
 {
-	// calculate bounding box for the entire mesh
-	int NN = mesh.Nodes();
-	int NE = mesh.Elements();
-	if ((NN == 0) || (NE == 0)) return;
-
-	vec3f r = mesh.Node(0).m_r0;
-	BOUNDINGBOX box(r, r);
-	for (int i=1; i<mesh.Nodes(); ++i)
-	{
-		r = mesh.Node(i).m_r0;
-		box += r;
-	}
-	float R = box.GetMaxExtent();
-	box.Inflate(R*0.001f);
-
-	// split this box recursively
-	m_bound.m_box = box;
-
-	int l = (int) (log(NE) / log(8.0));
-	if (l < 0) l = 0;
-	if (l > 3) l = 3;
-	m_bound.split(l);
-
-	// calculate bounding boxes for all elements
-	for (int i=0; i<NE; ++i)
-	{
-		FEElement& e = mesh.Element(i);
-		int ne = e.Nodes();
-
-		// do a quick bounding box test
-		vec3f r0 = mesh.Node(e.m_node[0]).m_r0;
-		vec3f r1 = r0;
-		BOUNDINGBOX box(r0, r1);
-		for (int j = 1; j<ne; ++j)
-		{
-			vec3f& rj = mesh.Node(e.m_node[j]).m_r0;
-			box += rj;
-		}
-		float R = box.GetMaxExtent();
-		box.Inflate(R*0.0001f);
-
-		// add it to the octree
-		m_bound.Add(box, i);
-	}
+	m_nframe = -1;
 }
 
-FEFindElement::FEFindElement(FEMeshBase& mesh, vector<bool>& flags) : m_mesh(mesh)
+void FEFindElement::InitReferenceFrame(vector<bool>& flags)
 {
+	assert(m_nframe == 0);
+
 	// calculate bounding box for the entire mesh
-	int NN = mesh.Nodes();
-	int NE = mesh.Elements();
+	int NN = m_mesh.Nodes();
+	int NE = m_mesh.Elements();
 	if ((NN == 0) || (NE == 0)) return;
 
-	vec3f r = mesh.Node(0).m_r0;
+	vec3f r = m_mesh.Node(0).m_r0;
 	BOUNDINGBOX box(r, r);
-	for (int i = 1; i<mesh.Nodes(); ++i)
+	for (int i = 1; i<m_mesh.Nodes(); ++i)
 	{
-		r = mesh.Node(i).m_r0;
+		r = m_mesh.Node(i).m_r0;
 		box += r;
 	}
 	float R = box.GetMaxExtent();
@@ -1899,7 +1824,7 @@ FEFindElement::FEFindElement(FEMeshBase& mesh, vector<bool>& flags) : m_mesh(mes
 	int cflags = flags.size();
 	for (int i = 0; i<NE; ++i)
 	{
-		FEElement& e = mesh.Element(i);
+		FEElement& e = m_mesh.Element(i);
 
 		bool badd = true;
 		if (flags.empty() == false)
@@ -1913,12 +1838,12 @@ FEFindElement::FEFindElement(FEMeshBase& mesh, vector<bool>& flags) : m_mesh(mes
 			int ne = e.Nodes();
 
 			// do a quick bounding box test
-			vec3f r0 = mesh.Node(e.m_node[0]).m_r0;
+			vec3f r0 = m_mesh.Node(e.m_node[0]).m_r0;
 			vec3f r1 = r0;
 			BOUNDINGBOX box(r0, r1);
 			for (int j = 1; j<ne; ++j)
 			{
-				vec3f& rj = mesh.Node(e.m_node[j]).m_r0;
+				vec3f& rj = m_mesh.Node(e.m_node[j]).m_r0;
 				box += rj;
 			}
 			float R = box.GetMaxExtent();
@@ -1930,8 +1855,87 @@ FEFindElement::FEFindElement(FEMeshBase& mesh, vector<bool>& flags) : m_mesh(mes
 	}
 }
 
+void FEFindElement::InitCurrentFrame(vector<bool>& flags)
+{
+	assert(m_nframe == 1);
+
+	// calculate bounding box for the entire mesh
+	int NN = m_mesh.Nodes();
+	int NE = m_mesh.Elements();
+	if ((NN == 0) || (NE == 0)) return;
+
+	vec3f r = m_mesh.Node(0).m_rt;
+	BOUNDINGBOX box(r, r);
+	for (int i = 1; i<m_mesh.Nodes(); ++i)
+	{
+		r = m_mesh.Node(i).m_rt;
+		box += r;
+	}
+	float R = box.GetMaxExtent();
+	box.Inflate(R*0.001f);
+
+	// split this box recursively
+	m_bound.m_box = box;
+
+	int l = (int)(log(NE) / log(8.0));
+	if (l < 0) l = 0;
+	if (l > 3) l = 3;
+	m_bound.split(l);
+
+	// calculate bounding boxes for all elements
+	int cflags = flags.size();
+	for (int i = 0; i<NE; ++i)
+	{
+		FEElement& e = m_mesh.Element(i);
+
+		bool badd = true;
+		if (flags.empty() == false)
+		{
+			int mid = e.m_MatID;
+			if ((mid >= 0) && (mid < cflags)) badd = flags[mid];
+		}
+
+		if (badd)
+		{
+			int ne = e.Nodes();
+
+			// do a quick bounding box test
+			vec3f r0 = m_mesh.Node(e.m_node[0]).m_rt;
+			vec3f r1 = r0;
+			BOUNDINGBOX box(r0, r1);
+			for (int j = 1; j<ne; ++j)
+			{
+				vec3f& rj = m_mesh.Node(e.m_node[j]).m_rt;
+				box += rj;
+			}
+			float R = box.GetMaxExtent();
+			box.Inflate(R*0.001f);
+
+			// add it to the octree
+			m_bound.Add(box, i);
+		}
+	}
+}
+
+void FEFindElement::Init(int nframe)
+{
+	vector<bool> dummy;
+	m_nframe = nframe;
+	if (m_nframe == 0) InitReferenceFrame(dummy);
+	else InitCurrentFrame(dummy);
+}
+
+void FEFindElement::Init(vector<bool>& flags, int nframe)
+{
+	m_nframe = nframe;
+	if (m_nframe == 0) InitReferenceFrame(flags);
+	else InitCurrentFrame(flags);
+}
+
 bool FEFindElement::FindInReferenceFrame(const vec3f& x, int& nelem, double r[3])
 {
+	assert(m_nframe == 0);
+
 	vec3f y[FEGenericElement::MAX_NODES];
 	BOX* b = FindBox(x);
 	if (b == 0) return false;
@@ -1953,6 +1957,38 @@ bool FEFindElement::FindInReferenceFrame(const vec3f& x, int& nelem, double r[3]
 		{
 			// do a more complete search
 			if (ProjectInsideReferenceElement(m_mesh, e, x, r)) return true;
+		}
+	}
+
+	nelem = -1;
+	return false;
+}
+
+bool FEFindElement::FindInCurrentFrame(const vec3f& x, int& nelem, double r[3])
+{
+	assert(m_nframe == 1);
+
+	vec3f y[FEGenericElement::MAX_NODES];
+	BOX* b = FindBox(x);
+	if (b == 0) return false;
+	assert(b->m_level == 0);
+
+	int NE = (int)b->m_child.size();
+	for (int i = 0; i<NE; ++i)
+	{
+		BOX* c = b->m_child[i];
+		assert(c->m_level == -1);
+
+		int nid = c->m_elem; assert(nid >= 0);
+
+		FEElement& e = m_mesh.Element(nid);
+		nelem = nid;
+
+		// do a quick bounding box test
+		if (c->m_box.IsInside(x))
+		{
+			// do a more complete search
+			if (ProjectInsideElement(m_mesh, e, x, r)) return true;
 		}
 	}
 

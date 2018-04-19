@@ -249,6 +249,10 @@ bool FindElementInReferenceFrame(FEMeshBase& m, const vec3f& x, int& nelem, doub
 // The return value is true or false depending if the point is actually inside the element
 bool ProjectInsideReferenceElement(FEMeshBase& m, FEElement& el, const vec3f& p, double r[3]);
 
+// project the point p in the current frame of element el. This returns the iso-parametric coordinates in r.
+// The return value is true or false depending if the point is actually inside the element
+bool ProjectInsideElement(FEMeshBase& m, FEElement& el, const vec3f& p, double r[3]);
+
 class FEFindElement
 {
 public:
@@ -275,11 +279,20 @@ public:
 
 public:
 	FEFindElement(FEMeshBase& mesh);
-	FEFindElement(FEMeshBase& mesh, vector<bool>& flags);
 
-	bool FindInReferenceFrame(const vec3f& x, int& nelem, double r[3]);
+	void Init(int nframe = 0);
+	void Init(vector<bool>& flags, int nframe = 0);
+
+	bool FindElement(const vec3f& x, int& nelem, double r[3]);
 
 	BOUNDINGBOX BoundingBox() const { return m_bound.m_box; }
+
+private:
+	void InitReferenceFrame(vector<bool>& flags);
+	void InitCurrentFrame(vector<bool>& flags);
+
+	bool FindInReferenceFrame(const vec3f& x, int& nelem, double r[3]);
+	bool FindInCurrentFrame(const vec3f& x, int& nelem, double r[3]);
 
 private:
 	BOX* FindBox(const vec3f& r);
@@ -287,6 +300,12 @@ private:
 private:
 	BOX			m_bound;
 	FEMeshBase&	m_mesh;
+	int			m_nframe;	// = 0 reference, 1 = current
 };
+
+inline bool FEFindElement::FindElement(const vec3f& x, int& nelem, double r[3])
+{
+	return (m_nframe == 0 ? FindInReferenceFrame(x, nelem, r) : FindInCurrentFrame(x, nelem, r));
+}
 
 #endif // !defined(AFX_FEMESH_H__4E540300_07D8_4732_BB8D_6570BB162180__INCLUDED_)

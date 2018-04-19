@@ -70,6 +70,8 @@ public:
 
 	void RemoveDisplacementMap();
 
+	bool HasDisplacementMap();
+
 	void SetMaterialParams(FEMaterial* pm);
 
 	//! set the smoothing angle

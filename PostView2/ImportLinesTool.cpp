@@ -232,7 +232,8 @@ int CImportLinesTool::ReadAng2Format(const char* szfile)
 	// store the raw data
 	vector<pair<FRAG, FRAG> > raw;
 
-	FEFindElement find(mesh, flags);
+	FEFindElement find(mesh);
+	find.Init(flags);
 
 	int nstate = 0;
 	while (!feof(fp) && !ferror(fp))
@@ -274,8 +275,8 @@ int CImportLinesTool::ReadAng2Format(const char* szfile)
 			vec3f b0 = vec3f(d[3], d[4], d[5]);
 
 			FRAG a, b;
-			if (find.FindInReferenceFrame(a0, a.iel, a.r) == false) a.iel = -1;
-			if (find.FindInReferenceFrame(b0, b.iel, b.r) == false) b.iel = -1;
+			if (find.FindElement(a0, a.iel, a.r) == false) a.iel = -1;
+			if (find.FindElement(b0, b.iel, b.r) == false) b.iel = -1;
 			raw.push_back(pair<FRAG, FRAG>(a, b));
 
 			// convert them to global coordinates

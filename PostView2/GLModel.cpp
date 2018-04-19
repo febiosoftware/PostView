@@ -225,12 +225,19 @@ bool CGLModel::AddDisplacementMap()
 	{
 		ps->SetDisplacementField(BUILD_FIELD(1, ndisp, 0));
 	}
+	else ps->SetDisplacementField(0);
 
 	ResetAllStates();
 
 	return true;
 }
 
+//-----------------------------------------------------------------------------
+bool CGLModel::HasDisplacementMap()
+{
+	if (m_pdis == 0) return false;
+	return (GetFEModel()->GetDisplacementField() != 0);
+}
 
 //-----------------------------------------------------------------------------
 void CGLModel::ResetMesh()
