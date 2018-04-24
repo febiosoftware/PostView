@@ -1399,6 +1399,31 @@ void CMainWindow::timerEvent(QTimerEvent* ev)
 				else { ftime = f1; StopAnimation(); }
 			}
 		}
+		else if (time.m_mode == MODE_REVERSE)
+		{
+			ftime -= time.m_dt;
+			if (ftime < f0)
+			{
+				if (time.m_bloop) ftime = f1;
+				else { ftime = f0; StopAnimation(); }
+			}
+		}
+		else if (time.m_mode == MODE_CYLCE)
+		{
+			ftime += time.m_dt*time.m_inc;
+			if (ftime > f1)
+			{
+				time.m_inc = -1;
+				ftime = f1; 
+				if (time.m_bloop == false) StopAnimation();
+			}
+			else if (ftime < f0)
+			{
+				time.m_inc = 1;
+				ftime = f0;
+				if (time.m_bloop == false) StopAnimation();
+			}
+		}
 
 		SetCurrentTimeValue(ftime);
 	}
