@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'DlgViewSettings.h'
 **
-** Created by: The Qt Meta Object Compiler version 67 (Qt 5.10.1)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.8.0)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -12,7 +12,7 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'DlgViewSettings.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
-#error "This file was generated using the moc from 5.10.1. It"
+#error "This file was generated using the moc from 5.8.0. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -101,9 +101,9 @@ void CColormapWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int 
     }
 }
 
-QT_INIT_METAOBJECT const QMetaObject CColormapWidget::staticMetaObject = {
+const QMetaObject CColormapWidget::staticMetaObject = {
     { &QWidget::staticMetaObject, qt_meta_stringdata_CColormapWidget.data,
-      qt_meta_data_CColormapWidget,  qt_static_metacall, nullptr, nullptr}
+      qt_meta_data_CColormapWidget,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
 };
 
 
@@ -114,9 +114,9 @@ const QMetaObject *CColormapWidget::metaObject() const
 
 void *CColormapWidget::qt_metacast(const char *_clname)
 {
-    if (!_clname) return nullptr;
+    if (!_clname) return Q_NULLPTR;
     if (!strcmp(_clname, qt_meta_stringdata_CColormapWidget.stringdata0))
-        return static_cast<void*>(this);
+        return static_cast<void*>(const_cast< CColormapWidget*>(this));
     return QWidget::qt_metacast(_clname);
 }
 
@@ -214,9 +214,9 @@ void CDlgViewSettings::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int
     }
 }
 
-QT_INIT_METAOBJECT const QMetaObject CDlgViewSettings::staticMetaObject = {
+const QMetaObject CDlgViewSettings::staticMetaObject = {
     { &QDialog::staticMetaObject, qt_meta_stringdata_CDlgViewSettings.data,
-      qt_meta_data_CDlgViewSettings,  qt_static_metacall, nullptr, nullptr}
+      qt_meta_data_CDlgViewSettings,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
 };
 
 
@@ -227,9 +227,9 @@ const QMetaObject *CDlgViewSettings::metaObject() const
 
 void *CDlgViewSettings::qt_metacast(const char *_clname)
 {
-    if (!_clname) return nullptr;
+    if (!_clname) return Q_NULLPTR;
     if (!strcmp(_clname, qt_meta_stringdata_CDlgViewSettings.stringdata0))
-        return static_cast<void*>(this);
+        return static_cast<void*>(const_cast< CDlgViewSettings*>(this));
     return QDialog::qt_metacast(_clname);
 }
 
