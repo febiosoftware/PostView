@@ -202,6 +202,18 @@ void CGLModel::SetMaterialParams(FEMaterial* pm)
 }
 
 //-----------------------------------------------------------------------------
+void CGLModel::SetSmoothingAngle(double w)
+{ 
+	m_stol = w*PI / 180.0;
+
+	FEModel* ps = GetFEModel();
+	if (ps == 0) return;
+
+	FEMeshBase* pm = ps->GetFEMesh(0);
+	pm->AutoSmooth(m_stol);
+}
+
+//-----------------------------------------------------------------------------
 bool CGLModel::AddDisplacementMap()
 {
 	FEModel* ps = GetFEModel();

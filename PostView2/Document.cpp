@@ -78,6 +78,7 @@ ModelData::ModelData(CGLModel *po)
 	m_mdl.m_nshellref  = po->m_nshellref;
 	m_mdl.m_nDivs      = po->m_nDivs;
 	m_mdl.m_nrender    = po->m_nrender;
+	m_mdl.m_smooth     = po->GetSmoothingAngle();
 
 	// set colormap props
 	CGLColorMap* pglmap = po->GetColorMap();
@@ -122,6 +123,7 @@ void ModelData::SetData(CGLModel* po)
 	po->m_nshellref  = m_mdl.m_nshellref;
 	po->m_nDivs      = m_mdl.m_nDivs;
 	po->m_nrender    = m_mdl.m_nrender;
+	po->SetSmoothingAngle(m_mdl.m_smooth);
 
 	// set color map data
 	CGLColorMap* pglmap = po->GetColorMap();

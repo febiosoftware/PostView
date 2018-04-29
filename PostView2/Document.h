@@ -123,6 +123,7 @@ private:
 		int		m_nshellref;	// shell reference surface
 		int		m_nDivs;	// nr of element subdivisions
 		int		m_nrender;	// render mode
+		double	m_smooth;	// smoothing angle
 	};
 
 	struct COLORMAP

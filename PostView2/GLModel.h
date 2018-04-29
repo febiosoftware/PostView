@@ -75,7 +75,7 @@ public:
 	void SetMaterialParams(FEMaterial* pm);
 
 	//! set the smoothing angle
-	void SetSmoothingAngle(double w) { m_stol = w*PI / 180.0; }
+	void SetSmoothingAngle(double w);
 
 	//! get the smoothing angle in degrees
 	double GetSmoothingAngle() { return 180 * m_stol / PI; }

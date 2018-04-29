@@ -77,7 +77,6 @@ public:
 		case 8: m_fem->m_nshellref = v.toInt(); break;
 		case 9: 
 			m_fem->SetSmoothingAngle(v.toDouble()); 
-//			m_fem->GetMesh()->AutoSmooth();
 			break;
 		}
 	}
