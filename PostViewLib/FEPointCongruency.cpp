@@ -266,11 +266,11 @@ float FEPointCongruency::nodal_curvature(int nid, vec3f& sn, int m)
 
 		vec3f e2 = e3 ^ e1;
 
-		mat3d Q;
+		Mat3d Q;
 		Q[0][0] = e1.x; Q[1][0] = e2.x; Q[2][0] = e3.x;
 		Q[0][1] = e1.y; Q[1][1] = e2.y; Q[2][1] = e3.y;
 		Q[0][2] = e1.z; Q[1][2] = e2.z; Q[2][2] = e3.z;
-		mat3d Qt = Q.transpose();
+		Mat3d Qt = Q.transpose();
 
 		// map coordinates
 		for (int i=0; i<nn; ++i)
@@ -280,7 +280,7 @@ float FEPointCongruency::nodal_curvature(int nid, vec3f& sn, int m)
 		}
 
 		// setup the linear system
-		matrix R(nn, 3);
+		Matrix R(nn, 3);
 		vector<double> r(nn);
 		for (int i=0; i<nn; ++i)
 		{
@@ -354,11 +354,11 @@ float FEPointCongruency::nodal_curvature(int nid, vec3f& sn, int m)
 
 			vec3f e2 = e3 ^ e1;
 
-			mat3d Q;
+			Mat3d Q;
 			Q[0][0] = e1.x; Q[1][0] = e2.x; Q[2][0] = e3.x;
 			Q[0][1] = e1.y; Q[1][1] = e2.y; Q[2][1] = e3.y;
 			Q[0][2] = e1.z; Q[1][2] = e2.z; Q[2][2] = e3.z;
-			mat3d Qt = Q.transpose();
+			Mat3d Qt = Q.transpose();
 
 			// map coordinates
 			for (int i=0; i<nn; ++i)
@@ -368,7 +368,7 @@ float FEPointCongruency::nodal_curvature(int nid, vec3f& sn, int m)
 			}
 
 			// setup the linear system
-			matrix R(nn, 5);
+			Matrix R(nn, 5);
 			vector<double> r(nn);
 			for (int i=0; i<nn; ++i)
 			{

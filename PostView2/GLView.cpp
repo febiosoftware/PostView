@@ -31,7 +31,7 @@ public:
 		// get the projection mode
 		int projectionMode = view->GetProjectionMode();
 
-		// set up the projection matrix
+		// set up the projection Matrix
 		double fov = view->GetFOV();
 		double ar = view->GetAspectRatio();
 		double fnear = view->GetNearPlane();
@@ -60,13 +60,13 @@ public:
 		glMatrixMode(GL_PROJECTION);
 		glPopMatrix();
 
-		// calculate projection matrix
-		matrix P(4, 4);
+		// calculate projection Matrix
+		Matrix P(4, 4);
 		for (int i = 0; i<4; ++i)
 			for (int j = 0; j<4; ++j) P(i, j) = p[j * 4 + i];
 
-		// calculate modelview matrix
-		matrix M(4, 4);
+		// calculate modelview Matrix
+		Matrix M(4, 4);
 		for (int i = 0; i<4; ++i)
 			for (int j = 0; j<4; ++j) M(i, j) = m[j * 4 + i];
 
@@ -100,7 +100,7 @@ public:
 	}
 
 private:
-	matrix m_PM;
+	Matrix m_PM;
 	int	m_vp[4];
 	vector<double>	c, q;
 };
@@ -443,12 +443,6 @@ void CGLView::initializeGL()
 	glEnable(GL_COLOR_MATERIAL);
 	glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
 
-	// set the texture parameters
-	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-
 	// set texture parameter for 2D textures
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -495,7 +489,7 @@ void CGLView::setupProjectionMatrix()
 	CDocument* doc = GetDocument();
 	BOUNDINGBOX box = doc->GetBoundingBox();
 
-	// set up the projection matrix
+	// set up the projection Matrix
 	double radius = box.Radius();
 	vec3f rc = box.Center();
 
@@ -550,10 +544,10 @@ void CGLView::paintGL()
 		else
 			glDisable(GL_LIGHTING);
 
-		// setup the projection matrix
+		// setup the projection Matrix
 		setupProjectionMatrix();
 
-		// set the model_view matrix mode
+		// set the model_view Matrix mode
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
@@ -579,7 +573,7 @@ void CGLView::paintGL()
 		CGLContext cgl(this);
 		cgl.m_x = cgl.m_y = 0;
 
-		// set the projection matrix to ortho2d so we can draw some stuff on the screen
+		// set the projection Matrix to ortho2d so we can draw some stuff on the screen
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		gluOrtho2D(0, width(), height(), 0);
@@ -1404,7 +1398,7 @@ Ray CGLView::PointToRay(int x, int y)
 
 	VIEWSETTINGS& view = GetDocument()->GetViewSettings();
 
-	// set up the projection matrix
+	// set up the projection Matrix
 	if (view.m_nproj == RENDER_ORTHO)
 	{
 		double z = GetCamera().GetTargetDistance();
@@ -1426,21 +1420,21 @@ Ray CGLView::PointToRay(int x, int y)
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
 
-	// calculate projection matrix
-	matrix P(4, 4);
+	// calculate projection Matrix
+	Matrix P(4, 4);
 	for (int i = 0; i<4; ++i)
 		for (int j = 0; j<4; ++j) P(i, j) = p[j * 4 + i];
 
-	// calculate modelview matrix
-	matrix M(4, 4);
+	// calculate modelview Matrix
+	Matrix M(4, 4);
 	for (int i = 0; i<4; ++i)
 		for (int j = 0; j<4; ++j) M(i, j) = m[j * 4 + i];
 
 	// multiply them together
-	matrix PM = P*M;
+	Matrix PM = P*M;
 
 	// invert it
-	matrix PMi = PM.inverse();
+	Matrix PMi = PM.inverse();
 
 	// flip the y-axis
 	y = m_viewport[3] - y;
@@ -2817,7 +2811,7 @@ void CGLView::PositionCam()
 
 		glTranslatef(r1.x, r1.y, r1.z);
 
-		// setup the rotation matrix
+		// setup the rotation Matrix
 		GLfloat m[4][4] = {0}, Q[4][4] = {0}, Qi[4][4] = {0};
 		m[3][3] = 1.f;
 		Q[3][3] = 1.f;

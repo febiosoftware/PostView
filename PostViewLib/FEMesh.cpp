@@ -1453,7 +1453,7 @@ void project_inside_element(FEElement& el, const vec3f& p, double r[3], vec3f* x
 
 	int ne = el.Nodes();
 	double dr[3], R[3];
-	mat3d K;
+	Mat3d K;
 	double u2, N[FEGenericElement::MAX_NODES], G[3][FEGenericElement::MAX_NODES];
 	int n = 0;
 	do

@@ -36,7 +36,7 @@ const char* FEDataField::TypeStr() const
 	case DATA_FLOAT: return "float"; break;
 	case DATA_VEC3F: return "vec3f"; break;
 	case DATA_MAT3F: return "mat3f"; break;
-	case DATA_MAT3D: return "mat3d"; break;
+	case DATA_MAT3D: return "Mat3d"; break;
 	case DATA_MAT3FS: return "mat3fs"; break;
 	case DATA_MAT3FD: return "mat3fd"; break;
 	case DATA_TENS4FS: return "tens4fs"; break;

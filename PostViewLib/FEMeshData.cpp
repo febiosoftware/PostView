@@ -56,7 +56,7 @@ void shape_grad(FEModel& fem, int elem, double q[3], int nstate, vec3f* G)
 	el.shape_deriv(Hr, Hs, Ht, q[0], q[1], q[2]);
 
 	// evaluate jacobian
-	mat3d J;
+	Mat3d J;
 	for (int i = 0; i<N; i++)
 	{
 		J[0][0] += x[i].x*Hr[i]; J[0][1] += x[i].x*Hs[i]; J[0][2] += x[i].x*Ht[i];
@@ -80,7 +80,7 @@ void shape_grad(FEModel& fem, int elem, double q[3], int nstate, vec3f* G)
 //-----------------------------------------------------------------------------
 // This function calculates the deformation gradient for a given state with respect to a user-
 // defined reference state.
-mat3d deform_grad(FEModel& fem, int n, double r, double s, double t, int nstate, int nref = 0)
+Mat3d deform_grad(FEModel& fem, int n, double r, double s, double t, int nstate, int nref = 0)
 {
 	// get the mesh
 	FEState& state = *fem.GetState(nstate);
@@ -94,7 +94,7 @@ mat3d deform_grad(FEModel& fem, int n, double r, double s, double t, int nstate,
 	if (el.IsSolid() == false)
 	{
 		// for non-solid elements, let's return the identity for now
-		return mat3d(1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0);
+		return Mat3d(1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0);
 	}
 
 	// get the nodal positions
@@ -112,7 +112,7 @@ mat3d deform_grad(FEModel& fem, int n, double r, double s, double t, int nstate,
 	el.shape_deriv(Hr, Hs, Ht, r, s, t);
 
 	// evaluate jacobian
-	mat3d J;
+	Mat3d J;
 	for (int i=0; i<N; i++)
 	{
 		J[0][0] += X[i].x*Hr[i]; J[0][1] += X[i].x*Hs[i]; J[0][2] += X[i].x*Ht[i];
@@ -122,7 +122,7 @@ mat3d deform_grad(FEModel& fem, int n, double r, double s, double t, int nstate,
 
 	// invert jacobian
 	double j = J.Invert();
-	if (j <= 0) return mat3d(0,0,0,0,0,0,0,0,0); 
+	if (j <= 0) return Mat3d(0,0,0,0,0,0,0,0,0); 
 	
 	// evaluate dH/dX = J^(-T)*dH/dr
 	double HX[MN], HY[MN], HZ[MN];
@@ -134,7 +134,7 @@ mat3d deform_grad(FEModel& fem, int n, double r, double s, double t, int nstate,
 	}
 
 	// evaluate deformation gradient F
-	mat3d F;
+	Mat3d F;
 	for (int i=0; i<N; i++)
 	{
 		F[0][0] += x[i].x*HX[i]; F[0][1] += x[i].x*HY[i]; F[0][2] += x[i].x*HZ[i];
@@ -146,11 +146,11 @@ mat3d deform_grad(FEModel& fem, int n, double r, double s, double t, int nstate,
 
 //-----------------------------------------------------------------------------
 // Deformation gradient
-FEDeformationGradient::FEDeformationGradient(FEState* pm, FEDataField* pdf) : FEElemData_T<mat3d, DATA_COMP>(pm, pdf)
+FEDeformationGradient::FEDeformationGradient(FEState* pm, FEDataField* pdf) : FEElemData_T<Mat3d, DATA_COMP>(pm, pdf)
 {
 }
 
-void FEDeformationGradient::eval(int n, mat3d* pv)
+void FEDeformationGradient::eval(int n, Mat3d* pv)
 {
 	// get the element
 	FEElement& e = GetFEState()->GetFEMesh()->Element(n);
@@ -158,7 +158,7 @@ void FEDeformationGradient::eval(int n, mat3d* pv)
 	// if this is not a solid element, return 0
 	if (e.IsSolid() == false)
 	{
-		mat3d z; z.zero();
+		Mat3d z; z.zero();
 		int N = e.Nodes();
 		for (int i=0; i<N; ++i) pv[i] = z;
 		return;
@@ -195,7 +195,7 @@ void FEInfStrain::eval(int n, mat3fs* pv)
 	int nstate = GetFEModel()->currentTime();
 
 	// get the deformation gradient
-	mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
+	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
 
 	// evaluate strain tensor U = F-I
 	double U[3][3];
@@ -231,7 +231,7 @@ void FERightCauchyGreen::eval(int n, mat3fs* pv)
 	int nstate = GetFEModel()->currentTime();
 
 	// get the deformation gradient
-	mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
+	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
 	
 	// evaluate right Cauchy-Green C = Ft*F
 	double C[3][3] = {0};
@@ -242,7 +242,7 @@ void FERightCauchyGreen::eval(int n, mat3fs* pv)
 		C[2][0] += F[k][2]*F[k][0]; C[2][1] += F[k][2]*F[k][1]; C[2][2] += F[k][2]*F[k][2];
 	}
 	
-	// convert C to a symmetric matrix
+	// convert C to a symmetric Matrix
 	mat3fs c;
 	c.x = (float) C[0][0];
 	c.y = (float) C[1][1];
@@ -269,7 +269,7 @@ void FERightStretch::eval(int n, mat3fs* pv)
 	int nstate = GetFEModel()->currentTime();
 
 	// get the deformation gradient
-	mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
+	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
 	
 	// evaluate right Cauchy-Green C = Ft*F
 	double C[3][3] = {0};
@@ -280,7 +280,7 @@ void FERightStretch::eval(int n, mat3fs* pv)
 		C[2][0] += F[k][2]*F[k][0]; C[2][1] += F[k][2]*F[k][1]; C[2][2] += F[k][2]*F[k][2];
 	}
 	
-	// convert C to a symmetric matrix
+	// convert C to a symmetric Matrix
 	mat3fs c;
 	c.x = (float) C[0][0];
 	c.y = (float) C[1][1];
@@ -326,7 +326,7 @@ void FELagrangeStrain::eval(int n, mat3fs* pv)
 	int nstate = GetFEModel()->currentTime();
 
 	// get the deformation gradient
-	mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
+	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
 	
 	// evaluate right Cauchy-Green C = Ft*F
 	double C[3][3] = {0};
@@ -364,7 +364,7 @@ void FEBiotStrain::eval(int n, mat3fs* pv)
 	int nstate = GetFEModel()->currentTime();
 
 	// get the deformation gradient
-	mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
+	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
 
 	// evaluate right Cauchy-Green C = Ft*F
 	double C[3][3] = {0};
@@ -375,7 +375,7 @@ void FEBiotStrain::eval(int n, mat3fs* pv)
 		C[2][0] += F[k][2]*F[k][0]; C[2][1] += F[k][2]*F[k][1]; C[2][2] += F[k][2]*F[k][2];
 	}
 
-	// convert C to a symmetric matrix
+	// convert C to a symmetric Matrix
 	mat3fs c;
 	c.x = (float) C[0][0];
 	c.y = (float) C[1][1];
@@ -421,7 +421,7 @@ void FERightHencky::eval(int n, mat3fs* pv)
 	int nstate = GetFEModel()->currentTime();
 
 	// get the deformation gradient
-	mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
+	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
 	
 	// evaluate right Cauchy-Green C = Ft*F
 	double C[3][3] = {0};
@@ -432,7 +432,7 @@ void FERightHencky::eval(int n, mat3fs* pv)
 		C[2][0] += F[k][2]*F[k][0]; C[2][1] += F[k][2]*F[k][1]; C[2][2] += F[k][2]*F[k][2];
 	}
 	
-	// convert C to a symmetric matrix
+	// convert C to a symmetric Matrix
 	mat3fs c;
 	c.x = (float) C[0][0];
 	c.y = (float) C[1][1];
@@ -478,7 +478,7 @@ void FELeftCauchyGreen::eval(int n, mat3fs* pv)
 	int nstate = GetFEModel()->currentTime();
     
     // get the deformation gradient
-	mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
+	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
     
     // evaluate left Cauchy-Green B = F*Ft
     double B[3][3] = {0};
@@ -489,7 +489,7 @@ void FELeftCauchyGreen::eval(int n, mat3fs* pv)
         B[2][0] += F[2][k]*F[0][k]; B[2][1] += F[2][k]*F[1][k]; B[2][2] += F[2][k]*F[2][k];
     }
     
-    // convert B to a symmetric matrix
+    // convert B to a symmetric Matrix
     mat3fs b;
     b.x = (float) B[0][0];
     b.y = (float) B[1][1];
@@ -516,7 +516,7 @@ void FELeftStretch::eval(int n, mat3fs* pv)
 	int nstate = GetFEModel()->currentTime();
     
     // get the deformation gradient
-	mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
+	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
     
     // evaluate left Cauchy-Green B = F*Ft
     double B[3][3] = {0};
@@ -527,7 +527,7 @@ void FELeftStretch::eval(int n, mat3fs* pv)
         B[2][0] += F[2][k]*F[0][k]; B[2][1] += F[2][k]*F[1][k]; B[2][2] += F[2][k]*F[2][k];
     }
     
-    // convert B to a symmetric matrix
+    // convert B to a symmetric Matrix
     mat3fs b;
     b.x = (float) B[0][0];
     b.y = (float) B[1][1];
@@ -573,7 +573,7 @@ void FELeftHencky::eval(int n, mat3fs* pv)
 	int nstate = GetFEModel()->currentTime();
     
     // get the deformation gradient
-	mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
+	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
     
     // evaluate left Cauchy-Green B = F*Ft
     double B[3][3] = {0};
@@ -584,7 +584,7 @@ void FELeftHencky::eval(int n, mat3fs* pv)
         B[2][0] += F[2][k]*F[0][k]; B[2][1] += F[2][k]*F[1][k]; B[2][2] += F[2][k]*F[2][k];
     }
     
-    // convert B to a symmetric matrix
+    // convert B to a symmetric Matrix
     mat3fs b;
     b.x = (float) B[0][0];
     b.y = (float) B[1][1];
@@ -630,7 +630,7 @@ void FEAlmansi::eval(int n, mat3fs* pv)
 	int nstate = GetFEModel()->currentTime();
     
     // get the deformation gradient
-	mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
+	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
     
     // evaluate left Cauchy-Green B = F*Ft
     double B[3][3] = {0};
@@ -642,7 +642,7 @@ void FEAlmansi::eval(int n, mat3fs* pv)
     }
     
     // invert B
-    mat3d bi;
+    Mat3d bi;
     bi(0,0) = B[0][0];
     bi(1,1) = B[1][1];
     bi(2,2) = B[2][2];
@@ -1150,11 +1150,11 @@ float FECurvature::nodal_curvature(int n, int m)
 
 		vec3f e2 = e3 ^ e1;
 
-		mat3d Q;
+		Mat3d Q;
 		Q[0][0] = e1.x; Q[1][0] = e2.x; Q[2][0] = e3.x;
 		Q[0][1] = e1.y; Q[1][1] = e2.y; Q[2][1] = e3.y;
 		Q[0][2] = e1.z; Q[1][2] = e2.z; Q[2][2] = e3.z;
-		mat3d Qt = Q.transpose();
+		Mat3d Qt = Q.transpose();
 
 		// map coordinates
 		for (int i=0; i<nn; ++i)
@@ -1164,7 +1164,7 @@ float FECurvature::nodal_curvature(int n, int m)
 		}
 
 		// setup the linear system
-		matrix R(nn, 3);
+		Matrix R(nn, 3);
 		vector<double> r(nn);
 		for (int i=0; i<nn; ++i)
 		{
@@ -1234,11 +1234,11 @@ float FECurvature::nodal_curvature(int n, int m)
 
 			vec3f e2 = e3 ^ e1;
 
-			mat3d Q;
+			Mat3d Q;
 			Q[0][0] = e1.x; Q[1][0] = e2.x; Q[2][0] = e3.x;
 			Q[0][1] = e1.y; Q[1][1] = e2.y; Q[2][1] = e3.y;
 			Q[0][2] = e1.z; Q[1][2] = e2.z; Q[2][2] = e3.z;
-			mat3d Qt = Q.transpose();
+			Mat3d Qt = Q.transpose();
 
 			// map coordinates
 			for (int i=0; i<nn; ++i)
@@ -1248,7 +1248,7 @@ float FECurvature::nodal_curvature(int n, int m)
 			}
 
 			// setup the linear system
-			matrix R(nn, 5);
+			Matrix R(nn, 5);
 			vector<double> r(nn);
 			for (int i=0; i<nn; ++i)
 			{
@@ -1484,11 +1484,11 @@ vec3f FEPrincCurvatureVector::nodal_curvature(int n, int m)
 
 		vec3f e2 = e3 ^ e1;
 
-		mat3d Q;
+		Mat3d Q;
 		Q[0][0] = e1.x; Q[1][0] = e2.x; Q[2][0] = e3.x;
 		Q[0][1] = e1.y; Q[1][1] = e2.y; Q[2][1] = e3.y;
 		Q[0][2] = e1.z; Q[1][2] = e2.z; Q[2][2] = e3.z;
-		mat3d Qt = Q.transpose();
+		Mat3d Qt = Q.transpose();
 
 		// map coordinates
 		for (int i=0; i<nn; ++i)
@@ -1498,7 +1498,7 @@ vec3f FEPrincCurvatureVector::nodal_curvature(int n, int m)
 		}
 
 		// setup the linear system
-		matrix R(nn, 3);
+		Matrix R(nn, 3);
 		vector<double> r(nn);
 		for (int i=0; i<nn; ++i)
 		{
@@ -1516,7 +1516,7 @@ vec3f FEPrincCurvatureVector::nodal_curvature(int n, int m)
 
 		// calculate curvature
 		double alpha = 0.5*atan2(b, a - c);
-		mat3d S;
+		Mat3d S;
 		S[0][0] =  cos(alpha); S[0][1] = -sin(alpha); S[0][2] = 0.0;
 		S[1][0] =  sin(alpha); S[1][1] =  cos(alpha); S[1][2] = 0.0;
 		S[2][0] =         0.0; S[2][1] =        0.0; S[2][2] = 1.0;
@@ -1549,11 +1549,11 @@ vec3f FEPrincCurvatureVector::nodal_curvature(int n, int m)
 
 			vec3f e2 = e3 ^ e1;
 
-			mat3d Q;
+			Mat3d Q;
 			Q[0][0] = e1.x; Q[1][0] = e2.x; Q[2][0] = e3.x;
 			Q[0][1] = e1.y; Q[1][1] = e2.y; Q[2][1] = e3.y;
 			Q[0][2] = e1.z; Q[1][2] = e2.z; Q[2][2] = e3.z;
-			mat3d Qt = Q.transpose();
+			Mat3d Qt = Q.transpose();
 
 			// map coordinates
 			for (int i=0; i<nn; ++i)
@@ -1563,7 +1563,7 @@ vec3f FEPrincCurvatureVector::nodal_curvature(int n, int m)
 			}
 
 			// setup the linear system
-			matrix R(nn, 5);
+			Matrix R(nn, 5);
 			vector<double> r(nn);
 			for (int i=0; i<nn; ++i)
 			{
@@ -1583,7 +1583,7 @@ vec3f FEPrincCurvatureVector::nodal_curvature(int n, int m)
 
 			// calculate curvature
 			double alpha = 0.5*atan2(b, a - c);
-			mat3d S;
+			Mat3d S;
 			S[0][0] =  cos(alpha); S[0][1] = -sin(alpha); S[0][2] = 0.0;
 			S[1][0] =  sin(alpha); S[1][1] =  cos(alpha); S[1][2] = 0.0;
 			S[2][0] =         0.0; S[2][1] =        0.0; S[2][2] = 1.0;

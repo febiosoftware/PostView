@@ -19,10 +19,10 @@ enum Data_Class {
 // Data types:
 // - DATA_FLOAT: single precision scalar
 // - DATA_VEC3F: 3D vector of floats (3 comp)
-// - DATA_MAT3D: 3D matrix of doubles (9 comp)
-// - DATA_MAT3FS: 3D symmetric matrix of floats (6 comp)
-// - DATA_MAT3FD: 3D diagonal matrix of floats (3 comp)
-// - DATA_TENS4FS: 6D symmetric matrix of floats (21 comp)
+// - DATA_MAT3D: 3D Matrix of doubles (9 comp)
+// - DATA_MAT3FS: 3D symmetric Matrix of floats (6 comp)
+// - DATA_MAT3FD: 3D diagonal Matrix of floats (3 comp)
+// - DATA_TENS4FS: 6D symmetric Matrix of floats (21 comp)
 // - DATA_ARRAY  : variable array (see FEDataField::GetArraySize())
 // - DATA_ARRAY_VEC3F: variable array of 3D vectors of float (comp =  3*FEDataField::GetArraySize())
 enum Data_Type {
@@ -110,7 +110,7 @@ template <class T> class FEMeshDataTraits {};
 
 template <> class FEMeshDataTraits<float>  { public: static Data_Type Type() { return DATA_FLOAT;   }};
 template <> class FEMeshDataTraits<vec3f>  { public: static Data_Type Type() { return DATA_VEC3F;   }};
-template <> class FEMeshDataTraits<mat3d>  { public: static Data_Type Type() { return DATA_MAT3D;   }};
+template <> class FEMeshDataTraits<Mat3d>  { public: static Data_Type Type() { return DATA_MAT3D;   }};
 template <> class FEMeshDataTraits<mat3f>  { public: static Data_Type Type() { return DATA_MAT3F;   }};
 template <> class FEMeshDataTraits<mat3fs> { public: static Data_Type Type() { return DATA_MAT3FS;  }};
 template <> class FEMeshDataTraits<mat3fd> { public: static Data_Type Type() { return DATA_MAT3FD;  }};
@@ -122,7 +122,7 @@ template <Data_Type t> class FEDataTypeTraits {};
 
 template <> class FEDataTypeTraits<DATA_FLOAT > { public: typedef float dataType; };
 template <> class FEDataTypeTraits<DATA_VEC3F > { public: typedef vec3f dataType; };
-template <> class FEDataTypeTraits<DATA_MAT3D > { public: typedef mat3d dataType; };
+template <> class FEDataTypeTraits<DATA_MAT3D > { public: typedef Mat3d dataType; };
 template <> class FEDataTypeTraits<DATA_MAT3F > { public: typedef mat3f dataType; };
 template <> class FEDataTypeTraits<DATA_MAT3FS> { public: typedef mat3fs dataType; };
 template <> class FEDataTypeTraits<DATA_MAT3FD> { public: typedef mat3fd dataType; };

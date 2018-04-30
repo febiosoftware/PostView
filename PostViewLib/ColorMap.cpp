@@ -257,6 +257,8 @@ void CColorTexture::UpdateTexture()
 		pb[1] = c.g;
 		pb[2] = c.b;
 	}
+
+	m_tex.Update();
 }
 
 int CColorTexture::GetDivisions() const

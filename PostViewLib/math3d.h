@@ -435,6 +435,12 @@ public:
 
 	static quat4f slerp(quat4f &q1, quat4f &q2, double t);
 
+	// set a quaternion defined via the XYZ Euler angles (in radians)
+	// Convention is first rotate about z, then x, and then y
+	// This conforms to the Tait-Bryan angles (roll, pitch, yaw)
+	void SetEuler(double x, double y, double z);
+	void GetEuler(double& x, double& y, double& z) const;
+
 public:
 	float w;
 	float x, y, z;
@@ -499,25 +505,25 @@ public:
 };
 
 ///////////////////////////////////////////////////////////////////
-// mat3d
+// Mat3d
 
-class mat3d
+class Mat3d
 {
 public:
-	mat3d() 
+	Mat3d() 
 	{
 		zero();
 	}
 
-	mat3d(double a00, double a01, double a02, double a10, double a11, double a12, double a20, double a21, double a22);
+	Mat3d(double a00, double a01, double a02, double a10, double a11, double a12, double a20, double a21, double a22);
 
 	double* operator [] (int i) { return m_data[i]; }
 	double& operator () (int i, int j) { return m_data[i][j]; }
 	double operator () (int i, int j) const { return m_data[i][j]; }
 
-	mat3d operator * (mat3d& m)
+	Mat3d operator * (Mat3d& m)
 	{
-		mat3d a;
+		Mat3d a;
 
 		int k;
 		for (k=0; k<3; k++)
@@ -530,7 +536,7 @@ public:
 		return a;
 	}
 
-	mat3d& operator *= (double g)
+	Mat3d& operator *= (double g)
 	{
 		m_data[0][0] *= g;	m_data[0][1] *= g; m_data[0][2] *= g;
 		m_data[1][0] *= g;	m_data[1][1] *= g; m_data[1][2] *= g;
@@ -554,7 +560,7 @@ public:
 		if (det == 0.0) return det;
 		double deti = 1.0 / det;
 
-		// calculate conjugate matrix
+		// calculate conjugate Matrix
 		double mi[3][3];
 
 		mi[0][0] =  (m_data[1][1]*m_data[2][2] - m_data[1][2]*m_data[2][1]);
@@ -585,20 +591,20 @@ public:
 		m_data[2][0] = m_data[2][1] = m_data[2][2] = 0.0;
 	}
 
-	mat3d transpose();
+	Mat3d transpose();
 
 protected:
 	double	m_data[3][3];
 };
 
 //=============================================================================
-class matrix
+class Matrix
 {
 public:
-	matrix(int r, int c);
-	matrix(const matrix& m);
-	~matrix() { delete [] d; }
-	void operator = (const matrix& m);
+	Matrix(int r, int c);
+	Matrix(const Matrix& m);
+	~Matrix() { delete [] d; }
+	void operator = (const Matrix& m);
 
 	void zero();
 
@@ -615,13 +621,13 @@ public:
 	void mult(vector<double>& x, vector<double>& y);
 	void mult_transpose(vector<double>& x, vector<double>& y);
 
-	void mult_transpose_self(matrix& AAt);
+	void mult_transpose_self(Matrix& AAt);
 
-	//! matrix inversion
-	matrix inverse();
+	//! Matrix inversion
+	Matrix inverse();
 
 	//! multiplication
-	matrix operator * (const matrix& m);
+	Matrix operator * (const Matrix& m);
 
 private:
 	double*		d;
@@ -632,7 +638,7 @@ private:
 //-----------------------------------------------------------------------------
 //! class for 4th order tensors with major and minor symmetries.
 
-// Due to the major symmetry we can store this tensor as a 6x6 matrix.
+// Due to the major symmetry we can store this tensor as a 6x6 Matrix.
 // The tensor is stored in column major order:
 //
 //     / 0   1   3   6   10   15  \
@@ -642,7 +648,7 @@ private:
 //     |                 14   19  |
 //     \                      20  /
 //
-// Note that due to the minor symmetry we only store the upper matrix of this tensor
+// Note that due to the minor symmetry we only store the upper Matrix of this tensor
 //
 
 class tens4fs
@@ -778,7 +784,7 @@ public:
         d[10] = d[11] = d[12] = d[13] = d[14] = d[15] = d[16] = d[17] = d[18] = d[19] = d[20] = 0;
     }
     
-	// extract 6x6 matrix
+	// extract 6x6 Matrix
 	void extract(float D[6][6]) {
         D[0][0] = d[0];  D[0][1] = d[1];  D[0][2] = d[3];  D[0][3] = d[6];  D[0][4] = d[10]; D[0][5] = d[15];
         D[1][0] = d[1];  D[1][1] = d[2];  D[1][2] = d[4];  D[1][3] = d[7];  D[1][4] = d[11]; D[1][5] = d[16];

@@ -134,7 +134,7 @@ void CGLCamera::Update(bool bhit)
 
 void CGLCamera::Transform()
 {
-	// reset the modelview matrix
+	// reset the modelview Matrix
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 

@@ -707,11 +707,11 @@ public:
 //=============================================================================
 
 //-----------------------------------------------------------------------------
-class FEDeformationGradient : public FEElemData_T<mat3d, DATA_COMP>
+class FEDeformationGradient : public FEElemData_T<Mat3d, DATA_COMP>
 {
 public:
 	FEDeformationGradient(FEState* pstate, FEDataField* pdf);
-	void eval(int n, mat3d* pv);
+	void eval(int n, Mat3d* pv);
 };
 
 //-----------------------------------------------------------------------------

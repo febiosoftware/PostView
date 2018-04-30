@@ -866,7 +866,7 @@ bool CDocument::AddNodeDataFromFile(const char* szfile, const char* szname, int 
 	{
 	case DATA_FLOAT  : pm->AddDataField(new FEDataField_T<FENodeData<float  > >(szname, EXPORT_DATA)); ND = 1; break;
 	case DATA_VEC3F  : pm->AddDataField(new FEDataField_T<FENodeData<vec3f  > >(szname, EXPORT_DATA)); ND = 3; break;
-	case DATA_MAT3D  : pm->AddDataField(new FEDataField_T<FENodeData<mat3d  > >(szname, EXPORT_DATA)); ND = 9; break;
+	case DATA_MAT3D  : pm->AddDataField(new FEDataField_T<FENodeData<Mat3d  > >(szname, EXPORT_DATA)); ND = 9; break;
 	case DATA_MAT3F  : pm->AddDataField(new FEDataField_T<FENodeData<mat3f  > >(szname, EXPORT_DATA)); ND = 9; break;
 	case DATA_MAT3FS : pm->AddDataField(new FEDataField_T<FENodeData<mat3fs > >(szname, EXPORT_DATA)); ND = 6; break;
 	case DATA_MAT3FD : pm->AddDataField(new FEDataField_T<FENodeData<mat3fd > >(szname, EXPORT_DATA)); ND = 3; break;
@@ -931,8 +931,8 @@ bool CDocument::AddNodeDataFromFile(const char* szfile, const char* szname, int 
 					break;
 				case DATA_MAT3D:
 					{
-						FENodeData<mat3d>& df = dynamic_cast<FENodeData<mat3d>&>(ps->m_Data[ndf-1]);
-						df[node] = mat3d(f[0], f[1], f[2], f[3], f[4], f[5], f[6], f[7], f[8]);
+						FENodeData<Mat3d>& df = dynamic_cast<FENodeData<Mat3d>&>(ps->m_Data[ndf-1]);
+						df[node] = Mat3d(f[0], f[1], f[2], f[3], f[4], f[5], f[6], f[7], f[8]);
 					}
 					break;
 				case DATA_MAT3F:
@@ -989,7 +989,7 @@ bool CDocument::AddElemDataFromFile(const char* szfile, const char* szname, int 
 	case DATA_FLOAT  : pm->AddDataField(new FEDataField_T<FEElementData<float  , DATA_ITEM> >(szname, EXPORT_DATA)); ND = 1; break;
 	case DATA_VEC3F  : pm->AddDataField(new FEDataField_T<FEElementData<vec3f  , DATA_ITEM> >(szname, EXPORT_DATA)); ND = 3; break;
 	case DATA_MAT3F  : pm->AddDataField(new FEDataField_T<FEElementData<mat3f  , DATA_ITEM> >(szname, EXPORT_DATA)); ND = 9; break;
-	case DATA_MAT3D  : pm->AddDataField(new FEDataField_T<FEElementData<mat3d  , DATA_ITEM> >(szname, EXPORT_DATA)); ND = 9; break;
+	case DATA_MAT3D  : pm->AddDataField(new FEDataField_T<FEElementData<Mat3d  , DATA_ITEM> >(szname, EXPORT_DATA)); ND = 9; break;
 	case DATA_MAT3FS : pm->AddDataField(new FEDataField_T<FEElementData<mat3fs , DATA_ITEM> >(szname, EXPORT_DATA)); ND = 6; break;
 	case DATA_MAT3FD : pm->AddDataField(new FEDataField_T<FEElementData<mat3fd , DATA_ITEM> >(szname, EXPORT_DATA)); ND = 3; break;
     case DATA_TENS4FS: pm->AddDataField(new FEDataField_T<FEElementData<tens4fs, DATA_ITEM> >(szname, EXPORT_DATA)); ND = 21; break;
@@ -1059,8 +1059,8 @@ bool CDocument::AddElemDataFromFile(const char* szfile, const char* szname, int 
 					break;
 				case DATA_MAT3D:
 					{
-						FEElementData<mat3d, DATA_ITEM>& df = dynamic_cast<FEElementData<mat3d, DATA_ITEM>&>(ps->m_Data[ndf-1]);
-						df.add(nelem, mat3d(f[0], f[1], f[2], f[3], f[4], f[5], f[6], f[7], f[8]));
+						FEElementData<Mat3d, DATA_ITEM>& df = dynamic_cast<FEElementData<Mat3d, DATA_ITEM>&>(ps->m_Data[ndf-1]);
+						df.add(nelem, Mat3d(f[0], f[1], f[2], f[3], f[4], f[5], f[6], f[7], f[8]));
 					}
 					break;
 				case DATA_MAT3FS:

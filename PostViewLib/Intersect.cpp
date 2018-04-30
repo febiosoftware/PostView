@@ -100,7 +100,7 @@ bool IntersectQuad(const Ray& ray, const Quad& quad, Intersection& intersect)
 		// evaluate residual
 		vec3f R = nn*l - y[0] * H[0] - y[1] * H[1] - y[2] * H[2] - y[3] * H[3];
 
-		mat3d K;
+		Mat3d K;
 		K[0][0] = nn.x;
 		K[0][1] = -y[0].x*Hr[0] - y[1].x*Hr[1] - y[2].x*Hr[2] - y[3].x*Hr[3];
 		K[0][2] = -y[0].x*Hs[0] - y[1].x*Hs[1] - y[2].x*Hs[2] - y[3].x*Hs[3];

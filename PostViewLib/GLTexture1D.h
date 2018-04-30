@@ -23,9 +23,13 @@ public:
 
 	unsigned char* GetBytes();
 
+	void Update();
+
 protected:
 	int		m_n;
+	unsigned int		m_texID;
 	unsigned char m_pb[3 * 1024];
+	bool	m_bupdate;
 };
 
 #endif // !defined(AFX_GLTEXTURE1D_H__1924E4C1_AF77_41B1_8E7D_29CC3ADAA2DB__INCLUDED_)

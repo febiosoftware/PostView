@@ -16,7 +16,7 @@
 // lubksb(a,n,indx, b)
 //
 // The lubksb can be called as many times as there are rhs vectors for 
-// this system that you wish to call. For a specific matrix ludcmp only
+// this system that you wish to call. For a specific Matrix ludcmp only
 // has to be called once.
 //
 

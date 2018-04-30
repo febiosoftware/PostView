@@ -140,7 +140,7 @@ void readParentNodeData(U3DBitStreamRead& ar)
 		string parentName;
 		ar.ReadString(parentName);
 
-		// read the transformation matrix
+		// read the transformation Matrix
 		float m;
 		for (int i=0; i<16; ++i) ar.ReadF32(m);
 	}

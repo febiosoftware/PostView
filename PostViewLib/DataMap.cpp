@@ -29,7 +29,7 @@ void VectorMap::Gradient(int ntime, std::vector<float> &v)
 	double f[8];
 	vec3f x[8];
 
-	mat3d J;
+	Mat3d J;
 	double j;
 	int node;
 

@@ -100,14 +100,14 @@ void mat3fs::eigen(vec3f e[3], float l[3]) const
 	double sm, tresh, g, h, t, c, tau, s, th;
 	int i, j, k;
 
-	// copy the matrix components since we will be overwriting them
+	// copy the Matrix components since we will be overwriting them
 	double a[3][3] = {
 			{x , xy, xz},
 			{xy, y , yz}, 
 			{xz, yz, z }
 	};
 
-	// the v matrix contains the eigen vectors
+	// the v Matrix contains the eigen vectors
 	// intialize to identity
 	double v[3][3] = {
 		{ 1, 0, 0 },
@@ -214,7 +214,7 @@ vec3f mat3fs::PrincDirection(int l)
 }
 
 //=============================================================================
-mat3d::mat3d(double a00, double a01, double a02, double a10, double a11, double a12, double a20, double a21, double a22)
+Mat3d::Mat3d(double a00, double a01, double a02, double a10, double a11, double a12, double a20, double a21, double a22)
 {
 	m_data[0][0] = a00; m_data[0][1] = a01; m_data[0][2] = a02;
 	m_data[1][0] = a10; m_data[1][1] = a11; m_data[1][2] = a12;
@@ -222,7 +222,7 @@ mat3d::mat3d(double a00, double a01, double a02, double a10, double a11, double 
 }
 
 //-----------------------------------------------------------------------------
-vec3f mat3d::operator*(const vec3f& r)
+vec3f Mat3d::operator*(const vec3f& r)
 {
 	return vec3f(
 		m_data[0][0]*r.x+m_data[0][1]*r.y+m_data[0][2]*r.z,
@@ -231,13 +231,13 @@ vec3f mat3d::operator*(const vec3f& r)
 }
 
 //-----------------------------------------------------------------------------
-mat3d mat3d::transpose()
+Mat3d Mat3d::transpose()
 {
-	return mat3d(m_data[0][0], m_data[1][0], m_data[2][0], m_data[0][1], m_data[1][1], m_data[2][1], m_data[0][2], m_data[1][2], m_data[2][2]);
+	return Mat3d(m_data[0][0], m_data[1][0], m_data[2][0], m_data[0][1], m_data[1][1], m_data[2][1], m_data[0][2], m_data[1][2], m_data[2][2]);
 }
 
 //=============================================================================
-matrix::matrix(int r, int c) : m_nr(r), m_nc(c)
+Matrix::Matrix(int r, int c) : m_nr(r), m_nc(c)
 {
 	m_ne = r*c;
 	if (m_ne > 0) d = new double[m_ne];
@@ -245,7 +245,7 @@ matrix::matrix(int r, int c) : m_nr(r), m_nc(c)
 }
 
 //-----------------------------------------------------------------------------
-matrix::matrix(const matrix& m)
+Matrix::Matrix(const Matrix& m)
 {
 	m_nr = m.m_nr;
 	m_nc = m.m_nc;
@@ -259,7 +259,7 @@ matrix::matrix(const matrix& m)
 }
 
 //-----------------------------------------------------------------------------
-void matrix::operator = (const matrix& m)
+void Matrix::operator = (const Matrix& m)
 {
 	if (d) delete [] d;
 
@@ -275,13 +275,13 @@ void matrix::operator = (const matrix& m)
 }
 
 //-----------------------------------------------------------------------------
-void matrix::zero()
+void Matrix::zero()
 {
 	for (int i=0; i<m_ne; ++i) d[i] = 0.0;
 }
 
 //-----------------------------------------------------------------------------
-void matrix::mult_transpose(vector<double>& x, vector<double>& y)
+void Matrix::mult_transpose(vector<double>& x, vector<double>& y)
 {
 	for (int i=0; i<m_nc; ++i) y[i] = 0.0;
 
@@ -293,7 +293,7 @@ void matrix::mult_transpose(vector<double>& x, vector<double>& y)
 }
 
 //-----------------------------------------------------------------------------
-bool matrix::lsq_solve(vector<double>& x, vector<double>& b)
+bool Matrix::lsq_solve(vector<double>& x, vector<double>& b)
 {
 	if ((int) x.size() != m_nc) return false;
 	if ((int) b.size() != m_nr) return false;
@@ -301,7 +301,7 @@ bool matrix::lsq_solve(vector<double>& x, vector<double>& b)
 	vector<double> y(m_nc);
 	mult_transpose(b, y);
 
-	matrix AA(m_nc, m_nc);
+	Matrix AA(m_nc, m_nc);
 	mult_transpose_self(AA);
 
 	AA.solve(x, y);
@@ -310,7 +310,7 @@ bool matrix::lsq_solve(vector<double>& x, vector<double>& b)
 }
 
 //-----------------------------------------------------------------------------
-void matrix::mult(vector<double>& x, vector<double>& y)
+void Matrix::mult(vector<double>& x, vector<double>& y)
 {
 	for (int i = 0; i<m_nr; ++i)
 	{
@@ -321,9 +321,9 @@ void matrix::mult(vector<double>& x, vector<double>& y)
 }
 
 //-----------------------------------------------------------------------------
-void matrix::mult_transpose_self(matrix& AAt)
+void Matrix::mult_transpose_self(Matrix& AAt)
 {
-	matrix& A = *this;
+	Matrix& A = *this;
 	int N = m_nc;
 	int R = m_nr;
 	for (int i=0; i<N; ++i)
@@ -336,7 +336,7 @@ void matrix::mult_transpose_self(matrix& AAt)
 }
 
 //-----------------------------------------------------------------------------
-bool matrix::solve(vector<double>& x, vector<double>& b)
+bool Matrix::solve(vector<double>& x, vector<double>& b)
 {
 	// check sizes
 	if (m_nr != m_nc) return false;
@@ -348,7 +348,7 @@ bool matrix::solve(vector<double>& x, vector<double>& b)
 	int i, imax, j, k;
 	double big, dum, sum, temp;
 
-	matrix& a = *this;
+	Matrix& a = *this;
 
 	int n = a.Rows();
 	
@@ -361,7 +361,7 @@ bool matrix::solve(vector<double>& x, vector<double>& b)
 		big = 0;
 		for (j=0; j<n; ++j)
 			if ((temp=fabs(a(i,j))) > big) big = temp;
-		if (big == 0) return false; // singular matrix
+		if (big == 0) return false; // singular Matrix
 		vv[i] = 1.0 / big;
 	}
 
@@ -460,14 +460,14 @@ quat4f quat4f::slerp(quat4f &q1, quat4f &q2, double t)
 
 
 //-----------------------------------------------------------------------------
-matrix matrix::inverse()
+Matrix Matrix::inverse()
 {
-	// make sure this is a square matrix
+	// make sure this is a square Matrix
 	assert(m_nr == m_nc);
 
-	// make a copy of this matrix
+	// make a copy of this Matrix
 	// since we don't want to change it
-	matrix tmp(*this);
+	Matrix tmp(*this);
 	double** a = new double*[m_nr];
 	for (int i = 0; i<m_nr; ++i) a[i] = tmp.d + i*m_nr;
 
@@ -476,8 +476,8 @@ matrix matrix::inverse()
 	vector<int> indx(n);
 	ludcmp(a, n, &indx[0]);
 
-	// allocate the inverse matrix
-	matrix ai(n, n);
+	// allocate the inverse Matrix
+	Matrix ai(n, n);
 
 	// do a backsubstituation on the columns of a
 	vector<double> b; b.assign(n, 0);
@@ -499,11 +499,11 @@ matrix matrix::inverse()
 }
 
 //-----------------------------------------------------------------------------
-matrix matrix::operator * (const matrix& m)
+Matrix Matrix::operator * (const Matrix& m)
 {
 	assert(m_nc == m.m_nr);
-	matrix a(m_nr, m.m_nc);
-	matrix& T = *this;
+	Matrix a(m_nr, m.m_nc);
+	Matrix& T = *this;
 
 	for (int i = 0; i<m_nr; ++i)
 	{
@@ -515,4 +515,43 @@ matrix matrix::operator * (const matrix& m)
 	}
 
 	return a;
+}
+
+
+//-----------------------------------------------------------------------------
+void quat4f::SetEuler(double X, double Y, double Z)
+{
+	// calculate cos and sin of angles
+	double cz = cos(Z*0.5);
+	double sz = sin(Z*0.5);
+	double cx = cos(X*0.5);
+	double sx = sin(X*0.5);
+	double cy = cos(Y*0.5);
+	double sy = sin(Y*0.5);
+
+	// define quaternion
+	w = cz * cx * cy + sz * sx * sy;
+	x = cz * sx * cy - sz * cx * sy;
+	y = cz * cx * sy + sz * sx * cy;
+	z = sz * cx * cy - cz * sx * sy;
+}
+
+//-----------------------------------------------------------------------------
+void quat4f::GetEuler(double& X, double& Y, double& Z) const
+{
+	// roll (x-axis rotation)
+	double t0 = +2.0 * (w * x + y * z);
+	double t1 = +1.0 - 2.0 * (x*x + y*y);
+	X = atan2(t0, t1);
+
+	// pitch (y-axis rotation)
+	double t2 = +2.0 * (w*y - z*x);
+	t2 = t2 > 1.0 ? 1.0 : t2;
+	t2 = t2 < -1.0 ? -1.0 : t2;
+	Y = asin(t2);
+
+	// yaw (z-axis rotation)
+	double t3 = +2.0 * (w * z + x * y);
+	double t4 = +1.0 - 2.0 * (y*y + z*z);
+	Z = atan2(t3, t4);
 }

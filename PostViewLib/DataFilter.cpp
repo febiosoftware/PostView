@@ -43,8 +43,8 @@ void DataScale(FEModel& fem, int nfield, double scale)
 			break;
 			case DATA_MAT3D:
 			{
-				FENodeData<mat3d>* pv = dynamic_cast< FENodeData<mat3d>* >(&d);
-				for (int n = 0; n<NN; ++n) { mat3d& v = (*pv)[n]; v *= fscale; }
+				FENodeData<Mat3d>* pv = dynamic_cast< FENodeData<Mat3d>* >(&d);
+				for (int n = 0; n<NN; ++n) { Mat3d& v = (*pv)[n]; v *= fscale; }
 			}
 			break;
 			case DATA_MAT3F:
@@ -149,25 +149,25 @@ void DataScale(FEModel& fem, int nfield, double scale)
 			{
 				if (fmt == DATA_NODE)
 				{
-					FEElementData<mat3d, DATA_NODE>* pf = dynamic_cast<FEElementData<mat3d, DATA_NODE>*>(&d);
+					FEElementData<Mat3d, DATA_NODE>* pf = dynamic_cast<FEElementData<Mat3d, DATA_NODE>*>(&d);
 					int N = pf->size();
 					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
 				}
 				else if (fmt == DATA_ITEM)
 				{
-					FEElementData<mat3d, DATA_ITEM>* pf = dynamic_cast<FEElementData<mat3d, DATA_ITEM>*>(&d);
+					FEElementData<Mat3d, DATA_ITEM>* pf = dynamic_cast<FEElementData<Mat3d, DATA_ITEM>*>(&d);
 					int N = pf->size();
 					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
 				}
 				else if (fmt == DATA_COMP)
 				{
-					FEElementData<mat3d, DATA_COMP>* pf = dynamic_cast<FEElementData<mat3d, DATA_COMP>*>(&d);
+					FEElementData<Mat3d, DATA_COMP>* pf = dynamic_cast<FEElementData<Mat3d, DATA_COMP>*>(&d);
 					int N = pf->size();
 					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
 				}
 				else if (fmt == DATA_REGION)
 				{
-					FEElementData<mat3d, DATA_REGION>* pf = dynamic_cast<FEElementData<mat3d, DATA_REGION>*>(&d);
+					FEElementData<Mat3d, DATA_REGION>* pf = dynamic_cast<FEElementData<Mat3d, DATA_REGION>*>(&d);
 					int N = pf->size();
 					for (int n = 0; n<N; ++n) (*pf)[n] *= fscale;
 				}
@@ -298,25 +298,25 @@ void DataScale(FEModel& fem, int nfield, double scale)
 			{
 				if (fmt == DATA_NODE)
 				{
-					FEFaceData<mat3d, DATA_NODE>* pf = dynamic_cast<FEFaceData<mat3d, DATA_NODE>*>(&d);
+					FEFaceData<Mat3d, DATA_NODE>* pf = dynamic_cast<FEFaceData<Mat3d, DATA_NODE>*>(&d);
 					int N = pf->size();
 					for (int n = 0; n<N; ++n) (*pf)[n] *= scale;
 				}
 				else if (fmt == DATA_ITEM)
 				{
-					FEFaceData<mat3d, DATA_ITEM>* pf = dynamic_cast<FEFaceData<mat3d, DATA_ITEM>*>(&d);
+					FEFaceData<Mat3d, DATA_ITEM>* pf = dynamic_cast<FEFaceData<Mat3d, DATA_ITEM>*>(&d);
 					int N = pf->size();
 					for (int n = 0; n<N; ++n) (*pf)[n] *= scale;
 				}
 				else if (fmt == DATA_COMP)
 				{
-					FEFaceData<mat3d, DATA_COMP>* pf = dynamic_cast<FEFaceData<mat3d, DATA_COMP>*>(&d);
+					FEFaceData<Mat3d, DATA_COMP>* pf = dynamic_cast<FEFaceData<Mat3d, DATA_COMP>*>(&d);
 					int N = pf->size();
 					for (int n = 0; n<N; ++n) (*pf)[n] *= scale;
 				}
 				else if (fmt == DATA_REGION)
 				{
-					FEFaceData<mat3d, DATA_REGION>* pf = dynamic_cast<FEFaceData<mat3d, DATA_REGION>*>(&d);
+					FEFaceData<Mat3d, DATA_REGION>* pf = dynamic_cast<FEFaceData<Mat3d, DATA_REGION>*>(&d);
 					int N = pf->size();
 					for (int n = 0; n<N; ++n) (*pf)[n] *= scale;
 				}
@@ -793,7 +793,7 @@ void extractNodeDataComponent(Data_Type ntype, FEMeshData& dst, FEMeshData& src,
 	case DATA_MAT3FS : extractNodeDataComponent_T<mat3fs >(dst, src, ncomp, mesh); break;
 	case DATA_MAT3FD : extractNodeDataComponent_T<mat3fs >(dst, src, ncomp, mesh); break;
 	case DATA_TENS4FS: extractNodeDataComponent_T<tens4fs>(dst, src, ncomp, mesh); break;
-	case DATA_MAT3D  : extractNodeDataComponent_T<mat3d  >(dst, src, ncomp, mesh); break;
+	case DATA_MAT3D  : extractNodeDataComponent_T<Mat3d  >(dst, src, ncomp, mesh); break;
 	case DATA_MAT3F  : extractNodeDataComponent_T<mat3f  >(dst, src, ncomp, mesh); break;
 	}
 }
@@ -848,7 +848,7 @@ void extractElemDataComponentITEM(Data_Type ntype, FEMeshData& dst, FEMeshData& 
 	case DATA_MAT3FS : extractElemDataComponentITEM_T<mat3fs >(dst, src, ncomp, mesh); break;
 	case DATA_MAT3FD : extractElemDataComponentITEM_T<mat3fs >(dst, src, ncomp, mesh); break;
 	case DATA_TENS4FS: extractElemDataComponentITEM_T<tens4fs>(dst, src, ncomp, mesh); break;
-	case DATA_MAT3D  : extractElemDataComponentITEM_T<mat3d  >(dst, src, ncomp, mesh); break;
+	case DATA_MAT3D  : extractElemDataComponentITEM_T<Mat3d  >(dst, src, ncomp, mesh); break;
 	case DATA_MAT3F  : extractElemDataComponentITEM_T<mat3f  >(dst, src, ncomp, mesh); break;
 	case DATA_ARRAY_VEC3F: extractElemDataComponentITEM_ARRAY_VEC3F(dst, src, ncomp, mesh); break;
 	}
@@ -924,7 +924,7 @@ void extractElemDataComponentNODE(Data_Type ntype, FEMeshData& dst, FEMeshData& 
 	case DATA_MAT3FS : extractElemDataComponentNODE_T<mat3fs >(dst, src, ncomp, mesh); break;
 	case DATA_MAT3FD : extractElemDataComponentNODE_T<mat3fs >(dst, src, ncomp, mesh); break;
 	case DATA_TENS4FS: extractElemDataComponentNODE_T<tens4fs>(dst, src, ncomp, mesh); break;
-	case DATA_MAT3D  : extractElemDataComponentNODE_T<mat3d  >(dst, src, ncomp, mesh); break;
+	case DATA_MAT3D  : extractElemDataComponentNODE_T<Mat3d  >(dst, src, ncomp, mesh); break;
 	case DATA_MAT3F  : extractElemDataComponentNODE_T<mat3f  >(dst, src, ncomp, mesh); break;
 	case DATA_ARRAY  : extractElemDataComponentNODE_ARRAY(dst, src, ncomp, mesh); break;
 	}

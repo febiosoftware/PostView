@@ -45,8 +45,8 @@ float component2(const vec3f& v, int n)
 
 
 //-----------------------------------------------------------------------------
-// extract a component from a mat3d
-float component(const mat3d& m, int n)
+// extract a component from a Mat3d
+float component(const Mat3d& m, int n)
 {
 	float g = 0.f;
 	switch (n)
@@ -67,7 +67,7 @@ float component(const mat3d& m, int n)
 }
 
 //-----------------------------------------------------------------------------
-// extract a component from a mat3d
+// extract a component from a Mat3d
 float component(const mat3f& m, int n)
 {
 	float g = 0.f;
@@ -694,8 +694,8 @@ void FEModel::EvaluateNode(int n, int ntime, int nfield, NODEDATA& d)
 			break;
 		case DATA_MAT3D:
 			{
-				FENodeData_T<mat3d>& dm = dynamic_cast<FENodeData_T<mat3d>&>(rd);
-				mat3d m;
+				FENodeData_T<Mat3d>& dm = dynamic_cast<FENodeData_T<Mat3d>&>(rd);
+				Mat3d m;
 				dm.eval(n, &m);
 				d.m_val = component(m, ncomp);
 			}
@@ -999,10 +999,10 @@ bool FEModel::EvaluateFace(int n, int ntime, int nfield, float* data, float& val
 			{
 				if (fmt == DATA_NODE)
 				{
-					FEFaceData_T<mat3d,DATA_NODE>& df = dynamic_cast<FEFaceData_T<mat3d,DATA_NODE>&>(rd);
+					FEFaceData_T<Mat3d,DATA_NODE>& df = dynamic_cast<FEFaceData_T<Mat3d,DATA_NODE>&>(rd);
 					if (df.active(n))
 					{
-						mat3d m[FEFace::MAX_NODES];
+						Mat3d m[FEFace::MAX_NODES];
 						df.eval(n, m);
 						int nf = f.Nodes();
 						val = 0.f;
@@ -1017,10 +1017,10 @@ bool FEModel::EvaluateFace(int n, int ntime, int nfield, float* data, float& val
 				}
 				else if (fmt == DATA_ITEM)
 				{
-					FEFaceData_T<mat3d,DATA_ITEM>& dv = dynamic_cast<FEFaceData_T<mat3d,DATA_ITEM>&>(rd);
+					FEFaceData_T<Mat3d,DATA_ITEM>& dv = dynamic_cast<FEFaceData_T<Mat3d,DATA_ITEM>&>(rd);
 					if (dv.active(n))
 					{
-						mat3d m;
+						Mat3d m;
 						dv.eval(n, &m);
 						val = component(m, ncomp);
 						for (int i=0; i<nf; ++i) data[i] = val;
@@ -1029,10 +1029,10 @@ bool FEModel::EvaluateFace(int n, int ntime, int nfield, float* data, float& val
 				}
 				else if (fmt == DATA_COMP)
 				{
-					FEFaceData_T<mat3d,DATA_COMP>& df = dynamic_cast<FEFaceData_T<mat3d,DATA_COMP>&>(rd);
+					FEFaceData_T<Mat3d,DATA_COMP>& df = dynamic_cast<FEFaceData_T<Mat3d,DATA_COMP>&>(rd);
 					if (df.active(n))
 					{
-						mat3d m[FEFace::MAX_NODES];
+						Mat3d m[FEFace::MAX_NODES];
 						df.eval(n, m);
 						val = 0.f;
 						for (int i=0; i<nf; ++i)
@@ -1568,10 +1568,10 @@ bool FEModel::EvaluateElement(int n, int ntime, int nfield, float* data, float& 
 			{
 				if (fmt == DATA_ITEM)
 				{
-					FEElemData_T<mat3d,DATA_ITEM>& dm = dynamic_cast<FEElemData_T<mat3d,DATA_ITEM>&>(rd);
+					FEElemData_T<Mat3d,DATA_ITEM>& dm = dynamic_cast<FEElemData_T<Mat3d,DATA_ITEM>&>(rd);
 					if (dm.active(n))
 					{
-						mat3d m;
+						Mat3d m;
 						dm.eval(n, &m);
 						val = component(m, ncomp);
 						for (int i=0; i<ne; ++i) data[i] = val;
@@ -1580,10 +1580,10 @@ bool FEModel::EvaluateElement(int n, int ntime, int nfield, float* data, float& 
 				}
 				else if (fmt == DATA_NODE)
 				{
-					FEElemData_T<mat3d,DATA_NODE>& dm = dynamic_cast<FEElemData_T<mat3d,DATA_NODE>&>(rd);
+					FEElemData_T<Mat3d,DATA_NODE>& dm = dynamic_cast<FEElemData_T<Mat3d,DATA_NODE>&>(rd);
 					if (dm.active(n))
 					{
-						mat3d m[FEGenericElement::MAX_NODES];
+						Mat3d m[FEGenericElement::MAX_NODES];
 						dm.eval(n, m);
 						val = 0;
 						for (int j=0; j<ne; ++j)
@@ -1597,10 +1597,10 @@ bool FEModel::EvaluateElement(int n, int ntime, int nfield, float* data, float& 
 				}
 				else if (fmt == DATA_COMP)
 				{
-					FEElemData_T<mat3d,DATA_COMP>& df = dynamic_cast<FEElemData_T<mat3d,DATA_COMP>&>(rd);
+					FEElemData_T<Mat3d,DATA_COMP>& df = dynamic_cast<FEElemData_T<Mat3d,DATA_COMP>&>(rd);
 					if (df.active(n))
 					{
-						mat3d v[FEGenericElement::MAX_NODES];
+						Mat3d v[FEGenericElement::MAX_NODES];
 						df.eval(n, v);
 						val = 0;
 						for (int j=0; j<ne; ++j) 
@@ -1614,10 +1614,10 @@ bool FEModel::EvaluateElement(int n, int ntime, int nfield, float* data, float& 
 				}
 				else if (fmt == DATA_REGION)
 				{
-					FEElemData_T<mat3d,DATA_REGION>& dm = dynamic_cast<FEElemData_T<mat3d,DATA_REGION>&>(rd);
+					FEElemData_T<Mat3d,DATA_REGION>& dm = dynamic_cast<FEElemData_T<Mat3d,DATA_REGION>&>(rd);
 					if (dm.active(n))
 					{
-						mat3d m;
+						Mat3d m;
 						dm.eval(n, &m);
 						val = component(m, ncomp);
 						for (int i=0; i<ne; ++i) data[i] = val;
