@@ -1046,7 +1046,7 @@ void CMainWindow::on_actionFind_triggered()
 void CMainWindow::on_actionDelete_triggered()
 {
 	GLWidget* pg = GLWidget::get_focus();
-	if (pg && (pg->GetObject() == 0))
+	if (pg)
 	{
 		CGLWidgetManager* pwm = CGLWidgetManager::GetInstance();
 		pwm->RemoveWidget(pg);

@@ -1,6 +1,6 @@
 #pragma once
 
-class CGLView;
+class QOpenGLWidget;
 #include "GLWidget.h"
 #include <vector>
 
@@ -24,7 +24,7 @@ public:
 
 	GLWidget* operator [] (int i) { return m_Widget[i]; }
 
-	void AttachToView(CGLView* pview);
+	void AttachToView(QOpenGLWidget* pview);
 
 	int handle(int x, int y, int nevent);
 
@@ -34,7 +34,7 @@ protected:
 	void SnapWidget(GLWidget* pw);
 
 protected:
-	CGLView*				m_pview;
+	QOpenGLWidget*			m_pview;
 	std::vector<GLWidget*>	m_Widget;
 
 private:

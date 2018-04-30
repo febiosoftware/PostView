@@ -12,24 +12,18 @@
 #include <GL/glu.h>
 #endif
 
+#include <QOpenGLWidget>
+
 #include "GLWidget.h"
-#include "Document.h"
-#include "GLView.h"
-#include "PostViewLib/GLObject.h"
-#include <ctype.h>
-#include <time.h>
 #include <assert.h>
 #include "convert.h"
 
 //-----------------------------------------------------------------------------
 
 GLWidget* GLWidget::m_pfocus = 0;
-CGLView* GLWidget::m_pview = 0;
 
-GLWidget::GLWidget(CGLObject* po, int x, int y, int w, int h, const char* szlabel)
+GLWidget::GLWidget(int x, int y, int w, int h, const char* szlabel)
 {
-	m_po = po;
-
 	m_minw = 30;
 	m_minh = 20;
 
@@ -86,20 +80,20 @@ bool GLWidget::is_inside(int x, int y)
 
 //-----------------------------------------------------------------------------
 
-GLBox::GLBox(CGLObject* po, int x, int y, int w, int h, CDocument* pdoc, const char *szlabel) : GLWidget(po, x, y, w, h, szlabel)
+GLBox::GLBox(int x, int y, int w, int h, const char *szlabel) : GLWidget(x, y, w, h, szlabel)
 {
-	m_pdoc = pdoc;
 	m_bshadow = false;
 	m_shc = GLCOLOR(200,200,200);
 }
 
 void GLBox::fit_to_size()
 {
-	QFontMetrics fm(m_font);
-	char szlabel[256] = {0};
-	parse_label(szlabel, m_szlabel, 255);
-	QSize size = fm.size(Qt::TextExpandTabs, szlabel);
-	resize(x(), y(), size.width(), size.height());
+	if (m_szlabel)
+	{
+		QFontMetrics fm(m_font);
+		QSize size = fm.size(Qt::TextExpandTabs, m_szlabel);
+		resize(x(), y(), size.width(), size.height());
+	}
 }
 
 void GLBox::draw_bg(int x0, int y0, int x1, int y1, QPainter* painter)
@@ -148,77 +142,24 @@ void GLBox::draw(QPainter* painter)
 
 	if (m_szlabel)
 	{
-		char szlabel[256] = {0};
-		parse_label(szlabel, m_szlabel, 255);
-
 		if (m_bshadow)
 		{
 			int dx = m_font.pointSize()/10+1;
 			painter->setPen(QColor(m_shc.r, m_shc.g, m_shc.b));
 			painter->setFont(m_font);
-			painter->drawText(x0+dx, y0+dx, m_w, m_h, Qt::AlignLeft| Qt::AlignVCenter, QString(szlabel));
+			painter->drawText(x0+dx, y0+dx, m_w, m_h, Qt::AlignLeft| Qt::AlignVCenter, QString(m_szlabel));
 		}
 		QPen pen = painter->pen();
 		pen.setColor(QColor(m_fgc.r, m_fgc.g, m_fgc.b));
 		painter->setFont(m_font);
 		painter->setPen(pen);
-		painter->drawText(x0, y0, m_w, m_h, Qt::AlignLeft| Qt::AlignVCenter, QString(szlabel));
-	}
-}
-
-void GLBox::parse_label(char* szlabel, const char* szval, int nmax)
-{
-	const char* cs = szval;
-	char* cd = szlabel;
-
-//	*cd++ = ' ';
-
-	while (*cs)
-	{
-		switch(*cs)
-		{
-		case '%':
-			{
-				int n = 0;
-				const char* ce = cs+1;
-				while (isalpha(*ce)) { ++ce; ++n; }
-
-
-				if (strncmp(cs+1, "title", n) == 0) 
-				{
-					const char* sztitle = m_pdoc->GetTitle();
-					if (sztitle) cd += sprintf(cd, "%s", sztitle);
-				}
-				else if (strncmp(cs+1, "field"    , n) == 0) cd += sprintf(cd, "%s", m_pdoc->GetFieldString().c_str());
-				else if (strncmp(cs+1, "time"     , n) == 0) cd += sprintf(cd, "%.4g", m_pdoc->GetTimeValue());
-				else if (strncmp(cs+1, "state"    , n) == 0) cd += sprintf(cd, "%d", m_pdoc->currentTime()+1);
-				else if (strncmp(cs+1, "filename" , n) == 0) cd += m_pdoc->GetFileName(cd);
-				else if (strncmp(cs+1, "filetitle", n) == 0) cd += m_pdoc->GetDocTitle(cd);
-				else if (strncmp(cs+1, "filepath" , n) == 0) cd += m_pdoc->GetFilePath(cd);
-//				else if (strncmp(cs+1, "date"     , n) == 0) _strdate(cd); cd = szlabel + strlen(szlabel);
-				cs += n+1;
-			}
-			break;
-		case '\\':
-			{
-				++cs;
-				switch (*cs)
-				{
-				case 'n': cd += sprintf(cd, "\n"); break;
-				case 't': cd += sprintf(cd, "\t"); break;
-				}
-				++cs;
-			}
-			break;
-		default:
-			*cd++ = *cs++;
-		}
+		painter->drawText(x0, y0, m_w, m_h, Qt::AlignLeft| Qt::AlignVCenter, QString(m_szlabel));
 	}
 }
 
 //-----------------------------------------------------------------------------
 
-GLLegendBar::GLLegendBar(CGLObject* po, CColorTexture* pm, int x, int y, int w, int h, int orientation) : GLWidget(po, x, y, w, h, 0)
+GLLegendBar::GLLegendBar(CColorTexture* pm, int x, int y, int w, int h, int orientation) : GLWidget(x, y, w, h, 0)
 {
 	m_pMap = pm;
 	m_ntype = GRADIENT;
@@ -667,15 +608,14 @@ void GLLegendBar::draw_discrete_horz(QPainter* painter)
 	painter->endNativePainting();
 
 	// render the title
-	if (m_btitle && m_po)
+	if (m_btitle && m_szlabel)
 	{
 		painter->setPen(QColor(m_fgc.r, m_fgc.g, m_fgc.b));
 		painter->setFont(m_font);
 
 		if (m_nrot == HORIZONTAL)
 		{
-			string name = m_po->GetName();
-			painter->drawText(x(), y(), w(), h(), Qt::AlignCenter | Qt::AlignBottom, name.c_str());
+			painter->drawText(x(), y(), w(), h(), Qt::AlignCenter | Qt::AlignBottom, m_szlabel);
 		}
 	}
 
@@ -717,9 +657,9 @@ void GLLegendBar::draw_discrete_horz(QPainter* painter)
 
 //-----------------------------------------------------------------------------
 
-GLTriad::GLTriad(CGLObject* po, int x, int y, int w, int h, CGLCamera *pcam) : GLWidget(po, x, y, w, h)
+GLTriad::GLTriad(int x, int y, int w, int h) : GLWidget(x, y, w, h)
 {
-	m_pcam = pcam;
+	m_rot = quat4f(0.f, vec3f(1.f,0.f,0.f));
 	m_bcoord_labels = true;
 }
 
@@ -736,7 +676,7 @@ void GLTriad::draw(QPainter* painter)
 	int view[4];
 	glGetIntegerv(GL_VIEWPORT, view);
     
-    int DPR = CGLView::DevicePixelRatio();
+	int DPR = painter->device()->devicePixelRatio();
 
 	int x0 = DPR*x();
 	int y0 = view[3]-DPR*(y() + h());
@@ -777,7 +717,7 @@ void GLTriad::draw(QPainter* painter)
 	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission);
 	glMateriali(GL_FRONT_AND_BACK, GL_SHININESS, 32);
 
-	quat4f q = m_pcam->GetOrientation();
+	quat4f q = m_rot;
 	vec3f r = q.GetVector();
 	float a = 180*q.GetAngle()/PI;
 
@@ -862,7 +802,7 @@ void GLTriad::draw(QPainter* painter)
 
 //-----------------------------------------------------------------------------
 
-GLSafeFrame::GLSafeFrame(CGLObject* po, int x, int y, int w, int h) : GLWidget(po, x, y, w, h)
+GLSafeFrame::GLSafeFrame(int x, int y, int w, int h) : GLWidget(x, y, w, h)
 {
 	m_block = false;
 }

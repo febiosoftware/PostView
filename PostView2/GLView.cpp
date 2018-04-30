@@ -340,19 +340,21 @@ CGLView::CGLView(CMainWindow* pwnd, QWidget* parent) : QOpenGLWidget(parent), m_
 	m_Widget = CGLWidgetManager::GetInstance();
 	m_Widget->AttachToView(this);
 
+	m_szsubtitle[0] = 0;
+
 	int Y = 0;
-	m_Widget->AddWidget(m_ptitle = new GLBox(po, 20, 20, 300, 50, pdoc, "%title")); 
+	m_Widget->AddWidget(m_ptitle = new GLBox(20, 20, 300, 50, "")); 
 	m_ptitle->set_font_size(30);
 	m_ptitle->fit_to_size();
 	Y += m_ptitle->h();
 
-	m_Widget->AddWidget(m_psubtitle = new GLBox(po, Y, 70, 300, 60, pdoc, "%field\\nTime = %time")); 
+	m_Widget->AddWidget(m_psubtitle = new GLBox(Y, 70, 300, 60, "")); 
 	m_psubtitle->set_font_size(15);
 	m_psubtitle->fit_to_size();
 
-	m_Widget->AddWidget(m_ptriad = new GLTriad(po, 0, 0, 150, 150, &GetCamera()));
+	m_Widget->AddWidget(m_ptriad = new GLTriad(0, 0, 150, 150));
 	m_ptriad->align(GLW_ALIGN_LEFT | GLW_ALIGN_BOTTOM);
-	m_Widget->AddWidget(m_pframe = new GLSafeFrame(po, 0, 0, 800, 600));
+	m_Widget->AddWidget(m_pframe = new GLSafeFrame(0, 0, 800, 600));
 	m_pframe->align(GLW_ALIGN_HCENTER | GLW_ALIGN_VCENTER);
 	m_pframe->hide();
 
@@ -585,6 +587,7 @@ void CGLView::paintGL()
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
+		// render the widgets
 		RenderWidgets();
 
 		// render the selection rectangle
@@ -1137,6 +1140,12 @@ void CGLView::RenderWidgets()
 	// render the title
 	if (pdoc->IsValid() && view.m_bTitle) 
 	{
+		const char* sztitle = pdoc->GetTitle();
+		m_ptitle->set_label(sztitle);
+
+		sprintf(m_szsubtitle, "%s\nTime = %.4g", pdoc->GetFieldString().c_str(), pdoc->GetTimeValue());
+		m_psubtitle->set_label(m_szsubtitle);
+
 		m_ptitle->show();
 		m_psubtitle->show();
 	}
@@ -1147,6 +1156,8 @@ void CGLView::RenderWidgets()
 	}
 
 	// render the triad
+	CGLCamera& cam = GetCamera();
+	m_ptriad->setOrientation(cam.GetOrientation());
 	if (view.m_bTriad) m_ptriad->show();
 	else m_ptriad->hide();
 
@@ -2692,6 +2703,23 @@ void CGLView::RenderDoc()
 		}
 	}
 	glPopAttrib();
+}
+
+void CGLView::AddWidget(GLWidget* pw)
+{
+	m_Widget->AddWidget(pw);
+}
+
+bool CGLView::DeleteWidget(GLWidget* pw)
+{
+	// make sure the widget is not one of the fixed widgets
+	if (pw == m_ptriad) return false;
+	if (pw == m_ptitle) return false;
+	if (pw == m_psubtitle) return false;
+
+	m_Widget->RemoveWidget(pw);
+
+	return true;
 }
 
 void CGLView::RenderTrack()

@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "GLWidgetManager.h"
-#include "GLView.h"
-#include "PostViewLib/GLObject.h"
+#include <QOpenGLWidget>
 #include <assert.h>
 
 CGLWidgetManager* CGLWidgetManager::m_pmgr = 0;
@@ -12,11 +11,10 @@ CGLWidgetManager* CGLWidgetManager::GetInstance()
 	return m_pmgr;
 }
 
-void CGLWidgetManager::AttachToView(CGLView *pview)
+void CGLWidgetManager::AttachToView(QOpenGLWidget *pview)
 {
 	assert(pview);
 	m_pview = pview;
-	GLWidget::m_pview = pview;
 }
 
 CGLWidgetManager::~CGLWidgetManager()

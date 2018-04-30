@@ -10,13 +10,12 @@
 #include <GL/gl.h>
 #endif
 
-#include "PostViewLib/ColorMap.h"
 #include <QPainter>
+#include <PostViewLib/ColorMap.h>
+#include <PostViewLib/math3d.h>
 
 class CGLView;
 class CGLWidgetManager;
-class CGLObject;
-class CDlgWidgetProps;
 
 #define GLW_ALIGN_LEFT		0x0001
 #define GLW_ALIGN_RIGHT		0x0002
@@ -32,10 +31,8 @@ public:
 	enum FillMode { NONE, COLOR1, COLOR2, HORIZONTAL, VERTICAL };
 
 public:
-	GLWidget(CGLObject* po, int x, int y, int w, int h, const char* szlabel = 0);
+	GLWidget(int x, int y, int w, int h, const char* szlabel = 0);
 	virtual ~GLWidget();
-
-	CGLObject* GetObject() { return m_po; }
 
 	virtual void draw(QPainter* painter) = 0;
 
@@ -80,8 +77,6 @@ public:
 		if (m_h < m_minh) m_h = m_minh;
 	}
 
-	static CGLView* GetView() { return m_pview; }
-
 	void show() { m_bshow = true; }
 	void hide() { m_bshow = false; if (this == m_pfocus) m_pfocus = 0; }
 	bool visible() { return m_bshow; }
@@ -111,35 +106,25 @@ protected:
 	int		m_nbg;	// background style
 
 	static GLWidget* m_pfocus;	// the widget that has the focus
-	static CGLView*	m_pview;	// view of the widget
 
 	bool	m_bshow;	// show the widget or not
-
-	CGLObject*	m_po;	// the object that manages the life of this widget
 
 	friend class CGLWidgetManager;
 };
 
 //-----------------------------------------------------------------------------
 
-class CDocument;
-
 class GLBox : public GLWidget
 {
 public:
-	GLBox(CGLObject* po, int x, int y, int w, int h, CDocument* pdoc, const char* szlabel = 0);
+	GLBox(int x, int y, int w, int h, const char* szlabel = 0);
 
 	void draw(QPainter* painter);
-
-	void parse_label(char* szlabel, const char* szval, int nmax);
 
 	void fit_to_size();
 
 protected:
 	void draw_bg(int x0, int y0, int x1, int y1, QPainter* painter);
-
-protected:
-	CDocument*	m_pdoc;
 
 public:
 	bool	m_bshadow;	// render shadows
@@ -155,7 +140,7 @@ public:
 	enum { HORIZONTAL, VERTICAL };
 
 public:
-	GLLegendBar(CGLObject* po, CColorTexture* pm, int x, int y, int w, int h, int orientation = VERTICAL);
+	GLLegendBar(CColorTexture* pm, int x, int y, int w, int h, int orientation = VERTICAL);
 
 	void draw(QPainter* painter);
 
@@ -199,21 +184,20 @@ protected:
 };
 
 //-----------------------------------------------------------------------------
-
-class CGLCamera;
-
 class GLTriad : public GLWidget
 {
 public:
-	GLTriad(CGLObject* po, int x, int y, int w, int h, CGLCamera* pcam);
+	GLTriad(int x, int y, int w, int h);
 
 	void draw(QPainter* painter);
 
 	void show_coord_labels(bool bshow) { m_bcoord_labels = bshow; }
 	bool show_coord_labels() { return m_bcoord_labels; }
 
+	void setOrientation(const quat4f& q) { m_rot = q; }
+
 protected:
-	CGLCamera*	m_pcam;
+	quat4f	m_rot;
 	bool	m_bcoord_labels;
 };
 
@@ -222,7 +206,7 @@ protected:
 class GLSafeFrame : public GLWidget
 {
 public:
-	GLSafeFrame(CGLObject* po, int x, int y, int w, int h);
+	GLSafeFrame(int x, int y, int w, int h);
 
 	void resize(int x, int y, int w, int h)
 	{

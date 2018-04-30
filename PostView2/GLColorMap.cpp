@@ -19,8 +19,9 @@ CGLColorMap::CGLColorMap(CGLModel *po) : CGLDataMap(po)
 
 	SetName("Color Map");
 
-	m_pbar = new GLLegendBar(this, &m_Col, 0, 0, 120, 600);
+	m_pbar = new GLLegendBar(&m_Col, 0, 0, 120, 600);
 	m_pbar->align(GLW_ALIGN_RIGHT | GLW_ALIGN_VCENTER);
+	m_pbar->copy_label(GetName().c_str());
 	m_pbar->hide();
 	CGLWidgetManager::GetInstance()->AddWidget(m_pbar);
 

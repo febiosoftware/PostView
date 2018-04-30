@@ -102,8 +102,9 @@ CGLSlicePlot::CGLSlicePlot(CGLModel* po) : CGLPlot(po)
 	m_fmin = 0.f;
 	m_fmax = 0.f;
 
-	m_pbar = new GLLegendBar(this, &m_Col, 0, 0, 120, 500);
+	m_pbar = new GLLegendBar(&m_Col, 0, 0, 120, 500);
 	m_pbar->align(GLW_ALIGN_LEFT| GLW_ALIGN_VCENTER);
+	m_pbar->copy_label(szname);
 	CGLWidgetManager::GetInstance()->AddWidget(m_pbar);
 }
 

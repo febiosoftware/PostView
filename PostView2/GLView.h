@@ -118,6 +118,8 @@ private:
 	int m_y0, m_y1;
 };
 
+class CGLCamera;
+
 class CGLView : public QOpenGLWidget
 {
 	Q_OBJECT
@@ -235,20 +237,9 @@ protected:
 	void OnPopup(Fl_Widget* pw, void* pd);
 */
 
-	void AddWidget(GLWidget* pw)
-	{
-		m_Widget->AddWidget(pw);
-	}
+	void AddWidget(GLWidget* pw);
 
-	void DeleteWidget(GLWidget* pw)
-	{
-		// we only delete user-created widget.
-		// user-created widgets do not have an owning object
-		if (pw->GetObject() == 0)
-		{
-			m_Widget->RemoveWidget(pw);
-		}
-	}
+	bool DeleteWidget(GLWidget* pw);
 
 	void RenderTrack();
 
@@ -294,6 +285,7 @@ private:
 	GLTriad*		m_ptriad;
 	GLSafeFrame*	m_pframe;
 	CGLWidgetManager*	m_Widget;
+	char			m_szsubtitle[256];
 
 	// used for selection
 	vector<pair<int,int> >		m_pl;

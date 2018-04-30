@@ -86,9 +86,10 @@ CGLIsoSurfacePlot::CGLIsoSurfacePlot(CGLModel* po) : CGLPlot(po)
 	m_Col.SetDivisions(m_nslices);
 	m_Col.SetSmooth(false);
 
-	m_pbar = new GLLegendBar(this, &m_Col, 0, 0, 600, 100, GLLegendBar::HORIZONTAL);
+	m_pbar = new GLLegendBar(&m_Col, 0, 0, 600, 100, GLLegendBar::HORIZONTAL);
 	m_pbar->align(GLW_ALIGN_BOTTOM | GLW_ALIGN_HCENTER);
 	m_pbar->SetType(GLLegendBar::DISCRETE);
+	m_pbar->copy_label(szname);
 	m_pbar->ShowTitle(true);
 	CGLWidgetManager::GetInstance()->AddWidget(m_pbar);
 }
