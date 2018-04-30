@@ -10,7 +10,7 @@
 #endif // _MSC_VER > 1000
 
 #include "GLPlot.h"
-#include "GLWidget.h"
+#include <GLWLib/GLWidget.h>
 #include "PostViewLib/DataMap.h"
 
 class CGLSlicePlot : public CGLPlot  

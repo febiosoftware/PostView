@@ -13,7 +13,7 @@
 #include <QFontComboBox>
 #include <QSpinBox>
 #include <QGroupBox>
-#include "GLWidget.h"
+#include <GLWLib/GLWidget.h>
 #include "CIntInput.h"
 #include "CColorButton.h"
 #include "convert.h"

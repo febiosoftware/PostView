@@ -1,6 +1,6 @@
 #pragma once
 #include "GLDataMap.h"
-#include "GLWidget.h"
+#include <GLWLib/GLWidget.h>
 #include "PostViewLib/GLTexture1D.h"
 #include "PostViewLib/ColorMap.h"
 

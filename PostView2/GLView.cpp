@@ -7,7 +7,7 @@
 
 #include "MainWindow.h"
 #include "Document.h"
-#include "GLWidget.h"
+#include <GLWLib/GLWidget.h>
 #include "GLModel.h"
 #include "GLPlaneCutPlot.h"
 #include "GLContext.h"

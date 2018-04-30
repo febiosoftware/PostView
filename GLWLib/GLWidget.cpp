@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #ifdef WIN32
 #include <Windows.h>
 #endif
@@ -16,7 +14,7 @@
 
 #include "GLWidget.h"
 #include <assert.h>
-#include "convert.h"
+#include <PostView2\convert.h>
 
 //-----------------------------------------------------------------------------
 

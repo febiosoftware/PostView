@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "GLColorMap.h"
 #include "GLModel.h"
-#include "GLWidgetManager.h"
+#include <GLWLib/GLWidgetManager.h>
 #include "PostViewLib/constants.h"
 
 //-----------------------------------------------------------------------------

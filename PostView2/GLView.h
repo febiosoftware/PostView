@@ -4,7 +4,7 @@
 #include <PostViewLib/Animation.h>
 #include <PostViewLib/FEElement.h>
 #include <PostViewLib/Intersect.h>
-#include "GLWidgetManager.h"
+#include <GLWLib/GLWidgetManager.h>
 #include <QNativeGestureEvent>
 
 //-----------------------------------------------------------------------------

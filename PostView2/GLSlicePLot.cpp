@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 #include "GLSlicePLot.h"
-#include "GLWidgetManager.h"
+#include <GLWLib/GLWidgetManager.h>
 #include "PostViewLib/constants.h"
 #include "PropertyList.h"
 

@@ -153,7 +153,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;postviewlib.lib;glew32.lib;opengl32.lib;glu32.lib;zlib64d.lib;vfw32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;postviewlib.lib;glwlib.lib;glew32.lib;opengl32.lib;glu32.lib;zlib64d.lib;vfw32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">
@@ -202,7 +202,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>postviewlib.lib;Qt5Core.lib;Qt5Gui.lib;Qt5Widgets.lib;glew32.lib;opengl32.lib;glu32.lib;zlib.lib;vfw32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>postviewlib.lib;Qt5Core.lib;Qt5Gui.lib;Qt5Widgets.lib;glwlib.lib;glew32.lib;opengl32.lib;glu32.lib;zlib.lib;vfw32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
@@ -331,8 +331,6 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </ClInclude>
-    <ClInclude Include="..\..\PostView2\GLWidget.h" />
-    <ClInclude Include="..\..\PostView2\GLWidgetManager.h" />
     <CustomBuild Include="..\..\PostView2\GraphWindow.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
@@ -550,8 +548,6 @@
     <ClCompile Include="..\..\PostView2\GLStreamLinePlot.cpp" />
     <ClCompile Include="..\..\PostView2\GLVectorPlot.cpp" />
     <ClCompile Include="..\..\PostView2\GLView.cpp" />
-    <ClCompile Include="..\..\PostView2\GLWidget.cpp" />
-    <ClCompile Include="..\..\PostView2\GLWidgetManager.cpp" />
     <ClCompile Include="..\..\PostView2\GraphWindow.cpp" />
     <ClCompile Include="..\..\PostView2\ImgAnimation.cpp" />
     <ClCompile Include="..\..\PostView2\ImportLinesTool.cpp" />

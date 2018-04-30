@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "GLWidgetManager.h"
 #include <QOpenGLWidget>
 #include <assert.h>
