@@ -1313,14 +1313,6 @@ BOUNDINGBOX CDocument::GetSelectionBox()
 }
 
 //-----------------------------------------------------------------------------
-bool CDocument::ExportVRML(const char* szfile)
-{
-//	VRMLExporter exporter;
-//	return exporter.Save(m_fem, szfile);
-	return false;
-}
-
-//-----------------------------------------------------------------------------
 bool CDocument::ExportBYU(const char* szfile)
 {
 /*	int i, j, n;

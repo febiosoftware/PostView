@@ -242,7 +242,6 @@ public:
 
 	// export routines
 	bool ExportPlot  (const char* szfile, bool bflag[6], int ncode[6]);
-	bool ExportVRML  (const char* szfile);
 	bool ExportBYU   (const char* szfile);
 	bool ExportASE   (const char* szfile);
 	bool ExportDXF   (const char* szfile);

@@ -27,6 +27,7 @@
 #include <PostViewLib/FESTLimport.h>
 #include <PostViewLib/FERAWImageReader.h>
 #include <PostViewLib/FEAsciiExport.h>
+#include <PostViewLib/VRMLExporter.h>
 #include "GLPlaneCutPlot.h"
 #include "GLIsoSurfacePlot.h"
 #include "GLSlicePLot.h"
@@ -554,7 +555,8 @@ bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 		break;
 	case 3:
 		{
-			bret = m_doc->ExportVRML(szfilename);
+			VRMLExporter exporter;
+			bret = exporter.Save(&fem, szfilename);
 		}
 		break;
 	case 4:
@@ -587,11 +589,9 @@ bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 			bret = w.Save(fem, szfilename);
 		}
 		break;
-	case 8:
-		{
-//			FELSDYNAPlotExport w;
-//			bret = w.Save(fem, szfilename);
-		}
+	default:
+		assert(false);
+		error = "Unknown file type";
 		break;
 	}
 
@@ -692,8 +692,7 @@ void CMainWindow::on_actionSave_triggered()
 			<< "LSDYNA Keyword (*.k)"
 			<< "BYU files(*.byu)"
 			<< "NIKE3D files (*.n)"
-			<< "VTK files (*.vtk)"
-			<< "LSDYNA Database (*)";
+			<< "VTK files (*.vtk)";
 
 	QFileDialog dlg(this, "Save");
 	dlg.setFileMode(QFileDialog::AnyFile);
