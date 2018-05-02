@@ -732,6 +732,7 @@ void CModelViewer::Update(bool breset)
 				CModelTreeItem* pi = new CModelTreeItem(volRender, ui->m_tree);
 				pi->setText(0, "Volume Render");
 				pi->setTextColor(0, volRender->IsActive() ? Qt::black : Qt::gray);
+				pi->setIcon(0, QIcon(QString(":/icons/volrender.png")));
 				ui->m_list.push_back(new CVolRenderProps(m_wnd, volRender));
 				pi->setData(0, Qt::UserRole, (int) (ui->m_list.size() - 1));
 				m_obj.push_back(volRender);
@@ -743,6 +744,7 @@ void CModelViewer::Update(bool breset)
 				CModelTreeItem* pi = new CModelTreeItem(imgSlice, ui->m_tree);
 				pi->setText(0, "Image Slicer");
 				pi->setTextColor(0, imgSlice->IsActive() ? Qt::black : Qt::gray);
+				pi->setIcon(0, QIcon(QString(":/icons/imageslice.png")));
 				ui->m_list.push_back(new CImageSlicerProps(m_wnd, imgSlice));
 				pi->setData(0, Qt::UserRole, (int)(ui->m_list.size() - 1));
 				m_obj.push_back(imgSlice);

@@ -53,5 +53,7 @@
 		<file>icons/particle.png</file>
 		<file>icons/auto.png</file>
 		<file>icons/apply.png</file>
+		<file>icons/volrender.png</file>
+		<file>icons/imageslice.png</file>
     </qresource>
 </RCC>
