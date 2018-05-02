@@ -281,9 +281,6 @@ public: // Selection
 	//! hide selected nodes
 	void HideSelectedNodes();
 
-	//! Invert selected elements
-	void InvertSelectedElements();
-
 	// --- S E L E C T I O N ---
 
 	// get selection mode
@@ -303,6 +300,18 @@ public: // Selection
 
 	// convert between selections
 	void ConvertSelection(int oldMode, int newMode);
+
+	//! Invert selected items
+	void InvertSelectedNodes();
+	void InvertSelectedEdges();
+	void InvertSelectedFaces();
+	void InvertSelectedElements();
+
+	// select items
+	void SelectAllNodes();
+	void SelectAllEdges();
+	void SelectAllFaces();
+	void SelectAllElements();
 
 protected:
 	void UpdateInternalSurfaces();

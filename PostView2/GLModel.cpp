@@ -3347,6 +3347,114 @@ void CGLModel::HideSelectedNodes()
 }
 
 //-----------------------------------------------------------------------------
+void CGLModel::SelectAllNodes()
+{
+	FEMeshBase* mesh = GetActiveMesh();
+	if (mesh == 0) return;
+
+	for (int i = 0; i<mesh->Nodes(); i++)
+	{
+		FENode& n = mesh->Node(i);
+		if (n.IsVisible()) n.Select();
+	}
+
+	UpdateSelectionLists(SELECT_NODES);
+}
+
+//-----------------------------------------------------------------------------
+void CGLModel::SelectAllEdges()
+{
+	FEMeshBase* mesh = GetActiveMesh();
+	if (mesh == 0) return;
+
+	for (int i = 0; i<mesh->Edges(); i++)
+	{
+		FEEdge& e = mesh->Edge(i);
+		if (e.IsVisible()) e.Select();
+	}
+
+	UpdateSelectionLists(SELECT_EDGES);
+}
+
+//-----------------------------------------------------------------------------
+void CGLModel::SelectAllFaces()
+{
+	FEMeshBase* mesh = GetActiveMesh();
+	if (mesh == 0) return;
+
+	for (int i = 0; i<mesh->Faces(); i++)
+	{
+		FEFace& f = mesh->Face(i);
+		if (f.IsVisible()) f.Select();
+	}
+
+	UpdateSelectionLists(SELECT_FACES);
+}
+
+//-----------------------------------------------------------------------------
+void CGLModel::SelectAllElements()
+{
+	FEMeshBase* mesh = GetActiveMesh();
+	if (mesh == 0) return;
+
+	for (int i = 0; i<mesh->Elements(); i++)
+	{
+		FEElement& e = mesh->Element(i);
+		if (e.IsVisible()) e.Select();
+	}
+
+	UpdateSelectionLists(SELECT_ELEMS);
+}
+
+//-----------------------------------------------------------------------------
+void CGLModel::InvertSelectedNodes()
+{
+	FEMeshBase* mesh = GetActiveMesh();
+	if (mesh)
+	{
+		for (int i = 0; i<mesh->Nodes(); i++)
+		{
+			FENode& n = mesh->Node(i);
+			if (n.IsVisible())
+				if (n.IsSelected()) n.Unselect(); else n.Select();
+		}
+	}
+	UpdateSelectionLists(SELECT_NODES);
+}
+
+//-----------------------------------------------------------------------------
+void CGLModel::InvertSelectedEdges()
+{
+	FEMeshBase* mesh = GetActiveMesh();
+	if (mesh)
+	{
+		for (int i = 0; i<mesh->Edges(); i++)
+		{
+			FEEdge& e = mesh->Edge(i);
+			if (e.IsVisible())
+				if (e.IsSelected()) e.Unselect(); else e.Select();
+		}
+	}
+	UpdateSelectionLists(SELECT_EDGES);
+}
+
+//-----------------------------------------------------------------------------
+void CGLModel::InvertSelectedFaces()
+{
+	FEMeshBase* mesh = GetActiveMesh();
+	if (mesh)
+	{
+		for (int i = 0; i<mesh->Faces(); i++)
+		{
+			FEFace& f = mesh->Face(i);
+			if (f.IsVisible())
+				if (f.IsSelected()) f.Unselect(); else f.Select();
+		}
+	}
+	UpdateSelectionLists(SELECT_FACES);
+}
+
+//-----------------------------------------------------------------------------
 void CGLModel::InvertSelectedElements()
 {
 	FEMeshBase* mesh = GetActiveMesh();

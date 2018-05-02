@@ -919,7 +919,14 @@ void CMainWindow::on_actionInvertSelection_triggered()
 	CDocument* pdoc = GetDocument();
 	CGLModel& mdl = *pdoc->GetGLModel();
 
-	mdl.InvertSelectedElements();
+	int mode = mdl.GetSelectionMode();
+	switch (mode)
+	{
+	case SELECT_NODES: mdl.InvertSelectedNodes(); break;
+	case SELECT_EDGES: mdl.InvertSelectedEdges(); break;
+	case SELECT_FACES: mdl.InvertSelectedFaces(); break;
+	case SELECT_ELEMS: mdl.InvertSelectedElements(); break;
+	}
 
 	UpdateStatusMessage();
 	pdoc->UpdateFEModel();
@@ -939,16 +946,17 @@ void CMainWindow::on_actionUnhideAll_triggered()
 void CMainWindow::on_actionSelectAll_triggered()
 {
 	CDocument* pdoc = GetDocument();
-	FEMeshBase* pfe = pdoc->GetActiveMesh();
+	CGLModel* m = pdoc->GetGLModel();
 
-	for (int i=0; i<pfe->Elements(); i++) 
+	int mode = m->GetSelectionMode();
+	switch (mode)
 	{
-		FEElement& e = pfe->Element(i);
-		if (e.IsVisible()) e.Select();
+	case SELECT_NODES: m->SelectAllNodes(); break;
+	case SELECT_EDGES: m->SelectAllEdges(); break;
+	case SELECT_FACES: m->SelectAllFaces(); break;
+	case SELECT_ELEMS: m->SelectAllElements(); break;
 	}
 
-	CGLModel& mdl = *pdoc->GetGLModel();
-	mdl.UpdateSelectionLists();
 	UpdateStatusMessage();
 	pdoc->UpdateFEModel();
 	RedrawGL();
