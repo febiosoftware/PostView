@@ -200,6 +200,16 @@ void CGLVectorPlot::Render(CGLContext& rc)
 		}
 	}
 
+	if (m_bshowHidden == false)
+	{
+		// make sure no vector is drawn for hidden nodes
+		for (int i=0; i<pm->Nodes(); ++i)
+		{
+			FENode& node = pm->Node(i);
+			if (node.IsVisible() == false) node.m_ntag = 0;
+		}
+	}
+
 	float auto_scale = 1.f;
 	if (m_bautoscale)
 	{
