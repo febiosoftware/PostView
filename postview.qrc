@@ -55,5 +55,6 @@
 		<file>icons/apply.png</file>
 		<file>icons/volrender.png</file>
 		<file>icons/imageslice.png</file>
+		<file>icons/tensor.png</file>
     </qresource>
 </RCC>

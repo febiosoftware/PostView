@@ -240,6 +240,12 @@ void CPropertyListForm::onDataChanged()
 							if (pc) m_list->SetPropertyValue(i, pc->currentValue());
 						}
 						break;
+					case CProperty::DataMat3:
+						{
+							CDataFieldSelector* pc = dynamic_cast<CDataFieldSelector*>(pw);
+							if (pc) m_list->SetPropertyValue(i, pc->currentValue());
+						}
+						break;
 					}
 				}
 				return;

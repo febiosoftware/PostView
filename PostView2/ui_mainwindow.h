@@ -316,6 +316,7 @@ public:
 		// --- Post menu ---
 		QAction* actionPlaneCut        = addAction("Plane cut"        , "actionPlaneCut"       , ":/icons/cut.png");
 		QAction* actionVectorPlot      = addAction("Vector plot"      , "actionVectorPlot"     , ":/icons/vectors.png");
+		QAction* actionTensorPlot      = addAction("Tensor plot"      , "actionTensorPlot"     , ":/icons/tensor.png");
 		QAction* actionIsosurfacePlot  = addAction("Isosurface plot"  , "actionIsosurfacePlot" , ":/icons/isosurface.png");
 		QAction* actionSlicePlot       = addAction("Slice plot"       , "actionSlicePlot"      , ":icons/slice.png");
 		QAction* actionDisplacementMap = addAction("Displacement map" , "actionDisplacementMap", ":/icons/distort.png");
@@ -328,6 +329,7 @@ public:
 
 		actionPlaneCut->setWhatsThis("<h3>Plane cut</h3>Add a plane cut plot to the model. A plane cut plot allows users to create a cross section of the mes.");
 		actionVectorPlot->setWhatsThis("<h3>Vector plot</h3>Add a vector plot to the model. Vectors plots can show vector data in the model");
+		actionTensorPlot->setWhatsThis("<h3>Tensor plot</h3>Add a tensor plot to the model. Tensor plots can show 2nd order tensor data in the model");
 		actionIsosurfacePlot->setWhatsThis("<h3>Iso-surface plot</h3>Add an iso-surface plot to the model. An iso-surface plot shows surfaces that have the same value. You may need to make the model transparent in order to see the iso surfaces.");
 		actionSlicePlot->setWhatsThis("<h3>Slice plot</h3>Add a slice plot. This plot adds several cross sections to the model. You may need to make the model transparent to see the slices.");
 		actionDisplacementMap->setWhatsThis("<h3>Displacement map</h3>Adds a displacement map. A displacement map will deform the model as a function of time.");
@@ -442,6 +444,7 @@ public:
 		menuBar->addAction(menuPost->menuAction());
 		menuPost->addAction(actionPlaneCut);
 		menuPost->addAction(actionVectorPlot);
+		menuPost->addAction(actionTensorPlot);
 		menuPost->addAction(actionIsosurfacePlot);
 		menuPost->addAction(actionSlicePlot);
 		menuPost->addAction(actionDisplacementMap);
@@ -540,6 +543,7 @@ public:
 		postToolbar->setObjectName("postToolbar");
 		postToolbar->addAction(actionPlaneCut      );
 		postToolbar->addAction(actionVectorPlot    );
+		postToolbar->addAction(actionTensorPlot);
 		postToolbar->addAction(actionIsosurfacePlot);
 		postToolbar->addAction(actionSlicePlot     );
 		postToolbar->addAction(actionStreamLinePlot);

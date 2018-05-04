@@ -14,6 +14,24 @@
 class CGLVectorPlot : public CGLPlot 
 {
 public:
+	// glyph types	
+	enum Glyph_Type {
+		GLYPH_ARROW,
+		GLYPH_CONE,
+		GLYPH_CYLINDER,
+		GLYPH_SPHERE,
+		GLYPH_BOX,
+		GLYPH_LINE
+	};
+
+	// glyph color types
+	enum Glyph_Color_Type {
+		GLYPH_COL_SOLID,
+		GLYPH_COL_LENGTH,
+		GLYPH_COL_ORIENT
+	};
+
+public:
 	CGLVectorPlot(CGLModel* po);
 	virtual ~CGLVectorPlot();
 

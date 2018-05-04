@@ -21,6 +21,7 @@
 #include "GLLinePlot.h"
 #include "GLStreamLinePlot.h"
 #include "GLParticleFlowPlot.h"
+#include "GLTensorPlot.h"
 #include <PostViewLib/3DImage.h>
 #include <PostViewLib/VolRender.h>
 #include <PostViewLib/ImageSlicer.h>
@@ -716,6 +717,7 @@ void CModelViewer::Update(bool breset)
 				else if (dynamic_cast<CGLIsoSurfacePlot*>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/isosurface.png")));
 				else if (dynamic_cast<CGLStreamLinePlot*>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/streamlines.png")));
 				else if (dynamic_cast<CGLParticleFlowPlot*>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/particle.png")));
+				else if (dynamic_cast<GLTensorPlot*       >(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/tensor.png")));
 
 				string name = plot.GetName();
 

@@ -236,7 +236,7 @@ std::string FEDataField::componentName(int ncomp, Data_Tensor_Type ntype)
 	{
 		switch (m_ntype)
 		{
-		case DATA_VEC3F: return string(sz); break;
+		case DATA_VEC3F: return name; break;
 		case DATA_MAT3FS:
 			{
 				if      (ncomp == 0) sprintf(szline, "1 Principal %s", sz);
@@ -265,7 +265,7 @@ std::string FEDataField::componentName(int ncomp, Data_Tensor_Type ntype)
 	{
 		switch (m_ntype)
 		{
-		case DATA_TENS4FS: return string(sz); break;
+		case DATA_MAT3FS: return name; break;
 		}
 	}
 

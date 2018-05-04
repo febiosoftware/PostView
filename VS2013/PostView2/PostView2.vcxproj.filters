@@ -210,6 +210,9 @@
     <ClInclude Include="..\..\PostView2\GLParticleFlowPlot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\PostView2\GLTensorPlot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\PostView2\3PointAngleTool.cpp">
@@ -534,6 +537,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\PostView2\GLParticleFlowPlot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PostView2\GLTensorPlot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

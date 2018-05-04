@@ -109,6 +109,17 @@ public:
 				}
 				else if (role == Qt::EditRole) return v;
 			}
+			if (prop.type == CProperty::DataMat3)
+			{
+				if (role == Qt::DisplayRole)
+				{
+					FEModel& fem = *FEModel::GetInstance();
+					std::string s = fem.GetDataManager()->getDataString(v.toInt(), DATA_TENSOR2);
+					if (s.empty()) s = "(please select)";
+					return QVariant(s.c_str());
+				}
+				else if (role == Qt::EditRole) return v;
+			}
 			if (role == Qt::EditRole) 
 			{
 				if ((prop.type == CProperty::Enum)&&(prop.values.isEmpty()==false))
@@ -287,6 +298,16 @@ public:
 				CDataFieldSelector* pc = new CDataFieldSelector(parent);
 				FEModel& fem = *FEModel::GetInstance();
 				pc->BuildMenu(FEModel::GetInstance(), DATA_VECTOR);
+				int nfield = data.toInt();
+				pc->setCurrentValue(nfield);
+				m_view->connect(pc, SIGNAL(currentValueChanged(int)), m_view, SLOT(onDataChanged()));
+				return pc;
+			}
+			else if (prop.type == CProperty::DataMat3)
+			{
+				CDataFieldSelector* pc = new CDataFieldSelector(parent);
+				FEModel& fem = *FEModel::GetInstance();
+				pc->BuildMenu(FEModel::GetInstance(), DATA_TENSOR2);
 				int nfield = data.toInt();
 				pc->setCurrentValue(nfield);
 				m_view->connect(pc, SIGNAL(currentValueChanged(int)), m_view, SLOT(onDataChanged()));

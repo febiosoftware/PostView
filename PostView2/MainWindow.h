@@ -121,6 +121,7 @@ public slots:
 
 	void on_actionPlaneCut_triggered();
 	void on_actionVectorPlot_triggered();
+	void on_actionTensorPlot_triggered();
 	void on_actionIsosurfacePlot_triggered();
 	void on_actionSlicePlot_triggered();
 	void on_actionDisplacementMap_triggered();

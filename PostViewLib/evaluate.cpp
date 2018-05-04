@@ -2399,7 +2399,8 @@ mat3fs FEModel::EvaluateElemTensor(int n, int ntime, int nten)
 	}
 	else
 	{
-		assert(false);
+//		assert(false);
+		m = mat3fs();
 	}
 
 	return m;

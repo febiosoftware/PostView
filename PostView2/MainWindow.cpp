@@ -32,6 +32,7 @@
 #include "GLIsoSurfacePlot.h"
 #include "GLSlicePLot.h"
 #include "GLVectorPlot.h"
+#include "GLTensorPlot.h"
 #include "GLStreamLinePlot.h"
 #include "GLParticleFlowPlot.h"
 #include "DlgViewSettings.h"
@@ -1123,6 +1124,21 @@ void CMainWindow::on_actionVectorPlot_triggered()
 
 	RedrawGL();
 }
+
+void CMainWindow::on_actionTensorPlot_triggered()
+{
+	CDocument* pdoc = GetDocument();
+	GLTensorPlot* pp = new GLTensorPlot(pdoc->GetGLModel());
+	pdoc->AddPlot(pp);
+	pdoc->UpdateFEModel();
+
+	ui->modelViewer->Update(true);
+	ui->modelViewer->selectObject(pp);
+	ui->modelViewer->parentWidget()->raise();
+
+	RedrawGL();
+}
+
 
 void CMainWindow::on_actionStreamLinePlot_triggered()
 {
