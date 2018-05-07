@@ -119,10 +119,6 @@ void CSummaryWindow::Update(bool breset)
 	// clear the graph
 	ui->plot->clear();
 
-	// copy the nodal values
-	vector<float> val(nodes);
-	int nfield;
-
 	// get the number of time steps
 	int nsteps = doc->GetTimeSteps();
 
@@ -152,8 +148,7 @@ void CSummaryWindow::Update(bool breset)
 		if (pdm) pdm->UpdateState(i);
 
 		// store the nodal values and field
-		nfield = ps->m_nField;
-		for (int j=0; j<nodes; ++j) val[j] = ps->m_NODE[j].m_val;
+		int noldField = ps->m_nField;
 
 		// evaluate the mesh
 		pfem->Evaluate(m_ncurrentData, i);
@@ -172,7 +167,7 @@ void CSummaryWindow::Update(bool breset)
 		dataAvg->addPoint(x[i], rng.favg);
 		
 		// reset the field data
-		if (nfield >= 0) pfem->Evaluate(nfield, i);
+		if (noldField >= 0) pfem->Evaluate(noldField, i);
 	}
 
 	// add the data
@@ -256,22 +251,30 @@ CSummaryWindow::RANGE CSummaryWindow::EvalElemRange(FEModel& fem, int nstate, bo
 	FEState& state = *fem.GetState(nstate);
 	FEMeshBase& mesh = *state.GetFEMesh();
 
+	ValArray& elemData = state.m_ElemData;
+
 	float sum = 0.f;
 	int NE = mesh.Elements();
 	for (int i=0; i<NE; i++)
 	{
 		FEElement& e = mesh.Element(i);
+		int ne = e.Nodes();
 
 		if ((bsel == false) || (e.IsSelected()))
 		{
-			float val = state.m_ELEM[i].m_val;
 			float w = 1;
 			if (bvol) w = mesh.ElementVolume(i);
 
-			rng.favg += val*w;
-			sum += w;
-			if (val > rng.fmax) rng.fmax = val;
-			if (val < rng.fmin) rng.fmin = val;
+			for (int j=0; j<ne; ++j)
+			{
+//				float val = state.m_ELEM[i].m_val;
+				float val = elemData.value(i, j);
+
+				rng.favg += val*w;
+				sum += w;
+				if (val > rng.fmax) rng.fmax = val;
+				if (val < rng.fmin) rng.fmin = val;
+			}
 		}
 	}
 
