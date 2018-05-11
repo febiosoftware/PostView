@@ -35,6 +35,7 @@
 		D5842FE21EC2BC95004FC215 /* FENodeEdgeList.h in Headers */ = {isa = PBXBuildFile; fileRef = D5842FDE1EC2BC95004FC215 /* FENodeEdgeList.h */; };
 		D5842FE31EC2BC95004FC215 /* Intersect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5842FDF1EC2BC95004FC215 /* Intersect.cpp */; };
 		D5842FE41EC2BC95004FC215 /* Intersect.h in Headers */ = {isa = PBXBuildFile; fileRef = D5842FE01EC2BC95004FC215 /* Intersect.h */; };
+		D593D28B20A5E88A0011F0C2 /* evaluate.h in Headers */ = {isa = PBXBuildFile; fileRef = D593D28A20A5E88A0011F0C2 /* evaluate.h */; };
 		D5A65E141DBFA55800B44009 /* xpltFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E101DBFA55800B44009 /* xpltFileReader.cpp */; };
 		D5A65E151DBFA55800B44009 /* xpltFileReader.h in Headers */ = {isa = PBXBuildFile; fileRef = D5A65E111DBFA55800B44009 /* xpltFileReader.h */; };
 		D5A65E161DBFA55800B44009 /* xpltReader2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E121DBFA55800B44009 /* xpltReader2.cpp */; };
@@ -197,6 +198,7 @@
 		D5842FDE1EC2BC95004FC215 /* FENodeEdgeList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FENodeEdgeList.h; sourceTree = "<group>"; };
 		D5842FDF1EC2BC95004FC215 /* Intersect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Intersect.cpp; sourceTree = "<group>"; };
 		D5842FE01EC2BC95004FC215 /* Intersect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Intersect.h; sourceTree = "<group>"; };
+		D593D28A20A5E88A0011F0C2 /* evaluate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = evaluate.h; sourceTree = "<group>"; };
 		D5A65E101DBFA55800B44009 /* xpltFileReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xpltFileReader.cpp; sourceTree = "<group>"; };
 		D5A65E111DBFA55800B44009 /* xpltFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xpltFileReader.h; sourceTree = "<group>"; };
 		D5A65E121DBFA55800B44009 /* xpltReader2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xpltReader2.cpp; sourceTree = "<group>"; };
@@ -378,6 +380,7 @@
 				D5F308A91CFBB65700F76762 /* DataMap.cpp */,
 				D5F308AA1CFBB65700F76762 /* DataMap.h */,
 				D5F308AB1CFBB65700F76762 /* evaluate.cpp */,
+				D593D28A20A5E88A0011F0C2 /* evaluate.h */,
 				D56731631F9FD87A00C87BC1 /* FEAreaCoverage.cpp */,
 				D56731641F9FD87A00C87BC1 /* FEAreaCoverage.h */,
 				D53292BC1E453471002798B3 /* FEAsciiExport.cpp */,
@@ -564,6 +567,7 @@
 				D53B032D207EF07A00E6B5F5 /* hex8.h in Headers */,
 				D5F309421CFBB65700F76762 /* FEMaterial.h in Headers */,
 				D5F309231CFBB65700F76762 /* DataMap.h in Headers */,
+				D593D28B20A5E88A0011F0C2 /* evaluate.h in Headers */,
 				D5F3097D1CFBB65700F76762 /* SphereFit.h in Headers */,
 				D5F309881CFBB65700F76762 /* XMLWriter.h in Headers */,
 				D53B032E207EF07A00E6B5F5 /* FEItem.h in Headers */,
@@ -647,7 +651,7 @@
 		D5F308821CFBB64400F76762 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0920;
+				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = febio.org;
 				TargetAttributes = {
 					D5F308891CFBB64400F76762 = {
@@ -768,12 +772,14 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -826,12 +832,14 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -881,12 +889,14 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;

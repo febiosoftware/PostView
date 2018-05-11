@@ -27,12 +27,14 @@
 		D571E01120385DE700A7B96D /* GLColorMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D571E00E20385DE700A7B96D /* GLColorMap.cpp */; };
 		D571E01220385DE700A7B96D /* FileThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D571E00F20385DE700A7B96D /* FileThread.cpp */; };
 		D571E01320385DE700A7B96D /* GLDisplacementMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D571E01020385DE700A7B96D /* GLDisplacementMap.cpp */; };
+		D593D28E20A5E8A50011F0C2 /* GLTensorPlot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D593D28C20A5E8A40011F0C2 /* GLTensorPlot.cpp */; };
 		D5A65E0F1DBFA53F00B44009 /* DlgFileInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */; };
 		D5C20C622038851000BFB643 /* moc_FileThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5C20C612038851000BFB643 /* moc_FileThread.cpp */; };
 		D5C53DB71F86D97E0014FA22 /* DlgAddEquation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5C53DB61F86D97E0014FA22 /* DlgAddEquation.cpp */; };
 		D5CEB8AC208929AF00BFEA96 /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5CEB8AB208929AF00BFEA96 /* QtCore.framework */; };
 		D5CEB8AE208929BD00BFEA96 /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5CEB8AD208929BD00BFEA96 /* QtGui.framework */; };
 		D5CEB8B0208929CD00BFEA96 /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5CEB8AF208929CD00BFEA96 /* QtWidgets.framework */; };
+		D5E08BA320A5E5BE00275FAB /* libGLWLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5E08BA220A5E5BE00275FAB /* libGLWLib.a */; };
 		D5E0E6A71E72390D006FE591 /* moc_DataFieldSelector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5E0E6A61E72390D006FE591 /* moc_DataFieldSelector.cpp */; };
 		D5FF7A401D72756B003D2CBD /* 3PointAngleTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79AA1D72756B003D2CBD /* 3PointAngleTool.cpp */; };
 		D5FF7A411D72756B003D2CBD /* 4PointAngleTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79AC1D72756B003D2CBD /* 4PointAngleTool.cpp */; };
@@ -65,8 +67,6 @@
 		D5FF7A5C1D72756B003D2CBD /* GLSlicePLot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79E41D72756B003D2CBD /* GLSlicePLot.cpp */; };
 		D5FF7A5D1D72756B003D2CBD /* GLVectorPlot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79E61D72756B003D2CBD /* GLVectorPlot.cpp */; };
 		D5FF7A5E1D72756B003D2CBD /* GLView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79E81D72756B003D2CBD /* GLView.cpp */; };
-		D5FF7A5F1D72756B003D2CBD /* GLWidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79EA1D72756B003D2CBD /* GLWidget.cpp */; };
-		D5FF7A601D72756B003D2CBD /* GLWidgetManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79EC1D72756B003D2CBD /* GLWidgetManager.cpp */; };
 		D5FF7A611D72756B003D2CBD /* GraphWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79EE1D72756B003D2CBD /* GraphWindow.cpp */; };
 		D5FF7A621D72756B003D2CBD /* ImportLinesTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79F01D72756B003D2CBD /* ImportLinesTool.cpp */; };
 		D5FF7A631D72756B003D2CBD /* IntegrateWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79F21D72756B003D2CBD /* IntegrateWindow.cpp */; };
@@ -173,6 +173,8 @@
 		D571E00E20385DE700A7B96D /* GLColorMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLColorMap.cpp; sourceTree = "<group>"; };
 		D571E00F20385DE700A7B96D /* FileThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileThread.cpp; sourceTree = "<group>"; };
 		D571E01020385DE700A7B96D /* GLDisplacementMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLDisplacementMap.cpp; sourceTree = "<group>"; };
+		D593D28C20A5E8A40011F0C2 /* GLTensorPlot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLTensorPlot.cpp; sourceTree = "<group>"; };
+		D593D28D20A5E8A40011F0C2 /* GLTensorPlot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLTensorPlot.h; sourceTree = "<group>"; };
 		D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgFileInfo.cpp; sourceTree = "<group>"; };
 		D5A65E0E1DBFA53F00B44009 /* DlgFileInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgFileInfo.h; sourceTree = "<group>"; };
 		D5C20C612038851000BFB643 /* moc_FileThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_FileThread.cpp; sourceTree = "<group>"; };
@@ -181,6 +183,7 @@
 		D5CEB8AB208929AF00BFEA96 /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt/5.10.1/lib/QtCore.framework; sourceTree = "<group>"; };
 		D5CEB8AD208929BD00BFEA96 /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt/5.10.1/lib/QtGui.framework; sourceTree = "<group>"; };
 		D5CEB8AF208929CD00BFEA96 /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt/5.10.1/lib/QtWidgets.framework; sourceTree = "<group>"; };
+		D5E08BA220A5E5BE00275FAB /* libGLWLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libGLWLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5E0E6A61E72390D006FE591 /* moc_DataFieldSelector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_DataFieldSelector.cpp; sourceTree = "<group>"; };
 		D5FF79951D72750E003D2CBD /* PostView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PostView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5FF79A31D72750E003D2CBD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -248,10 +251,6 @@
 		D5FF79E71D72756B003D2CBD /* GLVectorPlot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLVectorPlot.h; sourceTree = "<group>"; };
 		D5FF79E81D72756B003D2CBD /* GLView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLView.cpp; sourceTree = "<group>"; };
 		D5FF79E91D72756B003D2CBD /* GLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLView.h; sourceTree = "<group>"; };
-		D5FF79EA1D72756B003D2CBD /* GLWidget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLWidget.cpp; sourceTree = "<group>"; };
-		D5FF79EB1D72756B003D2CBD /* GLWidget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLWidget.h; sourceTree = "<group>"; };
-		D5FF79EC1D72756B003D2CBD /* GLWidgetManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLWidgetManager.cpp; sourceTree = "<group>"; };
-		D5FF79ED1D72756B003D2CBD /* GLWidgetManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLWidgetManager.h; sourceTree = "<group>"; };
 		D5FF79EE1D72756B003D2CBD /* GraphWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GraphWindow.cpp; sourceTree = "<group>"; };
 		D5FF79EF1D72756B003D2CBD /* GraphWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphWindow.h; sourceTree = "<group>"; };
 		D5FF79F01D72756B003D2CBD /* ImportLinesTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImportLinesTool.cpp; sourceTree = "<group>"; };
@@ -342,11 +341,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D52C6FB51D75DCE900DF804B /* libPostViewLib.a in Frameworks */,
+				D5E08BA320A5E5BE00275FAB /* libGLWLib.a in Frameworks */,
 				D5CEB8B0208929CD00BFEA96 /* QtWidgets.framework in Frameworks */,
 				D5CEB8AE208929BD00BFEA96 /* QtGui.framework in Frameworks */,
 				D5CEB8AC208929AF00BFEA96 /* QtCore.framework in Frameworks */,
 				D55AC5011E61EB6E00BBA0D1 /* OpenGL.framework in Frameworks */,
-				D52C6FB51D75DCE900DF804B /* libPostViewLib.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -469,14 +469,12 @@
 				D5FF79E51D72756B003D2CBD /* GLSlicePLot.h */,
 				D53A8DFA2074EC7C00BDDD2D /* GLStreamLinePlot.cpp */,
 				D53A8DF92074EC7B00BDDD2D /* GLStreamLinePlot.h */,
+				D593D28C20A5E8A40011F0C2 /* GLTensorPlot.cpp */,
+				D593D28D20A5E8A40011F0C2 /* GLTensorPlot.h */,
 				D5FF79E61D72756B003D2CBD /* GLVectorPlot.cpp */,
 				D5FF79E71D72756B003D2CBD /* GLVectorPlot.h */,
 				D5FF79E81D72756B003D2CBD /* GLView.cpp */,
 				D5FF79E91D72756B003D2CBD /* GLView.h */,
-				D5FF79EA1D72756B003D2CBD /* GLWidget.cpp */,
-				D5FF79EB1D72756B003D2CBD /* GLWidget.h */,
-				D5FF79EC1D72756B003D2CBD /* GLWidgetManager.cpp */,
-				D5FF79ED1D72756B003D2CBD /* GLWidgetManager.h */,
 				D5FF79EE1D72756B003D2CBD /* GraphWindow.cpp */,
 				D5FF79EF1D72756B003D2CBD /* GraphWindow.h */,
 				D511143E1ECC973100B8849F /* ImgAnimation.cpp */,
@@ -584,8 +582,9 @@
 				D5CEB8AF208929CD00BFEA96 /* QtWidgets.framework */,
 				D5CEB8AD208929BD00BFEA96 /* QtGui.framework */,
 				D5CEB8AB208929AF00BFEA96 /* QtCore.framework */,
-				D52C6FB41D75DCE900DF804B /* libPostViewLib.a */,
 				D55AC5001E61EB6E00BBA0D1 /* OpenGL.framework */,
+				D5E08BA220A5E5BE00275FAB /* libGLWLib.a */,
+				D52C6FB41D75DCE900DF804B /* libPostViewLib.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -617,7 +616,7 @@
 		D5FF798D1D72750E003D2CBD /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0920;
+				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = febio.org;
 				TargetAttributes = {
 					D5FF79941D72750E003D2CBD = {
@@ -702,7 +701,6 @@
 				D53A8DFB2074EC7C00BDDD2D /* GLStreamLinePlot.cpp in Sources */,
 				D52C6FB31D75DCA300DF804B /* TimePanel.cpp in Sources */,
 				D52C6FB11D75DCA300DF804B /* moc_TimePanel.cpp in Sources */,
-				D5FF7A601D72756B003D2CBD /* GLWidgetManager.cpp in Sources */,
 				D5FF7A491D72756B003D2CBD /* DistanceMapTool.cpp in Sources */,
 				D5FF7A401D72756B003D2CBD /* 3PointAngleTool.cpp in Sources */,
 				D5FF7A481D72756B003D2CBD /* DataPanel.cpp in Sources */,
@@ -721,6 +719,7 @@
 				D571E01120385DE700A7B96D /* GLColorMap.cpp in Sources */,
 				D5FF7A721D72756B003D2CBD /* moc_IntegrateWindow.cpp in Sources */,
 				D56731681F9FF5A700C87BC1 /* moc_AreaCoverageTool.cpp in Sources */,
+				D593D28E20A5E8A50011F0C2 /* GLTensorPlot.cpp in Sources */,
 				D5FF7A4F1D72756B003D2CBD /* DlgWidgetProps.cpp in Sources */,
 				D5FF7A621D72756B003D2CBD /* ImportLinesTool.cpp in Sources */,
 				D5FF7A761D72756B003D2CBD /* moc_PlaneTool.cpp in Sources */,
@@ -762,7 +761,6 @@
 				D5FF7A6B1D72756B003D2CBD /* moc_DlgExportXPLT.cpp in Sources */,
 				D5FF7A411D72756B003D2CBD /* 4PointAngleTool.cpp in Sources */,
 				D5FF7A751D72756B003D2CBD /* moc_ModelViewer.cpp in Sources */,
-				D5FF7A5F1D72756B003D2CBD /* GLWidget.cpp in Sources */,
 				D5FF7A441D72756B003D2CBD /* CColorButton.cpp in Sources */,
 				D5FF7A4B1D72756B003D2CBD /* DlgFind.cpp in Sources */,
 				D5FF7A8A1D72756B003D2CBD /* PropertyListForm.cpp in Sources */,
@@ -787,12 +785,14 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -864,12 +864,14 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -919,12 +921,14 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;

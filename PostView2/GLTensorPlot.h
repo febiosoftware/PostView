@@ -1,6 +1,10 @@
 #pragma once
 #include "GLPlot.h"
-#include <GL/GLU.h>
+#ifdef __APPLE__
+    #include <OpenGL/GLU.h>
+#else
+    #include <GL/GLU.h>
+#endif
 
 class GLTensorPlot : public CGLPlot
 {
