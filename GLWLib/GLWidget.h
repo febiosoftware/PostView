@@ -49,7 +49,7 @@ public:
 	int get_bg_style() { return m_nbg; }
 
 	void copy_label(const char* szlabel);
-	void set_label(const char* szlabel) { m_szlabel = (char*) szlabel; }
+	void set_label(const char* szlabel);
 	const char* get_label() { return m_szlabel; }
 
 	virtual bool is_inside(int x, int y);

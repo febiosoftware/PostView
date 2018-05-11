@@ -53,6 +53,15 @@ GLWidget::~GLWidget(void)
 	m_szlabel = 0;
 }
 
+void GLWidget::set_label(const char* szlabel)
+{ 
+	if (m_balloc) delete[] m_szlabel;
+	m_szlabel = 0;
+	m_balloc = false;
+
+	m_szlabel = (char*)szlabel; 
+}
+
 void GLWidget::copy_label(const char* szlabel)
 {
 	if (m_balloc) delete [] m_szlabel;
