@@ -1317,10 +1317,15 @@ void CMainWindow::on_selectData_currentValueChanged(int index)
 		CGLModel* pm = pdoc->GetGLModel();
 		pm->GetColorMap()->SetEvalField(nfield);
 
-		pdoc->UpdateFEModel();
+		// turn on the colormap
+		if (ui->actionColorMap->isChecked() == false)
+		{
+			ui->actionColorMap->toggle();
+		}
+		else pdoc->UpdateFEModel();
 
 		ui->glview->UpdateWidgets(false);
-//		RedrawGL();
+		RedrawGL();
 	}
 
 	if (ui->integrateWindow && ui->integrateWindow->isVisible()) 
@@ -1677,7 +1682,7 @@ void CMainWindow::UpdateMainToolbar()
 {
 	FEModel* pfem = m_doc->GetFEModel();
 	ui->selectData->BuildMenu(pfem, DATA_SCALAR);
-	ui->checkColormap(false);
+//	ui->checkColormap(false);
 	ui->actionViewSmooth->setChecked(true);
 	UpdatePlayToolbar(true);
 
