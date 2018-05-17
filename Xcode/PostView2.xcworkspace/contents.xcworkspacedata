@@ -7,7 +7,4 @@
    <FileRef
       location = "group:PostViewLib/PostViewLib.xcodeproj">
    </FileRef>
-   <FileRef
-      location = "group:GLWLib/GLWLib.xcodeproj">
-   </FileRef>
 </Workspace>

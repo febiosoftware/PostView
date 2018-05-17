@@ -1,25 +1,25 @@
 {
-  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "b505bdfe-9d5c-0410-8600-697d5fc8e487++8380",
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "b505bdfe-9d5c-0410-8600-697d5fc8e487",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
-    "b505bdfe-9d5c-0410-8600-697d5fc8e487++8380" : {
+    "b505bdfe-9d5c-0410-8600-697d5fc8e487" : {
 
     }
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
-    "b505bdfe-9d5c-0410-8600-697d5fc8e487++8380" : 0
+    "b505bdfe-9d5c-0410-8600-697d5fc8e487" : 0
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "1F7D6A39-14C0-46D5-9C96-F1A9C2962074",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
-    "b505bdfe-9d5c-0410-8600-697d5fc8e487++8380" : "PostView2\/"
+    "b505bdfe-9d5c-0410-8600-697d5fc8e487" : "MRLProjects\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "PostView2",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
-  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Xcode\/PostView2.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "PostView2\/Xcode\/PostView2.xcworkspace",
   "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/gforge.sci.utah.edu\/svn\/MRLProjects",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "b505bdfe-9d5c-0410-8600-697d5fc8e487++8380"
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "b505bdfe-9d5c-0410-8600-697d5fc8e487"
     }
   ]
 }
