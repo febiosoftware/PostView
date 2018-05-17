@@ -11,8 +11,8 @@
 #endif
 
 #include <QPainter>
-#include <PostViewLib/ColorMap.h>
-#include <PostViewLib/math3d.h>
+#include "PostViewLib/ColorMap.h"
+#include "PostViewLib/math3d.h"
 
 class CGLView;
 class CGLWidgetManager;
