@@ -937,7 +937,7 @@ void CGLPlaneCutPlot::ReleasePlane()
 
 int CGLPlaneCutPlot::ClipPlanes()
 {
-	return m_pcp.size();
+	return (int)m_pcp.size();
 }
 
 CGLPlaneCutPlot* CGLPlaneCutPlot::GetClipPlane(int i)

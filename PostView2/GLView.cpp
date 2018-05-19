@@ -368,6 +368,10 @@ CGLView::~CGLView()
 
 void CGLView::UpdateWidgets(bool bposition)
 {
+	CDocument* pdoc = GetDocument();
+	const string& title = pdoc->GetTitle();
+	m_ptitle->copy_label(title.c_str());
+
 	int Y = 0;
 	if (bposition)
 		m_ptitle->resize(0, 0, m_ptitle->w(), m_ptitle->h());
@@ -1134,8 +1138,8 @@ void CGLView::RenderWidgets()
 	// render the title
 	if (pdoc->IsValid() && view.m_bTitle) 
 	{
-		const char* sztitle = pdoc->GetTitle();
-		m_ptitle->set_label(sztitle);
+		string title = pdoc->GetTitle();
+		m_ptitle->copy_label(title.c_str());
 
 		sprintf(m_szsubtitle, "%s\nTime = %.4g", pdoc->GetFieldString().c_str(), pdoc->GetTimeValue());
 		m_psubtitle->set_label(m_szsubtitle);

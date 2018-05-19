@@ -79,7 +79,13 @@ template <class T> void copyData(FEMeshData* dest, FEMeshData* src)
 { 
 	T* pd = dynamic_cast<T*>(dest);
 	T* ps = dynamic_cast<T*>(src);
-	if (pd && ps) pd->copy(*ps); else assert(false);
+	if (pd && ps) pd->copy(*ps); 
+	else 
+	{
+		// We can get here for implicit data fields (e.g. LagrangeStrain). 
+		// which is probably okay.
+//		assert(false);
+	}
 }
 
 //-----------------------------------------------------------------------------

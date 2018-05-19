@@ -558,7 +558,8 @@ bool FELSDYNAPlotExport::Save(FEModel& fem, const char* szfile, bool bflag[6], i
 
 	// copy the title
 	// note that we only have 40 characters to store the title
-	const char* sztitle = fem.GetTitle();
+	string title = fem.GetTitle();
+	const char* sztitle = title.c_str();
 	if (strlen(sztitle) > 39)
 		strncpy(plh.Title, sztitle, 39);
 	else

@@ -29,6 +29,7 @@ FEModel* FEPlotMix::Load(const char **szfile, int n)
 
 	// load the first model
 	FEModel* pfem = new FEModel;
+	pfem->SetTitle("PlotMix");
 	pfr->SetReadStateFlag(XPLT_READ_LAST_STATE_ONLY);
 	if (pfr->Load(*pfem, szfile[0]) == false) { delete pfem; return 0; }
 
@@ -44,6 +45,9 @@ FEModel* FEPlotMix::Load(const char **szfile, int n)
 	// set the time indicator of the first state
 	FEState& s1 = *pfem->GetState(0);
 	s1.m_time = 0;
+
+	// get the mesh of the new model
+	FEMeshBase* mesh = pfem->GetFEMesh(0);
 
 	// load the other models
 	for (int i=1; i<n; ++i)
@@ -84,6 +88,10 @@ FEModel* FEPlotMix::Load(const char **szfile, int n)
 
 		// add a new state by copying it from fem2
 		FEState* pstate = new FEState((float) i, pfem, fem2.GetState(0));
+
+		// the state's mesh was set to the fem2 mesh, but we don't want that
+		pstate->SetFEMesh(mesh);
+
 		pfem->AddState(pstate);
 	}
 

@@ -54,9 +54,13 @@ public:
 
 	void DeleteMeshes();
 
+	// get/set name
+	void SetName(const std::string& name);
+	const string& GetName() const;
+
 	// get/set title of model
-	void SetTitle(const char* sztitle);
-	const char* GetTitle() { return m_szTitle; }
+	void SetTitle(const string& title);
+	const string& GetTitle() const;
 
 	// get the current active state
 	int currentTime() { return m_ntime; }
@@ -170,6 +174,7 @@ public:
 	FEMeshBase* GetFEMesh(int i);
 
 public:
+	static void SetInstance(FEModel* fem);
 	static FEModel* GetInstance();
 
 	MetaData& GetMetaData() { return m_meta; }
@@ -181,8 +186,9 @@ protected:
 	void EvalElemField(int ntime, int nfield);
 	
 protected:
-	char		m_szTitle[256]; // title of project
-	int			m_ntime;		// time step that is being evaluated
+	string	m_name;		// name (as displayed in model viewer)
+	string	m_title;	// title of project
+	int		m_ntime;	// time step that is being evaluated
 
 	// --- M E T A   D A T A ---
 	MetaData	m_meta;

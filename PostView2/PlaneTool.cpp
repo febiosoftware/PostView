@@ -225,7 +225,7 @@ void CPlaneTool::update(bool breset)
 		int* node = ui->m_node;
 		FEMeshBase& mesh = *m_doc->GetActiveMesh();
 		const vector<FENode*> selectedNodes = m_doc->GetGLModel()->GetNodeSelection();
-		int N = selectedNodes.size();
+		int N = (int)selectedNodes.size();
 		int nsel = 0;
 		for (int i = 0; i<N; ++i)
 		{

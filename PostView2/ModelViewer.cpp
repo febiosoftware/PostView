@@ -593,7 +593,7 @@ CModelViewer::CModelViewer(CMainWindow* pwnd, QWidget* parent) : CCommandPanel(p
 	ui->setupUi(this);
 }
 
-void CModelViewer::DocumentUpdate(CDocument* doc)
+void CModelViewer::DocumentUpdate(CDocument* doc, bool bnewFlag)
 {
 	Update(true);
 }
@@ -663,12 +663,9 @@ void CModelViewer::Update(bool breset)
 			FEModel* fem = pdoc->GetFEModel();
 			CGLModel* mdl = pdoc->GetGLModel();
 
-			char szfile[256] = {0};
-			pdoc->GetDocTitle(szfile);
-
 			ui->m_tree->clear();
 			CModelTreeItem* pi1 = new CModelTreeItem(0, ui->m_tree);
-			pi1->setText(0, szfile);
+			pi1->setText(0, QString::fromStdString(fem->GetName()));
 			pi1->setIcon(0, QIcon(QString(":/icons/postview_small.png")));
 			ui->m_list.push_back(new CModelProps(mdl));
 			pi1->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));

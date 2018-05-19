@@ -92,6 +92,7 @@ public:
 	POINTDATA& Point(int n) { return m_Point[n]; }
 	int Points() { return (int) m_Point.size(); }
 
+	void SetFEMesh(FEMeshBase* pm) { m_mesh = pm; }
 	FEMeshBase* GetFEMesh() { return m_mesh; }
 
 	FEModel* GetFEModel() { return m_fem; }

@@ -352,7 +352,7 @@ void CGLStreamLinePlot::ColorStreamLines()
 	int ncol = m_Col.GetColorMap();
 	CColorMap& col = ColorMapManager::GetColorMap(ncol);
 
-	int NSL = m_streamLines.size();
+	int NSL = (int)m_streamLines.size();
 	for (int i=0; i<NSL; ++i)
 	{
 		StreamLine& sl = m_streamLines[i];

@@ -3,8 +3,8 @@
 #include <QtCore/QBasicTimer>
 #include <QCloseEvent>
 #include "FileThread.h"
+#include "Document.h"
 
-class CDocument;
 class CGLView;
 class FEFileReader;
 class CFileThread;
@@ -14,7 +14,7 @@ namespace Ui {
 	class CMainWindow;
 }
 
-class CMainWindow : public QMainWindow
+class CMainWindow : public QMainWindow, public CDocObserver
 {
 	Q_OBJECT
 
@@ -94,6 +94,9 @@ public:
 
 	// Set the window title
 	void SetWindowTitle(const QString& t);
+
+	// document was updated
+	void DocumentUpdate(CDocument* doc, bool bNewFlag) override;
 
 public slots:
 	void on_actionOpen_triggered();

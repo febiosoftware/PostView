@@ -64,10 +64,11 @@ QWidget* CPlotMixTool::createUi()
 
 void CPlotMixTool::OnBrowse()
 {
-	QString filename = QFileDialog::getOpenFileName(0, "Open file", 0, "XPLT files(*.xplt)");
-	if (filename.isEmpty() == false)
+	QStringList filenames = QFileDialog::getOpenFileNames(0, "Open file", 0, "XPLT files(*.xplt)");
+	if (filenames.isEmpty() == false)
 	{
-		ui->list->addItem(filename);
+		for (int i=0; i<filenames.count(); ++i)
+			ui->list->addItem(filenames[i]);
 	}
 }
 

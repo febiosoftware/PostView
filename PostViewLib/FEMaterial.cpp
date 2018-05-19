@@ -12,6 +12,14 @@ FEMaterial::FEMaterial()
 	bvisible = true;
 	bmesh = true;
 	bcast_shadows = true;
+
+	shininess = 0.f;
+	transparency = 1.f;
+
+	diffuse = GLCOLOR(200, 200, 200);
+	ambient = GLCOLOR(0,0,0);
+	specular = GLCOLOR(0,0,0);
+	emission = GLCOLOR(0,0,0);
 }
 
 const char* FEMaterial::GetName() { return m_szname; }

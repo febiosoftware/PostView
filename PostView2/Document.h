@@ -166,7 +166,8 @@ public:
 	CDocObserver(){}
 	virtual ~CDocObserver(){}
 
-	virtual void DocumentUpdate(CDocument* doc) {}
+	// bnewFlag is set when a new model was loaded
+	virtual void DocumentUpdate(CDocument* doc, bool bnewFlag) {}
 };
 
 //-----------------------------------------------------------------------------
@@ -258,8 +259,8 @@ public:
 	int GetFilePath(char* szpath);
 	int GetDocTitle(char* sztitle);
 
-	const char* GetTitle();
-	void SetTitle(const char* sztitle);
+	string GetTitle() const;
+	void SetTitle(const string& title);
 
 	int GetEvalField();
 
@@ -342,7 +343,7 @@ protected:
 	void ClearPlots();
 	void ClearObjects();
 
-	void UpdateObservers();
+	void UpdateObservers(bool bnew);
 
 protected:
 	FEModel*		m_fem;	// the FE model

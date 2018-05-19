@@ -289,14 +289,14 @@ void CDocument::RemoveObserver(CDocObserver* observer)
 }
 
 //-----------------------------------------------------------------------------
-void CDocument::UpdateObservers()
+void CDocument::UpdateObservers(bool bnew)
 {
 	if (m_Observers.empty()) return;
 
 	for (int i=0; i<m_Observers.size(); ++i)
 	{
 		CDocObserver* observer = m_Observers[i];
-		if (observer) observer->DocumentUpdate(this);
+		if (observer) observer->DocumentUpdate(this, bnew);
 	}
 }
 
@@ -502,8 +502,9 @@ bool CDocument::LoadFEModel(FEFileReader* pimp, const char* szfile, bool bup)
 	m_bValid = false;
 	delete m_fem;
 
-	// create a new scene
-	m_fem= new FEModel;
+	// create a new model
+	m_fem = new FEModel;
+	m_fem->SetName(sztitle);
 
 	// set the file name as title
 	m_fem->SetTitle(sztitle);
@@ -619,12 +620,17 @@ void CDocument::SetFEModel(FEModel* pnew)
 
 	// set the new scene
 	m_fem = pnew;
+	FEModel::SetInstance(m_fem);
 
 	// create a new model
 	m_pGLModel = new CGLModel(m_fem);
 
 	// reset the view
 	Reset();
+
+	// assign material attributes
+	const CPalette& pal = CPaletteManager::CurrentPalette();
+	ApplyPalette(pal);
 
 	// create a new model
 	m_bValid = true;
@@ -645,6 +651,8 @@ void CDocument::SetFEModel(FEModel* pnew)
 	// make sure we can't update this file
 	m_pImp = 0;
 	m_szfile[0] = '\0';
+
+	UpdateObservers(true);
 }
 
 bool CDocument::ExportDXF(const char* szfile)
@@ -1528,7 +1536,7 @@ void CDocument::AddPlot(CGLPlot* pplot)
 { 
 	m_pPlot.push_back(pplot); 
 	pplot->Update(currentTime(), 0.f, true); 
-	UpdateObservers();
+	UpdateObservers(false);
 }
 
 void CDocument::DeleteObject(CGLObject *po)
@@ -1627,5 +1635,5 @@ void CDocument::UpdateAllStates()
 // get the number of time steps
 int CDocument::GetTimeSteps() { return (m_fem?m_fem->GetStates():0); }
 
-const char* CDocument::GetTitle() { return (m_fem?m_fem->GetTitle():0); }
-void CDocument::SetTitle(const char* sztitle) { if (m_fem) m_fem->SetTitle(sztitle); }
+string CDocument::GetTitle() const { return (m_fem?m_fem->GetTitle():""); }
+void CDocument::SetTitle(const string& title) { if (m_fem) m_fem->SetTitle(title); }

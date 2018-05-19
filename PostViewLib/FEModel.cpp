@@ -19,7 +19,6 @@ FEModel* FEModel::m_pThis = 0;
 // constructor
 FEModel::FEModel()
 {
-	m_szTitle[0] = 0;
 	m_ndisp = 0;
 	m_pDM = new FEDataManager(this);
 	m_ntime = 0;
@@ -33,7 +32,7 @@ FEModel::~FEModel()
 {
 	Clear();
 	delete m_pDM;
-	m_pThis = 0;
+	if (m_pThis == this) m_pThis = 0;
 
 	DeleteMeshes();
 
@@ -47,6 +46,10 @@ void FEModel::DeleteMeshes()
 	m_mesh.clear();
 }
 
+void FEModel::SetInstance(FEModel* fem)
+{
+	m_pThis = fem;
+}
 
 FEModel* FEModel::GetInstance()
 {
@@ -82,13 +85,32 @@ void FEModel::Clear()
 	ClearStates();
 	
 	m_ntime = 0;
-	m_szTitle[0] = 0;
+	m_title.clear();
+	m_name.clear();
 }
 
 //-----------------------------------------------------------------------------
-void FEModel::SetTitle(const char* sztitle)
+void FEModel::SetTitle(const string& title)
 {
-	strcpy(m_szTitle, sztitle); 
+	m_title = title;
+}
+
+//-----------------------------------------------------------------------------
+const string& FEModel::GetTitle() const
+{
+	return m_title;
+}
+
+//-----------------------------------------------------------------------------
+void FEModel::SetName(const std::string& name)
+{
+	m_name = name;
+}
+
+//-----------------------------------------------------------------------------
+const string& FEModel::GetName() const
+{
+	return m_name;
 }
 
 //-----------------------------------------------------------------------------

@@ -67,6 +67,9 @@ CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMai
 
 	// make sure the file viewer is visible
 	ui->fileViewer->parentWidget()->raise();
+
+	// add this
+	m_doc->AddObserver(this);
 }
 
 CMainWindow::~CMainWindow()
@@ -222,6 +225,17 @@ CGLView* CMainWindow::GetGLView()
 	return ui->glview;
 }
 
+// document was updated
+void CMainWindow::DocumentUpdate(CDocument* doc, bool bNewFlag)
+{
+	if (bNewFlag)
+	{
+		// let's pretend this comes from the model viewer, since the model viewer also gets this signal
+		UpdateUi(true, ui->modelViewer);
+		UpdateMainToolbar();
+	}
+}
+
 void CMainWindow::UpdateUi(bool breset, QWidget* psender)
 {
 	// update the command panels
@@ -340,7 +354,7 @@ void CMainWindow::OpenFile(const QString& fileName, int nfilter)
 		// conver to lower case
 		std::transform(sfile.begin(), sfile.end(), sfile.begin(), ::tolower);
 		
-		int npos = sfile.find_last_of('.');
+		int npos = (int)sfile.find_last_of('.');
 		if (npos == std::string::npos) nfilter = 2; // LSDYNA Database
 		else
 		{
@@ -2042,7 +2056,7 @@ void CMainWindow::on_actionRecordNew_triggered()
 		string sfile = fileName.toStdString();
 		char szfilename[512] = {0};
 		sprintf(szfilename, "%s", sfile.c_str());
-		int l = sfile.length();
+		int l = (int)sfile.length();
 		char* ch = strrchr(szfilename, '.');
 
 		int nfilter = filters.indexOf(dlg.selectedNameFilter());
