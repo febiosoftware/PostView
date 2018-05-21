@@ -641,12 +641,12 @@ private:
 // Due to the major symmetry we can store this tensor as a 6x6 Matrix.
 // The tensor is stored in column major order:
 //
-//     / 0   1   3   6   10   15  \
+//     | 0   1   3   6   10   15  |
 //     |     2   4   7   11   16  |
 //     |         5   8   12   17  |
 // A = |             9   13   18  |
 //     |                 14   19  |
-//     \                      20  /
+//     |                      20  |
 //
 // Note that due to the minor symmetry we only store the upper Matrix of this tensor
 //
