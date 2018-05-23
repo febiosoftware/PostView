@@ -1,4 +1,4 @@
-#ifndef __APPLE__
+#ifdef WIN32
 #include <glew.h>
 #endif
 #include "stdafx.h"
@@ -38,8 +38,9 @@ int main(int argc, char* argv[])
 	app.setWindowIcon(QIcon(":/icons/postview.png"));
 
 	// initialize glew
+#ifdef WIN32
 	glewInit();
-
+#endif
 	// create the main window
 	CMainWindow wnd;
 	wnd.show();

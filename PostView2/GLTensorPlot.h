@@ -3,7 +3,7 @@
 #ifdef __APPLE__
     #include <OpenGL/GLU.h>
 #else
-    #include <GL/GLU.h>
+    #include <GL/glu.h>
 #endif
 
 class GLTensorPlot : public CGLPlot
