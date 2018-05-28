@@ -341,6 +341,7 @@ void CMainWindow::OpenFile(const QString& fileName, int nfilter)
 	std::string sfile = fileName.toStdString();
 
 	ui->actionColorMap->setDisabled(true);
+    ui->actionColorMap->setChecked(false);
 
 	SetWindowTitle("");
 
