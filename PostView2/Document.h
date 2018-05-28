@@ -79,6 +79,7 @@ struct VIEWSETTINGS
 	bool	m_bBox;			// show bounding box or not
 	int		m_nproj;		// projection mode or not
 	bool	m_bLighting;	// use lighting or not
+    int     m_nconv;        // multiview projection convention
 
 	// selections
 	bool	m_bTags;						// show tags or not

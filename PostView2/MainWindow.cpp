@@ -1871,6 +1871,7 @@ void CMainWindow::writeSettings()
 	settings.setValue("m_boutline"        , view.m_boutline);
 	settings.setValue("m_bBox"            , view.m_bBox);
 	settings.setValue("m_nproj"           , view.m_nproj);
+    settings.setValue("m_nconv"           , view.m_nconv);
 	settings.setValue("m_bLighting"       , view.m_bLighting);
 	settings.setValue("m_bcull"           , view.m_bignoreBackfacingItems);
 	settings.setValue("m_blinesmooth"     , view.m_blinesmooth);
@@ -1950,6 +1951,7 @@ void CMainWindow::readSettings()
 	view.m_boutline         = settings.value("m_boutline"   , view.m_boutline).toBool();
 	view.m_bBox             = settings.value("m_bBox"       , view.m_bBox).toBool();
 	view.m_nproj            = settings.value("m_nproj"      , view.m_nproj).toInt();
+    view.m_nconv            = settings.value("m_nconv"      , view.m_nconv).toInt();
 	view.m_bLighting        = settings.value("m_bLighting"  , view.m_bLighting).toBool();
 	view.m_bignoreBackfacingItems = settings.value("m_bcull", view.m_bignoreBackfacingItems).toBool();
 	view.m_blinesmooth      = settings.value("m_blinesmooth", view.m_blinesmooth).toBool();

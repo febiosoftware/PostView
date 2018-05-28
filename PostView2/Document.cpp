@@ -44,6 +44,7 @@ void VIEWSETTINGS::Defaults()
 	m_bext       = true;
 	m_bBox        = false;
 	m_nproj       = RENDER_PERSP;
+    m_nconv       = 0;
 	m_bLighting   = true;
 	m_ambient     = 0.3f;
 	m_diffuse     = 0.7f;

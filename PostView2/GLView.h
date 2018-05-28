@@ -36,6 +36,14 @@ enum View_Mode {
 };
 
 //-----------------------------------------------------------------------------
+// view conventions
+enum View_Convention {
+    CONV_FR_XZ,
+    CONV_FR_XY,
+    CONV_US_XY
+};
+
+//-----------------------------------------------------------------------------
 // tag structure
 struct GLTAG
 {
@@ -146,6 +154,8 @@ public:
 	CDocument* GetDocument();
 
 	int GetProjectionMode();
+    
+    int GetViewConvention();
 
 	double GetFOV() { return m_fov; }
 	double GetAspectRatio() { return m_ar; }

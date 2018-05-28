@@ -67,6 +67,8 @@ CGLModel::CGLModel(FEModel* ps)
 	m_sel_col  = GLCOLOR(255,0,0);
 
 	m_nrender = RENDER_MODE_SOLID;
+    
+    m_nconv = CONV_FR_XZ;
 
 	m_selectMode = SELECT_ELEMS;
 	m_selectStyle = SELECT_RECT;

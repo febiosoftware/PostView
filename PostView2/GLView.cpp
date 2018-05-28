@@ -402,6 +402,12 @@ int CGLView::GetProjectionMode()
 	return view.m_nproj;
 }
 
+int CGLView::GetViewConvention()
+{
+    VIEWSETTINGS& view = GetDocument()->GetViewSettings();
+    return view.m_nconv;
+}
+
 void CGLView::initializeGL()
 {
 	GLfloat ones[] = {1.f, 1.f, 1.f, 1.f};
@@ -2886,17 +2892,57 @@ void CGLView::OnZoomRect(Fl_Widget* pw, void* pd)
 void CGLView::SetView(View_Mode n)
 {
 	quat4f q;
-	switch (n)
-	{
-	case VIEW_FRONT : q = quat4f(-90*DEG2RAD, vec3f(1,0,0)); break;
-	case VIEW_BACK  : q = quat4f(180*DEG2RAD, vec3f(0,1,0)); q *= quat4f(-90*DEG2RAD, vec3f(1,0,0)); break;
-	case VIEW_RIGHT : q = quat4f(-90*DEG2RAD, vec3f(1,0,0)); q *= quat4f( 90*DEG2RAD, vec3f(0,0,1)); break;
-	case VIEW_LEFT  : q = quat4f(-90*DEG2RAD, vec3f(0,1,0)); q *= quat4f(-90*DEG2RAD, vec3f(1,0,0)); break;
-	case VIEW_TOP   : q = quat4f(0, vec3f(1,0,0)); break;
-	case VIEW_BOTTOM: q = quat4f(180*DEG2RAD, vec3f(1,0,0)); break;
-	default:
-		assert(false);
-	}
+    int c = GetViewConvention();
+    switch (c)
+    {
+        case CONV_FR_XZ:
+        {
+            switch (n)
+            {
+                case VIEW_FRONT : q = quat4f(-90*DEG2RAD, vec3f(1,0,0)); break;
+                case VIEW_BACK  : q = quat4f(180*DEG2RAD, vec3f(0,1,0)); q *= quat4f(-90*DEG2RAD, vec3f(1,0,0)); break;
+                case VIEW_RIGHT : q = quat4f(-90*DEG2RAD, vec3f(1,0,0)); q *= quat4f( 90*DEG2RAD, vec3f(0,0,1)); break;
+                case VIEW_LEFT  : q = quat4f(-90*DEG2RAD, vec3f(0,1,0)); q *= quat4f(-90*DEG2RAD, vec3f(1,0,0)); break;
+                case VIEW_TOP   : q = quat4f(0, vec3f(1,0,0)); break;
+                case VIEW_BOTTOM: q = quat4f(180*DEG2RAD, vec3f(1,0,0)); break;
+                default:
+                    assert(false);
+            }
+        }
+            break;
+        case CONV_FR_XY:
+        {
+            switch (n)
+            {
+                case VIEW_FRONT : q = quat4f(0, vec3f(1,0,0)); break;
+                case VIEW_BACK  : q = quat4f(180*DEG2RAD, vec3f(0,1,0)); break;
+                case VIEW_LEFT  : q = quat4f(-90*DEG2RAD, vec3f(0,1,0)); break;
+                case VIEW_RIGHT : q = quat4f( 90*DEG2RAD, vec3f(0,1,0)); break;
+                case VIEW_TOP   : q = quat4f(-90*DEG2RAD, vec3f(1,0,0)); break;
+                case VIEW_BOTTOM: q = quat4f( 90*DEG2RAD, vec3f(1,0,0)); break;
+                default:
+                    assert(false);
+            }
+        }
+            break;
+        case CONV_US_XY:
+        {
+            switch (n)
+            {
+                case VIEW_FRONT : q = quat4f(0, vec3f(1,0,0)); break;
+                case VIEW_BACK  : q = quat4f(180*DEG2RAD, vec3f(0,1,0)); break;
+                case VIEW_LEFT  : q = quat4f( 90*DEG2RAD, vec3f(0,1,0)); break;
+                case VIEW_RIGHT : q = quat4f(-90*DEG2RAD, vec3f(0,1,0)); break;
+                case VIEW_TOP   : q = quat4f( 90*DEG2RAD, vec3f(1,0,0)); break;
+                case VIEW_BOTTOM: q = quat4f(-90*DEG2RAD, vec3f(1,0,0)); break;
+                default:
+                    assert(false);
+            }
+        }
+            break;
+        default:
+            assert(false);
+    }
 
 	m_nview = n;
 

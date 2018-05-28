@@ -29,15 +29,17 @@ public:
 	{
 		addProperty("Render style", CProperty::Enum, "The rendering style sets defaults for colors and other attributes.")->setEnumValues(QStringList()<<"User"<<"Default"<<"CAD");
 		addProperty("Perspective Projection", CProperty::Bool);
-		addProperty("Line smoothing", CProperty::Bool);
-		addProperty("Line thickness", CProperty::Float)->setFloatRange(0.0, 25.0).setFloatStep(0.5f);
-		addProperty("point size"    , CProperty::Float)->setFloatRange(0.0, 25.0).setFloatStep(0.5f);
+		addProperty("Line Smoothing", CProperty::Bool);
+		addProperty("Line Thickness", CProperty::Float)->setFloatRange(0.0, 25.0).setFloatStep(0.5f);
+		addProperty("Point Size"    , CProperty::Float)->setFloatRange(0.0, 25.0).setFloatStep(0.5f);
+        addProperty("Multiview Projection", CProperty::Enum, "Convention for Front/Back/Left/Right/Top/Bottom views.")->setEnumValues(QStringList()<<"First-angle projection (XZ)"<<"First-angle projection (XY)"<<"Third-angle projection (XY)");
 
 		m_nrender = 0;
 		m_bproj = true;
 		m_bline = true;
 		m_thick = 1.0f;
 		m_point = 6.0f;
+        m_nconv = 0;
 	}
 
 	QVariant GetPropertyValue(int i)
@@ -50,6 +52,7 @@ public:
 		case 2: return m_bline; break;
 		case 3: return m_thick; break;
 		case 4: return m_point; break;
+        case 5: return m_nconv; break;
 		}
 		return v;
 	}
@@ -63,6 +66,7 @@ public:
 		case 2: m_bline   = v.toBool(); break;
 		case 3: m_thick   = v.toFloat(); break;
 		case 4: m_point   = v.toFloat(); break;
+        case 5: m_nconv   = v.toInt(); break;
 		}
 	}
 
@@ -72,6 +76,8 @@ public:
 	bool	m_bline;
 	float	m_thick;
 	float	m_point;
+    int     m_nconv;
+    
 };
 
 //-----------------------------------------------------------------------------
@@ -612,6 +618,7 @@ public:
 	{
 		VIEWSETTINGS& view = doc.GetViewSettings();
 		m_render->m_bproj = view.m_nproj == RENDER_PERSP;
+        m_render->m_nconv = view.m_nconv;
 		m_render->m_bline = view.m_blinesmooth;
 		m_render->m_thick = view.m_flinethick;
 		m_render->m_point = view.m_fpointsize;
@@ -637,6 +644,7 @@ public:
 	{
 		VIEWSETTINGS& view = doc.GetViewSettings();
 		view.m_nproj       = (m_render->m_bproj ? RENDER_PERSP : RENDER_ORTHO);
+        view.m_nconv       = m_render->m_nconv;
 		view.m_blinesmooth = m_render->m_bline;
 		view.m_flinethick  = m_render->m_thick;
 		view.m_fpointsize  = m_render->m_point;

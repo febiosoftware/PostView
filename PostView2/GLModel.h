@@ -116,6 +116,9 @@ public:
 	int GetRenderMode() { return m_nrender; }
 	void SetRenderMode(int nmode) { m_nrender = nmode; }
 
+    int GetViewConvention() { return m_nconv; }
+    void SetViewConvention(int nmode) { m_nconv = nmode; }
+    
 	bool RenderInteriorNodes() const { return m_brenderInteriorNodes; }
 	void RenderInteriorNodes(bool b) { m_brenderInteriorNodes = b; }
 
@@ -327,6 +330,7 @@ public:
 	int			m_nshellref;	//!< shell reference surface
 	int			m_nDivs;		//!< nr of element subdivisions
 	int			m_nrender;		//!< render mode
+    int         m_nconv;        //!< multiview projection convention
 	GLCOLOR		m_line_col;		//!< line color
 	GLCOLOR		m_node_col;		//!< color for rendering (unselected) nodes
 	GLCOLOR		m_sel_col;		//!< selection color

@@ -156,6 +156,7 @@ bool CDocument::SaveSession(const char* szfile)
 				vec3f r = cam.GetPosition();
 				float d = cam.GetTargetDistance();
 				int nproj = GetViewSettings().m_nproj;
+                int nconv = GetViewSettings().m_nconv;
 
 				xml.add_branch("View");
 				{
@@ -167,6 +168,7 @@ bool CDocument::SaveSession(const char* szfile)
 					xml.add_leaf("z-pos", r.z);
 					xml.add_leaf("target", d);
 					xml.add_leaf("projection", nproj);
+                    xml.add_leaf("convention", nconv);
 
 					int N = pv->CameraKeys();
 					for (int i=0; i<N; ++i)
@@ -247,6 +249,7 @@ bool CDocument::SaveSession(const char* szfile)
 			xml.add_leaf("ignore_interior", v.m_bext);
 			xml.add_leaf("show_box", v.m_bBox);
 			xml.add_leaf("projection", v.m_nproj);
+            xml.add_leaf("convention", v.m_nconv);
 			xml.add_leaf("lighting", v.m_bLighting);
 			xml.add_leaf("cull_face", v.m_bignoreBackfacingItems);
 			xml.add_leaf("line_smooth", v.m_blinesmooth);
@@ -410,6 +413,7 @@ bool CDocument::OpenSession(const char* szfile)
 						vec3f v, r;
 						float f=0;
 						int nproj=0;
+                        int nconv=0;
 						xml.NextTag(tag);
 						do
 						{
@@ -421,6 +425,7 @@ bool CDocument::OpenSession(const char* szfile)
 							else if (tag == "z-pos") tag.value(r.z);
 							else if (tag == "target") tag.value(f);
 							else if (tag == "projection") tag.value(nproj);
+                            else if (tag == "convention") tag.value(nconv);
 							else if (tag == "Key")
 							{
 								GLCameraTransform key;
@@ -460,6 +465,7 @@ bool CDocument::OpenSession(const char* szfile)
 						cam.Update(true);
 						
 						GetViewSettings().m_nproj = nproj;
+                        GetViewSettings().m_nconv = nconv;
 					}
 				}
 				else if (tag == "Material")
@@ -526,6 +532,7 @@ bool CDocument::OpenSession(const char* szfile)
 				else if (tag == "ignore_interior") tag.value(v.m_bext);
 				else if (tag == "show_box") tag.value(v.m_bBox);
 				else if (tag == "projection") tag.value(v.m_nproj);
+                else if (tag == "convention") tag.value(v.m_nconv);
 				else if (tag == "lighting") tag.value(v.m_bLighting);
 				else if (tag == "cull_face") tag.value(v.m_bignoreBackfacingItems);
 				else if (tag == "line_smooth") tag.value(v.m_blinesmooth);
