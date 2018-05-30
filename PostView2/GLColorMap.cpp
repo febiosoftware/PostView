@@ -97,26 +97,6 @@ void CGLColorMap::Update(int ntime, float dt, bool breset)
 				if (f < fmin) fmin = f;
 			}			
 		}
-
-		int NF = pm->Faces();
-		for (int i = 0; i<NF; ++i)
-		{
-			FEFace& face = pm->Face(i);
-			FACEDATA& fd0 = s0.m_FACE[i];
-			FACEDATA& fd1 = s1.m_FACE[i];
-			//			if (face.IsEnabled() && (face.m_ntag > 0))
-			{
-				face.m_ntag = 1;
-				int nf = face.Nodes();
-				for (int j = 0; j<nf; ++j)
-				{
-					float f0 = faceData0.value(i, j);
-					float f1 = (n0 == n1 ? f0 : faceData1.value(i, j));
-					float f = f0 + (f1 - f0)*w;
-					face.m_tex[j] = f;
-				}
-			}
-		}
 	}
 	else
 	{
@@ -136,6 +116,29 @@ void CGLColorMap::Update(int ntime, float dt, bool breset)
 				if (f < fmin) fmin = f;
 			}
 			else node.m_ntag = 0;
+		}
+	}
+
+	if (m_bDispNodeVals == false)
+	{
+		int NF = pm->Faces();
+		for (int i = 0; i<NF; ++i)
+		{
+			FEFace& face = pm->Face(i);
+			FACEDATA& fd0 = s0.m_FACE[i];
+			FACEDATA& fd1 = s1.m_FACE[i];
+			//			if (face.IsEnabled() && (face.m_ntag > 0))
+			{
+				face.m_ntag = 1;
+				int nf = face.Nodes();
+				for (int j = 0; j<nf; ++j)
+				{
+					float f0 = faceData0.value(i, j);
+					float f1 = (n0 == n1 ? f0 : faceData1.value(i, j));
+					float f = f0 + (f1 - f0)*w;
+					face.m_tex[j] = f;
+				}
+			}
 		}
 	}
 
