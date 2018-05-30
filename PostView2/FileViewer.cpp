@@ -29,6 +29,7 @@ public:
 		m_folder->setEditable(true);
 		m_folder->setInsertPolicy(QComboBox::NoInsert);
 		m_folder->setMaxCount(15);
+		m_folder->setMaximumWidth(350);
 
 		m_fileFilter = new QComboBox(parent);
 		m_fileFilter->setObjectName(QStringLiteral("fileFilter"));

@@ -685,7 +685,7 @@ void CModelViewer::Update(bool breset)
 			{
 				pi2 = new CModelTreeItem(map, pi1);
 				pi2->setText(0, QString::fromStdString(map->GetName()));
-				pi2->setTextColor(0, map && map->IsActive() ? Qt::black : Qt::gray);
+//				pi2->setTextColor(0, map && map->IsActive() ? Qt::black : Qt::gray);
 				pi2->setIcon(0, QIcon(QString(":/icons/distort.png")));
 				ui->m_list.push_back(new CDisplacementMapProps(m_wnd, map));
 				pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
@@ -695,7 +695,7 @@ void CModelViewer::Update(bool breset)
 			CGLColorMap* col = mdl->GetColorMap();
 			pi2 = new CModelTreeItem(col, pi1);
 			pi2->setText(0, QString::fromStdString(col->GetName()));
-			pi2->setTextColor(0, col->IsActive() ? Qt::black : Qt::gray);
+//			pi2->setTextColor(0, col->IsActive() ? Qt::black : Qt::gray);
 			pi2->setIcon(0, QIcon(QString(":/icons/colormap.png")));
 			ui->m_list.push_back(new CColorMapProps(m_wnd, col));
 			pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
@@ -719,7 +719,7 @@ void CModelViewer::Update(bool breset)
 				string name = plot.GetName();
 
 				pi1->setText(0, name.c_str());
-				pi1->setTextColor(0, plot.IsActive() ? Qt::black : Qt::gray);
+//				pi1->setTextColor(0, plot.IsActive() ? Qt::black : Qt::gray);
 				ui->m_list.push_back(plot.propertyList());
 				pi1->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
 				m_obj.push_back(&plot);
@@ -730,7 +730,7 @@ void CModelViewer::Update(bool breset)
 			{
 				CModelTreeItem* pi = new CModelTreeItem(volRender, ui->m_tree);
 				pi->setText(0, "Volume Render");
-				pi->setTextColor(0, volRender->IsActive() ? Qt::black : Qt::gray);
+//				pi->setTextColor(0, volRender->IsActive() ? Qt::black : Qt::gray);
 				pi->setIcon(0, QIcon(QString(":/icons/volrender.png")));
 				ui->m_list.push_back(new CVolRenderProps(m_wnd, volRender));
 				pi->setData(0, Qt::UserRole, (int) (ui->m_list.size() - 1));
@@ -742,7 +742,7 @@ void CModelViewer::Update(bool breset)
 			{
 				CModelTreeItem* pi = new CModelTreeItem(imgSlice, ui->m_tree);
 				pi->setText(0, "Image Slicer");
-				pi->setTextColor(0, imgSlice->IsActive() ? Qt::black : Qt::gray);
+//				pi->setTextColor(0, imgSlice->IsActive() ? Qt::black : Qt::gray);
 				pi->setIcon(0, QIcon(QString(":/icons/imageslice.png")));
 				ui->m_list.push_back(new CImageSlicerProps(m_wnd, imgSlice));
 				pi->setData(0, Qt::UserRole, (int)(ui->m_list.size() - 1));
@@ -869,12 +869,12 @@ void CModelViewer::on_enabled_stateChanged(int nstate)
 	if (nstate == Qt::Unchecked)
 	{
 		po->Activate(false);
-		item->setTextColor(0, Qt::gray);
+//		item->setTextColor(0, Qt::gray);
 	}
 	else if (nstate == Qt::Checked)
 	{
 		po->Activate(true);
-		item->setTextColor(0, Qt::black);
+//		item->setTextColor(0, Qt::black);
 	}
 
 	m_wnd->CheckUi();

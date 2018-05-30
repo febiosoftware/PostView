@@ -20,6 +20,8 @@
 
 GLWidget* GLWidget::m_pfocus = 0;
 
+GLCOLOR GLWidget::m_base = GLCOLOR(0,0,0);
+
 GLWidget::GLWidget(int x, int y, int w, int h, const char* szlabel)
 {
 	m_minw = 30;
@@ -31,7 +33,7 @@ GLWidget::GLWidget(int x, int y, int w, int h, const char* szlabel)
 	m_h = h;
 	m_szlabel = (char*) szlabel;
 
-	m_fgc = GLCOLOR(0,0,0);
+	m_fgc = m_base;
 	m_bgc[0] = GLCOLOR(0,0,0,0);
 	m_bgc[1] = GLCOLOR(0,0,0,0);
 	m_nbg = NONE;
@@ -91,6 +93,7 @@ GLBox::GLBox(int x, int y, int w, int h, const char *szlabel) : GLWidget(x, y, w
 {
 	m_bshadow = false;
 	m_shc = GLCOLOR(200,200,200);
+	m_margin = 5;
 }
 
 void GLBox::fit_to_size()
@@ -99,7 +102,7 @@ void GLBox::fit_to_size()
 	{
 		QFontMetrics fm(m_font);
 		QSize size = fm.size(Qt::TextExpandTabs, m_szlabel);
-		resize(x(), y(), size.width(), size.height());
+		resize(x(), y(), size.width() + 2 * m_margin, size.height() + 2 * m_margin);
 	}
 }
 
@@ -147,6 +150,11 @@ void GLBox::draw(QPainter* painter)
 
 	draw_bg(x0, y0, x1, y1, painter);
 
+	x0 += m_margin;
+	y0 += m_margin;
+	int w = m_w - 2*m_margin;
+	int h = m_h - 2*m_margin;
+
 	if (m_szlabel)
 	{
 		if (m_bshadow)
@@ -154,13 +162,13 @@ void GLBox::draw(QPainter* painter)
 			int dx = m_font.pointSize()/10+1;
 			painter->setPen(QColor(m_shc.r, m_shc.g, m_shc.b));
 			painter->setFont(m_font);
-			painter->drawText(x0+dx, y0+dx, m_w, m_h, Qt::AlignLeft| Qt::AlignVCenter, QString(m_szlabel));
+			painter->drawText(x0+dx, y0+dx, w, h, Qt::AlignLeft| Qt::AlignVCenter, QString(m_szlabel));
 		}
 		QPen pen = painter->pen();
 		pen.setColor(QColor(m_fgc.r, m_fgc.g, m_fgc.b));
 		painter->setFont(m_font);
 		painter->setPen(pen);
-		painter->drawText(x0, y0, m_w, m_h, Qt::AlignLeft| Qt::AlignVCenter, QString(m_szlabel));
+		painter->drawText(x0, y0, w, h, Qt::AlignLeft| Qt::AlignVCenter, QString(m_szlabel));
 	}
 }
 

@@ -20,6 +20,7 @@
 #include <PostViewLib/Palette.h>
 #include <QSpinBox>
 #include <QInputDialog>
+#include "MainWindow.h"
 
 //-----------------------------------------------------------------------------
 class CRenderingProps : public CPropertyList
@@ -86,6 +87,7 @@ class CBackgroundProps : public CPropertyList
 public:
 	CBackgroundProps()
 	{
+		addProperty("Theme", CProperty::Enum)->setEnumValues(QStringList() << "Default" << "Dark");
 		addProperty("Background color 1", CProperty::Color);
 		addProperty("Background color 2", CProperty::Color);
 		addProperty("Background style", CProperty::Enum)->setEnumValues(QStringList()<<"Color 1"<<"Color 2" << "Fade horizontal" << "Fade vertical" << "Fade diagonally"); 
@@ -93,6 +95,7 @@ public:
 		m_col1 = GLCOLOR(0,0,0);
 		m_col2 = GLCOLOR(0,0,0);
 		m_nstyle = 0;
+		m_ntheme = 0;
 	}
 
 	QVariant GetPropertyValue(int i)
@@ -100,9 +103,10 @@ public:
 		QVariant v;
 		switch (i)
 		{
-		case 0: return toQColor(m_col1); break;
-		case 1: return toQColor(m_col2); break;
-		case 2: return m_nstyle; break;
+		case 0: return m_ntheme; break;
+		case 1: return toQColor(m_col1); break;
+		case 2: return toQColor(m_col2); break;
+		case 3: return m_nstyle; break;
 		}
 		return v;
 	}
@@ -111,9 +115,10 @@ public:
 	{
 		switch (i)
 		{
-		case 0: m_col1 = toGLColor(v.value<QColor>()); break;
-		case 1: m_col2 = toGLColor(v.value<QColor>()); break;
-		case 2: m_nstyle = v.toInt(); break;
+		case 0: m_ntheme = v.toInt(); break;
+		case 1: m_col1 = toGLColor(v.value<QColor>()); break;
+		case 2: m_col2 = toGLColor(v.value<QColor>()); break;
+		case 3: m_nstyle = v.toInt(); break;
 		}
 	}
 
@@ -121,6 +126,7 @@ public:
 	GLCOLOR	m_col1;
 	GLCOLOR	m_col2;
 	int		m_nstyle;
+	int		m_ntheme;
 };
 
 //-----------------------------------------------------------------------------
@@ -614,8 +620,10 @@ public:
 		QMetaObject::connectSlotsByName(pwnd);
 	}
 
-	void Set(CDocument& doc)
+	void Set(::CMainWindow* wnd)
 	{
+		CDocument& doc = *wnd->GetDocument();
+
 		VIEWSETTINGS& view = doc.GetViewSettings();
 		m_render->m_bproj = view.m_nproj == RENDER_PERSP;
         m_render->m_nconv = view.m_nconv;
@@ -626,6 +634,7 @@ public:
 		m_bg->m_col1 = view.bgcol1;
 		m_bg->m_col2 = view.bgcol2;
 		m_bg->m_nstyle = view.bgstyle;
+		m_bg->m_ntheme = wnd->currentTheme();
 
 		m_light->m_blight = view.m_bLighting;
 		m_light->m_diffuse = view.m_diffuse;
@@ -640,8 +649,10 @@ public:
 		m_select->m_binterior = view.m_bext;
 	}
 
-	void Get(CDocument& doc)
+	void Get(::CMainWindow* wnd)
 	{
+		CDocument& doc = *wnd->GetDocument();
+
 		VIEWSETTINGS& view = doc.GetViewSettings();
 		view.m_nproj       = (m_render->m_bproj ? RENDER_PERSP : RENDER_ORTHO);
         view.m_nconv       = m_render->m_nconv;
@@ -652,6 +663,7 @@ public:
 		view.bgcol1  = m_bg->m_col1;
 		view.bgcol2  = m_bg->m_col2;
 		view.bgstyle = m_bg->m_nstyle;
+		wnd->setCurrentTheme(m_bg->m_ntheme);
 
 		view.m_bLighting = m_light->m_blight;
 		view.m_diffuse   = m_light->m_diffuse;
@@ -702,7 +714,7 @@ CDlgViewSettings::CDlgViewSettings(CMainWindow* pwnd) : ui(new Ui::CDlgViewSetti
 	ui->m_cam->m_speed = cam.GetCameraSpeed();
 	ui->m_cam->m_bias = cam.GetCameraBias();
 
-	ui->Set(*pdoc);
+	ui->Set(pwnd);
 
 	ui->setupUi(this);
 
@@ -748,7 +760,7 @@ void CDlgViewSettings::apply()
 	VIEWSETTINGS& view = pdoc->GetViewSettings();
 	CGLCamera& cam = pdoc->GetView()->GetCamera();
 
-	ui->Get(*pdoc);
+	ui->Get(m_pwnd);
 
 	cam.SetCameraSpeed(ui->m_cam->m_speed);
 	cam.SetCameraBias(ui->m_cam->m_bias);
@@ -872,5 +884,5 @@ void CDlgViewSettings::OnReset()
 
 	view.Defaults();
 
-	ui->Set(doc);
+	ui->Set(m_pwnd);
 }

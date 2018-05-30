@@ -51,6 +51,29 @@
 #include "AVIAnimation.h"
 #include "MPEGAnimation.h"
 #include <string>
+#include <QStyleFactory>
+
+// create a dark style theme (work in progress)
+void darkStyle()
+{
+	qApp->setStyle(QStyleFactory::create("Fusion"));
+	QPalette palette = qApp->palette();
+	palette.setColor(QPalette::Window, QColor(53, 53, 53));
+	palette.setColor(QPalette::WindowText, Qt::white);
+	palette.setColor(QPalette::Base, QColor(30, 30, 30));
+	palette.setColor(QPalette::AlternateBase, QColor(53, 53, 53));
+	palette.setColor(QPalette::ToolTipBase, Qt::white);
+	palette.setColor(QPalette::ToolTipText, Qt::white);
+	palette.setColor(QPalette::Text, Qt::white);
+	palette.setColor(QPalette::Button, QColor(53, 53, 53));
+	palette.setColor(QPalette::ButtonText, Qt::white);
+	palette.setColor(QPalette::BrightText, Qt::red);
+	palette.setColor(QPalette::Highlight, QColor(51, 153, 255));
+	palette.setColor(QPalette::HighlightedText, Qt::white);
+	palette.setColor(QPalette::Disabled, QPalette::Text, Qt::darkGray);
+	palette.setColor(QPalette::Disabled, QPalette::ButtonText, Qt::darkGray);
+	qApp->setPalette(palette);
+}
 
 CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMainWindow)
 {
@@ -65,6 +88,19 @@ CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMai
 	// read settings from last session
 	readSettings();
 
+	// activate dark style
+	if (ui->m_theme == 1)
+	{
+		darkStyle();
+
+		VIEWSETTINGS& view = m_doc->GetViewSettings();
+		view.bgcol1 = GLCOLOR(83, 83, 83);
+		view.bgcol2 = GLCOLOR(0, 0, 0);
+		view.bgstyle = BG_COLOR_1;
+
+		GLWidget::set_base_color(GLCOLOR(255,255,255));
+	}
+
 	// make sure the file viewer is visible
 	ui->fileViewer->parentWidget()->raise();
 
@@ -74,6 +110,18 @@ CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMai
 
 CMainWindow::~CMainWindow()
 {
+}
+
+// get the current them
+int CMainWindow::currentTheme()
+{
+	return ui->m_theme;
+}
+
+// set current theme (must restart to take effect)
+void CMainWindow::setCurrentTheme(int n)
+{
+	ui->m_theme = n;
 }
 
 void CMainWindow::SetStatusMessage(const QString& message)
@@ -1849,6 +1897,7 @@ void CMainWindow::writeSettings()
 	settings.beginGroup("MainWindow");
 	settings.setValue("geometry", saveGeometry());
 	settings.setValue("state", saveState());
+	settings.setValue("theme", ui->m_theme);
 	settings.endGroup();
 
 	VIEWSETTINGS& view = GetDocument()->GetViewSettings();
@@ -1927,6 +1976,7 @@ void CMainWindow::readSettings()
 	settings.beginGroup("MainWindow");
 	restoreGeometry(settings.value("geometry").toByteArray());
 	restoreState(settings.value("state").toByteArray());
+	ui->m_theme = settings.value("theme", 0).toInt();
 	settings.endGroup();
 
 	int userColorMaps = -1;

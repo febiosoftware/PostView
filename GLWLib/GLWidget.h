@@ -89,6 +89,9 @@ public:
 	void set_font(const QFont& f) { m_font = f; }
 	void set_font_size(int nsize) { m_font.setPointSize(nsize); }
 
+public:
+	static void set_base_color(GLCOLOR c) { m_base = c; }
+
 protected:
 	int m_x, m_y;
 	int m_w, m_h;
@@ -106,6 +109,8 @@ protected:
 	int		m_nbg;	// background style
 
 	static GLWidget* m_pfocus;	// the widget that has the focus
+
+	static	GLCOLOR	m_base;	// base color
 
 	bool	m_bshow;	// show the widget or not
 
@@ -129,6 +134,7 @@ protected:
 public:
 	bool	m_bshadow;	// render shadows
 	GLCOLOR	m_shc;		// shadow color
+	int		m_margin;
 };
 
 //-----------------------------------------------------------------------------

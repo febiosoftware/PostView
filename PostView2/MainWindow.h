@@ -98,6 +98,12 @@ public:
 	// document was updated
 	void DocumentUpdate(CDocument* doc, bool bNewFlag) override;
 
+	// get the current them
+	int currentTheme();
+	
+	// set current theme (must restart to take effect)
+	void setCurrentTheme(int n);
+
 public slots:
 	void on_actionOpen_triggered();
 	void on_actionSave_triggered();

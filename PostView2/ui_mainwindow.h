@@ -121,6 +121,8 @@ public:
 
 	bool	m_update_spin;
 
+	int		m_theme;
+
 public:
 	// build the UI
 	void setupUi(CMainWindow* MainWindow)
@@ -129,6 +131,8 @@ public:
 		integrateWindow = 0;
 		statsWindow = 0;
 		pwnd = MainWindow;
+
+		m_theme = 0;
 
 		m_update_spin = true;
 

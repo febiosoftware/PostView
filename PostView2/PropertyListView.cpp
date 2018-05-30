@@ -56,7 +56,7 @@ public:
 	{
 		if ((m_list==0)||(!index.isValid())) return QVariant();
 
-		if (role == Qt::TextColorRole) return QColor(Qt::black);
+//		if (role == Qt::TextColorRole) return QColor(Qt::black);
 
 		const CProperty& prop = m_list->Property(index.row());
 
@@ -68,11 +68,11 @@ public:
 		if (index.column() == 0)
 		{
 			if ((role == Qt::DisplayRole)||(role==Qt::EditRole)) return prop.name;
-			if (role == Qt::BackgroundColorRole)
+/*			if (role == Qt::BackgroundColorRole)
 			{
 				return (prop.isModified() ? QColor(255, 255,0) : QColor(255, 255, 255));
 			}
-		}
+*/		}
 		else if (index.column() == 1)
 		{
 			QVariant v = m_list->GetPropertyValue(index.row());
