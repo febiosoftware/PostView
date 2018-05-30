@@ -167,7 +167,7 @@ public:
 
 		stopFileReading = new QToolButton;
 		stopFileReading->setAutoRaise(true);
-		stopFileReading->setToolTip("Cancel");
+		stopFileReading->setToolTip("<font color=\"black\">Cancel");
 		stopFileReading->setIcon(QIcon(":/icons/cancel.png"));
 
 		// connect all the slots
@@ -255,14 +255,14 @@ public:
 		QAction* actionSaveSession = addAction("Save session ..." , "actionSaveSession");
 		QAction* actionQuit        = addAction("Exit"             , "actionQuit"       );
 
-		actionOpen->setWhatsThis("Select this to open a file.");
-		actionSave->setWhatsThis("Select this to save the model.");
-		actionUpdate->setWhatsThis("Reload the model");
-		actionFileInfo->setWhatsThis("Display file info dialog box");
-		actionSnapShot->setWhatsThis("Take a screen shot of the Graphics View");
-		actionOpenSession->setWhatsThis("Open a PostView session file");
-		actionSaveSession->setWhatsThis("Save the current PostView session");
-		actionQuit->setWhatsThis("Quit PostView");
+		actionOpen->setWhatsThis("<font color=\"black\">Select this to open a file.");
+		actionSave->setWhatsThis("<font color=\"black\">Select this to save the model.");
+		actionUpdate->setWhatsThis("<font color=\"black\">Reload the model");
+		actionFileInfo->setWhatsThis("<font color=\"black\">Display file info dialog box");
+		actionSnapShot->setWhatsThis("<font color=\"black\">Take a screen shot of the Graphics View");
+		actionOpenSession->setWhatsThis("<font color=\"black\">Open a PostView session file");
+		actionSaveSession->setWhatsThis("<font color=\"black\">Save the current PostView session");
+		actionQuit->setWhatsThis("<font color=\"black\">Quit PostView");
 
 		// --- Edit menu ---
 		selectNodes = addAction("Select Nodes"   , "selectNodes", ":/icons/node.png"   ); selectNodes->setCheckable(true);
@@ -270,30 +270,30 @@ public:
 		selectFaces = addAction("Select Faces"   , "selectFaces", ":/icons/face.png"   ); selectFaces->setCheckable(true);
 		selectElems = addAction("Select Elements", "selectElems", ":/icons/element.png"); selectElems->setCheckable(true);
 
-		selectNodes->setWhatsThis("Turn on node selection mode");
-		selectEdges->setWhatsThis("Turn on edge selection mode");
-		selectFaces->setWhatsThis("Turn on face selection mode");
-		selectElems->setWhatsThis("Turn on element selection mode");
+		selectNodes->setWhatsThis("<font color=\"black\">Turn on node selection mode");
+		selectEdges->setWhatsThis("<font color=\"black\">Turn on edge selection mode");
+		selectFaces->setWhatsThis("<font color=\"black\">Turn on face selection mode");
+		selectElems->setWhatsThis("<font color=\"black\">Turn on element selection mode");
 		
 		QAction* actionZoomSelected = addAction("Zoom selected", "actionZoomSelected", ":/icons/zoom_selected.png"); actionZoomSelected->setShortcut(Qt::Key_S);
 		QAction* actionZoomExtents  = addAction("Zoom extents" , "actionZoomExtents" , ":/icons/zoom_extents.png");
 
-		actionZoomSelected->setWhatsThis("Click this to zoom in on the current selection.\nIf nothing selected this will zoom to the entire model");
-		actionZoomExtents->setWhatsThis("Click this to zoom out so the whole model is visible");
+		actionZoomSelected->setWhatsThis("<font color=\"black\">Click this to zoom in on the current selection.\nIf nothing selected this will zoom to the entire model");
+		actionZoomExtents->setWhatsThis("<font color=\"black\">Click this to zoom out so the whole model is visible");
 
 		QAction* actionSelectRect   = addAction("Select Rectangle", "actionSelectRect"  , ":/icons/select_rect.png"  ); actionSelectRect->setCheckable(true);
 		QAction* actionSelectCircle = addAction("Select Circle"   , "actionSelectCircle", ":/icons/select_circle.png"); actionSelectCircle->setCheckable(true);
 		QAction* actionSelectFree   = addAction("Select Free"     , "actionSelectFree"  , ":/icons/select_free.png"  ); actionSelectFree->setCheckable(true);
 
-		actionSelectRect->setWhatsThis("Use a rectangle for rubberbanding a selection");
-		actionSelectCircle->setWhatsThis("Use a circle for rubberbanding a selection");
-		actionSelectFree->setWhatsThis("Use a free-hand curve for rubberbanding selection");
+		actionSelectRect->setWhatsThis("<font color=\"black\">Use a rectangle for rubberbanding a selection");
+		actionSelectCircle->setWhatsThis("<font color=\"black\">Use a circle for rubberbanding a selection");
+		actionSelectFree->setWhatsThis("<font color=\"black\">Use a free-hand curve for rubberbanding selection");
 
 //		QAction* actionSelectItem = addAction("Select item"     , "actionSelectItem", ":/icons/select_item.png"   ); actionSelectItem->setCheckable(true);
 		QAction* actionSelectConn = addAction("Select connected", "actionSelectConn", ":/icons/select_connected.png"); actionSelectConn->setCheckable(true);
 
-//		actionSelectItem->setWhatsThis("Clicking this option will only allow a user to select a single item (node, edge, face, element) on the mesh");
-		actionSelectConn->setWhatsThis("Clicking this option will select all items that are connected on the same partition of the last selected item");
+//		actionSelectItem->setWhatsThis("<font color=\"black\">Clicking this option will only allow a user to select a single item (node, edge, face, element) on the mesh");
+		actionSelectConn->setWhatsThis("<font color=\"black\">Clicking this option will select all items that are connected on the same partition of the last selected item");
 
 		QAction* actionHideSelected    = addAction("Hide selected"   , "actionHideSelected"   ); actionHideSelected->setShortcut(Qt::Key_H);
 		QAction* actionHideUnselected  = addAction("Hide unselected" , "actionHideUnselected" );
@@ -306,16 +306,16 @@ public:
 		QAction* actionDelete          = addAction("Delete ..."      , "actionDelete"         );
 		QAction* actionProperties      = addAction("Properties ..."  , "actionProperties"     , ":/icons/properties.png");
 
-		actionHideSelected->setWhatsThis("Click this to hide the current mesh selection");
-		actionHideUnselected->setWhatsThis("Click this to hide the mesh items that are <i>not</i> selected.");
-		actionInvertSelection->setWhatsThis("Click this to invert the selection (i.e. selected items will be unselected and vice versa");
-		actionUnhideAll->setWhatsThis("Unhide all the previously hidden items");
-		actionSelectAll->setWhatsThis("Select all items in the mesh. What items will be selected depends on the current selection mode");
-		actionSelectRange->setWhatsThis("This opens a dialog box that allows users to select items within a value range");
-		actionClearSelection->setWhatsThis("This clears the current selection");
-		actionFind->setWhatsThis("Find mesh items from a list of IDs");
-		actionDelete->setWhatsThis("Delete the selected widget in the Graphics View. Note that not all widgets can be deleted");
-		actionProperties->setWhatsThis("Opens dialog box with properties of the currently selected widget");
+		actionHideSelected->setWhatsThis("<font color=\"black\">Click this to hide the current mesh selection");
+		actionHideUnselected->setWhatsThis("<font color=\"black\">Click this to hide the mesh items that are <i>not</i> selected.");
+		actionInvertSelection->setWhatsThis("<font color=\"black\">Click this to invert the selection (i.e. selected items will be unselected and vice versa");
+		actionUnhideAll->setWhatsThis("<font color=\"black\">Unhide all the previously hidden items");
+		actionSelectAll->setWhatsThis("<font color=\"black\">Select all items in the mesh. What items will be selected depends on the current selection mode");
+		actionSelectRange->setWhatsThis("<font color=\"black\">This opens a dialog box that allows users to select items within a value range");
+		actionClearSelection->setWhatsThis("<font color=\"black\">This clears the current selection");
+		actionFind->setWhatsThis("<font color=\"black\">Find mesh items from a list of IDs");
+		actionDelete->setWhatsThis("<font color=\"black\">Delete the selected widget in the Graphics View. Note that not all widgets can be deleted");
+		actionProperties->setWhatsThis("<font color=\"black\">Opens dialog box with properties of the currently selected widget");
 
 		// --- Post menu ---
 		QAction* actionPlaneCut        = addAction("Plane cut"        , "actionPlaneCut"       , ":/icons/cut.png");
@@ -331,16 +331,16 @@ public:
 		QAction* actionStats           = addAction("Statistics  ..."  , "actionStats"          );
 		QAction* actionIntegrate       = addAction("Integrate ..."    , "actionIntegrate"      , ":/icons/integrate.png");
 
-		actionPlaneCut->setWhatsThis("<h3>Plane cut</h3>Add a plane cut plot to the model. A plane cut plot allows users to create a cross section of the mes.");
-		actionVectorPlot->setWhatsThis("<h3>Vector plot</h3>Add a vector plot to the model. Vectors plots can show vector data in the model");
-		actionTensorPlot->setWhatsThis("<h3>Tensor plot</h3>Add a tensor plot to the model. Tensor plots can show 2nd order tensor data in the model");
-		actionIsosurfacePlot->setWhatsThis("<h3>Iso-surface plot</h3>Add an iso-surface plot to the model. An iso-surface plot shows surfaces that have the same value. You may need to make the model transparent in order to see the iso surfaces.");
-		actionSlicePlot->setWhatsThis("<h3>Slice plot</h3>Add a slice plot. This plot adds several cross sections to the model. You may need to make the model transparent to see the slices.");
-		actionDisplacementMap->setWhatsThis("<h3>Displacement map</h3>Adds a displacement map. A displacement map will deform the model as a function of time.");
-		actionGraph->setWhatsThis("Create a new Graph window");
-		actionSummary->setWhatsThis("Shows the Summary window.The Summary window shows the min, max, and average values of a user-selected data field");
-		actionStats->setWhatsThis("Shows the Statistics window. This window shows the distribution of the current nodal values at the current time step");
-		actionIntegrate->setWhatsThis("Shows a graph that plots the integral of the values of the current selection as a function of time. Note that for a surface select it calculates a surface integral and for an element section, it shows a volume integral. For a node selection, the nodal values are summed.");
+		actionPlaneCut->setWhatsThis("<font color=\"black\"><h3>Plane cut</h3>Add a plane cut plot to the model. A plane cut plot allows users to create a cross section of the mesh.</font>");
+		actionVectorPlot->setWhatsThis("<font color=\"black\"><h3>Vector plot</h3>Add a vector plot to the model. Vectors plots can show vector data in the model");
+		actionTensorPlot->setWhatsThis("<font color=\"black\"><h3>Tensor plot</h3>Add a tensor plot to the model. Tensor plots can show 2nd order tensor data in the model");
+		actionIsosurfacePlot->setWhatsThis("<font color=\"black\"><h3>Iso-surface plot</h3>Add an iso-surface plot to the model. An iso-surface plot shows surfaces that have the same value. You may need to make the model transparent in order to see the iso surfaces.");
+		actionSlicePlot->setWhatsThis("<font color=\"black\"><h3>Slice plot</h3>Add a slice plot. This plot adds several cross sections to the model. You may need to make the model transparent to see the slices.");
+		actionDisplacementMap->setWhatsThis("<font color=\"black\"><h3>Displacement map</h3>Adds a displacement map. A displacement map will deform the model as a function of time.");
+		actionGraph->setWhatsThis("<font color=\"black\">Create a new Graph window");
+		actionSummary->setWhatsThis("<font color=\"black\">Shows the Summary window.The Summary window shows the min, max, and average values of a user-selected data field");
+		actionStats->setWhatsThis("<font color=\"black\">Shows the Statistics window. This window shows the distribution of the current nodal values at the current time step");
+		actionIntegrate->setWhatsThis("<font color=\"black\">Shows a graph that plots the integral of the values of the current selection as a function of time. Note that for a surface select it calculates a surface integral and for an element section, it shows a volume integral. For a node selection, the nodal values are summed.");
 
 		// --- Record menu ---
 		QAction* actionRecordNew   = addAction("New ...", "actionRecordNew"  );
@@ -348,10 +348,10 @@ public:
 		QAction* actionRecordPause = addAction("Pause"  , "actionRecordPause");
 		QAction* actionRecordStop  = addAction("Stop"   , "actionRecordStop" );
 
-		actionRecordNew->setWhatsThis("Click this to open a file dialog box and create a new animation file.");
-		actionRecordStart->setWhatsThis("Click to start recording an animation. You must create an animation file first before you can start recording.");
-		actionRecordPause->setWhatsThis("Click this pause the current recording");
-		actionRecordStop->setWhatsThis("Click this to stop the recording. This will finalize and close the animation file as well.");
+		actionRecordNew->setWhatsThis("<font color=\"black\">Click this to open a file dialog box and create a new animation file.");
+		actionRecordStart->setWhatsThis("<font color=\"black\">Click to start recording an animation. You must create an animation file first before you can start recording.");
+		actionRecordPause->setWhatsThis("<font color=\"black\">Click this pause the current recording");
+		actionRecordStop->setWhatsThis("<font color=\"black\">Click this to stop the recording. This will finalize and close the animation file as well.");
 
 		// --- View Menu ---
 		actionViewSettings   = addAction("Settings ..."           , "actionViewSettings"  );
@@ -373,7 +373,8 @@ public:
 		actionViewVPNext     = addAction("Next viewpoint",         "actionViewVPNext"    ); actionViewVPNext->setShortcut(Qt::CTRL + Qt::Key_L);
 
 		QAction* whatsThis = QWhatsThis::createAction(MainWindow);
-		whatsThis->setWhatsThis("Click this to enter What's This mode. When selected any ui item can be selected and a brief description of the feature is shown");
+		whatsThis->setWhatsThis("<font color=\"black\">Click this to enter What's This mode. When selected any ui item can be selected and a brief description of the feature is shown");
+
 
 		// --- Help Menu ---
 		QAction* actionHelp  = new QAction("Online Help ... " , MainWindow); actionHelp ->setObjectName(QStringLiteral("actionHelp" ));
@@ -504,7 +505,7 @@ public:
 		actionColorMap = addAction("Toggle colormap" , "actionColorMap"       , ":/icons/colormap.png");
 		actionColorMap->setCheckable(true);
 		actionColorMap->setDisabled(true);
-		actionColorMap->setWhatsThis("Click this to turn on the color map on the model.");
+		actionColorMap->setWhatsThis("<font color=\"black\">Click this to turn on the color map on the model.");
 
 		mainToolBar->addAction(actionOpen);
 		mainToolBar->addAction(actionSave);
@@ -532,7 +533,7 @@ public:
 		// create the data field selector
 		mainToolBar->addSeparator();
 		selectData = new CDataFieldSelector;
-		selectData->setWhatsThis("Use this to select the current data variable that will be used to display the color map on the mesh.");
+		selectData->setWhatsThis("<font color=\"black\">Use this to select the current data variable that will be used to display the color map on the mesh.");
 		selectData->setMinimumWidth(300);
 //		selectData->setFixedHeight(23);
 		selectData->setObjectName("selectData");
@@ -576,12 +577,12 @@ public:
 		playToolBar->addAction(actionNext);
 		playToolBar->addAction(actionLast);
 
-		actionFirst->setWhatsThis("Click this to go to the first time step in the model.");
-		actionPrev->setWhatsThis("Click this to go to the previous time step in the model.");
-		actionPlay->setWhatsThis("Click this to toggle the animation on or off");
-		actionNext->setWhatsThis("Click this to go to the next time step");
-		actionLast->setWhatsThis("Click this to go to the last time step in the model.");
-		actionTime->setWhatsThis("Click this to open the Time Info dialog box.");
+		actionFirst->setWhatsThis("<font color=\"black\">Click this to go to the first time step in the model.");
+		actionPrev->setWhatsThis("<font color=\"black\">Click this to go to the previous time step in the model.");
+		actionPlay->setWhatsThis("<font color=\"black\">Click this to toggle the animation on or off");
+		actionNext->setWhatsThis("<font color=\"black\">Click this to go to the next time step");
+		actionLast->setWhatsThis("<font color=\"black\">Click this to go to the last time step in the model.");
+		actionTime->setWhatsThis("<font color=\"black\">Click this to open the Time Info dialog box.");
 
 		playToolBar->addWidget(pspin = new QSpinBox); 
 		pspin->setObjectName("selectTime");

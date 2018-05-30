@@ -62,7 +62,7 @@ public:
 
 		if (role == Qt::ToolTipRole)
 		{
-			QString tip = (tr("<p><b>%1</b></p><p>%2</p>").arg(prop.name).arg(prop.info));
+			QString tip = (tr("<font color=\"black\"><p><b>%1</b></p><p>%2</p></font>").arg(prop.name).arg(prop.info));
 			return tip;
 		}
 		if (index.column() == 0)

@@ -1165,6 +1165,8 @@ void CMainWindow::on_actionProperties_triggered()
 void CMainWindow::on_actionPlaneCut_triggered()
 {
 	CDocument* pdoc = GetDocument();
+	if (pdoc->IsValid() == false) return;
+
 	CGLPlaneCutPlot* pp = new CGLPlaneCutPlot(pdoc->GetGLModel());
 	pdoc->AddPlot(pp);
 
@@ -1177,6 +1179,8 @@ void CMainWindow::on_actionPlaneCut_triggered()
 void CMainWindow::on_actionVectorPlot_triggered()
 {
 	CDocument* pdoc = GetDocument();
+	if (pdoc->IsValid() == false) return;
+
 	CGLVectorPlot* pp = new CGLVectorPlot(pdoc->GetGLModel());
 	pdoc->AddPlot(pp);
 	pdoc->UpdateFEModel();
@@ -1191,6 +1195,8 @@ void CMainWindow::on_actionVectorPlot_triggered()
 void CMainWindow::on_actionTensorPlot_triggered()
 {
 	CDocument* pdoc = GetDocument();
+	if (pdoc->IsValid() == false) return;
+
 	GLTensorPlot* pp = new GLTensorPlot(pdoc->GetGLModel());
 	pdoc->AddPlot(pp);
 	pdoc->UpdateFEModel();
@@ -1202,10 +1208,11 @@ void CMainWindow::on_actionTensorPlot_triggered()
 	RedrawGL();
 }
 
-
 void CMainWindow::on_actionStreamLinePlot_triggered()
 {
 	CDocument* pdoc = GetDocument();
+	if (pdoc->IsValid() == false) return;
+
 	CGLStreamLinePlot* pp = new CGLStreamLinePlot(pdoc->GetGLModel());
 	pdoc->AddPlot(pp);
 	pdoc->UpdateFEModel();
@@ -1220,6 +1227,8 @@ void CMainWindow::on_actionStreamLinePlot_triggered()
 void CMainWindow::on_actionParticleFlowPlot_triggered()
 {
 	CDocument* pdoc = GetDocument();
+	if (pdoc->IsValid() == false) return;
+
 	CGLParticleFlowPlot* pp = new CGLParticleFlowPlot(pdoc->GetGLModel());
 	pdoc->AddPlot(pp);
 	pdoc->UpdateFEModel();
@@ -1234,6 +1243,8 @@ void CMainWindow::on_actionParticleFlowPlot_triggered()
 void CMainWindow::on_actionIsosurfacePlot_triggered()
 {
 	CDocument* pdoc = GetDocument();
+	if (pdoc->IsValid() == false) return;
+
 	CGLIsoSurfacePlot* pp = new CGLIsoSurfacePlot(pdoc->GetGLModel());
 	pdoc->AddPlot(pp);
 	pdoc->UpdateFEModel();
@@ -1248,6 +1259,8 @@ void CMainWindow::on_actionIsosurfacePlot_triggered()
 void CMainWindow::on_actionSlicePlot_triggered()
 {
 	CDocument* pdoc = GetDocument();
+	if (pdoc->IsValid() == false) return;
+
 	CGLSlicePlot* pp = new CGLSlicePlot(pdoc->GetGLModel());
 	pdoc->AddPlot(pp);
 	pdoc->UpdateFEModel();
@@ -1262,6 +1275,8 @@ void CMainWindow::on_actionSlicePlot_triggered()
 void CMainWindow::on_actionDisplacementMap_triggered()
 {
 	CDocument* pdoc = GetDocument();
+	if (pdoc->IsValid() == false) return;
+
 	CGLModel* pm = pdoc->GetGLModel();
 	if (pm->GetDisplacementMap() == 0)
 	{

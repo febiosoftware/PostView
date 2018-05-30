@@ -117,12 +117,12 @@ public:
 		pshow = new QToolButton; pshow->setObjectName("showButton");
 		pshow->setIcon(QIcon(":/icons/eye.png"));
 		pshow->setCheckable(true);
-		pshow->setToolTip("Show or hide material");
+		pshow->setToolTip("<font color=\"black\">Show or hide material");
 
 		pcheck = new QToolButton; pcheck->setObjectName("enableButton");
 		pcheck->setIcon(QIcon(":/icons/check.png"));
 		pcheck->setCheckable(true);
-		pcheck->setToolTip("Enable or disable material");
+		pcheck->setToolTip("<font color=\"black\">Enable or disable material");
 
 
 		QHBoxLayout* ph = new QHBoxLayout;
