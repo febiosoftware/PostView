@@ -143,6 +143,11 @@ public:
 		return (*this);
 	}
 
+	mat3fs operator * (float a)
+	{
+		return mat3fs(x*a, y*a, z*a, xy*a, yz*a, xz*a);
+	}
+
 	mat3fs operator / (float g)
 	{
 		return mat3fs(x/g, y/g, z/g, xy/g, yz/g, xz/g);

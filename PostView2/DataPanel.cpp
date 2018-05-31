@@ -83,6 +83,42 @@ public:
 	}
 };
 
+class CMathDataVec3Props : public CPropertyList
+{
+public:
+	FEMathVec3DataField*	m_pd;
+
+	CMathDataVec3Props(FEMathVec3DataField* pd) : m_pd(pd)
+	{
+		addProperty("x", CProperty::String);
+		addProperty("y", CProperty::String);
+		addProperty("z", CProperty::String);
+	}
+
+	QVariant GetPropertyValue(int i) override
+	{
+		switch (i)
+		{
+		case 0: return QString::fromStdString(m_pd->EquationString(0)); break;
+		case 1: return QString::fromStdString(m_pd->EquationString(1)); break;
+		case 2: return QString::fromStdString(m_pd->EquationString(2)); break;
+		}
+
+		return QVariant();
+	}
+
+	void SetPropertyValue(int i, const QVariant& v) override
+	{
+		switch (i)
+		{
+		case 0: m_pd->SetEquationString(0, (v.toString()).toStdString()); break;
+		case 1: m_pd->SetEquationString(1, (v.toString()).toStdString()); break;
+		case 2: m_pd->SetEquationString(2, (v.toString()).toStdString()); break;
+		}
+	}
+};
+
+
 class CDataModel : public QAbstractTableModel
 {
 public:
@@ -592,18 +628,40 @@ void CDataPanel::on_AddEquation_triggered()
 	if (dlg.exec())
 	{
 		QString name = dlg.GetDataName();
-		QString eq = dlg.GetEquation();
-		if (eq.isEmpty()) eq = "";
-		if (name.isEmpty()) name = eq;
-		if (name.isEmpty()) name = "(empty)";
 
-		// create new math data field
-		FEMathDataField* pd = new FEMathDataField(name.toStdString());
-		pd->SetEquationString(eq.toStdString());
+		int type = dlg.GetDataType();
 
-		// add it to the model
-		FEModel& fem = *doc.GetFEModel();
-		fem.AddDataField(pd);
+		if (type == 0)
+		{
+			QString eq = dlg.GetEquation();
+			if (eq.isEmpty()) eq = "";
+			if (name.isEmpty()) name = eq;
+			if (name.isEmpty()) name = "(empty)";
+
+			// create new math data field
+			FEMathDataField* pd = new FEMathDataField(name.toStdString());
+			pd->SetEquationString(eq.toStdString());
+
+			// add it to the model
+			FEModel& fem = *doc.GetFEModel();
+			fem.AddDataField(pd);
+		}
+		else
+		{
+			if (name.isEmpty()) name = "(empty)";
+
+			QString x = dlg.GetEquation(0);
+			QString y = dlg.GetEquation(1);
+			QString z = dlg.GetEquation(2);
+
+			// create new math data field
+			FEMathVec3DataField* pd = new FEMathVec3DataField(name.toStdString());
+			pd->SetEquationStrings(x.toStdString(), y.toStdString(), z.toStdString());
+
+			// add it to the model
+			FEModel& fem = *doc.GetFEModel();
+			fem.AddDataField(pd);
+		}
 		
 		// update the data list
 		Update(true);
@@ -703,42 +761,44 @@ void CDataPanel::on_FilterButton_clicked()
 				// get the name for the new field
 				string sname = dlg.getNewName().toStdString();
 
+				FEDataField* newData = 0;
+				bool bret = true;
 				int nfield = pdf->GetFieldID();
 				switch(dlg.m_nflt)
 				{
 				case 0:
 					{
-						FEDataField* newData = fem.CreateCachedCopy(pdf, sname.c_str());
-						DataScale(fem, newData->GetFieldID(), dlg.m_scale);
+						newData = fem.CreateCachedCopy(pdf, sname.c_str());
+						bret = DataScale(fem, newData->GetFieldID(), dlg.m_scale);
 					}
 					break;
 				case 1:
 					{
-						FEDataField* newData = fem.CreateCachedCopy(pdf, sname.c_str());
-						DataSmooth(fem, newData->GetFieldID(), dlg.m_theta, dlg.m_iters);
+						newData = fem.CreateCachedCopy(pdf, sname.c_str());
+						bret = DataSmooth(fem, newData->GetFieldID(), dlg.m_theta, dlg.m_iters);
 					}
 					break;
 				case 2:
 					{
-						FEDataField* newData = fem.CreateCachedCopy(pdf, sname.c_str());
+						newData = fem.CreateCachedCopy(pdf, sname.c_str());
 						FEDataFieldPtr p = fem.GetDataManager()->DataField(dataIds[dlg.m_ndata]);
-						DataArithmetic(fem, newData->GetFieldID(), dlg.m_nop, (*p)->GetFieldID());
+						bret = DataArithmetic(fem, newData->GetFieldID(), dlg.m_nop, (*p)->GetFieldID());
 					}
 					break;
 				case 3:
 					{
 						// create new vector field for storing the gradient
-						FEDataField* newData = new FEDataField_T<FENodeData<vec3f  > >(sname.c_str(), EXPORT_DATA);
+						newData = new FEDataField_T<FENodeData<vec3f  > >(sname.c_str(), EXPORT_DATA);
 						fem.AddDataField(newData);
 
 						// now, calculate gradient from scalar field
-						DataGradient(fem, newData->GetFieldID(), nfield);
+						bret = DataGradient(fem, newData->GetFieldID(), nfield);
 					}
 					break;
 				case 4:
 					{
 						// create new field for storing the component
-						FEDataField* newData = DataComponent(fem, pdf, dlg.getArrayComponent(), sname);
+						newData = DataComponent(fem, pdf, dlg.getArrayComponent(), sname);
 						if (newData == 0)
 						{
 							QMessageBox::critical(this, "Data Filter", "Failed to extract component.");
@@ -747,6 +807,12 @@ void CDataPanel::on_FilterButton_clicked()
 					break;
 				default:
 					QMessageBox::critical(this, "Data Filter", "Don't know this filter.");
+				}
+
+				if (bret == false)
+				{
+					if (newData) fem.DeleteDataField(newData);
+					QMessageBox::critical(this, "Data Filter", "Cannot apply this filter.");
 				}
 
 				Update(true);
@@ -801,6 +867,11 @@ void CDataPanel::on_dataList_clicked(const QModelIndex& index)
 		FEMathDataField* pm = dynamic_cast<FEMathDataField*>(p);
 		ui->m_prop->Update(new CMathDataProps(pm));
 	}
+	else if (dynamic_cast<FEMathVec3DataField*>(p))
+	{
+		FEMathVec3DataField* pm = dynamic_cast<FEMathVec3DataField*>(p);
+		ui->m_prop->Update(new CMathDataVec3Props(pm));
+	}
 	else ui->m_prop->Update(0);
 
 	ui->m_activeField = p;
@@ -822,6 +893,7 @@ void CDataPanel::on_fieldName_editingFinished()
 
 void CDataPanel::on_props_dataChanged()
 {
+	m_wnd->GetDocument()->GetGLModel()->ResetAllStates();
 	m_wnd->GetDocument()->UpdateFEModel(true);
 	m_wnd->RedrawGL();
 }

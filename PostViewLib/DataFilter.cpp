@@ -5,8 +5,7 @@
 #include "FEMeshData_T.h"
 #include "evaluate.h"
 
-// TODO: Find a way to return errors
-void DataScale(FEModel& fem, int nfield, double scale)
+bool DataScale(FEModel& fem, int nfield, double scale)
 {
 	FEMeshBase& mesh = *fem.GetFEMesh(0);
 	float fscale = (float) scale;
@@ -202,7 +201,7 @@ void DataScale(FEModel& fem, int nfield, double scale)
 			}
 			break;
 			default:
-				return;
+				return false;
 				break;
 			}
 		}
@@ -351,7 +350,7 @@ void DataScale(FEModel& fem, int nfield, double scale)
 			}
 			break;
 			default:
-				return;
+				return false;
 				break;
 			}
 		}
@@ -360,6 +359,8 @@ void DataScale(FEModel& fem, int nfield, double scale)
 			break; 
 		}
 	}
+
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -499,12 +500,14 @@ bool DataSmoothStep(FEModel& fem, int nfield, double theta)
 
 //-----------------------------------------------------------------------------
 // Apply a smoothing operation on data
-void DataSmooth(FEModel& fem, int nfield, double theta, int niters)
+bool DataSmooth(FEModel& fem, int nfield, double theta, int niters)
 {
 	for (int n = 0; n<niters; ++n) 
 	{
-		if (DataSmoothStep(fem, nfield, theta) == false) break;
+		if (DataSmoothStep(fem, nfield, theta) == false) return false;
 	}
+
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -516,7 +519,7 @@ double flt_div(double d, double s) { return d/s; }
 double flt_err(double d, double s) { return fabs(d - s); }
 
 //-----------------------------------------------------------------------------
-void DataArithmetic(FEModel& fem, int nfield, int nop, int noperand)
+bool DataArithmetic(FEModel& fem, int nfield, int nop, int noperand)
 {
 	int ndst = FIELD_CODE(nfield);
 	int nsrc = FIELD_CODE(noperand);
@@ -529,8 +532,8 @@ void DataArithmetic(FEModel& fem, int nfield, int nop, int noperand)
 		FEMeshData& s = state.m_Data[nsrc];
 
 		Data_Format fmt = d.GetFormat();
-		if (d.GetFormat() != s.GetFormat()) return;
-		if ((d.GetType() != s.GetType()) && (s.GetType() != DATA_FLOAT)) return;
+		if (d.GetFormat() != s.GetFormat()) return false;
+		if ((d.GetType() != s.GetType()) && (s.GetType() != DATA_FLOAT)) return false;
 
 		if (IS_NODE_FIELD(nfield) && IS_NODE_FIELD(noperand))
 		{
@@ -544,7 +547,7 @@ void DataArithmetic(FEModel& fem, int nfield, int nop, int noperand)
 				else if (nop == 4) f = flt_err;
 				else
 				{
-					return;
+					return false;
 				}
 
 				FENodeData<float>* pd = dynamic_cast<FENodeData<float>*>(&d);
@@ -576,6 +579,7 @@ void DataArithmetic(FEModel& fem, int nfield, int nop, int noperand)
 					case 3: for (int i = 0; i<N; ++i) (*pd)[i] /= (*ps)[i]; break;
 					}
 				}
+				else return false;
 			}
 		}
 		else if (IS_ELEM_FIELD(nfield) && IS_ELEM_FIELD(noperand))
@@ -590,7 +594,7 @@ void DataArithmetic(FEModel& fem, int nfield, int nop, int noperand)
 				else if (nop == 4) f = flt_err;
 				else
 				{
-					return;
+					return false;
 				}
 
 				if (fmt == DATA_ITEM)
@@ -602,10 +606,11 @@ void DataArithmetic(FEModel& fem, int nfield, int nop, int noperand)
 						int N = pd->size();
 						for (int i = 0; i<N; ++i) (*pd)[i] = (float)f((*pd)[i], (*ps)[i]); 
 					}
+					else return false;
 				}
 				else
 				{
-					return;
+					return false;
 				}
 			}
 			else if (d.GetType() == DATA_MAT3FS)
@@ -625,11 +630,12 @@ void DataArithmetic(FEModel& fem, int nfield, int nop, int noperand)
 							case 1: for (int i = 0; i<N; ++i) (*pd)[i] -= (*ps)[i]; break;
 							default:
 								{
-									return;
+									return false;
 								}
 							}
 						}
 					}
+					else return false;
 				}
 				else if (s.GetType() == DATA_FLOAT)
 				{
@@ -639,35 +645,41 @@ void DataArithmetic(FEModel& fem, int nfield, int nop, int noperand)
 						FEElementData<float, DATA_ITEM>* ps = dynamic_cast<FEElementData<float, DATA_ITEM>*>(&s);
 						if (pd && ps)
 						{
+							mat3fs I(1.f, 1.f, 1.f, 0.f, 0.f, 0.f);
 							int N = pd->size();
 							switch (nop)
 							{
+							case 0: for (int i = 0; i<N; ++i) (*pd)[i] += I*((*ps)[i]); break;
+							case 1: for (int i = 0; i<N; ++i) (*pd)[i] -= I*((*ps)[i]); break;
 							case 2: for (int i = 0; i<N; ++i) (*pd)[i] *= (*ps)[i]; break;
 							case 3: for (int i = 0; i<N; ++i) (*pd)[i] /= (*ps)[i]; break;
 							default:
 								{
-									return;
+									return false;
 								}
 							}
 						}
+						else return false;
 					}
+					else return false;
 				}
 				else
 				{
-					return;
+					return false;
 				}
 			}
 		}
 		else
 		{
-
-			return;
+			return false;
 		}
 	}
+
+	return true;
 }
 
 //-----------------------------------------------------------------------------
-void DataGradient(FEModel& fem, int vecField, int sclField)
+bool DataGradient(FEModel& fem, int vecField, int sclField)
 {
 	int nvec = FIELD_CODE(vecField);
 	int nscl = FIELD_CODE(sclField);
@@ -686,7 +698,7 @@ void DataGradient(FEModel& fem, int vecField, int sclField)
 			int N = pv->size();
 			for (int i = 0; i<N; ++i) (*pv)[i] = vec3f(0,0,0);
 		}
-		else return;
+		else return false;
 
 		// get the mesh
 		FEMeshBase* mesh = state.GetFEMesh();
@@ -769,6 +781,8 @@ void DataGradient(FEModel& fem, int vecField, int sclField)
 			(*pv)[i] = G[i];
 		}
 	}
+
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -823,7 +837,6 @@ void extractElemDataComponentITEM_ARRAY_VEC3F(FEMeshData& dst, FEMeshData& src, 
 	int veccomp = ncomp % 4;
 
 	int NE = mesh.Elements();
-	float val[FEGenericElement::MAX_NODES];
 	vector<float> data;
 	vector<int> elem(1);
 	vector<int> l;

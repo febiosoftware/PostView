@@ -335,6 +335,13 @@ public:
 				}
 			}
 		}
+		else if (data.type() == QVariant::String)
+		{
+			QLineEdit* pe = new QLineEdit(parent);
+			pe->setText(data.toString());
+			m_view->connect(pe, SIGNAL(editingFinished()), m_view, SLOT(onDataChanged()));
+			return pe;
+		}
 		return QStyledItemDelegate::createEditor(parent, option, index);
 	}
 
