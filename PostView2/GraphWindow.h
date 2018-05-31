@@ -8,6 +8,8 @@ class CGraphWidget;
 class QLineEdit;
 class QRadioButton;
 class QCheckBox;
+class QComboBox;
+class QLabel;
 
 namespace Ui {
 	class CGraphWindow;
@@ -62,9 +64,6 @@ public:
 class RegressionUi : public CPlotTool
 {
 	Q_OBJECT
-public:
-	QLineEdit*	a;
-	QLineEdit*	b;
 
 public:
 	RegressionUi(CGraphWidget* graph, QWidget* parent = 0);
@@ -73,13 +72,28 @@ public:
 
 	void Update();
 
+	void hideEvent(QHideEvent* ev) override;
+
+private:
+	void showParameters(int numParam);
+
 public slots:
 	void onCalculate();
+	void onFunctionChanged(int n);
+	void onColorChanged(QColor c);
 
 private:
 	CGraphWidget* m_graph;
-	double	m_a, m_b;
+	double	m_a, m_b, m_c;
 	bool	m_bvalid;
+
+private:
+	QComboBox*	m_fnc;
+	QLabel*		m_math;
+
+	QLabel*		m_lbl[3];
+	QLineEdit*	m_par[3];
+	QColor		m_col;
 };
 
 //=================================================================================================
@@ -99,6 +113,7 @@ public:
 
 public slots:
 	void onCalculate();
+	void onColorChanged(QColor c);
 
 private:
 	CGraphWidget*	m_graph;
@@ -106,6 +121,7 @@ private:
 
 	bool			m_bvalid;
 	std::string		m_math;
+	QColor			m_col;
 };
 
 //=================================================================================================

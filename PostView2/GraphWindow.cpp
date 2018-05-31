@@ -11,6 +11,7 @@
 #include <QSplitter>
 #include <QPushButton>
 #include <QCheckBox>
+#include <QFormLayout>
 #include <QRadioButton>
 #include "MainWindow.h"
 #include "Document.h"
@@ -23,6 +24,8 @@
 #include <QValidator>
 #include <QComboBox>
 #include <PostViewLib/LinearRegression.h>
+#include "CColorButton.h"
+#include "convert.h"
 
 OptionsUi::OptionsUi(CGraphWidget* graph, QWidget* parent) : CPlotTool(parent)
 {
@@ -96,29 +99,79 @@ void OptionsUi::getUserRange(int& imin, int& imax)
 
 RegressionUi::RegressionUi(CGraphWidget* graph, QWidget* parent) : CPlotTool(parent), m_graph(graph)
 {
-	QVBoxLayout* l = new QVBoxLayout;
-	l->addWidget(new QLabel("<p>y = <b>a</b>*x + <b>b</b></p>"));
+	m_fnc = new QComboBox;
+	m_fnc->addItem("Linear");
+	m_fnc->addItem("Quadratic");
+	m_fnc->addItem("Exponential");
+
+	m_col.setRgb(0,0,0);
+
+	CColorButton* cb = new CColorButton;
+	cb->setColor(m_col);
+	cb->setMaximumWidth(20);
+
 	QHBoxLayout* h = new QHBoxLayout;
-	QLabel* lbl = 0;
-	h->addWidget(lbl = new QLabel("a")); h->addWidget(a = new QLineEdit); lbl->setBuddy(a);
-	a->setValidator(new QDoubleValidator);
-	a->setReadOnly(true);
-	l->addLayout(h);
-	h = new QHBoxLayout;
-	h->addWidget(lbl = new QLabel("b")); h->addWidget(b = new QLineEdit); lbl->setBuddy(b);
-	b->setValidator(new QDoubleValidator);
-	b->setReadOnly(true);
-	l->addLayout(h);
+	h->setMargin(0);
+	h->addWidget(m_fnc);
+	h->addWidget(cb);
 
-	QPushButton* b = new QPushButton("Calculate");
-	l->addWidget(b);
+	QFormLayout* f = new QFormLayout;
+	f->setLabelAlignment(Qt::AlignRight);
+	f->setMargin(0);
+	f->addRow("Function", h);
+	f->addRow("", m_math = new QLabel(""));
+	f->addRow(m_lbl[0] = new QLabel("a"), m_par[0] = new QLineEdit); m_lbl[0]->setBuddy(m_par[0]);
+	m_par[0]->setValidator(new QDoubleValidator);
+	m_par[0]->setReadOnly(true);
+	f->addRow(m_lbl[1] = new QLabel("b"), m_par[1] = new QLineEdit); m_lbl[1]->setBuddy(m_par[1]);
+	m_par[1]->setValidator(new QDoubleValidator);
+	m_par[1]->setReadOnly(true);
+	f->addRow(m_lbl[2] = new QLabel("c"), m_par[2] = new QLineEdit); m_lbl[2]->setBuddy(m_par[2]);
+	m_par[2]->setValidator(new QDoubleValidator);
+	m_par[2]->setReadOnly(true);
 
-	l->addStretch();
-	setLayout(l);
+	QVBoxLayout* v = new QVBoxLayout;
+	v->addLayout(f);
 
-	QObject::connect(b, SIGNAL(clicked()), this, SLOT(onCalculate()));
+	QPushButton* pb = new QPushButton("Calculate");
+	v->addWidget(pb);
+
+	v->addStretch();
+	setLayout(v);
+
+	QObject::connect(pb, SIGNAL(clicked()), this, SLOT(onCalculate()));
+	QObject::connect(m_fnc, SIGNAL(currentIndexChanged(int)), this, SLOT(onFunctionChanged(int)));
+	QObject::connect(cb, SIGNAL(colorChanged(QColor)), this, SLOT(onColorChanged(QColor)));
+
+	onFunctionChanged(0);
 
 	Update();
+}
+
+void RegressionUi::showParameters(int numParam)
+{
+	if (numParam == 2) { m_lbl[2]->hide(); m_par[2]->hide(); }
+	else { m_lbl[2]->show(); m_par[2]->show(); }
+}
+
+void RegressionUi::onFunctionChanged(int n)
+{
+	switch (n)
+	{
+	case 0: showParameters(2); m_math->setText("<p>y = <b>a</b>*x + <b>b</b></p>"); break;
+	case 1: showParameters(3); m_math->setText("<p>y = <b>a</b>*x^2 + <b>b</b>*x + <b>c</b></p>"); break;
+	case 2: showParameters(2); m_math->setText("<p>y = <b>a</b>*exp(<b>b</b>*x)</p>"); break;
+	}
+
+	Update();
+	m_bvalid = false;
+	m_graph->repaint();
+}
+
+void RegressionUi::onColorChanged(QColor c)
+{
+	m_col = c;
+	m_graph->repaint();
 }
 
 void RegressionUi::onCalculate()
@@ -140,40 +193,110 @@ void RegressionUi::onCalculate()
 		pt[i].first = p.x();
 		pt[i].second = p.y();
 	}
-	pair<double, double> ans;
-	if (LinearRegression(pt, ans))
+
+	int nfc = m_fnc->currentIndex();
+	if (nfc == 0)
 	{
-		m_a = ans.first;
-		m_b = ans.second;
-		a->setText(QString::number(m_a));
-		b->setText(QString::number(m_b));
-		m_bvalid = true;
-		m_graph->repaint();
+		pair<double, double> ans;
+		if (LinearRegression(pt, ans))
+		{
+			m_a = ans.first;
+			m_b = ans.second;
+			m_par[0]->setText(QString::number(m_a));
+			m_par[1]->setText(QString::number(m_b));
+			m_bvalid = true;
+			m_graph->repaint();
+		}
+	}
+	else if (nfc == 1)
+	{
+		vector<double> ans(3, 0.0);
+		if (NonlinearRegression(pt, ans, 1))
+		{
+			m_a = ans[0];
+			m_b = ans[1];
+			m_c = ans[2];
+			m_par[0]->setText(QString::number(m_a));
+			m_par[1]->setText(QString::number(m_b));
+			m_par[2]->setText(QString::number(m_c));
+			m_bvalid = true;
+			m_graph->repaint();
+		}
+	}
+	else if (nfc == 2)
+	{
+		// do a linear regression on the log
+		for (int i=0; i<N; ++i)
+		{
+			pair<double, double>& pi = pt[i];
+			if (pi.second > 0) pi.second = log(pi.second);
+			else return;
+		}
+		pair<double, double> ans;
+		if (LinearRegression(pt, ans))
+		{
+			m_a = exp(ans.second);
+			m_b = ans.first;
+			m_par[0]->setText(QString::number(m_a));
+			m_par[1]->setText(QString::number(m_b));
+			m_bvalid = true;
+			m_graph->repaint();
+		}
 	}
 }
 
 void RegressionUi::draw(QPainter& p)
 {
-	if (m_bvalid==false) return;
+	if (m_bvalid == false) return;
 
-	QRectF view = m_graph->m_viewRect;
-	double x0 = view.left();
-	double x1 = view.right();
-	double y0 = m_a*x0 + m_b;
-	double y1 = m_a*x1 + m_b;
+	p.setPen(QPen(m_col, 2));
 
-	QPoint p0 = m_graph->ViewToScreen(QPointF(x0, y0));
-	QPoint p1 = m_graph->ViewToScreen(QPointF(x1, y1));
+	QRectF vr = m_graph->m_viewRect;
+	QRect sr = m_graph->ScreenRect();
 
-	p.setPen(QPen(Qt::black, 2));
-	p.drawLine(p0, p1);
+	int func = m_fnc->currentIndex();
+
+	QPoint p0, p1;
+	int ierr = 0;
+	for (int i = sr.left(); i < sr.right(); i += 2)
+	{
+		double x = vr.left() + (i - sr.left())*(vr.right() - vr.left()) / (sr.right() - sr.left());
+
+		double y = 0;
+		switch (func)
+		{
+		case 0: y = m_a*x + m_b; break;
+		case 1: y = m_a*x*x + m_b*x + m_c; break;
+		case 2: y = m_a*exp(m_b*x); break;
+		}
+
+		p1 = m_graph->ViewToScreen(QPointF(x, y));
+
+		if (i != sr.left())
+		{
+			p.drawLine(p0, p1);
+		}
+
+		p0 = p1;
+	}
 }
 
 void RegressionUi::Update()
 {
 	m_bvalid = false;
-	a->clear();
-	b->clear();
+	m_par[0]->clear();
+	m_par[1]->clear();
+	m_par[2]->clear();
+}
+
+
+void RegressionUi::hideEvent(QHideEvent* ev)
+{
+	if (m_bvalid)
+	{
+		m_bvalid = false;
+		m_graph->repaint();
+	}
 }
 
 //=================================================================================================
@@ -181,14 +304,21 @@ MathPlot::MathPlot(CGraphWidget* graph, QWidget* parent) : CPlotTool(parent), m_
 {
 	m_bvalid = false;
 
-	QVBoxLayout* l = new QVBoxLayout;
+	m_col.setRgb(0, 0, 0);
+
+	CColorButton* cb = new CColorButton;
+	cb->setColor(m_col);
+	cb->setMaximumWidth(20);
 
 	m_edit = new QLineEdit;
 
 	QHBoxLayout* h = new QHBoxLayout;
+	h->setMargin(0);
 	h->addWidget(new QLabel("y(x) = "));
 	h->addWidget(m_edit);
+	h->addWidget(cb);
 
+	QVBoxLayout* l = new QVBoxLayout;
 	l->addLayout(h);
 
 	QPushButton* b = new QPushButton("Plot");
@@ -197,6 +327,13 @@ MathPlot::MathPlot(CGraphWidget* graph, QWidget* parent) : CPlotTool(parent), m_
 	setLayout(l);
 
 	QObject::connect(b, SIGNAL(clicked()), this, SLOT(onCalculate()));
+	QObject::connect(cb, SIGNAL(colorChanged(QColor)), this, SLOT(onColorChanged(QColor)));
+}
+
+void MathPlot::onColorChanged(QColor c)
+{
+	m_col = c;
+	m_graph->repaint();
 }
 
 void MathPlot::onCalculate()
@@ -216,7 +353,7 @@ void MathPlot::draw(QPainter& p)
 {
 	if (m_bvalid == false) return;
 
-	p.setPen(QPen(Qt::black, 2));
+	p.setPen(QPen(m_col, 2));
 
 	CMathParser mp;
 
@@ -317,7 +454,7 @@ public:
 		plot->addTool(ops);
 
 		CPlotTool* tool = new RegressionUi(plot);
-		tools->addItem(tool, "Linear Regression");
+		tools->addItem(tool, "Curve fitting");
 		plot->addTool(tool);
 
 		tool = new MathPlot(plot);

@@ -135,8 +135,8 @@ void OptionsUi::optionsChanged()
     QMetaObject::activate(this, &staticMetaObject, 0, Q_NULLPTR);
 }
 struct qt_meta_stringdata_RegressionUi_t {
-    QByteArrayData data[3];
-    char stringdata0[26];
+    QByteArrayData data[7];
+    char stringdata0[63];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -147,10 +147,15 @@ static const qt_meta_stringdata_RegressionUi_t qt_meta_stringdata_RegressionUi =
     {
 QT_MOC_LITERAL(0, 0, 12), // "RegressionUi"
 QT_MOC_LITERAL(1, 13, 11), // "onCalculate"
-QT_MOC_LITERAL(2, 25, 0) // ""
+QT_MOC_LITERAL(2, 25, 0), // ""
+QT_MOC_LITERAL(3, 26, 17), // "onFunctionChanged"
+QT_MOC_LITERAL(4, 44, 1), // "n"
+QT_MOC_LITERAL(5, 46, 14), // "onColorChanged"
+QT_MOC_LITERAL(6, 61, 1) // "c"
 
     },
-    "RegressionUi\0onCalculate\0"
+    "RegressionUi\0onCalculate\0\0onFunctionChanged\0"
+    "n\0onColorChanged\0c"
 };
 #undef QT_MOC_LITERAL
 
@@ -160,7 +165,7 @@ static const uint qt_meta_data_RegressionUi[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       1,   14, // methods
+       3,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -168,10 +173,14 @@ static const uint qt_meta_data_RegressionUi[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,   19,    2, 0x0a /* Public */,
+       1,    0,   29,    2, 0x0a /* Public */,
+       3,    1,   30,    2, 0x0a /* Public */,
+       5,    1,   33,    2, 0x0a /* Public */,
 
  // slots: parameters
     QMetaType::Void,
+    QMetaType::Void, QMetaType::Int,    4,
+    QMetaType::Void, QMetaType::QColor,    6,
 
        0        // eod
 };
@@ -183,10 +192,11 @@ void RegressionUi::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->onCalculate(); break;
+        case 1: _t->onFunctionChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 2: _t->onColorChanged((*reinterpret_cast< QColor(*)>(_a[1]))); break;
         default: ;
         }
     }
-    Q_UNUSED(_a);
 }
 
 const QMetaObject RegressionUi::staticMetaObject = {
@@ -214,19 +224,19 @@ int RegressionUi::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 1)
+        if (_id < 3)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 1;
+        _id -= 3;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 1)
+        if (_id < 3)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 1;
+        _id -= 3;
     }
     return _id;
 }
 struct qt_meta_stringdata_MathPlot_t {
-    QByteArrayData data[3];
-    char stringdata0[22];
+    QByteArrayData data[5];
+    char stringdata0[39];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -237,10 +247,13 @@ static const qt_meta_stringdata_MathPlot_t qt_meta_stringdata_MathPlot = {
     {
 QT_MOC_LITERAL(0, 0, 8), // "MathPlot"
 QT_MOC_LITERAL(1, 9, 11), // "onCalculate"
-QT_MOC_LITERAL(2, 21, 0) // ""
+QT_MOC_LITERAL(2, 21, 0), // ""
+QT_MOC_LITERAL(3, 22, 14), // "onColorChanged"
+QT_MOC_LITERAL(4, 37, 1) // "c"
 
     },
-    "MathPlot\0onCalculate\0"
+    "MathPlot\0onCalculate\0\0onColorChanged\0"
+    "c"
 };
 #undef QT_MOC_LITERAL
 
@@ -250,7 +263,7 @@ static const uint qt_meta_data_MathPlot[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       1,   14, // methods
+       2,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -258,10 +271,12 @@ static const uint qt_meta_data_MathPlot[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,   19,    2, 0x0a /* Public */,
+       1,    0,   24,    2, 0x0a /* Public */,
+       3,    1,   25,    2, 0x0a /* Public */,
 
  // slots: parameters
     QMetaType::Void,
+    QMetaType::Void, QMetaType::QColor,    4,
 
        0        // eod
 };
@@ -273,10 +288,10 @@ void MathPlot::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, vo
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->onCalculate(); break;
+        case 1: _t->onColorChanged((*reinterpret_cast< QColor(*)>(_a[1]))); break;
         default: ;
         }
     }
-    Q_UNUSED(_a);
 }
 
 const QMetaObject MathPlot::staticMetaObject = {
@@ -304,13 +319,13 @@ int MathPlot::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 1)
+        if (_id < 2)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 1;
+        _id -= 2;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 1)
+        if (_id < 2)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 1;
+        _id -= 2;
     }
     return _id;
 }
