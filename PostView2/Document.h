@@ -250,6 +250,8 @@ public:
 	bool ExportRAW   (const char* szfile);
 
 	bool ExportDataField(const FEDataField& df, const char* szfile);
+	bool ExportNodeDataField(const FEDataField& df, FILE* fp);
+	bool ExportElementDataField(const FEDataField& df, FILE* fp);
 
 	void ApplyPalette(const CPalette& pal);
 

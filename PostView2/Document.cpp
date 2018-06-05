@@ -1109,104 +1109,178 @@ bool CDocument::ExportDataField(const FEDataField& df, const char* szfile)
 	FILE* fp = fopen(szfile, "wt");
 	if (fp == 0) return false;
 
+	bool bret = false;
+	int nfield = df.GetFieldID();
+	if (IS_NODE_FIELD(nfield))
+	{
+		bret = ExportNodeDataField(df, fp);
+	}
+	else if (IS_ELEM_FIELD(nfield))
+	{
+		bret = ExportElementDataField(df, fp);
+	}
+	fclose(fp);
+
+	return bret;
+}
+
+
+bool CDocument::ExportNodeDataField(const FEDataField& df, FILE* fp)
+{
+	int nfield = df.GetFieldID();
+	int ndata = FIELD_CODE(nfield);
+
 	// get the mesh
 	FEModel& fem = *GetFEModel();
 	FEMeshBase& mesh = *GetActiveMesh();
 
 	int nstates = fem.GetStates();
 
-	int nfield = df.GetFieldID();
-	if (IS_ELEM_FIELD(nfield))
+	// loop over all nodes
+	int NN = mesh.Nodes();
+	for (int i = 0; i<NN; ++i)
 	{
-		int ndata = FIELD_CODE(nfield);
+		FENode& node = mesh.Node(i);
 
-		// loop over all elements
-		int NE = mesh.Elements();
-		for (int i=0; i<NE; ++i)
+		// write the node ID
+		fprintf(fp, "%d,", i + 1);
+
+		// loop over all states
+		for (int n = 0; n<nstates; ++n)
 		{
-			FEElement& el = mesh.Element(i);
+			FEState& s = *fem.GetState(n);
 
-			// write the element ID
-			fprintf(fp, "%d,", i+1);
-
-			// loop over all states
-			for (int n = 0; n<nstates; ++n)
+			FEMeshData& d = s.m_Data[ndata];
+			Data_Format fmt = d.GetFormat();
+			switch (d.GetType())
 			{
-				FEState& s = *fem.GetState(n);
-
-				FEMeshData& d = s.m_Data[ndata];
-				Data_Format fmt = d.GetFormat();
-				if (fmt == DATA_ITEM)
-				{
-					switch (d.GetType())
-					{
-					case DATA_FLOAT:
-					{
-						FEElementData<float, DATA_ITEM>* pf = dynamic_cast<FEElementData<float, DATA_ITEM>*>(&d);
-						float f; pf->eval(i, &f);
-						fprintf(fp, "%g", f);
-					}
-					break;
-					case DATA_VEC3F:
-					{
-						FEElementData<vec3f, DATA_ITEM>* pf = dynamic_cast<FEElementData<vec3f, DATA_ITEM>*>(&d);
-						vec3f f; pf->eval(i, &f);
-						fprintf(fp, "%g,%g,%g", f.x, f.y, f.z);
-					}
-					break;
-					case DATA_MAT3FS:
-					{
-						FEElementData<mat3fs, DATA_ITEM>* pf = dynamic_cast<FEElementData<mat3fs, DATA_ITEM>*>(&d);
-						mat3fs f; pf->eval(i, &f);
-						fprintf(fp, "%g,%g,%g,%g,%g,%g", f.x, f.y, f.z, f.xy, f.yz, f.xz);
-					}
-					break;
-					}
-				}
-				else if (fmt == DATA_COMP)
-				{
-					int nn = el.Nodes();
-
-					switch (d.GetType())
-					{
-					case DATA_FLOAT:
-					{
-						FEElemData_T<float, DATA_COMP>* pf = dynamic_cast<FEElemData_T<float, DATA_COMP>*>(&d);
-						float v[FEGenericElement::MAX_NODES]; pf->eval(i, v);
-						float f = 0.0f;
-						for (int i=0; i<nn; ++i) f += v[i]; f /= (float) nn;
-						fprintf(fp, "%g", f);
-					}
-					break;
-					case DATA_VEC3F:
-					{
-						FEElemData_T<vec3f, DATA_COMP>* pf = dynamic_cast<FEElemData_T<vec3f, DATA_COMP>*>(&d);
-						vec3f v[FEGenericElement::MAX_NODES]; pf->eval(i, v);
-						vec3f f(0.f, 0.f, 0.f);
-						for (int i = 0; i<nn; ++i) f += v[i]; f /= (float)nn;
-						fprintf(fp, "%g,%g,%g", f.x, f.y, f.z);
-					}
-					break;
-					case DATA_MAT3FS:
-					{
-						FEElemData_T<mat3fs, DATA_COMP>* pf = dynamic_cast<FEElemData_T<mat3fs, DATA_COMP>*>(&d);
-						mat3fs v[FEGenericElement::MAX_NODES]; pf->eval(i, v);
-						mat3fs f(0.f, 0.f, 0.f, 0.f, 0.f, 0.f);
-						for (int i = 0; i<nn; ++i) f += v[i]; f /= (float)nn;
-						fprintf(fp, "%g,%g,%g,%g,%g,%g", f.x, f.y, f.z, f.xy, f.yz, f.xz);
-					}
-					break;
-					}
-				}
-				if (n != nstates - 1) fprintf(fp, ",");
+			case DATA_FLOAT:
+			{
+				FENodeData_T<float>* pf = dynamic_cast<FENodeData_T<float>*>(&d);
+				float f; pf->eval(i, &f);
+				fprintf(fp, "%g", f);
 			}
-			fprintf(fp, "\n");
+			break;
+			case DATA_VEC3F:
+			{
+				FENodeData_T<vec3f>* pf = dynamic_cast<FENodeData_T<vec3f>*>(&d);
+				vec3f f; pf->eval(i, &f);
+				fprintf(fp, "%g,%g,%g", f.x, f.y, f.z);
+			}
+			break;
+			case DATA_MAT3FS:
+			{
+				FENodeData_T<mat3fs>* pf = dynamic_cast<FENodeData_T<mat3fs>*>(&d);
+				mat3fs f; pf->eval(i, &f);
+				fprintf(fp, "%g,%g,%g,%g,%g,%g", f.x, f.y, f.z, f.xy, f.yz, f.xz);
+			}
+			break;
+			}
+			if (n != nstates - 1) fprintf(fp, ",");
 		}
+		fprintf(fp, "\n");
 	}
-	fclose(fp);
 
 	return true;
 }
+
+bool CDocument::ExportElementDataField(const FEDataField& df, FILE* fp)
+{
+	int nfield = df.GetFieldID();
+	int ndata = FIELD_CODE(nfield);
+
+	// get the mesh
+	FEModel& fem = *GetFEModel();
+	FEMeshBase& mesh = *GetActiveMesh();
+
+	int nstates = fem.GetStates();
+
+	// loop over all elements
+	int NE = mesh.Elements();
+	for (int i = 0; i<NE; ++i)
+	{
+		FEElement& el = mesh.Element(i);
+
+		// write the element ID
+		fprintf(fp, "%d,", i + 1);
+
+		// loop over all states
+		for (int n = 0; n<nstates; ++n)
+		{
+			FEState& s = *fem.GetState(n);
+
+			FEMeshData& d = s.m_Data[ndata];
+			Data_Format fmt = d.GetFormat();
+			if (fmt == DATA_ITEM)
+			{
+				switch (d.GetType())
+				{
+				case DATA_FLOAT:
+				{
+					FEElemData_T<float, DATA_ITEM>* pf = dynamic_cast<FEElemData_T<float, DATA_ITEM>*>(&d);
+					float f; pf->eval(i, &f);
+					fprintf(fp, "%g", f);
+				}
+				break;
+				case DATA_VEC3F:
+				{
+					FEElemData_T<vec3f, DATA_ITEM>* pf = dynamic_cast<FEElemData_T<vec3f, DATA_ITEM>*>(&d);
+					vec3f f; pf->eval(i, &f);
+					fprintf(fp, "%g,%g,%g", f.x, f.y, f.z);
+				}
+				break;
+				case DATA_MAT3FS:
+				{
+					FEElemData_T<mat3fs, DATA_ITEM>* pf = dynamic_cast<FEElemData_T<mat3fs, DATA_ITEM>*>(&d);
+					mat3fs f; pf->eval(i, &f);
+					fprintf(fp, "%g,%g,%g,%g,%g,%g", f.x, f.y, f.z, f.xy, f.yz, f.xz);
+				}
+				break;
+				}
+			}
+			else if (fmt == DATA_COMP)
+			{
+				int nn = el.Nodes();
+
+				switch (d.GetType())
+				{
+				case DATA_FLOAT:
+				{
+					FEElemData_T<float, DATA_COMP>* pf = dynamic_cast<FEElemData_T<float, DATA_COMP>*>(&d);
+					float v[FEGenericElement::MAX_NODES]; pf->eval(i, v);
+					float f = 0.0f;
+					for (int i = 0; i<nn; ++i) f += v[i]; f /= (float)nn;
+					fprintf(fp, "%g", f);
+				}
+				break;
+				case DATA_VEC3F:
+				{
+					FEElemData_T<vec3f, DATA_COMP>* pf = dynamic_cast<FEElemData_T<vec3f, DATA_COMP>*>(&d);
+					vec3f v[FEGenericElement::MAX_NODES]; pf->eval(i, v);
+					vec3f f(0.f, 0.f, 0.f);
+					for (int i = 0; i<nn; ++i) f += v[i]; f /= (float)nn;
+					fprintf(fp, "%g,%g,%g", f.x, f.y, f.z);
+				}
+				break;
+				case DATA_MAT3FS:
+				{
+					FEElemData_T<mat3fs, DATA_COMP>* pf = dynamic_cast<FEElemData_T<mat3fs, DATA_COMP>*>(&d);
+					mat3fs v[FEGenericElement::MAX_NODES]; pf->eval(i, v);
+					mat3fs f(0.f, 0.f, 0.f, 0.f, 0.f, 0.f);
+					for (int i = 0; i<nn; ++i) f += v[i]; f /= (float)nn;
+					fprintf(fp, "%g,%g,%g,%g,%g,%g", f.x, f.y, f.z, f.xy, f.yz, f.xz);
+				}
+				break;
+				}
+			}
+			if (n != nstates - 1) fprintf(fp, ",");
+		}
+		fprintf(fp, "\n");
+	}
+
+	return true;
+}
+
 
 bool CDocument::ExportPlot(const char* szfile, bool bflag[6], int ncode[6])
 {
