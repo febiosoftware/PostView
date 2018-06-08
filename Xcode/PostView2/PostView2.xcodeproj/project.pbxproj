@@ -27,6 +27,7 @@
 		D571E01120385DE700A7B96D /* GLColorMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D571E00E20385DE700A7B96D /* GLColorMap.cpp */; };
 		D571E01220385DE700A7B96D /* FileThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D571E00F20385DE700A7B96D /* FileThread.cpp */; };
 		D571E01320385DE700A7B96D /* GLDisplacementMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D571E01020385DE700A7B96D /* GLDisplacementMap.cpp */; };
+		D576BB3220CACBD100F09942 /* moc_DlgAddEquation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D576BB3120CACBD100F09942 /* moc_DlgAddEquation.cpp */; };
 		D593D28E20A5E8A50011F0C2 /* GLTensorPlot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D593D28C20A5E8A40011F0C2 /* GLTensorPlot.cpp */; };
 		D5A65E0F1DBFA53F00B44009 /* DlgFileInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */; };
 		D5C20C622038851000BFB643 /* moc_FileThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5C20C612038851000BFB643 /* moc_FileThread.cpp */; };
@@ -173,6 +174,7 @@
 		D571E00E20385DE700A7B96D /* GLColorMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLColorMap.cpp; sourceTree = "<group>"; };
 		D571E00F20385DE700A7B96D /* FileThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileThread.cpp; sourceTree = "<group>"; };
 		D571E01020385DE700A7B96D /* GLDisplacementMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLDisplacementMap.cpp; sourceTree = "<group>"; };
+		D576BB3120CACBD100F09942 /* moc_DlgAddEquation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_DlgAddEquation.cpp; sourceTree = "<group>"; };
 		D593D28C20A5E8A40011F0C2 /* GLTensorPlot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLTensorPlot.cpp; sourceTree = "<group>"; };
 		D593D28D20A5E8A40011F0C2 /* GLTensorPlot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLTensorPlot.h; sourceTree = "<group>"; };
 		D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgFileInfo.cpp; sourceTree = "<group>"; };
@@ -495,6 +497,7 @@
 				D5E0E6A61E72390D006FE591 /* moc_DataFieldSelector.cpp */,
 				D5FF79FC1D72756B003D2CBD /* moc_DataPanel.cpp */,
 				D5FF79FD1D72756B003D2CBD /* moc_DistanceMapTool.cpp */,
+				D576BB3120CACBD100F09942 /* moc_DlgAddEquation.cpp */,
 				D5FF79FE1D72756B003D2CBD /* moc_DlgExportXPLT.cpp */,
 				D5FF79FF1D72756B003D2CBD /* moc_DlgViewSettings.cpp */,
 				D5FF7A001D72756B003D2CBD /* moc_DlgWidgetProps.cpp */,
@@ -665,6 +668,7 @@
 				D5FF7A841D72756B003D2CBD /* PlotMixTool.cpp in Sources */,
 				D5FF7A5D1D72756B003D2CBD /* GLVectorPlot.cpp in Sources */,
 				D5FF7A701D72756B003D2CBD /* moc_GraphWindow.cpp in Sources */,
+				D576BB3220CACBD100F09942 /* moc_DlgAddEquation.cpp in Sources */,
 				D5FF7A571D72756B003D2CBD /* GLMesh.cpp in Sources */,
 				D5FF7A541D72756B003D2CBD /* GLDataMap.cpp in Sources */,
 				D5FF7A551D72756B003D2CBD /* GLIsoSurfacePlot.cpp in Sources */,
