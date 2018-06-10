@@ -202,13 +202,13 @@ void CMaterialPanel::UpdateStates()
 		QFont font = pi->font();
 		if (mat.visible())
 		{
-			pi->setForeground(Qt::black);
+//			pi->setForeground(Qt::black);
 			font.setBold(mat.enabled());
 			pi->setFont(font);
 		}
 		else 
 		{
-			pi->setForeground(Qt::gray);
+//			pi->setForeground(Qt::gray);
 			font.setBold(mat.enabled());
 			pi->setFont(font);
 		}
