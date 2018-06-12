@@ -719,7 +719,7 @@ public:
 class FEStrain
 {
 public:
-	FEStrain() { m_nref = 0; }
+	FEStrain() { m_nref = -1; }
 public:
 	int	m_nref;
 };

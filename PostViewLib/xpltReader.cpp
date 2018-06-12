@@ -126,6 +126,14 @@ bool XpltReader::Load(FEModel& fem)
 						}
 					}
 				}
+				else if (read_state_flag == XPLT_READ_FIRST_AND_LAST)
+				{
+					if (nstate == 0)
+					{
+						fem.AddState(m_pstate);
+						m_pstate = 0;
+					}
+				}
 			}
 			else errf("Error while reading state data.");
 			m_ar.CloseChunk();
@@ -143,7 +151,8 @@ bool XpltReader::Load(FEModel& fem)
 				break;
 			}
 		}
-		if (read_state_flag == XPLT_READ_LAST_STATE_ONLY) { fem.AddState(m_pstate); m_pstate = 0; }
+		if ((read_state_flag == XPLT_READ_LAST_STATE_ONLY) ||
+			(read_state_flag == XPLT_READ_FIRST_AND_LAST)) { fem.AddState(m_pstate); m_pstate = 0; }
 	}
 	catch (...)
 	{

@@ -30,11 +30,12 @@ FEModel* FEPlotMix::Load(const char **szfile, int n)
 	// load the first model
 	FEModel* pfem = new FEModel;
 	pfem->SetTitle("PlotMix");
-	pfr->SetReadStateFlag(XPLT_READ_LAST_STATE_ONLY);
+	pfr->SetReadStateFlag(XPLT_READ_FIRST_AND_LAST);
 	if (pfr->Load(*pfem, szfile[0]) == false) { delete pfem; return 0; }
 
-	// clear all states, except the last one
-	ClearStates(*pfem);
+	// the "time" value will be the state
+	pfem->GetState(0)->m_time = 0;
+	pfem->GetState(1)->m_time = 1;
 
 	// get the mesh
 	FEMeshBase& m1 = *pfem->GetFEMesh(0);
@@ -48,6 +49,9 @@ FEModel* FEPlotMix::Load(const char **szfile, int n)
 
 	// get the mesh of the new model
 	FEMeshBase* mesh = pfem->GetFEMesh(0);
+
+	// only read last states
+	pfr->SetReadStateFlag(XPLT_READ_LAST_STATE_ONLY);
 
 	// load the other models
 	for (int i=1; i<n; ++i)
@@ -67,9 +71,6 @@ FEModel* FEPlotMix::Load(const char **szfile, int n)
 		if ((m1.Nodes   () != m2.Nodes()) ||
 			(m1.Elements() != m2.Elements())) { delete pfem; return 0; } 
 
-		// clear all the states of the second fem
-		ClearStates(fem2);
-
 		// see if the data size is the same
 		FEDataManager* pdm2 = fem2.GetDataManager();
 
@@ -87,7 +88,7 @@ FEModel* FEPlotMix::Load(const char **szfile, int n)
 		}
 
 		// add a new state by copying it from fem2
-		FEState* pstate = new FEState((float) i, pfem, fem2.GetState(0));
+		FEState* pstate = new FEState((float) i + 1.f, pfem, fem2.GetState(0));
 
 		// the state's mesh was set to the fem2 mesh, but we don't want that
 		pstate->SetFEMesh(mesh);

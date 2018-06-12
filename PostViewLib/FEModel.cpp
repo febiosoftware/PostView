@@ -731,10 +731,19 @@ void FEModel::AddDataField(FEDataField* pd, vector<int>& L)
 // displacement field.
 vec3f FEModel::NodePosition(int n, int ntime)
 {
-	FEMeshBase* mesh = GetState(ntime)->GetFEMesh();
-	vec3f r = mesh->Node(n).m_r0;
-	if (m_ndisp) r += EvaluateNodeVector(n, ntime, m_ndisp);
-	
+	vec3f r;
+	if (ntime >= 0)
+	{
+		FEMeshBase* mesh = GetState(ntime)->GetFEMesh();
+		r = mesh->Node(n).m_r0;
+		if (m_ndisp) r += EvaluateNodeVector(n, ntime, m_ndisp);
+	}
+	else
+	{
+		FEMeshBase* mesh = GetFEMesh(0);
+		r = mesh->Node(n).m_r0;
+	}
+
 	return r;
 }
 
