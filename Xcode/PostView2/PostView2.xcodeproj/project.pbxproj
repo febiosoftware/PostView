@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D50DA1BC20D199D000ECF39D /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D50DA1B820D199D000ECF39D /* libavcodec.a */; };
+		D50DA1BD20D199D000ECF39D /* libavutil.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D50DA1B920D199D000ECF39D /* libavutil.a */; };
+		D50DA1BE20D199D000ECF39D /* libswscale.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D50DA1BA20D199D000ECF39D /* libswscale.a */; };
+		D50DA1BF20D199D000ECF39D /* libavformat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D50DA1BB20D199D000ECF39D /* libavformat.a */; };
 		D51114421ECC973100B8849F /* AVIAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D511143C1ECC973100B8849F /* AVIAnimation.cpp */; };
 		D51114431ECC973100B8849F /* ImgAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D511143E1ECC973100B8849F /* ImgAnimation.cpp */; };
 		D51114441ECC973100B8849F /* MPEGAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D51114401ECC973100B8849F /* MPEGAnimation.cpp */; };
@@ -139,6 +143,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D50DA1B820D199D000ECF39D /* libavcodec.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavcodec.a; path = ../../../../../../../../../../../usr/local/Cellar/ffmpeg/4.0/lib/libavcodec.a; sourceTree = "<group>"; };
+		D50DA1B920D199D000ECF39D /* libavutil.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavutil.a; path = ../../../../../../../../../../../usr/local/Cellar/ffmpeg/4.0/lib/libavutil.a; sourceTree = "<group>"; };
+		D50DA1BA20D199D000ECF39D /* libswscale.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswscale.a; path = ../../../../../../../../../../../usr/local/Cellar/ffmpeg/4.0/lib/libswscale.a; sourceTree = "<group>"; };
+		D50DA1BB20D199D000ECF39D /* libavformat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavformat.a; path = ../../../../../../../../../../../usr/local/Cellar/ffmpeg/4.0/lib/libavformat.a; sourceTree = "<group>"; };
 		D511143C1ECC973100B8849F /* AVIAnimation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AVIAnimation.cpp; sourceTree = "<group>"; };
 		D511143D1ECC973100B8849F /* AVIAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVIAnimation.h; sourceTree = "<group>"; };
 		D511143E1ECC973100B8849F /* ImgAnimation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImgAnimation.cpp; sourceTree = "<group>"; };
@@ -343,6 +351,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D50DA1BC20D199D000ECF39D /* libavcodec.a in Frameworks */,
+				D50DA1BD20D199D000ECF39D /* libavutil.a in Frameworks */,
+				D50DA1BE20D199D000ECF39D /* libswscale.a in Frameworks */,
+				D50DA1BF20D199D000ECF39D /* libavformat.a in Frameworks */,
 				D52C6FB51D75DCE900DF804B /* libPostViewLib.a in Frameworks */,
 				D5E08BA320A5E5BE00275FAB /* libGLWLib.a in Frameworks */,
 				D5CEB8B0208929CD00BFEA96 /* QtWidgets.framework in Frameworks */,
@@ -582,6 +594,10 @@
 		D5FF7AA61D727B52003D2CBD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D50DA1B820D199D000ECF39D /* libavcodec.a */,
+				D50DA1BB20D199D000ECF39D /* libavformat.a */,
+				D50DA1B920D199D000ECF39D /* libavutil.a */,
+				D50DA1BA20D199D000ECF39D /* libswscale.a */,
 				D5CEB8AF208929CD00BFEA96 /* QtWidgets.framework */,
 				D5CEB8AD208929BD00BFEA96 /* QtGui.framework */,
 				D5CEB8AB208929AF00BFEA96 /* QtCore.framework */,
@@ -821,6 +837,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
+					"-DFFMPEG",
 					"-DNDEBUG",
 				);
 				SDKROOT = macosx;
@@ -848,6 +865,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Applications/glew-2.0.0/lib",
+					/usr/local/Cellar/ffmpeg/4.0/lib,
 				);
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_BUNDLE_IDENTIFIER = FEB.PostView2;
@@ -907,6 +925,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
+					"-DFFMPEG",
 					"-DNDEBUG",
 				);
 				SDKROOT = macosx;
@@ -957,6 +976,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
+					"-DFFMPEG",
 					"-DNDEBUG",
 				);
 				SDKROOT = macosx;
@@ -976,12 +996,15 @@
 					/usr/local/opt/qt5/include/QtWidgets,
 					/usr/local/opt/qt5/include/QtGui,
 					/usr/local/opt/qt5/include/QtCore,
+					/usr/local/opt/ffmpeg/include,
 				);
 				INFOPLIST_FILE = PostView2/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/usr/local/opt/qt5/lib,
+					/usr/local/opt/ffmpeg/lib,
+					/usr/local/Cellar/ffmpeg/4.0/lib,
 				);
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_BUNDLE_IDENTIFIER = FEB.PostView2;
@@ -1005,12 +1028,15 @@
 					/usr/local/opt/qt5/include/QtGui,
 					/usr/local/opt/qt5/include/QtCore,
 					/usr/local/include/GL,
+					/usr/local/opt/ffmpeg/include,
 				);
 				INFOPLIST_FILE = PostView2/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"@executable_path/../Resources",
 					"$(inherited)",
+					/usr/local/opt/ffmpeg/lib,
+					/usr/local/Cellar/ffmpeg/4.0/lib,
 				);
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_BUNDLE_IDENTIFIER = FEB.PostView2;
