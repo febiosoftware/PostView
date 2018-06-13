@@ -81,6 +81,8 @@ int CAVIAnimation::Create(const char* szfile, int cx, int cy, float fps)
 		return FALSE;
 	}
 
+	if (m_pavicmp == 0) return FALSE;
+
 	// set the file format header info
 	BITMAPINFO *pbmi = (BITMAPINFO*) &m_bmi;
 	ZeroMemory(&pbmi->bmiHeader, sizeof(BITMAPINFOHEADER));	
@@ -122,13 +124,12 @@ int CAVIAnimation::Write(QImage& im)
 			return FALSE;
 		}
 	}
-	else // else make sure the format is still the same
+	
+	// make sure the format is still the same
+	if ((m_cx != im.width()) || (m_cy != im.height()))
 	{
-		if ((m_cx != im.width()) || (m_cy != im.height()))
-		{
-			Close();
-			return FALSE;
-		}
+		Close();
+		return FALSE;
 	}
 
 	// we need to flip the image and convert it to BGR

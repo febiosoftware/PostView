@@ -21,7 +21,7 @@ public:
     
 public:
     int Create(const char* szfile, int cx, int cy, float fps = 10.f);
-    int Write(CRGBImage& im);
+    int Write(QImage& im) override;
     void Close();
     bool IsValid() { return (file != NULL); }
     
@@ -38,7 +38,7 @@ protected:
 	int		m_nframe;	// frame index
     
 private:
-    bool Rgb24ToYuv420p(CRGBImage &im);
+    bool Rgb24ToYuv420p(QImage &im);
 };
 #endif
 

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "MPEGAnimation.h"
+#include <QImage>
 
 #ifdef FFMPEG
 CMPEGAnimation::CMPEGAnimation()
@@ -42,6 +43,7 @@ int CMPEGAnimation::Create(const char *szfile, int cx, int cy, float fps)
     
     // frames per second
     av_codec_context->time_base = av_make_q(1,25);
+	av_codec_context->framerate = av_make_q(25, 1);
     
     // emit one intra frame every ten frames
     av_codec_context->gop_size = 10;
@@ -61,10 +63,23 @@ int CMPEGAnimation::Create(const char *szfile, int cx, int cy, float fps)
         return false;
     }
     
+	yuv_frame = av_frame_alloc();
+	if (yuv_frame == 0) return false;
+
+	yuv_frame->format = av_codec_context->pix_fmt;
+	yuv_frame->width = av_codec_context->width;
+	yuv_frame->height = av_codec_context->height;
+
+	int yuv_frame_bytes = av_image_get_buffer_size(AV_PIX_FMT_YUV420P, av_codec_context->width, av_codec_context->height, 32);
+
+	buffer = (uint8_t *)av_malloc(yuv_frame_bytes * sizeof(uint8_t));
+
+	avpicture_fill((AVPicture *)yuv_frame, buffer, AV_PIX_FMT_YUV420P, av_codec_context->width, av_codec_context->height);
+
     return true;
 }
 
-int CMPEGAnimation::Write(CRGBImage &im)
+int CMPEGAnimation::Write(QImage &im)
 {
     // cannot convert rgb24 to yuv420
     if (!Rgb24ToYuv420p(im))
@@ -99,29 +114,19 @@ int CMPEGAnimation::Write(CRGBImage &im)
     return true;
 }
 
-bool CMPEGAnimation::Rgb24ToYuv420p(CRGBImage &im)
+bool CMPEGAnimation::Rgb24ToYuv420p(QImage &im)
 {
-	im.FlipY();
-
-    yuv_frame = av_frame_alloc();
-    
-    int yuv_frame_bytes = avpicture_get_size(PIX_FMT_YUV420P, av_codec_context->width, av_codec_context->height);
-    
-    buffer = (uint8_t *) av_malloc(yuv_frame_bytes * sizeof(uint8_t));
-    
-    avpicture_fill((AVPicture *)yuv_frame, buffer, PIX_FMT_YUV420P, av_codec_context->width, av_codec_context->height);
-    
     struct SwsContext *converted_format = NULL;
     
-    converted_format = sws_getCachedContext(converted_format, av_codec_context->width, av_codec_context->height, AV_PIX_FMT_RGB24, av_codec_context->width, av_codec_context->height, AV_PIX_FMT_YUV420P, SWS_BICUBIC, NULL, NULL, NULL);
+	converted_format = sws_getCachedContext(converted_format, av_codec_context->width, av_codec_context->height, AV_PIX_FMT_BGRA, av_codec_context->width, av_codec_context->height, AV_PIX_FMT_YUV420P, SWS_BICUBIC, NULL, NULL, NULL);
     
     if (!converted_format)
     {
         return false;
     }
-    
-    int linesize[] = {3 * im.Width(), 0, 0, 0, 0, 0, 0, 0};
-	const uint8_t* p = im.GetBytes();
+
+	int linesize[] = { im.bytesPerLine(), 0, 0, 0, 0, 0, 0, 0 };
+	const uint8_t* p = im.bits();
     
     sws_scale(converted_format, &p, linesize, 0, av_codec_context->height, yuv_frame->data, yuv_frame->linesize);
     
@@ -161,9 +166,8 @@ void CMPEGAnimation::Close()
     avcodec_close(av_codec_context);
     av_free(av_codec_context);
     if (file) fclose(file);
-    avcodec_free_frame(&yuv_frame);
-    avcodec_free_frame(&rgb_frame);
-    
+	av_frame_free(&yuv_frame);
+
     file = NULL;
     av_codec_context = NULL;
     av_output_format = NULL;

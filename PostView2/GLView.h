@@ -175,11 +175,14 @@ public:
 	void UpdateWidgets(bool bposition = true);
 
 public:
-	void NewAnimation(const char* szfile, CAnimation* panim, GLenum fmt = GL_RGB);
+	bool NewAnimation(const char* szfile, CAnimation* panim, GLenum fmt = GL_RGB);
 	void StartAnimation();
 	void StopAnimation();
 	void PauseAnimation();
 	void SetVideoFormat(GLenum fmt) { m_video_fmt = fmt; }
+
+	ANIMATION_MODE AnimationMode() const;
+	bool HasRecording() const;
 
 	bool FindFaceIntersection(const Ray& ray, const FEMeshBase& mesh, Intersection& q);
 	bool FindElementIntersection(const Ray& ray, const FEMeshBase& mesh, Intersection& q);

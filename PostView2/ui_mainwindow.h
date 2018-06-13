@@ -123,6 +123,8 @@ public:
 
 	int		m_theme;
 
+	QString	m_old_title;
+
 public:
 	// build the UI
 	void setupUi(CMainWindow* MainWindow)

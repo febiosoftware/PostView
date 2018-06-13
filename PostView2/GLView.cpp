@@ -17,6 +17,7 @@
 #include <QPainter>
 #include <QtCore/QTimer>
 #include <QMenu>
+#include <QMessageBox>
 
 class WorldToScreen
 {
@@ -612,7 +613,11 @@ void CGLView::paintGL()
 	{
 		glFlush();
 		QImage im = CaptureScreen();
-		m_panim->Write(im);
+		if (m_panim->Write(im) == FALSE)
+		{
+			StopAnimation();
+			QMessageBox::critical(this, "PostView2", "An error occurred while recording.");
+		}
 	}
 
 	// if the camera is animating, we need to redraw
@@ -2983,7 +2988,7 @@ void CGLView::OnPopup(Fl_Widget* pw, void* pd)
 }
 */
 
-void CGLView::NewAnimation(const char* szfile, CAnimation* panim, GLenum fmt)
+bool CGLView::NewAnimation(const char* szfile, CAnimation* panim, GLenum fmt)
 {
 	m_panim = panim;
 	SetVideoFormat(fmt);
@@ -3004,7 +3009,6 @@ void CGLView::NewAnimation(const char* szfile, CAnimation* panim, GLenum fmt)
 	// create the animation
 	if (m_panim->Create(szfile, cx, cy, fps) == false)
 	{
-//		flx_error("Failed creating animation stream.");
 		delete m_panim;
 		m_panim = 0;
 		m_nanim = ANIM_STOPPED;
@@ -3017,6 +3021,18 @@ void CGLView::NewAnimation(const char* szfile, CAnimation* panim, GLenum fmt)
 		// set the animation mode to paused
 		m_nanim = ANIM_PAUSED;
 	}
+
+	return (m_panim != 0);
+}
+
+bool CGLView::HasRecording() const
+{
+	return (m_panim != 0);
+}
+
+ANIMATION_MODE CGLView::AnimationMode() const
+{
+	return m_nanim;
 }
 
 void CGLView::StartAnimation()

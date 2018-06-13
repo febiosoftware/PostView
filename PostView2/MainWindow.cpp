@@ -2129,13 +2129,14 @@ void CMainWindow::on_actionRecordNew_triggered()
 
 		int nfilter = filters.indexOf(dlg.selectedNameFilter());
 
+		bool bret = false;
 		CAnimation* panim = 0;
 #ifdef WIN32
 		if (nfilter == 0)
 		{
 			panim = new CAVIAnimation;
 			if (ch == 0) sprintf(szfilename + l, ".avi");
-			ui->glview->NewAnimation(szfilename, panim, GL_BGR_EXT);
+			bret = ui->glview->NewAnimation(szfilename, panim, GL_BGR_EXT);
 		}
 		else if (nfilter == noff)
 #else
@@ -2144,47 +2145,81 @@ void CMainWindow::on_actionRecordNew_triggered()
 		{
 			panim = new CBmpAnimation;
 			if (ch == 0) sprintf(szfilename + l, ".bmp");
-			ui->glview->NewAnimation(szfilename, panim);
+			bret = ui->glview->NewAnimation(szfilename, panim);
 		}
 		else if (nfilter == noff + 1)
 		{
 			panim = new CJpgAnimation;
 			if (ch == 0) sprintf(szfilename + l, ".jpg");
-			ui->glview->NewAnimation(szfilename, panim);
+			bret = ui->glview->NewAnimation(szfilename, panim);
 		}
 		else if (nfilter == noff + 2)
 		{
 			panim = new CPNGAnimation;
 			if (ch == 0) sprintf(szfilename + l, ".png");
-			ui->glview->NewAnimation(szfilename, panim);
+			bret = ui->glview->NewAnimation(szfilename, panim);
 		}
 		else if (nfilter == noff + 3)
 		{
 #ifdef FFMPEG
 			panim = new CMPEGAnimation;
 			if (ch == 0) sprintf(szfilename + l, ".mpg");
-			m_pGLView->NewAnimation(szfilename, panim);
+			bret = ui->glview->NewAnimation(szfilename, panim);
 #else
 			QMessageBox::critical(this, "PostView2", "This video format is not supported in this version");
 #endif
 		}
+
+		if (bret)
+		{
+			ui->m_old_title = windowTitle();
+			setWindowTitle(ui->m_old_title + "   (RECORDING PAUSED)");
+		}
+		else bret = QMessageBox::critical(this, "PostView", "Failed creating animation stream.");
+
 		RedrawGL();
 	}
 }
 
 void CMainWindow::on_actionRecordStart_triggered()
 {
-	ui->glview->StartAnimation();
+	if (ui->glview->HasRecording())
+	{
+		if (ui->m_old_title.isEmpty()) ui->m_old_title = windowTitle();
+			
+		setWindowTitle(ui->m_old_title + "   (RECORDING)");
+
+		ui->glview->StartAnimation();
+	}
+	else QMessageBox::information(this, "PostView", "You need to create a new video file before you can start recording");
 }
 
 void CMainWindow::on_actionRecordPause_triggered()
 {
-	ui->glview->PauseAnimation();
+	if (ui->glview->HasRecording())
+	{
+		if (ui->glview->AnimationMode() == ANIM_RECORDING)
+		{
+			ui->glview->PauseAnimation();
+			setWindowTitle(ui->m_old_title + "   (RECORDING PAUSED)");
+		}
+	}
+	else QMessageBox::information(this, "PostView", "You need to create a new video file first.");
 }
 
 void CMainWindow::on_actionRecordStop_triggered()
 {
-	ui->glview->StopAnimation();
+	if (ui->glview->HasRecording())
+	{
+		if (ui->glview->AnimationMode() != ANIM_STOPPED)
+		{
+			ui->glview->StopAnimation();
+			setWindowTitle(ui->m_old_title);
+		}
+
+		ui->m_old_title.clear();
+	}
+	else QMessageBox::information(this, "PostView", "You need to create a new video file first.");
 }
 
 void CMainWindow::on_recentFiles_triggered(QAction* action)
