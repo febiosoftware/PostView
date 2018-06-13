@@ -613,7 +613,7 @@ void CGLView::paintGL()
 	{
 		glFlush();
 		QImage im = CaptureScreen();
-		if (m_panim->Write(im) == FALSE)
+		if (m_panim->Write(im) == false)
 		{
 			StopAnimation();
 			QMessageBox::critical(this, "PostView2", "An error occurred while recording.");
