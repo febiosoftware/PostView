@@ -223,7 +223,8 @@ void CDlgBoxProps::apply()
 	pb->set_font(font);
 	pb->set_fg_color(toGLColor(ui->pfont->getFontColor()));
 
-	if (parentWidget()) parentWidget()->repaint();
+	CMainWindow* wnd = dynamic_cast<CMainWindow*>(parentWidget());
+	if (wnd) wnd->RedrawGL();
 }
 
 void CDlgBoxProps::accept()
@@ -419,7 +420,8 @@ void CDlgTriadProps::apply()
 	pw->set_font(labelFont);
 	pw->set_fg_color(toGLColor(ui->plabelFont->getFontColor()));
 
-	if (parentWidget()) parentWidget()->repaint();
+	CMainWindow* wnd = dynamic_cast<CMainWindow*>(parentWidget());
+	if (wnd) wnd->RedrawGL();
 }
 
 void CDlgTriadProps::accept()
@@ -506,7 +508,8 @@ void CDlgCaptureFrameProps::apply()
 	int h = ui->ph->value();
 	pw->resize(x, y, w, h);
 
-	if (parentWidget()) parentWidget()->repaint();
+	CMainWindow* wnd = dynamic_cast<CMainWindow*>(parentWidget());
+	if (wnd) wnd->RedrawGL();
 }
 
 void CDlgCaptureFrameProps::accept()
