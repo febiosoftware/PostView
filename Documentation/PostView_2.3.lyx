@@ -1,0 +1,7639 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass extbook
+\begin_preamble
+% Converted from Microsoft Word to LaTeX
+% by Chikrii Softlab Word2TeX converter (version 5.0)
+% Copyright (C) 1999-2011 Chikrii Softlab. All rights reserved.
+% http://www.chikrii.com
+% mailto: support@chikrii.com
+% License: CSL#005010
+
+\usepackage{latexsym}
+\end_preamble
+\use_default_options false
+\begin_modules
+theorems-ams
+eqs-within-sections
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package none
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "helvet" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family sfdefault
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 11
+\spacing single
+\use_hyperref true
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder true
+\pdf_colorlinks false
+\pdf_backref false
+\pdf_pdfusetitle true
+\papersize default
+\use_geometry true
+\use_package amsmath 2
+\use_package amssymb 2
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 0
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date true
+\justification true
+\use_refstyle 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1in
+\topmargin 1in
+\rightmargin 1in
+\bottommargin 1in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+\begin_inset Graphics
+	filename Figures/PostView.png
+	lyxscale 25
+	width 6in
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\end_inset
+
+USER MANUAL Version 2.3
+\end_layout
+
+\begin_layout Date
+Last Updated: June 28, 2018
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph*
+Contributors
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Dr.
+ Steve Maas (
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+href{mailto:steve.maas@utah.edu}{steve.maas@utah.edu}
+\end_layout
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+Dr.
+ Jeffrey Weiss (
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+href{mailto:jeff.weiss@utah.edu}{jeff.weiss@utah.edu}
+\end_layout
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+Dr.
+ Gerard Ateshian (
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+href{mailto:ateshian@columbia.edu}{ateshian@columbia.edu}
+\end_layout
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+Dave Rawlins (
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+href{mailto:rawlins@sci.utah.edu}{rawlins@sci.utah.edu}
+\end_layout
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Paragraph*
+Contact address
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Musculoskeletal Research Laboratories, University of Utah
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\end_inset
+
+72 S.
+ Central Campus Drive, Room 2646
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\end_inset
+
+Salt Lake City, Utah
+\end_layout
+
+\begin_layout Paragraph*
+Website
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+MRL: 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+url{http://mrl.sci.utah.edu}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\end_inset
+
+FEBio: 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+url{http://febio.org}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph*
+Forum
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+url{https://forums.febio.org/}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph*
+Acknowledgments
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Development of the FEBio project is supported in part by a grant from the
+ U.S.
+ National Institutes of Health (R01GM083925).
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename Figures/NIHlogo.bmp
+	lyxscale 25
+	height 0.75in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+Getting Started
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:getting"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Overview of PostView
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:overview"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+PostView is a finite element (FE) post-processing application that is designed
+ to view 
+\emph on
+FEBio
+\emph default
+ output files.
+ It offers many post-processing capabilities, such as generation of surface
+ plots, isosurface plots, plane cuts, and many more.
+ Further, it offers a user-friendly graphical interface that shows 3D visualizat
+ion and animation of finite element models.
+ It has a customizable Graphics View and users can take snapshots and make
+ recordings.
+ In addition to reading FEBio output files, PostView can read several other
+ file formats, including LSDYNA keyword and database files, NIKE3D input
+ and output files, FEBio input files, VTK files and several other formats.
+ It also allows the user to import user defined data, offering a flexible
+ tool to accommodate the analysis of results from other FE software programs
+ in PostView.
+\end_layout
+
+\begin_layout Section
+Running PostView
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:running"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+System Recommendations
+\end_layout
+
+\begin_layout Standard
+PostView runs on most Windows platforms, MAC OSX, and Linux.
+ In order to run PostView, a memory size of at least 512 Mb is recommended.
+ Larger models may require more memory.
+ A processor speed of at least 1 GHz is also recommended.
+ The computer's graphics card must support the OpenGL library, since the
+ application makes extensive use of it.
+\end_layout
+
+\begin_layout Subsection
+Command Line Options
+\end_layout
+
+\begin_layout Standard
+When starting PostView from the command line, the full syntax for the command
+ is:
+\end_layout
+
+\begin_layout Standard
+>postview2 [
+\emph on
+filename
+\emph default
+]
+\end_layout
+
+\begin_layout Standard
+Here, 
+\emph on
+filename
+\emph default
+ is the optional name of a FEBio plot file.
+ If a filename is specified, the file will be loaded into the PostView environme
+nt when PostView starts.
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+A Quick Tour
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:mylabel1"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This chapter introduces the reader to the PostView user interface by using
+ a sample FEBio output file that comes with the PostView distribution.
+ The sample is called 
+\begin_inset Quotes eld
+\end_inset
+
+
+\emph on
+sample.xplt
+\emph default
+
+\begin_inset Quotes erd
+\end_inset
+
+ and shows a cylinder contacting a deformable box.
+\end_layout
+
+\begin_layout Section
+Starting PostView
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:starting"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+When PostView starts, the GUI will look something like Figure 1.
+ At the top of the screen you'll find the menu and toolbars.
+ On the left side you'll see different panels that can be used to do various
+ things such as opening files, add various plots to the model, filter data,
+ and more.
+ The big area in the center is called the 
+\emph on
+Graphics View
+\emph default
+ and will show a rendering of the model after a file is loaded.
+ See Chapter 3 for a detailed overview of the GUI components of PostView.
+\end_layout
+
+\begin_layout Section
+Opening a File
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:opening"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+After you start PostView, you should see something like the screen below.
+ On the left side of the screen the
+\emph on
+ File Viewer
+\emph default
+ is displayed.
+ The 
+\emph on
+File Viewer
+\emph default
+ can be used to navigate through your folder structure.
+ To open a file, simply locate the file in the 
+\emph on
+File Viewer
+\emph default
+ and double click on it.
+ Alternatively, if you prefer to use the more familiar File Open dialog,
+ you can do so by selecting the 
+\emph on
+File
+\emph default
+
+\begin_inset Formula $\backslash$
+\end_inset
+
+
+\emph on
+Open
+\emph default
+ menu or by clicking the corresponding button on the toolbar.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement htbp
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/Figure1.png
+	width 5in
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+The PostView window after the program has started.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig1"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Navigating the Model Viewer
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:navigating"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Open the sample file 
+\emph on
+sample.xplt 
+\emph default
+that is located in the Examples folder of your PostView installation folder.
+ After the file is loaded, the screen should look something like figure
+ 2.
+ You'll notice that the left side now shows the 
+\emph on
+Model Viewer
+\emph default
+.
+ If it is not showing you can activate this window by clicking on the second
+ tab from the left in the upper left corner of the tab window (below the
+ toolbar).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement htbp
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/Figure2.png
+	width 5in
+
+\end_inset
+
+ 
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+PostView with a file loaded.
+ The Model Viewer is active and shows a hierarchical overview of the components
+ of the currently loaded model.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig2"
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+Model Viewer
+\emph default
+ shows a hierarchical overview of the contents of the model.
+ By default, PostView will assign a 
+\emph on
+Displacement map
+\emph default
+ and a 
+\emph on
+Color map
+\emph default
+ to your model.
+ The 
+\emph on
+Displacement map
+\emph default
+ defines a map that will deform the model, and the 
+\emph on
+Color map
+\emph default
+ will define the color displayed on the model.
+ Selecting any item in the 
+\emph on
+Model Viewer
+\emph default
+ will display its properties list below the 
+\emph on
+Model Viewer
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+Select the 
+\emph on
+Color map
+\emph default
+ item in the 
+\emph on
+Model Viewer
+\emph default
+.
+ In the property list, find the 
+\emph on
+Data field
+\emph default
+ member.
+ This parameter determines the data field that will be used to color the
+ model.
+ You can select the data field to display by clicking on the 
+\emph on
+Data field
+\emph default
+ member and selecting an item from the drop down list.
+ To activate the color map, click the check button next to the name of the
+ name field.
+ Note that you can also select the data field from the main toolbar as well.
+ When you select the data field from the main toolbar you can also press
+ the 
+\emph on
+Toggle Color map 
+\emph default
+button, located next to the data selection field on the toolbar.
+\end_layout
+
+\begin_layout Section
+The Graphics View
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:mylabel1"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+The big part of the screen that shows a 3D rendering of your model is called
+ the 
+\emph on
+Graphics View
+\emph default
+.
+ When a file is loaded, PostView will display the model in a standard view
+ that shows the entire model.
+ The user can change the view using the mouse and the mouse buttons.
+\end_layout
+
+\begin_layout Itemize
+To rotate the view, hold down the left mouse button while dragging the mouse.
+ 
+\end_layout
+
+\begin_layout Itemize
+To pan the view, (that is, to move it left or right) use the middle mouse
+ button while dragging.
+ 
+\end_layout
+
+\begin_layout Itemize
+To zoom the view in or out press the right button while dragging.
+ 
+\end_layout
+
+\begin_layout Standard
+PostView also defines six default views, namely: top, bottom, left, right,
+ front and back.
+ The numeric keys on the keypad can be used to select these views.
+ For example, the 
+\begin_inset Quotes eld
+\end_inset
+
+1
+\begin_inset Quotes erd
+\end_inset
+
+ button selects the front view, the 
+\begin_inset Quotes eld
+\end_inset
+
+3
+\begin_inset Quotes erd
+\end_inset
+
+ button the right view and 
+\begin_inset Quotes eld
+\end_inset
+
+7
+\begin_inset Quotes erd
+\end_inset
+
+ selects the top view.
+ The opposite views can be activated by holding down the 
+\emph on
+ctrl 
+\emph default
+button when pressing the keypad buttons.
+ For example, to activate the bottom view, press ctrl
+\begin_inset Formula $+$
+\end_inset
+
+7.
+ The left view (ctrl
+\begin_inset Formula $+$
+\end_inset
+
+3) and back (ctrl
+\begin_inset Formula $+$
+\end_inset
+
+1) can be accessed similarly.
+ Note that this only works with the numbers on the keypad.
+ The numeric keys at the top of your keyboard do nothing.
+ If you have trouble remembering these shortcuts (or if you don't have a
+ keypad on your keyboard), you can right-click on the 
+\emph on
+Graphics View,
+\emph default
+ which brings up a popup menu from which you can select the default views.
+ Alternatively, you can also find these options in the View menu.
+\end_layout
+
+\begin_layout Section
+Animating the Model 
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:animating"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Usually the file will contain the results of a finite element analysis that
+ may have stored the state of the model for several time steps.
+ If that is the case, the 
+\emph on
+State Controller 
+\emph default
+will be displayed at the bottom of the window.
+ The 
+\emph on
+State Controller
+\emph default
+ allows you to select different results by clicking inside the dark grey
+ area of the 
+\emph on
+State Controller
+\emph default
+.
+ The 
+\emph on
+Animation 
+\emph default
+toolbar can also be used to animate the model or to step through the different
+ time steps.
+\end_layout
+
+\begin_layout Standard
+In Figure 3 you can see what your model should look like at the last time
+ step if you selected the 
+\emph on
+Effective Lagrange Strain
+\emph default
+ data field.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement htbp
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/Figure3.png
+	width 5in
+
+\end_inset
+
+ 
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Sample file showing the Effective Lagrange strain at the last time step.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig3"
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Saving a Screenshot
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:saving"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+PostView allows you to take a snapshot of the 
+\emph on
+Graphics View
+\emph default
+ and save it to file.
+ This can be done by either selecting 
+\emph on
+File/Snapshot 
+\emph default
+from the menu (or pressing the shortcut 
+\emph on
+ctrl
+\emph default
+
+\begin_inset Formula $+p)$
+\end_inset
+
+ or by pressing the 
+\emph on
+Snapshot 
+\emph default
+toolbar button.
+ A standard file dialog box now appears that allows you to select a file
+ type and enter a filename.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+The PostView Environment
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:mylabel2"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+This chapter presents a more detailed overview of the PostView GUI and a
+ description of the menu bar and the toolbar.
+\end_layout
+
+\begin_layout Section
+An Overview of the PostView GUI
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:mylabel2"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+PostView has a Graphical User Interface (GUI) that offers an easy and intuitive
+ way to interact with the FE model.
+ Figure 4 shows the GUI after the program has started and the sample file
+ is loaded.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement htbp
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/Figure4.png
+	width 5in
+
+\end_inset
+
+ 
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+The PostView GUI after a file has been loaded.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig4"
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The GUI consists of several components.
+ The 
+\emph on
+Menu Bar
+\emph default
+ at the top allows access to the various PostView options and settings.
+ Located below the menu bar are several toolbars.
+ The 
+\emph on
+Graphics View
+\emph default
+ (GV), the big central area of the window, shows a 3D view of the FE model.
+ At the bottom, the 
+\emph on
+State Controller
+\emph default
+ is used to select the model state that is being displayed.
+ The left side of the window shows additional panels that are organized
+ in a tabulated list.
+ By clicking the tabs at the top of the window (below the tool bar) you
+ can activate each panel.
+ The panels are:
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+File Viewer: 
+\emph default
+allows the user to navigate file folders and open files.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Model Viewer: 
+\emph default
+shows the contents of opened files.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Material viewer: 
+\emph default
+displays an overview of the different materials or parts of the model.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Data Manager: 
+\emph default
+allows users to remove, add, or filter data fields.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+State Manager: 
+\emph default
+lists all the states in the model and can be used to remove states.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Tools panel:
+\emph default
+ displays some useful tools.
+ 
+\end_layout
+
+\begin_layout Standard
+Note that the panels can be detached and docked to other parts of the screen.
+ To detach a panel, click the corresponding title bar and drag it away from
+ the tab window.
+ To dock the panel just move it to another part of the screen.
+ A blue rectangle will appear where the panel can be docked.
+ Note that toolbars can also be moved around.
+\end_layout
+
+\begin_layout Standard
+Each of the UI components described above will be describe in more detailed
+ in subsequent chapters.
+ The menu and toolbars are described in the following sections.
+\end_layout
+
+\begin_layout Section
+The Menu
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:mylabel3"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+In this section we will give an overview of the different menu items that
+ can be found in PostView.
+ The main menu bar, located at the top of the window, consists of the following
+ menus:
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+File -
+\emph default
+ file operations, such as opening and saving data.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Edit -
+\emph default
+ options that apply to the current selection, such as hiding, un-hiding,
+ etc.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Post -
+\emph default
+ contains some post-processing operations.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Record -
+\emph default
+ records an animation of the current Graphics View.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+View
+\emph default
+ -provides options to customize the 
+\emph on
+Graphics View.
+
+\emph default
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Help -
+\emph default
+ allows access to PostView help and the About dialog box.
+ 
+\end_layout
+
+\begin_layout Standard
+A more in-depth description of the different menu items follows.
+\end_layout
+
+\begin_layout Subsection
+The File Menu
+\begin_inset CommandInset label
+LatexCommand label
+name "subsubsec:mylabel1"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+The file menu gives access to file operations and has the following menu
+ items:
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Open 
+\emph default
+- opens a model file.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Save -
+\emph default
+ saves the data to file.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Update -
+\emph default
+ reloads the last loaded data file.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+File Info -
+\emph default
+ displays information about the currently loaded file.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Snapshot -
+\emph default
+ takes a snapshot of the current GV and save it to file.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Open Session -
+\emph default
+ continue a previously saved PostView session.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Save Session -
+\emph default
+ save the current PostView session.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Exit -
+\emph default
+ quits the application.
+ 
+\end_layout
+
+\begin_layout Subsection
+The Edit Menu
+\begin_inset CommandInset label
+LatexCommand label
+name "subsubsec:mylabel2"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+The edit menu gives access to operations that apply on the current selection:
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Select Nodes
+\emph default
+: switch to node selection mode 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Select Edges
+\emph default
+: switch to edge selection mode 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Select Faces
+\emph default
+: switch to face selection mode 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Select Elements
+\emph default
+: switch to element selection mode 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Hide Selected -
+\emph default
+ hides the currently selected items.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Hide Unselected -
+\emph default
+ hides the non-selected items.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Invert Selection -
+\emph default
+ inverts the current selection.
+ All selected items become unselected and vice-versa.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Unhide All -
+\emph default
+ un-hides all the previously hidden items.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Select All -
+\emph default
+ selects all visible items.
+ (Hidden items remain unselected.) 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Select Range -
+\emph default
+ select items based on their current values.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Clear Selection -
+\emph default
+ clears the current selection.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Find -
+\emph default
+ find items from their ID's.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Delete -
+\emph default
+ deletes the currently selected object from the GV.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Properties -
+\emph default
+ modify the properties of the currently selected GV object.
+ 
+\end_layout
+
+\begin_layout Subsection
+The Post Menu
+\begin_inset CommandInset label
+LatexCommand label
+name "subsubsec:mylabel3"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+The post menu allows the user to set many of the options that effect what
+ is being displayed.
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Plane Cut -
+\emph default
+ add a clipping plane to the model.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Vector plot - 
+\emph default
+adds a vector plot object to the model.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Isosurface plot - 
+\emph default
+adds an isosurface plot object to the model.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Slice plot - 
+\emph default
+adds a slice plot object to the model.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Displacement map -
+\emph default
+ add a displacement map to the model.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+New Graph -
+\emph default
+ opens a new graph window.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Summary - 
+\emph default
+provides 2D plots of minimum, maximum and average of the data fields.
+ 
+\begin_inset space \quad{}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Statistics -
+\emph default
+ displays a bar chart of the currently displayed data.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Integrate - 
+\emph default
+shows 
+\begin_inset space \quad{}
+\end_inset
+
+the integration tool.
+ 
+\end_layout
+
+\begin_layout Subsection
+The Record Menu
+\end_layout
+
+\begin_layout Standard
+The Record menu gives the user access to the recording capabilities of PostView.
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+New
+\emph default
+ - selects a new target file for the recording.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Start recording
+\emph default
+ - starts recording the GV and stores the frames to a file.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Pause recording
+\emph default
+ - pauses the current recording.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Stop recording
+\emph default
+ - stops the current recording and closes the target file.
+ 
+\end_layout
+
+\begin_layout Subsection
+The View Menu
+\begin_inset CommandInset label
+LatexCommand label
+name "subsubsec:mylabel4"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+The view menu allows the user to choose options that customize the display.
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Settings
+\emph default
+ - sets foreground and background colors and style 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Toggle Capture Frame 
+\emph default
+- displays or hides the capture frame 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Orthographic Projection
+\emph default
+ - toggle between orthographic and perspective projection 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Show Mesh lines 
+\emph default
+– toggles the mesh lines on or off 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Show tags 
+\emph default
+- toggles the tags on or off 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Show outline - 
+\emph default
+toggles the outline of the model 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Color smoothing 
+\emph default
+– toggles between continuous and discrete gradient smoothing.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Front
+\emph default
+: Rotate view to front view (XZ-plane) 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Back
+\emph default
+: Rotate view to back view (XZ-plane) 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Right
+\emph default
+: Rotate view to right view (YZ-plane) 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Left
+\emph default
+: Rotate view to left view (YZ-plane) 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Top
+\emph default
+: Rotate view to top view (XY-plane) 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Bottom
+\emph default
+: Rotate view to bottom view (XY-plane) 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Track selection 
+\emph default
+– when activated, the camera will follow the current selection 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Save viewpoint
+\emph default
+: Store the current camera position.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Prev viewpoint
+\emph default
+: set the view to the last stored camera position 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Next viewpoint
+\emph default
+: set the view to the next camera position.
+ 
+\end_layout
+
+\begin_layout Subsection
+The Help Menu
+\begin_inset CommandInset label
+LatexCommand label
+name "subsubsec:mylabel5"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+The help menu allows access to the help features available in PostView and
+ access to the software version and developers information.
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Online Help 
+\emph default
+- opens PostView help in a browser.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+About
+\emph default
+ - displays the about box.
+ 
+\end_layout
+
+\begin_layout Section
+The Main Toolbar
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:mylabel4"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+The main 
+\emph on
+toolbar
+\emph default
+ is located below the menu bar and allows quick access to several menu items:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/open.png
+	width 0.27in
+	height 0.27in
+
+\end_inset
+
+Opens an existing file.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/save.png
+	width 0.27in
+	height 0.27in
+
+\end_inset
+
+Saves the currently loaded model.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/refresh.png
+	width 0.26in
+	height 0.26in
+
+\end_inset
+
+Reloads the currently loaded file.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/snapshot.png
+	width 0.26in
+	height 0.26in
+
+\end_inset
+
+Saves a screenshot to file.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/node.png
+	width 0.26in
+	height 0.26in
+
+\end_inset
+
+Switches to node-selection mode.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/edge.png
+	width 0.27in
+	height 0.27in
+
+\end_inset
+
+Switches to edge-selection mode.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/face.png
+	width 0.26in
+	height 0.24in
+
+\end_inset
+
+Switches to face-selection mode.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/element.png
+	width 0.27in
+	height 0.25in
+
+\end_inset
+
+Switches to element-selection-mode.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/select_item.png
+	width 0.27in
+	height 0.25in
+
+\end_inset
+
+Activates single item selection mode
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/select_connected.png
+	width 0.26in
+	height 0.25in
+
+\end_inset
+
+Activates connected item selection mode
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/select_rect.png
+	width 0.29in
+	height 0.27in
+
+\end_inset
+
+Activates rectangular rubber banding selection
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/select_circle.png
+	width 0.27in
+	height 0.25in
+
+\end_inset
+
+Activates circular rubber banding selection
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/select_free.png
+	width 0.27in
+	height 0.25in
+
+\end_inset
+
+Activates free rubber banding selection
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/zoom_selected.png
+	width 0.27in
+	height 0.25in
+
+\end_inset
+
+Zooms in on the selection.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/zoom_extents.png
+	width 0.26in
+	height 0.24in
+
+\end_inset
+
+Zooms to the extents of the model.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/colormap.png
+	width 0.25in
+	height 0.23in
+
+\end_inset
+
+Activate the contour plot
+\end_layout
+
+\begin_layout Section
+The Post Toolbar
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:mylabel5"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+Post 
+\emph default
+toolbar offers various shortcuts to the Post menu items.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/cut.png
+	width 0.28in
+	height 0.25in
+
+\end_inset
+
+Adds a plane cut plot to the model
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/vectors.png
+	width 0.28in
+	height 0.25in
+
+\end_inset
+
+Adds a vector plot to the model
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/isosurface.png
+	width 0.28in
+	height 0.26in
+
+\end_inset
+
+Adds a isosurface plot to the model
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/slice.png
+	width 0.3in
+	height 0.27in
+
+\end_inset
+
+Adds a slice plot to the model
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/chart.png
+	width 0.32in
+	height 0.29in
+
+\end_inset
+
+Opens a new graph window
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/integrate.png
+	width 0.31in
+	height 0.28in
+
+\end_inset
+
+Opens the Integrate window
+\end_layout
+
+\begin_layout Section
+The Font Toolbar
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:mylabel6"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+The font toolbar allows users to easily modify the font of the selected
+ graphics widget.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/font_bold.png
+	width 0.27in
+	height 0.27in
+
+\end_inset
+
+Make the font 
+\series bold
+bold
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/font_italic.png
+	width 0.27in
+	height 0.27in
+
+\end_inset
+
+Make the font 
+\emph on
+italic
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/properties.png
+	width 0.27in
+	height 0.27in
+
+\end_inset
+
+Open the widget properties dialog box
+\end_layout
+
+\begin_layout Section
+The Animation Toolbar
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:mylabel7"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+Animation 
+\emph default
+toolbar can be used to animate the model over time or step through the time
+ steps of the model.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/back.png
+	width 0.27in
+	height 0.27in
+
+\end_inset
+
+Return to the first time step
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/prev.png
+	width 0.27in
+	height 0.27in
+
+\end_inset
+
+Step back by one step
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/play.png
+	width 0.27in
+	height 0.27in
+
+\end_inset
+
+Start (and stop) the animation
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/next.png
+	width 0.27in
+	height 0.27in
+
+\end_inset
+
+Step forward by one step
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/forward.png
+	width 0.27in
+	height 0.27in
+
+\end_inset
+
+Go to the last time step
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/properties.png
+	width 0.45in
+	height 0.38in
+
+\end_inset
+
+Open the time dialog box
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+The Graphics View
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:mylabel3"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+The Graphics View (GV) is the area of the screen where the model is displayed.
+\end_layout
+
+\begin_layout Section
+Elements of the GV
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:elements"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+Aside from a 3D rendering of the model, the GV has several other components
+ to it.
+ These components are referred to as widgets.
+ The image below displays the GV and all of its default widgets.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement htbp
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/Figure5.png
+	width 5in
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+The Graphics View components.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig40"
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+Title 
+\emph default
+widget displays the title of the model.
+ The 
+\emph on
+Subtitle 
+\emph default
+displays additional information, such as selected field and current time
+ value.
+ The 
+\emph on
+Triad
+\emph default
+ indicates the current orientation of the scene.
+ Finally, the 
+\emph on
+Legend 
+\emph default
+displays a colored bar and the range of the selected field.
+\end_layout
+
+\begin_layout Section
+Customizing the GV
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:customizing"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The user can customize the GV by selecting and moving the different widgets
+ around, and by adding new widgets.
+ This section describes how the user can customize the GV.
+ The following GV widgets are currently available:
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Text box
+\emph default
+ - displays a user-defined text.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Triad
+\emph default
+ - displays the orientation of the current view.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Legend
+\emph default
+ - displays a colored legend bar.
+ 
+\end_layout
+
+\begin_layout Subsection
+Selecting and moving widgets
+\end_layout
+
+\begin_layout Standard
+You can select a GV widget by clicking on it with any mouse button.
+ A selection box appears over the widget.
+ The widget can be moved by dragging the box, while holding the mouse button
+ down.
+ If you click and drag the small triangular shaped area in the lower right
+ corner of the selection box, you can resize the widget.
+ Double-clicking on a widget brings up a properties dialog box, where you
+ can modify the widget's properties.
+\end_layout
+
+\begin_layout Subsection
+Setting the GV widget's properties
+\end_layout
+
+\begin_layout Standard
+After selecting a widget, you can alter its properties by selecting Edit/Propert
+ies from the menu.
+ A dialog box appears.
+ You can also bring up this dialog box by double-clicking the widget.
+ Below is an example of the properties dialog box for a text widget.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement htbp
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/text properties.png
+	width 2.35in
+
+\end_inset
+
+ 
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Text properties dialog box.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig41"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The font type, font size, font color and attributes can be set in this dialog
+ box.
+ You can also set the text to be displayed in the box.
+ The text can consist of literal text and keywords.
+ The keywords, which start with a percentage sign (
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+%
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+), will be replaced by a predefined text.
+ The available keywords are listed in table 1.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement htbp
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="8" columns="2">
+<features tabularvalignment="middle">
+<column alignment="none" valignment="top" width="68pt">
+<column alignment="left" valignment="top">
+<row>
+<cell alignment="none" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+keyword
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+description
+\series default
+ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="none" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+%
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+title
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Title of the problem.
+ The title is set in the File/Model Info dialog box.
+ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="none" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+%
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+field
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+The field variable currently being displayed.
+ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="none" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+%
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+time
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+The time value of the current state.
+ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="none" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+%
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+state
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+The current state number.
+ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="none" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+%
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+filename
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+The name of the file.
+ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="none" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+%
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+filetitle
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+The title of the file, i.e.
+ the filename without the extension.
+ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="none" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+%
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+filepath
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+The path of the file.
+ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Text box keywords.
+\begin_inset CommandInset label
+LatexCommand label
+name "tab1"
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You can also use escape sequences, which start with a backslash (
+\begin_inset Formula $\backslash)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\backslash$
+\end_inset
+
+n - start a new line.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\backslash$
+\end_inset
+
+t - start the following text at the next tab position.
+ 
+\end_layout
+
+\begin_layout Subsection
+Adding GV Widgets
+\end_layout
+
+\begin_layout Standard
+PostView starts with a predefined set of GV widgets.
+ You can add new widgets by clicking one of the GV buttons in the toolbar.
+ Currently, PostView only supports the addition of a new text widget by
+ clicking on the 
+\begin_inset Quotes eld
+\end_inset
+
+Add text box
+\begin_inset Quotes erd
+\end_inset
+
+ button, located on the main toolbar.
+\end_layout
+
+\begin_layout Subsection
+Deleting GV Widgets
+\end_layout
+
+\begin_layout Standard
+GV widgets can be removed by first selecting them and then selecting Edit/Delete
+ from the menu bar.
+ Note that you cannot delete the predefined widgets, namely the title, subtitle,
+ legend and triad.
+ However, you can hide these objects by selecting the corresponding button
+ on the toolbar.
+\end_layout
+
+\begin_layout Section
+Saving Graphics
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:mylabel8"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Subsection
+The Capture Frame
+\end_layout
+
+\begin_layout Standard
+When storing graphics, it is important to understand the concept of the
+ 
+\emph on
+capture frame
+\emph default
+.
+ The capture frame is the area of the screen that will be captured when
+ taking a screen shot or recording an animation.
+ The capture frame is not always visible, but can be displayed by selecting
+ the 
+\emph on
+View/Toggle Capture Frame
+\emph default
+ from the menu.
+ The same menu will hide it again.
+ The capture frame can be shown by selecting the keypad-`0' shortcut.
+ When visible, the capture frame can be moved and resized by selecting one
+ of the borders and dragging the mouse button.
+ To resize it, you must grab the little triangular area in the lower right
+ corner of the capture frame.
+ If you wish to specify the location and size more accurately, you can open
+ the properties dialog box, by selecting the 
+\emph on
+Edit/Properties 
+\emph default
+menu or by double-clicking on one of its borders.
+\end_layout
+
+\begin_layout Subsection
+Taking a snapshot
+\end_layout
+
+\begin_layout Standard
+To take a snapshot of the current Graphics View, select the 
+\emph on
+File
+\emph default
+/
+\emph on
+Snapshot 
+\emph default
+menu.
+ Alternatively, you can press the 
+\emph on
+ctrl
+\emph default
+
+\begin_inset Formula $+p$
+\end_inset
+
+shortcut or push the 
+\emph on
+snapshot 
+\emph default
+button on the toolbar.
+ A standard 
+\emph on
+Save
+\emph default
+ dialog box appears and the desired filename can be entered or selected.
+ Images can be saved as BMP, TIFF or JPEG images.
+\end_layout
+
+\begin_layout Subsection
+Recording an animation
+\end_layout
+
+\begin_layout Standard
+PostView has the capability to record an animation of the current GV.
+ To record an animation, first position and resize the capture frame so
+ that it covers the desired area of the GV that will be captured.
+ Next, select the 
+\emph on
+Record/New 
+\emph default
+menu.
+ This opens a standard file dialog box where you can select a file format
+ and enter the target filename.
+ If the selected file format is an image format (.bmp, .tiff, etc.), the target
+ filename will be the file template from which the actual filenames will
+ be generated.
+ Each frame will be stored in a separate file, where the frame number is
+ appended to the file template.
+\end_layout
+
+\begin_layout Standard
+After you have selected a target file, you are ready for recording.
+ Note that the capture frame will now be locked, so you can no longer move
+ or resize it.
+ If it is visible, it will turn red.
+ The recording will begin in a paused state, allowing you to make some changes
+ to the GV before recording begins.
+\end_layout
+
+\begin_layout Standard
+To start recording, select 
+\emph on
+Record/Start 
+\emph default
+from the menu or press the corresponding shortcut.
+ Now, all the action in the GV will be recorded to the target file.
+ For example, if you press the play button, the GV will loop over all timesteps
+ and each step will be recorded to the file.
+ You can also rotate the GV and this will also be recorded to the file.
+\end_layout
+
+\begin_layout Standard
+To pause the recording, select 
+\emph on
+Record/Pause 
+\emph default
+from the menu.
+ To finally stop the recording, select 
+\emph on
+Record/Stop 
+\emph default
+from the menu.
+ This will close the target file and unlock the capture frame.
+\end_layout
+
+\begin_layout Section
+The View Settings
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:mylabel9"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+View Settings 
+\emph default
+dialog box (fig.
+ 7 below) controls the settings that affect the GV.
+ You can invoke it by selecting the 
+\emph on
+View
+\emph default
+/
+\emph on
+Settings 
+\emph default
+menu.
+\end_layout
+
+\begin_layout Standard
+It allows you to select the following options:
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Rendering
+\emph default
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\emph on
+Render style
+\emph default
+ 
+\begin_inset Formula $-$
+\end_inset
+
+ selects a style with some predefined rendering settings.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Perspective projection
+\emph default
+ 
+\begin_inset Formula $-$
+\end_inset
+
+ toggles between perspective and orthographic projection.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Line smoothing –
+\emph default
+ anti-alias line rendering 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Line thickness –
+\emph default
+ set the thickness of lines 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Point size –
+\emph default
+ sets the size of the nodes 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\emph on
+Background
+\emph default
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\emph on
+Background color 1
+\emph default
+ 
+\begin_inset Formula $-$
+\end_inset
+
+ sets the first background color.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Background color 2
+\emph default
+ 
+\begin_inset Formula $-$
+\end_inset
+
+ sets the second background color.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Background style -
+\emph default
+ sets the style of the background.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\emph on
+Lighting
+\emph default
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\emph on
+Enable Lighting -
+\emph default
+ turns lighting on or off.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Diffuse Intensity -
+\series bold
+\emph default
+ s
+\series default
+ets the diffuse intensity of the light for each material.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Ambient Intensity -
+\emph default
+ sets the ambient intensity of the light for each material.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Render shadows -
+\emph default
+ renders shadows cast by the objects in the scene, using the current light
+ position.
+ (
+\emph on
+Enable Lighting 
+\emph default
+must be checked.) 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Shadow Intensity -
+\emph default
+ sets the shadow intensity as a number between zero and one.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\emph on
+Camera
+\emph default
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\emph on
+Animate Camera – 
+\emph default
+animate 
+\begin_inset space \quad{}
+\end_inset
+
+the camera when moving between viewpoints 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Animation Speed –
+\emph default
+ sets the speed of the camera animation 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Animation Bias –
+\emph default
+ sets the bias of the camera motion (this affects the acceleration and decelerat
+ion when the camera approaches its next viewpoint) 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\emph on
+Selection
+\emph default
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\emph on
+Select connected: 
+\emph default
+switches between single item or connected item selection mode 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Tag info:
+\emph default
+ selects how much information is displayed when selecting items.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Select backfacing items:
+\emph default
+ sets whether backfacing items will be selected when region selecting 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Ignore interior items:
+\emph default
+ Select interior items when region selecting (only works for element selection)
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\emph on
+Pallette
+\emph default
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+This tab can be used to create, load, and save custom color palettes, which
+ are used for coloring the different parts (i.e.
+ materials) of the model 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\emph on
+Colormap
+\emph default
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+This tab can be used to modify or create custom colormaps.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Float figure
+placement htbp
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/settings.png
+	width 4in
+
+\end_inset
+
+ 
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+View Settings dialog box.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig42"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Camera Control
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:camera"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In PostView, the camera determines the position and orientation from which
+ the model is viewed.
+ The user can position and orient the camera in several ways.
+ Camera positions can also be saved to make it easier to recover certain
+ preferred positions.
+\end_layout
+
+\begin_layout Subsection
+Basic Camera control
+\end_layout
+
+\begin_layout Standard
+The easiest way to position the camera (and thus change the view) is by
+ using the mouse.
+ Moving the mouse while holding down one of its buttons will modify the
+ view.
+ The action depends on which mouse button is held down.
+ The following lists the possible actions.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement htbp
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="7" columns="2">
+<features tabularvalignment="middle">
+<column alignment="none" valignment="top" width="262pt">
+<column alignment="left" valignment="top">
+<row>
+<cell alignment="none" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Action
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Mouse/Keyboard 
+\series default
+ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="none" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+To rotate the view
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Left MB 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="none" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+To pan the view
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Middle MB or ALT
+\begin_inset Formula $+$
+\end_inset
+
+Right MB 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="none" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+To zoom
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Right MB 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="none" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+To rotate in the plane of view
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ALT
+\begin_inset Formula $+$
+\end_inset
+
+Left MB 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="none" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+To rotate view left/right by small increment
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Left/Right arrow key 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="none" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+To rotate view up/down by small increment
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Up/Down arraw key 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Mouse and keyboard shorcuts to control view.
+ 
+\begin_inset CommandInset label
+LatexCommand label
+name "tab2"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The camera position and orientation is displayed under the View item in
+ the Model Viewer.
+ By selecting this item in the Model Viewer, the current camera position
+ and orientation is shown in the properties panel under the Model Viewer.
+ All these fields can be edited manually for precision control over the
+ camera.
+\end_layout
+
+\begin_layout Subsection
+Element tracking
+\end_layout
+
+\begin_layout Standard
+The element tracking feature in PostView allows you to track the position
+ and orientation of an element.
+ The camera will then move with this element as it deforms through time.
+\end_layout
+
+\begin_layout Standard
+In order to use element tracking, first select the element that you wish
+ to track.
+ Then, select the 
+\emph on
+View
+\emph default
+
+\begin_inset Formula $\to$
+\end_inset
+
+
+\emph on
+Track Selection
+\emph default
+ menu item.
+ To stop element tracking, clear the selection and then select the same
+ menu item (or use the Ctrl
+\begin_inset Formula $+$
+\end_inset
+
+T shortcut).
+\end_layout
+
+\begin_layout Subsection
+Camera key-framing
+\end_layout
+
+\begin_layout Standard
+The current position of a camera can be stored in what is called a 
+\emph on
+viewpoint
+\emph default
+.
+ Simply select the 
+\emph on
+View
+\emph default
+
+\begin_inset Formula $\to$
+\end_inset
+
+
+\emph on
+Save viewpoint 
+\emph default
+menu item and a new key item will be created in the Model Viewer.
+ As with the View item, selecting a Key item allows you to edit the position
+ and orientation of that stored camera position.
+ In addition, by selecting the 
+\emph on
+View
+\emph default
+
+\begin_inset Formula $\to$
+\end_inset
+
+
+\emph on
+Prev/Next viewpoint, 
+\emph default
+you can smoothly interpolate between camera key positions.
+ This feature comes in handy when recording an animation and different camera
+ positions need to be visited in a repeatable manner.
+ Camera keys are stored in the PostView session file so they can be retrieved
+ later.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+The Tab Window
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:mylabel4"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Wrap figure
+lines 14
+placement o
+overhang 0in
+width "1.56in"
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/file viewer.png
+	width 1.56in
+	height 3.05in
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+The 
+\emph on
+Tab Window 
+\emph default
+is the window on the left side of the screen that has several tabs at the
+ top.
+ These tabs give the user access to several other panels which will be described
+ next.
+\end_layout
+
+\begin_layout Section
+The File Viewer
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:mylabel10"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\align block
+The 
+\emph on
+File Viewer
+\emph default
+ allows the user to navigate the computer's file structure.
+ The File Viewer is located in the tab window on the left and can be activated
+ by clicking the corresponding tab button at the top of the tab window.
+\end_layout
+
+\begin_layout Standard
+\align block
+The largest area of the File Viewer presents a list of folders and files
+ in the current folder.
+ The user can move to a subfolder by double-clicking the folder name.
+ Double-clicking on a file will open the file in PostView.
+ The tool button with the up-arrow icon can be used to go up one level in
+ the file hierarchy.
+ The dropdown box can be used to select a file filter.
+\end_layout
+
+\begin_layout Standard
+Note that the user can also open a file from the File/Open menu, which will
+ display the familiar File Open dialog box.
+\end_layout
+
+\begin_layout Section
+The Model Viewer
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:mylabel11"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+Model Viewer 
+\emph default
+gives an overview of the contents of the model.
+ It also gives access to the property window which is used to set many of
+ PostView's display settings.
+ The Model Viewer is accessed by clicking the 
+\begin_inset Quotes eld
+\end_inset
+
+Model
+\begin_inset Quotes erd
+\end_inset
+
+ tab button on the Tab Window.
+\end_layout
+
+\begin_layout Standard
+\align block
+The top part of the Model Viewer shows a tree-view of the contents of the
+ model.
+ Each item can be selected, and when selected, the property window at the
+ bottom lists the available properties for the selected item.
+ Properties can be edited by selecting the corresponding item in the value
+ column.
+\end_layout
+
+\begin_layout Standard
+The name edit field in the middle of the Model Viewer can be used to change
+ the name that refers to the selected item.
+ The 
+\emph on
+delete
+\emph default
+ button next to the name field can be used to delete a selected item.
+ Note that this only works for items that the user has added to the model.
+ See Chapter 6 for more details on adding items to a model.
+ The 
+\emph on
+enable 
+\emph default
+button, the checkbox located next to the name field, can be used to activate
+ the selected item in the Graphics View.
+ What this precisely means will depend on the particular item, but in general
+ this means that if enabled, the item will be displayed in the Graphics
+ View, and if disabled it will be hidden.
+ 
+\begin_inset Wrap figure
+lines 15
+placement o
+overhang 0in
+width "1.56in"
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/Model Viewer.png
+	width 1.56in
+	height 3.05in
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ Note that if an item is disabled, its name will be drawn in italics in
+ the model viewer.
+\end_layout
+
+\begin_layout Section
+The Material Viewer
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:mylabel12"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\align block
+The 
+\emph on
+Material Viewer 
+\emph default
+gives an overview of the different materials (or parts) in the model.
+ It can be accessed by selecting the 
+\begin_inset Quotes eld
+\end_inset
+
+Materials
+\begin_inset Quotes erd
+\end_inset
+
+ tab.
+\end_layout
+
+\begin_layout Standard
+\align block
+All the materials in the model are listed in the large window on the left.
+ A material can be selected by clicking on the entry in the list.
+ Multiple materials can be selected by holding down the shift button or
+ the ctrl button.
+\end_layout
+
+\begin_layout Standard
+\align block
+The name of the material can be modified by first selecting it, and then
+ editing the name field, which is located in the center of the material
+ viewer.
+ The enable button, next to the name field, can be used to toggle the state
+ of the material.
+ When a material is disabled, the corresponding part will not be evaluated
+ when visualizing the model data.
+ In that case, it will display with the material colors as defined in the
+ Material Viewer.
+ When enabled, the part will be evaluated, and will be colored according
+ to the local node or element values.
+ See Chapter 6 for more details on this process.
+ The 
+\emph on
+visible 
+\emph default
+button, next to the 
+\emph on
+enable 
+\emph default
+button, can be used to toggle the visibility of the corresponding part in
+ the Graphics View.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Wrap figure
+lines 15
+placement o
+overhang 0in
+width "1.59in"
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/Material Viewer.png
+	width 1.59in
+	height 3.81in
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+When a material is selected, the property window on the bottom of the material
+ viewer, lists the available properties that the user can change.
+ The options are:
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Color
+\emph default
+ - sets the color of the material.
+ By clicking on the colored button, the Color Selector dialog is opened
+ and the color can be changed.
+ Closing the Color Selector will automatically update the color in the Graphics
+ view.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Specular
+\emph default
+ - sets the specular color for the material.
+ Click the colored button next to it to change the specular color.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Emission -
+\emph default
+ sets the emission color for the material.
+ Click the colored button next to it to change the emission color.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Mesh Color -
+\emph default
+ sets the mesh color for the material.
+ Click the colored button next to it to change the mesh color.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Shininess -
+\emph default
+ sets the shininess value for the material.
+ Slide the slide bar to change the shininess value.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Transparency -
+\emph default
+ sets the transparency value for the material.
+ Slide the bar to change the transparency value.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Show Mesh -
+\emph default
+ if checked, the mesh lines will be drawn on top of the model.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Cast Shadows -
+\emph default
+ allows the material to cast shadows on other materials.
+ This has only an effect when shadows are enabled.
+ Shadows can be enabled by selecting the corresponding button on the toolbar.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Clip -
+\emph default
+ allows the material to be clipped when a clip plane is defined for the
+ model.
+ 
+\end_layout
+
+\begin_layout Section
+The Data Manager
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:mylabel13"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+Data Manager 
+\emph default
+lists all the available data fields that are defined in the model in a table
+ with four columns.
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+Data Field 
+\emph default
+column gives the name of the data field.
+ When selected, the name can be edited in the field below the data list.
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+Type 
+\emph default
+of the field identifies the type of the data.
+ The following types are currently defined:
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+float
+\emph default
+: single precision floating point 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+vec3f
+\emph default
+: a 3D vector with three float 
+\begin_inset space \quad{}
+\end_inset
+
+components 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+mat3fs
+\emph default
+: a 3D symmetric matrix with six float components 
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+Class 
+\emph default
+column identifies the region type for which the data field is defined:
+\end_layout
+
+\begin_layout Itemize
+NODE: data is defined at the nodes of the model 
+\end_layout
+
+\begin_layout Itemize
+FACE: data is defined for each facet of the model 
+\end_layout
+
+\begin_layout Itemize
+ELEM: data is defined for each element in the model 
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+Format 
+\emph default
+column displays the storage format for the data field.
+ The following values are supported:
+\end_layout
+
+\begin_layout Itemize
+ITEM: One value is stored for each item of the data field's region.
+ 
+\end_layout
+
+\begin_layout Itemize
+NODE: One value is stored for each node of the data field's region.
+ 
+\end_layout
+
+\begin_layout Itemize
+MIXED: One value is stored for each node of each item of the data field's
+ region.
+ 
+\end_layout
+
+\begin_layout Itemize
+REGION: Only one value is stored for the entire region.
+ 
+\end_layout
+
+\begin_layout Standard
+In addition, new data fields can be added by clicking the Add button.
+ A menu shows up from which the user can select from several options:
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Standard
+\emph default
+: select from a list of pre-defined data fields.
+ See Appendix A for an overview of currently supported data fields.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+From file
+\emph default
+: load a data field from a data file.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Equation
+\emph default
+: Enter a mathematical expression that will be evaluated over the mesh.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement htbp
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/Add_data_from_file.png
+	width 2.86in
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Add Data from file dialog box.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig46"
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Adding data from a text file
+\end_layout
+
+\begin_layout Standard
+When selecting the 
+\begin_inset Quotes eld
+\end_inset
+
+Add
+\begin_inset Formula $\backslash$
+\end_inset
+
+From file
+\begin_inset Quotes erd
+\end_inset
+
+ menu, a dialog box will be shown where you can enter the file name and
+ additional information for parsing the file.
+ The text file containing the data can be selected using the Browse button.
+ The data must be formatted using a comma delimited list, each line corresponds
+ to one item (node, element) and each value on each line corresponds to
+ a single state.
+ The 
+\emph on
+Name 
+\emph default
+edit box is used to give a name to the user field, the 
+\emph on
+class
+\emph default
+ list identifies whether the data corresponds to a node, element or face,
+ and the 
+\emph on
+type 
+\emph default
+list is used to define whether the data is a scalar (float), 3D vector (vec3f)
+ or 3D matrix (mat3fs).
+\end_layout
+
+\begin_layout Standard
+For example, assuming 
+\emph on
+class 
+\emph default
+is node, and 
+\emph on
+type 
+\emph default
+is float.
+\end_layout
+
+\begin_layout LyX-Code
+1, 0.1, 0.2, 0.3
+\end_layout
+
+\begin_layout LyX-Code
+2, 3.2, 3.3, 3.4
+\end_layout
+
+\begin_layout LyX-Code
+3, 1.2, 2.3, 2.4
+\end_layout
+
+\begin_layout Standard
+This file defines for nodes 1, 2 and 3 three values, one for each state
+ (assuming the model has three states).
+ Another example, assuming 
+\emph on
+class 
+\emph default
+is element, 
+\emph on
+type 
+\emph default
+is vec3f.
+\end_layout
+
+\begin_layout LyX-Code
+1234, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6
+\end_layout
+
+\begin_layout LyX-Code
+1235, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2
+\end_layout
+
+\begin_layout LyX-Code
+1236, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8
+\end_layout
+
+\begin_layout Standard
+This file defines for three elements (elements 1234, 1235 and 1236) a vec3f
+ value for two states: element 1234 has the value (0.1, 0.2, 0.3) for state
+ 1 and (0.4, 0.5, 0.6) for state 2.
+\end_layout
+
+\begin_layout Subsection
+Adding data via an equation
+\end_layout
+
+\begin_layout Standard
+When selecting the 
+\begin_inset Quotes eld
+\end_inset
+
+Add
+\begin_inset Formula $\backslash$
+\end_inset
+
+Equation
+\begin_inset Quotes erd
+\end_inset
+
+ menu from the data panel, a dialog box appears where the user can enter
+ the name of the new data field and a mathematical expression that will
+ be evaluated over the entire mesh.
+\end_layout
+
+\begin_layout Standard
+Currently, this only allows the creation of scalar nodal data (Type 
+\begin_inset Formula $=$
+\end_inset
+
+ float, Class 
+\begin_inset Formula $=$
+\end_inset
+
+ NODE, Format 
+\begin_inset Formula $=$
+\end_inset
+
+ ITEM).
+\end_layout
+
+\begin_layout Standard
+You can use the symbols 
+\begin_inset Formula $x$
+\end_inset
+
+, 
+\begin_inset Formula $y$
+\end_inset
+
+, and 
+\begin_inset Formula $z$
+\end_inset
+
+ to reference the (time dependent) nodal coordinates, and 
+\begin_inset Formula $t$
+\end_inset
+
+to reference time.
+\end_layout
+
+\begin_layout Subsection
+Filtering data
+\end_layout
+
+\begin_layout Standard
+New data fields can be defined by filtering existing data fields.
+ Note that this currently can only be done with the data fields that were
+ loaded from file (not with the standard data fields that PostView defines).
+\end_layout
+
+\begin_layout Standard
+To create a filtered data field, select a data field in the Data panel and
+ then click the 
+\begin_inset Quotes eld
+\end_inset
+
+Filter
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textellipsis
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Quotes erd
+\end_inset
+
+ button.
+ A dialog box appears where the following information has to be entered.
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Name
+\emph default
+: The name of the new data field.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Filter
+\emph default
+: The type of filter to apply to the original data field.
+ (See below) 
+\end_layout
+
+\begin_layout Standard
+For each filter additional data needs to be entered.
+ The following filters, and required data, are supported.
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Scale
+\emph default
+: The data will be scaled by multiplication by a scalar.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\emph on
+scale
+\emph default
+: the scale factor 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\emph on
+Smooth
+\emph default
+: The data will be smoothed via a Laplace operator.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\emph on
+theta
+\emph default
+: weight of the smoothing operator.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+iterations
+\emph default
+: number of times to apply the operator.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\emph on
+Arithmetic
+\emph default
+: Apply a simple arithmetic operation.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\emph on
+operation
+\emph default
+: select the operation to perform 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+operand
+\emph default
+: The data set that will be used as the right operand (the filtered data
+ field is the left operand).
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\emph on
+Gradient
+\emph default
+: Evaluate the gradient vector of a scalar data field.
+ 
+\end_layout
+
+\begin_layout Section
+The State Manager
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:mylabel14"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+State Manager 
+\emph default
+allows users to see all states defined in the model.
+ It shows a table and lists in each row the state and its corresponding
+ time value.
+ At the top of the panel several buttons are shown that allow users to modify
+ the state content of the model.
+\end_layout
+
+\begin_layout Standard
+To delete a state, select the state in the table and press the Delete button.
+ This will remove the state from the list.
+\end_layout
+
+\begin_layout Standard
+A state's time value can be edited by pressing the 
+\emph on
+Edit 
+\emph default
+button.
+ A dialog box opens where the user can edit the time value.
+\end_layout
+
+\begin_layout Standard
+A new state can also be added.
+ Select the 
+\emph on
+Add 
+\emph default
+button.
+ A dialog box appears where a time value can be entered for the new state.
+ The new state will be inserted on the defined time point.
+\end_layout
+
+\begin_layout Section
+The Tools panel
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:mylabel15"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+Tools 
+\emph default
+panel shows a list of additional tools that can be used to calculate certain
+ metrics or edit the model content.
+ See Appendix B for an overview of the currently supported tools.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+Post Processing
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:mylabel5"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+In this chapter the different post-processing tools are discussed that PostView
+ offers to display the model's data.
+ The user can define a displacement map that PostView will use to deform
+ the model.
+ The user can also define a colormap that defines the color of the different
+ parts of the model according to the corresponding element or nodal value.
+ The user can also add different types of plots to display data.
+ Plane cuts can be made to conveniently hide parts of the model and to inspect
+ the interior of the model.
+\end_layout
+
+\begin_layout Section
+Properties of the Model
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:properties"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+When selecting the 
+\emph on
+Model 
+\emph default
+item in the Model Viewer, the user can edit the properties of the Model.
+ The following properties are defined.
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Element subdivisions: 
+\emph default
+defines the number of subdivision levels.
+ PostView subdivides the elements in the model to improve the quality of
+ the renderings.
+ However, increasing the number of subdivisions will also increase the time
+ it takes to render the model so use this property judiciously.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Render mode: 
+\emph default
+Sets the render mode to solid or wireframe.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Render undeformed outline:
+\emph default
+ when selected 
+\emph on
+yes
+\emph default
+, PostView will draw an outline of the model in its undeformed state.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Outline color:
+\emph default
+ set the color for the model outlines 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Node color:
+\emph default
+ set the color of the nodes 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Selection color:
+\emph default
+ set the color of selected items 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Render smooth -
+\emph default
+ when selected 
+\emph on
+yes
+\emph default
+, PostView will render the model smoothly.
+ This means that it will vary the surface normal of the model to create
+ a smooth surface.
+ When selected 
+\emph on
+no
+\emph default
+, flat shading is used to render the model.
+ Note that smooth shading can be significantly slower than flat shading
+ due to the additional calculations that PostView needs to do.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Shells as hexes -
+\emph default
+ renders all shells as hexahedral elements using the shell thickness (if
+ available) to extrude the shell surface in the normal direction.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Shell reference surface -
+\emph default
+ defines how PostView needs to interpret the shell surface in relation to
+ the shell volume.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Smoothing angle -
+\emph default
+ identifies the hard edges in the model.
+ Edges with adjoining faces that have a surface normal, whose angle is more
+ than the smoothing angle, are considered hard.
+ 
+\end_layout
+
+\begin_layout Section
+Displacement Map
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:displacement"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+PostView uses the displacement map to define the deformation of the model
+ at each state.
+ The displacement map can be accessed in the Model Viewer by selecting the
+ item entitled 
+\emph on
+displacement map
+\emph default
+ (this is a sub-item of the 
+\emph on
+model 
+\emph default
+item).
+ Click on it to display the properties in the Properties Window, located
+ at the bottom of the Model Viewer.
+ The Displacement map has two parameters that the user can change.
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Data field: 
+\emph default
+is the data field that PostView will use to calculate the model's deformation.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Scale Factor: 
+\emph default
+sets the displacement scale factor, which can be used to scale the displacements
+ when displaying the model in the Graphics View.
+ (This scale factor does affect strain measures.) 
+\end_layout
+
+\begin_layout Standard
+Note that you must enable the displacement map by clicking on the 
+\emph on
+enable 
+\emph default
+button in the Model Viewer (this is the button with the checkmark).
+ Similarly, by clicking the button again the displacement map can be deactivated
+ in which case PostView will not deform the model when displaying the different
+ time steps.
+\end_layout
+
+\begin_layout Section
+Color Map
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:color"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+Color Map 
+\emph default
+defines how PostView will calculate the color that is used to display the
+ model in the Graphics View.
+ The Color Map's properties can be accessed by selecting the item in the
+ Model Viewer entitled 
+\emph on
+Color Map
+\emph default
+.
+ The properties will then be listed in the Properties Window below.
+ The following properties are defined for the color map.
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Data field - 
+\emph default
+allows the user to select the data field that PostView will use to define
+ the color of the model.
+ The color of the model is defined by the data field and the color gradient
+ (see below).
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Gradient smoothing -
+\emph default
+ PostView colors the material by drawing a fringe plot of the selected data
+ field.
+ When gradient smoothing is on, the fringe colors are smoothed to produce
+ a continuous transition between fringes.
+ When this option is off, a discrete set of colors is used instead.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Color map: 
+\emph default
+defines the color map that PostView will use to color the model.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Nodal values -
+\emph default
+ PostView defines nodal data and element data.
+ When displaying element data, PostView will first project the element data
+ to the nodes to produce a smooth rendering of the data.
+ However, when this option is turned of, element data will be displayed
+ by using a single color for each element.
+ This will produce a discretized drawing of the data, but will be truer
+ to the actual data since the element data is not interpolated before displaying.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Range type -
+\emph default
+ PostView keeps track of the range of the selected data field (that is the
+ minimum and maximum values).
+ The user can use this option to select a 
+\emph on
+dynamic
+\emph default
+ range (range is updated for each state independently), a 
+\emph on
+static 
+\emph default
+range (range is calculate over all the states) or 
+\emph on
+user 
+\emph default
+range (user defines the minimum and maximum values).
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Range divisions - 
+\emph default
+changes the number of fringes that PostView will draw on the model.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Show legend -
+\emph default
+ allows you to toggle the displaying of the legend bar in the Graphics View.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Legen Orientation:
+\emph default
+ sets the orientation of the legend bar (horizontal or vertical) 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+User max/ User min -
+\emph default
+ defines the minimum and maximum range value when using the 
+\emph on
+user 
+\emph default
+range option for 
+\emph on
+range type
+\emph default
+.
+ 
+\end_layout
+
+\begin_layout Standard
+When PostView starts, the colormap is turned off by default.
+ To activate it, select the 
+\emph on
+enable 
+\emph default
+button in the Model Viewer.
+ Similarly, to disable the color mapping, simply press this button again.
+ When the colormap is turned off, PostView will use the material colors
+ to display the model in the Graphics View.
+\end_layout
+
+\begin_layout Section
+Plane Cuts
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:plane"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+PostView allows the user to add a plane cut to the model.
+ The plane cut defines a clipping plane which will hide all geometry on
+ the positive side of the plane.
+ To add a plane cut to the model, select the 
+\emph on
+Post/Plane cut 
+\emph default
+from the menu.
+ A new item will show up the Model Viewer that the user can select and edit
+ the properties off.
+ The following properties are defined for the plane cut.
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Show plane - 
+\emph default
+shows or hides the plane in the Graphics View.
+ Note that selecting 
+\emph on
+no 
+\emph default
+for this option does not disable the plane cut.
+ It simply toggles the displaying of the plane.
+ To disable the plane cut, you need to click the 
+\emph on
+enable 
+\emph default
+button (see below).
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Cut hidden: 
+\emph default
+If yes, hidden parts will be cut.
+ If no, hidden parts are not cut.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Show Mesh: 
+\emph default
+show the mesh on the plane cut.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Transparency: 
+\emph default
+Set the transparency value of the plane.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+X-normal - 
+\emph default
+sets the 
+\begin_inset Formula $x$
+\end_inset
+
+ component of the plane normal.
+ Aside from entering the value directly, this edit field can also be used
+ as a slider.
+ You can change the value by click
+\begin_inset Formula $+$
+\end_inset
+
+dragging with the left mouse button.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Y-normal - 
+\emph default
+sets the 
+\begin_inset Formula $y$
+\end_inset
+
+ component of the plane normal.
+ Aside from entering the value directly, this edit field can also be used
+ as a slider.
+ You can change the value by click
+\begin_inset Formula $+$
+\end_inset
+
+dragging with the left mouse button.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Z-normal - 
+\emph default
+sets the 
+\begin_inset Formula $z$
+\end_inset
+
+ component of the plane normal.
+ Aside from entering the value directly, this edit field can also be used
+ as a slider.
+ You can change the value by click
+\begin_inset Formula $+$
+\end_inset
+
+dragging with the left mouse button.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+offset - 
+\emph default
+sets the relative position of the plane with respect to the center of the
+ model.
+ Aside from entering the value directly, this edit field can also be used
+ as a slider.
+ You can change the value by click
+\begin_inset Formula $+$
+\end_inset
+
+dragging with the left mouse button.
+ 
+\end_layout
+
+\begin_layout Standard
+Multiple plane cuts can be added to the model (up to six) and each plane
+ can be positioned independently of the others.
+ Note that the color of the plane in the Graphics View hints to its orientation
+ using a RGB color coding: a red plane is a plane whose normal is directed
+ in the x-direction, a green plane has its normal in the y-direction and
+ a blue plane has its normal in the z-direction.
+ A general orientation uses a combination of red, green and blue to indicate
+ the orientation.
+ You can also hide the displaying of the plane by setting the 
+\emph on
+Show plane 
+\emph default
+property to the appropriate value.
+\end_layout
+
+\begin_layout Standard
+To enable the plane cut, press the 
+\emph on
+enable 
+\emph default
+button in the Model Viewer.
+ To disable it, press the button again.
+ You can delete the plane cut altogether by clicking the 
+\emph on
+delete 
+\emph default
+button on the Model Viewer panel.
+\end_layout
+
+\begin_layout Section
+Vector Plot
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:vector"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+A 
+\emph on
+vector plot 
+\emph default
+of the model can be added by selecting the 
+\emph on
+Post/Vector plot 
+\emph default
+menu.
+ This will add a vector plot item to the Model Viewer.
+ The user can select the item in the Model Viewer to edit the properties
+ of the vector plot.
+ The following properties are defined.
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Data field - 
+\emph default
+selects the vector field that will be rendered.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Allow clipping:
+\emph default
+ If yes, the vector field will be clipped by any active plane cuts.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Density -
+\emph default
+ sets the density of the vector field.
+ A density of one will draw a vector at each node of the model.
+ Lower values will draw a vector only at randomly selected nodes.
+ The lower the value, the less vectors are drawn.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Glyph -
+\emph default
+ a small graphic that PostView will draw at each node to represent the vector.
+ This option allows the user to select the glyph.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Glyph color -
+\emph default
+ allows the user to set how PostView will determine the color of each glyph.
+ Currently, the options are: 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\emph on
+Solid -
+\emph default
+ draws each glyph in the same color (also see 
+\emph on
+Solid color
+\emph default
+).
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Length -
+\emph default
+ draws the glyph with a color that relates to its length (also see 
+\emph on
+Gradient
+\emph default
+).
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Orientation -
+\emph default
+ draws the glyph using RGB color coding to indicate the orientation of the
+ vector.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\emph on
+Solid color -
+\emph default
+ is the color that PostView uses when 
+\emph on
+Solid 
+\emph default
+is selected as the glyph color.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Normalize - 
+\emph default
+when selected 
+\emph on
+yes
+\emph default
+, PostView will normalize all vectors.
+ This implies that all vectors will be drawn with the same length.
+ Otherwise the size of the glyph will be representative to the size of the
+ corresponding vector.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Auto-scale: 
+\emph default
+scale the vectors automatically.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Scale: 
+\emph default
+scales the size of the glyphs.
+ 
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+enable 
+\emph default
+button on the Model Viewer panel can be used to toggle the vector plot on
+ and off.
+ The 
+\emph on
+delete 
+\emph default
+button can be used to remove the vector plot from the model.
+\end_layout
+
+\begin_layout Section
+Isosurface plot
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:isosurface"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+An isosurface plot draws a surface through all the points of the model that
+ have the same value.
+ An isosurface plot can be added by selecting the 
+\emph on
+Post/Isosurface plot 
+\emph default
+from the menu.
+ A new item will appear in the Model Viewer that the user can select to
+ edit the surface plot's properties.
+ The following properties are defined.
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Data field - 
+\emph default
+selects the data field that PostView will use to calculate the isosurfaces.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Allow clipping:
+\emph default
+ If yes, iso-surfaces will be clipped by any active plane cuts.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Gradient -
+\emph default
+ sets the color gradient that PostView will use to color the isosurfaces.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Slices -
+\emph default
+ defines the number of isosurfaces to draw.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Show legend -
+\emph default
+ shows a legend bar for the isosurface plot.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Smooth -
+\emph default
+ when selected 
+\emph on
+yes
+\emph default
+, PostView will draw the surfaces using smooth shading.
+ When selected 
+\emph on
+no
+\emph default
+, the isosurfaces are drawn with flat shading.
+ Note that when using smooth shading, additional calculations need to be
+ performed which may slow down the rendering of the plot.
+ 
+\end_layout
+
+\begin_layout Standard
+The isosurface plot is enabled by selecting the 
+\emph on
+enable 
+\emph default
+button on the Model Viewer panel.
+ Similarly, disabling the plot can be done by pressing the same button again.
+ You can delete the isosurface plot by pressing the 
+\emph on
+delete 
+\emph default
+button on the Model Viewer panel.
+\end_layout
+
+\begin_layout Standard
+Since the isosurface plot is drawn inside the model, it is advisable to
+ hide it.
+ You can hide the model by hiding each individual material, or by clicking
+ the 
+\emph on
+enable 
+\emph default
+button when the 
+\emph on
+model 
+\emph default
+is selected in the Model Viewer.
+\end_layout
+
+\begin_layout Section
+Slice plot
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:slice"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+A slice plot draws the intersection of the model with a series of planes.
+ The planes can be oriented by the user.
+ To add a slice plot, select the 
+\emph on
+Post/Slice plot 
+\emph default
+from the menu.
+ A new item will show up in the Model Viewer which the user can select to
+ edit the slice plot's properties.
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Data field - 
+\emph default
+selects the data field that PostView will use to color the planes.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Gradient -
+\emph default
+ sets the gradient that PostView will use to color the planes.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+X-normal -
+\emph default
+ sets the 
+\begin_inset Formula $x$
+\end_inset
+
+ component of the plane normal.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Y-normal
+\emph default
+ - sets the 
+\begin_inset Formula $y$
+\end_inset
+
+component of the plane normal 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $Z$
+\end_inset
+
+-
+\emph on
+normal
+\emph default
+ - sets the 
+\begin_inset Formula $z$
+\end_inset
+
+ component of the plane normal 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Show legend -
+\emph default
+ shows or hides the legend bar for this plot.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Slices -
+\emph default
+ selects the number of slicing planes.
+ 
+\end_layout
+
+\begin_layout Standard
+The slice plot can be enabled or disabled by pressing the 
+\emph on
+enable 
+\emph default
+button in the Model Viewer.
+ The plot can be deleted by selecting the 
+\emph on
+delete 
+\emph default
+button.
+ Since the slice plot is drawn inside the model, it is advisable to hide
+ the model.
+ You can hide the model by hiding each individual material, or by clicking
+ the 
+\emph on
+enable 
+\emph default
+button when the 
+\emph on
+model 
+\emph default
+is selected in the Model Viewer.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+Additional Windows
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:additional"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Section
+Summary Window
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:summary"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+The Summary Window displays a graph of the minimum, maximum, and average
+ values as a function of time for the selected expression.
+ This summary of values can be calculated using only selected elements or
+ nodes, or for the entire model when no elements or nodes are selected.
+ It can be opened by selecting the 
+\emph on
+Post
+\emph default
+/
+\emph on
+Summary
+\emph default
+.
+ Figure 9 shows the 
+\emph on
+Summary Window
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement htbp
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/summary.png
+	width 5in
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+The Summary Window can be opened from the Post/Summary menu.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig47"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To select the expression to display, click on the drop-down box in the upper
+ left corner and select the desired expression.
+ Each data point can be selected by clicking on it.
+ The exact values will appear next to a selected data point.
+\end_layout
+
+\begin_layout Standard
+To save the summary data to file, click the 
+\emph on
+Save
+\emph default
+ button located at the bottom of the 
+\emph on
+Summary View
+\emph default
+.
+ This will open the File Save dialog box.
+ After the user enters a filename, the data is saved to file as a simple
+ ASCII file.
+ The data can also be copied to the clipboard with the 
+\begin_inset Quotes eld
+\end_inset
+
+Copy to Clipboard
+\begin_inset Quotes erd
+\end_inset
+
+ option.
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+Options 
+\emph default
+button shows a dialog box where the user can change some options.
+\end_layout
+
+\begin_layout Standard
+The graph area can be scaled or moved by click
+\begin_inset Formula $+$
+\end_inset
+
+dragging the right and left mouse button respectively.
+ The buttons in the lower left corner of the Summary window can be used
+ to restore the x-range, y-range or both.
+\end_layout
+
+\begin_layout Section
+Graph Window
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:graph"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+The Graph window can be used to show time history plots and scatter plots
+ for selected items.
+ To open a 
+\emph on
+Graph window
+\emph default
+, select the 
+\emph on
+Post
+\emph default
+/
+\emph on
+new Graph 
+\emph default
+menu.
+ Multiple graph windows can be displayed simultaneously.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement htbp
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/Graph.png
+	width 4.68in
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+A Graph window displaying the time history of selected mesh items.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig48"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+Graph window 
+\emph default
+displays the selected expression for the selected mesh items (see below
+ on how to select mesh items).
+ On the right, the legend shows the item numbers (preceded by an 'E' for
+ 'element', 'N' for 'node', 'F' for 'face', 'C' for edge) and they are shown
+ in the same color as the corresponding curve.
+\end_layout
+
+\begin_layout Standard
+Each Graph window has a toolbar that offers the following functionality.
+\end_layout
+
+\begin_layout Itemize
+The 
+\emph on
+Save 
+\emph default
+button will save the displayed data to a text file.
+ 
+\end_layout
+
+\begin_layout Itemize
+The 
+\emph on
+Clipboard 
+\emph default
+button can be used to store the data values on the clipboard.
+ This data can then be pasted in other software that allows clipboard operations.
+ 
+\end_layout
+
+\begin_layout Itemize
+The 
+\emph on
+Type 
+\emph default
+selection box allows the user to select from different types of plots.
+ The following types are currently supported: 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\emph on
+Line
+\emph default
+ - displays a curve that represents the evolution of the selected data field
+ as a function of (pseudo-) time.
+ For this type, the user can only select the value for the y-axis; the x-axis
+ will show the time.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Scatter
+\emph default
+ - displays an x-y plot.
+ In this case, the user can select different data fields for both the x-
+ and y-axis.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Time
+\emph default
+-scatter: like scatter plot, but points are connected by time value 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Tools: Shows the graph tools panel, which is discussed in more detail below.
+ 
+\end_layout
+
+\begin_layout Standard
+The graph area can be scaled or moved by click
+\begin_inset Formula $+$
+\end_inset
+
+dragging the right and left mouse button respectively.
+ The buttons in the lower left corner of the Graph window can be used to
+ restore the x-range, y-range or both.
+\end_layout
+
+\begin_layout Subsection
+Graph Tools
+\end_layout
+
+\begin_layout Standard
+Each Graph window offers a tools panel that allows access to additional
+ features that affect what is displayed in the graph area.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement htbp
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/Graph_with_tools_panel.png
+	width 3.65in
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+A Graph window with the Tools panel expanded.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig49"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The following tools are currently supported.
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Options
+\emph default
+: Set various settings that affect what is shown and how the data is displayed.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Linear Regression
+\emph default
+: Do a linear regression on the first shown curve.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Math plot
+\emph default
+: Enter a mathematical expression, using 
+\begin_inset Formula $x$
+\end_inset
+
+as the ordinate, which will be displayed on the top of the graph.
+ 
+\end_layout
+
+\begin_layout Subsection
+Selecting mesh items
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset label
+LatexCommand label
+name "subsubsec:selecting"
+
+\end_inset
+
+ You can select nodes, edges, faces, and elements.
+ The item that will be selected is controlled by the selection buttons in
+ the 
+\emph on
+Toolbar
+\emph default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/node.png
+	width 0.26in
+	height 0.26in
+
+\end_inset
+
+Switches to node-selection mode.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/edge.png
+	width 0.27in
+	height 0.27in
+
+\end_inset
+
+Switches to edge-selection mode.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/face.png
+	width 0.26in
+	height 0.24in
+
+\end_inset
+
+Switches to face-selection mode.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Figures/element.png
+	width 0.27in
+	height 0.25in
+
+\end_inset
+
+Switches to element-selection-mode.
+\end_layout
+
+\begin_layout Standard
+To add an item to the current selection, just shift
+\begin_inset Formula $+$
+\end_inset
+
+click the item.
+ When tags are enabled, a dot followed by the item's number will appear
+ next to the item.
+ To enable the tags, select the corresponding button on the toolbar.
+ To remove an item from the current selection, ctrl
+\begin_inset Formula $+$
+\end_inset
+
+click the node or element.
+ You can (de-) select multiple items at the same time by dragging the mouse
+ cursor while holding down the shift or ctrl key and the left mouse button.
+ A colored rectangle will appear indicating what elements or nodes will
+ be selected.
+ Note that only 
+\emph on
+visible 
+\emph default
+elements or nodes that fall inside this rectangle will be selected.
+ This means that only elements or nodes on the surface of the mesh can be
+ selected.
+\end_layout
+
+\begin_layout Standard
+When no other windows are open (such as e.g.
+ Graph windows, etc.), pressing the ESC-key will clear the selection.
+ You can also select the 
+\emph on
+Edit
+\emph default
+/
+\emph on
+Clear Selection
+\emph default
+ menu to clear the entire selection.
+\end_layout
+
+\begin_layout Standard
+Also note that the 
+\emph on
+Edit
+\emph default
+ menu lists several options to manipulate the current selection, such as
+ hiding, un-hiding, inverting, etc.
+\end_layout
+
+\begin_layout Section
+Integration Tool
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:integration"
+
+\end_inset
+
+ The 
+\emph on
+Integration tool 
+\emph default
+allows you to calculate the integral over a selected region.
+ To use it, first select nodes, edges, faces, or elements.
+ Then, activate the Integration tool from the Post/Integrate menu.
+ A window appears with a graph that represents the integral of the selected
+ region as a function of time.
+ Depending on the selection, the graph represents different things.
+ For nodes, it is the sum of the values all the selected nodes, for edges
+ it is the line integral, for faces it is the surface integral of the selected
+ surface, and for elements it is the volume integral over the volume of
+ the selected elements.
+ The 
+\emph on
+Save 
+\emph default
+button saves the results to a text file and the 
+\emph on
+Clipboard 
+\emph default
+button copies the data to the clipboard.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement htbp
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/Integrate_window.png
+	width 5in
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+The Integration tool can be used to calculate the definite integral over
+ the selected region.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig54"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+Standard Data Fields
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:standard"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+PostView defines the following list of standard data fields that can be
+ added to a model.
+ Some of these require the addition of a displacement map.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement htbp
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="27" columns="3">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top" width="100pt">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top" width="100pt">
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\size footnotesize
+Name
+\series default
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\size footnotesize
+Description
+\series default
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\size footnotesize
+Requires displacement map?
+\series default
+ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Position
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+The current nodal position of the deformed model
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Yes 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Initial Position
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+The initial nodal position of the model
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+No 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Deformation gradient
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+The deformation gradient of the deformation map
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Yes 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Infinitesimal strain
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+The infinitesimal (engineering) strain tensor
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Yes 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Lagrange strain
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+The Euler-Lagrange strain tensor
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Yes 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Right Cauchy-Green
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+The right Cauchy-Green deformation tensor
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Yes 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Right stretch
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+The right stretch tensor
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Yes 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Biot strain
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+The Biot strain tensor
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Yes 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Right Hencky
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+The Right Hencky tensor
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Yes 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Left Cauchy-Green
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+The left Cauchy-Green strain tensor
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Yes 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Left stretch
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+The left stretch tensor
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Yes 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Left Hencky
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+The left Hencky tensr
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Yes 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Almansi strain
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+The Almansi strain tensor
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Yes 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Volume
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+The element's (approximate) volume 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Yes 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Volume ratio
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+The ratio of current over initial element volume
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Yes 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Volume strain
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+The volumetric strain
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Yes 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Aspect ratio
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+The element's aspect ratio
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+No 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+1-Princ curvature
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+The first principal curvature of the surface
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+No 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+2-Princ curvature
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+The second principal curvature of the surface
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+No 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Gaussian curvature
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+The Gaussian curvature of the surface
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+No 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Mean curvature
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+The mean curvature
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+No 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+RMS curvature
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+The Root-Mean-Square curvature
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+No 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Princ Curvature difference
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+The difference of the principal curvatures
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+No 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Congruency
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+The congruency
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+No 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+1-Princ curvature vector
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+The first principal curvature vector
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+No 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+2-Princ curvature vector
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+The second principal curvature vector
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+No 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "tab3"
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+PostView Tools
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:postview"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The following is a list of the available tools from the Tools panel.
+ A tool can be activated by clicking on the corresponding tools button.
+ When activated a property list will be displayed where the user can enter
+ additional information required for the selected tool.
+ A tool can be deactivated by clicking the corresponding tools button again.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Pt.
+ Distance
+\end_layout
+
+\begin_layout Standard
+This tool can be used to evaluate the distance between two selected nodes.
+ To use it, select two nodes on the mesh.
+ The tool will display the coordinate differences, the distance between
+ the points (length), and the stretch, which is the ratio of the current
+ distance over the distance at the first time point.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+3Point Angle
+\end_layout
+
+\begin_layout Standard
+This tool measures the angle between the two lines defined by three nodes.
+ Select three nodes, 
+\begin_inset Formula $a$
+\end_inset
+
+, 
+\begin_inset Formula $b$
+\end_inset
+
+, and 
+\begin_inset Formula $c$
+\end_inset
+
+.
+ The angle between the lines formed by nodes (
+\begin_inset Formula $a$
+\end_inset
+
+,
+\begin_inset Formula $b)$
+\end_inset
+
+ and (
+\begin_inset Formula $b$
+\end_inset
+
+,
+\begin_inset Formula $c)$
+\end_inset
+
+ is calculated.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+4Point angle
+\end_layout
+
+\begin_layout Standard
+Measures the angle between the lines defined by four nodes.
+ Select four nodes, 
+\begin_inset Formula $a$
+\end_inset
+
+, 
+\begin_inset Formula $b$
+\end_inset
+
+, 
+\begin_inset Formula $c$
+\end_inset
+
+, and 
+\begin_inset Formula $d$
+\end_inset
+
+.
+ The angle between the lines formed by nodes (
+\begin_inset Formula $a$
+\end_inset
+
+,
+\begin_inset Formula $b)$
+\end_inset
+
+, and (
+\begin_inset Formula $c$
+\end_inset
+
+,
+\begin_inset Formula $d)$
+\end_inset
+
+ is calculated.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Plane tool
+\end_layout
+
+\begin_layout Standard
+This tool can be used to define a plane defined from three nodes.
+ The plane normal will be calculated and the view can be modified to align
+ with the defined plane.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Plot Mix
+\end_layout
+
+\begin_layout Standard
+This tool can be used to combine several plot files into one.
+ A file list can be defined via the 
+\begin_inset Quotes eld
+\end_inset
+
+Add file
+\begin_inset Quotes erd
+\end_inset
+
+ button.
+ When Load is pressed, the tool will grab the last state from each plot
+ file and use it to define a time step.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Measure Area
+\end_layout
+
+\begin_layout Standard
+This tool calculates the area from a selection of faces.
+ To use it, first select some faces, then click the 
+\begin_inset Quotes eld
+\end_inset
+
+Apply
+\begin_inset Quotes erd
+\end_inset
+
+ button.
+ The tool will show the number of selected faces and the total area.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Import lines
+\end_layout
+
+\begin_layout Standard
+This tool imports line data that can be superimposed on the model.
+ Enter a name for the line data, select the source file, and click Apply.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Kinemat
+\end_layout
+
+\begin_layout Standard
+The Kinemat tool can be used to apply kinematics data to a model.
+ To use it, first select the model file, which currently has to be in the
+ .k (LSDYNA keyword) format.
+ Then, select the kinematics file.
+ This text file should define for each time step a line with a comma separated
+ list of 4x4 transformation matrices, one for each material in the model.
+ The matrices have to be entered in row-major order.
+ (The last row is currently ignored and can be zero.) Finally, enter the
+ range and stride of the rows of the kine file that will be read in.
+\end_layout
+
+\begin_layout Standard
+When Apply is pressed the Kinemat tool will apply the transformation matrices
+ to all the nodes of the models, generating a state for each row of the
+ kine file.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Distance Map
+\end_layout
+
+\begin_layout Standard
+This tool calculates a data field that measures the distance between two
+ surfaces.
+ Select the first surface and press the 
+\begin_inset Quotes eld
+\end_inset
+
+Assign to surface 1
+\begin_inset Quotes erd
+\end_inset
+
+ button.
+ The button will then show how many facets were assigned to surface 1.
+ Next, select the opposite surface and press 
+\begin_inset Quotes eld
+\end_inset
+
+Assign to surface 2
+\begin_inset Quotes erd
+\end_inset
+
+ button.
+ Optionally, the signed distance option can be checked.
+ Finally, press Apply.
+ A new data field will be created, called 
+\begin_inset Quotes eld
+\end_inset
+
+distance map
+\begin_inset Quotes erd
+\end_inset
+
+ that can be selected from the data field selector on the main toolbar.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Curvature Map
+\end_layout
+
+\begin_layout Standard
+This tool calculates the congruency between two surfaces by comparing the
+ relative curvatures.
+ Select the two surfaces in turn and assign them using the Assign buttons.
+ Then press Apply.
+ A new data field, called 
+\begin_inset Quotes eld
+\end_inset
+
+congruency
+\begin_inset Quotes erd
+\end_inset
+
+ will be created that can be selected from the data field selector from
+ the main tool bar.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Pt.
+ Congruency
+\end_layout
+
+\begin_layout Standard
+This tool calculates the congruency at a point of the mesh, by comparing
+ the curvature at the selected point and a point projected onto the opposing
+ surface.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Add 3D image
+\end_layout
+
+\begin_layout Standard
+This tool loads a 3D image data that will be rendered on top of the model
+ via a volume rendering approach.
+ Enter the file name in the 
+\emph on
+file 
+\emph default
+field.
+ The image file has to in the raw format.
+ Then, enter the other requested information to define the resolution and
+ size of the image set.
+ Next, a visualization method can be selected.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+Volume Rendering
+\begin_inset Quotes erd
+\end_inset
+
+ option creates a volumetric rendering of the image data.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+Image Slicer
+\begin_inset Quotes erd
+\end_inset
+
+ shows one slice of the image at a time and the user can control the location
+ and orientation of this slice.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Sphere Fit
+\end_layout
+
+\begin_layout Standard
+This tool can be used to fit a sphere to the model.
+ If the 
+\begin_inset Quotes eld
+\end_inset
+
+selection only
+\begin_inset Quotes erd
+\end_inset
+
+ is checked, the sphere will be fit only to the selection, otherwise all
+ the nodes on the surface of the model will be used.
+ Press 
+\begin_inset Quotes eld
+\end_inset
+
+Fit
+\begin_inset Quotes erd
+\end_inset
+
+ to calculate the best fitting sphere.
+ The location of the center, the radius, and the objective value (which
+ measures the average deviation of the sphere), will be calculated.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Transform
+\end_layout
+
+\begin_layout Standard
+This tool will apply a translation to the selected nodes.
+ Select some nodes first, then enter the translation vector, and press Apply.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Shell Thickness
+\end_layout
+
+\begin_layout Standard
+This tool can be used to set the shell thickness of the model.
+ FEBio models do not always contain the shell thickness data.
+ However, this data is sometimes useful for visualization, and this tool
+ allows the a-posteriori modification of the shell thickness.
+ To use it, enter the new shell thickness and press Apply.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Add Point
+\end_layout
+
+\begin_layout Standard
+This tool can be used to define a point in the model at the specified coordinate
+s.
+ This can often be useful for defining a reference point for locating certain
+ model features.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Import Points
+\end_layout
+
+\begin_layout Standard
+This tool can be used to load a point set from file.
+ Enter a name for the point set data, select the point set file name and
+ press Apply.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Area Coverage
+\end_layout
+
+\begin_layout Standard
+This tool evaluates the coverage of two surfaces.
+ It assigns a value of one or zero of each node of a surface depending on
+ whether it is covered by a second surface.
+ Coverage is set to 1 if the local surface normal intersects with the opposing
+ surface on the positive side of the normal.
+ To use this tool, simply select the two opposing surfaces and press Apply.
+\end_layout
+
+\end_body
+\end_document
