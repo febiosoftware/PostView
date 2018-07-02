@@ -12,7 +12,7 @@
 
 // VERSION INFORMATION
 #define VERSION			2
-#define SUBVERSION		3
+#define SUBVERSION		4
 #define SUBSUBVERSION	0
 
 #ifdef SVN
