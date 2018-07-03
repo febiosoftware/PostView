@@ -2,6 +2,53 @@
 = PostView Release Notes                                               =
 ========================================================================
 
+Version 2.3 - 7/3/2018
+========================
+
+- New plotting features for visualizing fluid problems: stream line plot, particle flow.
+
+- New tensor plot visualization tool was added. This tool allows the visualization of (second order, symmetric) tensor fields. The tools displays the eigenvectors. Different glyphs can be chosen. 
+
+- PostView 2.3 supports a "dark" theme. To activate it, go to the View\Settings menu. In the Settings dialog box, activate the background tab and select the Theme option. When you change the theme, PostView must be restarted before the change takes effect.
+
+- VEC3F fields can be added with the equation editor tool. The x,y,z components can be entered separately using a mathematical expression.
+
+- Added tool for quadratic and exponential curve fit to Graph window tool. Users can now set the colors of curve fit and math plots on Graph windows.
+
+- The video recording features, including FFMPG recording, were fixed.
+
+- Non-cached data fields can now be copied. Copies are always cached.
+
+- A new data filter was added that allow components of vector, tensor, and array data fields to be extracted into a new scalar data field.
+
+- An issue was fixed related to rendering contour plots for transparent materials. 
+
+- The displacement map can be removed. 
+
+- An issue with the fixed time stepping option was fixed.
+
+- Some minor issues were addressed related to selection. 
+
+- The VRML export feature was fixed.
+
+- Some issues related to volumetric rendering and image slices were fixed, including the ability to delete them. 
+
+- The plot mix tool was fixed. 
+
+
+Version 2.2
+========================
+
+- Fixed time stepping feature is working again. 
+
+- Some issues with area coverage tool was fixed. This tool now also performs better.
+
+- Fixed issue with Kinemat tool when only a single state is loaded.
+
+- The color map editor was improved, a preview of the resulting color was added.
+
+- Support was added for the new array variable type of xplt file format.
+
 Version 2.1 - 11/20/2017
 ========================
 
