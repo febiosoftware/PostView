@@ -90,6 +90,7 @@ struct VIEWSETTINGS
 	bool	m_blinesmooth;	// line smoothing
 	float	m_flinethick;	// line thickness
 	float	m_fpointsize;	// point size
+	float	m_fspringthick;	// line thickness for springs
 
 	void Defaults();
 };

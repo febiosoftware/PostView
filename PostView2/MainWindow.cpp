@@ -1940,6 +1940,7 @@ void CMainWindow::writeSettings()
 	settings.setValue("m_bcull"           , view.m_bignoreBackfacingItems);
 	settings.setValue("m_blinesmooth"     , view.m_blinesmooth);
 	settings.setValue("m_flinethick"      , view.m_flinethick);
+	settings.setValue("m_fspringthick"    , view.m_fspringthick);
 	settings.setValue("m_fpointsize"      , view.m_fpointsize);
 	settings.setValue("colorMaps"         , ColorMapManager::UserColorMaps());
 	settings.endGroup();
@@ -2021,6 +2022,7 @@ void CMainWindow::readSettings()
 	view.m_bignoreBackfacingItems = settings.value("m_bcull", view.m_bignoreBackfacingItems).toBool();
 	view.m_blinesmooth      = settings.value("m_blinesmooth", view.m_blinesmooth).toBool();
 	view.m_flinethick       = settings.value("m_flinethick" , view.m_flinethick).toFloat();
+	view.m_fspringthick     = settings.value("m_fspringthick", view.m_fspringthick).toFloat();
 	view.m_fpointsize       = settings.value("m_fpointsize" , view.m_fpointsize).toFloat();
 	userColorMaps = settings.value("colorMaps", -1).toInt();
 	settings.endGroup();

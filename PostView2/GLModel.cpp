@@ -286,13 +286,17 @@ void CGLModel::RemoveDisplacementMap()
 }
 
 //-----------------------------------------------------------------------------
-void CGLModel::Render(CGLContext& rc, bool showMesh, bool showOutline)
+void CGLModel::Render(CGLContext& rc, bool showMesh, bool showOutline, float springthick)
 {
 	// get the FE model
 	FEModel* fem = GetFEModel();
 
 	// Render discrete elements
+	float lineWidth;
+	glGetFloatv(GL_LINE_WIDTH, &lineWidth);
+	glLineWidth(springthick);
 	RenderDiscrete(rc);
+	glLineWidth(lineWidth);
 
 	// Render the model
 	glPolygonOffset(1.0, 1.0);

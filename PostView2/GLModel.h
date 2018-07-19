@@ -124,7 +124,7 @@ public:
 
 public:
 	// call this to render the model
-	void Render(CGLContext& rc, bool showMesh, bool showOutline);
+	void Render(CGLContext& rc, bool showMesh, bool showOutline, float springthick);
 
 public:
 	void RenderNodes(FEModel* ps, CGLContext& rc);

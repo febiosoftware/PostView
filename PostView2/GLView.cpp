@@ -2686,7 +2686,7 @@ void CGLView::RenderDoc()
 		if (po && po->IsActive())
 		{
 			// render the GL model
-			po->Render(rc, view.m_bmesh, view.m_boutline);
+			po->Render(rc, view.m_bmesh, view.m_boutline, view.m_fspringthick);
 
 			// render the bounding box
 			if (view.m_bBox) RenderBox();
