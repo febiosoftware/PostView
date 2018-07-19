@@ -490,6 +490,22 @@ template <typename T> void cached_copy_elem_data_ITEM(FEMeshData& dst, FEMeshDat
 	}
 }
 
+template <typename T> void cached_copy_elem_data_REGION(FEMeshData& dst, FEMeshData& src, int NE)
+{
+	FEElementData<T, DATA_REGION>& d = dynamic_cast<FEElementData<T, DATA_REGION>&>(dst);
+	FEElemData_T<T, DATA_REGION>& s = dynamic_cast<FEElemData_T<T, DATA_REGION>&>(src);
+
+	T f;
+	for (int i = 0; i<NE; ++i)
+	{
+		if (s.active(i))
+		{
+			s.eval(i, &f);
+			d.add(i, f);
+		}
+	}
+}
+
 template <typename T> void cached_copy_elem_data_COMP(FEMeshData& dst, FEMeshData& src, FEMeshBase& mesh)
 {
 	FEElementData<T, DATA_COMP>& d = dynamic_cast<FEElementData<T, DATA_COMP>&>(dst);
@@ -634,9 +650,17 @@ FEDataField* FEModel::CreateCachedCopy(FEDataField* pd, const char* sznewname)
 			else if (nfmt == DATA_NODE)
 			{
 				if      (ntype == DATA_FLOAT ) cached_copy_elem_data_NODE<float >(dst, src, mesh);
-				else if (ntype == DATA_FLOAT ) cached_copy_elem_data_NODE<vec3f >(dst, src, mesh);
+				else if (ntype == DATA_VEC3F ) cached_copy_elem_data_NODE<vec3f >(dst, src, mesh);
 				else if (ntype == DATA_MAT3FS) cached_copy_elem_data_NODE<mat3fs>(dst, src, mesh);
 				else if (ntype == DATA_MAT3FD) cached_copy_elem_data_NODE<mat3fd>(dst, src, mesh);
+				else assert(false);
+			}
+			else if (nfmt == DATA_REGION)
+			{
+				if      (ntype == DATA_FLOAT ) cached_copy_elem_data_REGION<float >(dst, src, NE);
+				else if (ntype == DATA_VEC3F ) cached_copy_elem_data_REGION<vec3f >(dst, src, NE);
+				else if (ntype == DATA_MAT3FS) cached_copy_elem_data_REGION<mat3fs>(dst, src, NE);
+				else if (ntype == DATA_MAT3FD) cached_copy_elem_data_REGION<mat3fd>(dst, src, NE);
 				else assert(false);
 			}
 			else assert(false);

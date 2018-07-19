@@ -459,6 +459,17 @@ public:
 		}
 	}
 
+	void add(int item, const T& v)
+	{
+		int m = (int)m_data.size();
+		m_data.push_back(v);
+		if (m_elem[item] == -1) m_elem[item] = m;
+		else
+		{
+			assert(m_elem[item] == m);
+		}
+	}
+
 	int size() const { return (int) m_data.size(); }
 	T& operator [] (int n) { return m_data[n]; }
 
