@@ -912,6 +912,9 @@ float FEMeshBase::ElementVolume(int iel)
 	case FE_HEX20  : return HexVolume(el); break;
 	case FE_HEX27  : return HexVolume(el); break;
 	case FE_TET4   : return TetVolume(el); break;
+    case FE_TET10  : return TetVolume(el); break;
+    case FE_TET15  : return TetVolume(el); break;
+    case FE_TET20  : return TetVolume(el); break;
 	case FE_PENTA6 : return PentaVolume(el); break;
     case FE_PENTA15: return PentaVolume(el); break;
 	case FE_PYRA5  : return PyramidVolume(el); break;
@@ -1256,7 +1259,8 @@ float FEMeshBase::PyramidVolume(const FEElement& el)
 // Calculate the volume of a tetrahedral element
 float FEMeshBase::TetVolume(const FEElement& el)
 {
-	assert(el.Type() == FE_TET4);
+	assert((el.Type() == FE_TET4) || (el.Type() == FE_TET10)
+           || (el.Type() == FE_TET15) || (el.Type() == FE_TET20));
 
 	// gauss-point data
 	const float a = 0.58541020f;
