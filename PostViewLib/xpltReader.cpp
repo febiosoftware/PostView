@@ -457,7 +457,7 @@ bool XpltReader::ReadDictionary(FEModel& fem)
 	// add additional displacement fields
 	if (m_bHasDispl) 
 	{
-		pdm->AddDataField(new FEDataField_T<FELagrangeStrain>("Lagrange strain"  ));
+		pdm->AddDataField(new FEStrainDataField("Lagrange strain", FEStrainDataField::LAGRANGE));
 		pdm->AddDataField(new FEDataField_T<FENodePosition  >("position"         ));
 		pdm->AddDataField(new FEDataField_T<FENodeInitPos   >("initial position" ));
 	}

@@ -160,20 +160,7 @@ bool FELSDYNAPlotImport::ReadHeader(FEModel& fem)
 		if (m_hdr.nv2d == 44) { pdm->AddDataField(new FEDataField_T<FEElementData<mat3fs,DATA_ITEM> >("Shell strain", EXPORT_DATA)); m_nfield[LSDYNA_SHELL_STRAIN] = ne++; }
 
 		// additional element data
-		pdm->AddDataField(new FEDataField_T<FELagrangeStrain  >("Lagrange strain"   ));
-		pdm->AddDataField(new FEDataField_T<FEInfStrain       >("Inf strain"        ));
-		pdm->AddDataField(new FEDataField_T<FERightCauchyGreen>("Right Cauchy-Green"));
-		pdm->AddDataField(new FEDataField_T<FERightStretch    >("Right stretch"     ));
-		pdm->AddDataField(new FEDataField_T<FELagrangeStrain  >("Lagrange strain"   ));
-		pdm->AddDataField(new FEDataField_T<FEBiotStrain      >("Biot strain"       ));
-		pdm->AddDataField(new FEDataField_T<FERightHencky     >("Right Hencky"      ));
-        pdm->AddDataField(new FEDataField_T<FELeftCauchyGreen >("Left Cauchy-Green" ));
-        pdm->AddDataField(new FEDataField_T<FELeftStretch     >("Left stretch"      ));
-        pdm->AddDataField(new FEDataField_T<FELeftHencky      >("Left Hencky"       ));
-        pdm->AddDataField(new FEDataField_T<FEAlmansi         >("Almansi strain"    ));
-		pdm->AddDataField(new FEDataField_T<FEElementVolume   >("Volume"            ));
-		pdm->AddDataField(new FEDataField_T<FEVolRatio        >("Volume ratio"      ));
-		pdm->AddDataField(new FEDataField_T<FEVolStrain       >("Volume strain"     ));
+		pdm->AddDataField(new FEStrainDataField("Lagrange strain", FEStrainDataField::LAGRANGE));
 	}
 	else fem.SetDisplacementField(-1);
  

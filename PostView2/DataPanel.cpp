@@ -118,6 +118,36 @@ public:
 	}
 };
 
+class CStrainProps : public CPropertyList
+{
+private:
+	FEStrainDataField*	m_ps;
+
+public:
+	CStrainProps(FEStrainDataField* ps, int maxStates) : m_ps(ps)
+	{
+		addProperty("reference state", CProperty::Int)->setIntRange(0, maxStates);
+	}
+
+	QVariant GetPropertyValue(int i) override
+	{
+		switch (i)
+		{
+		case 0: return m_ps->m_nref + 1; break;
+		}
+
+		return QVariant();
+	}
+
+	void SetPropertyValue(int i, const QVariant& v) override
+	{
+		switch (i)
+		{
+		case 0: m_ps->m_nref = v.toInt() - 1; break;
+		}
+	}
+};
+
 
 class CDataModel : public QAbstractTableModel
 {
@@ -852,8 +882,11 @@ void CDataPanel::on_ExportButton_clicked()
 
 void CDataPanel::on_dataList_clicked(const QModelIndex& index)
 {
-	FEDataManager& dm = *ui->data->m_fem->GetDataManager();
+	FEModel* fem = ui->data->m_fem;
+	FEDataManager& dm = *fem->GetDataManager();
 	int n = index.row();
+
+	int nstates = fem->GetStates();
 
 	FEDataField* p = *dm.DataField(n);
 
@@ -871,6 +904,11 @@ void CDataPanel::on_dataList_clicked(const QModelIndex& index)
 	{
 		FEMathVec3DataField* pm = dynamic_cast<FEMathVec3DataField*>(p);
 		ui->m_prop->Update(new CMathDataVec3Props(pm));
+	}
+	else if (dynamic_cast<FEStrainDataField*>(p))
+	{
+		FEStrainDataField* ps = dynamic_cast<FEStrainDataField*>(p);
+		ui->m_prop->Update(new CStrainProps(ps, nstates));
 	}
 	else ui->m_prop->Update(0);
 

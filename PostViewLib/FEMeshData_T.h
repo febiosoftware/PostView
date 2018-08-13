@@ -727,91 +727,133 @@ public:
 
 //-----------------------------------------------------------------------------
 // strain data
-class FEStrain
+class FEStrainDataField : public FEDataField
 {
 public:
-	FEStrain() { m_nref = -1; }
+	enum {
+		INF_STRAIN,
+		RIGHT_CAUCHY_GREEN,
+		RIGHT_STRETCH,
+		LAGRANGE,
+		BIOT,
+		RIGHT_HENCKY,
+		LEFT_CAUCHY_GREEN,
+		LEFT_STRETCH,
+		LEFT_HENCKY,
+		ALMANSI
+	};
+
+public:
+	FEStrainDataField(const std::string& name, int measure) : FEDataField(name, DATA_MAT3FS, DATA_ITEM, CLASS_ELEM, 0)
+	{ 
+		m_nref = -1; 
+		m_measure = measure; 
+	}
+
+	FEDataField* Clone() const override
+	{
+		FEStrainDataField* pd = new FEStrainDataField(GetName(), m_measure);
+		pd->m_nref = m_nref;
+		return pd;
+	}
+
+	FEMeshData* CreateData(FEState* pstate) override;
+
 public:
 	int	m_nref;
+	int	m_measure;
 };
 
 //-----------------------------------------------------------------------------
-class FEInfStrain : public FEElemData_T<mat3fs, DATA_ITEM>, public FEStrain
+class FEStrain : public FEElemData_T<mat3fs, DATA_ITEM>
 {
 public:
-	FEInfStrain(FEState* state, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(state, pdf) {}
+	FEStrain(FEState* state, FEStrainDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(state, pdf), m_strainData(pdf) {}
+
+protected:
+	int ReferenceState() { return m_strainData->m_nref; }
+
+private:
+	FEStrainDataField*	m_strainData;
+};
+
+//-----------------------------------------------------------------------------
+class FEInfStrain : public FEStrain
+{
+public:
+	FEInfStrain(FEState* state, FEStrainDataField* pdf) : FEStrain(state, pdf) {}
 	void eval(int n, mat3fs* pv);
 };
 
 //-----------------------------------------------------------------------------
-class FERightCauchyGreen : public FEElemData_T<mat3fs, DATA_ITEM>, public FEStrain
+class FERightCauchyGreen : public FEStrain
 {
 public:
-	FERightCauchyGreen(FEState* state, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(state, pdf) {}
+	FERightCauchyGreen(FEState* state, FEStrainDataField* pdf) : FEStrain(state, pdf) {}
 	void eval(int n, mat3fs* pv);
 };
 
 //-----------------------------------------------------------------------------
-class FERightStretch : public FEElemData_T<mat3fs, DATA_ITEM>, public FEStrain
+class FERightStretch : public FEStrain
 {
 public:
-	FERightStretch(FEState* state, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(state, pdf) {}
+	FERightStretch(FEState* state, FEStrainDataField* pdf) : FEStrain(state, pdf) {}
 	void eval(int n, mat3fs* pv);
 };
 
 //-----------------------------------------------------------------------------
-class FELagrangeStrain : public FEElemData_T<mat3fs, DATA_ITEM>, public FEStrain
+class FELagrangeStrain : public FEStrain
 {
 public:
-	FELagrangeStrain(FEState* state, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(state, pdf) {}
+	FELagrangeStrain(FEState* state, FEStrainDataField* pdf) : FEStrain(state, pdf) {}
 	void eval(int n, mat3fs* pv);
 };
 
 //-----------------------------------------------------------------------------
-class FEBiotStrain : public FEElemData_T<mat3fs, DATA_ITEM>, public FEStrain
+class FEBiotStrain : public FEStrain
 {
 public:
-	FEBiotStrain(FEState* state, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(state, pdf) {}
+	FEBiotStrain(FEState* state, FEStrainDataField* pdf) : FEStrain(state, pdf) {}
 	void eval(int n, mat3fs* pv);
 };
 
 //-----------------------------------------------------------------------------
-class FERightHencky : public FEElemData_T<mat3fs, DATA_ITEM>, public FEStrain
+class FERightHencky : public FEStrain
 {
 public:
-	FERightHencky(FEState* state, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(state, pdf) {}
+	FERightHencky(FEState* state, FEStrainDataField* pdf) : FEStrain(state, pdf) {}
 	void eval(int n, mat3fs* pv);
 };
 
 //-----------------------------------------------------------------------------
-class FELeftCauchyGreen : public FEElemData_T<mat3fs, DATA_ITEM>, public FEStrain
+class FELeftCauchyGreen : public FEStrain
 {
 public:
-	FELeftCauchyGreen(FEState* state, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(state, pdf) {}
+	FELeftCauchyGreen(FEState* state, FEStrainDataField* pdf) : FEStrain(state, pdf) {}
     void eval(int n, mat3fs* pv);
 };
 
 //-----------------------------------------------------------------------------
-class FELeftStretch : public FEElemData_T<mat3fs, DATA_ITEM>, public FEStrain
+class FELeftStretch : public FEStrain
 {
 public:
-	FELeftStretch(FEState* state, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(state, pdf) {}
+	FELeftStretch(FEState* state, FEStrainDataField* pdf) : FEStrain(state, pdf) {}
     void eval(int n, mat3fs* pv);
 };
 
 //-----------------------------------------------------------------------------
-class FELeftHencky : public FEElemData_T<mat3fs, DATA_ITEM>, public FEStrain
+class FELeftHencky : public FEStrain
 {
 public:
-	FELeftHencky(FEState* state, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(state, pdf) {}
+	FELeftHencky(FEState* state, FEStrainDataField* pdf) : FEStrain(state, pdf) {}
     void eval(int n, mat3fs* pv);
 };
 
 //-----------------------------------------------------------------------------
-class FEAlmansi : public FEElemData_T<mat3fs, DATA_ITEM>, public FEStrain
+class FEAlmansi : public FEStrain
 {
 public:
-	FEAlmansi(FEState* state, FEDataField* pdf) : FEElemData_T<mat3fs, DATA_ITEM>(state, pdf) {}
+	FEAlmansi(FEState* state, FEStrainDataField* pdf) : FEStrain(state, pdf) {}
     void eval(int n, mat3fs* pv);
 };
 

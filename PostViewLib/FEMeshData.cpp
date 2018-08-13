@@ -181,6 +181,28 @@ void FEDeformationGradient::eval(int n, Mat3d* pv)
 }
 
 //-----------------------------------------------------------------------------
+FEMeshData* FEStrainDataField::CreateData(FEState* pstate)
+{
+	switch (m_measure)
+	{
+	case INF_STRAIN        : return new FEInfStrain       (pstate, this);
+	case RIGHT_CAUCHY_GREEN: return new FERightCauchyGreen(pstate, this);
+	case RIGHT_STRETCH     : return new FERightStretch    (pstate, this);
+	case LAGRANGE          : return new FELagrangeStrain  (pstate, this);
+	case BIOT              : return new FEBiotStrain      (pstate, this);
+	case RIGHT_HENCKY      : return new FERightHencky     (pstate, this);
+	case LEFT_CAUCHY_GREEN : return new FELeftCauchyGreen (pstate, this);
+	case LEFT_STRETCH      : return new FELeftStretch     (pstate, this);
+	case LEFT_HENCKY       : return new FELeftHencky      (pstate, this);
+	case ALMANSI           : return new FEAlmansi         (pstate, this);
+	default:
+		assert(false);
+	}
+
+	return 0;
+}
+
+//-----------------------------------------------------------------------------
 // infinitesimal strain
 //
 void FEInfStrain::eval(int n, mat3fs* pv)
@@ -195,7 +217,8 @@ void FEInfStrain::eval(int n, mat3fs* pv)
 	int nstate = m_state->GetID();
 
 	// get the deformation gradient
-	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
+	int nref = ReferenceState();
+	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, nref);
 
 	// evaluate strain tensor U = F-I
 	double U[3][3];
@@ -231,7 +254,8 @@ void FERightCauchyGreen::eval(int n, mat3fs* pv)
 	int nstate = m_state->GetID();
 
 	// get the deformation gradient
-	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
+	int nref = ReferenceState();
+	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, nref);
 	
 	// evaluate right Cauchy-Green C = Ft*F
 	double C[3][3] = {0};
@@ -269,7 +293,8 @@ void FERightStretch::eval(int n, mat3fs* pv)
 	int nstate = m_state->GetID();
 
 	// get the deformation gradient
-	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
+	int nref = ReferenceState();
+	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, nref);
 	
 	// evaluate right Cauchy-Green C = Ft*F
 	double C[3][3] = {0};
@@ -326,7 +351,8 @@ void FELagrangeStrain::eval(int n, mat3fs* pv)
 	int nstate = m_state->GetID();
 
 	// get the deformation gradient
-	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
+	int nref = ReferenceState();
+	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, nref);
 	
 	// evaluate right Cauchy-Green C = Ft*F
 	double C[3][3] = {0};
@@ -364,7 +390,8 @@ void FEBiotStrain::eval(int n, mat3fs* pv)
 	int nstate = m_state->GetID();
 
 	// get the deformation gradient
-	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
+	int nref = ReferenceState();
+	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, nref);
 
 	// evaluate right Cauchy-Green C = Ft*F
 	double C[3][3] = {0};
@@ -421,7 +448,8 @@ void FERightHencky::eval(int n, mat3fs* pv)
 	int nstate = m_state->GetID();
 
 	// get the deformation gradient
-	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
+	int nref = ReferenceState();
+	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, nref);
 	
 	// evaluate right Cauchy-Green C = Ft*F
 	double C[3][3] = {0};
@@ -478,7 +506,8 @@ void FELeftCauchyGreen::eval(int n, mat3fs* pv)
 	int nstate = m_state->GetID();
 
     // get the deformation gradient
-	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
+	int nref = ReferenceState();
+	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, nref);
     
     // evaluate left Cauchy-Green B = F*Ft
     double B[3][3] = {0};
@@ -516,7 +545,8 @@ void FELeftStretch::eval(int n, mat3fs* pv)
 	int nstate = m_state->GetID();
 
     // get the deformation gradient
-	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
+	int nref = ReferenceState();
+	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, nref);
     
     // evaluate left Cauchy-Green B = F*Ft
     double B[3][3] = {0};
@@ -573,7 +603,8 @@ void FELeftHencky::eval(int n, mat3fs* pv)
 	int nstate = m_state->GetID();
 
     // get the deformation gradient
-	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
+	int nref = ReferenceState();
+	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, nref);
     
     // evaluate left Cauchy-Green B = F*Ft
     double B[3][3] = {0};
@@ -630,7 +661,8 @@ void FEAlmansi::eval(int n, mat3fs* pv)
 	int nstate = m_state->GetID();
 
     // get the deformation gradient
-	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, m_nref);
+	int nref = ReferenceState();
+	Mat3d F = deform_grad(*GetFEModel(), n, q[0], q[1], q[2], nstate, nref);
     
     // evaluate left Cauchy-Green B = F*Ft
     double B[3][3] = {0};
