@@ -2082,8 +2082,7 @@ void CMainWindow::readSettings()
 
 void CMainWindow::on_actionHelp_triggered()
 {
-//	QDesktopServices::openUrl(QUrl("http://help.mrl.sci.utah.edu/help/index.jsp"));
-	QDesktopServices::openUrl(QUrl("http://help.mrl.sci.utah.edu/help/topic/org.febio.help.postview_um/html/title_page.html?cp=3"));
+	QDesktopServices::openUrl(QUrl("https://help.febio.org/PostView/PostView_2_3/index.html"));
 }
 
 void CMainWindow::on_actionAbout_triggered()
