@@ -118,11 +118,16 @@ public:
 	void eval(int n, T* pv) { (*pv) = m_data[m_face[n]]; }
 	bool active(int n) { return (m_face[n] >= 0); }
 	void copy(FEFaceData<T,DATA_ITEM>& d) { m_data = d.m_data; }
-	void add(int n, const T& d)
+	bool add(int n, const T& d)
 	{ 
-		if (m_face[n] >= 0) assert(m_face[n] == (int) m_data.size());
+		if (m_face[n] >= 0) 
+		{
+//			assert(m_face[n] == (int) m_data.size());
+			if (m_face[n] != (int)m_data.size()) return false;
+		}
 		else m_face[n] = (int) m_data.size(); 
 		m_data.push_back(d); 
+		return true;
 	}
 
 	int size() const { return (int) m_data.size(); }
@@ -145,7 +150,7 @@ public:
 	void eval(int n, T* pv) { (*pv) = m_data[m_face[n]]; }
 	bool active(int n) { return (m_face[n] >= 0); }
 	void copy(FEFaceData<T,DATA_ITEM>& d) { m_data = d.m_data; }
-	void add(vector<int>& item, const T& v) 
+	bool add(vector<int>& item, const T& v) 
 	{ 
 		int m = (int) m_data.size(); 
 		m_data.push_back(v);
@@ -154,9 +159,12 @@ public:
 			if (m_face[item[i]] == -1) m_face[item[i]] = m;
 			else
 			{
-				assert(m_face[item[i]] == m);
+//				assert(m_face[item[i]] == m);
+				if (m_face[item[i]] != m) return false;
 			}
 		}
+
+		return true;
 	}
 
 	int size() const { return (int)m_data.size(); }
@@ -184,11 +192,16 @@ public:
 	}
 	bool active(int n) { return (m_face[n] >= 0); }
 	void copy(FEFaceData<T,DATA_COMP>& d) { m_data = d.m_data; m_face = d.m_face; }
-	void add(int n, T* d, int m) 
+	bool add(int n, T* d, int m) 
 	{ 
-		if (m_face[n] >= 0) assert(m_face[n] == (int) m_data.size());
+		if (m_face[n] >= 0) 
+		{
+//			assert(m_face[n] == (int) m_data.size());
+			if (m_face[n] != (int)m_data.size()) return false;
+		}
 		else m_face[n] = (int) m_data.size();
 		for (int i=0; i<m; ++i) m_data.push_back(d[i]);
+		return true;
 	}
 
 	int size() const { return (int)m_data.size(); }

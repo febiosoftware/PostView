@@ -17,6 +17,13 @@ bool xpltParser::errf(const char* szerr)
 	return m_xplt->errf(szerr);
 }
 
+void xpltParser::addWarning(int n)
+{
+	for (int i=0; i<warnings(); ++i)
+		if (warning(i) == n) return;
+	m_wrng.push_back(n); 
+}
+
 xpltFileReader::xpltFileReader() : FEFileReader("FEBio plot")
 {
 	m_xplt = 0;
@@ -66,6 +73,20 @@ bool xpltFileReader::Load(FEModel& fem, const char* szfile)
 	// clean up
 	m_ar.Close();
 	Close();
+
+	if (m_xplt->warnings() > 0)
+	{
+		for (int i=0; i<m_xplt->warnings(); ++i)
+		{
+			switch (m_xplt->warning(i))
+			{
+			case XPLT_READ_DUPLICATE_FACES: errf("WARNING: Duplicate surface values encountered.");
+			break;
+			default:
+				errf("WARNING: unknown warning occurred.");
+			}
+		}
+	}
 
 	// all done
 	return bret;

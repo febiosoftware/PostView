@@ -1213,6 +1213,9 @@ bool XpltReader::ReadStateSection(FEModel& fem)
 	try 
 	{
 		ps = m_pstate = new FEState(0.f, &fem, &mesh);
+
+		// we give it a temporary ID
+		ps->SetID(fem.GetStates());
 	}
 	catch (...)
 	{
@@ -1853,6 +1856,8 @@ bool XpltReader::ReadFaceData_MULT(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 		}
 	}
 
+	bool bok = true;
+
 	switch (ntype)
 	{
 	case FLOAT:
@@ -1866,7 +1871,7 @@ bool XpltReader::ReadFaceData_MULT(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 				FACE& f = s.face[i];
 				vector<int>& li = l[i];
 				for (int j=0; j<f.nn; ++j) v[j] = a[NFM*i + li[j]];
-				if (f.nid >= 0) df.add(f.nid, v, f.nn);
+				if (f.nid >= 0) bok &= df.add(f.nid, v, f.nn);
 			}
 		}
 		break;
@@ -1881,7 +1886,7 @@ bool XpltReader::ReadFaceData_MULT(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 				FACE& f = s.face[i];
 				vector<int>& li = l[i];
 				for (int j=0; j<f.nn; ++j) v[j] = a[NFM*i + li[j]];
-				if (f.nid >= 0) df.add(f.nid, v, f.nn);
+				if (f.nid >= 0) bok &= df.add(f.nid, v, f.nn);
 			}
 		}
 		break;
@@ -1896,7 +1901,7 @@ bool XpltReader::ReadFaceData_MULT(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 				FACE& f = s.face[i];
 				vector<int>& li = l[i];
 				for (int j=0; j<f.nn; ++j) v[j] = a[NFM*i + li[j]];
-				if (f.nid >= 0) df.add(f.nid, v, f.nn);
+				if (f.nid >= 0) bok &= df.add(f.nid, v, f.nn);
 			}
 		}
 		break;
@@ -1911,7 +1916,7 @@ bool XpltReader::ReadFaceData_MULT(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 				FACE& f = s.face[i];
 				vector<int>& li = l[i];
 				for (int j=0; j<f.nn; ++j) v[j] = a[NFM*i + li[j]];
-				if (f.nid >= 0) df.add(f.nid, v, f.nn);
+				if (f.nid >= 0) bok &= df.add(f.nid, v, f.nn);
 			}
 		}
 		break;
@@ -1926,7 +1931,7 @@ bool XpltReader::ReadFaceData_MULT(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 				FACE& f = s.face[i];
 				vector<int>& li = l[i];
 				for (int j=0; j<f.nn; ++j) v[j] = a[NFM*i + li[j]];
-				if (f.nid >= 0) df.add(f.nid, v, f.nn);
+				if (f.nid >= 0) bok &= df.add(f.nid, v, f.nn);
 			}
 		}
 		break;	
@@ -1941,13 +1946,15 @@ bool XpltReader::ReadFaceData_MULT(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 				FACE& f = s.face[i];
 				vector<int>& li = l[i];
 				for (int j=0; j<f.nn; ++j) v[j] = a[NFM*i + li[j]];
-				if (f.nid >= 0) df.add(f.nid, v, f.nn);
+				if (f.nid >= 0) bok &= df.add(f.nid, v, f.nn);
 			}
 		}
         break;
 	default:
 		return errf("Failed reading face data");
 	}
+
+	if (bok == false) addWarning(XPLT_READ_DUPLICATE_FACES);
 
 	return true;
 }
@@ -1956,6 +1963,7 @@ bool XpltReader::ReadFaceData_MULT(FEMeshBase& m, XpltReader::Surface &s, FEMesh
 bool XpltReader::ReadFaceData_ITEM(XpltReader::Surface &s, FEMeshData &data, int ntype)
 {
 	int NF = s.nf;
+	bool bok = true;
 	switch (ntype)
 	{
 	case FLOAT:
@@ -1963,7 +1971,7 @@ bool XpltReader::ReadFaceData_ITEM(XpltReader::Surface &s, FEMeshData &data, int
 			FEFaceData<float,DATA_ITEM>& df = dynamic_cast<FEFaceData<float,DATA_ITEM>&>(data);
 			vector<float> a(NF);
 			m_ar.read(a);
-			for (int i=0; i<NF; ++i) df.add(s.face[i].nid, a[i]);
+			for (int i=0; i<NF; ++i) bok &= df.add(s.face[i].nid, a[i]);
 		}
 		break;
 	case VEC3F:
@@ -1971,7 +1979,7 @@ bool XpltReader::ReadFaceData_ITEM(XpltReader::Surface &s, FEMeshData &data, int
 			vector<vec3f> a(NF);
 			m_ar.read(a);
 			FEFaceData<vec3f,DATA_ITEM>& dv = dynamic_cast<FEFaceData<vec3f,DATA_ITEM>&>(data);
-			for (int i=0; i<NF; ++i) dv.add(s.face[i].nid, a[i]);
+			for (int i = 0; i<NF; ++i) bok &= dv.add(s.face[i].nid, a[i]);
 		}
 		break;
 	case MAT3FS:
@@ -1979,7 +1987,7 @@ bool XpltReader::ReadFaceData_ITEM(XpltReader::Surface &s, FEMeshData &data, int
 			vector<mat3fs> a(NF);
 			m_ar.read(a);
 			FEFaceData<mat3fs,DATA_ITEM>& dm = dynamic_cast<FEFaceData<mat3fs,DATA_ITEM>&>(data);
-			for (int i=0; i<NF; ++i) dm.add(s.face[i].nid, a[i]);
+			for (int i = 0; i<NF; ++i) bok &= dm.add(s.face[i].nid, a[i]);
 		}
 		break;
 	case MAT3F:
@@ -1987,7 +1995,7 @@ bool XpltReader::ReadFaceData_ITEM(XpltReader::Surface &s, FEMeshData &data, int
 			vector<mat3f> a(NF);
 			m_ar.read(a);
 			FEFaceData<mat3f,DATA_ITEM>& dm = dynamic_cast<FEFaceData<mat3f,DATA_ITEM>&>(data);
-			for (int i=0; i<NF; ++i) dm.add(s.face[i].nid, a[i]);
+			for (int i = 0; i<NF; ++i) bok &= dm.add(s.face[i].nid, a[i]);
 		}
 		break;
 	case MAT3FD:
@@ -1995,7 +2003,7 @@ bool XpltReader::ReadFaceData_ITEM(XpltReader::Surface &s, FEMeshData &data, int
 			vector<mat3fd> a(NF);
 			m_ar.read(a);
 			FEFaceData<mat3fd,DATA_ITEM>& dm = dynamic_cast<FEFaceData<mat3fd,DATA_ITEM>&>(data);
-			for (int i=0; i<NF; ++i) dm.add(s.face[i].nid, a[i]);
+			for (int i = 0; i<NF; ++i) bok &= dm.add(s.face[i].nid, a[i]);
 		}
 		break;
     case TENS4FS:
@@ -2003,12 +2011,14 @@ bool XpltReader::ReadFaceData_ITEM(XpltReader::Surface &s, FEMeshData &data, int
 			vector<tens4fs> a(NF);
 			m_ar.read(a);
 			FEFaceData<tens4fs,DATA_ITEM>& dm = dynamic_cast<FEFaceData<tens4fs,DATA_ITEM>&>(data);
-			for (int i=0; i<NF; ++i) dm.add(s.face[i].nid, a[i]);
+			for (int i = 0; i<NF; ++i) bok &= dm.add(s.face[i].nid, a[i]);
 		}
         break;
 	default:
 		return errf("Failed reading face data");
 	}
+
+	if (bok == false) addWarning(XPLT_READ_DUPLICATE_FACES);
 
 	return true;
 }

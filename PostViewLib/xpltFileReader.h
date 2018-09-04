@@ -9,6 +9,10 @@ enum XPLT_READ_STATE_FLAG {
 	XPLT_READ_FIRST_AND_LAST 
 };
 
+enum XPLT_READ_WARNING {
+	XPLT_READ_DUPLICATE_FACES			// warning issued when surface values are overwritten
+};
+
 class xpltFileReader;
 
 class xpltParser
@@ -21,9 +25,14 @@ public:
 
 	bool errf(const char* sz);
 
+	void addWarning(int n);
+	int warnings() const { return (int) m_wrng.size(); }
+	int warning(int n) const { return m_wrng[n]; }
+
 protected:
 	xpltFileReader*	m_xplt;
 	IArchive&		m_ar;
+	vector<int>		m_wrng;	// warning list
 };
 
 class xpltFileReader : public FEFileReader
