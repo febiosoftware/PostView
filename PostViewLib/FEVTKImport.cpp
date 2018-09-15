@@ -211,8 +211,7 @@ bool FEVTKimport::Load(FEModel& fem, const char* szfile)
 				}
 			}
 
-			FEDataManager& dm = *fem.GetDataManager();
-			dm.AddDataField(new FEDataField_T<FENodeData<float> >("data", EXPORT_DATA));
+			fem.AddDataField(new FEDataField_T<FENodeData<float> >("data", EXPORT_DATA));
 
 			FENodeData<float>& df = dynamic_cast<FENodeData<float>&>(ps->m_Data[0]);
 			for (int j=0; j<pm->Nodes(); ++j) df[j] = (float) data[j];
@@ -221,8 +220,7 @@ bool FEVTKimport::Load(FEModel& fem, const char* szfile)
 		//reading cell data
 		if(isCellData)
 		{
-			FEDataManager& dm = *fem.GetDataManager();
-			dm.AddDataField(new FEDataField_T<FENodeData<float> >("data", EXPORT_DATA));
+			fem.AddDataField(new FEDataField_T<FEElementData<float, DATA_ITEM> >("data", EXPORT_DATA));
 
 			FEElementData<float, DATA_ITEM>& ed = dynamic_cast<FEElementData<float, DATA_ITEM>&>(ps->m_Data[0]);
 
@@ -232,7 +230,7 @@ bool FEVTKimport::Load(FEModel& fem, const char* szfile)
 				ch = fgets(szline, 255, m_fp);
 				if (ch == 0) return errf("An unexpected error occured while reading the file data.");
 				nread = sscanf(szline, "%lg", &temp[0]);
-				ed[i] = (float) temp[0];
+				ed.add(i, (float) temp[0]);
 			}
 		}		
 		break;
