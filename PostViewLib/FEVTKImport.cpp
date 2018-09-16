@@ -155,6 +155,7 @@ bool FEVTKimport::Load(FEModel& fem, const char* szfile)
 
 	// add a state
 	FEState* ps = new FEState(0.f, m_pfem, m_pfem->GetFEMesh(0));
+	m_ps = ps;
 	m_pfem->AddState(ps);
 
 	while (ch != NULL) //making sure the file doesn't ends here
@@ -165,7 +166,9 @@ bool FEVTKimport::Load(FEModel& fem, const char* szfile)
 			if (ch == NULL) break;
 			if (ch == 0) return errf("An unexpected error occured while reading the file data.");
 			if (strstr(ch, "POINT_DATA") != 0)
-				size = atoi(ch+10);
+			{
+				if (!readPointData(szline)) return errf("Error while reading POINT_DATA");
+			}
 			if(strstr(ch,"CELL_DATA")!=0)
 			{
 				size = atoi(ch + 9);
@@ -176,6 +179,8 @@ bool FEVTKimport::Load(FEModel& fem, const char* szfile)
 			ch = fgets(szline, 255, m_fp);
 		}
 		while(ch == NULL || strstr(ch, "LOOKUP_TABLE") == 0);
+
+		if (ch == NULL) break;
 
 		if(!isScalar && ch !=NULL)
 			return errf("Only scalar data is supported.");	
@@ -222,7 +227,7 @@ bool FEVTKimport::Load(FEModel& fem, const char* szfile)
 		{
 			fem.AddDataField(new FEDataField_T<FEElementData<float, DATA_ITEM> >("data", EXPORT_DATA));
 
-			FEElementData<float, DATA_ITEM>& ed = dynamic_cast<FEElementData<float, DATA_ITEM>&>(ps->m_Data[0]);
+			FEElementData<float, DATA_ITEM>& ed = dynamic_cast<FEElementData<float, DATA_ITEM>&>(ps->m_Data[ ps->m_Data.size() - 1]);
 
 			for (i=0; i<size; ++i)
 			{
@@ -233,10 +238,38 @@ bool FEVTKimport::Load(FEModel& fem, const char* szfile)
 				ed.add(i, (float) temp[0]);
 			}
 		}		
-		break;
 	}
 
 	Close();
+
+	return true;
+}
+
+bool FEVTKimport::readPointData(char* szline)
+{
+	int size = atoi(szline + 10);
+	char* ch = fgets(szline, 255, m_fp);
+	char buf[3][64] = {0};
+	int nread = sscanf(szline, "%s %s %s", buf[0], buf[1], buf[2]);
+
+
+	bool bVectors = false;
+	if (strcmp(buf[0], "VECTORS") == 0) bVectors = true;
+
+	if (bVectors)
+	{
+		m_pfem->AddDataField(new FEDataField_T<FENodeData<vec3f> >(buf[1], EXPORT_DATA));
+
+		FENodeData<vec3f>& df = dynamic_cast<FENodeData<vec3f>&>(m_ps->m_Data[  m_ps->m_Data.size() - 1 ]);
+
+		float v[3];
+		for (int i=0; i<size; ++i)
+		{
+			fgets(szline, 255, m_fp);
+			nread = sscanf(szline, "%g%g%g", &v[0], &v[1], &v[2]);
+			df[i] = vec3f(v[0], v[1], v[2]);
+		}
+	}
 
 	return true;
 }
