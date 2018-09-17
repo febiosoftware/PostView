@@ -2229,6 +2229,20 @@ vec3f FEModel::EvaluateElemVector(int n, int ntime, int nvec)
 				}
 			}
 			break;
+		case DATA_MAT3F:
+			{
+				if (nfmt == DATA_ITEM)
+				{
+					FEElemData_T<mat3f, DATA_ITEM>& dm = dynamic_cast<FEElemData_T<mat3f, DATA_ITEM>&>(rd);
+					if (dm.active(n))
+					{
+						mat3f m;
+						dm.eval(n, &m);
+						r = m.col(ncomp);
+					}
+				}
+			}
+			break;
 		case DATA_ARRAY_VEC3F:
 			{
 				if (nfmt == DATA_ITEM)

@@ -505,6 +505,18 @@ public:
 		m_data[2][0] = m_data[2][1] = m_data[2][2] = 0.f;
 	}
 
+	vec3f col(int i)
+	{
+		vec3f r;
+		switch (i)
+		{
+		case 0: r.x = m_data[0][0]; r.y = m_data[1][0]; r.z = m_data[2][0]; break;
+		case 1: r.x = m_data[0][1]; r.y = m_data[1][1]; r.z = m_data[2][1]; break;
+		case 2: r.x = m_data[0][2]; r.y = m_data[1][2]; r.z = m_data[2][2]; break;
+		}
+		return r;
+	}
+
 public:
 	float m_data[3][3];
 };

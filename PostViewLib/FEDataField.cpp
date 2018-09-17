@@ -69,8 +69,8 @@ int FEDataField::components(Data_Tensor_Type ntype)
 		{
 		case DATA_FLOAT: return 0; break;
 		case DATA_VEC3F: return 1; break;
-		case DATA_MAT3F: return 0; break;
-		case DATA_MAT3D: return 0; break;
+		case DATA_MAT3F: return 3; break;
+		case DATA_MAT3D: return 3; break;
 		case DATA_MAT3FS: return 3; break;
 		case DATA_MAT3FD: return 0; break;
 		case DATA_TENS4FS: return 0; break;
@@ -242,6 +242,15 @@ std::string FEDataField::componentName(int ncomp, Data_Tensor_Type ntype)
 				if      (ncomp == 0) sprintf(szline, "1 Principal %s", sz);
 				else if (ncomp == 1) sprintf(szline, "2 Principal %s", sz);
 				else if (ncomp == 2) sprintf(szline, "3 Principal %s", sz);
+				return szline;
+			}
+		break;
+		case DATA_MAT3F:
+		case DATA_MAT3D:
+			{
+				if      (ncomp == 0) sprintf(szline, "column 1 %s", sz);
+				else if (ncomp == 1) sprintf(szline, "column 2 %s", sz);
+				else if (ncomp == 2) sprintf(szline, "column 3 %s", sz);
 				return szline;
 			}
 		break;
