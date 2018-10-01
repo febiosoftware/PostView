@@ -129,9 +129,6 @@
     <ClInclude Include="..\..\PostView2\CColorButton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PostView2\DistanceMapTool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\PostView2\DlgExportXPLT.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -542,6 +539,12 @@
     <ClCompile Include="..\..\PostView2\moc_DlgAddEquation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\PostView2\StrainMapTool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PostView2\moc_StrainMapTool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\PostView2\MainWindow.h">
@@ -584,6 +587,12 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\PostView2\DlgAddEquation.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\StrainMapTool.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\PostView2\DistanceMapTool.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

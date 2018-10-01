@@ -32,6 +32,7 @@
 #include "AddImage3DTool.h"
 #include "PlotMixTool.h"
 #include "AreaCoverageTool.h"
+#include "StrainMapTool.h"
 
 static QList<CAbstractTool*>	tools;
 
@@ -144,6 +145,7 @@ void CToolsPanel::initTools()
 	tools.push_back(new CAddPointTool       (doc));
 	tools.push_back(new CImportPointsTool   (doc));
 	tools.push_back(new CAreaCoverageTool   (doc));
+	tools.push_back(new CStrainMapTool      (doc));
 }
 
 void CToolsPanel::on_buttons_buttonClicked(int id)

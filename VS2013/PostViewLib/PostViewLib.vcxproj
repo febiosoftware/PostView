@@ -207,6 +207,7 @@
     <ClInclude Include="..\..\PostViewLib\FEMathData.h" />
     <ClInclude Include="..\..\PostViewLib\FENode.h" />
     <ClInclude Include="..\..\PostViewLib\FENodeEdgeList.h" />
+    <ClInclude Include="..\..\PostViewLib\FEStrainMap.h" />
     <ClInclude Include="..\..\PostViewLib\hex20.h" />
     <ClInclude Include="..\..\PostViewLib\hex27.h" />
     <ClInclude Include="..\..\PostViewLib\hex8.h" />
@@ -323,6 +324,7 @@
     <ClCompile Include="..\..\PostViewLib\FERAWImageReader.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEState.cpp" />
     <ClCompile Include="..\..\PostViewLib\FESTLimport.cpp" />
+    <ClCompile Include="..\..\PostViewLib\FEStrainMap.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEU3DImport.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEVTKExport.cpp" />
     <ClCompile Include="..\..\PostViewLib\FEVTKImport.cpp" />

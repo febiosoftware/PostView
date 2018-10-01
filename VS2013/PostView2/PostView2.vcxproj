@@ -221,6 +221,14 @@
     <ClInclude Include="..\..\PostView2\GLParticleFlowPlot.h" />
     <ClInclude Include="..\..\PostView2\GLStreamLinePlot.h" />
     <ClInclude Include="..\..\PostView2\GLTensorPlot.h" />
+    <CustomBuild Include="..\..\PostView2\StrainMapTool.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </CustomBuild>
     <ClInclude Include="resource.h" />
     <CustomBuild Include="..\..\PostView2\AreaCoverageTool.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
@@ -255,14 +263,14 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </CustomBuild>
-    <ClInclude Include="..\..\PostView2\DistanceMapTool.h">
+    <CustomBuild Include="..\..\PostView2\DistanceMapTool.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </ClInclude>
+    </CustomBuild>
     <CustomBuild Include="..\..\PostView2\DlgAddEquation.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug (No MOC)|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
@@ -592,6 +600,7 @@
     <ClCompile Include="..\..\PostView2\moc_SphereFitTool.cpp" />
     <ClCompile Include="..\..\PostView2\moc_StatePanel.cpp" />
     <ClCompile Include="..\..\PostView2\moc_StatsWindow.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_StrainMapTool.cpp" />
     <ClCompile Include="..\..\PostView2\moc_SummaryWindow.cpp" />
     <ClCompile Include="..\..\PostView2\moc_TimeController.cpp" />
     <ClCompile Include="..\..\PostView2\moc_TimePanel.cpp" />
@@ -617,6 +626,7 @@
     <ClCompile Include="..\..\PostView2\StatePanel.cpp" />
     <ClCompile Include="..\..\PostView2\StatsWindow.cpp" />
     <ClCompile Include="..\..\PostView2\stdafx.cpp" />
+    <ClCompile Include="..\..\PostView2\StrainMapTool.cpp" />
     <ClCompile Include="..\..\PostView2\SummaryWindow.cpp" />
     <ClCompile Include="..\..\PostView2\TimeController.cpp" />
     <ClCompile Include="..\..\PostView2\TimePanel.cpp" />
