@@ -44,12 +44,6 @@ protected:
 	// project r onto a facet
 	bool ProjectToFacet(FEFace& face, vec3f& r, int ntime, vec3f& q);
 
-	// project onto triangular facet
-	bool ProjectToTriangle(vec3f* y, vec3f& r, vec3f& q);
-
-	// project onto quad facet
-	bool ProjectToQuad(vec3f* y, vec3f& r, vec3f& q);
-
 protected:
 	Surface		m_surf1;
 	Surface		m_surf2;

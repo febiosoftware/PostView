@@ -271,6 +271,7 @@
     <ClInclude Include="..\..\PostViewLib\tet15.h" />
     <ClInclude Include="..\..\PostViewLib\tet20.h" />
     <ClInclude Include="..\..\PostViewLib\tet4.h" />
+    <ClInclude Include="..\..\PostViewLib\tools.h" />
     <ClInclude Include="..\..\PostViewLib\U3DFile.h" />
     <ClInclude Include="..\..\PostViewLib\VolRender.h" />
     <ClInclude Include="..\..\PostViewLib\VRMLExporter.h" />
@@ -347,6 +348,7 @@
     <ClCompile Include="..\..\PostViewLib\Palette.cpp" />
     <ClCompile Include="..\..\PostViewLib\PltArchive.cpp" />
     <ClCompile Include="..\..\PostViewLib\SphereFit.cpp" />
+    <ClCompile Include="..\..\PostViewLib\tools.cpp" />
     <ClCompile Include="..\..\PostViewLib\U3DFile.cpp" />
     <ClCompile Include="..\..\PostViewLib\VolRender.cpp" />
     <ClCompile Include="..\..\PostViewLib\VRMLExporter.cpp" />

@@ -41,16 +41,10 @@ protected:
 	void BuildNormalList(FEStrainMap::Surface& s);
 
 	// project r onto the surface
-	vec3f project(Surface& surf, vec3f& r, int ntime);
+	bool project(Surface& surf, vec3f& r, vec3f& t, int ntime, vec3f& q);
 
 	// project r onto a facet
-	bool ProjectToFacet(FEFace& face, vec3f& r, int ntime, vec3f& q);
-
-	// project onto triangular facet
-	bool ProjectToTriangle(vec3f* y, vec3f& r, vec3f& q);
-
-	// project onto quad facet
-	bool ProjectToQuad(vec3f* y, vec3f& r, vec3f& q);
+	bool ProjectToFacet(FEFace& face, vec3f& r, vec3f& t, int ntime, vec3f& q);
 
 protected:
 	Surface		m_front1;

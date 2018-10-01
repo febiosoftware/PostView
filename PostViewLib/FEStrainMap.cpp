@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "FEStrainMap.h"
 #include "FEMeshData_T.h"
+#include "tools.h"
 
 //-----------------------------------------------------------------------------
 void FEStrainMap::Surface::BuildNodeList(FEMeshBase& mesh)
@@ -132,16 +133,19 @@ void FEStrainMap::Apply(FEModel& fem)
 		FEFaceData<float, DATA_NODE>& df = dynamic_cast<FEFaceData<float, DATA_NODE>&>(ps->m_Data[NDATA]);
 
 		// loop over all nodes of surface 1
-		vector<float> D1(m_front1.Nodes());
+		vector<float> D1(m_front1.Nodes(), 0.f);
+		vec3f q;
 		for (int i = 0; i<m_front1.Nodes(); ++i)
 		{
 			int inode = m_front1.m_node[i];
 			FENode& node = mesh.Node(inode);
 			vec3f r = fem.NodePosition(inode, n);
-			vec3f q = project(m_front2, r, n);
-			D1[i] = (q - r).Length();
-			double s = (q - r)*m_front1.m_norm[i];
-			if (s < 0) D1[i] = -D1[i];
+			if (project(m_front2, r, m_front1.m_norm[i], n, q))
+			{
+				D1[i] = (q - r).Length();
+				double s = (q - r)*m_front1.m_norm[i];
+				if (s < 0) D1[i] = -D1[i];
+			}
 		}
 
 		vector<float> L1(m_front1.Nodes());
@@ -152,10 +156,13 @@ void FEStrainMap::Apply(FEModel& fem)
 			{
 				FENode& node = mesh.Node(inode);
 				vec3f r = fem.NodePosition(inode, n);
-				vec3f q = project(m_back1, r, n);
-				L1[i] = (q - r).Length();
-				double s = (r - q)*m_front1.m_norm[i];
-				if (s < 0) L1[i] = -L1[i];
+				if (project(m_back1, r, m_front1.m_norm[i], n, q))
+				{
+					L1[i] = (q - r).Length();
+					double s = (r - q)*m_front1.m_norm[i];
+					if (s < 0) L1[i] = -L1[i];
+				}
+				else L1[i] = 1e+34f;	// really large number, such that the strain is zero
 			}
 			else L1[i] = 0.0;
 		}
@@ -164,9 +171,9 @@ void FEStrainMap::Apply(FEModel& fem)
 		for (int i=0; i<m_front1.Nodes(); ++i)
 		{
 			if (D1[i] < 0.0)
-				s1[i] = 0.5*D1[i] / L1[i];
+				s1[i] = 0.5f*D1[i] / L1[i];
 			else
-				s1[i] = 0.0;
+				s1[i] = 0.f;
 		}
 
 		vector<int> nf1(m_front1.Faces());
@@ -180,10 +187,13 @@ void FEStrainMap::Apply(FEModel& fem)
 			int inode = m_front2.m_node[i];
 			FENode& node = mesh.Node(inode);
 			vec3f r = fem.NodePosition(inode, n);
-			vec3f q = project(m_front1, r, n);
-			D2[i] = (q - r).Length();
-			double s = (q - r)*m_front2.m_norm[i];
-			if (s < 0) D2[i] = -D2[i];
+			if (project(m_front1, r, m_front2.m_norm[i], n, q))
+			{
+				D2[i] = (q - r).Length();
+				double s = (q - r)*m_front2.m_norm[i];
+				if (s < 0) D2[i] = -D2[i];
+			}
+			else D2[i] = 0.f;
 		}
 
 		vector<float> L2(m_front2.Nodes());
@@ -194,21 +204,24 @@ void FEStrainMap::Apply(FEModel& fem)
 			{
 				FENode& node = mesh.Node(inode);
 				vec3f r = fem.NodePosition(inode, n);
-				vec3f q = project(m_back2, r, n);
-				L2[i] = (q - r).Length();
-				double s = (r - q)*m_front2.m_norm[i];
-				if (s < 0) L2[i] = -L2[i];
+				if (project(m_back2, r, m_front2.m_norm[i], n, q))
+				{
+					L2[i] = (q - r).Length();
+					double s = (r - q)*m_front2.m_norm[i];
+					if (s < 0) L2[i] = -L2[i];
+				}
+				else L2[i] = 1e+34f;	// really large number, such that the strain is zero
 			}
-			else L2[i] = 0.0;
+			else L2[i] = 0.f;
 		}
 
 		vector<float> s2(m_front2.Nodes());
 		for (int i = 0; i<m_front2.Nodes(); ++i)
 		{
 			if (D2[i] < 0.0)
-				s2[i] = 0.5*D2[i] / L2[i];
+				s2[i] = 0.5f*D2[i] / L2[i];
 			else
-				s2[i] = 0.0;
+				s2[i] = 0.f;
 		}
 
 		vector<int> nf2(m_front2.Faces());
@@ -240,52 +253,38 @@ void FEStrainMap::BuildNormalList(FEStrainMap::Surface& s)
 }
 
 //-----------------------------------------------------------------------------
-vec3f FEStrainMap::project(FEStrainMap::Surface& surf, vec3f& r, int ntime)
+bool FEStrainMap::project(FEStrainMap::Surface& surf, vec3f& r, vec3f& t, int ntime, vec3f& q)
 {
 	FEMeshBase& mesh = *m_fem->GetFEMesh(0);
 
-	// find the closest surface node
-	vec3f q = m_fem->NodePosition(surf.m_node[0], ntime);
-	float Dmin = (q - r)*(q - r);
-	int imin = 0;
-	for (int i = 1; i<surf.Nodes(); ++i)
-	{
-		vec3f p = m_fem->NodePosition(surf.m_node[i], ntime);
-		float D = (p - r)*(p - r);
-		if (D < Dmin)
-		{
-			q = p;
-			Dmin = D;
-			imin = i;
-		}
-	}
-
-	// loop over all facets connected to this node
-	vector<int>& FT = surf.m_NLT[imin];
-	for (int i = 0; i<(int)FT.size(); ++i)
+	// loop over all facets
+	float Dmin = 0.f;
+	bool bfound = false;
+	for (int i = 0; i<surf.Faces(); ++i)
 	{
 		// get the i-th facet
-		FEFace& face = mesh.Face(FT[i]);
+		FEFace& face = mesh.Face(surf.m_face[i]);
 
-		// project r onto the the facet
+		// project r onto the the facet along its normal
 		vec3f p;
-		if (ProjectToFacet(face, r, ntime, p))
+		if (ProjectToFacet(face, r, t, ntime, p))
 		{
 			// return the closest projection
 			float D = (p - r)*(p - r);
-			if (D < Dmin)
+			if ((D < Dmin) || (bfound == false))
 			{
 				q = p;
 				Dmin = D;
+				bfound = true;
 			}
 		}
 	}
 
-	return q;
+	return bfound;
 }
 
 //-----------------------------------------------------------------------------
-bool FEStrainMap::ProjectToFacet(FEFace& f, vec3f& x, int ntime, vec3f& q)
+bool FEStrainMap::ProjectToFacet(FEFace& f, vec3f& x, vec3f& t, int ntime, vec3f& q)
 {
 	// get the mesh to which this surface belongs
 	FEMeshBase& mesh = *m_fem->GetFEMesh(0);
@@ -300,145 +299,10 @@ bool FEStrainMap::ProjectToFacet(FEFace& f, vec3f& x, int ntime, vec3f& q)
 	// calculate normal projection of x onto element
 	switch (ne)
 	{
-	case 3: return ProjectToTriangle(y, x, q); break;
-	case 4: return ProjectToQuad(y, x, q); break;
+	case 3: return ProjectToTriangle(y, x, t, q, m_tol); break;
+	case 4: return ProjectToQuad(y, x, t, q, m_tol); break;
 	default:
 		assert(false);
 	}
 	return false;
-}
-
-
-//-----------------------------------------------------------------------------
-// project onto a triangular face
-bool FEStrainMap::ProjectToTriangle(vec3f* y, vec3f& x, vec3f& q)
-{
-	// calculate base vectors 
-	vec3f e1 = y[1] - y[0];
-	vec3f e2 = y[2] - y[0];
-
-	// calculate plane normal
-	vec3f n = e1^e2; n.Normalize();
-
-	// project x onto the plane
-	q = x - n*((x - y[0])*n);
-
-	// set up metric tensor
-	double G[2][2];
-	G[0][0] = e1*e1;
-	G[0][1] = G[1][0] = e1*e2;
-	G[1][1] = e2*e2;
-
-	// invert metric tensor
-	double D = G[0][0] * G[1][1] - G[0][1] * G[1][0];
-	double Gi[2][2];
-	Gi[0][0] = G[1][1] / D;
-	Gi[1][1] = G[0][0] / D;
-	Gi[0][1] = Gi[1][0] = -G[0][1] / D;
-
-	// calculate dual base vectors
-	vec3f E1 = e1*Gi[0][0] + e2*Gi[0][1];
-	vec3f E2 = e1*Gi[1][0] + e2*Gi[1][1];
-
-	// now we can calculate r and s
-	vec3f t = q - y[0];
-	double r = t*E1;
-	double s = t*E2;
-
-	return ((r >= -m_tol) && (s >= -m_tol) && (r + s <= 1.0 + m_tol));
-}
-
-//-----------------------------------------------------------------------------
-// project onto a quadrilateral surface.
-bool FEStrainMap::ProjectToQuad(vec3f* y, vec3f& x, vec3f& q)
-{
-	double R[2], u[2], D;
-	double gr[4] = { -1, +1, +1, -1 };
-	double gs[4] = { -1, -1, +1, +1 };
-	double H[4], Hr[4], Hs[4], Hrs[4];
-
-	int i, j;
-	int NMAX = 50, n = 0;
-
-	// evaulate scalar products
-	double xy[4] = { x*y[0], x*y[1], x*y[2], x*y[3] };
-	double yy[4][4];
-	yy[0][0] = y[0] * y[0]; yy[1][1] = y[1] * y[1]; yy[2][2] = y[2] * y[2]; yy[3][3] = y[3] * y[3];
-	yy[0][1] = yy[1][0] = y[0] * y[1];
-	yy[0][2] = yy[2][0] = y[0] * y[2];
-	yy[0][3] = yy[3][0] = y[0] * y[3];
-	yy[1][2] = yy[2][1] = y[1] * y[2];
-	yy[1][3] = yy[3][1] = y[1] * y[3];
-	yy[2][3] = yy[3][2] = y[2] * y[3];
-
-	double r = 0, s = 0;
-
-	// loop until converged
-	bool bconv = false;
-	double normu;
-	do
-	{
-		// evaluate shape functions and shape function derivatives.
-		for (i = 0; i<4; ++i)
-		{
-			H[i] = 0.25*(1 + gr[i] * r)*(1 + gs[i] * s);
-
-			Hr[i] = 0.25*gr[i] * (1 + gs[i] * s);
-			Hs[i] = 0.25*gs[i] * (1 + gr[i] * r);
-
-			Hrs[i] = 0.25*gr[i] * gs[i];
-		}
-
-		// set up the system of equations
-		R[0] = R[1] = 0;
-		double A[2][2] = { 0 };
-		for (i = 0; i<4; ++i)
-		{
-			R[0] -= (xy[i])*Hr[i];
-			R[1] -= (xy[i])*Hs[i];
-
-			A[0][1] += (xy[i])*Hrs[i];
-			A[1][0] += (xy[i])*Hrs[i];
-
-			for (j = 0; j<4; ++j)
-			{
-				double yij = yy[i][j];
-				R[0] -= -H[j] * Hr[i] * (yij);
-				R[1] -= -H[j] * Hs[i] * (yij);
-
-				A[0][0] -= (yij)*(Hr[i] * Hr[j]);
-				A[1][1] -= (yij)*(Hs[i] * Hs[j]);
-
-				A[0][1] -= (yij)*(Hr[i] * Hs[j] + Hrs[i] * H[j]);
-				A[1][0] -= (yij)*(Hs[i] * Hr[j] + Hrs[i] * H[j]);
-			}
-		}
-
-		// determinant of A
-		D = A[0][0] * A[1][1] - A[0][1] * A[1][0];
-
-		// solve for u = A^(-1)*R
-		u[0] = (A[1][1] * R[0] - A[0][1] * R[1]) / D;
-		u[1] = (A[0][0] * R[1] - A[1][0] * R[0]) / D;
-
-		// calculate displacement norm
-		normu = u[0] * u[0] + u[1] * u[1];
-
-		// check for convergence
-		bconv = ((normu < 1e-10));
-		if (!bconv && (n <= NMAX))
-		{
-			// Don't update if converged otherwise the point q
-			// does not correspond with the current values for (r,s)
-			r += u[0];
-			s += u[1];
-			++n;
-		}
-		else break;
-	} while (1);
-
-	// evaluate q
-	q = y[0] * H[0] + y[1] * H[1] + y[2] * H[2] + y[3] * H[3];
-
-	return ((r >= -1.0 - m_tol) && (r <= 1.0 + m_tol) && (s >= -1.0 - m_tol) && (s <= 1.0 + m_tol));
 }
