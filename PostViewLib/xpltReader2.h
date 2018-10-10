@@ -195,14 +195,15 @@ public:
 	{
 	public:
 		int				sid;
-		int				nf;
+		int				nfaces;		// number of faces
+		int				maxNodes;	// max nr of nodes
 		vector<FACE>	face;
 		char			szname[64];
 
 	public:
-		Surface() { nf = 0; szname[0] = 0; }
-		Surface(const Surface& s) { nf = s.nf; face = s.face; strncpy(szname, s.szname, 64); }
-		void operator = (const Surface& s) { nf = s.nf; face = s.face; }
+		Surface() { nfaces = 0; maxNodes = 0; szname[0] = 0; }
+		Surface(const Surface& s) { nfaces = s.nfaces; maxNodes = s.maxNodes; face = s.face; strncpy(szname, s.szname, 64); }
+		void operator = (const Surface& s) { nfaces = s.nfaces; maxNodes = s.maxNodes; face = s.face; }
 	};
 
 	class NodeSet

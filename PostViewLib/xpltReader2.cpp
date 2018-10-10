@@ -8,7 +8,7 @@
 
 template <class Type> void ReadFaceData_REGION(IArchive& ar, FEMeshBase& m, XpltReader2::Surface &s, FEMeshData &data)
 {
-	int NF = s.nf;
+	int NF = s.nfaces;
 	vector<int> face(NF);
 	for (int i=0; i<(int) face.size(); ++i) face[i] = s.face[i].nid;
 
@@ -743,8 +743,6 @@ bool XpltReader2::ReadDomainSection(FEModel &fem)
 //-----------------------------------------------------------------------------
 bool XpltReader2::ReadSurfaceSection(FEModel &fem)
 {
-	int nodes_per_facet = 4;;
-
 	while (m_ar.OpenChunk() == IO_OK)
 	{
 		if (m_ar.GetChunkID() == PLT_SURFACE)
@@ -760,9 +758,10 @@ bool XpltReader2::ReadSurfaceSection(FEModel &fem)
 					{
 						switch(m_ar.GetChunkID())
 						{
-						case PLT_SURFACE_ID   : m_ar.read(S.sid); break;
-						case PLT_SURFACE_FACES: m_ar.read(S.nf); break;
-						case PLT_SURFACE_NAME : m_ar.read(S.szname); break;
+						case PLT_SURFACE_ID             : m_ar.read(S.sid); break;
+						case PLT_SURFACE_FACES          : m_ar.read(S.nfaces); break;
+						case PLT_SURFACE_NAME           : m_ar.read(S.szname); break;
+						case PLT_SURFACE_MAX_FACET_NODES: m_ar.read(S.maxNodes); break;
 						default:
 							assert(false);
 							return errf("Error while reading Surface section");
@@ -772,15 +771,14 @@ bool XpltReader2::ReadSurfaceSection(FEModel &fem)
 				}
 				else if (nid == PLT_FACE_LIST)
 				{
-					assert(S.nf > 0);
-					S.face.reserve(S.nf);
-					int n[11];
-					assert(nodes_per_facet <= 9);
+					assert(S.nfaces > 0);
+					S.face.reserve(S.nfaces);
+					int n[12];
 					while (m_ar.OpenChunk() == IO_OK)
 					{
 						if (m_ar.GetChunkID() == PLT_FACE)
 						{
-							m_ar.read(n, nodes_per_facet+2);
+							m_ar.read(n, S.maxNodes+2);
 							FACE f;
 							f.nid = n[0];
 							f.nn = n[1];
@@ -797,7 +795,7 @@ bool XpltReader2::ReadSurfaceSection(FEModel &fem)
 				}
 				m_ar.CloseChunk();
 			}
-			assert(S.nf == S.face.size());
+			assert(S.nfaces == S.face.size());
 			m_Surf.push_back(S);
 		}
 		else
@@ -1061,7 +1059,7 @@ bool XpltReader2::BuildMesh(FEModel &fem)
 	for (int n=0; n<(int) m_Surf.size(); ++n)
 	{
 		Surface& s = m_Surf[n];
-		for (int i=0; i<s.nf; ++i)
+		for (int i=0; i<s.nfaces; ++i)
 		{
 			FACE& f = s.face[i];
 			f.nid = NFT.FindFace(f.node[0], f.node, f.nn);
@@ -1088,8 +1086,8 @@ bool XpltReader2::BuildMesh(FEModel &fem)
 		FESurface* ps = new FESurface(pmesh);
 		if (s.szname[0]==0) { sprintf(szname, "surface%02d",n+1); ps->SetName(szname); }
 		else ps->SetName(s.szname);
-		ps->m_Face.reserve(s.nf);
-		for (int i=0; i<s.nf; ++i) ps->m_Face.push_back(s.face[i].nid);
+		ps->m_Face.reserve(s.nfaces);
+		for (int i=0; i<s.nfaces; ++i) ps->m_Face.push_back(s.face[i].nid);
 		pmesh->AddSurface(ps);
 	}
 
@@ -1710,10 +1708,10 @@ bool XpltReader2::ReadFaceData_MULT(FEMeshBase& m, XpltReader2::Surface &s, FEMe
 {
 	// It is possible that the node ordering of the FACE's are different than the FEFace's
 	// so we setup up an array to unscramble the nodal values
-	int NF = s.nf;
+	int NF = s.nfaces;
 	vector<int> tag;
 	tag.assign(m.Nodes(), -1);
-	const int NFM = 4;//m_hdr.nmax_facet_nodes;
+	const int NFM = s.maxNodes;
 	vector<vector<int> > l(NF, vector<int>(NFM));
 	for (int i=0; i<NF; ++i)
 	{
@@ -1726,6 +1724,8 @@ bool XpltReader2::ReadFaceData_MULT(FEMeshBase& m, XpltReader2::Surface &s, FEMe
 		}
 	}
 
+	bool bok = true;
+
 	switch (ntype)
 	{
 	case FLOAT:
@@ -1733,13 +1733,13 @@ bool XpltReader2::ReadFaceData_MULT(FEMeshBase& m, XpltReader2::Surface &s, FEMe
 			FEFaceData<float,DATA_COMP>& df = dynamic_cast<FEFaceData<float,DATA_COMP>&>(data);
 			vector<float> a(NFM*NF);
 			m_ar.read(a);
-			float v[9];
+			float v[10];
 			for (int i=0; i<NF; ++i)
 			{
 				FACE& f = s.face[i];
 				vector<int>& li = l[i];
 				for (int j=0; j<f.nn; ++j) v[j] = a[NFM*i + li[j]];
-				if (f.nid >= 0) df.add(f.nid, v, f.nn);
+				if (f.nid >= 0) bok &= df.add(f.nid, v, f.nn);
 			}
 		}
 		break;
@@ -1748,13 +1748,13 @@ bool XpltReader2::ReadFaceData_MULT(FEMeshBase& m, XpltReader2::Surface &s, FEMe
 			FEFaceData<vec3f,DATA_COMP>& df = dynamic_cast<FEFaceData<vec3f,DATA_COMP>&>(data);
 			vector<vec3f> a(NFM*NF);
 			m_ar.read(a);
-			vec3f v[9];
+			vec3f v[10];
 			for (int i=0; i<NF; ++i)
 			{
 				FACE& f = s.face[i];
 				vector<int>& li = l[i];
 				for (int j=0; j<f.nn; ++j) v[j] = a[NFM*i + li[j]];
-				if (f.nid >= 0) df.add(f.nid, v, f.nn);
+				if (f.nid >= 0) bok &= df.add(f.nid, v, f.nn);
 			}
 		}
 		break;
@@ -1763,13 +1763,13 @@ bool XpltReader2::ReadFaceData_MULT(FEMeshBase& m, XpltReader2::Surface &s, FEMe
 			FEFaceData<mat3fs,DATA_COMP>& df = dynamic_cast<FEFaceData<mat3fs,DATA_COMP>&>(data);
 			vector<mat3fs> a(4*NF);
 			m_ar.read(a);
-			mat3fs v[9];
+			mat3fs v[10];
 			for (int i=0; i<NF; ++i)
 			{
 				FACE& f = s.face[i];
 				vector<int>& li = l[i];
 				for (int j=0; j<f.nn; ++j) v[j] = a[NFM*i + li[j]];
-				if (f.nid >= 0) df.add(f.nid, v, f.nn);
+				if (f.nid >= 0) bok &= df.add(f.nid, v, f.nn);
 			}
 		}
 		break;
@@ -1778,13 +1778,13 @@ bool XpltReader2::ReadFaceData_MULT(FEMeshBase& m, XpltReader2::Surface &s, FEMe
 			FEFaceData<mat3f,DATA_COMP>& df = dynamic_cast<FEFaceData<mat3f,DATA_COMP>&>(data);
 			vector<mat3f> a(4*NF);
 			m_ar.read(a);
-			mat3f v[9];
+			mat3f v[10];
 			for (int i=0; i<NF; ++i)
 			{
 				FACE& f = s.face[i];
 				vector<int>& li = l[i];
 				for (int j=0; j<f.nn; ++j) v[j] = a[NFM*i + li[j]];
-				if (f.nid >= 0) df.add(f.nid, v, f.nn);
+				if (f.nid >= 0) bok &= df.add(f.nid, v, f.nn);
 			}
 		}
 		break;
@@ -1793,13 +1793,13 @@ bool XpltReader2::ReadFaceData_MULT(FEMeshBase& m, XpltReader2::Surface &s, FEMe
 			FEFaceData<mat3fd,DATA_COMP>& df = dynamic_cast<FEFaceData<mat3fd,DATA_COMP>&>(data);
 			vector<mat3fd> a(4*NF);
 			m_ar.read(a);
-			mat3fd v[9];
+			mat3fd v[10];
 			for (int i=0; i<NF; ++i)
 			{
 				FACE& f = s.face[i];
 				vector<int>& li = l[i];
 				for (int j=0; j<f.nn; ++j) v[j] = a[NFM*i + li[j]];
-				if (f.nid >= 0) df.add(f.nid, v, f.nn);
+				if (f.nid >= 0) bok &= df.add(f.nid, v, f.nn);
 			}
 		}
 		break;	
@@ -1808,13 +1808,13 @@ bool XpltReader2::ReadFaceData_MULT(FEMeshBase& m, XpltReader2::Surface &s, FEMe
 			FEFaceData<tens4fs,DATA_COMP>& df = dynamic_cast<FEFaceData<tens4fs,DATA_COMP>&>(data);
 			vector<tens4fs> a(4*NF);
 			m_ar.read(a);
-			tens4fs v[9];
+			tens4fs v[10];
 			for (int i=0; i<NF; ++i)
 			{
 				FACE& f = s.face[i];
 				vector<int>& li = l[i];
 				for (int j=0; j<f.nn; ++j) v[j] = a[NFM*i + li[j]];
-				if (f.nid >= 0) df.add(f.nid, v, f.nn);
+				if (f.nid >= 0) bok &= df.add(f.nid, v, f.nn);
 			}
 		}
         break;
@@ -1822,13 +1822,15 @@ bool XpltReader2::ReadFaceData_MULT(FEMeshBase& m, XpltReader2::Surface &s, FEMe
 		return errf("Failed reading face data");
 	}
 
+	if (bok == false) addWarning(XPLT_READ_DUPLICATE_FACES);
+
 	return true;
 }
 
 //-----------------------------------------------------------------------------
 bool XpltReader2::ReadFaceData_ITEM(XpltReader2::Surface &s, FEMeshData &data, int ntype)
 {
-	int NF = s.nf;
+	int NF = s.nfaces;
 	switch (ntype)
 	{
 	case FLOAT:
@@ -1894,7 +1896,7 @@ bool XpltReader2::ReadFaceData_NODE(FEMeshBase& m, XpltReader2::Surface &s, FEMe
 	for (int i = 0; i<NN; ++i) m.Node(i).m_ntag = -1;
 
 	int n = 0;
-	for (int i = 0; i<s.nf; ++i)
+	for (int i = 0; i<s.nfaces; ++i)
 	{
 		FACE& f = s.face[i];
 		int nf = f.nn;
@@ -1903,16 +1905,16 @@ bool XpltReader2::ReadFaceData_NODE(FEMeshBase& m, XpltReader2::Surface &s, FEMe
 	}
 
 	// create the face list
-	vector<int> f(s.nf);
-	for (int i = 0; i<s.nf; ++i) f[i] = s.face[i].nid;
+	vector<int> f(s.nfaces);
+	for (int i = 0; i<s.nfaces; ++i) f[i] = s.face[i].nid;
 
 	// create vector that stores the number of nodes for each facet
-	vector<int> fn(s.nf, 0);
-	for (int i = 0; i<s.nf; ++i) fn[i] = s.face[i].nn;
+	vector<int> fn(s.nfaces, 0);
+	for (int i = 0; i<s.nfaces; ++i) fn[i] = s.face[i].nn;
 
 	// create the local node index list
-	vector<int> l; l.resize(s.nf*FEFace::MAX_NODES);
-	for (int i = 0; i<s.nf; ++i)
+	vector<int> l; l.resize(s.nfaces*FEFace::MAX_NODES);
+	for (int i = 0; i<s.nfaces; ++i)
 	{
 		FEFace& f = m.Face(s.face[i].nid);
 		int nn = f.Nodes();
