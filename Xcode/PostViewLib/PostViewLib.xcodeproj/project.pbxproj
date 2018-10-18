@@ -167,6 +167,10 @@
 		D5F309881CFBB65700F76762 /* XMLWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = D5F3090F1CFBB65700F76762 /* XMLWriter.h */; };
 		D5F309891CFBB65700F76762 /* xpltReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5F309101CFBB65700F76762 /* xpltReader.cpp */; };
 		D5F3098A1CFBB65700F76762 /* xpltReader.h in Headers */ = {isa = PBXBuildFile; fileRef = D5F309111CFBB65700F76762 /* xpltReader.h */; };
+		D5FAC5CD21792BE3005E4684 /* FEStrainMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FAC5C921792BE3005E4684 /* FEStrainMap.cpp */; };
+		D5FAC5CE21792BE3005E4684 /* tools.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FAC5CA21792BE3005E4684 /* tools.cpp */; };
+		D5FAC5CF21792BE3005E4684 /* FEStrainMap.h in Headers */ = {isa = PBXBuildFile; fileRef = D5FAC5CB21792BE3005E4684 /* FEStrainMap.h */; };
+		D5FAC5D021792BE3005E4684 /* tools.h in Headers */ = {isa = PBXBuildFile; fileRef = D5FAC5CC21792BE3005E4684 /* tools.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -331,6 +335,10 @@
 		D5F3090F1CFBB65700F76762 /* XMLWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLWriter.h; sourceTree = "<group>"; };
 		D5F309101CFBB65700F76762 /* xpltReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xpltReader.cpp; sourceTree = "<group>"; };
 		D5F309111CFBB65700F76762 /* xpltReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xpltReader.h; sourceTree = "<group>"; };
+		D5FAC5C921792BE3005E4684 /* FEStrainMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FEStrainMap.cpp; sourceTree = "<group>"; };
+		D5FAC5CA21792BE3005E4684 /* tools.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tools.cpp; sourceTree = "<group>"; };
+		D5FAC5CB21792BE3005E4684 /* FEStrainMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FEStrainMap.h; sourceTree = "<group>"; };
+		D5FAC5CC21792BE3005E4684 /* tools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tools.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -454,6 +462,8 @@
 				D5F308E21CFBB65700F76762 /* FEState.h */,
 				D5F308E31CFBB65700F76762 /* FESTLimport.cpp */,
 				D5F308E41CFBB65700F76762 /* FESTLimport.h */,
+				D5FAC5C921792BE3005E4684 /* FEStrainMap.cpp */,
+				D5FAC5CB21792BE3005E4684 /* FEStrainMap.h */,
 				D5F308E51CFBB65700F76762 /* FEU3DImport.cpp */,
 				D5F308E61CFBB65700F76762 /* FEU3DImport.h */,
 				D5F308E71CFBB65700F76762 /* FEVTKExport.cpp */,
@@ -507,6 +517,8 @@
 				D53B0327207EF07A00E6B5F5 /* tet10.h */,
 				D53B0326207EF07A00E6B5F5 /* tet15.h */,
 				D53B0329207EF07A00E6B5F5 /* tet20.h */,
+				D5FAC5CA21792BE3005E4684 /* tools.cpp */,
+				D5FAC5CC21792BE3005E4684 /* tools.h */,
 				D5F309061CFBB65700F76762 /* U3DFile.cpp */,
 				D5F309071CFBB65700F76762 /* U3DFile.h */,
 				D5F309081CFBB65700F76762 /* VolRender.cpp */,
@@ -556,6 +568,7 @@
 				D5F3096B1CFBB65700F76762 /* GLTexture1D.h in Headers */,
 				D5F309861CFBB65700F76762 /* XMLReader.h in Headers */,
 				D5F309551CFBB65700F76762 /* FEPlotMix.h in Headers */,
+				D5FAC5CF21792BE3005E4684 /* FEStrainMap.h in Headers */,
 				D5F309671CFBB65700F76762 /* GLCamera.h in Headers */,
 				D5F3096F1CFBB65700F76762 /* GView.h in Headers */,
 				D5F309461CFBB65700F76762 /* FEMeshData.h in Headers */,
@@ -615,6 +628,7 @@
 				D5F309491CFBB65700F76762 /* FEModel.h in Headers */,
 				D5F3097E1CFBB65700F76762 /* stdafx.h in Headers */,
 				D53B0334207EF07A00E6B5F5 /* penta6.h in Headers */,
+				D5FAC5D021792BE3005E4684 /* tools.h in Headers */,
 				D5F309261CFBB65700F76762 /* FEASCIIImport.h in Headers */,
 				D5C53DB31F86D95F0014FA22 /* FEMathData.h in Headers */,
 				D5842FE21EC2BC95004FC215 /* FENodeEdgeList.h in Headers */,
@@ -703,6 +717,7 @@
 				D5F309311CFBB65700F76762 /* FEElement.cpp in Sources */,
 				D5F3096A1CFBB65700F76762 /* GLTexture1D.cpp in Sources */,
 				D5F3097F1CFBB65700F76762 /* U3DFile.cpp in Sources */,
+				D5FAC5CD21792BE3005E4684 /* FEStrainMap.cpp in Sources */,
 				D56731651F9FD87A00C87BC1 /* FEAreaCoverage.cpp in Sources */,
 				D5F3094E1CFBB65700F76762 /* FENodeElemList.cpp in Sources */,
 				D5F309681CFBB65700F76762 /* GLObject.cpp in Sources */,
@@ -724,6 +739,7 @@
 				D5F309221CFBB65700F76762 /* DataMap.cpp in Sources */,
 				D5842FE31EC2BC95004FC215 /* Intersect.cpp in Sources */,
 				D5F309121CFBB65700F76762 /* 3DImage.cpp in Sources */,
+				D5FAC5CE21792BE3005E4684 /* tools.cpp in Sources */,
 				D5F309481CFBB65700F76762 /* FEModel.cpp in Sources */,
 				D5C53DB41F86D95F0014FA22 /* MathParser.cpp in Sources */,
 				D5F309871CFBB65700F76762 /* XMLWriter.cpp in Sources */,

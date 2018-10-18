@@ -41,6 +41,8 @@
 		D5CEB8B0208929CD00BFEA96 /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5CEB8AF208929CD00BFEA96 /* QtWidgets.framework */; };
 		D5E08BA320A5E5BE00275FAB /* libGLWLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5E08BA220A5E5BE00275FAB /* libGLWLib.a */; };
 		D5E0E6A71E72390D006FE591 /* moc_DataFieldSelector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5E0E6A61E72390D006FE591 /* moc_DataFieldSelector.cpp */; };
+		D5FAC5C821792BC8005E4684 /* StrainMapTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FAC5C721792BC8005E4684 /* StrainMapTool.cpp */; };
+		D5FAC5D221793358005E4684 /* moc_StrainMapTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FAC5D121793357005E4684 /* moc_StrainMapTool.cpp */; };
 		D5FF7A401D72756B003D2CBD /* 3PointAngleTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79AA1D72756B003D2CBD /* 3PointAngleTool.cpp */; };
 		D5FF7A411D72756B003D2CBD /* 4PointAngleTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79AC1D72756B003D2CBD /* 4PointAngleTool.cpp */; };
 		D5FF7A421D72756B003D2CBD /* AddImage3DTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79AE1D72756B003D2CBD /* AddImage3DTool.cpp */; };
@@ -195,6 +197,9 @@
 		D5CEB8AF208929CD00BFEA96 /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt/5.10.1/lib/QtWidgets.framework; sourceTree = "<group>"; };
 		D5E08BA220A5E5BE00275FAB /* libGLWLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libGLWLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5E0E6A61E72390D006FE591 /* moc_DataFieldSelector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_DataFieldSelector.cpp; sourceTree = "<group>"; };
+		D5FAC5C621792BC7005E4684 /* StrainMapTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StrainMapTool.h; sourceTree = "<group>"; };
+		D5FAC5C721792BC8005E4684 /* StrainMapTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StrainMapTool.cpp; sourceTree = "<group>"; };
+		D5FAC5D121793357005E4684 /* moc_StrainMapTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_StrainMapTool.cpp; sourceTree = "<group>"; };
 		D5FF79951D72750E003D2CBD /* PostView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PostView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5FF79A31D72750E003D2CBD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D5FF79AA1D72756B003D2CBD /* 3PointAngleTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = 3PointAngleTool.cpp; sourceTree = "<group>"; };
@@ -531,6 +536,7 @@
 				D5FF7A0F1D72756B003D2CBD /* moc_SphereFitTool.cpp */,
 				D5FF7A101D72756B003D2CBD /* moc_StatePanel.cpp */,
 				D5FF7A111D72756B003D2CBD /* moc_StatsWindow.cpp */,
+				D5FAC5D121793357005E4684 /* moc_StrainMapTool.cpp */,
 				D5FF7A121D72756B003D2CBD /* moc_SummaryWindow.cpp */,
 				D52C6FA91D75DCA300DF804B /* moc_TimeController.cpp */,
 				D52C6FAA1D75DCA300DF804B /* moc_TimePanel.cpp */,
@@ -570,6 +576,8 @@
 				D5FF7A321D72756B003D2CBD /* StatsWindow.h */,
 				D5FF7A331D72756B003D2CBD /* stdafx.cpp */,
 				D5FF7A341D72756B003D2CBD /* stdafx.h */,
+				D5FAC5C721792BC8005E4684 /* StrainMapTool.cpp */,
+				D5FAC5C621792BC7005E4684 /* StrainMapTool.h */,
 				D5FF7A351D72756B003D2CBD /* SummaryWindow.cpp */,
 				D5FF7A361D72756B003D2CBD /* SummaryWindow.h */,
 				D5FF7A371D72756B003D2CBD /* targetver.h */,
@@ -594,14 +602,14 @@
 		D5FF7AA61D727B52003D2CBD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D50DA1B820D199D000ECF39D /* libavcodec.a */,
-				D50DA1BB20D199D000ECF39D /* libavformat.a */,
-				D50DA1B920D199D000ECF39D /* libavutil.a */,
-				D50DA1BA20D199D000ECF39D /* libswscale.a */,
 				D5CEB8AF208929CD00BFEA96 /* QtWidgets.framework */,
 				D5CEB8AD208929BD00BFEA96 /* QtGui.framework */,
 				D5CEB8AB208929AF00BFEA96 /* QtCore.framework */,
 				D55AC5001E61EB6E00BBA0D1 /* OpenGL.framework */,
+				D50DA1BA20D199D000ECF39D /* libswscale.a */,
+				D50DA1B820D199D000ECF39D /* libavcodec.a */,
+				D50DA1BB20D199D000ECF39D /* libavformat.a */,
+				D50DA1B920D199D000ECF39D /* libavutil.a */,
 				D5E08BA220A5E5BE00275FAB /* libGLWLib.a */,
 				D52C6FB41D75DCE900DF804B /* libPostViewLib.a */,
 			);
@@ -692,6 +700,7 @@
 				D5FF7A7A1D72756B003D2CBD /* moc_PropertyListForm.cpp in Sources */,
 				D5A65E0F1DBFA53F00B44009 /* DlgFileInfo.cpp in Sources */,
 				D5FF7A941D72756B003D2CBD /* SummaryWindow.cpp in Sources */,
+				D5FAC5C821792BC8005E4684 /* StrainMapTool.cpp in Sources */,
 				D5FF7A5C1D72756B003D2CBD /* GLSlicePLot.cpp in Sources */,
 				D56731621F9FD85200C87BC1 /* AreaCoverageTool.cpp in Sources */,
 				D5FF7A691D72756B003D2CBD /* moc_DataPanel.cpp in Sources */,
@@ -773,6 +782,7 @@
 				D5FF7A641D72756B003D2CBD /* MainWindow.cpp in Sources */,
 				D53B031C207EF04B00E6B5F5 /* GLParticleFlowPlot.cpp in Sources */,
 				D5FF7A451D72756B003D2CBD /* CDlgImportXPLT.cpp in Sources */,
+				D5FAC5D221793358005E4684 /* moc_StrainMapTool.cpp in Sources */,
 				D5FF7A611D72756B003D2CBD /* GraphWindow.cpp in Sources */,
 				D5FF7A711D72756B003D2CBD /* moc_ImportLinesTool.cpp in Sources */,
 				D5FF7A831D72756B003D2CBD /* PlaneTool.cpp in Sources */,
@@ -1004,7 +1014,6 @@
 					"$(inherited)",
 					/usr/local/opt/qt5/lib,
 					/usr/local/opt/ffmpeg/lib,
-					/usr/local/Cellar/ffmpeg/4.0/lib,
 				);
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_BUNDLE_IDENTIFIER = FEB.PostView2;
