@@ -252,6 +252,7 @@ public:
 
 	bool ExportDataField(const FEDataField& df, const char* szfile);
 	bool ExportNodeDataField(const FEDataField& df, FILE* fp);
+	bool ExportFaceDataField(const FEDataField& df, FILE* fp);
 	bool ExportElementDataField(const FEDataField& df, FILE* fp);
 
 	void ApplyPalette(const CPalette& pal);
@@ -335,6 +336,7 @@ public:
 	bool AddStandardDataField(int ndata, bool bselection_only);
 
 	bool AddNodeDataFromFile(const char* szfile, const char* szname, int ntype);
+	bool AddFaceDataFromFile(const char* szfile, const char* szname, int ntype);
 	bool AddElemDataFromFile(const char* szfile, const char* szname, int ntype);
 
 	CMainWindow* GetWindow() { return m_wnd; }
@@ -342,12 +344,11 @@ public:
 public:
 	void AddObserver(CDocObserver* observer);
 	void RemoveObserver(CDocObserver* observer);
+	void UpdateObservers(bool bnew);
 
 protected:
 	void ClearPlots();
 	void ClearObjects();
-
-	void UpdateObservers(bool bnew);
 
 protected:
 	FEModel*		m_fem;	// the FE model

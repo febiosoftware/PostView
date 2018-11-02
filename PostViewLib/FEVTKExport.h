@@ -5,12 +5,6 @@
 class FEModel;
 
 //-----------------------------------------------------------------------------
-struct VTKEXPORT
-{
-    bool	bshellthick;	// shell thickness
-    bool	bscalar_data;   //user scalar data
-};
-
 class FEVTKExport : public FEBioPlotExport
 {
 public:
@@ -18,10 +12,14 @@ public:
     ~FEVTKExport(void);
     
     bool Save(FEModel& fem, const char* szfile);
-    void SetOptions(VTKEXPORT o) { m_ops = o; }
-    
-    void Space2_(char* szname);
+
+	void ExportAllStates(bool b);
+
+private:
+	bool WriteState(const char* szname, FEModel& fem, int nstate);
     
 protected:
-    VTKEXPORT m_ops;
+	bool	m_bshellthick;		// shell thickness
+	bool	m_bscalar_data;		// user scalar data
+	bool	m_bwriteAllStates;	// write all states
 };

@@ -45,6 +45,7 @@
 #include "DlgTimeSettings.h"
 #include "DlgFileInfo.h"
 #include "DlgExportAscii.h"
+#include "DlgExportVTK.h"
 #include "version.h"
 #include "convert.h"
 #include "ImgAnimation.h"
@@ -649,8 +650,14 @@ bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 		break;
 	case 7:
 		{
-			FEVTKExport w;
-			bret = w.Save(fem, szfilename);
+			CDlgExportVTK dlg(this);
+			if (dlg.exec())
+			{
+				FEVTKExport w;
+				w.ExportAllStates(dlg.m_ops[0]);
+				bret = w.Save(fem, szfilename);
+				error = w.GetErrorMessage();
+			}
 		}
 		break;
 	default:

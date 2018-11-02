@@ -983,6 +983,128 @@ bool CDocument::AddNodeDataFromFile(const char* szfile, const char* szname, int 
 }
 
 //------------------------------------------------------------------------------------------
+bool CDocument::AddFaceDataFromFile(const char* szfile, const char* szname, int ntype)
+{
+	FILE* fp = fopen(szfile, "rt");
+	if (fp == 0) return false;
+
+	// get the mesh
+	FEModel* pm = GetFEModel();
+	FEMeshBase& m = *GetActiveMesh();
+
+	// create a new data field
+	int ND = 0;
+	switch (ntype)
+	{
+	case DATA_FLOAT  : pm->AddDataField(new FEDataField_T<FEFaceData<float  , DATA_ITEM> >(szname, EXPORT_DATA)); ND = 1; break;
+	case DATA_VEC3F  : pm->AddDataField(new FEDataField_T<FEFaceData<vec3f  , DATA_ITEM> >(szname, EXPORT_DATA)); ND = 3; break;
+	case DATA_MAT3F  : pm->AddDataField(new FEDataField_T<FEFaceData<mat3f  , DATA_ITEM> >(szname, EXPORT_DATA)); ND = 9; break;
+	case DATA_MAT3D  : pm->AddDataField(new FEDataField_T<FEFaceData<Mat3d  , DATA_ITEM> >(szname, EXPORT_DATA)); ND = 9; break;
+	case DATA_MAT3FS : pm->AddDataField(new FEDataField_T<FEFaceData<mat3fs , DATA_ITEM> >(szname, EXPORT_DATA)); ND = 6; break;
+	case DATA_MAT3FD : pm->AddDataField(new FEDataField_T<FEFaceData<mat3fd , DATA_ITEM> >(szname, EXPORT_DATA)); ND = 3; break;
+    case DATA_TENS4FS: pm->AddDataField(new FEDataField_T<FEFaceData<tens4fs, DATA_ITEM> >(szname, EXPORT_DATA)); ND = 21; break;
+	default:
+		assert(false);
+		fclose(fp);
+		return false;
+	}
+
+	// the data should be organized in a comma seperated list. 
+	// the first entry identifies the element for which the data is intended
+	// the second and following contain the data, one entry for each state
+	char szline[8192] = {0}, *ch, *sz;
+	int N = 0;
+	do
+	{
+		// read a line
+		fgets(szline, 8191, fp);
+		sz = szline;
+
+		// read the first entry
+		ch = strchr(szline, ',');
+		if (ch) *ch = 0;
+		int nface = atoi(sz)-1;
+		if (ch) sz = ch+1;
+
+		if ((nface >= 0) || (nface < m.Faces()))
+		{
+			int nstate = 0;
+			while (ch && (nstate < pm->GetStates()))
+			{
+				float f[21] = {0};
+				int nf = 0;
+				do
+				{
+					f[nf++] = (float) atof(sz);
+					ch = strchr(sz, ',');
+					if (ch) { *ch = 0; sz = ch+1; }
+				}
+				while (ch && (nf < ND));
+
+				// get the state
+				FEState* ps = pm->GetState(nstate);
+
+				int ndf = ps->m_Data.size();
+
+				// get the datafield
+				switch (ntype)
+				{
+				case DATA_FLOAT:
+					{
+						FEFaceData<float, DATA_ITEM>& df = dynamic_cast<FEFaceData<float, DATA_ITEM>&>(ps->m_Data[ndf-1]);
+						df.add(nface, f[0]);
+					}
+					break;
+				case DATA_VEC3F:
+					{
+						FEFaceData<vec3f, DATA_ITEM>& df = dynamic_cast<FEFaceData<vec3f, DATA_ITEM>&>(ps->m_Data[ndf - 1]);
+						df.add(nface, vec3f(f[0], f[1], f[2]));
+					}
+					break;
+				case DATA_MAT3F:
+					{
+						FEFaceData<mat3f, DATA_ITEM>& df = dynamic_cast<FEFaceData<mat3f, DATA_ITEM>&>(ps->m_Data[ndf - 1]);
+						df.add(nface, mat3f(f[0], f[1], f[2], f[3], f[4], f[5], f[6], f[7], f[8]));
+					}
+					break;
+				case DATA_MAT3D:
+					{
+						FEFaceData<Mat3d, DATA_ITEM>& df = dynamic_cast<FEFaceData<Mat3d, DATA_ITEM>&>(ps->m_Data[ndf - 1]);
+						df.add(nface, Mat3d(f[0], f[1], f[2], f[3], f[4], f[5], f[6], f[7], f[8]));
+					}
+					break;
+				case DATA_MAT3FS:
+					{
+						FEFaceData<mat3fs, DATA_ITEM>& df = dynamic_cast<FEFaceData<mat3fs, DATA_ITEM>&>(ps->m_Data[ndf - 1]);
+						df.add(nface, mat3fs(f[0], f[1], f[2], f[3], f[4], f[5]));
+					}
+					break;
+				case DATA_MAT3FD:
+					{
+						FEFaceData<mat3fd, DATA_ITEM>& df = dynamic_cast<FEFaceData<mat3fd, DATA_ITEM>&>(ps->m_Data[ndf - 1]);
+						df.add(nface, mat3fd(f[0], f[1], f[2]));
+					}
+					break;
+                case DATA_TENS4FS:
+					{
+						FEFaceData<tens4fs, DATA_ITEM>& df = dynamic_cast<FEFaceData<tens4fs, DATA_ITEM>&>(ps->m_Data[ndf - 1]);
+						df.add(nface, tens4fs(f));
+					}
+                    break;
+				}
+
+				++nstate;
+			}
+		}
+		++N;
+	}
+	while(!feof(fp) && !ferror(fp) && (N < m.Faces()));
+
+	fclose(fp);
+	return true;
+}
+
+//------------------------------------------------------------------------------------------
 bool CDocument::AddElemDataFromFile(const char* szfile, const char* szname, int ntype)
 {
 	FILE* fp = fopen(szfile, "rt");
@@ -1120,6 +1242,10 @@ bool CDocument::ExportDataField(const FEDataField& df, const char* szfile)
 	{
 		bret = ExportElementDataField(df, fp);
 	}
+	else if (IS_FACE_FIELD(nfield))
+	{
+		bret = ExportFaceDataField(df, fp);
+	}
 	fclose(fp);
 
 	return bret;
@@ -1180,6 +1306,187 @@ bool CDocument::ExportNodeDataField(const FEDataField& df, FILE* fp)
 			if (n != nstates - 1) fprintf(fp, ",");
 		}
 		fprintf(fp, "\n");
+	}
+
+	return true;
+}
+
+
+bool CDocument::ExportFaceDataField(const FEDataField& df, FILE* fp)
+{
+	int nfield = df.GetFieldID();
+	int ndata = FIELD_CODE(nfield);
+
+	// get the mesh
+	FEModel& fem = *GetFEModel();
+	FEMeshBase& mesh = *GetActiveMesh();
+
+	int nstates = fem.GetStates();
+
+	char buf[8192] = {0};
+
+	// loop over all elements
+	int NF = mesh.Faces();
+	for (int i = 0; i<NF; ++i)
+	{
+		FEFace& face = mesh.Face(i);
+
+		// write the element ID
+		char* sz = buf;
+		sprintf(sz, "%d,", i + 1); sz += strlen(sz);
+
+		// loop over all states
+		bool bwrite = true;
+		for (int n = 0; n<nstates; ++n)
+		{
+			FEState& s = *fem.GetState(n);
+
+			FEMeshData& d = s.m_Data[ndata];
+			Data_Format fmt = d.GetFormat();
+			if (fmt == DATA_ITEM)
+			{
+				switch (d.GetType())
+				{
+				case DATA_FLOAT:
+				{
+					FEFaceData_T<float, DATA_ITEM>* pf = dynamic_cast<FEFaceData_T<float, DATA_ITEM>*>(&d);
+					if (pf->active(i))
+					{
+						float f; pf->eval(i, &f);
+						sprintf(sz, "%g", f); sz += strlen(sz);
+					}
+					else bwrite = false;
+				}
+				break;
+				case DATA_VEC3F:
+				{
+					FEFaceData_T<vec3f, DATA_ITEM>* pf = dynamic_cast<FEFaceData_T<vec3f, DATA_ITEM>*>(&d);
+					if (pf->active(i))
+					{
+						vec3f f; pf->eval(i, &f);
+						sprintf(sz, "%g,%g,%g", f.x, f.y, f.z); sz += strlen(sz);
+					}
+					else bwrite = false;
+				}
+				break;
+				case DATA_MAT3FS:
+				{
+					FEFaceData_T<mat3fs, DATA_ITEM>* pf = dynamic_cast<FEFaceData_T<mat3fs, DATA_ITEM>*>(&d);
+					if (pf->active(i))
+					{
+						mat3fs f; pf->eval(i, &f);
+						sprintf(sz, "%g,%g,%g,%g,%g,%g", f.x, f.y, f.z, f.xy, f.yz, f.xz); sz += strlen(sz);
+					}
+					else bwrite = false;
+				}
+				break;
+				}
+			}
+			else if (fmt == DATA_COMP)
+			{
+				int nn = face.Nodes();
+
+				switch (d.GetType())
+				{
+				case DATA_FLOAT:
+				{
+					FEFaceData_T<float, DATA_COMP>* pf = dynamic_cast<FEFaceData_T<float, DATA_COMP>*>(&d);
+					if (pf->active(i))
+					{
+						float v[FEGenericElement::MAX_NODES]; pf->eval(i, v);
+						float f = 0.0f;
+						for (int i = 0; i<nn; ++i) f += v[i]; f /= (float)nn;
+						sprintf(sz, "%g", f); sz += strlen(sz);
+					}
+					else bwrite = false;
+				}
+				break;
+				case DATA_VEC3F:
+				{
+					FEFaceData_T<vec3f, DATA_COMP>* pf = dynamic_cast<FEFaceData_T<vec3f, DATA_COMP>*>(&d);
+					if (pf->active(i))
+					{
+						vec3f v[FEGenericElement::MAX_NODES]; pf->eval(i, v);
+						vec3f f(0.f, 0.f, 0.f);
+						for (int i = 0; i<nn; ++i) f += v[i]; f /= (float)nn;
+						sprintf(sz, "%g,%g,%g", f.x, f.y, f.z); sz += strlen(sz);
+					}
+					else bwrite = false;
+				}
+				break;
+				case DATA_MAT3FS:
+				{
+					FEFaceData_T<mat3fs, DATA_COMP>* pf = dynamic_cast<FEFaceData_T<mat3fs, DATA_COMP>*>(&d);
+					if (pf->active(i))
+					{
+						mat3fs v[FEGenericElement::MAX_NODES]; pf->eval(i, v);
+						mat3fs f(0.f, 0.f, 0.f, 0.f, 0.f, 0.f);
+						for (int i = 0; i<nn; ++i) f += v[i]; f /= (float)nn;
+						sprintf(sz, "%g,%g,%g,%g,%g,%g", f.x, f.y, f.z, f.xy, f.yz, f.xz); sz += strlen(sz);
+					}
+					else bwrite = false;
+				}
+				break;
+				default:
+					return false;
+				}
+			}
+			else if (fmt == DATA_NODE)
+			{
+				int nn = face.Nodes();
+
+				switch (d.GetType())
+				{
+				case DATA_FLOAT:
+				{
+					FEFaceData_T<float, DATA_NODE>* pf = dynamic_cast<FEFaceData_T<float, DATA_NODE>*>(&d);
+					if (pf->active(i))
+					{
+						float v[FEGenericElement::MAX_NODES]; pf->eval(i, v);
+						float f = 0.0f;
+						for (int i = 0; i<nn; ++i) f += v[i]; f /= (float)nn;
+						sprintf(sz, "%g", f); sz += strlen(sz);
+					}
+					else bwrite = false;
+				}
+				break;
+				case DATA_VEC3F:
+				{
+					FEFaceData_T<vec3f, DATA_NODE>* pf = dynamic_cast<FEFaceData_T<vec3f, DATA_NODE>*>(&d);
+					if (pf->active(i))
+					{
+						vec3f v[FEGenericElement::MAX_NODES]; pf->eval(i, v);
+						vec3f f(0.f, 0.f, 0.f);
+						for (int i = 0; i<nn; ++i) f += v[i]; f /= (float)nn;
+						sprintf(sz, "%g,%g,%g", f.x, f.y, f.z); sz += strlen(sz);
+					}
+					else bwrite = false;
+				}
+				break;
+				case DATA_MAT3FS:
+				{
+					FEFaceData_T<mat3fs, DATA_NODE>* pf = dynamic_cast<FEFaceData_T<mat3fs, DATA_NODE>*>(&d);
+					if (pf->active(i))
+					{
+						mat3fs v[FEGenericElement::MAX_NODES]; pf->eval(i, v);
+						mat3fs f(0.f, 0.f, 0.f, 0.f, 0.f, 0.f);
+						for (int i = 0; i<nn; ++i) f += v[i]; f /= (float)nn;
+						sprintf(sz, "%g,%g,%g,%g,%g,%g", f.x, f.y, f.z, f.xy, f.yz, f.xz); sz += strlen(sz);
+					}
+					else bwrite = false;
+				}
+				break;
+				default:
+					return false;
+				}
+			}
+			else return false;
+
+			if (n != nstates - 1) { sprintf(sz, ",");  sz += strlen(sz); }
+		}
+		sprintf(sz, "\n");
+
+		if (bwrite) fprintf(fp, "%s", buf);
 	}
 
 	return true;

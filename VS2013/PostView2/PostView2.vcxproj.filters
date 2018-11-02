@@ -207,6 +207,9 @@
     <ClInclude Include="..\..\PostView2\GLTensorPlot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\PostView2\DlgExportVTK.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\PostView2\3PointAngleTool.cpp">
@@ -543,6 +546,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\PostView2\moc_StrainMapTool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PostView2\DlgExportVTK.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

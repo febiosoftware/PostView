@@ -88,6 +88,7 @@ void CDistanceMapTool::OnApply()
 		FEDistanceMap& map = ui->m_map;
 		map.m_bsigned = bcheck;
 		map.Apply(*m_doc->GetFEModel());
+		m_doc->UpdateObservers(true);
 		updateUi();
 	}
 }

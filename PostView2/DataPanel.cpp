@@ -343,6 +343,7 @@ public:
 
 		pclass = new QComboBox;
 		pclass->addItem("Node");
+		pclass->addItem("Face");
 		pclass->addItem("Elem");
 
 		ptype = new QComboBox;
@@ -634,7 +635,8 @@ void CDataPanel::on_AddFromFile_triggered()
 		switch (dlg.m_nclass)
 		{
 		case 0: bret = doc->AddNodeDataFromFile(dlg.m_file.c_str(), dlg.m_name.c_str(), dlg.m_ntype); break;
-		case 1: bret = doc->AddElemDataFromFile(dlg.m_file.c_str(), dlg.m_name.c_str(), dlg.m_ntype); break;
+		case 1: bret = doc->AddFaceDataFromFile(dlg.m_file.c_str(), dlg.m_name.c_str(), dlg.m_ntype); break;
+		case 2: bret = doc->AddElemDataFromFile(dlg.m_file.c_str(), dlg.m_name.c_str(), dlg.m_ntype); break;
 		default:
 			assert(false);
 		}
