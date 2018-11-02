@@ -7,10 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D50DA1BC20D199D000ECF39D /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D50DA1B820D199D000ECF39D /* libavcodec.a */; };
-		D50DA1BD20D199D000ECF39D /* libavutil.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D50DA1B920D199D000ECF39D /* libavutil.a */; };
-		D50DA1BE20D199D000ECF39D /* libswscale.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D50DA1BA20D199D000ECF39D /* libswscale.a */; };
-		D50DA1BF20D199D000ECF39D /* libavformat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D50DA1BB20D199D000ECF39D /* libavformat.a */; };
 		D51114421ECC973100B8849F /* AVIAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D511143C1ECC973100B8849F /* AVIAnimation.cpp */; };
 		D51114431ECC973100B8849F /* ImgAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D511143E1ECC973100B8849F /* ImgAnimation.cpp */; };
 		D51114441ECC973100B8849F /* MPEGAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D51114401ECC973100B8849F /* MPEGAnimation.cpp */; };
@@ -21,6 +17,28 @@
 		D52C6FB21D75DCA300DF804B /* TimeController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D52C6FAB1D75DCA300DF804B /* TimeController.cpp */; };
 		D52C6FB31D75DCA300DF804B /* TimePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D52C6FAD1D75DCA300DF804B /* TimePanel.cpp */; };
 		D52C6FB51D75DCE900DF804B /* libPostViewLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D52C6FB41D75DCE900DF804B /* libPostViewLib.a */; };
+		D52F507A218C96E30094F7D1 /* DlgExportVTK.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D52F5079218C96E30094F7D1 /* DlgExportVTK.cpp */; };
+		D52F507C218C98730094F7D1 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D52F507B218C98730094F7D1 /* AudioToolbox.framework */; };
+		D52F507E218C98AD0094F7D1 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D52F507D218C98AC0094F7D1 /* CoreFoundation.framework */; };
+		D52F5080218C98ED0094F7D1 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D52F507F218C98ED0094F7D1 /* CoreMedia.framework */; };
+		D52F5082218C990D0094F7D1 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D52F5081218C990D0094F7D1 /* CoreVideo.framework */; };
+		D52F5084218C99360094F7D1 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D52F5083218C99350094F7D1 /* VideoToolbox.framework */; };
+		D52F508E218C9C370094F7D1 /* libiconv.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D52F508D218C9C370094F7D1 /* libiconv.2.dylib */; };
+		D52F50F5218D07710094F7D1 /* libswresample.3.1.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D52F50F0218D07700094F7D1 /* libswresample.3.1.100.dylib */; };
+		D52F50F6218D07710094F7D1 /* libavcodec.58.18.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D52F50F1218D07700094F7D1 /* libavcodec.58.18.100.dylib */; };
+		D52F50F7218D07710094F7D1 /* libavutil.56.14.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D52F50F2218D07700094F7D1 /* libavutil.56.14.100.dylib */; };
+		D52F50F8218D07710094F7D1 /* libavformat.58.12.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D52F50F3218D07700094F7D1 /* libavformat.58.12.100.dylib */; };
+		D52F50F9218D07710094F7D1 /* libswscale.5.1.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D52F50F4218D07710094F7D1 /* libswscale.5.1.100.dylib */; };
+		D52F50FB218D07AD0094F7D1 /* libxvidcore.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D52F50FA218D07AD0094F7D1 /* libxvidcore.4.dylib */; };
+		D52F50FF218D07EF0094F7D1 /* libmp3lame.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D52F50FE218D07EF0094F7D1 /* libmp3lame.0.dylib */; };
+		D52F5100218D085A0094F7D1 /* libmp3lame.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = D52F50FE218D07EF0094F7D1 /* libmp3lame.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		D52F5102218D085A0094F7D1 /* libxvidcore.4.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = D52F50FA218D07AD0094F7D1 /* libxvidcore.4.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		D52F5103218D085A0094F7D1 /* libavcodec.58.18.100.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = D52F50F1218D07700094F7D1 /* libavcodec.58.18.100.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		D52F5104218D085A0094F7D1 /* libavformat.58.12.100.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = D52F50F3218D07700094F7D1 /* libavformat.58.12.100.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		D52F5105218D085A0094F7D1 /* libavutil.56.14.100.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = D52F50F2218D07700094F7D1 /* libavutil.56.14.100.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		D52F5106218D085A0094F7D1 /* libswresample.3.1.100.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = D52F50F0218D07700094F7D1 /* libswresample.3.1.100.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		D52F5107218D085A0094F7D1 /* libswscale.5.1.100.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = D52F50F4218D07710094F7D1 /* libswscale.5.1.100.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		D52F5109218D0B280094F7D1 /* libx265.165.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D52F5108218D0B280094F7D1 /* libx265.165.dylib */; };
 		D53292BB1E453447002798B3 /* DlgExportAscii.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53292B91E453447002798B3 /* DlgExportAscii.cpp */; };
 		D53598C01E901C0500584A4F /* DragBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53598BE1E901C0500584A4F /* DragBox.cpp */; };
 		D53A8DFB2074EC7C00BDDD2D /* GLStreamLinePlot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53A8DFA2074EC7C00BDDD2D /* GLStreamLinePlot.cpp */; };
@@ -135,20 +153,23 @@
 /* Begin PBXCopyFilesBuildPhase section */
 		D5215F6E1F030BB000838680 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 8;
+			buildActionMask = 12;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				D52F5100218D085A0094F7D1 /* libmp3lame.0.dylib in CopyFiles */,
+				D52F5102218D085A0094F7D1 /* libxvidcore.4.dylib in CopyFiles */,
+				D52F5103218D085A0094F7D1 /* libavcodec.58.18.100.dylib in CopyFiles */,
+				D52F5104218D085A0094F7D1 /* libavformat.58.12.100.dylib in CopyFiles */,
+				D52F5105218D085A0094F7D1 /* libavutil.56.14.100.dylib in CopyFiles */,
+				D52F5106218D085A0094F7D1 /* libswresample.3.1.100.dylib in CopyFiles */,
+				D52F5107218D085A0094F7D1 /* libswscale.5.1.100.dylib in CopyFiles */,
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		D50DA1B820D199D000ECF39D /* libavcodec.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavcodec.a; path = ../../../../../../../../../../../usr/local/Cellar/ffmpeg/4.0/lib/libavcodec.a; sourceTree = "<group>"; };
-		D50DA1B920D199D000ECF39D /* libavutil.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavutil.a; path = ../../../../../../../../../../../usr/local/Cellar/ffmpeg/4.0/lib/libavutil.a; sourceTree = "<group>"; };
-		D50DA1BA20D199D000ECF39D /* libswscale.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswscale.a; path = ../../../../../../../../../../../usr/local/Cellar/ffmpeg/4.0/lib/libswscale.a; sourceTree = "<group>"; };
-		D50DA1BB20D199D000ECF39D /* libavformat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavformat.a; path = ../../../../../../../../../../../usr/local/Cellar/ffmpeg/4.0/lib/libavformat.a; sourceTree = "<group>"; };
 		D511143C1ECC973100B8849F /* AVIAnimation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AVIAnimation.cpp; sourceTree = "<group>"; };
 		D511143D1ECC973100B8849F /* AVIAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVIAnimation.h; sourceTree = "<group>"; };
 		D511143E1ECC973100B8849F /* ImgAnimation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImgAnimation.cpp; sourceTree = "<group>"; };
@@ -166,6 +187,23 @@
 		D52C6FAE1D75DCA300DF804B /* TimePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimePanel.h; sourceTree = "<group>"; };
 		D52C6FAF1D75DCA300DF804B /* ui_timepanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ui_timepanel.h; sourceTree = "<group>"; };
 		D52C6FB41D75DCE900DF804B /* libPostViewLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPostViewLib.a; path = ../PostViewLib/build/Release/libPostViewLib.a; sourceTree = "<group>"; };
+		D52F5078218C96E30094F7D1 /* DlgExportVTK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgExportVTK.h; sourceTree = "<group>"; };
+		D52F5079218C96E30094F7D1 /* DlgExportVTK.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgExportVTK.cpp; sourceTree = "<group>"; };
+		D52F507B218C98730094F7D1 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		D52F507D218C98AC0094F7D1 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		D52F507F218C98ED0094F7D1 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		D52F5081218C990D0094F7D1 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		D52F5083218C99350094F7D1 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		D52F5085218C996B0094F7D1 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		D52F508D218C9C370094F7D1 /* libiconv.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.dylib; path = ../../../../../../../../../../../usr/lib/libiconv.2.dylib; sourceTree = "<group>"; };
+		D52F50F0218D07700094F7D1 /* libswresample.3.1.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libswresample.3.1.100.dylib; path = ../../../../../../../../../../../usr/local/Cellar/ffmpeg/4.0.2_1/lib/libswresample.3.1.100.dylib; sourceTree = "<group>"; };
+		D52F50F1218D07700094F7D1 /* libavcodec.58.18.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavcodec.58.18.100.dylib; path = ../../../../../../../../../../../usr/local/Cellar/ffmpeg/4.0.2_1/lib/libavcodec.58.18.100.dylib; sourceTree = "<group>"; };
+		D52F50F2218D07700094F7D1 /* libavutil.56.14.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavutil.56.14.100.dylib; path = ../../../../../../../../../../../usr/local/Cellar/ffmpeg/4.0.2_1/lib/libavutil.56.14.100.dylib; sourceTree = "<group>"; };
+		D52F50F3218D07700094F7D1 /* libavformat.58.12.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavformat.58.12.100.dylib; path = ../../../../../../../../../../../usr/local/Cellar/ffmpeg/4.0.2_1/lib/libavformat.58.12.100.dylib; sourceTree = "<group>"; };
+		D52F50F4218D07710094F7D1 /* libswscale.5.1.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libswscale.5.1.100.dylib; path = ../../../../../../../../../../../usr/local/Cellar/ffmpeg/4.0.2_1/lib/libswscale.5.1.100.dylib; sourceTree = "<group>"; };
+		D52F50FA218D07AD0094F7D1 /* libxvidcore.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxvidcore.4.dylib; path = ../../../../../../../../../../../usr/local/Cellar/xvid/1.3.5/lib/libxvidcore.4.dylib; sourceTree = "<group>"; };
+		D52F50FE218D07EF0094F7D1 /* libmp3lame.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libmp3lame.0.dylib; path = ../../../../../../../../../../../usr/local/Cellar/lame/3.100/lib/libmp3lame.0.dylib; sourceTree = "<group>"; };
+		D52F5108218D0B280094F7D1 /* libx265.165.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libx265.165.dylib; path = ../../../../../../../../../../../usr/local/Cellar/x265/2.9/lib/libx265.165.dylib; sourceTree = "<group>"; };
 		D53292B91E453447002798B3 /* DlgExportAscii.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgExportAscii.cpp; sourceTree = "<group>"; };
 		D53292BA1E453447002798B3 /* DlgExportAscii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgExportAscii.h; sourceTree = "<group>"; };
 		D53598BE1E901C0500584A4F /* DragBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DragBox.cpp; sourceTree = "<group>"; };
@@ -356,16 +394,26 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D50DA1BC20D199D000ECF39D /* libavcodec.a in Frameworks */,
-				D50DA1BD20D199D000ECF39D /* libavutil.a in Frameworks */,
-				D50DA1BE20D199D000ECF39D /* libswscale.a in Frameworks */,
-				D50DA1BF20D199D000ECF39D /* libavformat.a in Frameworks */,
+				D52F5109218D0B280094F7D1 /* libx265.165.dylib in Frameworks */,
+				D52F50FF218D07EF0094F7D1 /* libmp3lame.0.dylib in Frameworks */,
+				D52F50FB218D07AD0094F7D1 /* libxvidcore.4.dylib in Frameworks */,
+				D52F50F5218D07710094F7D1 /* libswresample.3.1.100.dylib in Frameworks */,
+				D52F50F6218D07710094F7D1 /* libavcodec.58.18.100.dylib in Frameworks */,
+				D52F50F7218D07710094F7D1 /* libavutil.56.14.100.dylib in Frameworks */,
+				D52F50F8218D07710094F7D1 /* libavformat.58.12.100.dylib in Frameworks */,
+				D52F50F9218D07710094F7D1 /* libswscale.5.1.100.dylib in Frameworks */,
+				D52F508E218C9C370094F7D1 /* libiconv.2.dylib in Frameworks */,
 				D52C6FB51D75DCE900DF804B /* libPostViewLib.a in Frameworks */,
 				D5E08BA320A5E5BE00275FAB /* libGLWLib.a in Frameworks */,
 				D5CEB8B0208929CD00BFEA96 /* QtWidgets.framework in Frameworks */,
 				D5CEB8AE208929BD00BFEA96 /* QtGui.framework in Frameworks */,
 				D5CEB8AC208929AF00BFEA96 /* QtCore.framework in Frameworks */,
 				D55AC5011E61EB6E00BBA0D1 /* OpenGL.framework in Frameworks */,
+				D52F507C218C98730094F7D1 /* AudioToolbox.framework in Frameworks */,
+				D52F507E218C98AD0094F7D1 /* CoreFoundation.framework in Frameworks */,
+				D52F5080218C98ED0094F7D1 /* CoreMedia.framework in Frameworks */,
+				D52F5082218C990D0094F7D1 /* CoreVideo.framework in Frameworks */,
+				D52F5084218C99360094F7D1 /* VideoToolbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -435,6 +483,8 @@
 				D53292BA1E453447002798B3 /* DlgExportAscii.h */,
 				D518E6841F8436970028AA8F /* DlgExportLSDYNA.cpp */,
 				D518E6821F8436970028AA8F /* DlgExportLSDYNA.h */,
+				D52F5079218C96E30094F7D1 /* DlgExportVTK.cpp */,
+				D52F5078218C96E30094F7D1 /* DlgExportVTK.h */,
 				D5FF79BF1D72756B003D2CBD /* DlgExportXPLT.cpp */,
 				D5FF79C01D72756B003D2CBD /* DlgExportXPLT.h */,
 				D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */,
@@ -602,14 +652,25 @@
 		D5FF7AA61D727B52003D2CBD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D52F5108218D0B280094F7D1 /* libx265.165.dylib */,
+				D52F50FE218D07EF0094F7D1 /* libmp3lame.0.dylib */,
+				D52F50FA218D07AD0094F7D1 /* libxvidcore.4.dylib */,
+				D52F50F1218D07700094F7D1 /* libavcodec.58.18.100.dylib */,
+				D52F50F3218D07700094F7D1 /* libavformat.58.12.100.dylib */,
+				D52F50F2218D07700094F7D1 /* libavutil.56.14.100.dylib */,
+				D52F50F0218D07700094F7D1 /* libswresample.3.1.100.dylib */,
+				D52F50F4218D07710094F7D1 /* libswscale.5.1.100.dylib */,
+				D52F508D218C9C370094F7D1 /* libiconv.2.dylib */,
+				D52F5085218C996B0094F7D1 /* CoreAudio.framework */,
+				D52F5083218C99350094F7D1 /* VideoToolbox.framework */,
+				D52F5081218C990D0094F7D1 /* CoreVideo.framework */,
+				D52F507F218C98ED0094F7D1 /* CoreMedia.framework */,
+				D52F507D218C98AC0094F7D1 /* CoreFoundation.framework */,
+				D52F507B218C98730094F7D1 /* AudioToolbox.framework */,
 				D5CEB8AF208929CD00BFEA96 /* QtWidgets.framework */,
 				D5CEB8AD208929BD00BFEA96 /* QtGui.framework */,
 				D5CEB8AB208929AF00BFEA96 /* QtCore.framework */,
 				D55AC5001E61EB6E00BBA0D1 /* OpenGL.framework */,
-				D50DA1BA20D199D000ECF39D /* libswscale.a */,
-				D50DA1B820D199D000ECF39D /* libavcodec.a */,
-				D50DA1BB20D199D000ECF39D /* libavformat.a */,
-				D50DA1B920D199D000ECF39D /* libavutil.a */,
 				D5E08BA220A5E5BE00275FAB /* libGLWLib.a */,
 				D52C6FB41D75DCE900DF804B /* libPostViewLib.a */,
 			);
@@ -690,6 +751,7 @@
 				D5FF7A461D72756B003D2CBD /* CommandPanel.cpp in Sources */,
 				D5FF7A561D72756B003D2CBD /* GLLinePlot.cpp in Sources */,
 				D5FF7A841D72756B003D2CBD /* PlotMixTool.cpp in Sources */,
+				D52F507A218C96E30094F7D1 /* DlgExportVTK.cpp in Sources */,
 				D5FF7A5D1D72756B003D2CBD /* GLVectorPlot.cpp in Sources */,
 				D5FF7A701D72756B003D2CBD /* moc_GraphWindow.cpp in Sources */,
 				D576BB3220CACBD100F09942 /* moc_DlgAddEquation.cpp in Sources */,
@@ -876,6 +938,12 @@
 					"$(inherited)",
 					"/Applications/glew-2.0.0/lib",
 					/usr/local/Cellar/ffmpeg/4.0/lib,
+					/usr/local/Cellar/xvid/1.3.5/lib,
+					/usr/local/Cellar/x264/r2854/lib,
+					/usr/local/Cellar/lame/3.100/lib,
+					/usr/local/Cellar/ffmpeg/4.0.2/lib,
+					/usr/local/Cellar/ffmpeg/4.0.2_1/lib,
+					/usr/local/Cellar/x265/2.9/lib,
 				);
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_BUNDLE_IDENTIFIER = FEB.PostView2;
@@ -1014,6 +1082,12 @@
 					"$(inherited)",
 					/usr/local/opt/qt5/lib,
 					/usr/local/opt/ffmpeg/lib,
+					/usr/local/Cellar/xvid/1.3.5/lib,
+					/usr/local/Cellar/x264/r2854/lib,
+					/usr/local/Cellar/lame/3.100/lib,
+					/usr/local/Cellar/ffmpeg/4.0.2/lib,
+					/usr/local/Cellar/ffmpeg/4.0.2_1/lib,
+					/usr/local/Cellar/x265/2.9/lib,
 				);
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_BUNDLE_IDENTIFIER = FEB.PostView2;
@@ -1046,6 +1120,12 @@
 					"$(inherited)",
 					/usr/local/opt/ffmpeg/lib,
 					/usr/local/Cellar/ffmpeg/4.0/lib,
+					/usr/local/Cellar/xvid/1.3.5/lib,
+					/usr/local/Cellar/x264/r2854/lib,
+					/usr/local/Cellar/lame/3.100/lib,
+					/usr/local/Cellar/ffmpeg/4.0.2/lib,
+					/usr/local/Cellar/ffmpeg/4.0.2_1/lib,
+					/usr/local/Cellar/x265/2.9/lib,
 				);
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_BUNDLE_IDENTIFIER = FEB.PostView2;
