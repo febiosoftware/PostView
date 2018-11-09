@@ -2,6 +2,27 @@
 = PostView Release Notes                                               =
 ========================================================================
 
+
+Version 2.3.2 - 11/9/2018
+==========================
+
+- Fixed issue with arithmetic data filter
+
+
+Version 2.3.1 - 11/2/2018
+==========================
+
+- Fixed some issues with VTK export and added option to choose between exporting all states and just the current one. Added ability to import face data from file. 
+
+- Fixed minor issue with distance map tool.
+
+- Volume for tet10, tet15, and tet20 elements are now calculated. 
+
+- Option was added to change reference state in strain field evaluations in data panel.
+
+- Link to online help was fixed.
+
+
 Version 2.3 - 7/3/2018
 ========================
 
