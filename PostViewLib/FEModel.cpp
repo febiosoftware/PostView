@@ -401,8 +401,8 @@ FEDataField* createCachedDataField(FEDataField* pd, const char* sznewname)
 //-----------------------------------------------------------------------------
 template <typename T> void cached_copy_node_data(FEMeshData& dst, FEMeshData& src, int NN)
 {
-	FENodeData<float>& d = dynamic_cast<FENodeData<float>&>(dst);
-	FENodeData_T<float>& s = dynamic_cast<FENodeData_T<float>&>(src);
+	FENodeData<T>& d = dynamic_cast<FENodeData<T>&>(dst);
+	FENodeData_T<T>& s = dynamic_cast<FENodeData_T<T>&>(src);
 	for (int i = 0; i<NN; ++i) s.eval(i, &d[i]);
 }
 

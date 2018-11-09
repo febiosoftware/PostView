@@ -143,6 +143,9 @@ public:
 		return (*this);
 	}
 
+	mat3fs operator + (const mat3fs& a) { return mat3fs(x + a.x, y + a.y, z + a.z, xy + a.xy, yz + a.yz, xz + a.xz); }
+	mat3fs operator - (const mat3fs& a) { return mat3fs(x - a.x, y - a.y, z - a.z, xy - a.xy, yz - a.yz, xz - a.xz); }
+
 	mat3fs operator * (float a)
 	{
 		return mat3fs(x*a, y*a, z*a, xy*a, yz*a, xz*a);
