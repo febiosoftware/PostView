@@ -16,6 +16,13 @@
 class CGLIsoSurfacePlot : public CGLPlot  
 {
 public:
+	enum RANGE_TYPE {
+		RNG_DYNAMIC,
+		RNG_STATIC,
+		RNG_USER
+	};
+
+public:
 	CGLIsoSurfacePlot(CGLModel* po);
 	virtual ~CGLIsoSurfacePlot();
 
@@ -44,13 +51,27 @@ public:
 
 	void UpdateTexture() { m_Col.UpdateTexture(); }
 
+	void SetRangeType(int n) { m_rangeType = n; }
+	int GetRangeType() const { return m_rangeType; }
+
+	void SetUserRangeMin(double rangeMin) { m_userMin = rangeMin; }
+	double GetUserRangeMin() const { return m_userMin; }
+
+	void SetUserRangeMax(double rangeMax) { m_userMax = rangeMax; }
+	double GetUserRangeMax() const { return m_userMax; }
+
 protected:
-	void RenderSlice(float ref);
+	void RenderSlice(float ref, GLCOLOR col);
 
 protected:
 	int		m_nslices;		// nr. of iso surface slices
 	bool	m_bsmooth;		// render smooth or not
 	bool	m_bcut_hidden;	//!< cut hidden materials or not
+
+	int		m_rangeType;				//!< dynamic, static, or user-defined
+	double	m_userMin, m_userMax;		//!< range for user-defined range
+
+	double	m_rngMin, m_rngMax;
 
 	int				m_nfield;	// data field
 	CColorTexture	m_Col;		// colormap

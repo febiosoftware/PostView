@@ -569,18 +569,17 @@ void GLLegendBar::draw_discrete_horz(QPainter* painter)
 
 		CColorMap& map = ColorMapManager::GetColorMap(m_pMap->GetColorMap());
 
+		float denom = (nsteps <= 1 ? 1.f : nsteps - 1.f);
+
 		// render the lines and text
 		for (i=1; i<nsteps+1; i++)
 		{
 			if (m_nrot == VERTICAL)
 			{
 				yt = y0 + i*(y1 - y0)/(nsteps+1);
-				f = m_fmax + i*(m_fmin - m_fmax)/(nsteps+1);
-		
-//				sprintf(str, szfmt, (fabs(f/p) < 1e-5 ? 0 : f/p));
+				f = 1.f - (i - 1) / denom;
 
 				glColor3ub(m_fgc.r,m_fgc.g,m_fgc.b);
-//				gl_draw(str, x0 - 55, yt-8, 50, 20, FL_ALIGN_RIGHT);
 
 				GLCOLOR c = map.map((float) f);
 				glColor3ub(c.r, c.g, c.b);
@@ -596,12 +595,9 @@ void GLLegendBar::draw_discrete_horz(QPainter* painter)
 			else
 			{
 				int xt = x0 + i*(x1 - x0)/(nsteps+1);
-				f = m_fmin + i*(m_fmax - m_fmin)/(nsteps+1);
-		
-//				sprintf(str, szfmt, (fabs(f/p) < 1e-5 ? 0 : f/p));
+				f = (i - 1) / denom;
 
 				glColor3ub(m_fgc.r,m_fgc.g,m_fgc.b);
-//				gl_draw(str, xt - 25, y1-30, 50, 20, FL_ALIGN_CENTER);
 
 				GLCOLOR c = map.map((float)f);
 				glColor3ub(c.r, c.g, c.b);
@@ -644,13 +640,15 @@ void GLLegendBar::draw_discrete_horz(QPainter* painter)
 		char szfmt[16]={0}, str[128] = {0};
 		sprintf(szfmt, "%%.%dg", m_nprec);
 
+		float denom = (nsteps <= 1 ? 1.f : nsteps - 1.f); 
+
 		// render the lines and text
 		for (i = 1; i<nsteps + 1; i++)
 		{
 			if (m_nrot == VERTICAL)
 			{
 				yt = y0 + i*(y1 - y0) / (nsteps + 1);
-				f = m_fmax + i*(m_fmin - m_fmax) / (nsteps + 1);
+				f = m_fmax + (i-1)*(m_fmin - m_fmax) / denom;
 
 				sprintf(str, szfmt, (fabs(f/p) < 1e-5 ? 0 : f/p));
 
@@ -659,7 +657,7 @@ void GLLegendBar::draw_discrete_horz(QPainter* painter)
 			else
 			{
 				int xt = x0 + i*(x1 - x0) / (nsteps + 1);
-				f = m_fmin + i*(m_fmax - m_fmin) / (nsteps + 1);
+				f = m_fmin + (i-1)*(m_fmax - m_fmin) / denom;
 
 				sprintf(str, szfmt, (fabs(f/p) < 1e-5 ? 0 : f/p));
 

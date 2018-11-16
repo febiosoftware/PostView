@@ -32,6 +32,9 @@ public:
 		addProperty("Slices"        , CProperty::Int );
 		addProperty("Show Legend"   , CProperty::Bool);
 		addProperty("Smooth"        , CProperty::Bool);
+		addProperty("Range Type"    , CProperty::Enum)->setEnumValues(QStringList() << "Dynamic" << "Static" << "User");
+		addProperty("User Range Min", CProperty::Float);
+		addProperty("User Range Max", CProperty::Float);
 	}
 
 	QVariant GetPropertyValue(int i)
@@ -45,6 +48,9 @@ public:
 		case 4: return m_iso->GetSlices(); break;
 		case 5: return m_iso->ShowLegend(); break;
 		case 6: return m_iso->RenderSmooth(); break;
+		case 7: return m_iso->GetRangeType(); break;
+		case 8: return m_iso->GetUserRangeMin(); break;
+		case 9: return m_iso->GetUserRangeMax(); break;
 		}
 		return QVariant();
 	}
@@ -60,6 +66,9 @@ public:
 		case 4: m_iso->SetSlices(v.toInt()); break;
 		case 5: m_iso->ShowLegend(v.toBool()); break;
 		case 6: m_iso->RenderSmooth(v.toBool()); break;
+		case 7: m_iso->SetRangeType(v.toInt()); break;
+		case 8: m_iso->SetUserRangeMin(v.toFloat()); break;
+		case 9: m_iso->SetUserRangeMax(v.toFloat()); break;
 		}
 	}
 
@@ -82,6 +91,12 @@ CGLIsoSurfacePlot::CGLIsoSurfacePlot(CGLModel* po) : CGLPlot(po)
 	m_bsmooth = true;
 	m_bcut_hidden = false;
 	m_nfield = BUILD_FIELD(1,0,0);
+
+	m_rangeType = RNG_DYNAMIC;
+	m_rngMin = 0.;
+	m_rngMax = 1.;
+	m_userMin = 0.;
+	m_userMax = 1.;
 
 	m_Col.SetDivisions(m_nslices);
 	m_Col.SetSmooth(false);
@@ -133,12 +148,25 @@ void CGLIsoSurfacePlot::Render(CGLContext& rc)
 		glLightfv(GL_LIGHT0, GL_SPECULAR, zero);
 	//	glLightfv(GL_LIGHT0, GL_AMBIENT, one);
 	//	glLightfv(GL_LIGHT0, GL_DIFFUSE, one);
-	
 
-		for (int i=1; i<m_nslices+1; ++i)
+		float crng = (r.y - r.x);
+		if (crng == 0.f) crng = 1.f;
+
+		// scale a little to make sure the range extrema will be shown
+		r.x *= .99f;
+		r.y *= .99f;
+
+		float denom = (m_nslices <= 1 ? 1.f : m_nslices - 1.f);
+		for (int i=0; i<m_nslices; ++i)
 		{
-			float ref = r.x + (float) i / (float) (m_nslices+1) * (r.y - r.x);
-			RenderSlice(ref);
+			float ref = r.x + (float) i / denom * (r.y - r.x);
+
+			float w = (ref - m_crng.x)/crng;
+
+			CColorMap& map = ColorMapManager::GetColorMap(m_Col.GetColorMap());
+			GLCOLOR col = map.map(w);
+
+			RenderSlice(ref, col);
 		}
 	}
 	glPopAttrib();
@@ -146,7 +174,7 @@ void CGLIsoSurfacePlot::Render(CGLContext& rc)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void CGLIsoSurfacePlot::RenderSlice(float ref)
+void CGLIsoSurfacePlot::RenderSlice(float ref, GLCOLOR col)
 {
 	int i, k, l;
 	int ncase, *pf;
@@ -168,8 +196,6 @@ void CGLIsoSurfacePlot::RenderSlice(float ref)
 
 	const int* nt;
 
-	CColorMap& map = ColorMapManager::GetColorMap(m_Col.GetColorMap());
-	GLCOLOR col = map.map(ref);
 	glColor3ub(col.r, col.g, col.b);
 
 	// loop over all elements
@@ -335,7 +361,28 @@ void CGLIsoSurfacePlot::Update(int ntime, float dt, bool breset)
 
 	// update colormap range
 	vec2f r = m_rng[ntime];
-//	m_Col.SetRange(r.x, r.y, false);
 
-	m_crng = m_rng[ntime];
+	// update static range
+	if (breset) { m_rngMin = r.x; m_rngMax = r.y; }
+	else
+	{
+		if (r.x < m_rngMin) m_rngMin = r.x;
+		if (r.y > m_rngMax) m_rngMax = r.y;
+	}
+
+	// set range for color map
+	switch (m_rangeType)
+	{
+	case RNG_DYNAMIC:
+		m_crng = m_rng[ntime];
+		break;
+	case RNG_STATIC:
+		m_crng = vec2f((float) m_rngMin, (float) m_rngMax);
+		break;
+	case RNG_USER:
+		m_crng = vec2f((float)m_userMin, (float)m_userMax);
+		break;
+	}
+
+	m_pbar->SetRange(m_crng.x, m_crng.y);
 }
