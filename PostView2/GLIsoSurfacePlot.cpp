@@ -70,6 +70,8 @@ public:
 		case 8: m_iso->SetUserRangeMin(v.toFloat()); break;
 		case 9: m_iso->SetUserRangeMax(v.toFloat()); break;
 		}
+
+		m_iso->Update();
 	}
 
 private:
@@ -298,8 +300,17 @@ void CGLIsoSurfacePlot::SetEvalField(int n)
 }
 
 //-----------------------------------------------------------------------------
+void CGLIsoSurfacePlot::Update()
+{
+	Update(m_lastTime, m_lastdt, true);
+}
+
+//-----------------------------------------------------------------------------
 void CGLIsoSurfacePlot::Update(int ntime, float dt, bool breset)
 {
+	m_lastTime = ntime;
+	m_lastdt = dt;
+
 	CGLModel* mdl = GetModel();
 
 	FEMeshBase* pm = mdl->GetActiveMesh();

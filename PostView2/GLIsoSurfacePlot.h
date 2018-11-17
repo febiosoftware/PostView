@@ -60,6 +60,8 @@ public:
 	void SetUserRangeMax(double rangeMax) { m_userMax = rangeMax; }
 	double GetUserRangeMax() const { return m_userMax; }
 
+	void Update();
+
 protected:
 	void RenderSlice(float ref, GLCOLOR col);
 
@@ -83,6 +85,9 @@ protected:
 	vec2f			m_crng;
 	vector<float>	m_val;	// current nodal values
 	vector<vec3f>	m_grd;	// current gradient values
+
+	int		m_lastTime;
+	float	m_lastdt;
 
 	GLLegendBar*	m_pbar;
 };
