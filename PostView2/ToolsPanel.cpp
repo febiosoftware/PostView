@@ -33,6 +33,7 @@
 #include "PlotMixTool.h"
 #include "AreaCoverageTool.h"
 #include "StrainMapTool.h"
+#include "MeasureVolumeTool.h"
 
 static QList<CAbstractTool*>	tools;
 
@@ -146,6 +147,7 @@ void CToolsPanel::initTools()
 	tools.push_back(new CImportPointsTool   (doc));
 	tools.push_back(new CAreaCoverageTool   (doc));
 	tools.push_back(new CStrainMapTool      (doc));
+	tools.push_back(new CMeasureVolumeTool  (doc));
 }
 
 void CToolsPanel::on_buttons_buttonClicked(int id)

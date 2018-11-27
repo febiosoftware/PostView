@@ -150,7 +150,11 @@ void CPropertyListForm::updateData()
 						QComboBox* pc = qobject_cast<QComboBox*>(pw);
 						if (pc)
 						{
-							pc->addItems(pi.values);
+							if (pc->count() != pi.values.size())
+							{
+								pc->clear();
+								pc->addItems(pi.values);
+							}
 							pc->setCurrentIndex(v.toInt());
 						}
 					}
