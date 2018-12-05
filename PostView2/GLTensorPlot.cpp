@@ -18,6 +18,7 @@ public:
 		}
 
 		addProperty("Data field"    , CProperty::DataMat3);
+		addProperty("Calculate"		, CProperty::Enum)->setEnumValues(QStringList() << "Eigenvectors" << "Columns" << "Rows");
 		addProperty("Color map"     , CProperty::Enum)->setEnumValues(cols);
 		addProperty("Allow clipping", CProperty::Bool);
 		addProperty("Show hidden"   , CProperty::Bool);
@@ -35,16 +36,17 @@ public:
 		switch (i)
 		{
 		case 0: return m_tensor->GetTensorField(); break;
-		case 1: return m_tensor->GetColorMap()->GetColorMap();
-		case 2: return m_tensor->AllowClipping(); break;
-		case 3: return m_tensor->ShowHidden(); break;
-		case 4: return m_tensor->GetScaleFactor(); break;
-		case 5: return m_tensor->GetDensity(); break;
-		case 6: return m_tensor->GetGlyphType(); break;
-		case 7: return m_tensor->GetColorType(); break;
-		case 8: return toQColor(m_tensor->GetGlyphColor()); break;
-		case 9: return m_tensor->GetAutoScale(); break;
-		case 10: return m_tensor->GetNormalize(); break;
+		case 1: return m_tensor->GetVectorMethod(); break;
+		case 2: return m_tensor->GetColorMap()->GetColorMap();
+		case 3: return m_tensor->AllowClipping(); break;
+		case 4: return m_tensor->ShowHidden(); break;
+		case 5: return m_tensor->GetScaleFactor(); break;
+		case 6: return m_tensor->GetDensity(); break;
+		case 7: return m_tensor->GetGlyphType(); break;
+		case 8: return m_tensor->GetColorType(); break;
+		case 9: return toQColor(m_tensor->GetGlyphColor()); break;
+		case 10: return m_tensor->GetAutoScale(); break;
+		case 11: return m_tensor->GetNormalize(); break;
 		}
 		return QVariant();
 	}
@@ -54,16 +56,17 @@ public:
 		switch (i)
 		{
 		case 0: m_tensor->SetTensorField(v.toInt()); break;
-		case 1: m_tensor->GetColorMap()->SetColorMap(v.toInt()); break;
-		case 2: m_tensor->AllowClipping(v.toBool()); break;
-		case 3: m_tensor->ShowHidden(v.toBool()); break;
-		case 4: m_tensor->SetScaleFactor(v.toFloat()); break;
-		case 5: m_tensor->SetDensity(v.toFloat()); break;
-		case 6: m_tensor->SetGlyphType(v.toInt()); break;
-		case 7: m_tensor->SetColorType(v.toInt()); break;
-		case 8: m_tensor->SetGlyphColor(toGLColor(v.value<QColor>())); break;
-		case 9: m_tensor->SetAutoScale(v.toBool()); break;
-		case 10: m_tensor->SetNormalize(v.toBool()); break;
+		case 1: m_tensor->SetVectorMethod(v.toInt()); break;
+		case 2: m_tensor->GetColorMap()->SetColorMap(v.toInt()); break;
+		case 3: m_tensor->AllowClipping(v.toBool()); break;
+		case 4: m_tensor->ShowHidden(v.toBool()); break;
+		case 5: m_tensor->SetScaleFactor(v.toFloat()); break;
+		case 6: m_tensor->SetDensity(v.toFloat()); break;
+		case 7: m_tensor->SetGlyphType(v.toInt()); break;
+		case 8: m_tensor->SetColorType(v.toInt()); break;
+		case 9: m_tensor->SetGlyphColor(toGLColor(v.value<QColor>())); break;
+		case 10: m_tensor->SetAutoScale(v.toBool()); break;
+		case 11: m_tensor->SetNormalize(v.toBool()); break;
 		}
 	}
 
@@ -98,6 +101,8 @@ GLTensorPlot::GLTensorPlot(CGLModel* po) : CGLPlot(po)
 	m_bnormalize = false;
 
 	m_seed = rand();
+
+	m_nmethod = VEC_EIGEN;
 }
 
 GLTensorPlot::~GLTensorPlot()
@@ -112,6 +117,13 @@ CPropertyList* GLTensorPlot::propertyList()
 void GLTensorPlot::SetTensorField(int nfield)
 {
 	m_ntensor = nfield;
+	Update(GetModel()->currentTimeIndex(), 0.0, false);
+}
+
+void GLTensorPlot::SetVectorMethod(int m)
+{ 
+	m_nmethod = m; 
+	for (int i=0; i<m_map.States(); ++i) m_map.SetTag(i, -1);
 	Update(GetModel()->currentTimeIndex(), 0.0, false);
 }
 
@@ -152,18 +164,59 @@ void GLTensorPlot::Update(int ntime, float dt, bool breset)
 		TENSOR t;
 		for (int i = 0; i<pm->Nodes(); ++i)
 		{
-			mat3fs m = pfem->EvaluateNodeTensor(i, ntime, m_ntensor);
-			m.eigen(t.r, t.l);
-
-			vec3f n = t.r[0]^t.r[1];
-			if (n*t.r[2] < 0.f)
+			switch (m_nmethod)
 			{
-				t.r[2] = -t.r[2];
-				t.l[2] = -t.l[2];
-			}
-			t.f = m.von_mises();
+			case VEC_EIGEN:
+				{
+					mat3f m = pfem->EvaluateNodeTensor(i, ntime, m_ntensor, DATA_MAT3FS);
 
-			val[i] = t;
+					mat3fs s = m.sym();
+					s.eigen(t.r, t.l);
+
+					vec3f n = t.r[0]^t.r[1];
+					if (n*t.r[2] < 0.f)
+					{
+						t.r[2] = -t.r[2];
+						t.l[2] = -t.l[2];
+					}
+					t.f = s.von_mises();
+
+					val[i] = t;
+				}
+				break;
+			case VEC_COLUMN:
+				{
+					mat3f m = pfem->EvaluateNodeTensor(i, ntime, m_ntensor);
+					t.r[0] = m.col(0);
+					t.r[1] = m.col(1);
+					t.r[2] = m.col(2);
+
+					t.l[0] = t.r[0].Length();
+					t.l[1] = t.r[1].Length();
+					t.l[2] = t.r[2].Length();
+
+					t.f = 0.f;
+
+					val[i] = t;
+				}
+				break;
+			case VEC_ROW:
+				{
+					mat3f m = pfem->EvaluateNodeTensor(i, ntime, m_ntensor);
+					t.r[0] = m.row(0);
+					t.r[1] = m.row(1);
+					t.r[2] = m.row(2);
+
+					t.l[0] = t.r[0].Length();
+					t.l[1] = t.r[1].Length();
+					t.l[2] = t.r[2].Length();
+
+					t.f = 0.f;
+
+					val[i] = t;
+				}
+				break;
+			}
 		}
 	}
 

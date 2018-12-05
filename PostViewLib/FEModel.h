@@ -147,9 +147,9 @@ public:
 	vec3f EvaluateElemVector(int n, int ntime, int nvec);
 
 	// evaluate tensor functions
-	mat3fs EvaluateNodeTensor(int n, int ntime, int nten);
-	mat3fs EvaluateFaceTensor(int n, int ntime, int nten);
-	mat3fs EvaluateElemTensor(int n, int ntime, int nten);
+	mat3f EvaluateNodeTensor(int n, int ntime, int nten, int ntype = -1);
+	mat3f EvaluateFaceTensor(int n, int ntime, int nten, int ntype = -1);
+	mat3f EvaluateElemTensor(int n, int ntime, int nten, int ntype = -1);
 
 	// displacement field
 	void SetDisplacementField(int ndisp) { m_ndisp = ndisp; }

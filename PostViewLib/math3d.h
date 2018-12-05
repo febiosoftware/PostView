@@ -474,6 +474,13 @@ public:
 		m_data[2][0] = a20; m_data[2][1] = a21; m_data[2][2] = a22;
 	}
 
+	mat3f(const mat3fs& a)
+	{
+		m_data[0][0] = a.x ; m_data[0][1] = a.xy; m_data[0][2] = a.xz;
+		m_data[1][0] = a.xy; m_data[1][1] = a.y ; m_data[1][2] = a.yz;
+		m_data[2][0] = a.xz; m_data[2][1] = a.yz; m_data[2][2] = a.z ;
+	}
+
 	float* operator [] (int i) { return m_data[i]; }
 	float& operator () (int i, int j) { return m_data[i][j]; }
 	float operator () (int i, int j) const { return m_data[i][j]; }
@@ -501,6 +508,35 @@ public:
 		return (*this);
 	}
 
+	mat3f& operator /= (float g)
+	{
+		m_data[0][0] /= g;	m_data[0][1] /= g; m_data[0][2] /= g;
+		m_data[1][0] /= g;	m_data[1][1] /= g; m_data[1][2] /= g;
+		m_data[2][0] /= g;	m_data[2][1] /= g; m_data[2][2] /= g;
+		return (*this);
+	}
+
+	mat3f operator += (const mat3f& a)
+	{
+		m_data[0][0] += a.m_data[0][0]; m_data[0][1] += a.m_data[0][1]; m_data[0][2] += a.m_data[0][2];
+		m_data[1][0] += a.m_data[1][0]; m_data[1][1] += a.m_data[1][1]; m_data[1][2] += a.m_data[1][2];
+		m_data[2][0] += a.m_data[2][0]; m_data[2][1] += a.m_data[2][1]; m_data[2][2] += a.m_data[2][2];
+		return (*this);
+	}
+
+	mat3f operator -= (const mat3f& a)
+	{
+		m_data[0][0] -= a.m_data[0][0]; m_data[0][1] -= a.m_data[0][1]; m_data[0][2] -= a.m_data[0][2];
+		m_data[1][0] -= a.m_data[1][0]; m_data[1][1] -= a.m_data[1][1]; m_data[1][2] -= a.m_data[1][2];
+		m_data[2][0] -= a.m_data[2][0]; m_data[2][1] -= a.m_data[2][1]; m_data[2][2] -= a.m_data[2][2];
+		return (*this);
+	}
+
+	mat3fs sym() const
+	{
+		return mat3fs(m_data[0][0], m_data[1][1], m_data[2][2], 0.5f*(m_data[0][1] + m_data[1][0]), 0.5f*(m_data[1][2] + m_data[2][1]), 0.5f*(m_data[0][2] + m_data[2][0]));
+	}
+
 	void zero()
 	{
 		m_data[0][0] = m_data[0][1] = m_data[0][2] = 0.f;
@@ -508,7 +544,7 @@ public:
 		m_data[2][0] = m_data[2][1] = m_data[2][2] = 0.f;
 	}
 
-	vec3f col(int i)
+	vec3f col(int i) const
 	{
 		vec3f r;
 		switch (i)
@@ -516,6 +552,18 @@ public:
 		case 0: r.x = m_data[0][0]; r.y = m_data[1][0]; r.z = m_data[2][0]; break;
 		case 1: r.x = m_data[0][1]; r.y = m_data[1][1]; r.z = m_data[2][1]; break;
 		case 2: r.x = m_data[0][2]; r.y = m_data[1][2]; r.z = m_data[2][2]; break;
+		}
+		return r;
+	}
+
+	vec3f row(int i) const
+	{
+		vec3f r;
+		switch (i)
+		{
+		case 0: r.x = m_data[0][0]; r.y = m_data[0][1]; r.z = m_data[0][2]; break;
+		case 1: r.x = m_data[1][0]; r.y = m_data[1][1]; r.z = m_data[1][2]; break;
+		case 2: r.x = m_data[2][0]; r.y = m_data[2][1]; r.z = m_data[2][2]; break;
 		}
 		return r;
 	}

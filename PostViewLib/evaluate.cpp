@@ -2280,26 +2280,40 @@ vec3f FEModel::EvaluateElemVector(int n, int ntime, int nvec)
 
 //-----------------------------------------------------------------------------
 // Evaluate tensor field at node n
-mat3fs FEModel::EvaluateNodeTensor(int n, int ntime, int nten)
+mat3f FEModel::EvaluateNodeTensor(int n, int ntime, int nten, int ntype)
 {
 	FEState& state = *GetState(ntime);
 	FEMeshBase* mesh = state.GetFEMesh();
 	m_ntime = ntime;
 
-	mat3fs m;
+	mat3f m;
 
 	if (IS_NODE_FIELD(nten))
 	{
 		// get the data ID
 		int ndata = FIELD_CODE(nten);
-		if ((ndata < 0) || (ndata >= state.m_Data.size())) return mat3fs();
+		if ((ndata < 0) || (ndata >= state.m_Data.size())) return mat3f();
 
 		FEMeshData& rd = state.m_Data[ndata];
+		if ((ntype != -1) && (rd.GetType() != ntype)) return m;
 
-		assert(rd.GetType() == DATA_MAT3FS);
-
-		FENodeData_T<mat3fs>& dm = dynamic_cast<FENodeData_T<mat3fs>&>(rd);
-		dm.eval(n, &m);
+		switch (rd.GetType())
+		{
+		case DATA_MAT3FS:
+			{
+				FENodeData_T<mat3fs>& dm = dynamic_cast<FENodeData_T<mat3fs>&>(rd);
+				mat3fs a;
+				dm.eval(n, &a);
+				m = a;
+			}
+			break;
+		case DATA_MAT3F:
+			{
+				FENodeData_T<mat3f>& dm = dynamic_cast<FENodeData_T<mat3f>&>(rd);
+				dm.eval(n, &m);
+			}
+			break;
+		}
 	}
 	else 
 	{
@@ -2307,7 +2321,7 @@ mat3fs FEModel::EvaluateNodeTensor(int n, int ntime, int nten)
 		vector<NodeElemRef>& nel = mesh->NodeElemList(n);
 		if (!nel.empty())
 		{
-			for (int i=0; i<(int) nel.size(); ++i) m += EvaluateElemTensor(nel[i].first, ntime, nten);
+			for (int i=0; i<(int) nel.size(); ++i) m += EvaluateElemTensor(nel[i].first, ntime, nten, ntype);
 			m /= (float) nel.size();
 		}
 	}
@@ -2317,31 +2331,45 @@ mat3fs FEModel::EvaluateNodeTensor(int n, int ntime, int nten)
 
 //-----------------------------------------------------------------------------
 // Evaluate tensor field at face n
-mat3fs FEModel::EvaluateFaceTensor(int n, int ntime, int nten)
+mat3f FEModel::EvaluateFaceTensor(int n, int ntime, int nten, int ntype)
 {
 	FEState& state = *GetState(ntime);
 	FEMeshBase* mesh = state.GetFEMesh();
 	m_ntime = ntime;
 
-	mat3fs m;
+	mat3f m;
 
 	if (IS_FACE_FIELD(nten))
 	{
 		// get the data ID
 		int ndata = FIELD_CODE(nten);
-		if ((ndata < 0) || (ndata >= state.m_Data.size())) return mat3fs();
+		if ((ndata < 0) || (ndata >= state.m_Data.size())) return mat3f();
 		FEMeshData& rd = state.m_Data[ndata];
+		if ((ntype != -1) && (rd.GetType() != ntype)) return m;
 
-		assert(rd.GetType() == DATA_MAT3FS);
-
-		FEFaceData_T<mat3fs,DATA_ITEM>& dm = dynamic_cast<FEFaceData_T<mat3fs,DATA_ITEM>&>(rd);
-		dm.eval(n, &m);
+		switch (rd.GetType())
+		{
+		case DATA_MAT3FS:
+			{
+				mat3fs a;
+				FEFaceData_T<mat3fs,DATA_ITEM>& dm = dynamic_cast<FEFaceData_T<mat3fs,DATA_ITEM>&>(rd);
+				dm.eval(n, &a);
+				m = a;
+			}
+			break;
+		case DATA_MAT3F:
+			{
+				FEFaceData_T<mat3f, DATA_ITEM>& dm = dynamic_cast<FEFaceData_T<mat3f, DATA_ITEM>&>(rd);
+				dm.eval(n, &m);
+			}
+			break;
+		}
 	}
 	else if (IS_NODE_FIELD(nten))
 	{
 		FEFace& f = mesh->Face(n);
 		// take the average of the nodal values
-		for (int i=0; i<f.Nodes(); ++i) m += EvaluateNodeTensor(f.node[i], ntime, nten);
+		for (int i = 0; i<f.Nodes(); ++i) m += EvaluateNodeTensor(f.node[i], ntime, nten, ntype);
 		m /= (float) f.Nodes();
 	}
 	else if (IS_ELEM_FIELD(nten))
@@ -2358,43 +2386,84 @@ mat3fs FEModel::EvaluateFaceTensor(int n, int ntime, int nten)
 
 //-----------------------------------------------------------------------------
 // Evaluate tensor field at element n
-mat3fs FEModel::EvaluateElemTensor(int n, int ntime, int nten)
+mat3f FEModel::EvaluateElemTensor(int n, int ntime, int nten, int ntype)
 {
 	FEState& state = *GetState(ntime);
 	FEMeshBase* mesh = state.GetFEMesh();
 	m_ntime = ntime;
 
-	mat3fs m;
+	mat3f m;
 
 	if (IS_ELEM_FIELD(nten))
 	{
 		// get the data ID
 		int ndata = FIELD_CODE(nten);
-		if ((ndata < 0) || (ndata >= state.m_Data.size())) return mat3fs();
+		if ((ndata < 0) || (ndata >= state.m_Data.size())) return mat3f();
 		FEMeshData& rd = state.m_Data[ndata];
 		int nfmt  = rd.GetFormat();
 
-		assert(rd.GetType() == DATA_MAT3FS);
+		if ((ntype != -1) && (rd.GetType() != ntype)) return m;
 
 		switch (nfmt)
 		{
 		case DATA_ITEM:
 			{
-				FEElemData_T<mat3fs,DATA_ITEM>& dm = dynamic_cast<FEElemData_T<mat3fs,DATA_ITEM>&>(rd);
-				dm.eval(n, &m);
+				switch (rd.GetType())
+				{
+				case DATA_MAT3FS:
+					{
+						FEElemData_T<mat3fs,DATA_ITEM>& dm = dynamic_cast<FEElemData_T<mat3fs,DATA_ITEM>&>(rd);
+						if (dm.active(n))
+						{
+							mat3fs a;
+							dm.eval(n, &a);
+							m = a;
+						}
+					}
+					break;
+				case DATA_MAT3F:
+					{
+						FEElemData_T<mat3f, DATA_ITEM>& dm = dynamic_cast<FEElemData_T<mat3f, DATA_ITEM>&>(rd);
+						if (dm.active(n)) dm.eval(n, &m);
+					}
+					break;
+				}
 			}
 			break;
 		case DATA_COMP:
 			{
-				FEElemData_T<mat3fs,DATA_COMP>& dm = dynamic_cast<FEElemData_T<mat3fs,DATA_COMP>&>(rd);
-				mat3fs mi[FEGenericElement::MAX_NODES];
-				if (dm.active(n))
+				switch (rd.GetType())
 				{
-					dm.eval(n, mi);
-					int ne = mesh->Element(n).Nodes();
-					m = mi[0];
-					for (int i=1; i<ne; ++i) m += mi[i];
-					m /= (float) ne;
+				case DATA_MAT3FS:
+					{
+						FEElemData_T<mat3fs,DATA_COMP>& dm = dynamic_cast<FEElemData_T<mat3fs,DATA_COMP>&>(rd);
+						mat3fs mi[FEGenericElement::MAX_NODES];
+						if (dm.active(n))
+						{
+							dm.eval(n, mi);
+							int ne = mesh->Element(n).Nodes();
+							mat3fs a = mi[0];
+							for (int i=1; i<ne; ++i) a += mi[i];
+							a /= (float) ne;
+
+							m = a;
+						}
+					}
+					break;
+				case DATA_MAT3F:
+					{
+						FEElemData_T<mat3f, DATA_COMP>& dm = dynamic_cast<FEElemData_T<mat3f, DATA_COMP>&>(rd);
+						mat3f mi[FEGenericElement::MAX_NODES];
+						if (dm.active(n))
+						{
+							dm.eval(n, mi);
+							int ne = mesh->Element(n).Nodes();
+							m = mi[0];
+							for (int i = 1; i<ne; ++i) m += mi[i];
+							m /= (float)ne;
+						}
+					}
+					break;
 				}
 			};
 			break;
@@ -2404,7 +2473,7 @@ mat3fs FEModel::EvaluateElemTensor(int n, int ntime, int nten)
 	{
 		FEElement& el = mesh->Element(n);
 		// take the average of the nodal values
-		for (int i=0; i<el.Nodes(); ++i) m += EvaluateNodeTensor(el.m_node[i], ntime, nten);
+		for (int i = 0; i<el.Nodes(); ++i) m += EvaluateNodeTensor(el.m_node[i], ntime, nten, ntype);
 		m /= (float) el.Nodes();
 	}
 	else if (IS_FACE_FIELD(nten))
@@ -2413,8 +2482,6 @@ mat3fs FEModel::EvaluateElemTensor(int n, int ntime, int nten)
 	}
 	else
 	{
-//		assert(false);
-		m = mat3fs();
 	}
 
 	return m;

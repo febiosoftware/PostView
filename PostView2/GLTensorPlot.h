@@ -21,6 +21,12 @@ public:
 		Glyph_Col_Norm
 	};
 
+	enum Vector_Method {
+		VEC_EIGEN,
+		VEC_COLUMN,
+		VEC_ROW
+	};
+
 private:
 	struct TENSOR {
 		vec3f	r[3];	// principal directions
@@ -43,6 +49,9 @@ public:
 public:
 	int GetTensorField() { return m_ntensor; }
 	void SetTensorField(int nfield);
+
+	int GetVectorMethod() const { return m_nmethod; }
+	void SetVectorMethod(int m);
 
 	void SetScaleFactor(float g) { m_scale = g; }
 	double GetScaleFactor() { return m_scale; }
@@ -93,4 +102,6 @@ protected:
 
 	GLCOLOR			m_gcl;	// glyph color (for GLYPH_COL_SOLID)
 	CColorTexture	m_Col;	// glyph color (for not GLYPH_COL_SOLID)
+
+	int		m_nmethod;
 };

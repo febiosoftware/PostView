@@ -761,13 +761,14 @@ bool FELSDYNAPlotExport::Save(FEModel& fem, const char* szfile, bool bflag[6], i
 			{
 				if (bflag[0])
 				{
-					mat3fs m = fem.EvaluateElemTensor(i, l, ncode[0]);
-					s[ 0] = m.x;
-					s[ 1] = m.y;
-					s[ 2] = m.z;
-					s[ 3] = m.xy;
-					s[ 4] = m.yz;
-					s[ 5] = m.xz;
+					mat3f m = fem.EvaluateElemTensor(i, l, ncode[0], DATA_MAT3FS);
+					mat3fs a = m.sym();
+					s[ 0] = a.x;
+					s[ 1] = a.y;
+					s[ 2] = a.z;
+					s[ 3] = a.xy;
+					s[ 4] = a.yz;
+					s[ 5] = a.xz;
 				}
 				if (bflag[1]) 
 				{
@@ -799,13 +800,14 @@ bool FELSDYNAPlotExport::Save(FEModel& fem, const char* szfile, bool bflag[6], i
 				if (bflag[0])
 				{
 					// mid-surface stresses
-					mat3fs m = fem.EvaluateElemTensor(i, l, ncode[0]);
-					s[ 0] = m.x;
-					s[ 1] = m.y;
-					s[ 2] = m.z;
-					s[ 3] = m.xy;
-					s[ 4] = m.yz;
-					s[ 5] = m.xz;
+					mat3f m = fem.EvaluateElemTensor(i, l, ncode[0], DATA_MAT3FS);
+					mat3fs a = m.sym();
+					s[ 0] = a.x;
+					s[ 1] = a.y;
+					s[ 2] = a.z;
+					s[ 3] = a.xy;
+					s[ 4] = a.yz;
+					s[ 5] = a.xz;
 				}
 
 				// inner surface stresses
