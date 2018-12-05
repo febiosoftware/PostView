@@ -296,8 +296,7 @@ void CMaterialPanel::on_enableButton_toggled(bool b)
 	}
 	mdl.UpdateMeshState();
 	mdl.ResetAllStates();
-
-	mdl.Update(true);
+	doc.UpdateFEModel(true);
 	UpdateStates();
 	m_wnd->RedrawGL();
 }

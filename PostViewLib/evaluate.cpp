@@ -2011,8 +2011,19 @@ vec3f FEModel::EvaluateNodeVector(int n, int ntime, int nvec)
 		vector<NodeElemRef>& nel = mesh->NodeElemList(n);
 		if (!nel.empty())
 		{
-			for (int i=0; i<(int) nel.size(); ++i) r += EvaluateElemVector(nel[i].first, ntime, nvec);
-			r /= (float) nel.size();
+			int n = 0;
+			for (int i=0; i<(int) nel.size(); ++i)
+			{
+				int iel = nel[i].first;
+				FEElement& el = mesh->Element(iel);
+				FEMaterial* mat = GetMaterial(el.m_MatID);
+				if (mat->benable)
+				{
+					r += EvaluateElemVector(iel, ntime, nvec);
+					n++;
+				}
+			}
+			if (n != 0) r /= (float)n;
 		}
 	}
 	else if (IS_FACE_FIELD(nvec))
