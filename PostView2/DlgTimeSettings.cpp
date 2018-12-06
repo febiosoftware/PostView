@@ -6,6 +6,7 @@
 #include <QSpinBox>
 #include <QDialogButtonBox>
 #include <QMessageBox>
+#include <QLineEdit>
 #include "Document.h"
 
 class Ui::CDlgTimeSettings
@@ -17,7 +18,7 @@ public:
 	QSpinBox*			end;	
 	QCheckBox*			loop;
 	QCheckBox*			fix;
-	QDoubleSpinBox*		step;
+	QLineEdit*		step;
 
 public:
 	void setupUi(QDialog* parent)
@@ -42,11 +43,10 @@ public:
 		mainLayout->addWidget(fix  = new QCheckBox("fixed time step"));
 
 		pform = new QFormLayout;
-		pform->addRow("Time step size:", step = new QDoubleSpinBox);
+		pform->addRow("Time step size:", step = new QLineEdit);
 		mainLayout->addLayout(pform);
 
-		step->setRange(0.01, 100.0);
-		step->setSingleStep(0.01);
+		step->setValidator(new QDoubleValidator(0.0, 1e5, 4));
 
 		QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
 		mainLayout->addWidget(buttonBox);
@@ -72,7 +72,7 @@ CDlgTimeSettings::CDlgTimeSettings(CDocument* doc, QWidget* parent) : QDialog(pa
 	ui->end->setValue(time.m_end + 1);
 	ui->loop->setChecked(time.m_bloop);
 	ui->fix->setChecked(time.m_bfix);
-	ui->step->setValue(time.m_dt);
+	ui->step->setText(QString::number(time.m_dt));
 }
 
 void CDlgTimeSettings::accept()
@@ -86,7 +86,7 @@ void CDlgTimeSettings::accept()
 	time.m_end   = ui->end->value() - 1;
 	time.m_bloop = ui->loop->isChecked();
 	time.m_bfix  = ui->fix->isChecked();
-	time.m_dt    = ui->step->value();
+	time.m_dt    = ui->step->text().toDouble();
 
 	if ((time.m_start < 0) || (time.m_end >= N) || (time.m_start > time.m_end))
 	{
