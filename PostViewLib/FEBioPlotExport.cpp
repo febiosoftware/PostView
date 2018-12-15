@@ -787,7 +787,7 @@ bool FEBioPlotExport::FillElemDataArray(vector<float>& val, FEMeshData& meshData
 				}
 			}
 		}
-		return error("Unknown data type in FillElemDataArray");
+		else return error("Unknown data type in FillElemDataArray");
 	}
 	else if (nfmt == DATA_COMP)
 	{

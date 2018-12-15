@@ -45,7 +45,7 @@ FEVTKExport::~FEVTKExport(void)
 
 void FEVTKExport::ExportAllStates(bool b)
 {
-	
+    m_bwriteAllStates = b;
 }
 
 bool FEVTKExport::Save(FEModel& fem, const char* szfile)
