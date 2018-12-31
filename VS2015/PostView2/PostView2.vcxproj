@@ -1,0 +1,355 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{304993CF-BC63-4DEC-819F-524CDD833FCF}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>PostView2</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(QT512DIR)\include;$(QT512DIR)\include\QtGui;$(QT512DIR)\include\QtWidgets;$(SolutionDir)..;$(ZLIBDIR)\contrib\vstudio\vc14\;$(ZLIBDIR);$(GLEWDIR)\include\GL;$(FFMPEGDIR)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)x64\Debug;$(QT512DIR)\lib;$(GLEWDIR)\lib\Release\x64;$(FFMPEGDIR)\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(QT512DIR)\include;$(QT512DIR)\include\QtGui;$(QT512DIR)\include\QtWidgets;$(SolutionDir)..;$(ZLIBDIR);$(GLEWDIR)\include\GL;$(FFMPEGDIR)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)x64\Release;$(QT512DIR)\lib;$(GLEWDIR)\lib\Release\x64;$(FFMPEGDIR)\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;FFMPEG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;postviewlib.lib;glwlib.lib;glew32.lib;opengl32.lib;glu32.lib;$(ZLIBDIR)\contrib\vstudio\vc14\Debug\zlibstaticd.lib;vfw32.lib;avcodec.lib;avutil.lib;swscale.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;FFMPEG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Qt5Core.lib;Qt5Gui.lib;Qt5Widgets.lib;postviewlib.lib;glwlib.lib;glew32.lib;opengl32.lib;glu32.lib;$(ZLIBDIR)\contrib\vstudio\vc14\Release\zlib.lib;vfw32.lib;avcodec.lib;avutil.lib;swscale.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\PostView2\3PointAngleTool.h" />
+    <ClInclude Include="..\..\PostView2\4PointAngleTool.h" />
+    <ClInclude Include="..\..\PostView2\AddImage3DTool.h" />
+    <ClInclude Include="..\..\PostView2\AddPointTool.h" />
+    <ClInclude Include="..\..\PostView2\AreaCoverageTool.h" />
+    <ClInclude Include="..\..\PostView2\AVIAnimation.h" />
+    <ClInclude Include="..\..\PostView2\CColorButton.h" />
+    <ClInclude Include="..\..\PostView2\CIntInput.h" />
+    <ClInclude Include="..\..\PostView2\CommandPanel.h" />
+    <ClInclude Include="..\..\PostView2\convert.h" />
+    <ClInclude Include="..\..\PostView2\DataFieldSelector.h" />
+    <ClInclude Include="..\..\PostView2\DataPanel.h" />
+    <ClInclude Include="..\..\PostView2\DistanceMapTool.h" />
+    <ClInclude Include="..\..\PostView2\DlgAddEquation.h" />
+    <ClInclude Include="..\..\PostView2\DlgExportAscii.h" />
+    <ClInclude Include="..\..\PostView2\DlgExportLSDYNA.h" />
+    <ClInclude Include="..\..\PostView2\DlgExportVTK.h" />
+    <ClInclude Include="..\..\PostView2\DlgExportXPLT.h" />
+    <ClInclude Include="..\..\PostView2\DlgFileInfo.h" />
+    <ClInclude Include="..\..\PostView2\DlgFind.h" />
+    <ClInclude Include="..\..\PostView2\DlgImportXPLT.h" />
+    <ClInclude Include="..\..\PostView2\DlgSelectRange.h" />
+    <ClInclude Include="..\..\PostView2\DlgTimeSettings.h" />
+    <ClInclude Include="..\..\PostView2\DlgViewSettings.h" />
+    <ClInclude Include="..\..\PostView2\DlgWidgetProps.h" />
+    <ClInclude Include="..\..\PostView2\Document.h" />
+    <ClInclude Include="..\..\PostView2\DragBox.h" />
+    <ClInclude Include="..\..\PostView2\FEKinemat.h" />
+    <ClInclude Include="..\..\PostView2\FileThread.h" />
+    <ClInclude Include="..\..\PostView2\FileViewer.h" />
+    <ClInclude Include="..\..\PostView2\GLColorMap.h" />
+    <ClInclude Include="..\..\PostView2\GLContext.h" />
+    <ClInclude Include="..\..\PostView2\GLDataMap.h" />
+    <ClInclude Include="..\..\PostView2\GLDisplacementMap.h" />
+    <ClInclude Include="..\..\PostView2\GLIsoSurfacePlot.h" />
+    <ClInclude Include="..\..\PostView2\GLLinePlot.h" />
+    <ClInclude Include="..\..\PostView2\GLMesh.h" />
+    <ClInclude Include="..\..\PostView2\GLModel.h" />
+    <ClInclude Include="..\..\PostView2\GLParticleFlowPlot.h" />
+    <ClInclude Include="..\..\PostView2\GLPlane.h" />
+    <ClInclude Include="..\..\PostView2\GLPlaneCutPlot.h" />
+    <ClInclude Include="..\..\PostView2\GLPlot.h" />
+    <ClInclude Include="..\..\PostView2\GLSlicePLot.h" />
+    <ClInclude Include="..\..\PostView2\GLStreamLinePlot.h" />
+    <ClInclude Include="..\..\PostView2\GLTensorPlot.h" />
+    <ClInclude Include="..\..\PostView2\GLVectorPlot.h" />
+    <ClInclude Include="..\..\PostView2\GLView.h" />
+    <ClInclude Include="..\..\PostView2\GraphWindow.h" />
+    <ClInclude Include="..\..\PostView2\ImgAnimation.h" />
+    <ClInclude Include="..\..\PostView2\ImportLinesTool.h" />
+    <ClInclude Include="..\..\PostView2\IntegrateWindow.h" />
+    <ClInclude Include="..\..\PostView2\MainWindow.h" />
+    <ClInclude Include="..\..\PostView2\MaterialPanel.h" />
+    <ClInclude Include="..\..\PostView2\MeasureAreaTool.h" />
+    <ClInclude Include="..\..\PostView2\MeasureVolumeTool.h" />
+    <ClInclude Include="..\..\PostView2\ModelViewer.h" />
+    <ClInclude Include="..\..\PostView2\MPEGAnimation.h" />
+    <ClInclude Include="..\..\PostView2\PlaneTool.h" />
+    <ClInclude Include="..\..\PostView2\PlotMixTool.h" />
+    <ClInclude Include="..\..\PostView2\PlotWidget.h" />
+    <ClInclude Include="..\..\PostView2\PointCongruencyTool.h" />
+    <ClInclude Include="..\..\PostView2\PointDistanceTool.h" />
+    <ClInclude Include="..\..\PostView2\PropertyList.h" />
+    <ClInclude Include="..\..\PostView2\PropertyListForm.h" />
+    <ClInclude Include="..\..\PostView2\PropertyListView.h" />
+    <ClInclude Include="..\..\PostView2\ShellThicknessTool.h" />
+    <ClInclude Include="..\..\PostView2\SphereFitTool.h" />
+    <ClInclude Include="..\..\PostView2\StatePanel.h" />
+    <ClInclude Include="..\..\PostView2\StatsWindow.h" />
+    <ClInclude Include="..\..\PostView2\stdafx.h" />
+    <ClInclude Include="..\..\PostView2\StrainMapTool.h" />
+    <ClInclude Include="..\..\PostView2\SummaryWindow.h" />
+    <ClInclude Include="..\..\PostView2\targetver.h" />
+    <ClInclude Include="..\..\PostView2\TimeController.h" />
+    <ClInclude Include="..\..\PostView2\TimePanel.h" />
+    <ClInclude Include="..\..\PostView2\Tool.h" />
+    <ClInclude Include="..\..\PostView2\ToolsPanel.h" />
+    <ClInclude Include="..\..\PostView2\TransformTool.h" />
+    <ClInclude Include="..\..\PostView2\ui_mainwindow.h" />
+    <ClInclude Include="..\..\PostView2\ui_timepanel.h" />
+    <ClInclude Include="..\..\PostView2\version.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\PostView2\3PointAngleTool.cpp" />
+    <ClCompile Include="..\..\PostView2\4PointAngleTool.cpp" />
+    <ClCompile Include="..\..\PostView2\AddImage3DTool.cpp" />
+    <ClCompile Include="..\..\PostView2\AddPointTool.cpp" />
+    <ClCompile Include="..\..\PostView2\AreaCoverageTool.cpp" />
+    <ClCompile Include="..\..\PostView2\AVIAnimation.cpp" />
+    <ClCompile Include="..\..\PostView2\CColorButton.cpp" />
+    <ClCompile Include="..\..\PostView2\CDlgImportXPLT.cpp" />
+    <ClCompile Include="..\..\PostView2\CIntInput.cpp" />
+    <ClCompile Include="..\..\PostView2\CommandPanel.cpp" />
+    <ClCompile Include="..\..\PostView2\DataFieldSelector.cpp" />
+    <ClCompile Include="..\..\PostView2\DataPanel.cpp" />
+    <ClCompile Include="..\..\PostView2\DistanceMapTool.cpp" />
+    <ClCompile Include="..\..\PostView2\DlgAddEquation.cpp" />
+    <ClCompile Include="..\..\PostView2\DlgExportAscii.cpp" />
+    <ClCompile Include="..\..\PostView2\DlgExportLSDYNA.cpp" />
+    <ClCompile Include="..\..\PostView2\DlgExportVTK.cpp" />
+    <ClCompile Include="..\..\PostView2\DlgExportXPLT.cpp" />
+    <ClCompile Include="..\..\PostView2\DlgFileInfo.cpp" />
+    <ClCompile Include="..\..\PostView2\DlgFind.cpp" />
+    <ClCompile Include="..\..\PostView2\DlgSelectRange.cpp" />
+    <ClCompile Include="..\..\PostView2\DlgTimeSettings.cpp" />
+    <ClCompile Include="..\..\PostView2\DlgViewSettings.cpp" />
+    <ClCompile Include="..\..\PostView2\DlgWidgetProps.cpp" />
+    <ClCompile Include="..\..\PostView2\Document.cpp" />
+    <ClCompile Include="..\..\PostView2\DragBox.cpp" />
+    <ClCompile Include="..\..\PostView2\FEKinemat.cpp" />
+    <ClCompile Include="..\..\PostView2\FileThread.cpp" />
+    <ClCompile Include="..\..\PostView2\FileViewer.cpp" />
+    <ClCompile Include="..\..\PostView2\GLColorMap.cpp" />
+    <ClCompile Include="..\..\PostView2\GLContext.cpp" />
+    <ClCompile Include="..\..\PostView2\GLDataMap.cpp" />
+    <ClCompile Include="..\..\PostView2\GLDisplacementMap.cpp" />
+    <ClCompile Include="..\..\PostView2\GLIsoSurfacePlot.cpp" />
+    <ClCompile Include="..\..\PostView2\GLLinePlot.cpp" />
+    <ClCompile Include="..\..\PostView2\GLMesh.cpp" />
+    <ClCompile Include="..\..\PostView2\GLModel.cpp" />
+    <ClCompile Include="..\..\PostView2\GLParticleFlowPlot.cpp" />
+    <ClCompile Include="..\..\PostView2\GLPlane.cpp" />
+    <ClCompile Include="..\..\PostView2\GLPlaneCutPlot.cpp" />
+    <ClCompile Include="..\..\PostView2\GLPlot.cpp" />
+    <ClCompile Include="..\..\PostView2\GLSlicePLot.cpp" />
+    <ClCompile Include="..\..\PostView2\GLStreamLinePlot.cpp" />
+    <ClCompile Include="..\..\PostView2\GLTensorPlot.cpp" />
+    <ClCompile Include="..\..\PostView2\GLVectorPlot.cpp" />
+    <ClCompile Include="..\..\PostView2\GLView.cpp" />
+    <ClCompile Include="..\..\PostView2\GraphWindow.cpp" />
+    <ClCompile Include="..\..\PostView2\ImgAnimation.cpp" />
+    <ClCompile Include="..\..\PostView2\ImportLinesTool.cpp" />
+    <ClCompile Include="..\..\PostView2\IntegrateWindow.cpp" />
+    <ClCompile Include="..\..\PostView2\MainWindow.cpp" />
+    <ClCompile Include="..\..\PostView2\MaterialPanel.cpp" />
+    <ClCompile Include="..\..\PostView2\MeasureAreaTool.cpp" />
+    <ClCompile Include="..\..\PostView2\MeasureVolumeTool.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_AddImage3DTool.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_AreaCoverageTool.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_CColorButton.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_DataFieldSelector.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_DataPanel.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_DistanceMapTool.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_DlgAddEquation.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_DlgExportXPLT.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_DlgViewSettings.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_DlgWidgetProps.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_FileThread.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_FileViewer.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_GLView.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_GraphWindow.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_ImportLinesTool.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_IntegrateWindow.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_MainWindow.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_MaterialPanel.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_ModelViewer.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_PlaneTool.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_PlotMixTool.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_PlotWidget.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_PointCongruencyTool.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_PropertyListForm.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_PropertyListView.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_SphereFitTool.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_StatePanel.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_StatsWindow.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_StrainMapTool.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_SummaryWindow.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_TimeController.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_TimePanel.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_Tool.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_ToolsPanel.cpp" />
+    <ClCompile Include="..\..\PostView2\ModelViewer.cpp" />
+    <ClCompile Include="..\..\PostView2\MPEGAnimation.cpp" />
+    <ClCompile Include="..\..\PostView2\PlaneTool.cpp" />
+    <ClCompile Include="..\..\PostView2\PlotMixTool.cpp" />
+    <ClCompile Include="..\..\PostView2\PlotWidget.cpp" />
+    <ClCompile Include="..\..\PostView2\PointCongruencyTool.cpp" />
+    <ClCompile Include="..\..\PostView2\PointDistanceTool.cpp" />
+    <ClCompile Include="..\..\PostView2\PostView2.cpp" />
+    <ClCompile Include="..\..\PostView2\PropertyList.cpp" />
+    <ClCompile Include="..\..\PostView2\PropertyListForm.cpp" />
+    <ClCompile Include="..\..\PostView2\PropertyListView.cpp" />
+    <ClCompile Include="..\..\PostView2\qrc_postview.cpp" />
+    <ClCompile Include="..\..\PostView2\render.cpp" />
+    <ClCompile Include="..\..\PostView2\session.cpp" />
+    <ClCompile Include="..\..\PostView2\ShellThicknessTool.cpp" />
+    <ClCompile Include="..\..\PostView2\SphereFitTool.cpp" />
+    <ClCompile Include="..\..\PostView2\StatePanel.cpp" />
+    <ClCompile Include="..\..\PostView2\StatsWindow.cpp" />
+    <ClCompile Include="..\..\PostView2\stdafx.cpp" />
+    <ClCompile Include="..\..\PostView2\StrainMapTool.cpp" />
+    <ClCompile Include="..\..\PostView2\SummaryWindow.cpp" />
+    <ClCompile Include="..\..\PostView2\TimeController.cpp" />
+    <ClCompile Include="..\..\PostView2\TimePanel.cpp" />
+    <ClCompile Include="..\..\PostView2\Tool.cpp" />
+    <ClCompile Include="..\..\PostView2\ToolsPanel.cpp" />
+    <ClCompile Include="..\..\PostView2\TransformTool.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
