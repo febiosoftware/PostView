@@ -47,6 +47,11 @@ bool FEKinemat::Apply(const char* szfile, const char* szkine)
 
 	// update displacements on all states
 	CGLModel& mdl = *m_pDoc->GetGLModel();
+	if (mdl.GetDisplacementMap() == nullptr)
+	{
+		mdl.AddDisplacementMap("Displacement");
+	}
+
 	int nstates = mdl.GetFEModel()->GetStates();
 	for (int i=0; i<nstates; ++i) mdl.UpdateDisplacements(i, true);
 

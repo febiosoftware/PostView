@@ -66,7 +66,7 @@ public:
 	void Update(bool breset);
 	void UpdateDisplacements(int nstate, bool breset = false);
 
-	bool AddDisplacementMap();
+	bool AddDisplacementMap(const char* szvectorField = 0);
 
 	void RemoveDisplacementMap();
 

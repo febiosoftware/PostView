@@ -216,8 +216,10 @@ void CGLModel::SetSmoothingAngle(double w)
 }
 
 //-----------------------------------------------------------------------------
-bool CGLModel::AddDisplacementMap()
+bool CGLModel::AddDisplacementMap(const char* szvectorField)
 {
+	if (szvectorField == nullptr) szvectorField = "displacement";
+
 	FEModel* ps = GetFEModel();
 
 	// see if the mesh has any vector fields
@@ -229,7 +231,7 @@ bool CGLModel::AddDisplacementMap()
 	for (int i=0; i<pdm->DataFields(); ++i, ++pd)
 	{
 		if ((*pd)->Type() == DATA_VEC3F) ++nv;
-		if ((*pd)->GetName() == "displacement") ndisp = i;
+		if ((*pd)->GetName() == szvectorField) ndisp = i;
 	}
 
 	if (nv == 0) return false;
