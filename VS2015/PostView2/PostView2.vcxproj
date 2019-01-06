@@ -146,7 +146,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Qt5Core.lib;Qt5Gui.lib;Qt5Widgets.lib;postviewlib.lib;glwlib.lib;glew32.lib;opengl32.lib;glu32.lib;$(ZLIBDIR)\contrib\vstudio\vc14\Release\zlib.lib;vfw32.lib;avcodec.lib;avutil.lib;swscale.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qt5Core.lib;Qt5Gui.lib;Qt5Widgets.lib;postviewlib.lib;glwlib.lib;glew32.lib;opengl32.lib;glu32.lib;$(ZLIBDIR)\contrib\vstudio\vc14\Release\zlibstatic.lib;vfw32.lib;avcodec.lib;avutil.lib;swscale.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
