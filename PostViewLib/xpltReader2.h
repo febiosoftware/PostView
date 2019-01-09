@@ -219,6 +219,39 @@ public:
 		NodeSet(const NodeSet& s) { nn = s.nn; node = s.node; strncpy(szname, s.szname, 64); }
 	};
 
+	class XMesh
+	{
+	public:
+		vector<MATERIAL>	m_Mat;
+		vector<NODE>		m_Node;
+		vector<Domain>		m_Dom;
+		vector<Surface>		m_Surf;
+		vector<NodeSet>		m_NodeSet;
+
+	public:
+		void Clear();
+
+		int materials() const { return (int)m_Mat.size(); }
+		void addMaterial(MATERIAL& mat);
+		MATERIAL& material(int i) { return m_Mat[i]; }
+
+		int nodes() const { return (int)m_Node.size(); }
+		NODE& node(int i) { return m_Node[i]; }
+		void addNodes(std::vector<NODE>& nodes);
+
+		int domains() const { return (int)m_Dom.size(); }
+		void addDomain(Domain& dom);
+		Domain& domain(int i) { return m_Dom[i]; }
+
+		int surfaces() const { return (int)m_Surf.size(); }
+		void addSurface(Surface& surf);
+		Surface& surface(int i) { return m_Surf[i]; }
+
+		int nodeSets() const { return (int)m_NodeSet.size(); }
+		void addNodeSet(NodeSet& nset);
+		NodeSet& nodeSet(int i) { return m_NodeSet[i]; }
+	};
+
 public:
 	XpltReader2(xpltFileReader* xplt);
 	~XpltReader2();
@@ -272,11 +305,7 @@ protected:
 
 protected:
 	Dictionary			m_dic;
-	vector<MATERIAL>	m_Mat;
-	vector<NODE>		m_Node;
-	vector<Domain>		m_Dom;
-	vector<Surface>		m_Surf;
-	vector<NodeSet>		m_NodeSet;
+	XMesh				m_xmesh;
 
 	bool	m_bHasDispl;			// has displacement field
 	bool	m_bHasStress;			// has stress field

@@ -419,10 +419,9 @@ template <typename T, Data_Format fmt> class FEElementData : public FEElemData_T
 template <typename T> class FEElementData<T, DATA_ITEM> : public FEElemData_T<T, DATA_ITEM>
 {
 public:
-	FEElementData(FEState* state, FEDataField* pdf) : FEElemData_T<T, DATA_ITEM>(state, pdf), m_elem(pdf->m_item)
+	FEElementData(FEState* state, FEDataField* pdf) : FEElemData_T<T, DATA_ITEM>(state, pdf)
 	{ 
-		if (m_elem.empty())
-			m_elem.assign(state->GetFEMesh()->Elements(), -1); 
+		m_elem.assign(state->GetFEMesh()->Elements(), -1); 
 	}
 	void eval(int n, T* pv) { assert(m_elem[n] >= 0); (*pv) = m_data[m_elem[n]]; }
 	void set(int n, const T& v) { assert(m_elem[n] >= 0); m_data[m_elem[n]] = v; }
@@ -443,7 +442,7 @@ public:
 
 protected:
 	vector<T>		m_data;
-	vector<int>&	m_elem;
+	vector<int>		m_elem;
 };
 
 // *** specialization for DATA_REGION format ***

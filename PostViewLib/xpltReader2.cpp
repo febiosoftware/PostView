@@ -30,7 +30,48 @@ template <class Type> void ReadElemData_REGION(IArchive& ar, XpltReader2::Domain
 	df.add(elem, a);
 }
 
+
+//=============================================================================
+void XpltReader2::XMesh::Clear()
+{
+	m_Mat.clear();
+	m_Node.clear();
+	m_Dom.clear();
+	m_Surf.clear();
+}
+
 //-----------------------------------------------------------------------------
+void XpltReader2::XMesh::addMaterial(MATERIAL& mat)
+{
+	m_Mat.push_back(mat);
+}
+
+//-----------------------------------------------------------------------------
+void XpltReader2::XMesh::addNodes(std::vector<XpltReader2::NODE>& nodes)
+{
+	m_Node.insert(m_Node.end(), nodes.begin(), nodes.end());
+}
+
+//-----------------------------------------------------------------------------
+void XpltReader2::XMesh::addDomain(XpltReader2::Domain& dom)
+{
+	m_Dom.push_back(dom);
+}
+
+//-----------------------------------------------------------------------------
+void XpltReader2::XMesh::addSurface(XpltReader2::Surface& surf)
+{
+	m_Surf.push_back(surf);
+}
+
+//-----------------------------------------------------------------------------
+void XpltReader2::XMesh::addNodeSet(XpltReader2::NodeSet& nset)
+{
+	m_NodeSet.push_back(nset);
+}
+
+//=============================================================================
+
 XpltReader2::XpltReader2(xpltFileReader* xplt) : xpltParser(xplt)
 {
 	m_pstate = 0;
@@ -45,10 +86,7 @@ XpltReader2::~XpltReader2()
 void XpltReader2::Clear()
 {
 	m_dic.Clear();
-	m_Mat.clear();
-	m_Node.clear();
-	m_Dom.clear();
-	m_Surf.clear();
+	m_xmesh.Clear();
 	m_bHasDispl = false;
 	m_bHasStress = false;
 	m_bHasNodalStress = false;
@@ -72,6 +110,10 @@ bool XpltReader2::Load(FEModel& fem)
 	m_ar.CloseChunk();
 	if (m_ar.OpenChunk() != IO_END) return false;
 
+	// At this point we'll assume we can read the mesh in, so clear the model
+	// clear the state data
+	fem.ClearStates();
+
 	// read the first Mesh section
 	if (m_ar.OpenChunk() == IO_OK)
 	{
@@ -83,9 +125,6 @@ bool XpltReader2::Load(FEModel& fem)
 
 	// Clear the end-flag of the mesh section
 	if (m_ar.OpenChunk() != IO_END) return false;
-
-	// Build the mesh
-	if (BuildMesh(fem) == false) return false;
 
 	// read the state sections (these could be compressed)
 	const xpltFileReader::HEADER& hdr = m_xplt->GetHeader();
@@ -116,6 +155,10 @@ bool XpltReader2::Load(FEModel& fem)
 						}
 					}
 				}
+			}
+			else if (m_ar.GetChunkID() == PLT_MESH)
+			{
+				if (ReadMesh(fem) == false) return errf("Error while reading mesh section.");
 			}
 			else errf("Error while reading state data.");
 			m_ar.CloseChunk();
@@ -543,7 +586,7 @@ bool XpltReader2::ReadPartsSection(FEModel& fem)
 				m_ar.CloseChunk();
 			}
 			strcpy(m.szname, sz);
-			m_Mat.push_back(m);
+			m_xmesh.addMaterial(m);
 		}
 		else
 		{
@@ -561,11 +604,12 @@ void XpltReader2::CreateMaterials(FEModel& fem)
 {
 	// initialize material properties
 	fem.ClearMaterials();
-	int nmat = (int) m_Mat.size();
+	int nmat = m_xmesh.materials();
 	for (int i=0; i<nmat; i++)
 	{
+		MATERIAL& xm = m_xmesh.material(i);
 		FEMaterial m;
-		m.SetName(m_Mat[i].szname);
+		m.SetName(xm.szname);
 		fem.AddMaterial(m);
 	}
 }
@@ -573,6 +617,10 @@ void XpltReader2::CreateMaterials(FEModel& fem)
 //-----------------------------------------------------------------------------
 bool XpltReader2::ReadMesh(FEModel &fem)
 {
+	// clear the current XMesh
+	m_xmesh.Clear();
+
+	// read the mesh in
 	while (m_ar.OpenChunk() == IO_OK)
 	{
 		switch (m_ar.GetChunkID())
@@ -588,6 +636,9 @@ bool XpltReader2::ReadMesh(FEModel &fem)
 		}
 		m_ar.CloseChunk();
 	}
+
+	// create a FE mesh
+	if (BuildMesh(fem) == false) return false;
 
 	return true;
 }
@@ -619,14 +670,16 @@ bool XpltReader2::ReadNodeSection(FEModel &fem)
 				if (nodes == 0) return errf("Missing or invalid node header section");
 				if (dim   == 0) return errf("Missing or invalid node header section");
 
+				vector<NODE> allNodes;
 				NODE node = {-1, 0.f, 0.f, 0.f};
 				for (int i=0; i<nodes; ++i)
 				{
 					m_ar.read(node.id);
 					m_ar.read(node.x, dim);
 
-					m_Node.push_back(node);
+					allNodes.push_back(node);
 				}
+				m_xmesh.addNodes(allNodes);
 			}
 			break;
 		default:
@@ -707,7 +760,7 @@ bool XpltReader2::ReadDomainSection(FEModel &fem)
 							m_ar.read(n, ne+1);
 							e.index = index++;
 							e.eid = n[0];
-							for (int i=0; i<ne; ++i) { e.node[i] = n[i+1]; assert(e.node[i] < (int)m_Node.size()); }
+							for (int i=0; i<ne; ++i) { e.node[i] = n[i+1]; assert(e.node[i] < m_xmesh.nodes()); }
 							D.elem.push_back(e);
 							D.elist.push_back(e.index);
 						}
@@ -728,7 +781,7 @@ bool XpltReader2::ReadDomainSection(FEModel &fem)
 			}
 			assert(D.ne == D.elem.size());
 			D.nid = nd++;
-			m_Dom.push_back(D);
+			m_xmesh.addDomain(D);
 		}
 		else
 		{
@@ -796,7 +849,7 @@ bool XpltReader2::ReadSurfaceSection(FEModel &fem)
 				m_ar.CloseChunk();
 			}
 			assert(S.nfaces == S.face.size());
-			m_Surf.push_back(S);
+			m_xmesh.addSurface(S);
 		}
 		else
 		{
@@ -848,7 +901,7 @@ bool XpltReader2::ReadNodeSetSection(FEModel& fem)
 				}
 				m_ar.CloseChunk();
 			}
-			m_NodeSet.push_back(S);
+			m_xmesh.addNodeSet(S);
 		}
 		else
 		{
@@ -864,23 +917,20 @@ bool XpltReader2::ReadNodeSetSection(FEModel& fem)
 //-----------------------------------------------------------------------------
 bool XpltReader2::BuildMesh(FEModel &fem)
 {
-	// clear the state data
-	fem.ClearStates();
-
 	// count all nodes
-	int NN = (int) m_Node.size();
+	int NN = m_xmesh.nodes();
 
 	// count all elements
-	int ND = (int) m_Dom.size();
+	int ND = m_xmesh.domains();
 	int NE = 0;
-	for (int i=0; i<ND; ++i) NE += m_Dom[i].ne;
+	for (int i=0; i<ND; ++i) NE += m_xmesh.domain(i).ne;
 
 	// find the element type
-	int ntype = m_Dom[0].etype;
+	int ntype = m_xmesh.domain(0).etype;
 	bool blinear = true;	// all linear elements flag
 	for (int i=0; i<ND; ++i)
 	{
-		int domType = m_Dom[i].etype;
+		int domType = m_xmesh.domain(i).etype;
 		if (domType != ntype) ntype = -1;
 		if ((domType != PLT_ELEM_TRUSS) && 
 			(domType != PLT_ELEM_TRI) && 
@@ -902,7 +952,7 @@ bool XpltReader2::BuildMesh(FEModel &fem)
 		int nmat = fem.Materials();
 		for (int i=0; i<ND; i++)
 		{
-			Domain& D = m_Dom[i];
+			Domain& D = m_xmesh.domain(i);
 			for (int j=0; j<D.ne; ++j)
 			{
 				ELEM& E = D.elem[j];
@@ -922,7 +972,7 @@ bool XpltReader2::BuildMesh(FEModel &fem)
 		int nmat = fem.Materials();
 		for (int i=0; i<ND; i++)
 		{
-			Domain& D = m_Dom[i];
+			Domain& D = m_xmesh.domain(i);
 			for (int j=0; j<D.ne; ++j)
 			{
 				ELEM& E = D.elem[j];
@@ -944,7 +994,7 @@ bool XpltReader2::BuildMesh(FEModel &fem)
 			int nmat = fem.Materials();
 			for (int i=0; i<ND; i++)
 			{
-				Domain& D = m_Dom[i];
+				Domain& D = m_xmesh.domain(i);
 				for (int j=0; j<D.ne; ++j)
 				{
 					ELEM& E = D.elem[j];
@@ -981,7 +1031,7 @@ bool XpltReader2::BuildMesh(FEModel &fem)
 			int nmat = fem.Materials();
 			for (int i=0; i<ND; i++)
 			{
-				Domain& D = m_Dom[i];
+				Domain& D = m_xmesh.domain(i);
 				for (int j=0; j<D.ne; ++j)
 				{
 					ELEM& E = D.elem[j];
@@ -1018,11 +1068,11 @@ bool XpltReader2::BuildMesh(FEModel &fem)
 	}
 
 	// read the nodal coordinates
-	NN = (int) m_Node.size();
+	NN = m_xmesh.nodes();
 	for (int i=0; i<NN; i++)
 	{
 		FENode& n = pmesh->Node(i);
-		NODE& N = m_Node[i];
+		NODE& N = m_xmesh.node(i);
 
 		// assign coordinates
 		n.m_r0 = vec3f(N.x[0], N.x[1], N.x[2]);
@@ -1056,9 +1106,9 @@ bool XpltReader2::BuildMesh(FEModel &fem)
 	FENodeFaceTable NFT(pmesh);
 
 	// next, we reindex the surfaces
-	for (int n=0; n<(int) m_Surf.size(); ++n)
+	for (int n=0; n< m_xmesh.surfaces(); ++n)
 	{
-		Surface& s = m_Surf[n];
+		Surface& s = m_xmesh.surface(n);
 		for (int i=0; i<s.nfaces; ++i)
 		{
 			FACE& f = s.face[i];
@@ -1069,9 +1119,9 @@ bool XpltReader2::BuildMesh(FEModel &fem)
 
 	// let's create the nodesets
 	char szname[128]={0};
-	for (int n=0; n<(int)m_NodeSet.size(); ++n)
+	for (int n=0; n< m_xmesh.nodeSets(); ++n)
 	{
-		NodeSet& s = m_NodeSet[n];
+		NodeSet& s = m_xmesh.nodeSet(n);
 		FENodeSet* ps = new FENodeSet(pmesh);
 		if (s.szname[0]==0) { sprintf(szname, "nodeset%02d",n+1); ps->SetName(szname); }
 		else ps->SetName(s.szname);
@@ -1080,9 +1130,9 @@ bool XpltReader2::BuildMesh(FEModel &fem)
 	}
 
 	// let's create the FE surfaces
-	for (int n=0; n<(int) m_Surf.size(); ++n)
+	for (int n=0; n< m_xmesh.surfaces(); ++n)
 	{
-		Surface& s = m_Surf[n];
+		Surface& s = m_xmesh.surface(n);
 		FESurface* ps = new FESurface(pmesh);
 		if (s.szname[0]==0) { sprintf(szname, "surface%02d",n+1); ps->SetName(szname); }
 		else ps->SetName(s.szname);
@@ -1092,9 +1142,9 @@ bool XpltReader2::BuildMesh(FEModel &fem)
 	}
 
 	// let's create the parts
-	for (int n=0; n<(int) m_Dom.size(); ++n)
+	for (int n=0; n< m_xmesh.domains(); ++n)
 	{
-		Domain& s = m_Dom[n];
+		Domain& s = m_xmesh.domain(n);
 		FEPart* pg = new FEPart(pmesh);
 		if (s.szname[0]==0) { sprintf(szname, "part%02d",n+1); pg->SetName(szname); }
 		else pg->SetName(s.szname);
@@ -1314,12 +1364,12 @@ bool XpltReader2::ReadElemData(FEModel &fem, FEState* pstate)
 					while (m_ar.OpenChunk() == IO_OK)
 					{
 						int nd = m_ar.GetChunkID() - 1;
-						assert((nd >= 0)&&(nd < (int)m_Dom.size()));
-						if ((nd < 0) || (nd >= (int) m_Dom.size())) return errf("Failed reading all state data");
+						assert((nd >= 0)&&(nd < m_xmesh.domains()));
+						if ((nd < 0) || (nd >= (int)m_xmesh.domains())) return errf("Failed reading all state data");
 
 						int nfield = dm.FindDataField(it.szname);
 
-						Domain& dom = m_Dom[nd];
+						Domain& dom = m_xmesh.domain(nd);
 						FEElemItemData& ed = dynamic_cast<FEElemItemData&>(pstate->m_Data[nfield]);
 						switch (it.nfmt)
 						{
@@ -1657,12 +1707,12 @@ bool XpltReader2::ReadFaceData(FEModel& fem, FEState* pstate)
 					while (m_ar.OpenChunk() == IO_OK)
 					{
 						int ns = m_ar.GetChunkID() - 1;
-						assert((ns >= 0)&&(ns < (int)m_Surf.size()));
-						if ((ns < 0) || (ns >= (int)m_Surf.size())) return errf("Failed reading all state data");
+						assert((ns >= 0)&&(ns < m_xmesh.surfaces()));
+						if ((ns < 0) || (ns >= m_xmesh.surfaces())) return errf("Failed reading all state data");
 
 						int nfield = dm.FindDataField(it.szname);
 
-						Surface& s = m_Surf[ns];
+						Surface& s = m_xmesh.surface(ns);
 						switch (it.nfmt)
 						{
 						case FMT_NODE  : if (ReadFaceData_NODE  (mesh, s, pstate->m_Data[nfield], it.ntype) == false) return errf("Failed reading face data"); break;
