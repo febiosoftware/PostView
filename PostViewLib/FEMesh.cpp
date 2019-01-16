@@ -709,6 +709,9 @@ void FEMeshBase::UpdateNormals(bool bsmooth)
 		int nsg = 0;
 		vector<vec3f> nt(nodes);
 		vector<int> ntag; ntag.assign(nodes, 0);
+		vector<FEFace*> faceList(faces);
+		vector<int> nodeList(nodes);
+		int nfl = 0, nnl = 0;
 		for (int i=0; i<faces; ++i)
 		{
 			// find the next unprocessed face
@@ -719,10 +722,13 @@ void FEMeshBase::UpdateNormals(bool bsmooth)
 				stack[ns++] = pf;
 
 				// find all connected faces
+				nfl = 0;
+				nnl = 0;
 				while (ns > 0)
 				{
 					// pop a face
 					pf = stack[--ns];
+					faceList[nfl++] = pf;
 
 					// mark as processed
 					pf->m_ntag = nsg;
@@ -733,8 +739,13 @@ void FEMeshBase::UpdateNormals(bool bsmooth)
 					// add face normal to node normal
 					for (int j=0; j<fn; ++j)
 					{
-						nt[pf->node[j]] += pf->m_fn;
-						ntag[pf->node[j]] = 1;
+						int nj = pf->node[j];
+						nt[nj] += pf->m_fn;
+						if (ntag[nj] != 1)
+						{
+							ntag[nj] = 1;
+							nodeList[nnl++] = nj;
+						}
 					}
 
 					// push unprocessed neighbors
@@ -750,24 +761,25 @@ void FEMeshBase::UpdateNormals(bool bsmooth)
 				}
 
 				// normalize normals
-				for (int j=0; j<nodes; ++j)
+				for (int j=0; j<nnl; ++j)
 				{
-					if (ntag[j] == 1) { nt[j].Normalize(); ntag[j] = 0; }
+					int nj = nodeList[j];
+					assert(ntag[nj] == 1);
+					nt[nj].Normalize();
+					ntag[nj] = 0;
 				}
 
 				// assign node normals
-				for (int j=0; j<faces; ++j)
+				for (int j=0; j<nfl; ++j)
 				{
-					FEFace& f = m_Face[j];
-					if (f.m_ntag == nsg)
-					{
-						int nf = f.Nodes();
-						for (int k=0; k<nf; ++k) f.m_nn[k] = nt[ f.node[k] ];
-					}
+					FEFace& f = *faceList[j];
+					assert(f.m_nsg == nsg);
+					int nf = f.Nodes();
+					for (int k=0; k<nf; ++k) f.m_nn[k] = nt[ f.node[k] ];
 				}
 
 				// clear normals for next group
-				for (int j=0; j<nodes; ++j) nt[j] = vec3f(0,0,0);
+				for (int j=0; j<nnl; ++j) nt[nodeList[j]] = vec3f(0,0,0);
 				++nsg;
 			}
 		}
