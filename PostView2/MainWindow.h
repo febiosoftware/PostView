@@ -193,6 +193,7 @@ public slots:
 	void on_fontItalic_toggled(bool bchecked);
 
 	void on_selectTime_valueChanged(int i);
+	void on_selectAngle_valueChanged(int i);
 
 	void finishedReadingFile(bool success, const QString& errorString);
 

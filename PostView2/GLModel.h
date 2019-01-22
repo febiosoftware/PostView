@@ -249,7 +249,7 @@ public: // Selection
 	void SelectConnectedVolumeElements(FEElement& el);
 
 	//! select connected faces
-	void SelectConnectedFaces(FEFace& f);
+	void SelectConnectedFaces(FEFace& f, double angleTol);
 
 	//! select connected edges
 	void SelectConnectedEdges(FEEdge& e);

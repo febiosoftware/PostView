@@ -97,6 +97,7 @@ public:
 
 	CDataFieldSelector*	selectData;
 	QSpinBox* pspin;
+	QSpinBox*	pangle;
 
 	QToolBar* playToolBar;
 	QToolBar* pFontToolBar;
@@ -523,6 +524,10 @@ public:
 
 //		mainToolBar->addAction(actionSelectItem);
 		mainToolBar->addAction(actionSelectConn);
+		mainToolBar->addWidget(pangle = new QSpinBox);
+		pangle->setObjectName("selectAngle");
+		pangle->setMinimumWidth(80);
+		pangle->setRange(0, 180);
 
 		mainToolBar->addAction(actionSelectRect  );
 		mainToolBar->addAction(actionSelectCircle);

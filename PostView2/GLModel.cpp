@@ -2918,12 +2918,14 @@ void CGLModel::SelectConnectedEdges(FEEdge& e)
 
 //-----------------------------------------------------------------------------
 // Select faces that are connected
-void CGLModel::SelectConnectedFaces(FEFace &f)
+void CGLModel::SelectConnectedFaces(FEFace &f, double angleTol)
 {
 	FEMeshBase& mesh = *GetActiveMesh();
 
 	// clear tags on all faces
 	for (int i=0; i<mesh.Faces(); ++i) mesh.Face(i).m_ntag = 0;
+
+	double tol = cos(DEG2RAD*angleTol);
 
 	// propagate through all neighbors
 	stack<FEFace*> S;
@@ -2939,7 +2941,7 @@ void CGLModel::SelectConnectedFaces(FEFace &f)
 			for (int j=0; j<pf->Edges(); ++j)
 			{
 				FEFace* pf2 = (pf->m_nbr[j] >= 0? &mesh.Face(pf->m_nbr[j]) : 0);
-				if (pf2 && (pf2->m_ntag == 0) && (pf2->m_nsg == pf->m_nsg) && (pf2->m_mat == pf->m_mat))
+				if (pf2 && (pf2->m_ntag == 0) && (pf2->m_nsg == pf->m_nsg) && (pf2->m_mat == pf->m_mat) && (f.m_fn*pf2->m_fn > tol))
 				{
 					pf2->m_ntag = 1;
 					S.push(pf2);

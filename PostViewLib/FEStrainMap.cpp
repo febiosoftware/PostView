@@ -65,7 +65,6 @@ void FEStrainMap::Surface::BuildNodeList(FEMeshBase& mesh)
 	}
 }
 
-
 // constructor
 FEStrainMap::FEStrainMap()
 {
@@ -96,6 +95,9 @@ void FEStrainMap::SetBackSurface2(std::vector<int>& s)
 // apply the map
 void FEStrainMap::Apply(FEModel& fem)
 {
+	// relative distance to allow penetration
+	double distTol = 1.0;
+
 	static int ncalls = 0; ncalls++;
 	char szname[64];
 	if (ncalls == 1)
@@ -120,15 +122,20 @@ void FEStrainMap::Apply(FEModel& fem)
 	m_back2.BuildNodeList(mesh);
 	int N = mesh.Nodes();
 
-	BuildNormalList(m_front1);
-	BuildNormalList(m_back1);
-	BuildNormalList(m_front2);
-	BuildNormalList(m_back2);
-
 	// repeat for all steps
 	int nstep = fem.GetStates();
 	for (int n = 0; n<nstep; ++n)
 	{
+		UpdateNodePositions(m_front1, n);
+		UpdateNodePositions(m_back1, n);
+		UpdateNodePositions(m_front2, n);
+		UpdateNodePositions(m_back2, n);
+
+		BuildNormalList(m_front1);
+		BuildNormalList(m_back1);
+		BuildNormalList(m_front2);
+		BuildNormalList(m_back2);
+
 		FEState* ps = fem.GetState(n);
 		FEFaceData<float, DATA_NODE>& df = dynamic_cast<FEFaceData<float, DATA_NODE>&>(ps->m_Data[NDATA]);
 
@@ -139,8 +146,8 @@ void FEStrainMap::Apply(FEModel& fem)
 		{
 			int inode = m_front1.m_node[i];
 			FENode& node = mesh.Node(inode);
-			vec3f r = fem.NodePosition(inode, n);
-			if (project(m_front2, r, m_front1.m_norm[i], n, q))
+			vec3f r = m_front1.m_pos[i];
+			if (project(m_front2, r, m_front1.m_norm[i], q))
 			{
 				D1[i] = (q - r).Length();
 				double s = (q - r)*m_front1.m_norm[i];
@@ -155,12 +162,16 @@ void FEStrainMap::Apply(FEModel& fem)
 			if (D1[i] < 0)
 			{
 				FENode& node = mesh.Node(inode);
-				vec3f r = fem.NodePosition(inode, n);
-				if (project(m_back1, r, m_front1.m_norm[i], n, q))
+				vec3f r = m_front1.m_pos[i];
+				if (project(m_back1, r, m_front1.m_norm[i], q))
 				{
 					L1[i] = (q - r).Length();
-					double s = (r - q)*m_front1.m_norm[i];
-					if (s < 0) L1[i] = -L1[i];
+					if (fabs(D1[i]) <= distTol*fabs(L1[i]))
+					{
+						double s = (r - q)*m_front1.m_norm[i];
+						if (s < 0) L1[i] = -L1[i];
+					}
+					else L1[i] = 1e+34f;
 				}
 				else L1[i] = 1e+34f;	// really large number, such that the strain is zero
 			}
@@ -186,8 +197,8 @@ void FEStrainMap::Apply(FEModel& fem)
 		{
 			int inode = m_front2.m_node[i];
 			FENode& node = mesh.Node(inode);
-			vec3f r = fem.NodePosition(inode, n);
-			if (project(m_front1, r, m_front2.m_norm[i], n, q))
+			vec3f r = m_front2.m_pos[i];
+			if (project(m_front1, r, m_front2.m_norm[i], q))
 			{
 				D2[i] = (q - r).Length();
 				double s = (q - r)*m_front2.m_norm[i];
@@ -203,12 +214,16 @@ void FEStrainMap::Apply(FEModel& fem)
 			if (D2[i] < 0)
 			{
 				FENode& node = mesh.Node(inode);
-				vec3f r = fem.NodePosition(inode, n);
-				if (project(m_back2, r, m_front2.m_norm[i], n, q))
+				vec3f r = m_front2.m_pos[i];
+				if (project(m_back2, r, m_front2.m_norm[i], q))
 				{
 					L2[i] = (q - r).Length();
-					double s = (r - q)*m_front2.m_norm[i];
-					if (s < 0) L2[i] = -L2[i];
+					if (fabs(D2[i]) <= distTol*fabs(L2[i]))
+					{
+						double s = (r - q)*m_front2.m_norm[i];
+						if (s < 0) L2[i] = -L2[i];
+					}
+					else L2[i] = 1e+34f;	// really large number, such that the strain is zero
 				}
 				else L2[i] = 1e+34f;	// really large number, such that the strain is zero
 			}
@@ -230,6 +245,15 @@ void FEStrainMap::Apply(FEModel& fem)
 	}
 }
 
+
+//-----------------------------------------------------------------------------
+void FEStrainMap::UpdateNodePositions(FEStrainMap::Surface& s, int ntime)
+{
+	int NN = s.Nodes();
+	s.m_pos.resize(NN);
+	for (int i = 0; i < NN; ++i) s.m_pos[i] = m_fem->NodePosition(s.m_node[i], ntime);
+}
+
 //-----------------------------------------------------------------------------
 void FEStrainMap::BuildNormalList(FEStrainMap::Surface& s)
 {
@@ -239,35 +263,49 @@ void FEStrainMap::BuildNormalList(FEStrainMap::Surface& s)
 	int NF = s.Faces();
 	int NN = s.Nodes();
 	s.m_norm.resize(NN);
+	for (int i = 0; i < NN; ++i) s.m_norm[i] = vec3f(0, 0, 0);
 
+	vec3f r[3];
 	for (int i = 0; i<NF; ++i)
 	{
 		FEFace& f = mesh.Face(s.m_face[i]);
 		int nf = f.Nodes();
+		r[0] = s.m_pos[s.m_lnode[4*i   ]];
+		r[1] = s.m_pos[s.m_lnode[4*i + 1]];
+		r[2] = s.m_pos[s.m_lnode[4*i + 2]];
+		vec3f fn = (r[1] - r[0]) ^ (r[2] - r[0]);
+
 		for (int j = 0; j<nf; ++j)
 		{
 			int n = s.m_lnode[4 * i + j]; assert(n >= 0);
-			s.m_norm[n] = f.m_nn[j];
+			s.m_norm[n] += fn;
 		}
 	}
+
+	for (int i = 0; i < NN; ++i) s.m_norm[i].Normalize();
 }
 
 //-----------------------------------------------------------------------------
-bool FEStrainMap::project(FEStrainMap::Surface& surf, vec3f& r, vec3f& t, int ntime, vec3f& q)
+bool FEStrainMap::project(FEStrainMap::Surface& surf, vec3f& r, vec3f& t, vec3f& q)
 {
 	FEMeshBase& mesh = *m_fem->GetFEMesh(0);
 
 	// loop over all facets
 	float Dmin = 0.f;
 	bool bfound = false;
+	vec3f rf[4];
 	for (int i = 0; i<surf.Faces(); ++i)
 	{
 		// get the i-th facet
 		FEFace& face = mesh.Face(surf.m_face[i]);
+		rf[0] = surf.m_pos[surf.m_lnode[4*i    ]];
+		rf[1] = surf.m_pos[surf.m_lnode[4*i + 1]];
+		rf[2] = surf.m_pos[surf.m_lnode[4*i + 2]];
+		rf[3] = surf.m_pos[surf.m_lnode[4*i + 3]];
 
 		// project r onto the the facet along its normal
 		vec3f p;
-		if (ProjectToFacet(face, r, t, ntime, p))
+		if (ProjectToFacet(rf, face.Nodes(), r, t, p))
 		{
 			// return the closest projection
 			float D = (p - r)*(p - r);
@@ -284,20 +322,13 @@ bool FEStrainMap::project(FEStrainMap::Surface& surf, vec3f& r, vec3f& t, int nt
 }
 
 //-----------------------------------------------------------------------------
-bool FEStrainMap::ProjectToFacet(FEFace& f, vec3f& x, vec3f& t, int ntime, vec3f& q)
+bool FEStrainMap::ProjectToFacet(vec3f* y, int nf, vec3f& x, vec3f& t, vec3f& q)
 {
 	// get the mesh to which this surface belongs
 	FEMeshBase& mesh = *m_fem->GetFEMesh(0);
 
-	// number of element nodes
-	int ne = f.Nodes();
-
-	// get the elements nodal positions
-	vec3f y[4];
-	for (int i = 0; i<ne; ++i) y[i] = m_fem->NodePosition(f.node[i], ntime);
-
 	// calculate normal projection of x onto element
-	switch (ne)
+	switch (nf)
 	{
 	case 3: return ProjectToTriangle(y, x, t, q, m_tol); break;
 	case 4: return ProjectToQuad(y, x, t, q, m_tol); break;

@@ -1631,7 +1631,7 @@ void CGLView::SelectFaces(int x0, int y0, int mode)
 		if (mode == SELECT_ADD) 
 		{
 			if (view.m_bconn == false) f.Select();
-			else mdl.SelectConnectedFaces(f);
+			else mdl.SelectConnectedFaces(f, view.m_angleTol);
 		}
 		else f.Unselect();
 	}

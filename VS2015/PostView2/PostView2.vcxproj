@@ -202,7 +202,11 @@
     <ClInclude Include="..\..\PostView2\ImgAnimation.h" />
     <ClInclude Include="..\..\PostView2\ImportLinesTool.h" />
     <ClInclude Include="..\..\PostView2\IntegrateWindow.h" />
-    <ClInclude Include="..\..\PostView2\MainWindow.h" />
+    <CustomBuild Include="..\..\PostView2\MainWindow.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </CustomBuild>
     <ClInclude Include="..\..\PostView2\MaterialPanel.h" />
     <ClInclude Include="..\..\PostView2\MeasureAreaTool.h" />
     <ClInclude Include="..\..\PostView2\MeasureVolumeTool.h" />

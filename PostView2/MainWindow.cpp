@@ -1786,7 +1786,7 @@ void CMainWindow::UpdateMainToolbar()
 	ui->actionViewOutline->setChecked(settings.m_boutline);
 	ui->actionViewMesh->setChecked(settings.m_bmesh);
 	ui->actionViewShowTags->setChecked(settings.m_bTags);
-
+	ui->pangle->setValue((int)settings.m_angleTol);
 }
 
 void CMainWindow::UpdatePlayToolbar(bool breset)
@@ -1814,6 +1814,15 @@ void CMainWindow::UpdatePlayToolbar(bool breset)
 void CMainWindow::on_selectTime_valueChanged(int i)
 {
 	if (ui->m_update_spin) SetCurrentTime(i - 1);
+}
+
+void CMainWindow::on_selectAngle_valueChanged(int i)
+{
+	if (m_doc->IsValid())
+	{
+		VIEWSETTINGS& vs = m_doc->GetViewSettings();
+		vs.m_angleTol = (float)i;
+	}
 }
 
 void CMainWindow::UpdateFontToolbar()

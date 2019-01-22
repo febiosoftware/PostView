@@ -773,7 +773,7 @@ void FEMeshBase::UpdateNormals(bool bsmooth)
 				for (int j=0; j<nfl; ++j)
 				{
 					FEFace& f = *faceList[j];
-					assert(f.m_nsg == nsg);
+					assert(f.m_ntag == nsg);
 					int nf = f.Nodes();
 					for (int k=0; k<nf; ++k) f.m_nn[k] = nt[ f.node[k] ];
 				}

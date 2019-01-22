@@ -85,6 +85,7 @@ struct VIEWSETTINGS
 	bool	m_bTags;						// show tags or not
 	int		m_ntagInfo;						// tag info level
 	bool	m_bignoreBackfacingItems;		// ignore backfacing items or not
+	float	m_angleTol;						// angle tolerance for connected face selection
 
 	// OpenGL settings
 	bool	m_blinesmooth;	// line smoothing

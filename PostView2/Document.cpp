@@ -49,10 +49,11 @@ void VIEWSETTINGS::Defaults()
 	m_ambient     = 0.3f;
 	m_diffuse     = 0.7f;
 	m_bignoreBackfacingItems = true;
-	m_blinesmooth = true;
-	m_flinethick  = 1.0f;
+	m_blinesmooth  = true;
+	m_flinethick   = 1.0f;
 	m_fspringthick = 1.0f;
-	m_fpointsize  = 6.0f;
+	m_fpointsize   = 6.0f;
+	m_angleTol     = 90.f;
 }
 
 void TIMESETTINGS::Defaults()
