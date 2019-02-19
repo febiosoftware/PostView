@@ -494,7 +494,7 @@ protected:
 template <typename T> class FEElementData<T, DATA_COMP> : public FEElemData_T<T, DATA_COMP>
 {
 public:
-	FEElementData(FEState* state, FEDataField* pdf) : FEElemData_T<T, DATA_COMP>(state, pdf), m_elem(pdf->m_item)
+	FEElementData(FEState* state, FEDataField* pdf) : FEElemData_T<T, DATA_COMP>(state, pdf) //, m_elem(pdf->m_item)
 	{
 		if (m_elem.empty())
 		{
@@ -525,7 +525,7 @@ public:
 
 protected:
 	vector<T>		m_data;
-	vector<int>&	m_elem;
+	vector<int>		m_elem;
 };
 
 // *** specialization for DATA_NODE format ***

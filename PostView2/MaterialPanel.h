@@ -18,12 +18,15 @@ public:
 	void Update(bool breset);
 	void UpdateStates();
 
+private:
+	void SetItemColor(int item, GLCOLOR c);
+
 private slots:
 	void on_materialList_currentRowChanged(int nrow);
 	void on_showButton_toggled(bool b);
 	void on_enableButton_toggled(bool b);
 	void on_editName_editingFinished();
-	void on_props_dataChanged();
+	void on_props_dataChanged(int nprop);
 
 private:
 	Ui::CMaterialPanel*	ui;

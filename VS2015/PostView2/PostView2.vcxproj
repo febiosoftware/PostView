@@ -207,7 +207,11 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </CustomBuild>
-    <ClInclude Include="..\..\PostView2\MaterialPanel.h" />
+    <CustomBuild Include="..\..\PostView2\MaterialPanel.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </CustomBuild>
     <ClInclude Include="..\..\PostView2\MeasureAreaTool.h" />
     <ClInclude Include="..\..\PostView2\MeasureVolumeTool.h" />
     <ClInclude Include="..\..\PostView2\ModelViewer.h" />
@@ -219,7 +223,11 @@
     <ClInclude Include="..\..\PostView2\PointDistanceTool.h" />
     <ClInclude Include="..\..\PostView2\PropertyList.h" />
     <ClInclude Include="..\..\PostView2\PropertyListForm.h" />
-    <ClInclude Include="..\..\PostView2\PropertyListView.h" />
+    <CustomBuild Include="..\..\PostView2\PropertyListView.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </CustomBuild>
     <ClInclude Include="..\..\PostView2\ShellThicknessTool.h" />
     <ClInclude Include="..\..\PostView2\SphereFitTool.h" />
     <ClInclude Include="..\..\PostView2\StatePanel.h" />

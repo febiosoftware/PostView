@@ -14,6 +14,7 @@
 class MaterialProps : public CPropertyList
 {
 public:
+	// NOTE: Changes to the list should be reflected in void CMaterialPanel::on_props_dataChanged(int nprop)
 	MaterialProps()
 	{
 		m_mat = 0;
@@ -319,20 +320,64 @@ void CMaterialPanel::on_editName_editingFinished()
 	}
 }
 
-void CMaterialPanel::on_props_dataChanged()
+void CMaterialPanel::SetItemColor(int nmat, GLCOLOR c)
 {
-	// update color
+	QListWidgetItem* item = ui->m_list->item(nmat);
+	ui->setColor(item, c);
+}
+
+void CMaterialPanel::on_props_dataChanged(int nprop)
+{
+	// Get the model
 	CDocument& doc = *m_wnd->GetDocument();
-	QModelIndex n = ui->m_list->currentIndex();
-	if (n.isValid())
+	FEModel& fem = *doc.GetFEModel();
+
+	// get the current material
+	QModelIndex currentIndex = ui->m_list->currentIndex();
+	if (currentIndex.isValid() == false) return;
+
+	// get the current material
+	int nmat = currentIndex.row();
+	FEMaterial& currentMat = *fem.GetMaterial(nmat);
+
+	// update color of corresponding item in material list
+	if (nprop == 1) SetItemColor(nmat, currentMat.diffuse);
+
+	// update all the other selected materials
+	QItemSelectionModel* pselect = ui->m_list->selectionModel();
+	QModelIndexList selection = pselect->selectedRows();
+	int ncount = selection.count();
+	for (int i = 0; i<ncount; ++i)
 	{
-		int nmat = n.row();
+		QModelIndex index = selection.at(i);
+		if (index.row() != currentIndex.row())
+		{
+			int imat = index.row();
+			FEMaterial& mati = *fem.GetMaterial(imat);
 
-		FEModel& fem = *doc.GetFEModel();
-		FEMaterial& mat = *fem.GetMaterial(nmat);
+			switch (nprop)
+			{
+			case  0: mati.m_nrender     = currentMat.m_nrender; break;
+			case  1: 
+				mati.diffuse = currentMat.diffuse; 
+				mati.ambient = currentMat.ambient;
+				break;
+			case  2: mati.specular      = currentMat.specular; break;
+			case  3: mati.emission      = currentMat.emission; break;
+			case  4: mati.meshcol       = currentMat.meshcol; break;
+			case  5: mati.shininess     = currentMat.shininess; break;
+			case  6: mati.transparency  = currentMat.transparency; break;
+			case  7: mati.m_ntransmode  = currentMat.m_ntransmode; break;
+			case  8: mati.bmesh         = currentMat.bmesh; break;
+			case  9: mati.bcast_shadows = currentMat.bcast_shadows; break;
+			case 10: mati.bclip         = currentMat.bclip; break;
+			default:
+				assert(false);
+			};
 
-		QListWidgetItem* item = ui->m_list->item(nmat);
-		ui->setColor(item, mat.diffuse);
+			// update color of corresponding item in material list
+			if (nprop == 1) SetItemColor(imat, mati.diffuse);
+		}
 	}
 
 	m_wnd->RedrawGL();

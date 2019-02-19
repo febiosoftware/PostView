@@ -163,6 +163,7 @@ public slots:
 
 	void on_actionViewSettings_triggered();
 	void on_actionViewCapture_toggled(bool bchecked);
+	void on_actionViewWidgets_toggled(bool bchecked);
 	void on_actionViewProjection_toggled(bool bchecked);
 	void on_actionViewFront_triggered();
 	void on_actionViewBack_triggered();

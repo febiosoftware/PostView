@@ -146,6 +146,8 @@ public:
 
 	void showSafeFrame(bool b);
 
+	void showWidgets(bool b);
+
 	void SetView(View_Mode nview);
 
 	void OnZoomExtents();
@@ -293,6 +295,7 @@ private:
 	int		m_ntrack[3];
 
 	// the GL widgets
+	bool			m_bShowWidgets;
 	GLBox*			m_ptitle;
 	GLBox*			m_psubtitle;
 	GLTriad*		m_ptriad;

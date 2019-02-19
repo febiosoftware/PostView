@@ -62,6 +62,7 @@ public:
 
 	QAction* actionViewSettings;
 	QAction* actionViewCapture; 
+	QAction* actionViewWidgets;
 	QAction* actionViewProjection;
 	QAction* actionViewMesh;
 	QAction* actionViewOutline;
@@ -359,6 +360,7 @@ public:
 		// --- View Menu ---
 		actionViewSettings   = addAction("Settings ..."           , "actionViewSettings"  );
 		actionViewCapture    = addAction("Show capture Frame"     , "actionViewCapture"   ); actionViewCapture->setCheckable(true); actionViewCapture->setShortcut(Qt::Key_0);
+		actionViewWidgets    = addAction("Show widgets"           , "actionViewWidgets"   ); actionViewWidgets->setCheckable(true); actionViewWidgets->setChecked(true);
 		actionViewProjection = addAction("Orthographic projection", "actionViewProjection"); actionViewProjection->setShortcut(Qt::CTRL + Qt::Key_0); actionViewProjection->setCheckable(true);
 		actionViewMesh       = addAction("Show mesh lines"        , "actionViewMesh"      ); actionViewMesh   ->setShortcut(Qt::Key_M); actionViewMesh->setCheckable(true);
 		actionViewOutline    = addAction("Show outline"           , "actionViewOutline"   ); actionViewOutline->setShortcut(Qt::Key_Z); actionViewOutline->setCheckable(true);
@@ -477,6 +479,7 @@ public:
 		menuView->addSeparator();
 		menuView->addAction(actionViewCapture   );
 		menuView->addAction(actionViewProjection);
+		menuView->addAction(actionViewWidgets   );
 		menuView->addAction(actionViewMesh      );
 		menuView->addAction(actionViewShowTags  );
 		menuView->addAction(actionViewOutline   );

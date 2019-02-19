@@ -321,6 +321,8 @@ CGLView::CGLView(CMainWindow* pwnd, QWidget* parent) : QOpenGLWidget(parent), m_
 
 	m_bsingle = true;
 
+	m_bShowWidgets = true;
+
 	// NOTE: multi-sampling prevents the snapshot feature from working
 	QSurfaceFormat fmt = format();
 	fmt.setSamples(4);
@@ -593,7 +595,7 @@ void CGLView::paintGL()
 		glLoadIdentity();
 
 		// render the widgets
-		RenderWidgets();
+		if (m_bShowWidgets) RenderWidgets();
 
 		// render the selection rectangle
 		if (m_bdrag) RenderRubberBand();
@@ -2961,6 +2963,11 @@ void CGLView::showSafeFrame(bool b)
 {
 	if (b) m_pframe->show();
 	else m_pframe->hide();
+}
+
+void CGLView::showWidgets(bool b)
+{
+	m_bShowWidgets = b;
 }
 
 void CGLView::setPerspective(bool b)

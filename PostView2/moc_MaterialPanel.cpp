@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_CMaterialPanel_t {
-    QByteArrayData data[9];
-    char stringdata0[152];
+    QByteArrayData data[10];
+    char stringdata0[158];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -39,14 +39,15 @@ QT_MOC_LITERAL(4, 55, 21), // "on_showButton_toggled"
 QT_MOC_LITERAL(5, 77, 1), // "b"
 QT_MOC_LITERAL(6, 79, 23), // "on_enableButton_toggled"
 QT_MOC_LITERAL(7, 103, 27), // "on_editName_editingFinished"
-QT_MOC_LITERAL(8, 131, 20) // "on_props_dataChanged"
+QT_MOC_LITERAL(8, 131, 20), // "on_props_dataChanged"
+QT_MOC_LITERAL(9, 152, 5) // "nprop"
 
     },
     "CMaterialPanel\0on_materialList_currentRowChanged\0"
     "\0nrow\0on_showButton_toggled\0b\0"
     "on_enableButton_toggled\0"
     "on_editName_editingFinished\0"
-    "on_props_dataChanged"
+    "on_props_dataChanged\0nprop"
 };
 #undef QT_MOC_LITERAL
 
@@ -68,14 +69,14 @@ static const uint qt_meta_data_CMaterialPanel[] = {
        4,    1,   42,    2, 0x08 /* Private */,
        6,    1,   45,    2, 0x08 /* Private */,
        7,    0,   48,    2, 0x08 /* Private */,
-       8,    0,   49,    2, 0x08 /* Private */,
+       8,    1,   49,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void, QMetaType::Int,    3,
     QMetaType::Void, QMetaType::Bool,    5,
     QMetaType::Void, QMetaType::Bool,    5,
     QMetaType::Void,
-    QMetaType::Void,
+    QMetaType::Void, QMetaType::Int,    9,
 
        0        // eod
 };
@@ -90,7 +91,7 @@ void CMaterialPanel::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
         case 1: _t->on_showButton_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 2: _t->on_enableButton_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 3: _t->on_editName_editingFinished(); break;
-        case 4: _t->on_props_dataChanged(); break;
+        case 4: _t->on_props_dataChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         default: ;
         }
     }

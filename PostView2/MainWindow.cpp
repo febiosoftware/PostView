@@ -1687,6 +1687,12 @@ void CMainWindow::on_actionViewCapture_toggled(bool bchecked)
 	RedrawGL();
 }
 
+void CMainWindow::on_actionViewWidgets_toggled(bool bchecked)
+{
+	ui->glview->showWidgets(bchecked);
+	RedrawGL();
+}
+
 void CMainWindow::on_actionViewProjection_toggled(bool bchecked)
 {
 	ui->glview->setPerspective(!bchecked);
