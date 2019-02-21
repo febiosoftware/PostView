@@ -374,6 +374,7 @@ void CGLModel::RenderDiscrete(CGLContext& rc)
 	glDisable(GL_LIGHTING);
 	FEMeshBase& mesh = *GetActiveMesh();
 	int curMat = -1;
+	bool bvisible = true;
 	glBegin(GL_LINES);
 	for (int i=0; i<m_edge.Edges(); ++i)
 	{
@@ -381,16 +382,21 @@ void CGLModel::RenderDiscrete(CGLContext& rc)
 		int mat = edge.mat;
 		if (mat != curMat)
 		{
-			GLCOLOR c = m_ps->GetMaterial(mat)->diffuse;
+			FEMaterial* pmat = m_ps->GetMaterial(mat);
+			GLCOLOR c = pmat->diffuse;
 			curMat = mat;
+			bvisible = pmat->bvisible;
 			glColor3ub(c.r, c.g, c.b);
 		}
 
-		vec3f r0 = mesh.Node(edge.n0).m_rt;
-		vec3f r1 = mesh.Node(edge.n1).m_rt;
+		if (bvisible)
+		{
+			vec3f r0 = mesh.Node(edge.n0).m_rt;
+			vec3f r1 = mesh.Node(edge.n1).m_rt;
 
-		glVertex3f(r0.x, r0.y, r0.z);
-		glVertex3f(r1.x, r1.y, r1.z);
+			glVertex3f(r0.x, r0.y, r0.z);
+			glVertex3f(r1.x, r1.y, r1.z);
+		}
 	}
 	glEnd();
 	glPopAttrib();

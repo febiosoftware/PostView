@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GLStreamLinePlot.h"
 #include "PropertyList.h"
+#include <GLWLib/GLWidgetManager.h>
 
 class CStreamLinePlotProps : public CPropertyList
 {
@@ -21,6 +22,10 @@ public:
 		addProperty("Step size"     , CProperty::Float);
 		addProperty("Density"       , CProperty::Float)->setFloatRange(0.0, 1.0).setFloatStep(0.01);
 		addProperty("Velocity threshold", CProperty::Float);
+		addProperty("Range Type", CProperty::Enum)->setEnumValues(QStringList() << "Dynamic" << "Static" << "User");
+		addProperty("Range divisions", CProperty::Int)->setIntRange(1, 100);
+		addProperty("User Range Min", CProperty::Float);
+		addProperty("User Range Max", CProperty::Float);
 	}
 
 	QVariant GetPropertyValue(int i)
@@ -33,6 +38,10 @@ public:
 		case 3: return m_plt->StepSize(); break;
 		case 4: return m_plt->Density(); break;
 		case 5: return m_plt->Threshold(); break;
+		case 6: return m_plt->GetRangeType(); break;
+		case 7: return m_plt->GetColorMap()->GetDivisions(); break;
+		case 8: return m_plt->GetUserRangeMin(); break;
+		case 9: return m_plt->GetUserRangeMax(); break;
 		}
 		return QVariant();
 	}
@@ -47,7 +56,13 @@ public:
 		case 3: m_plt->SetStepSize(v.toFloat()); m_plt->UpdateStreamLines(); break; 
 		case 4: m_plt->SetDensity(v.toFloat()); m_plt->UpdateStreamLines(); break;
 		case 5: m_plt->SetThreshold(v.toFloat()); break;
+		case 6: m_plt->SetRangeType(v.toInt()); break;
+		case 7: m_plt->GetColorMap()->SetDivisions(v.toInt()); break;
+		case 8: m_plt->SetUserRangeMin(v.toFloat()); break;
+		case 9: m_plt->SetUserRangeMax(v.toFloat()); break;
 		}
+
+		m_plt->Update();
 	}
 
 private:
@@ -68,6 +83,30 @@ CGLStreamLinePlot::CGLStreamLinePlot(CGLModel* fem) : CGLPlot(fem), m_find(*fem-
 
 	m_nvec = -1;
 	m_inc = 0.01f;
+
+	m_rangeType = RNG_DYNAMIC;
+	m_userMin = 0.;
+	m_userMax = 1.;
+	m_rngMin = 0.;
+	m_rngMax = 1.;
+
+	m_lastTime = 0;
+	m_lastdt = 1.f;
+
+	m_Col.SetDivisions(10);
+
+	m_pbar = new GLLegendBar(&m_Col, 0, 0, 600, 100, GLLegendBar::HORIZONTAL);
+	m_pbar->align(GLW_ALIGN_BOTTOM | GLW_ALIGN_HCENTER);
+	m_pbar->SetType(GLLegendBar::GRADIENT);
+	m_pbar->copy_label(szname);
+	m_pbar->ShowTitle(true);
+	CGLWidgetManager::GetInstance()->AddWidget(m_pbar);
+}
+
+CGLStreamLinePlot::~CGLStreamLinePlot()
+{
+	CGLWidgetManager::GetInstance()->RemoveWidget(m_pbar);
+	delete m_pbar;
 }
 
 CPropertyList* CGLStreamLinePlot::propertyList()
@@ -75,10 +114,20 @@ CPropertyList* CGLStreamLinePlot::propertyList()
 	return new CStreamLinePlotProps(this);
 }
 
+void CGLStreamLinePlot::Update()
+{
+	Update(m_lastTime, m_lastdt, true);
+}
+
 void CGLStreamLinePlot::SetVectorType(int ntype)
 {
 	m_nvec = ntype;
-	Update(GetModel()->currentTimeIndex(), 0.0, false);
+
+	FEModel* fem = GetModel()->GetFEModel();
+	std::string dataName = fem->getDataString(m_nvec, DATA_VECTOR);
+	m_pbar->copy_label(dataName.c_str());
+
+	Update();
 }
 
 void CGLStreamLinePlot::Render(CGLContext& rc)
@@ -121,6 +170,9 @@ static float frand()
 
 void CGLStreamLinePlot::Update(int ntime, float dt, bool breset)
 {
+	m_lastTime = ntime;
+	m_lastdt = dt;
+
 	CGLModel* mdl = GetModel();
 	FEMeshBase* pm = mdl->GetActiveMesh();
 	FEModel* pfem = mdl->GetFEModel();
@@ -183,6 +235,30 @@ void CGLStreamLinePlot::Update(int ntime, float dt, bool breset)
 	// copy nodal values
 	m_val = m_map.State(ntime);
 	m_crng = m_rng[ntime];
+
+	// update static range
+	if (breset) { m_rngMin = m_crng.x; m_rngMax = m_crng.y; }
+	else
+	{
+		if (m_crng.x < m_rngMin) m_rngMin = m_crng.x;
+		if (m_crng.y > m_rngMax) m_rngMax = m_crng.y;
+	}
+
+	// set range for color map
+	switch (m_rangeType)
+	{
+	case RNG_DYNAMIC:
+		m_crng = m_rng[ntime];
+		break;
+	case RNG_STATIC:
+		m_crng = vec2f((float)m_rngMin, (float)m_rngMax);
+		break;
+	case RNG_USER:
+		m_crng = vec2f((float)m_userMin, (float)m_userMax);
+		break;
+	}
+
+	m_pbar->SetRange(m_crng.x, m_crng.y);
 
 	// update stream lins
 	UpdateStreamLines();

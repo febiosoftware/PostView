@@ -672,6 +672,14 @@ FEDataField* FEModel::CreateCachedCopy(FEDataField* pd, const char* sznewname)
 }
 
 //-----------------------------------------------------------------------------
+// Get the field variable name
+std::string FEModel::getDataString(int ndata, Data_Tensor_Type ntype)
+{
+	FEDataManager& dm = *GetDataManager();
+	return dm.getDataString(ndata, ntype);
+}
+
+//-----------------------------------------------------------------------------
 // Delete a data field
 void FEModel::DeleteDataField(FEDataField* pd)
 {

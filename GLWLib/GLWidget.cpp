@@ -491,6 +491,18 @@ void GLLegendBar::draw_gradient_horz(QPainter* painter)
 			}
 		}
 	}
+
+	// render the title
+	if (m_btitle && m_szlabel)
+	{
+		painter->setPen(QColor(m_fgc.r, m_fgc.g, m_fgc.b));
+		painter->setFont(m_font);
+
+		if (m_nrot == HORIZONTAL)
+		{
+			painter->drawText(x(), y(), w(), h(), Qt::AlignCenter | Qt::AlignBottom, m_szlabel);
+		}
+	}
 }
 
 void GLLegendBar::draw_discrete_vert(QPainter* painter)

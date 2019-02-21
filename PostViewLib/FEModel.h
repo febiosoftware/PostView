@@ -119,6 +119,9 @@ public:
 	//! Create a cached copy of a data field
 	FEDataField* CreateCachedCopy(FEDataField* pd, const char* sznewname);
 
+	// Get the field variable name
+	std::string getDataString(int nfield, Data_Tensor_Type ntype);
+
 public:
 	//! get the bounding box
 	BOUNDINGBOX GetBoundingBox() { return m_bbox; }
