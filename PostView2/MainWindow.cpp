@@ -100,6 +100,10 @@ CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMai
 		view.bgstyle = BG_COLOR_1;
 
 		GLWidget::set_base_color(GLCOLOR(255,255,255));
+
+		// adjust some toolbar buttons
+		ui->actionFontBold->setIcon(QIcon(":/icons/font_bold_neg.png"));
+		ui->actionFontItalic->setIcon(QIcon(":/icons/font_italic_neg.png"));
 	}
 
 	// make sure the file viewer is visible
@@ -2109,7 +2113,7 @@ void CMainWindow::on_actionHelp_triggered()
 
 void CMainWindow::on_actionAbout_triggered()
 {
-	QString txt = QString("<h1>PostView</h1><p>Version %1.%2.%3</p><p>Musculoskeletal Research Laboratories, University of Utah</p><p> Copyright (c) 2005 - 2018, All rights reserved</p>").arg(VERSION).arg(SUBVERSION).arg(SUBSUBVERSION);
+	QString txt = QString("<h1>PostView</h1><p>Version %1.%2.%3</p><p>Musculoskeletal Research Laboratories, University of Utah</p><p> Copyright (c) 2005 - 2019, All rights reserved</p>").arg(VERSION).arg(SUBVERSION).arg(SUBSUBVERSION);
 
 	QMessageBox about(this);
 	about.setWindowTitle("About PostView");
