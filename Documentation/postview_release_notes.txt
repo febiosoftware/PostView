@@ -3,6 +3,44 @@
 ========================================================================
 
 
+Version 2.4.0 - 3/1/2018
+==========================
+
+- First version built with Visual Studio 2015 using Qt 5.12. 
+
+- A significant performance issue was addressed that was causing slow rendering and updating for large models. Large models should now render much faster. 
+
+- Some icons were added with better contrast in Dark theme.
+
+- A legend bar was added to the streamline plot. 
+
+- All materials selected in the Material editor will be updated when a material parameter is changed. 
+
+- An angle field was added to the main toolbar that is used in face selection. All faces whose normal is within the angle tolerance will be selected when the "Select connected" option is active. 
+
+- An issue was fixed with the Kinemat tool where a displacement map was not added to the model. 
+
+- The line thickness of springs can now be set independently of the mesh line thickness. 
+
+- A bug was fixed in applying the scaling filter to REGION data.
+
+- The volume of tet10, tet15, and tet20 elements are now calculated in the Volume data field. 
+
+- The reference state for strain measures can now be defined in the data panel. 
+
+- The online help link was fixed.
+
+- A warning will now be issued when a data field defines multiple values for surface elements. (This can often happen with overlappnig contact surfaces. In those cases PostView will only display the last value that is defined in the plotfile.)
+
+- A bug was fixed in VTK import of CELL_DATA and the ability to read vector data from VTK files was added.
+
+- Colums of mat3f data can now be plotted as vector data. (For instance, if the mat3f represents a rotation tensor, the columns represent the rotated coordinate axis and can be plotted as vector plots.)
+
+- An issue was fixed when evaluating the range of the color map when the Nodal Values option is turned off.
+
+- The fixed time step can now be set to an arbitrary value (in Time Settings dialog box). 
+
+
 Version 2.3.2 - 11/9/2018
 ==========================
 
