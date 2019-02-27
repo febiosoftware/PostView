@@ -10,6 +10,7 @@
 #include <QSpinBox>
 #include <QCloseEvent>
 #include <QShowEvent>
+#include <QScrollArea>
 #include "Tool.h"
 #include "MainWindow.h"
 #include "Document.h"
@@ -98,10 +99,13 @@ public:
 			else layout->addWidget(pw);
 			stack->addWidget(pg);
 		}
+		
+		QScrollArea* scrollArea = new QScrollArea();
+		
+		scrollArea->setWidget(stack);
 
 		pg->addWidget(box);
-		pg->addWidget(stack);
-		pg->addStretch();
+		pg->addWidget(scrollArea);
 
 		QMetaObject::connectSlotsByName(parent);
 	}
