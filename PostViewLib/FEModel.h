@@ -176,6 +176,8 @@ public:
 	int Meshes() const;
 	FEMeshBase* GetFEMesh(int i);
 
+	void UpdateMeshState(int ntime);
+
 public:
 	static void SetInstance(FEModel* fem);
 	static FEModel* GetInstance();

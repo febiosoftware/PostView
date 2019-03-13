@@ -51,6 +51,7 @@ FEState::FEState(float time, FEModel* fem, FEMeshBase* pmesh) : m_fem(fem), m_me
 	for (int i=0; i<nodes; ++i) m_NODE[i].m_rt = mesh.Node(i).m_r0;
 	for (int i=0; i<elems; ++i)
 	{
+		m_ELEM[i].m_state = StatusFlags::VISIBLE;
 		m_ELEM[i].m_h[0] = 0.f;
 		m_ELEM[i].m_h[1] = 0.f;
 		m_ELEM[i].m_h[2] = 0.f;

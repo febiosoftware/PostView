@@ -29,6 +29,12 @@ protected:
 };
 
 //-----------------------------------------------------------------------------
+enum StatusFlags {
+	ACTIVE	= 0x01,			// item has data
+	VISIBLE	= 0x02			// item is visible
+};
+
+//-----------------------------------------------------------------------------
 // Data classes for mesh items
 struct NODEDATA
 {
@@ -46,9 +52,9 @@ struct EDGEDATA
 
 struct ELEMDATA
 {
-	float	m_val;		// current element value
-	int		m_ntag;		// active flag
-	float	m_h[FEGenericElement::MAX_NODES];		// shell thickness (TODO: Can we move this to the face data?)
+	float			m_val;		// current element value
+	unsigned int	m_state;	// state flags
+	float			m_h[FEGenericElement::MAX_NODES];		// shell thickness (TODO: Can we move this to the face data?)
 };
 
 struct FACEDATA

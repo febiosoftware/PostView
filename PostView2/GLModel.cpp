@@ -162,6 +162,10 @@ void CGLModel::Update(bool breset)
 	// get the time inc value
 	float dt = m_fTime - GetTimeValue(m_nTime);
 
+	// update the state of the mesh
+	GetFEModel()->UpdateMeshState(m_nTime);
+	UpdateInternalSurfaces(false);
+
 	// update displacement map
 	if (m_pdis && m_pdis->IsActive()) m_pdis->Update(m_nTime, dt, breset);
 
@@ -1026,9 +1030,12 @@ void CGLModel::RenderSolidMaterial(FEModel* ps, int m)
 		face.m_ntag = 0;
 
 		// check render state
-		if (((mode != SELECT_ELEMS) || !el.IsSelected()) && ((mode != SELECT_FACES) || !face.IsSelected()) && face.IsVisible())
+		if (el.IsVisible())
 		{
-			face.m_ntag = (face.IsActive() ? 1 : 2);
+			if (((mode != SELECT_ELEMS) || !el.IsSelected()) && ((mode != SELECT_FACES) || !face.IsSelected()) && face.IsVisible())
+			{
+				face.m_ntag = (face.IsActive() ? 1 : 2);
+			}
 		}
 	}
 
@@ -1408,7 +1415,8 @@ void CGLModel::RenderMeshLines(FEModel* ps, int nmat)
 		for (int i=0; i<dom.Faces(); ++i)
 		{
 			FEFace& face = dom.Face(i);
-			if (face.IsVisible())
+			FEElement& el = pm->Element(face.m_elem[0]);
+			if (face.IsVisible() && el.IsVisible())
 			{
 				// okay, we got one, so let's render it
 				RenderFaceOutline(face, pm, ndivs);
@@ -3513,7 +3521,7 @@ void CGLModel::ClearInternalSurfaces()
 }
 
 //-----------------------------------------------------------------------------
-void CGLModel::UpdateInternalSurfaces()
+void CGLModel::UpdateInternalSurfaces(bool eval)
 {
 	ClearInternalSurfaces();
 
@@ -3557,7 +3565,7 @@ void CGLModel::UpdateInternalSurfaces()
 	}
 
 	// reevaluate model
-	Update(false);
+	if (eval) Update(false);
 }
 
 //-----------------------------------------------------------------------------

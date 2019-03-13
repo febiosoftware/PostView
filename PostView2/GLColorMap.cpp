@@ -88,7 +88,7 @@ void CGLColorMap::Update(int ntime, float dt, bool breset)
 			FEElement& el = pm->Element(i);
 			ELEMDATA& d0 = s0.m_ELEM[i];
 			ELEMDATA& d1 = s1.m_ELEM[i];
-			if ((d0.m_ntag > 0) && (d1.m_ntag > 0))
+			if ((d0.m_state & StatusFlags::ACTIVE) && (d1.m_state & StatusFlags::ACTIVE))
 			{
 				float f0 = d0.m_val;
 				float f1 = d1.m_val;
@@ -207,7 +207,7 @@ void CGLColorMap::Update(int ntime, float dt, bool breset)
 		FEElement& el = pm->Element(i);
 		ELEMDATA& d0 = s0.m_ELEM[i];
 		ELEMDATA& d1 = s1.m_ELEM[i];
-		if ((d0.m_ntag > 0) && (d1.m_ntag > 0))
+		if ((d0.m_state & StatusFlags::ACTIVE) && (d1.m_state & StatusFlags::ACTIVE))
 		{
 			float f0 = d0.m_val;
 			float f1 = d1.m_val;
@@ -237,7 +237,7 @@ void CGLColorMap::Update(int ntime, float dt, bool breset)
 				ELEMDATA& d0 = s0.m_ELEM[iel];
 				ELEMDATA& d1 = s1.m_ELEM[iel];
 
-				if ((d0.m_ntag == 0) || (d1.m_ntag == 0)) face.Deactivate();
+				if (((d0.m_state & StatusFlags::ACTIVE)==0) || ((d1.m_state & StatusFlags::ACTIVE)== 0)) face.Deactivate();
 				else
 				{
 					float v0 = d0.m_val;

@@ -169,6 +169,7 @@ public:
 	IOResult read(vector<mat3fd >& a) { return read(&(a[0].x), 3*(int) a.size()); }
 	IOResult read(vector<tens4fs>& a) { return read(&(a[0].d[0]), 21*(int) a.size()); }
 	IOResult read(vector<mat3f  >& a) { return read(&(a[0].m_data[0][0]), 9*(int) a.size()); }
+	IOResult read(vector<unsigned int>& a) { return read((int*)&a[0], (int)a.size()); }
 
 	// conversion to FILE* 
 //	operator FILE* () { return m_fp; }

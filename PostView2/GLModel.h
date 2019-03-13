@@ -317,7 +317,7 @@ public: // Selection
 	void SelectAllElements();
 
 protected:
-	void UpdateInternalSurfaces();
+	void UpdateInternalSurfaces(bool eval = true);
 	void ClearInternalSurfaces();
 	void UpdateEdge();
 

@@ -907,3 +907,23 @@ void FEModel::ClearDependants()
 		m_Dependants.clear();
 	}
 }
+
+//-----------------------------------------------------------------------------
+void FEModel::UpdateMeshState(int ntime)
+{
+	FEState& state = *GetState(ntime);
+
+	FEMeshBase* mesh = state.GetFEMesh();
+	int NE = mesh->Elements();
+	for (int i = 0; i < NE; ++i)
+	{
+		FEElement& el = mesh->Element(i);
+		ELEMDATA& data = state.m_ELEM[i];
+
+		if ((data.m_state & StatusFlags::VISIBLE) == 0)
+		{
+			el.Show(false);
+		}
+		else el.Show(true);
+	}
+}

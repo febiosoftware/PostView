@@ -231,11 +231,11 @@ void FEModel::EvalNodeField(int ntime, int nfield)
 		FEElement& e = mesh->Element(i);
 		ELEMDATA& d = state.m_ELEM[i];
 		d.m_val = 0.f;
-		d.m_ntag = 0;
+		d.m_state &= ~StatusFlags::ACTIVE;
 		e.Deactivate();
 		if (e.IsEnabled())
 		{
-			d.m_ntag = 1;
+			d.m_state |= StatusFlags::ACTIVE;
 			e.Activate();
 			for (j=0; j<e.Nodes(); ++j) { float val = state.m_NODE[e.m_node[j]].m_val; elemData.value(i,j) = val; d.m_val += val; }
 			d.m_val /= (float) e.Nodes();
@@ -356,7 +356,7 @@ void FEModel::EvalFaceField(int ntime, int nfield)
 		FEElement& el = mesh->Element(i);
 		el.Deactivate();
 		state.m_ELEM[i].m_val = 0.f;
-		state.m_ELEM[i].m_ntag = 0;
+		state.m_ELEM[i].m_state &= ~StatusFlags::ACTIVE;
 	}
 }
 
@@ -379,13 +379,13 @@ void FEModel::EvalElemField(int ntime, int nfield)
 	{
 		FEElement& el = mesh->Element(i);
 		state.m_ELEM[i].m_val = 0.f;
-		state.m_ELEM[i].m_ntag = 0;
+		state.m_ELEM[i].m_state &= ~StatusFlags::ACTIVE;
 		el.Deactivate();
 		if (el.IsEnabled()) 
 		{
 			if (EvaluateElement(i, ntime, nfield, data, val))
 			{
-				state.m_ELEM[i].m_ntag = 1;
+				state.m_ELEM[i].m_state |= StatusFlags::ACTIVE;
 				state.m_ELEM[i].m_val = val;
 				el.Activate();
 				int ne = el.Nodes();
@@ -409,7 +409,7 @@ void FEModel::EvalElemField(int ntime, int nfield)
 			for (int j=0; j<m; ++j)
 			{
 				ELEMDATA& e = state.m_ELEM[nel[j].first];
-				if (e.m_ntag > 0)
+				if (e.m_state & StatusFlags::ACTIVE)
 				{
 					val += elemData.value(nel[j].first, nel[j].second);
 					++n;
@@ -430,10 +430,11 @@ void FEModel::EvalElemField(int ntime, int nfield)
 		FEFace& f = mesh->Face(i);
 		FACEDATA& d = state.m_FACE[i];
 		d.m_ntag = 0;
-		if (state.m_ELEM[f.m_elem[0]].m_ntag > 0)
+		ELEMDATA& e = state.m_ELEM[f.m_elem[0]];
+		if (e.m_state & StatusFlags::ACTIVE)
 		{
 			d.m_ntag = 1;
-			ELEMDATA& e = state.m_ELEM[f.m_elem[0]];
+
 			switch (mesh->Element(f.m_elem[0]).Type())
 			{
 			case FE_TET4:

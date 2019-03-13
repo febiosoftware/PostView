@@ -258,7 +258,7 @@ double CIntegrateWindow::IntegrateElems(FEMeshBase& mesh, FEState* ps)
 	for (int i=0; i<mesh.Elements(); ++i)
 	{
 		FEElement& e = mesh.Element(i);
-		if (e.IsSelected() && (e.IsSolid()) && (ps->m_ELEM[i].m_ntag > 0))
+		if (e.IsSelected() && (e.IsSolid()) && (ps->m_ELEM[i].m_state & StatusFlags::ACTIVE))
 		{
 			int nn = e.Nodes();
 

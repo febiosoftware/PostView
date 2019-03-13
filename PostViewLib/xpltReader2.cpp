@@ -1209,6 +1209,28 @@ bool XpltReader2::ReadStateSection(FEModel& fem)
 				m_ar.CloseChunk();
 			}
 		}
+		else if (nid == PLT_MESH_STATE)
+		{
+			while (m_ar.OpenChunk() == IO_OK)
+			{
+				if (m_ar.GetChunkID() == PLT_ELEMENT_STATE)
+				{
+					FEMeshBase* mesh = fem.GetFEMesh(0);
+					int NE = mesh->Elements();
+					vector<unsigned int> flags(NE, 0);
+					m_ar.read(flags);
+
+					for (int i = 0; i < NE; ++i)
+					{
+						if (flags[i] == 1)
+							ps->m_ELEM[i].m_state = StatusFlags::VISIBLE;
+						else
+							ps->m_ELEM[i].m_state = 0;
+					}
+				}
+				m_ar.CloseChunk();
+			}
+		}
 		else return errf("Invalid chunk ID");
 		m_ar.CloseChunk();
 	}
