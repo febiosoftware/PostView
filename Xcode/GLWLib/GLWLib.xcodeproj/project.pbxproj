@@ -250,14 +250,14 @@
 				EXECUTABLE_PREFIX = lib;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/usr/local/Cellar/qt/5.10.1/lib,
+					/usr/local/opt/qt/Frameworks,
 				);
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_ENABLE_CPP_RTTI = YES;
 				HEADER_SEARCH_PATHS = (
-					/usr/local/opt/qt5/include/QtWidgets,
-					/usr/local/opt/qt5/include/QtGui,
-					/usr/local/opt/qt5/include/QtCore,
+					/usr/local/opt/qt/include/QtWidgets,
+					/usr/local/opt/qt/include/QtGui,
+					/usr/local/opt/qt/include/QtCore,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/../..";
@@ -270,14 +270,14 @@
 				EXECUTABLE_PREFIX = lib;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/usr/local/Cellar/qt/5.10.1/lib,
+					/usr/local/opt/qt/Frameworks,
 				);
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_ENABLE_CPP_RTTI = YES;
 				HEADER_SEARCH_PATHS = (
-					/usr/local/opt/qt5/include/QtWidgets,
-					/usr/local/opt/qt5/include/QtGui,
-					/usr/local/opt/qt5/include/QtCore,
+					/usr/local/opt/qt/include/QtWidgets,
+					/usr/local/opt/qt/include/QtGui,
+					/usr/local/opt/qt/include/QtCore,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/../..";

@@ -44,6 +44,7 @@
 		D53A8DFB2074EC7C00BDDD2D /* GLStreamLinePlot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53A8DFA2074EC7C00BDDD2D /* GLStreamLinePlot.cpp */; };
 		D53B031C207EF04B00E6B5F5 /* GLParticleFlowPlot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53B031B207EF04A00E6B5F5 /* GLParticleFlowPlot.cpp */; };
 		D55AC5011E61EB6E00BBA0D1 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D55AC5001E61EB6E00BBA0D1 /* OpenGL.framework */; };
+		D55CE8EE21B96C0E0096890D /* MeasureVolumeTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D55CE8ED21B96C0E0096890D /* MeasureVolumeTool.cpp */; };
 		D56731621F9FD85200C87BC1 /* AreaCoverageTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D56731611F9FD85200C87BC1 /* AreaCoverageTool.cpp */; };
 		D56731681F9FF5A700C87BC1 /* moc_AreaCoverageTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D56731671F9FF5A700C87BC1 /* moc_AreaCoverageTool.cpp */; };
 		D571E01120385DE700A7B96D /* GLColorMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D571E00E20385DE700A7B96D /* GLColorMap.cpp */; };
@@ -52,11 +53,11 @@
 		D576BB3220CACBD100F09942 /* moc_DlgAddEquation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D576BB3120CACBD100F09942 /* moc_DlgAddEquation.cpp */; };
 		D593D28E20A5E8A50011F0C2 /* GLTensorPlot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D593D28C20A5E8A40011F0C2 /* GLTensorPlot.cpp */; };
 		D5A65E0F1DBFA53F00B44009 /* DlgFileInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */; };
+		D5B805C2223BEF5C00198805 /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5B805BF223BEF5C00198805 /* QtGui.framework */; };
+		D5B805C3223BEF5C00198805 /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5B805C0223BEF5C00198805 /* QtWidgets.framework */; };
+		D5B805C4223BEF5C00198805 /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5B805C1223BEF5C00198805 /* QtCore.framework */; };
 		D5C20C622038851000BFB643 /* moc_FileThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5C20C612038851000BFB643 /* moc_FileThread.cpp */; };
 		D5C53DB71F86D97E0014FA22 /* DlgAddEquation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5C53DB61F86D97E0014FA22 /* DlgAddEquation.cpp */; };
-		D5CEB8AC208929AF00BFEA96 /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5CEB8AB208929AF00BFEA96 /* QtCore.framework */; };
-		D5CEB8AE208929BD00BFEA96 /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5CEB8AD208929BD00BFEA96 /* QtGui.framework */; };
-		D5CEB8B0208929CD00BFEA96 /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5CEB8AF208929CD00BFEA96 /* QtWidgets.framework */; };
 		D5E08BA320A5E5BE00275FAB /* libGLWLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5E08BA220A5E5BE00275FAB /* libGLWLib.a */; };
 		D5E0E6A71E72390D006FE591 /* moc_DataFieldSelector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5E0E6A61E72390D006FE591 /* moc_DataFieldSelector.cpp */; };
 		D5FAC5C821792BC8005E4684 /* StrainMapTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FAC5C721792BC8005E4684 /* StrainMapTool.cpp */; };
@@ -213,6 +214,8 @@
 		D53B031A207EF04A00E6B5F5 /* GLParticleFlowPlot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLParticleFlowPlot.h; sourceTree = "<group>"; };
 		D53B031B207EF04A00E6B5F5 /* GLParticleFlowPlot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLParticleFlowPlot.cpp; sourceTree = "<group>"; };
 		D55AC5001E61EB6E00BBA0D1 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		D55CE8EC21B96C0D0096890D /* MeasureVolumeTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeasureVolumeTool.h; sourceTree = "<group>"; };
+		D55CE8ED21B96C0E0096890D /* MeasureVolumeTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MeasureVolumeTool.cpp; sourceTree = "<group>"; };
 		D56731601F9FD85200C87BC1 /* AreaCoverageTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AreaCoverageTool.h; sourceTree = "<group>"; };
 		D56731611F9FD85200C87BC1 /* AreaCoverageTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AreaCoverageTool.cpp; sourceTree = "<group>"; };
 		D56731671F9FF5A700C87BC1 /* moc_AreaCoverageTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_AreaCoverageTool.cpp; sourceTree = "<group>"; };
@@ -227,12 +230,12 @@
 		D593D28D20A5E8A40011F0C2 /* GLTensorPlot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLTensorPlot.h; sourceTree = "<group>"; };
 		D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgFileInfo.cpp; sourceTree = "<group>"; };
 		D5A65E0E1DBFA53F00B44009 /* DlgFileInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgFileInfo.h; sourceTree = "<group>"; };
+		D5B805BF223BEF5C00198805 /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt/5.12.0/lib/QtGui.framework; sourceTree = "<group>"; };
+		D5B805C0223BEF5C00198805 /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt/5.12.0/lib/QtWidgets.framework; sourceTree = "<group>"; };
+		D5B805C1223BEF5C00198805 /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt/5.12.0/lib/QtCore.framework; sourceTree = "<group>"; };
 		D5C20C612038851000BFB643 /* moc_FileThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_FileThread.cpp; sourceTree = "<group>"; };
 		D5C53DB51F86D97E0014FA22 /* DlgAddEquation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgAddEquation.h; sourceTree = "<group>"; };
 		D5C53DB61F86D97E0014FA22 /* DlgAddEquation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgAddEquation.cpp; sourceTree = "<group>"; };
-		D5CEB8AB208929AF00BFEA96 /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt/5.10.1/lib/QtCore.framework; sourceTree = "<group>"; };
-		D5CEB8AD208929BD00BFEA96 /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt/5.10.1/lib/QtGui.framework; sourceTree = "<group>"; };
-		D5CEB8AF208929CD00BFEA96 /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt/5.10.1/lib/QtWidgets.framework; sourceTree = "<group>"; };
 		D5E08BA220A5E5BE00275FAB /* libGLWLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libGLWLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5E0E6A61E72390D006FE591 /* moc_DataFieldSelector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_DataFieldSelector.cpp; sourceTree = "<group>"; };
 		D5FAC5C621792BC7005E4684 /* StrainMapTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StrainMapTool.h; sourceTree = "<group>"; };
@@ -405,9 +408,9 @@
 				D52F508E218C9C370094F7D1 /* libiconv.2.dylib in Frameworks */,
 				D52C6FB51D75DCE900DF804B /* libPostViewLib.a in Frameworks */,
 				D5E08BA320A5E5BE00275FAB /* libGLWLib.a in Frameworks */,
-				D5CEB8B0208929CD00BFEA96 /* QtWidgets.framework in Frameworks */,
-				D5CEB8AE208929BD00BFEA96 /* QtGui.framework in Frameworks */,
-				D5CEB8AC208929AF00BFEA96 /* QtCore.framework in Frameworks */,
+				D5B805C2223BEF5C00198805 /* QtGui.framework in Frameworks */,
+				D5B805C3223BEF5C00198805 /* QtWidgets.framework in Frameworks */,
+				D5B805C4223BEF5C00198805 /* QtCore.framework in Frameworks */,
 				D55AC5011E61EB6E00BBA0D1 /* OpenGL.framework in Frameworks */,
 				D52F507C218C98730094F7D1 /* AudioToolbox.framework in Frameworks */,
 				D52F507E218C98AD0094F7D1 /* CoreFoundation.framework in Frameworks */,
@@ -558,6 +561,8 @@
 				D5FF79F71D72756B003D2CBD /* MaterialPanel.h */,
 				D5FF79F81D72756B003D2CBD /* MeasureAreaTool.cpp */,
 				D5FF79F91D72756B003D2CBD /* MeasureAreaTool.h */,
+				D55CE8ED21B96C0E0096890D /* MeasureVolumeTool.cpp */,
+				D55CE8EC21B96C0D0096890D /* MeasureVolumeTool.h */,
 				D5FF79FA1D72756B003D2CBD /* moc_AddImage3DTool.cpp */,
 				D56731671F9FF5A700C87BC1 /* moc_AreaCoverageTool.cpp */,
 				D5FF79FB1D72756B003D2CBD /* moc_CColorButton.cpp */,
@@ -661,15 +666,15 @@
 				D52F50F0218D07700094F7D1 /* libswresample.3.1.100.dylib */,
 				D52F50F4218D07710094F7D1 /* libswscale.5.1.100.dylib */,
 				D52F508D218C9C370094F7D1 /* libiconv.2.dylib */,
+				D5B805C1223BEF5C00198805 /* QtCore.framework */,
+				D5B805BF223BEF5C00198805 /* QtGui.framework */,
+				D5B805C0223BEF5C00198805 /* QtWidgets.framework */,
 				D52F5085218C996B0094F7D1 /* CoreAudio.framework */,
 				D52F5083218C99350094F7D1 /* VideoToolbox.framework */,
 				D52F5081218C990D0094F7D1 /* CoreVideo.framework */,
 				D52F507F218C98ED0094F7D1 /* CoreMedia.framework */,
 				D52F507D218C98AC0094F7D1 /* CoreFoundation.framework */,
 				D52F507B218C98730094F7D1 /* AudioToolbox.framework */,
-				D5CEB8AF208929CD00BFEA96 /* QtWidgets.framework */,
-				D5CEB8AD208929BD00BFEA96 /* QtGui.framework */,
-				D5CEB8AB208929AF00BFEA96 /* QtCore.framework */,
 				D55AC5001E61EB6E00BBA0D1 /* OpenGL.framework */,
 				D5E08BA220A5E5BE00275FAB /* libGLWLib.a */,
 				D52C6FB41D75DCE900DF804B /* libPostViewLib.a */,
@@ -842,6 +847,7 @@
 				D5FF7A791D72756B003D2CBD /* moc_PointCongruencyTool.cpp in Sources */,
 				D5FF7A521D72756B003D2CBD /* FileViewer.cpp in Sources */,
 				D5FF7A641D72756B003D2CBD /* MainWindow.cpp in Sources */,
+				D55CE8EE21B96C0E0096890D /* MeasureVolumeTool.cpp in Sources */,
 				D53B031C207EF04B00E6B5F5 /* GLParticleFlowPlot.cpp in Sources */,
 				D5FF7A451D72756B003D2CBD /* CDlgImportXPLT.cpp in Sources */,
 				D5FAC5D221793358005E4684 /* moc_StrainMapTool.cpp in Sources */,
@@ -927,6 +933,7 @@
 					/usr/local/Cellar/qt5/5.8.0_1/lib,
 					/usr/local/Cellar/qt/5.9.0_1/lib,
 					/usr/local/Cellar/qt/5.10.1/lib,
+					/usr/local/Cellar/qt/5.12.0/lib,
 				);
 				HEADER_SEARCH_PATHS = (
 					/Applications/Qt5.6.1/5.6/clang_64/lib/QtWidgets.framework/Headers,
@@ -1068,26 +1075,25 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/usr/local/Cellar/qt/5.10.1/lib,
+					/usr/local/opt/qt/Frameworks,
 				);
 				HEADER_SEARCH_PATHS = (
-					/usr/local/opt/qt5/include/QtWidgets,
-					/usr/local/opt/qt5/include/QtGui,
-					/usr/local/opt/qt5/include/QtCore,
+					/usr/local/opt/qt/include/QtWidgets,
+					/usr/local/opt/qt/include/QtGui,
+					/usr/local/opt/qt/include/QtCore,
 					/usr/local/opt/ffmpeg/include,
 				);
 				INFOPLIST_FILE = PostView2/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/usr/local/opt/qt5/lib,
+					/usr/local/opt/qt/lib,
 					/usr/local/opt/ffmpeg/lib,
-					/usr/local/Cellar/xvid/1.3.5/lib,
-					/usr/local/Cellar/x264/r2854/lib,
-					/usr/local/Cellar/lame/3.100/lib,
-					/usr/local/Cellar/ffmpeg/4.0.2/lib,
-					/usr/local/Cellar/ffmpeg/4.0.2_1/lib,
-					/usr/local/Cellar/x265/2.9/lib,
+					/usr/local/opt/xvid/lib,
+					/usr/local/opt/x264/lib,
+					/usr/local/opt/lame/lib,
+					/usr/local/opt/ffmpeg/lib,
+					/usr/local/opt/x265/lib,
 				);
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_BUNDLE_IDENTIFIER = FEB.PostView2;
@@ -1104,13 +1110,12 @@
 				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/usr/local/Cellar/qt/5.10.1/lib,
+					/usr/local/opt/qt/Frameworks,
 				);
 				HEADER_SEARCH_PATHS = (
-					/usr/local/opt/qt5/include/QtWidgets,
-					/usr/local/opt/qt5/include/QtGui,
-					/usr/local/opt/qt5/include/QtCore,
-					/usr/local/include/GL,
+					/usr/local/opt/qt/include/QtWidgets,
+					/usr/local/opt/qt/include/QtGui,
+					/usr/local/opt/qt/include/QtCore,
 					/usr/local/opt/ffmpeg/include,
 				);
 				INFOPLIST_FILE = PostView2/Info.plist;
