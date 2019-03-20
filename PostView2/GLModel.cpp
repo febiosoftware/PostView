@@ -59,6 +59,8 @@ CGLModel::CGLModel(FEModel* ps)
 	m_nDivs = 0; // this means "auto"
 	m_brenderInteriorNodes = true;
 
+	m_bshowMesh = true;
+
 	m_bShell2Hex  = false;
 	m_nshellref   = 0;
 
@@ -297,6 +299,8 @@ void CGLModel::Render(CGLContext& rc, bool showMesh, bool showOutline, float spr
 	// get the FE model
 	FEModel* fem = GetFEModel();
 
+	m_bshowMesh = showMesh;
+
 	// Render discrete elements
 	float lineWidth;
 	glGetFloatv(GL_LINE_WIDTH, &lineWidth);
@@ -334,17 +338,6 @@ void CGLModel::Render(CGLContext& rc, bool showMesh, bool showOutline, float spr
 	if (m_bghost) RenderGhost(rc);
 
 	glPolygonOffset(0.0, 0.0);
-
-	// render the lines
-	// Notice that we change the depth range for rendering the lines
-	// We do this to prevent z-fighting between the mesh' lines and the
-	// the mesh polygons. I could have used glPolygonOffset but I found
-	// that this approach gave better results. Furthermore, this way works
-	// with more than just polygons.
-	if (showMesh && (mode != SELECT_EDGES))
-	{
-		RenderMeshLines(fem);
-	}
 
 	if (showOutline)
 	{
@@ -409,8 +402,6 @@ void CGLModel::RenderDiscrete(CGLContext& rc)
 //-----------------------------------------------------------------------------
 void CGLModel::RenderFaces(FEModel* ps, CGLContext& rc)
 {
-	glPushAttrib(GL_ENABLE_BIT);
-
 	// get the mesh
 	FEMeshBase* pm = GetActiveMesh();
 
@@ -424,18 +415,7 @@ void CGLModel::RenderFaces(FEModel* ps, CGLContext& rc)
 		// make sure the material is visible
 		if (pmat->bvisible && (pmat->transparency>.99f)) 
 		{
-			// set the rendering mode
-			int nmode = m_nrender;
-			if (pmat->m_nrender != RENDER_MODE_DEFAULT) nmode = pmat->m_nrender;
-
-			if (nmode == RENDER_MODE_SOLID)
-			{
-				RenderSolidMaterial(ps, m);
-			}
-			else 
-			{
-				RenderOutline(rc, m);
-			}
+			RenderSolidPart(ps, rc, m);
 		}
 	}
 
@@ -448,30 +428,14 @@ void CGLModel::RenderFaces(FEModel* ps, CGLContext& rc)
 		// make sure the material is visible
 		if (pmat->bvisible && (pmat->transparency<=.99f) && (pmat->transparency>0.001f)) 
 		{
-			// set the rendering mode
-			int nmode = m_nrender;
-			if (pmat->m_nrender != RENDER_MODE_DEFAULT) nmode = pmat->m_nrender;
-
-			if (nmode == RENDER_MODE_SOLID)
-			{
-				if (pmat->m_ntransmode == RENDER_TRANS_CONSTANT) RenderSolidMaterial(ps, m);
-				else RenderTransparentMaterial(rc, ps, m);
-			}
-			else
-			{
-				RenderOutline(rc, m);
-			}
+			RenderSolidPart(ps, rc, m);
 		}
 	}
-
-	glPopAttrib();
 }
 
 //-----------------------------------------------------------------------------
 void CGLModel::RenderElems(FEModel* ps, CGLContext& rc)
 {
-	glPushAttrib(GL_ENABLE_BIT);
-
 	// get the mesh
 	FEMeshBase* pm = GetActiveMesh();
 
@@ -485,19 +449,7 @@ void CGLModel::RenderElems(FEModel* ps, CGLContext& rc)
 		// make sure the material is visible
 		if (pmat->bvisible && (pmat->transparency>.99f))
 		{
-
-			// set the rendering mode
-			int nmode = m_nrender;
-			if (pmat->m_nrender != RENDER_MODE_DEFAULT) nmode = pmat->m_nrender;
-
-			if (nmode == RENDER_MODE_SOLID)
-			{
-				RenderSolidMaterial(ps, m);
-			}
-			else
-			{
-				RenderOutline(rc, m);
-			}
+			RenderSolidPart(ps, rc, m);
 		}
 	}
 
@@ -510,30 +462,14 @@ void CGLModel::RenderElems(FEModel* ps, CGLContext& rc)
 		// make sure the material is visible
 		if (pmat->bvisible && (pmat->transparency <= .99f) && (pmat->transparency>0.001f))
 		{
-			// set the rendering mode
-			int nmode = m_nrender;
-			if (pmat->m_nrender != RENDER_MODE_DEFAULT) nmode = pmat->m_nrender;
-
-			if (nmode == RENDER_MODE_SOLID)
-			{
-				if (pmat->m_ntransmode == RENDER_TRANS_CONSTANT) RenderSolidMaterial(ps, m);
-				else RenderTransparentMaterial(rc, ps, m);
-			}
-			else
-			{
-				RenderOutline(rc, m);
-			}
+			RenderSolidPart(ps, rc, m);
 		}
 	}
-
-	glPopAttrib();
 }
 
 //-----------------------------------------------------------------------------
 void CGLModel::RenderSurface(FEModel* ps, CGLContext& rc)
 {
-	glPushAttrib(GL_ENABLE_BIT);
-
 	// get the mesh
 	FEMeshBase* pm = GetActiveMesh();
 
@@ -547,19 +483,7 @@ void CGLModel::RenderSurface(FEModel* ps, CGLContext& rc)
 		// make sure the material is visible
 		if (pmat->bvisible && (pmat->transparency>.99f))
 		{
-
-			// set the rendering mode
-			int nmode = m_nrender;
-			if (pmat->m_nrender != RENDER_MODE_DEFAULT) nmode = pmat->m_nrender;
-
-			if (nmode == RENDER_MODE_SOLID)
-			{
-				RenderSolidMaterial(ps, m);
-			}
-			else
-			{
-				RenderOutline(rc, m);
-			}
+			RenderSolidPart(ps, rc, m);
 		}
 	}
 
@@ -572,23 +496,9 @@ void CGLModel::RenderSurface(FEModel* ps, CGLContext& rc)
 		// make sure the material is visible
 		if (pmat->bvisible && (pmat->transparency <= .99f) && (pmat->transparency>0.001f))
 		{
-			// set the rendering mode
-			int nmode = m_nrender;
-			if (pmat->m_nrender != RENDER_MODE_DEFAULT) nmode = pmat->m_nrender;
-
-			if (nmode == RENDER_MODE_SOLID)
-			{
-				if (pmat->m_ntransmode == RENDER_TRANS_CONSTANT) RenderSolidMaterial(ps, m);
-				else RenderTransparentMaterial(rc, ps, m);
-			}
-			else
-			{
-				RenderOutline(rc, m);
-			}
+			RenderSolidPart(ps, rc, m);
 		}
 	}
-
-	glPopAttrib();
 }
 
 //-----------------------------------------------------------------------------
@@ -976,6 +886,54 @@ void CGLModel::RenderSolidDomain(FEDomain& dom, bool btex)
 		}
 	}
 	if (btex) glEnable(GL_TEXTURE_1D);
+}
+
+//-----------------------------------------------------------------------------
+void CGLModel::RenderSolidPart(FEModel* ps, CGLContext& rc, int mat)
+{
+	// get the material
+	FEMaterial* pmat = ps->GetMaterial(mat);
+
+	// set the rendering mode
+	int nmode = m_nrender;
+	if (pmat->m_nrender != RENDER_MODE_DEFAULT) nmode = pmat->m_nrender;
+
+	if (nmode == RENDER_MODE_SOLID)
+	{
+		if ((pmat->transparency >= 0.99f) || (pmat->m_ntransmode == RENDER_TRANS_CONSTANT)) RenderSolidMaterial(ps, mat);
+		else RenderTransparentMaterial(rc, ps, mat);
+
+		RenderSolidMaterial(ps, mat);
+	}
+	else
+	{
+		RenderOutline(rc, mat);
+	}
+
+	// Render the mesh lines
+	if (m_bshowMesh && (GetSelectionMode() != SELECT_EDGES))
+	{
+		// store attributes
+		glPushAttrib(GL_ENABLE_BIT | GL_POLYGON_BIT);
+
+		glDisable(GL_LIGHTING);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+		if (pmat->bclip == false) CGLPlaneCutPlot::DisableClipPlanes();
+
+		// make sure the material is visible
+		if (pmat->bvisible && pmat->bmesh)
+		{
+			// set the material properties
+			GLCOLOR c = pmat->meshcol;
+			glColor3ub(c.r, c.g, c.b);
+			RenderMeshLines(ps, mat);
+		}
+		CGLPlaneCutPlot::EnableClipPlanes();
+
+		// restore attributes
+		glPopAttrib();
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -1434,39 +1392,6 @@ void CGLModel::RenderMeshLines(FEModel* ps, int nmat)
 
 //-----------------------------------------------------------------------------
 // Render the mesh lines of the model.
-
-void CGLModel::RenderMeshLines(FEModel* ps)
-{
-	// store attributes
-	glPushAttrib(GL_ENABLE_BIT | GL_POLYGON_BIT);
-
-	glDisable(GL_LIGHTING);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-	// we render the mesh by looping over the materials
-	// first we draw the materials that are not transparant
-	for (int m=0; m<ps->Materials(); ++m)
-	{
-		// get the material
-		FEMaterial* pmat = ps->GetMaterial(m);
-
-		if (pmat->bclip == false) CGLPlaneCutPlot::DisableClipPlanes();
-
-		// make sure the material is visible
-		if (pmat->bvisible && pmat->bmesh) 
-		{ 
-			// set the material properties
-			GLCOLOR c = pmat->meshcol;
-			glColor3ub(c.r, c.g, c.b);
-			RenderMeshLines(ps, m);
-		}
-
-		CGLPlaneCutPlot::EnableClipPlanes();
-	}
-
-	// restore attributes
-	glPopAttrib();
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 

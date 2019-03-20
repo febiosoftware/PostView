@@ -144,7 +144,6 @@ public:
 	void RenderDecorations();
 
 //	void RenderFeatureEdges(FEModel* ps);
-	void RenderMeshLines(FEModel* ps);
 	void RenderMeshLines(FEModel* ps, int nmat);
 	void RenderThickShell(FEFace& face, FEMeshBase* pm);
 	void RenderThickQuad(FEFace& face, FEMeshBase* pm);
@@ -161,6 +160,7 @@ protected:
 	void RenderTexFace(FEFace& el, FEMeshBase* pm);
 	void RenderElementOutline(FEElement& el, FEMeshBase* pm);
 	void RenderFaceOutline(FEFace& face, FEMeshBase* pm, int ndivs);
+	void RenderSolidPart(FEModel* ps, CGLContext& rc, int mat);
 	void RenderSolidMaterial(FEModel* ps, int m);
 	void RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m);
 	void RenderFaceEdge(FEFace& face, int j, FEMeshBase* pm, int ndivs);
@@ -336,6 +336,8 @@ public:
 	GLCOLOR		m_sel_col;		//!< selection color
 	GLCOLOR		m_col_inactive;	//!< color for inactive parts
 	double		m_stol;			//!< smoothing threshold
+
+	bool		m_bshowMesh;
 
 	float	m_fTime;		// current time value
 	int		m_nTime;		// active time step
