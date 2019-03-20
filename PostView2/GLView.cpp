@@ -436,9 +436,9 @@ void CGLView::initializeGL()
 	glLightfv(GL_LIGHT0, GL_SPECULAR, ones);
 	glEnable(GL_LIGHT0);
 
-	// enable color tracking for diffuse color of materials
+	// enable color tracking for ambient and diffuse color of materials
 	glEnable(GL_COLOR_MATERIAL);
-	glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 
 	// set texture parameter for 2D textures
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

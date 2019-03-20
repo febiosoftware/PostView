@@ -191,19 +191,23 @@ void CGLModel::SetMaterialParams(FEMaterial* pm)
 
 	glColor4ub(pm->diffuse.r, pm->diffuse.g, pm->diffuse.b, a);
 
-	fv[0] = (float) pm->ambient.r*f;
+/*	fv[0] = (float) pm->ambient.r*f;
 	fv[1] = (float) pm->ambient.g*f;
 	fv[2] = (float) pm->ambient.b*f;
+	fv[3] = (float) a*f;
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, fv);
+*/
 
 	fv[0] = (float) pm->specular.r*f;
 	fv[1] = (float) pm->specular.g*f;
 	fv[2] = (float) pm->specular.b*f;
+	fv[3] = 1.f;
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, fv);
 
 	fv[0] = (float) pm->emission.r*f;
 	fv[1] = (float) pm->emission.g*f;
 	fv[2] = (float) pm->emission.b*f;
+	fv[3] = 1.f;
 	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, fv);
 
 	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, pm->shininess*64.f);
@@ -308,9 +312,6 @@ void CGLModel::Render(CGLContext& rc, bool showMesh, bool showOutline, float spr
 	RenderDiscrete(rc);
 	glLineWidth(lineWidth);
 
-	// Render the model
-	glPolygonOffset(1.0, 1.0);
-
 	int mode = GetSelectionMode();
 
 	// render the faces
@@ -336,8 +337,6 @@ void CGLModel::Render(CGLContext& rc, bool showMesh, bool showOutline, float spr
 
 	// render the ghost
 	if (m_bghost) RenderGhost(rc);
-
-	glPolygonOffset(0.0, 0.0);
 
 	if (showOutline)
 	{
@@ -818,7 +817,7 @@ void CGLModel::RenderTransparentMaterial(CGLContext& rc, FEModel* ps, int m)
 
 	if (pmat->benable && m_pcol->IsActive())
 	{
-		glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+		glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	}
 
 	glPopAttrib();
@@ -853,7 +852,7 @@ void CGLModel::RenderInnerSurfaceOutline(int m, int ndivs)
 }
 
 //-----------------------------------------------------------------------------
-void CGLModel::RenderSolidDomain(FEDomain& dom, bool btex)
+void CGLModel::RenderSolidDomain(FEDomain& dom, bool btex, bool benable)
 {
 	FEMeshBase* pm = GetActiveMesh();
 	int ndivs = GetSubDivisions();
@@ -875,7 +874,7 @@ void CGLModel::RenderSolidDomain(FEDomain& dom, bool btex)
 
 	// render inactive faces
 	if (btex) glDisable(GL_TEXTURE_1D);
-	if (m_pcol->IsActive()) glColor4ub(m_col_inactive.r, m_col_inactive.g, m_col_inactive.b, m_col_inactive.a);
+	if (m_pcol->IsActive() && benable) glColor4ub(m_col_inactive.r, m_col_inactive.g, m_col_inactive.b, m_col_inactive.a);
 	for (int i = 0; i<NF; ++i)
 	{
 		FEFace& face = dom.Face(i);
@@ -924,10 +923,14 @@ void CGLModel::RenderSolidPart(FEModel* ps, CGLContext& rc, int mat)
 		// make sure the material is visible
 		if (pmat->bvisible && pmat->bmesh)
 		{
+			glDepthRange(0, 0.999999);
+
 			// set the material properties
 			GLCOLOR c = pmat->meshcol;
 			glColor3ub(c.r, c.g, c.b);
 			RenderMeshLines(ps, mat);
+
+			glDepthRange(0, 1.0);
 		}
 		CGLPlaneCutPlot::EnableClipPlanes();
 
@@ -949,21 +952,22 @@ void CGLModel::RenderSolidMaterial(FEModel* ps, int m)
 	// get the transparency value
 	GLubyte alpha = (GLubyte)(255.f*pmat->transparency);
 
-	// set the material properties
+	// set the color for inactive materials
 	m_col_inactive = GLCOLOR(200, 200, 200);
+	m_col_inactive.a = alpha;
+
+	// set the material properties
+	SetMaterialParams(pmat);
 	bool btex = false;
 	if (pmat->benable && m_pcol->IsActive())
 	{
 		btex = true;
-		glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 		glColor4ub(255,255,255, alpha);
 		m_pcol->GetColorMap()->GetTexture().MakeCurrent();
-		m_col_inactive.a = alpha;
 	}
 	else
 	{
 		btex = false;
-		SetMaterialParams(pmat);
 	}
 
 	// see if we allow the model to be clipped
@@ -1000,7 +1004,7 @@ void CGLModel::RenderSolidMaterial(FEModel* ps, int m)
 	// do the rendering
 	if (pmat->transparency > .999f)
 	{
-		RenderSolidDomain(dom, btex);
+		RenderSolidDomain(dom, btex, pmat->benable);
 	}
 	else
 	{
@@ -1009,12 +1013,12 @@ void CGLModel::RenderSolidMaterial(FEModel* ps, int m)
 		glEnable(GL_CULL_FACE);
 
 		glCullFace(GL_FRONT);
-		RenderSolidDomain(dom, btex);
+		RenderSolidDomain(dom, btex, pmat->benable);
 
 		// and then we draw the front-facing ones.
 		glCullFace(GL_BACK);
 		if (btex) glColor4ub(255, 255, 255, alpha);
-		RenderSolidDomain(dom, btex);
+		RenderSolidDomain(dom, btex, pmat->benable);
 
 		glPopAttrib();
 	}
@@ -1028,7 +1032,7 @@ void CGLModel::RenderSolidMaterial(FEModel* ps, int m)
 
 	if (pmat->benable && m_pcol->IsActive())
 	{
-		glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+		glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	}
 
 	glPopAttrib();
