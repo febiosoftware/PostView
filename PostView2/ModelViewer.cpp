@@ -635,7 +635,7 @@ void CModelViewer::Update(bool breset)
 {
 	if (breset)
 	{
-		CModelTreeItem* item = dynamic_cast<CModelTreeItem*>(ui->m_tree->currentItem());
+//		CModelTreeItem* item = dynamic_cast<CModelTreeItem*>(ui->m_tree->currentItem());
 /*		CGLObject* po = 0;
 		if (item)
 		{

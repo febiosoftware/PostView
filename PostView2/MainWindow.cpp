@@ -730,6 +730,11 @@ void CMainWindow::on_actionUpdate_triggered()
 
 		FEModel* fem = m_doc->GetFEModel();
 		int nfield = m_doc->GetEvalField();
+
+		// we need to update the model viewer before we rebuild the selection menu
+		ui->modelViewer->Update(true);
+
+		// now, we can rebuild the 
 		ui->selectData->BuildMenu(m_doc->GetFEModel(), DATA_SCALAR);
 		ui->selectData->setCurrentValue(nfield);
 		ui->actionColorMap->setDisabled(false);
