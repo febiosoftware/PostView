@@ -755,7 +755,11 @@ void FEMeshBase::UpdateNormals(bool bsmooth)
 						if (pf->m_nbr[j] >= 0)
 						{
 							pf2 = &m_Face[pf->m_nbr[j]];
-							if ((pf2->m_ntag == -1) && (pf2->m_nsg == pf->m_nsg)) stack[ns++] = pf2;
+							if ((pf2->m_ntag == -1) && (pf2->m_nsg == pf->m_nsg))
+							{
+								pf2->m_ntag = nsg;
+								stack[ns++] = pf2;
+							}
 						}
 					}
 				}
