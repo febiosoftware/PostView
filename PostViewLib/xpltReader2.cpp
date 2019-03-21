@@ -1215,8 +1215,7 @@ bool XpltReader2::ReadStateSection(FEModel& fem)
 			{
 				if (m_ar.GetChunkID() == PLT_ELEMENT_STATE)
 				{
-					FEMeshBase* mesh = fem.GetFEMesh(0);
-					int NE = mesh->Elements();
+					int NE = mesh.Elements();
 					vector<unsigned int> flags(NE, 0);
 					m_ar.read(flags);
 
