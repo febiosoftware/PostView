@@ -28,9 +28,16 @@ public:
 	// Apply button
 	void OnApply();
 
+	// update
+	void update(bool breset) override;
+
 private:
 	int		m_nsel;		// selected faces
 	double	m_area;		// area of selection
+
+	bool	m_bfilter;
+	double	m_minFilter;
+	double	m_maxFilter;
 
 	friend class Props;
 };

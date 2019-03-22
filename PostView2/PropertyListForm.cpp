@@ -95,9 +95,9 @@ void CPropertyListForm::setPropertyList(CPropertyList* pl)
 				QLineEdit* edit = new QLineEdit;
 				edit->setText(v.toString());
 				edit->setReadOnly(true);
-				QPalette p = edit->palette();
-				p.setBrush(QPalette::Base, QColor(236, 236, 236));
-				edit->setPalette(p);
+//				QPalette p = edit->palette();
+//				p.setBrush(QPalette::Base, QColor(236, 236, 236));
+//				edit->setPalette(p);
 				pw = edit;
 			}
 			if (pw) ui->addRow(pi.name, pw);
