@@ -125,6 +125,8 @@ public:
 
 	int		m_theme;
 
+	bool	m_isAnimating;
+
 	QString	m_old_title;
 
 public:
@@ -139,6 +141,8 @@ public:
 		m_theme = 0;
 
 		m_update_spin = true;
+
+		m_isAnimating = false;
 
 		currentPath = QDir::currentPath();
 

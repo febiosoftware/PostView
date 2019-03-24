@@ -389,7 +389,7 @@ void CMainWindow::SetCurrentFolder(const QString& folder)
 void CMainWindow::OpenFile(const QString& fileName, int nfilter)
 {
 	// Stop the timer if it's running
-	if (m_timer.isActive()) StopAnimation();
+	if (ui->m_isAnimating) ui->m_isAnimating = false;
 
 	std::string sfile = fileName.toStdString();
 
@@ -1436,16 +1436,17 @@ void CMainWindow::on_actionPlay_toggled(bool bchecked)
 	CDocument* doc = GetDocument();
 	if (doc->IsValid())
 	{
-		TIMESETTINGS& time = GetDocument()->GetTimeSettings();
-		double fps = time.m_fps;
-		if (fps < 1.0) fps = 1.0;
-		double msec_per_frame = 1000.0 / fps;
-
 		if (bchecked)
 		{
-			m_timer.start(msec_per_frame, this);
+			TIMESETTINGS& time = GetDocument()->GetTimeSettings();
+			double fps = time.m_fps;
+			if (fps < 1.0) fps = 1.0;
+			double msec_per_frame = 1000.0 / fps;
+
+			ui->m_isAnimating = true;
+			QTimer::singleShot(msec_per_frame, this, SLOT(onTimer()));
 		}
-		else m_timer.stop();
+		else ui->m_isAnimating = false;
 	}
 }
 
@@ -1490,12 +1491,14 @@ void CMainWindow::SetCurrentTimeValue(float ftime)
 
 void CMainWindow::StopAnimation()
 {
-	m_timer.stop();
+	ui->m_isAnimating = false;
 	ui->actionPlay->setChecked(false);
 }
 
-void CMainWindow::timerEvent(QTimerEvent* ev)
+void CMainWindow::onTimer()
 {
+	if (ui->m_isAnimating == false) return;
+
 	CDocument* pdoc = GetDocument();
 	TIMESETTINGS& time = pdoc->GetTimeSettings();
 
@@ -1587,7 +1590,22 @@ void CMainWindow::timerEvent(QTimerEvent* ev)
 		}
 		SetCurrentTime(nstep);
 	}
+
 	RedrawGL();
+
+	// TODO: Should I start the event before or after the view is redrawn?
+	if (ui->m_isAnimating)
+	{
+		CDocument* doc = GetDocument();
+		if (doc->IsValid())
+		{
+			TIMESETTINGS& time = GetDocument()->GetTimeSettings();
+			double fps = time.m_fps;
+			if (fps < 1.0) fps = 1.0;
+			double msec_per_frame = 1000.0 / fps;
+			QTimer::singleShot(msec_per_frame, this, SLOT(onTimer()));
+		}
+	}
 }
 
 void CMainWindow::on_actionFirst_triggered()

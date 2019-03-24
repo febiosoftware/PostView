@@ -204,8 +204,9 @@ public slots:
 
 	void on_recentFiles_triggered(QAction* action);
 
+	void onTimer();
+
 private:
-	void timerEvent(QTimerEvent* ev);
 	void closeEvent(QCloseEvent* ev);
 	void StopAnimation();
 
@@ -217,6 +218,5 @@ private:
 private:
 	Ui::CMainWindow*	ui;
 	CDocument*			m_doc;
-	QBasicTimer			m_timer;
 	CFileThread*		m_fileThread;
 };
