@@ -2,6 +2,17 @@
 = PostView Release Notes                                               =
 ========================================================================
 
+Version 2.4.1 - 3/25/2018
+==========================
+
+- A bug was fixed that could cause a crash when updating the model.
+
+- Mesh lines can now be seen through transparent objects.
+
+- Some issues with material colors not displaying correctly were addressed. 
+
+- Fixed a bug that was causing a crash for some models that did not have any crease edges. 
+
 
 Version 2.4.0 - 3/7/2018
 ==========================
