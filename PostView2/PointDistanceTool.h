@@ -17,7 +17,7 @@ class CPointDistanceTool : public CBasicTool
 	};
 
 public:
-	CPointDistanceTool(CDocument* doc);
+	CPointDistanceTool(CMainWindow* wnd);
 
 	CPropertyList* getPropertyList();
 

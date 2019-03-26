@@ -26,7 +26,7 @@ void CShellThicknessTool::Props::SetPropertyValue(int i, const QVariant& v)
 }
 
 //-----------------------------------------------------------------------------
-CShellThicknessTool::CShellThicknessTool(CDocument* doc) : CBasicTool("Shell Thickness", doc, CBasicTool::HAS_APPLY_BUTTON)
+CShellThicknessTool::CShellThicknessTool(CMainWindow* wnd) : CBasicTool("Shell Thickness", wnd, CBasicTool::HAS_APPLY_BUTTON)
 {
 	m_h = 0.0;
 }
@@ -40,9 +40,10 @@ CPropertyList* CShellThicknessTool::getPropertyList()
 //-----------------------------------------------------------------------------
 void CShellThicknessTool::OnApply()
 {
-	if (m_doc && m_doc->IsValid())
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
 	{
-		FEModel& fem = *m_doc->GetFEModel();
+		FEModel& fem = *doc->GetFEModel();
 		FEMeshBase& mesh = *fem.GetFEMesh(0);
 
 		int NS = fem.GetStates();
@@ -59,7 +60,7 @@ void CShellThicknessTool::OnApply()
 				}
 			}
 		}
-		m_doc->UpdateFEModel(true);
+		doc->UpdateFEModel(true);
 	}
 	updateUi();
 }

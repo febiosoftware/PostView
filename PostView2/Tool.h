@@ -3,6 +3,7 @@
 #include <QWidget>
 
 class CDocument;
+class CMainWindow;
 class CPropertyListForm;
 class QHideEvent;
 class QShowEvent;
@@ -15,7 +16,7 @@ class CAbstractTool : public QObject
 {
 public:
 	// constructor. Requires a name for the plugin
-	CAbstractTool(const QString& s, CDocument* doc) : m_name(s), m_doc(doc) {}
+	CAbstractTool(const QString& s, CMainWindow* wnd);
 
 	// retrieve attributes
 	const QString& name() { return m_name; }
@@ -38,9 +39,12 @@ public:
 	// update the Ui
 	virtual void updateUi();
 
+	// get the active document
+	CDocument* GetActiveDocument();
+
 protected:
-	QString		m_name;
-	CDocument*	m_doc;
+	QString			m_name;
+	CMainWindow*	m_wnd;
 };
 
 //-----------------------------------------------------------------------------
@@ -71,7 +75,7 @@ public:
 	};
 
 public:
-	CBasicTool(const QString& s, CDocument* doc, unsigned int flags = 0);
+	CBasicTool(const QString& s, CMainWindow* wnd, unsigned int flags = 0);
 
 	// A form will be created based on the property list
 	QWidget* createUi();

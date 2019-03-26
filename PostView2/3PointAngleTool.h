@@ -20,7 +20,7 @@ class C3PointAngleTool : public CBasicTool
 
 public:
 	// constructor
-	C3PointAngleTool(CDocument* doc);
+	C3PointAngleTool(CMainWindow* wnd);
 
 	// get the property list
 	CPropertyList*	getPropertyList();

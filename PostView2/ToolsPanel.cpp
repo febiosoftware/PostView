@@ -130,28 +130,26 @@ void CToolsPanel::Update(bool breset)
 
 void CToolsPanel::initTools()
 {
-	CDocument* doc = m_wnd->GetActiveDocument();
-
-	tools.push_back(new CPointDistanceTool  (doc));
-	tools.push_back(new C3PointAngleTool    (doc));
-	tools.push_back(new C4PointAngleTool    (doc));
-	tools.push_back(new CPlaneTool          (doc));
-	tools.push_back(new CPlotMixTool        (doc));
-	tools.push_back(new CMeasureAreaTool    (doc));
-	tools.push_back(new CImportLinesTool    (doc));
-	tools.push_back(new CKinematTool        (doc));
-	tools.push_back(new CDistanceMapTool    (doc));
-	tools.push_back(new CCurvatureMapTool   (doc));
-	tools.push_back(new CPointCongruencyTool(doc));
-	tools.push_back(new CAddImage3DTool     (doc));
-	tools.push_back(new CSphereFitTool      (doc));
-	tools.push_back(new CTransformTool      (doc));
-	tools.push_back(new CShellThicknessTool (doc));
-	tools.push_back(new CAddPointTool       (doc));
-	tools.push_back(new CImportPointsTool   (doc));
-	tools.push_back(new CAreaCoverageTool   (doc));
-	tools.push_back(new CStrainMapTool      (doc));
-	tools.push_back(new CMeasureVolumeTool  (doc));
+	tools.push_back(new CPointDistanceTool  (m_wnd));
+	tools.push_back(new C3PointAngleTool    (m_wnd));
+	tools.push_back(new C4PointAngleTool    (m_wnd));
+	tools.push_back(new CPlaneTool          (m_wnd));
+	tools.push_back(new CPlotMixTool        (m_wnd));
+	tools.push_back(new CMeasureAreaTool    (m_wnd));
+	tools.push_back(new CImportLinesTool    (m_wnd));
+	tools.push_back(new CKinematTool        (m_wnd));
+	tools.push_back(new CDistanceMapTool    (m_wnd));
+	tools.push_back(new CCurvatureMapTool   (m_wnd));
+	tools.push_back(new CPointCongruencyTool(m_wnd));
+	tools.push_back(new CAddImage3DTool     (m_wnd));
+	tools.push_back(new CSphereFitTool      (m_wnd));
+	tools.push_back(new CTransformTool      (m_wnd));
+	tools.push_back(new CShellThicknessTool (m_wnd));
+	tools.push_back(new CAddPointTool       (m_wnd));
+	tools.push_back(new CImportPointsTool   (m_wnd));
+	tools.push_back(new CAreaCoverageTool   (m_wnd));
+	tools.push_back(new CStrainMapTool      (m_wnd));
+	tools.push_back(new CMeasureVolumeTool  (m_wnd));
 }
 
 void CToolsPanel::on_buttons_buttonClicked(int id)

@@ -46,7 +46,7 @@ public:
 };
 
 // constructor
-CSphereFitTool::CSphereFitTool(CDocument* doc) : CAbstractTool("Sphere Fit", doc)
+CSphereFitTool::CSphereFitTool(CMainWindow* wnd) : CAbstractTool("Sphere Fit", wnd)
 {
 	ui = 0;
 }
@@ -60,11 +60,12 @@ QWidget* CSphereFitTool::createUi()
 void CSphereFitTool::OnFit()
 {
 	// get the nodal coordinates (surface only)
-	if (m_doc && m_doc->IsValid())
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
 	{
 		bool bsel = ui->pc->isChecked();
 
-		FEModel& fem = *m_doc->GetFEModel();
+		FEModel& fem = *doc->GetFEModel();
 		FEMeshBase& mesh = *fem.GetFEMesh(0);
 		int N = mesh.Nodes();
 		int F = mesh.Faces();

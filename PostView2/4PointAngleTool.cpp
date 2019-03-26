@@ -86,7 +86,7 @@ void C4PointAngleTool::Props::SetPropertyValue(int i, const QVariant& v)
 }
 
 //-----------------------------------------------------------------------------
-C4PointAngleTool::C4PointAngleTool(CDocument* doc) : CBasicTool("4Point Angle", doc)
+C4PointAngleTool::C4PointAngleTool(CMainWindow* wnd) : CBasicTool("4Point Angle", wnd)
 {
 	m_deco = 0;
 
@@ -114,7 +114,8 @@ void C4PointAngleTool::deactivate()
 {
 	if (m_deco)
 	{
-		m_doc->GetGLModel()->RemoveDecoration(m_deco);
+		CDocument* doc = GetActiveDocument();
+		if (doc) doc->GetGLModel()->RemoveDecoration(m_deco);
 		delete m_deco;
 		m_deco = 0;
 	}
@@ -125,11 +126,12 @@ void C4PointAngleTool::UpdateAngle()
 {
 	m_angle = 0.0;
 	if (m_deco) m_deco->setVisible(false);
-	if (m_doc && m_doc->IsValid())
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
 	{
-		FEModel& fem = *m_doc->GetFEModel();
-		FEMeshBase& mesh = *m_doc->GetActiveMesh();
-		int ntime = m_doc->currentTime();
+		FEModel& fem = *doc->GetFEModel();
+		FEMeshBase& mesh = *doc->GetActiveMesh();
+		int ntime = doc->currentTime();
 		int NN = mesh.Nodes();
 		if ((m_node[0] >   0)&&(m_node[1] >   0)&&(m_node[2] >   0)&&(m_node[3] >  0)&&
 			(m_node[0] <= NN)&&(m_node[1] <= NN)&&(m_node[2] <= NN)&&(m_node[3] <= NN))
@@ -159,10 +161,11 @@ void C4PointAngleTool::update(bool breset)
 {
 	if (breset)
 	{
-		if (m_doc && m_doc->IsValid())
+		CDocument* doc = GetActiveDocument();
+		if (doc && doc->IsValid())
 		{
-			FEMeshBase& mesh = *m_doc->GetActiveMesh();
-			const vector<FENode*> selectedNodes = m_doc->GetGLModel()->GetNodeSelection();
+			FEMeshBase& mesh = *doc->GetActiveMesh();
+			const vector<FENode*> selectedNodes = doc->GetGLModel()->GetNodeSelection();
 			int N = selectedNodes.size();
 			int nsel = 0;
 			for (int i = 0; i<N; ++i)
@@ -183,12 +186,12 @@ void C4PointAngleTool::update(bool breset)
 
 			if (m_deco)
 			{
-				m_doc->GetGLModel()->RemoveDecoration(m_deco);
+				doc->GetGLModel()->RemoveDecoration(m_deco);
 				delete m_deco;
 				m_deco = 0;
 			}
 			m_deco = new C4PointAngleDecoration;
-			m_doc->GetGLModel()->AddDecoration(m_deco);
+			doc->GetGLModel()->AddDecoration(m_deco);
 			UpdateAngle();
 		}
 	}

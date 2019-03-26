@@ -13,7 +13,7 @@ class CAddImage3DTool : public CAbstractTool
 
 public:
 	// constructor
-	CAddImage3DTool(CDocument* doc);
+	CAddImage3DTool(CMainWindow* wnd);
 
 	// get the property list
 	QWidget* createUi();

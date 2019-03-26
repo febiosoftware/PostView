@@ -20,7 +20,7 @@ class CMeasureAreaTool : public CBasicTool
 
 public:
 	// constructor
-	CMeasureAreaTool(CDocument* doc);
+	CMeasureAreaTool(CMainWindow* wnd);
 
 	// get the property list
 	CPropertyList*	getPropertyList();

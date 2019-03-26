@@ -22,7 +22,7 @@ class CAddPointTool : public CBasicTool
 
 public:
 	// constructor
-	CAddPointTool(CDocument* doc);
+	CAddPointTool(CMainWindow* wnd);
 
 	// get the property list
 	CPropertyList*	getPropertyList();

@@ -67,7 +67,7 @@ public:
 	}
 };
 
-CAddImage3DTool::CAddImage3DTool(CDocument* doc) : CAbstractTool("Add 3D image", doc)
+CAddImage3DTool::CAddImage3DTool(CMainWindow* wnd) : CAbstractTool("Add 3D image", wnd)
 {
 	ui = 0;
 };
@@ -89,7 +89,8 @@ void CAddImage3DTool::OnBrowse()
 
 void CAddImage3DTool::OnApply()
 {
-	if (m_doc && m_doc->IsValid())
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
 	{
 		int nx = ui->pnx->value();
 		int ny = ui->pny->value();
@@ -119,7 +120,7 @@ void CAddImage3DTool::OnApply()
 			return;
 		}
 
-		FEModel& fem = *m_doc->GetFEModel();
+		FEModel& fem = *doc->GetFEModel();
 		C3DImage* pimg = new C3DImage;
 		if (pimg->Create(nx, ny, nz) == false)
 		{
@@ -138,8 +139,7 @@ void CAddImage3DTool::OnApply()
 
 		int nops = ui->vis->currentIndex();
 
-		m_doc->Add3DImage(pimg, xmin, ymin, zmin, xmax, ymax, zmax, nops);
-		CMainWindow* pwnd = m_doc->GetWindow();
-		pwnd->UpdateUi(true);
+		doc->Add3DImage(pimg, xmin, ymin, zmin, xmax, ymax, zmax, nops);
+		m_wnd->UpdateUi(true);
 	}
 }

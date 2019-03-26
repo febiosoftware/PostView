@@ -62,7 +62,7 @@ public:
 };
 
 // constructor
-CPointCongruencyTool::CPointCongruencyTool(CDocument* doc) : CAbstractTool("Pt. Congruency", doc)
+CPointCongruencyTool::CPointCongruencyTool(CMainWindow* wnd) : CAbstractTool("Pt. Congruency", wnd)
 {
 	ui = 0;
 }
@@ -76,10 +76,11 @@ QWidget* CPointCongruencyTool::createUi()
 void CPointCongruencyTool::OnApply()
 {
 	// get the nodal coordinates (surface only)
-	if (m_doc && m_doc->IsValid())
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
 	{
 		int node = ui->node->value() - 1;
-		FEModel& fem = *m_doc->GetFEModel();
+		FEModel& fem = *doc->GetFEModel();
 		FEMeshBase& mesh = *fem.GetFEMesh(0);
 		if ((node >= 0)&&(node<mesh.Nodes()))
 		{

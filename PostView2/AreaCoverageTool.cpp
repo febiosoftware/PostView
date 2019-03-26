@@ -48,7 +48,7 @@ public:
 
 //=============================================================================
 
-CAreaCoverageTool::CAreaCoverageTool(CDocument* doc) : CAbstractTool("Area Coverage", doc)
+CAreaCoverageTool::CAreaCoverageTool(CMainWindow* wnd) : CAbstractTool("Area Coverage", wnd)
 {
 	ui = 0;
 }
@@ -60,25 +60,34 @@ QWidget* CAreaCoverageTool::createUi()
 
 void CAreaCoverageTool::OnAssign1()
 {
-	vector<int> sel;
-	m_doc->GetGLModel()->GetSelectionList(sel, SELECT_FACES);
-	ui->m_tool.SetSelection1(sel);
-	int n = (int)sel.size();
-	ui->p1->setText(QString("Assign to surface 1 (%1 faces)").arg(n));
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
+	{
+		vector<int> sel;
+		doc->GetGLModel()->GetSelectionList(sel, SELECT_FACES);
+		ui->m_tool.SetSelection1(sel);
+		int n = (int)sel.size();
+		ui->p1->setText(QString("Assign to surface 1 (%1 faces)").arg(n));
+	}
 }
 
 void CAreaCoverageTool::OnAssign2()
 {
-	vector<int> sel;
-	m_doc->GetGLModel()->GetSelectionList(sel, SELECT_FACES);
-	ui->m_tool.SetSelection2(sel);
-	int n = (int)sel.size();
-	ui->p2->setText(QString("Assign to surface 2 (%1 faces)").arg(n));
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
+	{
+		vector<int> sel;
+		doc->GetGLModel()->GetSelectionList(sel, SELECT_FACES);
+		ui->m_tool.SetSelection2(sel);
+		int n = (int)sel.size();
+		ui->p2->setText(QString("Assign to surface 2 (%1 faces)").arg(n));
+	}
 }
 
 void CAreaCoverageTool::OnApply()
 {
-	if (m_doc && m_doc->IsValid())
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
 	{
 		FEAreaCoverage& tool = ui->m_tool;
 
@@ -88,7 +97,7 @@ void CAreaCoverageTool::OnApply()
 		{
 			tool.SetDataFieldName(name.toStdString());
 		}
-		tool.Apply(*m_doc->GetFEModel());
+		tool.Apply(*doc->GetFEModel());
 		updateUi();
 	}
 }

@@ -35,7 +35,7 @@ void CTransformTool::Props::SetPropertyValue(int i, const QVariant& v)
 }
 
 //-----------------------------------------------------------------------------
-CTransformTool::CTransformTool(CDocument* doc) : CBasicTool("Transform", doc, CBasicTool::HAS_APPLY_BUTTON)
+CTransformTool::CTransformTool(CMainWindow* wnd) : CBasicTool("Transform", wnd, CBasicTool::HAS_APPLY_BUTTON)
 {
 	m_dr = vec3f(0.f, 0.f, 0.f);
 }
@@ -49,15 +49,16 @@ CPropertyList* CTransformTool::getPropertyList()
 //-----------------------------------------------------------------------------
 void CTransformTool::OnApply()
 {
-	if (m_doc && m_doc->IsValid())
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
 	{
-		const vector<FENode*> selNodes = m_doc->GetGLModel()->GetNodeSelection();
+		const vector<FENode*> selNodes = doc->GetGLModel()->GetNodeSelection();
 		for (int i=0; i<(int)selNodes.size(); ++i)
 		{
 			FENode& node = *selNodes[i];
 			node.m_r0 += m_dr;
 		}
-		m_doc->UpdateFEModel(true);
+		doc->UpdateFEModel(true);
 	}
 	updateUi();
 }

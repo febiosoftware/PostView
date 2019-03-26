@@ -2,8 +2,6 @@
 #include "Tool.h"
 
 //-----------------------------------------------------------------------------
-class CDocument;
-
 class CSphereFitToolUI;
 
 //-----------------------------------------------------------------------------
@@ -13,7 +11,7 @@ class CSphereFitTool : public CAbstractTool
 
 public:
 	// constructor
-	CSphereFitTool(CDocument* doc);
+	CSphereFitTool(CMainWindow* wnd);
 
 	// get the property list
 	QWidget* createUi();

@@ -18,7 +18,7 @@ class CMeasureVolumeTool : public CBasicTool
 
 public:
 	// constructor
-	CMeasureVolumeTool(CDocument* doc);
+	CMeasureVolumeTool(CMainWindow* wnd);
 
 	// get the property list
 	CPropertyList*	getPropertyList();

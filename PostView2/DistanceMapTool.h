@@ -16,7 +16,7 @@ class CDistanceMapTool : public CAbstractTool
 
 public:
 	// constructor
-	CDistanceMapTool(CDocument* doc);
+	CDistanceMapTool(CMainWindow* wnd);
 
 	// get the property list
 	QWidget* createUi();
@@ -38,7 +38,7 @@ class CCurvatureMapTool : public CAbstractTool
 
 public:
 	// constructor
-	CCurvatureMapTool(CDocument* doc);
+	CCurvatureMapTool(CMainWindow* wnd);
 
 	// get the property list
 	QWidget* createUi();

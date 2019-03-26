@@ -84,7 +84,7 @@ void CPointDistanceTool::Props::SetPropertyValue(int i, const QVariant& v)
 	tool->updateLength();
 }
 
-CPointDistanceTool::CPointDistanceTool(CDocument* doc) : CBasicTool("Pt.Distance", doc)
+CPointDistanceTool::CPointDistanceTool(CMainWindow* wnd) : CBasicTool("Pt.Distance", wnd)
 { 
 	m_node1 = 0; 
 	m_node2 = 0; 
@@ -107,7 +107,8 @@ void CPointDistanceTool::deactivate()
 {
 	if (m_deco)
 	{
-		m_doc->GetGLModel()->RemoveDecoration(m_deco);
+		CDocument* doc = GetActiveDocument();
+		if (doc) doc->GetGLModel()->RemoveDecoration(m_deco);
 		delete m_deco;
 		m_deco = 0;
 	}
@@ -123,11 +124,12 @@ void CPointDistanceTool::updateLength()
 	m_bvalid = false;
 	m_d = vec3f(0.f,0.f,0.f);
 	if (m_deco) m_deco->setVisible(false);
-	if (m_doc && m_doc->IsValid())
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
 	{
-		FEModel& fem = *m_doc->GetFEModel();
-		FEMeshBase& mesh = *m_doc->GetActiveMesh();
-		int ntime = m_doc->currentTime();
+		FEModel& fem = *doc->GetFEModel();
+		FEMeshBase& mesh = *doc->GetActiveMesh();
+		int ntime = doc->currentTime();
 		int NN = mesh.Nodes();
 		if ((m_node1 > 0)&&(m_node2 > 0)&&(m_node1 <= NN)&&(m_node2 <= NN))
 		{
@@ -151,10 +153,11 @@ void CPointDistanceTool::update(bool reset)
 {
 	if (reset)
 	{
-		if (m_doc && m_doc->IsValid())
+		CDocument* doc = GetActiveDocument();
+		if (doc && doc->IsValid())
 		{
-			FEMeshBase& mesh = *m_doc->GetActiveMesh();
-			const vector<FENode*> selectedNodes = m_doc->GetGLModel()->GetNodeSelection();
+			FEMeshBase& mesh = *doc->GetActiveMesh();
+			const vector<FENode*> selectedNodes = doc->GetGLModel()->GetNodeSelection();
 			int N = (int) selectedNodes.size();
 			for (int i = 0; i<N; ++i)
 			{
@@ -170,12 +173,12 @@ void CPointDistanceTool::update(bool reset)
 
 			if (m_deco)
 			{
-				m_doc->GetGLModel()->RemoveDecoration(m_deco);
+				doc->GetGLModel()->RemoveDecoration(m_deco);
 				delete m_deco;
 				m_deco = 0;
 			}
 			m_deco = new CPointDistanceDecoration;
-			m_doc->GetGLModel()->AddDecoration(m_deco);
+			doc->GetGLModel()->AddDecoration(m_deco);
 			updateLength();
 		}
 	}

@@ -27,7 +27,9 @@ public:
 	void OpenFile(const QString& fileName, int nfilter);
 	bool SaveFile(const QString& fileName, int nfilter);
 
-	CDocument*	GetActiveDocument();
+	CDocument* GetActiveDocument();
+
+	CDocument* NewDocument(const std::string& docTitle);
 
 	CGLView* GetGLView();
 

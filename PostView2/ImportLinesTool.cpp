@@ -57,7 +57,7 @@ public:
 };
 
 // constructor
-CImportLinesTool::CImportLinesTool(CDocument* doc) : CAbstractTool("Import lines", doc)
+CImportLinesTool::CImportLinesTool(CMainWindow* wnd) : CAbstractTool("Import lines", wnd)
 {
 	ui = 0;
 }
@@ -70,7 +70,8 @@ QWidget* CImportLinesTool::createUi()
 
 void CImportLinesTool::OnApply()
 {
-	if (m_doc && m_doc->IsValid())
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
 	{
 		string fileName = ui->fileName->text().toStdString();
 		string name = ui->name->text().toStdString();
@@ -97,8 +98,8 @@ void CImportLinesTool::OnApply()
 		if (bsuccess)
 		{
 			// add a line plot for visualizing the line data
-			CGLLinePlot* pgl = new CGLLinePlot(m_doc->GetGLModel());
-			m_doc->AddPlot(pgl);
+			CGLLinePlot* pgl = new CGLLinePlot(doc->GetGLModel());
+			doc->AddPlot(pgl);
 			pgl->SetName(fileName);
 
 			ui->m_ncount++;
@@ -124,10 +125,13 @@ void CImportLinesTool::OnBrowse()
 
 bool CImportLinesTool::ReadOldFormat(const char* szfile)
 {
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return false;
+
 	FILE* fp = fopen(szfile, "rt");
 	if (fp == 0) return false;
 
-	FEModel& fem = *m_doc->GetFEModel();
+	FEModel& fem = *doc->GetFEModel();
 
 	char szline[256] = { 0 };
 	while (!feof(fp))
@@ -183,10 +187,13 @@ vec3f GetCoordinatesFromFrag(FEModel& fem, int nstate, FRAG& a)
 // 2 = EOF reached before all states were read in
 int CImportLinesTool::ReadAng2Format(const char* szfile)
 {
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return false;
+
 	FILE* fp = fopen(szfile, "rb");
 	if (fp == 0) return 0;
 
-	FEModel& fem = *m_doc->GetFEModel();
+	FEModel& fem = *doc->GetFEModel();
 	FEMeshBase& mesh = *fem.GetFEMesh(0);
 
 	// read the magic number
@@ -341,7 +348,7 @@ public:
 };
 
 // constructor
-CImportPointsTool::CImportPointsTool(CDocument* doc) : CAbstractTool("Import points", doc)
+CImportPointsTool::CImportPointsTool(CMainWindow* wnd) : CAbstractTool("Import points", wnd)
 {
 	ui = 0;
 }
@@ -363,7 +370,8 @@ void CImportPointsTool::OnBrowse()
 
 void CImportPointsTool::OnApply()
 {
-	if (m_doc && m_doc->IsValid())
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
 	{
 		string fileName = ui->fileName->text().toStdString();
 		string name = ui->name->text().toStdString();
@@ -375,7 +383,7 @@ void CImportPointsTool::OnApply()
 			return;
 		}
 
-		FEModel& fem = *m_doc->GetFEModel();
+		FEModel& fem = *doc->GetFEModel();
 
 		char szline[256] = {0};
 		while (!feof(fp))
@@ -398,8 +406,8 @@ void CImportPointsTool::OnApply()
 		fclose(fp);
 
 		// add a line plot
-		CGLPointPlot* pgl = new CGLPointPlot(m_doc->GetGLModel());
-		m_doc->AddPlot(pgl);
+		CGLPointPlot* pgl = new CGLPointPlot(doc->GetGLModel());
+		doc->AddPlot(pgl);
 		pgl->SetName(name.c_str());
 
 		ui->m_ncount++;

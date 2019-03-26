@@ -109,7 +109,7 @@ public:
 	}
 };
 
-CPlaneTool::CPlaneTool(CDocument* doc) : CAbstractTool("Plane tool", doc)
+CPlaneTool::CPlaneTool(CMainWindow* wnd) : CAbstractTool("Plane tool", wnd)
 {
 	m_dec = 0;
 }
@@ -131,7 +131,8 @@ void CPlaneTool::deactivate()
 {
 	if (m_dec)
 	{
-		m_doc->GetGLModel()->RemoveDecoration(m_dec);
+		CDocument* doc = GetActiveDocument();
+		if (doc) doc->GetGLModel()->RemoveDecoration(m_dec);
 		delete m_dec;
 		m_dec = 0;
 	}
@@ -161,7 +162,8 @@ void CPlaneTool::UpdateNormal()
 
 	if ((node[0] > 0) && (node[1] > 0) && (node[2] > 0))
 	{
-		FEMeshBase* pm = m_doc->GetActiveMesh();
+		CDocument* doc = GetActiveDocument();
+		FEMeshBase* pm = doc->GetActiveMesh();
 
 		FENode& n1 = pm->Node(node[0]-1);
 		FENode& n2 = pm->Node(node[1]-1);
@@ -207,7 +209,8 @@ void CPlaneTool::onAlignView()
 	int* node = ui->m_node;
 	if ((node[0] > 0) && (node[1] > 0) && (node[2] > 0))
 	{
-		CGView& view = *m_doc->GetView();
+		CDocument* doc = GetActiveDocument();
+		CGView& view = *doc->GetView();
 
 		vec3f r(ui->normx->value(), ui->normy->value(), ui->normz->value());
 
@@ -222,9 +225,10 @@ void CPlaneTool::update(bool breset)
 {
 	if (breset)
 	{
+		CDocument* doc = GetActiveDocument();
 		int* node = ui->m_node;
-		FEMeshBase& mesh = *m_doc->GetActiveMesh();
-		const vector<FENode*> selectedNodes = m_doc->GetGLModel()->GetNodeSelection();
+		FEMeshBase& mesh = *doc->GetActiveMesh();
+		const vector<FENode*> selectedNodes = doc->GetGLModel()->GetNodeSelection();
 		int N = (int)selectedNodes.size();
 		int nsel = 0;
 		for (int i = 0; i<N; ++i)
@@ -247,12 +251,12 @@ void CPlaneTool::update(bool breset)
 		
 		if (m_dec)
 		{
-			m_doc->GetGLModel()->RemoveDecoration(m_dec);
+			doc->GetGLModel()->RemoveDecoration(m_dec);
 			delete m_dec;
 			m_dec = 0;
 		}
 		m_dec = new CPlaneDecoration;
-		m_doc->GetGLModel()->AddDecoration(m_dec);
+		doc->GetGLModel()->AddDecoration(m_dec);
 		UpdateNormal();
 	}
 	else UpdateNormal();

@@ -5,7 +5,6 @@
 class CDocument;
 
 //-----------------------------------------------------------------------------
-// This tool measures the angle between three consecutively selected nodes
 class CShellThicknessTool : public CBasicTool
 {
 	class Props : public CPropertyList
@@ -20,7 +19,7 @@ class CShellThicknessTool : public CBasicTool
 
 public:
 	// constructor
-	CShellThicknessTool(CDocument* doc);
+	CShellThicknessTool(CMainWindow* wnd);
 
 	// get the property list
 	CPropertyList*	getPropertyList();

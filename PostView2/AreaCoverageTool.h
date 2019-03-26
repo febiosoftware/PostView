@@ -8,7 +8,7 @@ class CAreaCoverageTool : public CAbstractTool
 	Q_OBJECT
 
 public:
-	CAreaCoverageTool(CDocument* doc);
+	CAreaCoverageTool(CMainWindow* wnd);
 
 	QWidget* createUi();
 

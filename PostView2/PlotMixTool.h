@@ -12,7 +12,7 @@ class CPlotMixTool : public CAbstractTool
 
 public:
 	// constructor
-	CPlotMixTool(CDocument* doc);
+	CPlotMixTool(CMainWindow* wnd);
 
 	// get the property list
 	QWidget* createUi();
@@ -35,7 +35,7 @@ class CKinematTool : public CAbstractTool
 
 public:
 	// constructor
-	CKinematTool(CDocument* doc);
+	CKinematTool(CMainWindow* wnd);
 
 	// get the property list
 	QWidget* createUi();

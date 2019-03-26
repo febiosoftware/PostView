@@ -39,7 +39,7 @@ void CMeasureAreaTool::Props::SetPropertyValue(int i, const QVariant& v)
 }
 
 //-----------------------------------------------------------------------------
-CMeasureAreaTool::CMeasureAreaTool(CDocument* doc) : CBasicTool("Measure Area", doc, CBasicTool::HAS_APPLY_BUTTON)
+CMeasureAreaTool::CMeasureAreaTool(CMainWindow* wnd) : CBasicTool("Measure Area", wnd, CBasicTool::HAS_APPLY_BUTTON)
 {
 	m_nsel = 0;
 	m_area = 0.0;
@@ -60,13 +60,14 @@ void CMeasureAreaTool::OnApply()
 {
 	m_nsel = 0;
 	m_area = 0.0;
-	if (m_doc && m_doc->IsValid())
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
 	{
-		CGLModel& m = *m_doc->GetGLModel();
-		FEModel& fem = *m_doc->GetFEModel();
+		CGLModel& m = *doc->GetGLModel();
+		FEModel& fem = *doc->GetFEModel();
 		FEMeshBase& mesh = *fem.GetFEMesh(0);
 		FEState* ps = fem.GetState(m.currentTimeIndex());
-		const vector<FEFace*> selectedFaces = m_doc->GetGLModel()->GetFaceSelection();
+		const vector<FEFace*> selectedFaces = doc->GetGLModel()->GetFaceSelection();
 		int N = (int)selectedFaces.size();
 		for (int i=0; i<N; ++i)
 		{

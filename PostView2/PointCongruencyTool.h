@@ -13,7 +13,7 @@ class CPointCongruencyTool : public CAbstractTool
 
 public:
 	// constructor
-	CPointCongruencyTool(CDocument* doc);
+	CPointCongruencyTool(CMainWindow* wnd);
 
 	// get the property list
 	QWidget* createUi();

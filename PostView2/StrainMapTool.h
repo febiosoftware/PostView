@@ -9,7 +9,7 @@ class CStrainMapTool : public CAbstractTool
 	Q_OBJECT
 
 public:
-	CStrainMapTool(CDocument* doc);
+	CStrainMapTool(CMainWindow* wnd);
 
 	// get the property list
 	QWidget* createUi();

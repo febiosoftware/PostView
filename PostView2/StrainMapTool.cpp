@@ -46,7 +46,7 @@ public:
 };
 
 // constructor
-CStrainMapTool::CStrainMapTool(CDocument* doc) : CAbstractTool("Strain Map", doc)
+CStrainMapTool::CStrainMapTool(CMainWindow* wnd) : CAbstractTool("Strain Map", wnd)
 {
 	ui = 0;
 }
@@ -59,47 +59,64 @@ QWidget* CStrainMapTool::createUi()
 
 void CStrainMapTool::OnAssignFront1()
 {
-	vector<int> sel;
-	m_doc->GetGLModel()->GetSelectionList(sel, SELECT_FACES);
-	ui->m_map.SetFrontSurface1(sel);
-	int n = (int)sel.size();
-	ui->pf1->setText(QString("Assign to front surface 1 (%1 faces)").arg(n));
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
+	{
+		vector<int> sel;
+		doc->GetGLModel()->GetSelectionList(sel, SELECT_FACES);
+		ui->m_map.SetFrontSurface1(sel);
+		int n = (int)sel.size();
+		ui->pf1->setText(QString("Assign to front surface 1 (%1 faces)").arg(n));
+	}
 }
 
 void CStrainMapTool::OnAssignBack1()
 {
-	vector<int> sel;
-	m_doc->GetGLModel()->GetSelectionList(sel, SELECT_FACES);
-	ui->m_map.SetBackSurface1(sel);
-	int n = (int)sel.size();
-	ui->pb1->setText(QString("Assign to back surface 1 (%1 faces)").arg(n));
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
+	{
+		vector<int> sel;
+		doc->GetGLModel()->GetSelectionList(sel, SELECT_FACES);
+		ui->m_map.SetBackSurface1(sel);
+		int n = (int)sel.size();
+		ui->pb1->setText(QString("Assign to back surface 1 (%1 faces)").arg(n));
+	}
 }
 
 void CStrainMapTool::OnAssignFront2()
 {
-	vector<int> sel;
-	m_doc->GetGLModel()->GetSelectionList(sel, SELECT_FACES);
-	ui->m_map.SetFrontSurface2(sel);
-	int n = (int)sel.size();
-	ui->pf2->setText(QString("Assign to front surface 2 (%1 faces)").arg(n));
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
+	{
+		vector<int> sel;
+		doc->GetGLModel()->GetSelectionList(sel, SELECT_FACES);
+		ui->m_map.SetFrontSurface2(sel);
+		int n = (int)sel.size();
+		ui->pf2->setText(QString("Assign to front surface 2 (%1 faces)").arg(n));
+	}
 }
 
 void CStrainMapTool::OnAssignBack2()
 {
-	vector<int> sel;
-	m_doc->GetGLModel()->GetSelectionList(sel, SELECT_FACES);
-	ui->m_map.SetBackSurface2(sel);
-	int n = (int)sel.size();
-	ui->pb2->setText(QString("Assign to back surface 2 (%1 faces)").arg(n));
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
+	{
+		vector<int> sel;
+		doc->GetGLModel()->GetSelectionList(sel, SELECT_FACES);
+		ui->m_map.SetBackSurface2(sel);
+		int n = (int)sel.size();
+		ui->pb2->setText(QString("Assign to back surface 2 (%1 faces)").arg(n));
+	}
 }
 
 
 void CStrainMapTool::OnApply()
 {
-	if (m_doc && m_doc->IsValid())
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
 	{
 		FEStrainMap& map = ui->m_map;
-		map.Apply(*m_doc->GetFEModel());
+		map.Apply(*doc->GetFEModel());
 		updateUi();
 	}
 }

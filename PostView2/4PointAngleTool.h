@@ -20,10 +20,10 @@ class C4PointAngleTool : public CBasicTool
 
 public:
 	// constructor
-	C4PointAngleTool(CDocument* doc);
+	C4PointAngleTool(CMainWindow* wnd);
 
 	// get the property list
-	CPropertyList*	getPropertyList();
+	CPropertyList* getPropertyList();
 
 	// activate the tool
 	void activate();

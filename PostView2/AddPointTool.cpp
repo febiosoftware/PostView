@@ -33,7 +33,7 @@ void CAddPointTool::Props::SetPropertyValue(int i, const QVariant& v)
 }
 
 //-----------------------------------------------------------------------------
-CAddPointTool::CAddPointTool(CDocument* doc) : CBasicTool("Add Point", doc)
+CAddPointTool::CAddPointTool(CMainWindow* wnd) : CBasicTool("Add Point", wnd)
 {
 	m_deco = 0;
 	m_pos = vec3f(0.f, 0.f, 0.f);
@@ -48,16 +48,17 @@ CPropertyList* CAddPointTool::getPropertyList()
 //-----------------------------------------------------------------------------
 void CAddPointTool::activate()
 {
-	if (m_doc && m_doc->IsValid())
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
 	{
 		if (m_deco)
 		{
-			m_doc->GetGLModel()->RemoveDecoration(m_deco);
+			doc->GetGLModel()->RemoveDecoration(m_deco);
 			delete m_deco;
 			m_deco = 0;
 		}
 		m_deco = new GPointDecoration;
-		m_doc->GetGLModel()->AddDecoration(m_deco);
+		doc->GetGLModel()->AddDecoration(m_deco);
 		UpdateNode();
 	}
 }
@@ -67,7 +68,8 @@ void CAddPointTool::deactivate()
 {
 	if (m_deco)
 	{
-		m_doc->GetGLModel()->RemoveDecoration(m_deco);
+		CDocument* doc = GetActiveDocument();
+		doc->GetGLModel()->RemoveDecoration(m_deco);
 		delete m_deco;
 		m_deco = 0;
 	}
@@ -77,7 +79,8 @@ void CAddPointTool::deactivate()
 void CAddPointTool::UpdateNode()
 {
 	if (m_deco) m_deco->setVisible(false);
-	if (m_doc && m_doc->IsValid())
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
 	{
 		if (m_deco) 
 		{

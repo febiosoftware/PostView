@@ -51,7 +51,7 @@ public:
 };
 
 // constructor
-CDistanceMapTool::CDistanceMapTool(CDocument* doc) : CAbstractTool("Distance Map", doc)
+CDistanceMapTool::CDistanceMapTool(CMainWindow* wnd) : CAbstractTool("Distance Map", wnd)
 {
 	ui = 0;
 }
@@ -64,31 +64,40 @@ QWidget* CDistanceMapTool::createUi()
 
 void CDistanceMapTool::OnAssign1()
 {
-	vector<int> sel;
-	m_doc->GetGLModel()->GetSelectionList(sel, SELECT_FACES);
-	ui->m_map.SetSelection1(sel);
-	int n = (int) sel.size();
-	ui->p1->setText(QString("Assign to surface 1 (%1 faces)").arg(n));
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
+	{
+		vector<int> sel;
+		doc->GetGLModel()->GetSelectionList(sel, SELECT_FACES);
+		ui->m_map.SetSelection1(sel);
+		int n = (int)sel.size();
+		ui->p1->setText(QString("Assign to surface 1 (%1 faces)").arg(n));
+	}
 }
 
 void CDistanceMapTool::OnAssign2()
 {
-	vector<int> sel;
-	m_doc->GetGLModel()->GetSelectionList(sel, SELECT_FACES);
-	ui->m_map.SetSelection2(sel);
-	int n = (int) sel.size();
-	ui->p2->setText(QString("Assign to surface 2 (%1 faces)").arg(n));
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
+	{
+		vector<int> sel;
+		doc->GetGLModel()->GetSelectionList(sel, SELECT_FACES);
+		ui->m_map.SetSelection2(sel);
+		int n = (int)sel.size();
+		ui->p2->setText(QString("Assign to surface 2 (%1 faces)").arg(n));
+	}
 }
 
 void CDistanceMapTool::OnApply()
 {
-	if (m_doc && m_doc->IsValid())
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
 	{
 		bool bcheck = ui->check->isChecked();
 		FEDistanceMap& map = ui->m_map;
 		map.m_bsigned = bcheck;
-		map.Apply(*m_doc->GetFEModel());
-		m_doc->UpdateObservers(true);
+		map.Apply(*doc->GetFEModel());
+		doc->UpdateObservers(true);
 		updateUi();
 	}
 }
@@ -124,7 +133,7 @@ public:
 };
 
 // constructor
-CCurvatureMapTool::CCurvatureMapTool(CDocument* doc) : CAbstractTool("Curvature Map", doc)
+CCurvatureMapTool::CCurvatureMapTool(CMainWindow* wnd) : CAbstractTool("Curvature Map", wnd)
 {
 	ui = 0;
 }
@@ -137,28 +146,37 @@ QWidget* CCurvatureMapTool::createUi()
 
 void CCurvatureMapTool::OnAssign1()
 {
-	vector<int> sel;
-	m_doc->GetGLModel()->GetSelectionList(sel, SELECT_FACES);
-	ui->m_map.SetSelection1(sel);
-	int n = (int) sel.size();
-	ui->p1->setText(QString("Assign to surface 1 (%1 faces)").arg(n));
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
+	{
+		vector<int> sel;
+		doc->GetGLModel()->GetSelectionList(sel, SELECT_FACES);
+		ui->m_map.SetSelection1(sel);
+		int n = (int)sel.size();
+		ui->p1->setText(QString("Assign to surface 1 (%1 faces)").arg(n));
+	}
 }
 
 void CCurvatureMapTool::OnAssign2()
 {
-	vector<int> sel;
-	m_doc->GetGLModel()->GetSelectionList(sel, SELECT_FACES);
-	ui->m_map.SetSelection2(sel);
-	int n = (int) sel.size();
-	ui->p2->setText(QString("Assign to surface 2 (%1 faces)").arg(n));
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
+	{
+		vector<int> sel;
+		doc->GetGLModel()->GetSelectionList(sel, SELECT_FACES);
+		ui->m_map.SetSelection2(sel);
+		int n = (int)sel.size();
+		ui->p2->setText(QString("Assign to surface 2 (%1 faces)").arg(n));
+	}
 }
 
 void CCurvatureMapTool::OnApply()
 {
-	if (m_doc && m_doc->IsValid())
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
 	{
 		FECongruencyMap& map = ui->m_map;
-		map.Apply(*m_doc->GetFEModel());
+		map.Apply(*doc->GetFEModel());
 		updateUi();
 	}
 }

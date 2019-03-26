@@ -10,7 +10,7 @@ class CPlaneTool : public CAbstractTool
 	Q_OBJECT
 
 public:
-	CPlaneTool(CDocument* doc);
+	CPlaneTool(CMainWindow* wnd);
 
 	// get the UI widget
 	QWidget* createUi();

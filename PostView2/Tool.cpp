@@ -1,8 +1,14 @@
 #include "Tool.h"
 #include "PropertyListForm.h"
+#include "MainWindow.h"
 #include <QApplication>
 #include <QBoxLayout>
 #include <QPushButton>
+
+//-----------------------------------------------------------------------------
+CAbstractTool::CAbstractTool(const QString& s, CMainWindow* wnd) : m_name(s), m_wnd(wnd) 
+{
+}
 
 //-----------------------------------------------------------------------------
 void CAbstractTool::updateUi()
@@ -11,18 +17,27 @@ void CAbstractTool::updateUi()
 	if (w) w->repaint();
 }
 
+//-----------------------------------------------------------------------------
+// get the active document
+CDocument* CAbstractTool::GetActiveDocument()
+{
+	return m_wnd->GetActiveDocument();
+}
+
+//-----------------------------------------------------------------------------
 void CToolUI::hideEvent(QHideEvent* ev)
 {
 	if (m_tool) m_tool->deactivate();
 }
 
+//-----------------------------------------------------------------------------
 void CToolUI::showEvent(QShowEvent* ev)
 {
 	if (m_tool) m_tool->activate();
 }
 
 //-----------------------------------------------------------------------------
-CBasicTool::CBasicTool(const QString& s, CDocument* doc, unsigned int flags) : CAbstractTool(s, doc)
+CBasicTool::CBasicTool(const QString& s, CMainWindow* wnd, unsigned int flags) : CAbstractTool(s, wnd)
 {
 	m_list = 0;
 	m_form = 0;

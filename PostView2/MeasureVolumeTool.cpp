@@ -30,7 +30,7 @@ void CMeasureVolumeTool::Props::SetPropertyValue(int i, const QVariant& v)
 }
 
 //-----------------------------------------------------------------------------
-CMeasureVolumeTool::CMeasureVolumeTool(CDocument* doc) : CBasicTool("Measure Volume", doc, CBasicTool::HAS_APPLY_BUTTON)
+CMeasureVolumeTool::CMeasureVolumeTool(CMainWindow* wnd) : CBasicTool("Measure Volume", wnd, CBasicTool::HAS_APPLY_BUTTON)
 {
 	m_nsel = 0;
 	m_vol = 0.0;
@@ -48,12 +48,13 @@ void CMeasureVolumeTool::OnApply()
 {
 	m_nsel = 0;
 	m_vol = 0.0;
-	if (m_doc && m_doc->IsValid())
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
 	{
-		FEModel& fem = *m_doc->GetFEModel();
+		FEModel& fem = *doc->GetFEModel();
 		int ntime = fem.currentTime();
 		FEMeshBase& mesh = *fem.GetFEMesh(0);
-		const vector<FEFace*> selectedFaces = m_doc->GetGLModel()->GetFaceSelection();
+		const vector<FEFace*> selectedFaces = doc->GetGLModel()->GetFaceSelection();
 		int N = (int)selectedFaces.size();
 		for (int i = 0; i<N; ++i)
 		{

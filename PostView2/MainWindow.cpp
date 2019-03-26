@@ -123,6 +123,15 @@ CDocument*	CMainWindow::GetActiveDocument()
 	return m_activeDoc;
 }
 
+CDocument* CMainWindow::NewDocument(const std::string& docTitle)
+{
+	CDocument* doc = new CDocument(this);
+	doc->SetTitle(docTitle);
+	AddDocument(doc);
+	MakeDocActive(doc);
+	return doc;
+}
+
 // get the current them
 int CMainWindow::currentTheme()
 {

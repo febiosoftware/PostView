@@ -50,7 +50,7 @@ public:
 	}
 };
 
-CPlotMixTool::CPlotMixTool(CDocument* doc) : CAbstractTool("Plot Mix", doc)
+CPlotMixTool::CPlotMixTool(CMainWindow* wnd) : CAbstractTool("Plot Mix", wnd)
 {
 	ui = 0;
 }
@@ -115,11 +115,14 @@ void CPlotMixTool::OnApply()
 	vector<const char*> sz(nitems, 0);
 	for (int i=0; i<nitems; ++i) sz[i] = str[i].c_str();
 
+	// Create a new document
+	CDocument* doc = m_wnd->NewDocument("plotmix");
+
 	FEModel* pnew = reader.Load(&sz[0], nitems);
 	if (pnew == 0) QMessageBox::critical(0, "Plot Mix Tool", "An error occured reading the plot files.");
 	else
 	{
-		m_doc->SetFEModel(pnew);
+		doc->SetFEModel(pnew);
 	}
 	ui->list->clear();
 	updateUi();
@@ -177,7 +180,7 @@ public:
 	}
 };
 
-CKinematTool::CKinematTool(CDocument* doc) : CAbstractTool("Kinemat", doc)
+CKinematTool::CKinematTool(CMainWindow* wnd) : CAbstractTool("Kinemat", wnd)
 {
 	ui = 0;
 }
@@ -213,7 +216,10 @@ void CKinematTool::OnApply()
 	int n1 = ui->end->value();
 	int ni = ui->stride->value();
 
-	FEKinemat kine(m_doc);
+	// create a new document
+	CDocument* doc = m_wnd->NewDocument("Kinemat");
+
+	FEKinemat kine(doc);
 	kine.SetRange(n0, n1, ni);
 
 	string modelFile = ui->modelFile->text().toStdString();
@@ -224,9 +230,8 @@ void CKinematTool::OnApply()
 		QMessageBox::critical(0, "Kinemat", "Failed applying Kinemat tool");
 	}
 
-	m_doc->ZoomExtents();
-	CMainWindow* pwnd = m_doc->GetWindow();
-	pwnd->SetCurrentTime(0);
-	pwnd->UpdateMainToolbar();
-	pwnd->UpdateUi(true);
+	doc->ZoomExtents();
+	m_wnd->SetCurrentTime(0);
+	m_wnd->UpdateMainToolbar();
+	m_wnd->UpdateUi(true);
 }

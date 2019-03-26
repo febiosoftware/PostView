@@ -79,7 +79,7 @@ void C3PointAngleTool::Props::SetPropertyValue(int i, const QVariant& v)
 }
 
 //-----------------------------------------------------------------------------
-C3PointAngleTool::C3PointAngleTool(CDocument* doc) : CBasicTool("3Point Angle", doc)
+C3PointAngleTool::C3PointAngleTool(CMainWindow* wnd) : CBasicTool("3Point Angle", wnd)
 {
 	m_deco = 0;
 
@@ -106,7 +106,8 @@ void C3PointAngleTool::deactivate()
 {
 	if (m_deco)
 	{
-		m_doc->GetGLModel()->RemoveDecoration(m_deco);
+		CDocument* doc = GetActiveDocument();
+		if (doc) doc->GetGLModel()->RemoveDecoration(m_deco);
 		delete m_deco;
 		m_deco = 0;
 	}
@@ -117,10 +118,11 @@ void C3PointAngleTool::update(bool breset)
 {
 	if (breset)
 	{
-		if (m_doc && m_doc->IsValid())
+		CDocument* doc = GetActiveDocument();
+		if (doc && doc->IsValid())
 		{
-			FEMeshBase& mesh = *m_doc->GetActiveMesh();
-			const vector<FENode*> selectedNodes = m_doc->GetGLModel()->GetNodeSelection();
+			FEMeshBase& mesh = *doc->GetActiveMesh();
+			const vector<FENode*> selectedNodes = doc->GetGLModel()->GetNodeSelection();
 			int N = selectedNodes.size();
 			int nsel = 0;
 			for (int i = 0; i<N; ++i)
@@ -139,12 +141,12 @@ void C3PointAngleTool::update(bool breset)
 
 			if (m_deco)
 			{
-				m_doc->GetGLModel()->RemoveDecoration(m_deco);
+				doc->GetGLModel()->RemoveDecoration(m_deco);
 				delete m_deco;
 				m_deco = 0;
 			}
 			m_deco = new C3PointAngleDecoration;
-			m_doc->GetGLModel()->AddDecoration(m_deco);
+			doc->GetGLModel()->AddDecoration(m_deco);
 			UpdateAngle();
 		}
 	}
@@ -156,11 +158,12 @@ void C3PointAngleTool::UpdateAngle()
 {
 	m_angle = 0.0;
 	if (m_deco) m_deco->setVisible(false);
-	if (m_doc && m_doc->IsValid())
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
 	{
-		FEModel& fem = *m_doc->GetFEModel();
-		FEMeshBase& mesh = *m_doc->GetActiveMesh();
-		int ntime = m_doc->currentTime();
+		FEModel& fem = *doc->GetFEModel();
+		FEMeshBase& mesh = *doc->GetActiveMesh();
+		int ntime = doc->currentTime();
 		int NN = mesh.Nodes();
 		if ((m_node[0] >   0)&&(m_node[1] >   0)&&(m_node[2] >   0)&&
 			(m_node[0] <= NN)&&(m_node[1] <= NN)&&(m_node[2] <= NN))

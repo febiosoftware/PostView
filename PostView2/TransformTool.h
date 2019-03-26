@@ -20,7 +20,7 @@ class CTransformTool : public CBasicTool
 
 public:
 	// constructor
-	CTransformTool(CDocument* doc);
+	CTransformTool(CMainWindow* wnd);
 
 	// get the property list
 	CPropertyList*	getPropertyList();
