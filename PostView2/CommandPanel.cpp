@@ -3,11 +3,14 @@
 
 CCommandPanel::CCommandPanel(CMainWindow* pwnd, QWidget* parent) : QWidget(parent), m_wnd(pwnd)
 {
-	CDocument* doc = pwnd->GetDocument();
-	doc->AddObserver(this);
 }
 
 void CCommandPanel::Update(bool breset)
 {
 
+}
+
+CDocument* CCommandPanel::GetActiveDocument()
+{
+	return m_wnd->GetActiveDocument();
 }

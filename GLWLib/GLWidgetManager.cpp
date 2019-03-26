@@ -16,13 +16,26 @@ void CGLWidgetManager::AttachToView(QOpenGLWidget *pview)
 	m_pview = pview;
 }
 
+CGLWidgetManager::CGLWidgetManager()
+{
+	m_layer = 0;
+}
+
+CGLWidgetManager::CGLWidgetManager(const CGLWidgetManager& m) {}
+
 CGLWidgetManager::~CGLWidgetManager()
 {
 
 }
 
+void CGLWidgetManager::SetActiveLayer(int l)
+{
+	m_layer = l;
+}
+
 void CGLWidgetManager::AddWidget(GLWidget* pw)
 {
+	pw->set_layer(m_layer);
 	m_Widget.push_back(pw);
 }
 
@@ -180,7 +193,7 @@ void CGLWidgetManager::DrawWidgets(QPainter* painter)
 	for (int i=0; i<(int) m_Widget.size(); ++i) 
 	{
 		GLWidget* pw = m_Widget[i];
-		if (pw->visible())
+		if (pw->visible() && ((pw->layer() == 0) || (pw->layer() == m_layer)))
 		{
 			// snap the widget if any of its align flags are set
 			if (pw->GetSnap()) SnapWidget(pw);
@@ -205,6 +218,6 @@ void CGLWidgetManager::DrawWidgets(QPainter* painter)
 	for (int i=0; i<(int) m_Widget.size(); ++i) 
 	{
 		GLWidget* pw = m_Widget[i];
-		if (pw->visible()) pw->draw(painter);
+		if (pw->visible() && ((pw->layer() == 0)|| (pw->layer() == m_layer))) pw->draw(painter);
 	}
 }

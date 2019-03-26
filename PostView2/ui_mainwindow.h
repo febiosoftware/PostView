@@ -29,6 +29,7 @@
 #include <QPushButton>
 #include <QToolButton>
 #include <QWhatsThis>
+#include <QTabBar>
 
 QT_BEGIN_NAMESPACE
 
@@ -95,6 +96,7 @@ public:
 	CToolsPanel*	toolsPanel;
 	CTimePanel*		timePanel;
 	CGLView*		glview;
+	QTabBar*		tab;
 
 	CDataFieldSelector*	selectData;
 	QSpinBox* pspin;
@@ -150,9 +152,19 @@ public:
         MainWindow->resize(wndWidth, wndHeight);
 
 		// create the central widget
+		QWidget* centralWidget = new QWidget;
+		tab = new QTabBar;
+		tab->setObjectName("tab");
+		tab->setExpanding(false);
+		tab->setTabsClosable(true);
 		glview = new CGLView(MainWindow);
+		QVBoxLayout* l = new QVBoxLayout;
+		l->setMargin(0);
+		l->addWidget(tab);
+		l->addWidget(glview);
+		centralWidget->setLayout(l);
 
-		MainWindow->setCentralWidget(glview);
+		MainWindow->setCentralWidget(centralWidget);
 
 		// build the menu
 		buildMenu(MainWindow);
@@ -660,6 +672,18 @@ public:
 			QAction* pa = menuRecentFiles->actions().first();
 			menuRecentFiles->removeAction(pa);
 		}
+	}
+
+	void addTab(const QString& tabTitle, const QString& toolTip)
+	{
+		tab->addTab(tabTitle);
+		tab->setCurrentIndex(tab->count() - 1);
+		tab->setTabToolTip(tab->count() - 1, toolTip);
+	}
+
+	void RemoveTab(int i)
+	{
+		tab->removeTab(i);
 	}
 };
 

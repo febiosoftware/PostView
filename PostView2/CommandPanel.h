@@ -11,6 +11,8 @@ class CCommandPanel : public QWidget, public CDocObserver
 public:
 	CCommandPanel(CMainWindow* pwnd, QWidget* parent = 0);
 
+	CDocument* GetActiveDocument();
+
 public:
 	// This function must be overloaded by derived classes.
 	// When reset is true the panel should update all its content

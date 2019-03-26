@@ -11,8 +11,8 @@ CTimePanel::CTimePanel(CMainWindow* wnd, QWidget* parent) : QWidget(parent), m_w
 
 void CTimePanel::Update(bool reset)
 {
-	CDocument* doc = m_wnd->GetDocument();
-	if (doc->IsValid())
+	CDocument* doc = m_wnd->GetActiveDocument();
+	if (doc && doc->IsValid())
 	{
 		if (reset)
 		{
@@ -51,7 +51,7 @@ void CTimePanel::on_timer_pointClicked(int i)
 
 void CTimePanel::on_timer_rangeChanged(int nmin, int nmax)
 {
-	CDocument* doc = m_wnd->GetDocument();
+	CDocument* doc = m_wnd->GetActiveDocument();
 	if (doc->IsValid())
 	{
 		TIMESETTINGS& time = doc->GetTimeSettings();

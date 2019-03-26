@@ -30,16 +30,19 @@ public:
 
 	void DrawWidgets(QPainter* painter);
 
+	void SetActiveLayer(int l);
+
 protected:
 	void SnapWidget(GLWidget* pw);
 
 protected:
 	QOpenGLWidget*			m_pview;
 	std::vector<GLWidget*>	m_Widget;
+	unsigned int			m_layer;
 
 private:
-	CGLWidgetManager() {}
-	CGLWidgetManager(const CGLWidgetManager& m) {}
+	CGLWidgetManager();
+	CGLWidgetManager(const CGLWidgetManager& m);
 
 	static CGLWidgetManager*	m_pmgr;
 };

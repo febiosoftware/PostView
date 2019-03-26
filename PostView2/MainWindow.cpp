@@ -6,7 +6,7 @@
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 #include <QDesktopServices>
-#include "Document.h"
+#include "DocManager.h"
 #include "Document.h"
 #include "GLModel.h"
 #include <PostViewLib/xpltFileReader.h>
@@ -51,6 +51,7 @@
 #include "ImgAnimation.h"
 #include "AVIAnimation.h"
 #include "MPEGAnimation.h"
+#include "DocManager.h"
 #include <string>
 #include <QStyleFactory>
 
@@ -78,9 +79,12 @@ void darkStyle()
 
 CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMainWindow)
 {
-	m_doc = new CDocument(this);
+	m_DocManager = new CDocManager(this);
 	ui->setupUi(this);
 	m_fileThread = 0;
+	m_activeDoc = nullptr;
+
+	m_ops.Defaults();
 
 	// initialize color maps
 	// (This must be done before we read the settings!)
@@ -94,7 +98,7 @@ CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMai
 	{
 		darkStyle();
 
-		VIEWSETTINGS& view = m_doc->GetViewSettings();
+		VIEWSETTINGS& view = GetViewSettings();
 		view.bgcol1 = GLCOLOR(83, 83, 83);
 		view.bgcol2 = GLCOLOR(0, 0, 0);
 		view.bgstyle = BG_COLOR_1;
@@ -108,13 +112,15 @@ CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMai
 
 	// make sure the file viewer is visible
 	ui->fileViewer->parentWidget()->raise();
-
-	// add this
-	m_doc->AddObserver(this);
 }
 
 CMainWindow::~CMainWindow()
 {
+}
+
+CDocument*	CMainWindow::GetActiveDocument()
+{ 
+	return m_activeDoc;
 }
 
 // get the current them
@@ -142,10 +148,11 @@ void CMainWindow::ClearStatusMessage()
 void CMainWindow::UpdateStatusMessage()
 {
 	ClearStatusMessage();
-	if (m_doc->IsValid())
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
 	{
-		CGLModel& mdl = *m_doc->GetGLModel();
-		FEMeshBase* mesh = m_doc->GetActiveMesh();
+		CGLModel& mdl = *doc->GetGLModel();
+		FEMeshBase* mesh = doc->GetActiveMesh();
 		if (mesh)
 		{
 			int selectionMode = mdl.GetSelectionMode();
@@ -303,7 +310,10 @@ void CMainWindow::UpdateUi(bool breset, QWidget* psender)
 	UpdateGraphs(breset, breset);
 
 	// update the gl view
-	ui->glview->GetCamera().Update(true);
+	if (GetActiveDocument())
+	{
+		ui->glview->GetCamera().Update(true);
+	}
 	RedrawGL();
 }
 
@@ -320,8 +330,8 @@ void CMainWindow::RedrawGL()
 void CMainWindow::CheckUi()
 {
 	// check the color map state
-	CDocument* doc = GetDocument();
-	CGLModel* po = doc->GetGLModel();
+	CDocument* doc = GetActiveDocument();
+	CGLModel* po = (doc ? doc->GetGLModel() : nullptr);
 	if (po)
 	{
 		bool bcheck = ui->actionColorMap->isChecked();
@@ -471,14 +481,14 @@ void CMainWindow::OpenFile(const QString& fileName, int nfilter)
 		stitle = sfile.substr(npos+1);
 	}
 */
-	// set the window title
-	SetWindowTitle(QString(stitle.c_str()));
-
 	// deactivate the play tool bar
 	ui->playToolBar->setEnabled(false);
 
+	// Create a new document
+	CDocument* doc = new CDocument(this);
+
 	// create the file reading thread and run it
-	m_fileThread = new CFileThread(this, reader, fileName);
+	m_fileThread = new CFileThread(this, doc, reader, fileName);
 	m_fileThread->start();
 	ui->statusBar->showMessage(QString("Reading file %1 ...").arg(fileName));
 
@@ -504,8 +514,9 @@ void CMainWindow::onCancelFileRead()
 		if (fileReader)
 		{
 			fileReader->Cancel();
-			ui->stopFileReading->setDisabled(true);
 		}
+		ui->stopFileReading->setDisabled(true);
+		delete m_fileThread->GetDocument();
 	}
 }
 
@@ -521,9 +532,17 @@ void CMainWindow::checkFileProgress()
 	}
 }
 
+void CMainWindow::AddDocument(CDocument* doc)
+{
+	m_DocManager->AddDocument(doc);
+	ui->addTab(QString::fromStdString(doc->GetFileName()), doc->GetFile());
+}
+
 void CMainWindow::finishedReadingFile(bool success, const QString& errorString)
 {
+	CDocument* doc = m_fileThread->GetDocument();
 	m_fileThread = 0;
+
 	ui->statusBar->clearMessage();
 	ui->statusBar->removeWidget(ui->stopFileReading);
 	ui->statusBar->removeWidget(ui->fileProgress);
@@ -537,29 +556,18 @@ void CMainWindow::finishedReadingFile(bool success, const QString& errorString)
 	{
 		QMessageBox::information(this, "PostView2", errorString);
 	}
-	ui->glview->UpdateWidgets();
 
-	// update all Ui components
-	UpdateUi(true);
+	// Add the document
+	AddDocument(doc);
 
-	UpdateMainToolbar();
+	// Make it the active document
+	MakeDocActive(doc);
 
 	// show the model viewer
 	ui->modelViewer->parentWidget()->raise();
 
-	// This is already done in UpdateMainToolbar so I can probably remove this
-	FEModel* fem = m_doc->GetFEModel();
-	if (fem && fem->GetStates() > 0)
-	{
-		ui->playToolBar->setEnabled(true);
-	}
-	else
-	{
-		ui->playToolBar->setDisabled(true);
-	}
-
 	// add file to recent list
-	ui->addToRecentFiles(m_doc->GetFile());
+	ui->addToRecentFiles(doc->GetFile());
 }
 
 bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
@@ -568,9 +576,10 @@ bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 	string sfilename = fileName.toStdString();
 	const char* szfilename = sfilename.c_str();
 
-	if (m_doc->IsValid() == false) return true;
+	CDocument* doc = GetActiveDocument();
+	if ((doc == nullptr) || (doc->IsValid() == false)) return true;
 
-	FEModel& fem = *m_doc->GetFEModel();
+	FEModel& fem = *doc->GetFEModel();
 
 	bool bret = false;
 	QString error("(unknown)");
@@ -601,7 +610,7 @@ bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 			{ 
 				// decide which time steps to export
 				int n0, n1;
-				if (dlg.m_nstep == 0) n0 = n1 = m_doc->currentTime();
+				if (dlg.m_nstep == 0) n0 = n1 = doc->currentTime();
 				else
 				{
 					n0 = 0;
@@ -637,13 +646,13 @@ bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 				w.m_bsel = dlg.m_bsel;
 				w.m_bsurf = dlg.m_bsurf;
 				w.m_bnode = dlg.m_bnode;
-				bret = w.Save(fem, m_doc->currentTime(), szfilename);
+				bret = w.Save(fem, doc->currentTime(), szfilename);
 			}
 		}
 		break;
 	case 5:
 		{
-			bret = m_doc->ExportBYU(szfilename);
+			bret = doc->ExportBYU(szfilename);
 		}
 		break;
 	case 6:
@@ -719,23 +728,26 @@ void CMainWindow::on_actionUpdate_triggered()
 	ui->actionColorMap->setDisabled(true);
 	ui->playToolBar->setDisabled(true);
 
-	if (m_doc->LoadFEModel(0, m_doc->GetFile(), true) == false)
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+
+	if (doc->LoadFEModel(0, doc->GetFile(), true) == false)
 	{
 		QMessageBox::critical(this, tr("PostView2"), "Failed updating the model");
 	}
-	else if (m_doc->IsValid())
+	else if (doc->IsValid())
 	{
-		int N = m_doc->GetFEModel()->GetStates();
+		int N = doc->GetFEModel()->GetStates();
 		if (N > 1) ui->playToolBar->setEnabled(true);
 
-		FEModel* fem = m_doc->GetFEModel();
-		int nfield = m_doc->GetEvalField();
+		FEModel* fem = doc->GetFEModel();
+		int nfield = doc->GetEvalField();
 
 		// we need to update the model viewer before we rebuild the selection menu
 		ui->modelViewer->Update(true);
 
 		// now, we can rebuild the 
-		ui->selectData->BuildMenu(m_doc->GetFEModel(), DATA_SCALAR);
+		ui->selectData->BuildMenu(doc->GetFEModel(), DATA_SCALAR);
 		ui->selectData->setCurrentValue(nfield);
 		ui->actionColorMap->setDisabled(false);
 
@@ -749,7 +761,9 @@ void CMainWindow::on_actionUpdate_triggered()
 void CMainWindow::on_actionFileInfo_triggered()
 {
 	CDlgFileInfo dlg;
-	FEModel* fem = GetDocument()->GetFEModel();
+	CDocument* doc = GetActiveDocument();
+
+	FEModel* fem = (doc ? doc->GetFEModel() : nullptr);
 	if (fem)
 	{
 		MetaData& md = fem->GetMetaData();
@@ -829,9 +843,9 @@ void CMainWindow::on_actionOpenSession_triggered()
 		std::string sfile = filename.toStdString();
 		const char* szfile = sfile.c_str();
 
-		CDocument* pdoc = GetDocument();
+		CDocument* pdoc = GetActiveDocument();
 		// try to open the session
-		if (pdoc->OpenSession(szfile) == false)
+		if (m_DocManager->OpenSession(szfile) == false)
 		{
 			QMessageBox::critical(this, "PostView", "Failed restoring session.");
 //			ShowTimeController(false);
@@ -852,8 +866,8 @@ void CMainWindow::on_actionOpenSession_triggered()
 			QString title; title = QString(ch);
 			SetWindowTitle(title);
 			
-			ui->selectData->BuildMenu(m_doc->GetFEModel(), DATA_SCALAR);
-			if (m_doc->GetFEModel()->GetStates() > 0) ui->playToolBar->setEnabled(true);
+			ui->selectData->BuildMenu(pdoc->GetFEModel(), DATA_SCALAR);
+			if (pdoc->GetFEModel()->GetStates() > 0) ui->playToolBar->setEnabled(true);
 			else ui->playToolBar->setDisabled(true);
 
 			// update all Ui components
@@ -869,7 +883,7 @@ void CMainWindow::on_actionSaveSession_triggered()
 	{
 		std::string sfile = fileName.toStdString();
 		const char* szfile = sfile.c_str();
-		if (m_doc->SaveSession(szfile) == false)
+		if (m_DocManager->SaveSession(szfile) == false)
 		{
 			QMessageBox::critical(this, "PostView", "Failed storing PostView session.");
 		}
@@ -884,7 +898,10 @@ void CMainWindow::on_actionQuit_triggered()
 
 void CMainWindow::on_selectNodes_triggered()
 {
-	CGLModel* model = m_doc->GetGLModel(); assert(model);
+	CDocument* doc = GetActiveDocument();
+	if ((doc == nullptr) || (doc->IsValid() == false)) return;
+
+	CGLModel* model = doc->GetGLModel(); assert(model);
 	if (model == 0) return;
 	
 	int oldMode = model->GetSelectionMode();
@@ -898,7 +915,10 @@ void CMainWindow::on_selectNodes_triggered()
 
 void CMainWindow::on_selectEdges_triggered()
 {
-	CGLModel* model = m_doc->GetGLModel(); assert(model);
+	CDocument* doc = GetActiveDocument();
+	if ((doc == nullptr) || (doc->IsValid() == false)) return;
+
+	CGLModel* model = doc->GetGLModel(); assert(model);
 	if (model == 0) return;
 
 	model->SetSelectionMode(SELECT_EDGES);
@@ -907,7 +927,10 @@ void CMainWindow::on_selectEdges_triggered()
 
 void CMainWindow::on_selectFaces_triggered()
 {
-	CGLModel* model = m_doc->GetGLModel(); assert(model);
+	CDocument* doc = GetActiveDocument();
+	if ((doc == nullptr) || (doc->IsValid() == false)) return;
+
+	CGLModel* model = doc->GetGLModel(); assert(model);
 	if (model == 0) return;
 
 	model->SetSelectionMode(SELECT_FACES);
@@ -916,7 +939,10 @@ void CMainWindow::on_selectFaces_triggered()
 
 void CMainWindow::on_selectElems_triggered()
 {
-	CGLModel* model = m_doc->GetGLModel(); assert(model);
+	CDocument* doc = GetActiveDocument();
+	if ((doc == nullptr) || (doc->IsValid() == false)) return;
+
+	CGLModel* model = doc->GetGLModel(); assert(model);
 	if (model == 0) return;
 
 	model->SetSelectionMode(SELECT_ELEMS);
@@ -925,7 +951,10 @@ void CMainWindow::on_selectElems_triggered()
 
 void CMainWindow::on_actionSelectRect_triggered()
 {
-	CGLModel* model = m_doc->GetGLModel(); assert(model);
+	CDocument* doc = GetActiveDocument();
+	if ((doc == nullptr) || (doc->IsValid() == false)) return;
+
+	CGLModel* model = doc->GetGLModel(); assert(model);
 	if (model == 0) return;
 
 	model->SetSelectionStyle(SELECT_RECT);
@@ -933,7 +962,10 @@ void CMainWindow::on_actionSelectRect_triggered()
 
 void CMainWindow::on_actionSelectCircle_triggered()
 {
-	CGLModel* model = m_doc->GetGLModel(); assert(model);
+	CDocument* doc = GetActiveDocument();
+	if ((doc == nullptr) || (doc->IsValid() == false)) return;
+
+	CGLModel* model = doc->GetGLModel(); assert(model);
 	if (model == 0) return;
 
 	model->SetSelectionStyle(SELECT_CIRCLE);
@@ -941,7 +973,10 @@ void CMainWindow::on_actionSelectCircle_triggered()
 
 void CMainWindow::on_actionSelectFree_triggered()
 {
-	CGLModel* model = m_doc->GetGLModel(); assert(model);
+	CDocument* doc = GetActiveDocument();
+	if ((doc == nullptr) || (doc->IsValid() == false)) return;
+
+	CGLModel* model = doc->GetGLModel(); assert(model);
 	if (model == 0) return;
 
 	model->SetSelectionStyle(SELECT_FREE);
@@ -959,15 +994,15 @@ void CMainWindow::on_actionZoomExtents_triggered()
 
 void CMainWindow::on_actionSelectConn_toggled(bool b)
 {
-	GetDocument()->GetViewSettings().m_bconn = b;
+	GetViewSettings().m_bconn = b;
 }
 
 void CMainWindow::on_actionHideSelected_triggered()
 {
-	CDocument* pdoc = GetDocument();
-	if (pdoc->IsValid() == false) return;
+	CDocument* doc = GetActiveDocument();
+	if ((doc == nullptr) || (doc->IsValid() == false)) return;
 
-	CGLModel& mdl = *pdoc->GetGLModel();
+	CGLModel& mdl = *doc->GetGLModel();
 
 	switch (mdl.GetSelectionMode())
 	{
@@ -978,25 +1013,29 @@ void CMainWindow::on_actionHideSelected_triggered()
 	}
 
 	UpdateStatusMessage();
-	pdoc->UpdateFEModel();
+	doc->UpdateFEModel();
 	RedrawGL();
 }
 
 void CMainWindow::on_actionHideUnselected_triggered()
 {
-	CDocument* pdoc = GetDocument();
-	CGLModel& mdl = *pdoc->GetGLModel();
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+
+	CGLModel& mdl = *doc->GetGLModel();
 
 	mdl.HideUnselectedElements();
 
-	pdoc->UpdateFEModel();
+	doc->UpdateFEModel();
 	RedrawGL();
 }
 
 void CMainWindow::on_actionInvertSelection_triggered()
 {
-	CDocument* pdoc = GetDocument();
-	CGLModel& mdl = *pdoc->GetGLModel();
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+
+	CGLModel& mdl = *doc->GetGLModel();
 
 	int mode = mdl.GetSelectionMode();
 	switch (mode)
@@ -1008,24 +1047,26 @@ void CMainWindow::on_actionInvertSelection_triggered()
 	}
 
 	UpdateStatusMessage();
-	pdoc->UpdateFEModel();
+	doc->UpdateFEModel();
 	RedrawGL();
 }
 
 void CMainWindow::on_actionUnhideAll_triggered()
 {
-	CDocument* pdoc = GetDocument();
-	if (pdoc->IsValid() == false) return;
-	CGLModel& mdl = *pdoc->GetGLModel();
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+	if (doc->IsValid() == false) return;
+	CGLModel& mdl = *doc->GetGLModel();
 	mdl.UnhideAll();
-	pdoc->UpdateFEModel();
+	doc->UpdateFEModel();
 	RedrawGL();
 }
 
 void CMainWindow::on_actionSelectAll_triggered()
 {
-	CDocument* pdoc = GetDocument();
-	CGLModel* m = pdoc->GetGLModel();
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+	CGLModel* m = doc->GetGLModel();
 
 	int mode = m->GetSelectionMode();
 	switch (mode)
@@ -1037,19 +1078,20 @@ void CMainWindow::on_actionSelectAll_triggered()
 	}
 
 	UpdateStatusMessage();
-	pdoc->UpdateFEModel();
+	doc->UpdateFEModel();
 	RedrawGL();
 }
 
 void CMainWindow::on_actionSelectRange_triggered()
 {
-	CDocument* pdoc = GetDocument();
-	if (!pdoc->IsValid()) return;
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+	if (!doc->IsValid()) return;
 
-	CGLModel* model = m_doc->GetGLModel(); assert(model);
+	CGLModel* model = doc->GetGLModel(); assert(model);
 	if (model == 0) return;
 
-	CGLColorMap* pcol = pdoc->GetGLModel()->GetColorMap();
+	CGLColorMap* pcol = doc->GetGLModel()->GetColorMap();
 	if (pcol == 0) return;
 
 	float d[2];
@@ -1063,39 +1105,41 @@ void CMainWindow::on_actionSelectRange_triggered()
 	{
 		switch (model->GetSelectionMode())
 		{
-		case SELECT_NODES: pdoc->SelectNodesInRange(dlg.m_min, dlg.m_max, dlg.m_brange); break;
-		case SELECT_EDGES: pdoc->SelectEdgesInRange(dlg.m_min, dlg.m_max, dlg.m_brange); break;
-		case SELECT_FACES: pdoc->SelectFacesInRange(dlg.m_min, dlg.m_max, dlg.m_brange); break;
-		case SELECT_ELEMS: pdoc->SelectElemsInRange(dlg.m_min, dlg.m_max, dlg.m_brange); break;
+		case SELECT_NODES: doc->SelectNodesInRange(dlg.m_min, dlg.m_max, dlg.m_brange); break;
+		case SELECT_EDGES: doc->SelectEdgesInRange(dlg.m_min, dlg.m_max, dlg.m_brange); break;
+		case SELECT_FACES: doc->SelectFacesInRange(dlg.m_min, dlg.m_max, dlg.m_brange); break;
+		case SELECT_ELEMS: doc->SelectElemsInRange(dlg.m_min, dlg.m_max, dlg.m_brange); break;
 		}
 		
-		CGLModel& mdl = *pdoc->GetGLModel();
+		CGLModel& mdl = *doc->GetGLModel();
 		mdl.UpdateSelectionLists();
 		UpdateStatusMessage();
-		pdoc->UpdateFEModel();
+		doc->UpdateFEModel();
 		UpdateUi(false);
 	}
 }
 
 void CMainWindow::on_actionClearSelection_triggered()
 {
-	CDocument* pdoc = GetDocument();
-	if (pdoc->IsValid())
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+	if (doc->IsValid())
 	{
-		CGLModel& mdl = *pdoc->GetGLModel();
+		CGLModel& mdl = *doc->GetGLModel();
 		mdl.ClearSelection(); 
 		UpdateStatusMessage();
-		pdoc->UpdateFEModel();
+		doc->UpdateFEModel();
 		RedrawGL();
 	}
 }
 
 void CMainWindow::on_actionFind_triggered()
 {
-	CDocument& doc = *GetDocument();
-	if (doc.IsValid() == false) return;
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+	if (doc->IsValid() == false) return;
 
-	CGLModel* model = m_doc->GetGLModel(); assert(model);
+	CGLModel* model = doc->GetGLModel(); assert(model);
 	if (model == 0) return;
 
 	int nview = model->GetSelectionMode();
@@ -1109,7 +1153,7 @@ void CMainWindow::on_actionFind_triggered()
 
 	if (dlg.exec())
 	{
-		CGLModel* pm = doc.GetGLModel();
+		CGLModel* pm = doc->GetGLModel();
 
 		if (dlg.m_bsel[0]) nview = SELECT_NODES;
 		if (dlg.m_bsel[1]) nview = SELECT_EDGES;
@@ -1124,7 +1168,7 @@ void CMainWindow::on_actionFind_triggered()
 		case SELECT_ELEMS: on_selectElems_triggered(); pm->SelectElements(dlg.m_item, dlg.m_bclear); break;
 		}
 
-		doc.GetGLModel()->UpdateSelectionLists();
+		doc->GetGLModel()->UpdateSelectionLists();
 		UpdateStatusMessage();
 		RedrawGL();
 	}
@@ -1180,11 +1224,12 @@ void CMainWindow::on_actionProperties_triggered()
 
 void CMainWindow::on_actionPlaneCut_triggered()
 {
-	CDocument* pdoc = GetDocument();
-	if (pdoc->IsValid() == false) return;
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+	if (doc->IsValid() == false) return;
 
-	CGLPlaneCutPlot* pp = new CGLPlaneCutPlot(pdoc->GetGLModel());
-	pdoc->AddPlot(pp);
+	CGLPlaneCutPlot* pp = new CGLPlaneCutPlot(doc->GetGLModel());
+	doc->AddPlot(pp);
 
 	ui->modelViewer->Update(true);
 	ui->modelViewer->selectObject(pp);
@@ -1194,12 +1239,13 @@ void CMainWindow::on_actionPlaneCut_triggered()
 
 void CMainWindow::on_actionVectorPlot_triggered()
 {
-	CDocument* pdoc = GetDocument();
-	if (pdoc->IsValid() == false) return;
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+	if (doc->IsValid() == false) return;
 
-	CGLVectorPlot* pp = new CGLVectorPlot(pdoc->GetGLModel());
-	pdoc->AddPlot(pp);
-	pdoc->UpdateFEModel();
+	CGLVectorPlot* pp = new CGLVectorPlot(doc->GetGLModel());
+	doc->AddPlot(pp);
+	doc->UpdateFEModel();
 	
 	ui->modelViewer->Update(true);
 	ui->modelViewer->selectObject(pp);
@@ -1210,12 +1256,13 @@ void CMainWindow::on_actionVectorPlot_triggered()
 
 void CMainWindow::on_actionTensorPlot_triggered()
 {
-	CDocument* pdoc = GetDocument();
-	if (pdoc->IsValid() == false) return;
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+	if (doc->IsValid() == false) return;
 
-	GLTensorPlot* pp = new GLTensorPlot(pdoc->GetGLModel());
-	pdoc->AddPlot(pp);
-	pdoc->UpdateFEModel();
+	GLTensorPlot* pp = new GLTensorPlot(doc->GetGLModel());
+	doc->AddPlot(pp);
+	doc->UpdateFEModel();
 
 	ui->modelViewer->Update(true);
 	ui->modelViewer->selectObject(pp);
@@ -1226,12 +1273,13 @@ void CMainWindow::on_actionTensorPlot_triggered()
 
 void CMainWindow::on_actionStreamLinePlot_triggered()
 {
-	CDocument* pdoc = GetDocument();
-	if (pdoc->IsValid() == false) return;
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+	if (doc->IsValid() == false) return;
 
-	CGLStreamLinePlot* pp = new CGLStreamLinePlot(pdoc->GetGLModel());
-	pdoc->AddPlot(pp);
-	pdoc->UpdateFEModel();
+	CGLStreamLinePlot* pp = new CGLStreamLinePlot(doc->GetGLModel());
+	doc->AddPlot(pp);
+	doc->UpdateFEModel();
 
 	ui->modelViewer->Update(true);
 	ui->modelViewer->selectObject(pp);
@@ -1242,12 +1290,13 @@ void CMainWindow::on_actionStreamLinePlot_triggered()
 
 void CMainWindow::on_actionParticleFlowPlot_triggered()
 {
-	CDocument* pdoc = GetDocument();
-	if (pdoc->IsValid() == false) return;
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+	if (doc->IsValid() == false) return;
 
-	CGLParticleFlowPlot* pp = new CGLParticleFlowPlot(pdoc->GetGLModel());
-	pdoc->AddPlot(pp);
-	pdoc->UpdateFEModel();
+	CGLParticleFlowPlot* pp = new CGLParticleFlowPlot(doc->GetGLModel());
+	doc->AddPlot(pp);
+	doc->UpdateFEModel();
 
 	ui->modelViewer->Update(true);
 	ui->modelViewer->selectObject(pp);
@@ -1258,12 +1307,13 @@ void CMainWindow::on_actionParticleFlowPlot_triggered()
 
 void CMainWindow::on_actionIsosurfacePlot_triggered()
 {
-	CDocument* pdoc = GetDocument();
-	if (pdoc->IsValid() == false) return;
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+	if (doc->IsValid() == false) return;
 
-	CGLIsoSurfacePlot* pp = new CGLIsoSurfacePlot(pdoc->GetGLModel());
-	pdoc->AddPlot(pp);
-	pdoc->UpdateFEModel();
+	CGLIsoSurfacePlot* pp = new CGLIsoSurfacePlot(doc->GetGLModel());
+	doc->AddPlot(pp);
+	doc->UpdateFEModel();
 
 	ui->modelViewer->Update(true);
 	ui->modelViewer->selectObject(pp);
@@ -1274,12 +1324,13 @@ void CMainWindow::on_actionIsosurfacePlot_triggered()
 
 void CMainWindow::on_actionSlicePlot_triggered()
 {
-	CDocument* pdoc = GetDocument();
-	if (pdoc->IsValid() == false) return;
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+	if (doc->IsValid() == false) return;
 
-	CGLSlicePlot* pp = new CGLSlicePlot(pdoc->GetGLModel());
-	pdoc->AddPlot(pp);
-	pdoc->UpdateFEModel();
+	CGLSlicePlot* pp = new CGLSlicePlot(doc->GetGLModel());
+	doc->AddPlot(pp);
+	doc->UpdateFEModel();
 
 	ui->modelViewer->Update(true);
 	ui->modelViewer->selectObject(pp);
@@ -1290,10 +1341,11 @@ void CMainWindow::on_actionSlicePlot_triggered()
 
 void CMainWindow::on_actionDisplacementMap_triggered()
 {
-	CDocument* pdoc = GetDocument();
-	if (pdoc->IsValid() == false) return;
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+	if (doc->IsValid() == false) return;
 
-	CGLModel* pm = pdoc->GetGLModel();
+	CGLModel* pm = doc->GetGLModel();
 	if (pm->GetDisplacementMap() == 0)
 	{
 		if (pm->AddDisplacementMap() == false)
@@ -1302,7 +1354,7 @@ void CMainWindow::on_actionDisplacementMap_triggered()
 		}
 		else
 		{
-			pdoc->UpdateFEModel(true);
+			doc->UpdateFEModel(true);
 			ui->modelViewer->Update(true);
 		}
 	}
@@ -1384,11 +1436,12 @@ void CMainWindow::on_actionIntegrate_triggered()
 
 void CMainWindow::on_actionColorMap_toggled(bool bchecked)
 {
-	CDocument* pdoc = GetDocument();
-	CGLModel* po = pdoc->GetGLModel();
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+	CGLModel* po = doc->GetGLModel();
 	po->GetColorMap()->Activate(bchecked);
 	UpdateModelViewer(false);
-	pdoc->UpdateFEModel();
+	doc->UpdateFEModel();
 	RedrawGL();
 }
 
@@ -1407,8 +1460,9 @@ void CMainWindow::on_selectData_currentValueChanged(int index)
 			ui->actionColorMap->setEnabled(true);
 
 		int nfield = ui->selectData->currentValue();
-		CDocument* pdoc = GetDocument();
-		CGLModel* pm = pdoc->GetGLModel();
+		CDocument* doc = GetActiveDocument();
+		if (doc == nullptr) return;
+		CGLModel* pm = doc->GetGLModel();
 		pm->GetColorMap()->SetEvalField(nfield);
 
 		// turn on the colormap
@@ -1416,7 +1470,7 @@ void CMainWindow::on_selectData_currentValueChanged(int index)
 		{
 			ui->actionColorMap->toggle();
 		}
-		else pdoc->UpdateFEModel();
+		else doc->UpdateFEModel();
 
 		ui->glview->UpdateWidgets(false);
 		RedrawGL();
@@ -1433,12 +1487,12 @@ void CMainWindow::on_selectData_currentValueChanged(int index)
 
 void CMainWindow::on_actionPlay_toggled(bool bchecked)
 {
-	CDocument* doc = GetDocument();
-	if (doc->IsValid())
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
 	{
 		if (bchecked)
 		{
-			TIMESETTINGS& time = GetDocument()->GetTimeSettings();
+			TIMESETTINGS& time = doc->GetTimeSettings();
 			double fps = time.m_fps;
 			if (fps < 1.0) fps = 1.0;
 			double msec_per_frame = 1000.0 / fps;
@@ -1452,7 +1506,10 @@ void CMainWindow::on_actionPlay_toggled(bool bchecked)
 
 void CMainWindow::SetCurrentTime(int n)
 {
-	GetDocument()->SetCurrentTime(n);
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+
+	doc->SetCurrentTime(n);
 
 	// update the spinbox value
 	// Changing the value will trigger a signal, which will call this function again
@@ -1470,7 +1527,9 @@ void CMainWindow::SetCurrentTime(int n)
 
 void CMainWindow::SetCurrentTimeValue(float ftime)
 {
-	CDocument* doc = GetDocument();
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+
 	int n0 = doc->currentTime();
 	doc->SetCurrentTimeValue(ftime);
 	int n1 = doc->currentTime();
@@ -1499,21 +1558,22 @@ void CMainWindow::onTimer()
 {
 	if (ui->m_isAnimating == false) return;
 
-	CDocument* pdoc = GetDocument();
-	TIMESETTINGS& time = pdoc->GetTimeSettings();
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+	TIMESETTINGS& time = doc->GetTimeSettings();
 
-	int N = pdoc->GetFEModel()->GetStates();
+	int N = doc->GetFEModel()->GetStates();
 	int N0 = time.m_start;
 	int N1 = time.m_end;
 
-	float f0 = pdoc->GetTimeValue(N0);
-	float f1 = pdoc->GetTimeValue(N1);
+	float f0 = doc->GetTimeValue(N0);
+	float f1 = doc->GetTimeValue(N1);
 
-	int nstep = pdoc->currentTime();
+	int nstep = doc->currentTime();
 
 	if (time.m_bfix)
 	{
-		float ftime = pdoc->GetTimeValue();
+		float ftime = doc->GetTimeValue();
 		
 		if (time.m_mode == MODE_FORWARD)
 		{
@@ -1596,10 +1656,11 @@ void CMainWindow::onTimer()
 	// TODO: Should I start the event before or after the view is redrawn?
 	if (ui->m_isAnimating)
 	{
-		CDocument* doc = GetDocument();
+		CDocument* doc = GetActiveDocument();
+		if (doc == nullptr) return;
 		if (doc->IsValid())
 		{
-			TIMESETTINGS& time = GetDocument()->GetTimeSettings();
+			TIMESETTINGS& time = doc->GetTimeSettings();
 			double fps = time.m_fps;
 			if (fps < 1.0) fps = 1.0;
 			double msec_per_frame = 1000.0 / fps;
@@ -1610,16 +1671,18 @@ void CMainWindow::onTimer()
 
 void CMainWindow::on_actionFirst_triggered()
 {
-	CDocument* pdoc = GetDocument();
-	TIMESETTINGS& time = pdoc->GetTimeSettings();
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+	TIMESETTINGS& time = doc->GetTimeSettings();
 	SetCurrentTime(time.m_start);
 }
 
 void CMainWindow::on_actionPrev_triggered()
 {
-	CDocument* pdoc = GetDocument();
-	TIMESETTINGS& time = pdoc->GetTimeSettings();
-	int nstep = pdoc->currentTime();
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+	TIMESETTINGS& time = doc->GetTimeSettings();
+	int nstep = doc->currentTime();
 	nstep--;
 	if (nstep < time.m_start) nstep = time.m_start;
 	SetCurrentTime(nstep);
@@ -1627,9 +1690,10 @@ void CMainWindow::on_actionPrev_triggered()
 
 void CMainWindow::on_actionNext_triggered()
 {
-	CDocument* pdoc = GetDocument();
-	TIMESETTINGS& time = pdoc->GetTimeSettings();
-	int nstep = pdoc->currentTime();
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+	TIMESETTINGS& time = doc->GetTimeSettings();
+	int nstep = doc->currentTime();
 	nstep++;
 	if (nstep > time.m_end) nstep = time.m_end;
 	SetCurrentTime(nstep);
@@ -1637,20 +1701,24 @@ void CMainWindow::on_actionNext_triggered()
 
 void CMainWindow::on_actionLast_triggered()
 {
-	CDocument* pdoc = GetDocument();
-	TIMESETTINGS& time = pdoc->GetTimeSettings();
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+	TIMESETTINGS& time = doc->GetTimeSettings();
 	SetCurrentTime(time.m_end);
 }
 
 void CMainWindow::on_actionTimeSettings_triggered()
 {
-	CDlgTimeSettings dlg(GetDocument(), this);
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+
+	CDlgTimeSettings dlg(doc, this);
 	if (dlg.exec())
 	{
-		TIMESETTINGS& time = m_doc->GetTimeSettings();
+		TIMESETTINGS& time = doc->GetTimeSettings();
 		ui->timePanel->SetRange(time.m_start, time.m_end);
 
-		int ntime = m_doc->currentTime();
+		int ntime = doc->currentTime();
 		if ((ntime < time.m_start) || (ntime > time.m_end))
 		{
 			if (ntime < time.m_start) ntime = time.m_start;
@@ -1669,28 +1737,31 @@ void CMainWindow::on_actionViewSettings_triggered()
 
 void CMainWindow::on_actionViewMesh_toggled(bool bchecked)
 {
-	VIEWSETTINGS& view = GetDocument()->GetViewSettings();
+	VIEWSETTINGS& view = GetViewSettings();
 	view.m_bmesh = bchecked;
 	RedrawGL();
 }
 
 void CMainWindow::on_actionViewOutline_toggled(bool bchecked)
 {
-	VIEWSETTINGS& view = GetDocument()->GetViewSettings();
+	VIEWSETTINGS& view = GetViewSettings();
 	view.m_boutline = bchecked;
 	RedrawGL();
 }
 
 void CMainWindow::on_actionViewShowTags_toggled(bool bchecked)
 {
-	VIEWSETTINGS& view = GetDocument()->GetViewSettings();
+	VIEWSETTINGS& view = GetViewSettings();
 	view.m_bTags = bchecked;
 	RedrawGL();
 }
 
 void CMainWindow::on_actionViewSmooth_toggled(bool bchecked)
 {
-	CGLModel* po = GetDocument()->GetGLModel();
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+
+	CGLModel* po = doc->GetGLModel();
 	if (po)
 	{
 		CGLColorMap* pcm = po->GetColorMap();
@@ -1701,7 +1772,7 @@ void CMainWindow::on_actionViewSmooth_toggled(bool bchecked)
 			{
 				bool b = pc->GetSmooth();
 				pc->SetSmooth(!b);
-				m_doc->UpdateFEModel();
+				doc->UpdateFEModel();
 				RedrawGL();
 			}
 		}
@@ -1763,11 +1834,14 @@ void CMainWindow::on_actionViewTrack_toggled(bool bchecked)
 
 void CMainWindow::on_actionViewVPSave_triggered()
 {
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+
 	CGLCamera& cam = ui->glview->GetCamera();
 	GLCameraTransform t;
 	cam.GetTransform(t);
 
-	CGView& view = *GetDocument()->GetView();
+	CGView& view = *doc->GetView();
 	static int n = 0; n++;
 	char szname[64]={0};
 	sprintf(szname, "key%02d", n);
@@ -1778,7 +1852,10 @@ void CMainWindow::on_actionViewVPSave_triggered()
 
 void CMainWindow::on_actionViewVPPrev_triggered()
 {
-	CGView& view = *GetDocument()->GetView();
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+
+	CGView& view = *doc->GetView();
 	if (view.CameraKeys() > 0)
 	{
 		view.PrevKey();
@@ -1788,7 +1865,10 @@ void CMainWindow::on_actionViewVPPrev_triggered()
 
 void CMainWindow::on_actionViewVPNext_triggered()
 {
-	CGView& view = *GetDocument()->GetView();
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+
+	CGView& view = *doc->GetView();
 	if (view.CameraKeys() > 0)
 	{
 		view.NextKey();
@@ -1798,13 +1878,16 @@ void CMainWindow::on_actionViewVPNext_triggered()
 
 void CMainWindow::UpdateMainToolbar()
 {
-	FEModel* pfem = m_doc->GetFEModel();
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+
+	FEModel* pfem = doc->GetFEModel();
 	ui->selectData->BuildMenu(pfem, DATA_SCALAR);
 //	ui->checkColormap(false);
 	ui->actionViewSmooth->setChecked(true);
 	UpdatePlayToolbar(true);
 
-	CGLModel* m = m_doc->GetGLModel();
+	CGLModel* m = doc->GetGLModel();
 	if (m)
 	{
 		int mode = m->GetSelectionMode();
@@ -1814,7 +1897,7 @@ void CMainWindow::UpdateMainToolbar()
 		if (mode == SELECT_ELEMS) ui->selectElems->setChecked(true);
 	}
 
-	const VIEWSETTINGS& settings = GetDocument()->GetViewSettings();
+	const VIEWSETTINGS& settings = GetViewSettings();
 	ui->actionViewProjection->setChecked(settings.m_nproj == 0);
 	ui->actionViewOutline->setChecked(settings.m_boutline);
 	ui->actionViewMesh->setChecked(settings.m_bmesh);
@@ -1824,7 +1907,10 @@ void CMainWindow::UpdateMainToolbar()
 
 void CMainWindow::UpdatePlayToolbar(bool breset)
 {
-	CGLModel* mdl = m_doc->GetGLModel();
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+
+	CGLModel* mdl = doc->GetGLModel();
 	if (mdl == 0) ui->playToolBar->setDisabled(true);
 	else
 	{
@@ -1851,10 +1937,60 @@ void CMainWindow::on_selectTime_valueChanged(int i)
 
 void CMainWindow::on_selectAngle_valueChanged(int i)
 {
-	if (m_doc->IsValid())
+	VIEWSETTINGS& vs = GetViewSettings();
+	vs.m_angleTol = (float)i;
+}
+
+void CMainWindow::on_tab_currentChanged(int i)
+{
+	CDocument* doc = m_DocManager->GetDocument(i);
+	MakeDocActive(doc);
+}
+
+void CMainWindow::on_tab_tabCloseRequested(int i)
+{
+	m_activeDoc = nullptr;
+	m_DocManager->RemoveDocument(i);
+	ui->RemoveTab(i);
+}
+
+void CMainWindow::MakeDocActive(CDocument* doc)
+{
+	m_activeDoc = doc;
+
+	if (doc)
 	{
-		VIEWSETTINGS& vs = m_doc->GetViewSettings();
-		vs.m_angleTol = (float)i;
+		// set the window title
+		SetWindowTitle(QString(doc->GetFile()));
+
+		int layer = doc->GetGLModel()->m_layer;
+		CGLWidgetManager::GetInstance()->SetActiveLayer(layer);
+
+		ui->glview->UpdateWidgets();
+
+		// update all Ui components
+		UpdateUi(true);
+
+		UpdateMainToolbar();
+
+		// This is already done in UpdateMainToolbar so I can probably remove this
+		FEModel* fem = doc->GetFEModel();
+		if (fem && fem->GetStates() > 0)
+		{
+			ui->playToolBar->setEnabled(true);
+		}
+		else
+		{
+			ui->playToolBar->setDisabled(true);
+		}
+	}
+	else
+	{
+		SetWindowTitle("");
+		CGLWidgetManager::GetInstance()->SetActiveLayer(0);
+		UpdateUi(true);
+		UpdateMainToolbar();
+		ui->playToolBar->setDisabled(true);
 	}
 }
 
@@ -1964,7 +2100,7 @@ void CMainWindow::writeSettings()
 	settings.setValue("theme", ui->m_theme);
 	settings.endGroup();
 
-	VIEWSETTINGS& view = GetDocument()->GetViewSettings();
+	VIEWSETTINGS& view = GetViewSettings();
 	settings.beginGroup("ViewSettings");
 	settings.setValue("bgcol1", colorToByteArray(view.bgcol1));
 	settings.setValue("bgcol2", colorToByteArray(view.bgcol2));
@@ -2045,7 +2181,7 @@ void CMainWindow::readSettings()
 	settings.endGroup();
 
 	int userColorMaps = -1;
-	VIEWSETTINGS& view = GetDocument()->GetViewSettings();
+	VIEWSETTINGS& view = GetViewSettings();
 	view.Defaults();
 	settings.beginGroup("ViewSettings");
 	view.bgcol1 = byteArrayToColor(settings.value("bgcol1", colorToByteArray(view.bgcol1)).toByteArray());

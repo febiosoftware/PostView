@@ -342,6 +342,8 @@ public:
 	float	m_fTime;		// current time value
 	int		m_nTime;		// active time step
 
+	unsigned int	m_layer;
+
 protected:
 	FEModel*			m_ps;
 	vector<GLSurface*>		m_innerSurface;

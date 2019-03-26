@@ -6,6 +6,7 @@
 #include <PostViewLib/Intersect.h>
 #include <GLWLib/GLWidgetManager.h>
 #include <QNativeGestureEvent>
+#include "ViewSettings.h"
 
 //-----------------------------------------------------------------------------
 // forward declarations
@@ -154,6 +155,8 @@ public:
 	void OnZoomSelect ();
 
 	CDocument* GetDocument();
+
+	VIEWSETTINGS& GetViewSettings();
 
 	int GetProjectionMode();
     

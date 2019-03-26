@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "DocManager.h"
 #include "Document.h"
 #include "PostViewLib/XMLWriter.h"
 #include "PostViewLib/XMLReader.h"
@@ -43,12 +44,10 @@ FEFileReader* GetFileReader(const char* szfile)
 
 //-----------------------------------------------------------------------------
 // Save the current session
-bool CDocument::SaveSession(const char* szfile)
+bool CDocManager::SaveSession(const std::string& sfile)
 {
-	if (IsValid() == false) return false;
-
-	XMLWriter xml;
-	if (xml.open(szfile) == false) return false;
+/*	XMLWriter xml;
+	if (xml.open(sfile.c_str()) == false) return false;
 	xml.add_branch("postview_spec");
 	{
 		XMLElement e;
@@ -56,10 +55,7 @@ bool CDocument::SaveSession(const char* szfile)
 
 		// only store the filename
 		char* sz = m_szfile;
-/*		char* sz = strrchr(m_szfile, '\\');
-		if (sz==0) sz = strrchr(m_szfile, '/');
-		if (sz) sz = sz+1; else sz = m_szfile;
-*/		e.add_attribute("file", sz);
+		e.add_attribute("file", sz);
 
 		// store model data
 		CGLModel* pmdl = m_pGLModel;
@@ -262,7 +258,7 @@ bool CDocument::SaveSession(const char* szfile)
 	xml.close_branch();
 
 	xml.close();
-	return true;
+*/	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -277,9 +273,9 @@ void get_file_path(const char* szfilename, char* szpath)
 
 //-----------------------------------------------------------------------------
 // Restore a saved session
-bool CDocument::OpenSession(const char* szfile)
+bool CDocManager::OpenSession(const std::string& sfile)
 {
-	FILE* fp = fopen(szfile, "rt");
+/*	FILE* fp = fopen(sfile.c_str(), "rt");
 	if (fp == 0) return false;
 	XMLReader xml;
 	xml.Attach(fp);
@@ -290,7 +286,7 @@ bool CDocument::OpenSession(const char* szfile)
 
 	// get the path of the file
 	char szpath[1024] = {0};
-	get_file_path(szfile, szpath);
+	get_file_path(sfile.c_str(), szpath);
 
 	// parse the file
 	xml.NextTag(tag);
@@ -551,5 +547,5 @@ bool CDocument::OpenSession(const char* szfile)
 	while (!tag.isend());
 
 	fclose(fp);
-	return true;
+*/	return true;
 }

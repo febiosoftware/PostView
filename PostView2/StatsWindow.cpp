@@ -55,7 +55,7 @@ CStatsWindow::CStatsWindow(CMainWindow* wnd) : m_wnd(wnd), QMainWindow(wnd), ui(
 
 void CStatsWindow::Update(bool breset)
 {
-	CDocument* doc = m_wnd->GetDocument();
+	CDocument* doc = m_wnd->GetActiveDocument();
 	if (doc->IsValid() == false) return;
 
 	FEMeshBase* pm = doc->GetFEModel()->GetFEMesh(0);
@@ -164,41 +164,7 @@ void CStatsWindow::Update(bool breset)
 
 void CStatsWindow::UpdateSelection(bool breset)
 {
-/*	double fmin, fmax;
-	if (breset)
-	{
-		m_pBar->GetRange(fmin, fmax);
-		m_pmin->value((float) fmin);
-		m_pmax->value((float) fmax);
-	}
-	else
-	{
-		fmin = m_pmin->value();
-		fmax = m_pmax->value();
-	}
 
-	CDocument* pdoc = m_pWnd->GetDocument();
-
-	int nfield = pdoc->GetEvalField();
-	if (m_psel->value())
-	{
-		if (IS_ELEM_FIELD(nfield))
-		{
-			pdoc->SelectElemsInRange((float) fmin, (float) fmax, false);
-		}
-		else if (IS_NODE_FIELD(nfield))
-		{
-			pdoc->SelectNodesInRange((float) fmin, (float) fmax, false);
-		}
-	}
-	else
-	{
-		pdoc->GetFEModel()->GetMesh()->ClearSelection();
-		pdoc->ClearSelectionLists();
-	}
-
-	m_pWnd->RedrawGL();
-*/
 }
 
 //-----------------------------------------------------------------------------

@@ -154,7 +154,7 @@ public:
 			pfem->SetDisplacementField(v.toInt());
 		}
 		if (i==1) m_map->m_scl = v.toFloat();
-		m_wnd->GetDocument()->UpdateFEModel();
+		m_wnd->GetActiveDocument()->UpdateFEModel();
 	}
 
 private:
@@ -230,7 +230,7 @@ public:
 		case 8: rng[1] = v.toFloat(); m_map->SetRange(rng); break;
 		case 9: rng[0] = v.toFloat(); m_map->SetRange(rng); break;
 		}
-		m_wnd->GetDocument()->UpdateFEModel();
+		m_wnd->GetActiveDocument()->UpdateFEModel();
 	}
 
 private:
@@ -656,14 +656,14 @@ void CModelViewer::Update(bool breset)
 		ui->name->clear();
 
 		// rebuild the tree
-		CDocument* pdoc = m_wnd->GetDocument();
+		CDocument* pdoc = GetActiveDocument();
 		ui->m_props->Update(0);
-		if (pdoc->IsValid())
+		ui->m_tree->clear();
+		if (pdoc && pdoc->IsValid())
 		{
 			FEModel* fem = pdoc->GetFEModel();
 			CGLModel* mdl = pdoc->GetGLModel();
 
-			ui->m_tree->clear();
 			CModelTreeItem* pi1 = new CModelTreeItem(0, ui->m_tree);
 			pi1->setText(0, QString::fromStdString(fem->GetName()));
 			pi1->setIcon(0, QIcon(QString(":/icons/postview_small.png")));
@@ -820,7 +820,7 @@ void CModelViewer::on_modelTree_itemDoubleClicked(QTreeWidgetItem* item, int col
 	GLCameraTransform* pkey = dynamic_cast<GLCameraTransform*>(m_obj[n]);
 	if (pkey)
 	{
-		CGView* view = m_wnd->GetDocument()->GetView();
+		CGView* view = GetActiveDocument()->GetView();
 		view->SetCurrentKey(pkey);
 		m_wnd->RedrawGL();
 	}
@@ -843,7 +843,7 @@ void CModelViewer::on_deleteButton_clicked()
 		CGLObject* po = m_obj[n];
 		if (po)
 		{
-			m_wnd->GetDocument()->DeleteObject(po);
+			GetActiveDocument()->DeleteObject(po);
 			item->SetObject(0);
 			Update(true);
 			m_wnd->RedrawGL();

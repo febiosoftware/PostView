@@ -166,9 +166,10 @@ void CMaterialPanel::Update(bool breset)
 	ui->m_prop->Update(0);
 	m_pmat->SetMaterial(0);
 
-	CDocument* pdoc = m_wnd->GetDocument();
-	FEModel* fem = pdoc->GetFEModel();
+	CDocument* pdoc = GetActiveDocument();
+	if (pdoc == nullptr) return;
 
+	FEModel* fem = pdoc->GetFEModel();
 	if (fem)
 	{
 		int nmat = fem->Materials();
@@ -191,7 +192,7 @@ void CMaterialPanel::Update(bool breset)
 
 void CMaterialPanel::UpdateStates()
 {
-	CDocument* pdoc = m_wnd->GetDocument();
+	CDocument* pdoc = GetActiveDocument();
 	FEModel* fem = pdoc->GetFEModel();
 	if (fem == 0) return;
 
@@ -220,18 +221,22 @@ void CMaterialPanel::UpdateStates()
 
 void CMaterialPanel::on_materialList_currentRowChanged(int nrow)
 {
-	FEModel& fem = *m_wnd->GetDocument()->GetFEModel();
-	if ((nrow >= 0) && (nrow < fem.Materials()))
+	CDocument* doc = GetActiveDocument();
+	if (doc && doc->IsValid())
 	{
-		FEMaterial* pmat = fem.GetMaterial(nrow);
-		m_pmat->SetMaterial(pmat);
-		ui->m_prop->Update(m_pmat);
-		ui->name->setText(QString(pmat->GetName()));
+		FEModel& fem = *doc->GetFEModel();
+		if ((nrow >= 0) && (nrow < fem.Materials()))
+		{
+			FEMaterial* pmat = fem.GetMaterial(nrow);
+			m_pmat->SetMaterial(pmat);
+			ui->m_prop->Update(m_pmat);
+			ui->name->setText(QString(pmat->GetName()));
 
-		ui->update = false;
-		ui->pcheck->setChecked(pmat->enabled());
-		ui->pshow->setChecked(pmat->visible());
-		ui->update = true;
+			ui->update = false;
+			ui->pcheck->setChecked(pmat->enabled());
+			ui->pshow->setChecked(pmat->visible());
+			ui->update = true;
+		}
 	}
 }
 
@@ -239,7 +244,7 @@ void CMaterialPanel::on_showButton_toggled(bool b)
 {
 	if (ui->update == false) return;
 
-	CDocument& doc = *m_wnd->GetDocument();
+	CDocument& doc = *GetActiveDocument();
 	if (doc.IsValid() == false) return;
 
 	CGLModel& mdl = *doc.GetGLModel();
@@ -275,7 +280,7 @@ void CMaterialPanel::on_enableButton_toggled(bool b)
 {
 	if (ui->update == false) return;
 
-	CDocument& doc = *m_wnd->GetDocument();
+	CDocument& doc = *GetActiveDocument();
 	if (doc.IsValid() == false) return;
 
 	CGLModel& mdl = *doc.GetGLModel();
@@ -304,7 +309,7 @@ void CMaterialPanel::on_enableButton_toggled(bool b)
 
 void CMaterialPanel::on_editName_editingFinished()
 {
-	CDocument& doc = *m_wnd->GetDocument();
+	CDocument& doc = *GetActiveDocument();
 	QModelIndex n = ui->m_list->currentIndex();
 	if (n.isValid())
 	{
@@ -329,7 +334,7 @@ void CMaterialPanel::SetItemColor(int nmat, GLCOLOR c)
 void CMaterialPanel::on_props_dataChanged(int nprop)
 {
 	// Get the model
-	CDocument& doc = *m_wnd->GetDocument();
+	CDocument& doc = *GetActiveDocument();
 	FEModel& fem = *doc.GetFEModel();
 
 	// get the current material

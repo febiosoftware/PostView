@@ -8,6 +8,7 @@
 #include "GLContext.h"
 #include "GLView.h"
 #include "PropertyList.h"
+#include "ViewSettings.h"
 
 extern int LUT[256][15];
 extern int LUT2D[16][4];
@@ -215,7 +216,7 @@ void CGLPlaneCutPlot::Render(CGLContext& rc)
 		glDepthRange(0, 1);
 	}
 
-	VIEWSETTINGS& view = rc.m_pview->GetDocument()->GetViewSettings();
+	VIEWSETTINGS& view = rc.m_pview->GetViewSettings();
 	if (view.m_boutline)
 	{
 		RenderOutline();

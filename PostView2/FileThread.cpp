@@ -4,7 +4,7 @@
 #include "Document.h"
 #include <PostViewLib/FEFileReader.h>
 
-CFileThread::CFileThread(CMainWindow* wnd, FEFileReader* file, const QString& fileName) : m_wnd(wnd), m_fileReader(file), m_fileName(fileName)
+CFileThread::CFileThread(CMainWindow* wnd, CDocument* doc, FEFileReader* file, const QString& fileName) : m_wnd(wnd), m_doc(doc), m_fileReader(file), m_fileName(fileName)
 {
 	QObject::connect(this, SIGNAL(resultReady(bool, const QString&)), wnd, SLOT(finishedReadingFile(bool, const QString&)));
 	QObject::connect(this, SIGNAL(finished()), this, SLOT(deleteLater()));
@@ -15,7 +15,7 @@ void CFileThread::run()
 	if (m_fileReader)
 	{
 		std::string sfile = m_fileName.toStdString();
-		CDocument& doc = *m_wnd->GetDocument();
+		CDocument& doc = *m_doc;
 		bool ret = doc.LoadFEModel(m_fileReader, sfile.c_str());
 		std::string err = m_fileReader->GetErrorMessage();
 		emit resultReady(ret, QString(err.c_str()));

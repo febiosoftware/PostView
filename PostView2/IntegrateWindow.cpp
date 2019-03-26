@@ -71,7 +71,7 @@ CIntegrateWindow::CIntegrateWindow(CMainWindow* wnd) : m_wnd(wnd), QMainWindow(w
 
 void CIntegrateWindow::Update(bool breset)
 {
-	CDocument* doc = m_wnd->GetDocument();
+	CDocument* doc = m_wnd->GetActiveDocument();
 	if (doc->IsValid() == false) return;
 
 	// update the source options
@@ -94,7 +94,7 @@ void CIntegrateWindow::UpdateIntegral()
 	ui->plot->clear();
 
 	// get the source object
-	CDocument* pdoc = m_wnd->GetDocument();
+	CDocument* pdoc = m_wnd->GetActiveDocument();
 
 	CGLModel* model = pdoc->GetGLModel();
 
@@ -133,7 +133,7 @@ void CIntegrateWindow::UpdateSourceOptions()
 	m_src.push_back((CGLPlaneCutPlot*) 0);
 
 	// get the document
-	CDocument* pdoc = m_wnd->GetDocument();
+	CDocument* pdoc = m_wnd->GetActiveDocument();
 
 	// add all plane cuts to the source options
 	GPlotList& plt = pdoc->GetPlotList();
@@ -157,7 +157,7 @@ void CIntegrateWindow::UpdateSourceOptions()
 void CIntegrateWindow::IntegrateSelection(CLineChartData& data)
 {
 	// get the document
-	CDocument* pdoc = m_wnd->GetDocument();
+	CDocument* pdoc = m_wnd->GetActiveDocument();
 	FEModel& fem = *pdoc->GetFEModel();
 	FEMeshBase& mesh = *fem.GetFEMesh(0);
 	CGLModel* po = pdoc->GetGLModel();
@@ -300,7 +300,7 @@ double CIntegrateWindow::IntegrateElems(FEMeshBase& mesh, FEState* ps)
 void CIntegrateWindow::IntegratePlaneCut(CGLPlaneCutPlot* pp, CLineChartData& data)
 {
 	// get the document
-	CDocument* pdoc = m_wnd->GetDocument();
+	CDocument* pdoc = m_wnd->GetActiveDocument();
 	FEModel& fem = *pdoc->GetFEModel();
 	CGLModel* po = pdoc->GetGLModel();
 

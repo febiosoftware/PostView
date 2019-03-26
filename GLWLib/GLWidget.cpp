@@ -47,6 +47,8 @@ GLWidget::GLWidget(int x, int y, int w, int h, const char* szlabel)
 	m_balloc = false;
 
 	m_bshow = true;
+
+	m_layer = 0;
 }
 
 GLWidget::~GLWidget(void)

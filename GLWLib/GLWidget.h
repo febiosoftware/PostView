@@ -90,6 +90,10 @@ public:
 	void set_font_size(int nsize) { m_font.setPointSize(nsize); }
 
 public:
+	unsigned int layer() const { return m_layer; }
+	void set_layer(unsigned int l) { m_layer = l; }
+
+public:
 	static void set_base_color(GLCOLOR c) { m_base = c; }
 
 protected:
@@ -103,6 +107,8 @@ protected:
 	QFont	m_font;	// label font
 	
 	unsigned int	m_nsnap;	// alignment flag
+
+	unsigned int m_layer;
 
 	GLCOLOR	m_fgc;
 	GLCOLOR m_bgc[2];

@@ -627,9 +627,9 @@ public:
 
 	void Set(::CMainWindow* wnd)
 	{
-		CDocument& doc = *wnd->GetDocument();
+		CDocument& doc = *wnd->GetActiveDocument();
 
-		VIEWSETTINGS& view = doc.GetViewSettings();
+		VIEWSETTINGS& view = wnd->GetViewSettings();
 		m_render->m_bproj = view.m_nproj == RENDER_PERSP;
         m_render->m_nconv = view.m_nconv;
 		m_render->m_bline = view.m_blinesmooth;
@@ -657,9 +657,9 @@ public:
 
 	void Get(::CMainWindow* wnd)
 	{
-		CDocument& doc = *wnd->GetDocument();
+		CDocument& doc = *wnd->GetActiveDocument();
 
-		VIEWSETTINGS& view = doc.GetViewSettings();
+		VIEWSETTINGS& view = wnd->GetViewSettings();
 		view.m_nproj       = (m_render->m_bproj ? RENDER_PERSP : RENDER_ORTHO);
         view.m_nconv       = m_render->m_nconv;
 		view.m_blinesmooth = m_render->m_bline;
@@ -708,8 +708,8 @@ CDlgViewSettings::CDlgViewSettings(CMainWindow* pwnd) : ui(new Ui::CDlgViewSetti
 {
 	m_pwnd = pwnd;
 
-	CDocument* pdoc = m_pwnd->GetDocument();
-	VIEWSETTINGS& view = pdoc->GetViewSettings();
+	CDocument* pdoc = m_pwnd->GetActiveDocument();
+	VIEWSETTINGS& view = m_pwnd->GetViewSettings();
 	CGLCamera& cam = pdoc->GetView()->GetCamera();
 
 	ui->m_render = new CRenderingProps;
@@ -763,8 +763,8 @@ void CDlgViewSettings::hideEvent(QHideEvent* ev)
 
 void CDlgViewSettings::apply()
 {
-	CDocument* pdoc = m_pwnd->GetDocument();
-	VIEWSETTINGS& view = pdoc->GetViewSettings();
+	CDocument* pdoc = m_pwnd->GetActiveDocument();
+	VIEWSETTINGS& view = m_pwnd->GetViewSettings();
 	CGLCamera& cam = pdoc->GetView()->GetCamera();
 
 	ui->Get(m_pwnd);
@@ -835,7 +835,7 @@ void CDlgViewSettings::on_save_clicked()
 
 void CDlgViewSettings::on_create_clicked()
 {
-	CDocument& doc = *m_pwnd->GetDocument();
+	CDocument& doc = *m_pwnd->GetActiveDocument();
 	if (doc.IsValid() == false)
 	{
 		QMessageBox::critical(this, "PostView", "No model is loaded");
@@ -870,7 +870,7 @@ void CDlgViewSettings::on_create_clicked()
 
 void CDlgViewSettings::on_apply_clicked()
 {
-	CDocument& doc = *m_pwnd->GetDocument();
+	CDocument& doc = *m_pwnd->GetActiveDocument();
 	if (doc.IsValid() == false)
 	{
 		QMessageBox::critical(this, "PostView", "No model is loaded");
@@ -886,10 +886,7 @@ void CDlgViewSettings::on_apply_clicked()
 
 void CDlgViewSettings::OnReset()
 {
-	CDocument& doc = *m_pwnd->GetDocument();
-	VIEWSETTINGS& view = doc.GetViewSettings();
-
+	VIEWSETTINGS& view = m_pwnd->GetViewSettings();
 	view.Defaults();
-
 	ui->Set(m_pwnd);
 }

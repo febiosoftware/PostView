@@ -545,7 +545,7 @@ CGraphWindow::CGraphWindow(CMainWindow* pwnd) : m_wnd(pwnd), QMainWindow(pwnd), 
 // If breset==false, the selection has changed
 void CGraphWindow::Update(bool breset, bool bfit)
 {
-	CDocument* doc = m_wnd->GetDocument();
+	CDocument* doc = m_wnd->GetActiveDocument();
 	if (doc->IsValid() == false) return;
 
 	if (breset)
@@ -680,7 +680,7 @@ void CGraphWindow::Update(bool breset, bool bfit)
 //-----------------------------------------------------------------------------
 void CGraphWindow::addSelectedNodes()
 {
-	CDocument* pdoc = m_wnd->GetDocument();
+	CDocument* pdoc = m_wnd->GetActiveDocument();
 	FEModel& fem = *pdoc->GetFEModel();
 	FEMeshBase& mesh = *fem.GetFEMesh(0);
 
@@ -797,7 +797,7 @@ void CGraphWindow::addSelectedNodes()
 //-----------------------------------------------------------------------------
 void CGraphWindow::addSelectedEdges()
 {
-	CDocument* pdoc = m_wnd->GetDocument();
+	CDocument* pdoc = m_wnd->GetActiveDocument();
 	FEModel& fem = *pdoc->GetFEModel();
 	FEMeshBase& mesh = *fem.GetFEMesh(0);
 
@@ -839,7 +839,7 @@ void CGraphWindow::addSelectedEdges()
 //-----------------------------------------------------------------------------
 void CGraphWindow::addSelectedFaces()
 {
-	CDocument* pdoc = m_wnd->GetDocument();
+	CDocument* pdoc = m_wnd->GetActiveDocument();
 	FEModel& fem = *pdoc->GetFEModel();
 	FEMeshBase& mesh = *fem.GetFEMesh(0);
 
@@ -881,7 +881,7 @@ void CGraphWindow::addSelectedFaces()
 //-----------------------------------------------------------------------------
 void CGraphWindow::addSelectedElems()
 {
-	CDocument* pdoc = m_wnd->GetDocument();
+	CDocument* pdoc = m_wnd->GetActiveDocument();
 	FEModel& fem = *pdoc->GetFEModel();
 	FEMeshBase& mesh = *fem.GetFEMesh(0);
 
@@ -924,7 +924,7 @@ void CGraphWindow::addSelectedElems()
 // Calculate time history of a node
 void CGraphWindow::TrackNodeHistory(int node, float* pval, int nfield, int nmin, int nmax)
 {
-	FEModel& fem = *m_wnd->GetDocument()->GetFEModel();
+	FEModel& fem = *m_wnd->GetActiveDocument()->GetFEModel();
 
 	int nsteps = fem.GetStates();
 	if (nmin <       0) nmin = 0;
@@ -945,7 +945,7 @@ void CGraphWindow::TrackNodeHistory(int node, float* pval, int nfield, int nmin,
 // Calculate time history of a edge
 void CGraphWindow::TrackEdgeHistory(int edge, float* pval, int nfield, int nmin, int nmax)
 {
-	FEModel& fem = *m_wnd->GetDocument()->GetFEModel();
+	FEModel& fem = *m_wnd->GetActiveDocument()->GetFEModel();
 
 	int nsteps = fem.GetStates();
 	if (nmin <       0) nmin = 0;
@@ -966,7 +966,7 @@ void CGraphWindow::TrackEdgeHistory(int edge, float* pval, int nfield, int nmin,
 // Calculate time history of a face
 void CGraphWindow::TrackFaceHistory(int nface, float* pval, int nfield, int nmin, int nmax)
 {
-	FEModel& fem = *m_wnd->GetDocument()->GetFEModel();
+	FEModel& fem = *m_wnd->GetActiveDocument()->GetFEModel();
 
 	int nsteps = fem.GetStates();
 	if (nmin <       0) nmin = 0;
@@ -987,7 +987,7 @@ void CGraphWindow::TrackFaceHistory(int nface, float* pval, int nfield, int nmin
 // Calculate time history of an element
 void CGraphWindow::TrackElementHistory(int nelem, float* pval, int nfield, int nmin, int nmax)
 {
-	FEModel& fem = *m_wnd->GetDocument()->GetFEModel();
+	FEModel& fem = *m_wnd->GetActiveDocument()->GetFEModel();
 
 	int nsteps = fem.GetStates();
 	if (nmin <       0) nmin = 0;

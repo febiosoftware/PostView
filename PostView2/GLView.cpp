@@ -337,8 +337,6 @@ CGLView::CGLView(CMainWindow* pwnd, QWidget* parent) : QOpenGLWidget(parent), m_
 	m_fov = 45.f;
 
 	m_btrack = false;
-	CDocument* pdoc = pwnd->GetDocument();
-	CGLModel* po = pdoc->GetGLModel();
 
 	m_Widget = CGLWidgetManager::GetInstance();
 	m_Widget->AttachToView(this);
@@ -380,18 +378,23 @@ void CGLView::UpdateWidgets(bool bposition)
 
 CDocument* CGLView::GetDocument()
 {
-	return m_wnd->GetDocument();
+	return m_wnd->GetActiveDocument();
+}
+
+VIEWSETTINGS& CGLView::GetViewSettings()
+{
+	return m_wnd->GetViewSettings();
 }
 
 int CGLView::GetProjectionMode()
 {
-	VIEWSETTINGS& view = GetDocument()->GetViewSettings();
+	VIEWSETTINGS& view = GetViewSettings();
 	return view.m_nproj;
 }
 
 int CGLView::GetViewConvention()
 {
-    VIEWSETTINGS& view = GetDocument()->GetViewSettings();
+    VIEWSETTINGS& view = GetViewSettings();
     return view.m_nconv;
 }
 
@@ -400,7 +403,7 @@ void CGLView::initializeGL()
 	GLfloat ones[] = {1.f, 1.f, 1.f, 1.f};
 	glClearColor(1.f, 0.f, 0.5f, 1.f);
 
-	VIEWSETTINGS& view = GetDocument()->GetViewSettings();
+	VIEWSETTINGS& view = GetViewSettings();
 
 	glEnable(GL_DEPTH_TEST);
 //	glEnable(GL_CULL_FACE);
@@ -514,7 +517,7 @@ void CGLView::setupProjectionMatrix()
 
 	if (height() == 0) m_ar = 1; else m_ar = (GLfloat) width() / (GLfloat) height();
 
-	VIEWSETTINGS& view = doc->GetViewSettings();
+	VIEWSETTINGS& view = GetViewSettings();
 	if (view.m_nproj == RENDER_ORTHO)
 	{
 		double z = GetCamera().GetTargetDistance();
@@ -538,77 +541,76 @@ void CGLView::paintGL()
 	glGetIntegerv(GL_VIEWPORT, m_viewport);
 
 	// get the document
-	CDocument* pdoc = m_wnd->GetDocument();
-	if (pdoc->IsValid())
+	CDocument* pdoc = GetDocument();
+	if ((pdoc == nullptr) || (pdoc->IsValid() == false)) return;
+
+	// get the scene's view settings
+	VIEWSETTINGS view = GetViewSettings();
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glPointSize(view.m_fpointsize);
+	glLineWidth(view.m_flinethick);
+
+	// turn on/off lighting
+	if (view.m_bLighting)
+		glEnable(GL_LIGHTING);
+	else
+		glDisable(GL_LIGHTING);
+
+	// setup the projection Matrix
+	setupProjectionMatrix();
+
+	// set the model_view Matrix mode
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	// position the light
+	vec3f lp = pdoc->GetLightPosition();
+	GLfloat fv[4] = {0};
+	fv[0] = lp.x; fv[1] = lp.y; fv[2] = lp.z;
+	glLightfv(GL_LIGHT0, GL_POSITION, fv);
+
+	// position the camera
+	PositionCam();
+
+	// render the model
+	if (pdoc->IsValid()) RenderModel();
+
+	// render the tracking
+	if (m_btrack) RenderTrack();
+
+	// render the tags
+	if (view.m_bTags && pdoc->IsValid()) RenderTags();
+
+	// give the command window a chance to render stuff
+	CGLContext cgl(this);
+	cgl.m_x = cgl.m_y = 0;
+
+	// set the projection Matrix to ortho2d so we can draw some stuff on the screen
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluOrtho2D(0, width(), height(), 0);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	// render the widgets
+	if (m_bShowWidgets) RenderWidgets();
+
+	// render the selection rectangle
+	if (m_bdrag) RenderRubberBand();
+
+	if (m_nanim != ANIM_STOPPED)
 	{
-		// get the scene's view settings
-		VIEWSETTINGS view = pdoc->GetViewSettings();
-
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		glPointSize(view.m_fpointsize);
-		glLineWidth(view.m_flinethick);
-
-		// turn on/off lighting
-		if (view.m_bLighting)
-			glEnable(GL_LIGHTING);
-		else
-			glDisable(GL_LIGHTING);
-
-		// setup the projection Matrix
-		setupProjectionMatrix();
-
-		// set the model_view Matrix mode
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-
-		// position the light
-		vec3f lp = pdoc->GetLightPosition();
-		GLfloat fv[4] = {0};
-		fv[0] = lp.x; fv[1] = lp.y; fv[2] = lp.z;
-		glLightfv(GL_LIGHT0, GL_POSITION, fv);
-
-		// position the camera
-		PositionCam();
-
-		// render the model
-		if (pdoc->IsValid()) RenderModel();
-
-		// render the tracking
-		if (m_btrack) RenderTrack();
-
-		// render the tags
-		if (view.m_bTags && pdoc->IsValid()) RenderTags();
-
-		// give the command window a chance to render stuff
-		CGLContext cgl(this);
-		cgl.m_x = cgl.m_y = 0;
-
-		// set the projection Matrix to ortho2d so we can draw some stuff on the screen
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		gluOrtho2D(0, width(), height(), 0);
-
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-
-		// render the widgets
-		if (m_bShowWidgets) RenderWidgets();
-
-		// render the selection rectangle
-		if (m_bdrag) RenderRubberBand();
-
-		if (m_nanim != ANIM_STOPPED)
-		{
-			glPushAttrib(GL_ENABLE_BIT);
-			glDisable(GL_DEPTH_TEST);
-			glDisable(GL_LIGHTING);
-			int x = width()-200;
-			int y = height()-40;
-			glPopAttrib();
-		}
+		glPushAttrib(GL_ENABLE_BIT);
+		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_LIGHTING);
+		int x = width()-200;
+		int y = height()-40;
+		glPopAttrib();
 	}
 
 	if ((m_nanim == ANIM_RECORDING) && (m_panim != 0))
@@ -698,6 +700,8 @@ void CGLView::wheelEvent(QWheelEvent* ev)
     Qt::KeyboardModifiers key = ev->modifiers();
     bool balt   = (key & Qt::AltModifier);
 
+	if (GetDocument() == nullptr) return;
+
 	CGLCamera& cam = GetCamera();
     
 #ifdef __APPLE__
@@ -739,6 +743,8 @@ void CGLView::mouseMoveEvent(QMouseEvent* ev)
 		m_wnd->UpdateFontToolbar();
 		return;
 	}
+
+	if (GetDocument() == nullptr) return;
 
 	CGLCamera* pcam = &GetCamera();
 
@@ -948,6 +954,8 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 
 	// get the view mode
 	CDocument* pdoc = GetDocument();
+	if (pdoc == nullptr) return;
+
 	CGLModel* model = pdoc->GetGLModel();
 
 	int view_mode = -1;
@@ -1030,10 +1038,10 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 void CGLView::Clear()
 {
 	// get the document
-	CDocument* pdoc = m_wnd->GetDocument();
+	CDocument* pdoc = GetDocument();
 
 	// get the scene's view settings
-	VIEWSETTINGS view = pdoc->GetViewSettings();
+	VIEWSETTINGS view = GetViewSettings();
 
 	// clear the scene
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -1105,8 +1113,8 @@ void CGLView::RenderBkGround(GLCOLOR c1, GLCOLOR c2, int style)
 //-----------------------------------------------------------------------------
 void CGLView::RenderBox()
 {
-	CDocument* pdoc = m_wnd->GetDocument();
-	VIEWSETTINGS& ops = pdoc->GetViewSettings();
+	CDocument* pdoc = GetDocument();
+	VIEWSETTINGS& ops = GetViewSettings();
 	BOUNDINGBOX box = pdoc->GetBoundingBox();
 
 	glColor3ub(ops.fgcol.r, ops.fgcol.g, ops.fgcol.b);
@@ -1146,7 +1154,7 @@ void CGLView::RenderWidgets()
 {
 	CDocument* pdoc = GetDocument();
 
-	VIEWSETTINGS& view = pdoc->GetViewSettings();
+	VIEWSETTINGS& view = GetViewSettings();
 
 	// render the title
 	if (pdoc->IsValid() && view.m_bTitle) 
@@ -1180,7 +1188,7 @@ void CGLView::RenderWidgets()
 
 CGLCamera& CGLView::GetCamera()
 {
-	CDocument* pdoc = m_wnd->GetDocument();
+	CDocument* pdoc = GetDocument();
 	return pdoc->GetView()->GetCamera();
 }
 
@@ -1188,11 +1196,11 @@ CGLCamera& CGLView::GetCamera()
 //! Render the tags on the selected items.
 void CGLView::RenderTags()
 {
-	CDocument* pdoc = m_wnd->GetDocument();
+	CDocument* pdoc = GetDocument();
 	BOUNDINGBOX box = pdoc->GetBoundingBox();
 	CGLModel* model = pdoc->GetGLModel();
 
-	VIEWSETTINGS& view = pdoc->GetViewSettings();
+	VIEWSETTINGS& view = GetViewSettings();
 
 	int mode = model->GetSelectionMode();
 
@@ -1379,7 +1387,7 @@ void CGLView::PanView(vec3f r)
 	CDocument* pdoc = GetDocument();
 	CGLCamera* pcam = &GetCamera();
 
-	if (pdoc->GetViewSettings().m_nproj == RENDER_ORTHO)
+	if (GetViewSettings().m_nproj == RENDER_ORTHO)
 	{
 		// get the scene's bounding box
 		double z = GetCamera().GetTargetDistance();
@@ -1413,7 +1421,7 @@ Ray CGLView::PointToRay(int x, int y)
 	glPushMatrix();
 	glLoadIdentity();
 
-	VIEWSETTINGS& view = GetDocument()->GetViewSettings();
+	VIEWSETTINGS& view = GetViewSettings();
 
 	// set up the projection Matrix
 	if (view.m_nproj == RENDER_ORTHO)
@@ -1602,7 +1610,7 @@ void CGLView::SelectFaces(int x0, int y0, int mode)
 {
 	// Make sure we have a valid model
 	CDocument* pdoc = GetDocument();
-	if (pdoc->IsValid() == false) return;
+	if ((pdoc == nullptr) || (pdoc->IsValid() == false)) return;
 
 	// get the active mesh
 	CGLModel& mdl = *pdoc->GetGLModel();
@@ -1616,7 +1624,7 @@ void CGLView::SelectFaces(int x0, int y0, int mode)
 	FindFaceIntersection(ray, *pm, q);
 
 	// get view settings
-	VIEWSETTINGS& view = pdoc->GetViewSettings();
+	VIEWSETTINGS& view = GetViewSettings();
 
 	if (mode == 0)
 	{
@@ -1697,7 +1705,7 @@ void CGLView::RegionSelectElements(const SelectRegion& region, int mode)
 	CDocument* pdoc = GetDocument();
 	if (pdoc->IsValid() == false) return;
 
-	VIEWSETTINGS& view = pdoc->GetViewSettings();
+	VIEWSETTINGS& view = GetViewSettings();
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
@@ -1752,7 +1760,7 @@ void CGLView::RegionSelectFaces(const SelectRegion& region, int mode)
 	CDocument* pdoc = GetDocument();
 	if (pdoc->IsValid() == false) return;
 
-	VIEWSETTINGS& view = pdoc->GetViewSettings();
+	VIEWSETTINGS& view = GetViewSettings();
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
@@ -1792,7 +1800,7 @@ void CGLView::RegionSelectNodes(const SelectRegion& region, int mode)
 	CDocument* pdoc = GetDocument();
 	if (pdoc->IsValid() == false) return;
 
-	VIEWSETTINGS& view = pdoc->GetViewSettings();
+	VIEWSETTINGS& view = GetViewSettings();
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
@@ -1841,7 +1849,7 @@ void CGLView::RegionSelectEdges(const SelectRegion& region, int mode)
 	CDocument* pdoc = GetDocument();
 	if (pdoc->IsValid() == false) return;
 
-	VIEWSETTINGS& view = pdoc->GetViewSettings();
+	VIEWSETTINGS& view = GetViewSettings();
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
@@ -2034,7 +2042,7 @@ void CGLView::SelectElements(int x0, int y0, int mode)
 	FindElementIntersection(ray, *pm, q);
 
 	// get view settings
-	VIEWSETTINGS& view = pdoc->GetViewSettings();
+	VIEWSETTINGS& view = GetViewSettings();
 
 	if (mode == 0)
 	{
@@ -2302,7 +2310,7 @@ void CGLView::SelectNodes(int x0, int y0, int mode)
 	int S = 4 * m_dpr;
 	BoxRegion box(x0 - S, y0 - S, x0 + S, y0 + S);
 
-	VIEWSETTINGS& view = pdoc->GetViewSettings();
+	VIEWSETTINGS& view = GetViewSettings();
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
@@ -2382,7 +2390,7 @@ void CGLView::SelectEdges(int x0, int y0, int mode)
 	CDocument* pdoc = GetDocument();
 	if (pdoc->IsValid() == false) return;
 
-	VIEWSETTINGS& view = pdoc->GetViewSettings();
+	VIEWSETTINGS& view = GetViewSettings();
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
@@ -2548,7 +2556,7 @@ void CGLView::RenderRubberBand()
 void CGLView::RenderModel()
 {
 	CDocument* pdoc = GetDocument();
-	VIEWSETTINGS& view = pdoc->GetViewSettings();
+	VIEWSETTINGS& view = GetViewSettings();
 
 	FEModel* ps = pdoc->GetFEModel();
 
@@ -2657,7 +2665,7 @@ void CGLView::RenderDoc()
 	glPushAttrib(GL_ENABLE_BIT);
 	{
 		CGLCamera& cam = GetCamera();
-		VIEWSETTINGS& view = pdoc->GetViewSettings();
+		VIEWSETTINGS& view = GetViewSettings();
 
 		// never do backface culling as it hides shells, iso-surface, slice plots, etc.
 		glDisable(GL_CULL_FACE);
@@ -2973,27 +2981,11 @@ void CGLView::showWidgets(bool b)
 void CGLView::setPerspective(bool b)
 {
 	CDocument* pdoc = GetDocument();
-	VIEWSETTINGS& view = pdoc->GetViewSettings();
+	VIEWSETTINGS& view = GetViewSettings();
 
 	view.m_nproj = (b ? RENDER_PERSP : RENDER_ORTHO);
 	repaint();
 }
-
-/*
-void CGLView::OnPopup(Fl_Widget* pw, void* pd)
-{
-	switch(m_pop->value())
-	{
-	case 0: TogglePerspective(); break;
-	case 1: SetView(VIEW_FRONT ); break;
-	case 2: SetView(VIEW_BACK  ); break;
-	case 3: SetView(VIEW_LEFT  ); break;
-	case 4: SetView(VIEW_RIGHT ); break;
-	case 5: SetView(VIEW_TOP   ); break;
-	case 6: SetView(VIEW_BOTTOM); break;
-	}
-}
-*/
 
 bool CGLView::NewAnimation(const char* szfile, CAnimation* panim, GLenum fmt)
 {

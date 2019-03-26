@@ -176,6 +176,7 @@
     <ClInclude Include="..\..\PostView2\DlgTimeSettings.h" />
     <ClInclude Include="..\..\PostView2\DlgViewSettings.h" />
     <ClInclude Include="..\..\PostView2\DlgWidgetProps.h" />
+    <ClInclude Include="..\..\PostView2\DocManager.h" />
     <ClInclude Include="..\..\PostView2\Document.h" />
     <ClInclude Include="..\..\PostView2\DragBox.h" />
     <ClInclude Include="..\..\PostView2\FEKinemat.h" />
@@ -202,6 +203,7 @@
     <ClInclude Include="..\..\PostView2\ImgAnimation.h" />
     <ClInclude Include="..\..\PostView2\ImportLinesTool.h" />
     <ClInclude Include="..\..\PostView2\IntegrateWindow.h" />
+    <ClInclude Include="..\..\PostView2\ViewSettings.h" />
     <CustomBuild Include="..\..\PostView2\MainWindow.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
@@ -270,6 +272,7 @@
     <ClCompile Include="..\..\PostView2\DlgTimeSettings.cpp" />
     <ClCompile Include="..\..\PostView2\DlgViewSettings.cpp" />
     <ClCompile Include="..\..\PostView2\DlgWidgetProps.cpp" />
+    <ClCompile Include="..\..\PostView2\DocManager.cpp" />
     <ClCompile Include="..\..\PostView2\Document.cpp" />
     <ClCompile Include="..\..\PostView2\DragBox.cpp" />
     <ClCompile Include="..\..\PostView2\FEKinemat.cpp" />
@@ -360,6 +363,7 @@
     <ClCompile Include="..\..\PostView2\Tool.cpp" />
     <ClCompile Include="..\..\PostView2\ToolsPanel.cpp" />
     <ClCompile Include="..\..\PostView2\TransformTool.cpp" />
+    <ClCompile Include="..\..\PostView2\ViewSettings.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

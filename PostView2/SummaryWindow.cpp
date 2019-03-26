@@ -74,7 +74,7 @@ CSummaryWindow::CSummaryWindow(CMainWindow* wnd) : m_wnd(wnd), QMainWindow(wnd),
 
 void CSummaryWindow::Update(bool breset)
 {
-	CDocument* doc = m_wnd->GetDocument();
+	CDocument* doc = m_wnd->GetActiveDocument();
 	if (breset)
 	{
 		if (doc->IsValid())

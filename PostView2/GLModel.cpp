@@ -27,9 +27,14 @@ CGLModel::CGLModel(FEModel* ps)
 	m_nTime = 0;
 	m_fTime = 0.f;
 
+	static int layer = 1;
+	m_layer = layer++;
+
 	m_stol = 60.*PI / 180.0;
 
 	m_ps = ps;
+
+	CGLWidgetManager::GetInstance()->SetActiveLayer(m_layer);
 
 	// see if the mesh has any vector fields
 	// which can be used for displacement maps

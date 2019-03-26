@@ -567,9 +567,12 @@ void CDataPanel::Update(bool breset)
 {
 	if (breset)
 	{
-		CDocument* pdoc = m_wnd->GetDocument();
+		CDocument* pdoc = GetActiveDocument();
 		ui->m_prop->Update(0);
-		ui->data->SetFEModel(pdoc->GetFEModel());
+		if (pdoc)
+			ui->data->SetFEModel(pdoc->GetFEModel());
+		else
+			ui->data->SetFEModel(nullptr);
 	}
 }
 
@@ -609,7 +612,7 @@ void CDataPanel::on_AddStandard_triggered()
 	if (ok)
 	{
 		int nitem = items.indexOf(item);
-		if (m_wnd->GetDocument()->AddStandardDataField(nitem, true) == false)
+		if (GetActiveDocument()->AddStandardDataField(nitem, true) == false)
 		{
 			QMessageBox::critical(this, "Add Data Field", "Failed adding data");
 		}
@@ -621,7 +624,7 @@ void CDataPanel::on_AddStandard_triggered()
 
 void CDataPanel::on_AddFromFile_triggered()
 {
-	CDocument* doc = m_wnd->GetDocument();
+	CDocument* doc = GetActiveDocument();
 	if (doc->IsValid() == false)
 	{
 		QMessageBox::critical(this, "PostView", "No model data loaded");
@@ -653,7 +656,7 @@ void CDataPanel::on_AddFromFile_triggered()
 
 void CDataPanel::on_AddEquation_triggered()
 {
-	CDocument& doc = *m_wnd->GetDocument();
+	CDocument& doc = *GetActiveDocument();
 	if (doc.IsValid() == false) return;
 
 	CDlgAddEquation dlg(this);
@@ -707,7 +710,7 @@ void CDataPanel::on_CopyButton_clicked()
 	if (selRow.count() == 1)
 	{
 		int nsel = selRow.at(0).row();
-		CDocument& doc = *m_wnd->GetDocument();
+		CDocument& doc = *m_wnd->GetActiveDocument();
 		FEModel& fem = *doc.GetFEModel();
 		FEDataManager& dm = *fem.GetDataManager();
 		FEDataField* pdf = *dm.DataField(nsel);
@@ -733,7 +736,7 @@ void CDataPanel::on_DeleteButton_clicked()
 	if (selRow.count() == 1)
 	{
 		int nsel = selRow.at(0).row();
-		CDocument& doc = *m_wnd->GetDocument();
+		CDocument& doc = *GetActiveDocument();
 		FEModel& fem = *doc.GetFEModel();
 		FEDataManager& dm = *fem.GetDataManager();
 		FEDataField* pdf = *dm.DataField(nsel);
@@ -757,7 +760,7 @@ void CDataPanel::on_FilterButton_clicked()
 	if (selRow.count() == 1)
 	{
 		int nsel = selRow.at(0).row();
-		CDocument& doc = *m_wnd->GetDocument();
+		CDocument& doc = *GetActiveDocument();
 		FEModel& fem = *doc.GetFEModel();
 		FEDataManager& dm = *fem.GetDataManager();
 		FEDataField* pdf = *dm.DataField(nsel);
@@ -862,7 +865,7 @@ void CDataPanel::on_ExportButton_clicked()
 	if (selRow.count() == 1)
 	{
 		int nsel = selRow.at(0).row();
-		CDocument& doc = *m_wnd->GetDocument();
+		CDocument& doc = *GetActiveDocument();
 		FEModel& fem = *doc.GetFEModel();
 		FEDataManager& dm = *fem.GetDataManager();
 		FEDataField* pdf = *dm.DataField(nsel);
@@ -926,14 +929,15 @@ void CDataPanel::on_fieldName_editingFinished()
 	{
 		ui->m_activeField->SetName(t.toStdString());
 		Update(true);
-		CDocument& doc = *m_wnd->GetDocument();
+		CDocument& doc = *GetActiveDocument();
 		doc.GetFEModel()->UpdateDependants();
 	}
 }
 
 void CDataPanel::on_props_dataChanged()
 {
-	m_wnd->GetDocument()->GetGLModel()->ResetAllStates();
-	m_wnd->GetDocument()->UpdateFEModel(true);
+	CDocument* doc = GetActiveDocument();
+	doc->GetGLModel()->ResetAllStates();
+	doc->UpdateFEModel(true);
 	m_wnd->RedrawGL();
 }

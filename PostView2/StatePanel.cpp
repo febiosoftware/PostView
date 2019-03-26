@@ -165,9 +165,8 @@ void CStatePanel::Update(bool breset)
 {
 	if (breset)
 	{
-		CDocument* pdoc = m_wnd->GetDocument();
-		FEModel* fem = pdoc->GetFEModel();
-
+		CDocument* pdoc = GetActiveDocument();
+		FEModel* fem = (pdoc ? pdoc->GetFEModel() : nullptr);
 		ui->data->SetFEModel(fem);
 	}
 }
@@ -179,7 +178,7 @@ void CStatePanel::on_stateList_doubleClicked(const QModelIndex& index)
 
 void CStatePanel::on_addButton_clicked()
 {
-	CDocument& doc = *m_wnd->GetDocument();
+	CDocument& doc = *GetActiveDocument();
 	if (doc.IsValid() == false) return;
 
 	CDlgAddState dlg(this);
@@ -201,7 +200,7 @@ void CStatePanel::on_addButton_clicked()
 
 void CStatePanel::on_editButton_clicked()
 {
-	CDocument& doc = *m_wnd->GetDocument();
+	CDocument& doc = *GetActiveDocument();
 	if (doc.IsValid() == false) return;
 
 	FEModel& fem = *doc.GetFEModel();
@@ -229,7 +228,7 @@ void CStatePanel::on_editButton_clicked()
 
 void CStatePanel::on_deleteButton_clicked()
 {
-	CDocument& doc = *m_wnd->GetDocument();
+	CDocument& doc = *GetActiveDocument();
 	if (doc.IsValid() == false) return;
 
 	FEModel& fem = *doc.GetFEModel();

@@ -3,12 +3,14 @@
 #include <QtCore/QBasicTimer>
 #include <QCloseEvent>
 #include "FileThread.h"
+#include "ViewSettings.h"
 #include "Document.h"
 
 class CGLView;
 class FEFileReader;
 class CFileThread;
 class CTimePanel;
+class CDocManager;
 
 namespace Ui {
 	class CMainWindow;
@@ -25,7 +27,7 @@ public:
 	void OpenFile(const QString& fileName, int nfilter);
 	bool SaveFile(const QString& fileName, int nfilter);
 
-	CDocument*	GetDocument() { return m_doc; }
+	CDocument*	GetActiveDocument();
 
 	CGLView* GetGLView();
 
@@ -103,6 +105,9 @@ public:
 	
 	// set current theme (must restart to take effect)
 	void setCurrentTheme(int n);
+
+	// get the view settings
+	VIEWSETTINGS& GetViewSettings() { return m_ops; }
 
 public slots:
 	void on_actionOpen_triggered();
@@ -196,6 +201,9 @@ public slots:
 	void on_selectTime_valueChanged(int i);
 	void on_selectAngle_valueChanged(int i);
 
+	void on_tab_currentChanged(int i);
+	void on_tab_tabCloseRequested(int i);
+
 	void finishedReadingFile(bool success, const QString& errorString);
 
 	void checkFileProgress();
@@ -210,6 +218,9 @@ private:
 	void closeEvent(QCloseEvent* ev);
 	void StopAnimation();
 
+	void AddDocument(CDocument* doc);
+
+	void MakeDocActive(CDocument* doc);
 
 private:
 	void writeSettings();
@@ -217,6 +228,9 @@ private:
 
 private:
 	Ui::CMainWindow*	ui;
-	CDocument*			m_doc;
 	CFileThread*		m_fileThread;
+	VIEWSETTINGS		m_ops;		// the view settings
+
+	CDocManager*		m_DocManager;
+	CDocument*			m_activeDoc;
 };

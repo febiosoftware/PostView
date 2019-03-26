@@ -130,7 +130,7 @@ void CToolsPanel::Update(bool breset)
 
 void CToolsPanel::initTools()
 {
-	CDocument* doc = m_wnd->GetDocument();
+	CDocument* doc = m_wnd->GetActiveDocument();
 
 	tools.push_back(new CPointDistanceTool  (doc));
 	tools.push_back(new C3PointAngleTool    (doc));
