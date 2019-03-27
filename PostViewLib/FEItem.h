@@ -6,7 +6,8 @@
 #define FE_SELECTED		0x02		// is the item currently selected ?
 #define FE_DISABLED		0x04		// should the item be evaluated ?
 #define FE_ACTIVE		0x08		// does the item contain data?
-#define FE_INVISIBLE	0x10		// is the item actually visible? 
+#define FE_INVISIBLE	0x10		// is the item invisible because the parent material was hidden? 
+#define FE_ERODED		0x20		// the item is "eroded" and should be treated as no longer present
 // Even when not hidden, the item may not be shown since e.g. the material is hidden
 
 //-----------------------------------------------------------------------------
@@ -36,6 +37,9 @@ public:
 	void Activate() { m_state = m_state | FE_ACTIVE; }
 	void Deactivate() { m_state = m_state & ~FE_ACTIVE; }
 
+	void SetEroded(bool b) { if (b) m_state = m_state | FE_ERODED; else m_state = m_state & ~FE_ERODED; }
+	bool IsEroded() const { return ((m_state & FE_ERODED) != 0); }
+
 	bool IsEnabled() const { return (IsDisabled() == false); }
 
 	void Show(bool bshow)
@@ -44,7 +48,7 @@ public:
 		else m_state = (m_state | FE_INVISIBLE) & ~FE_SELECTED;
 	}
 
-	bool IsVisible() const { return (IsInvisible() == false) && (IsHidden() == false); }
+	bool IsVisible() const { return (IsInvisible() == false) && (IsHidden() == false) && (IsEroded() == false); }
 
 	unsigned int GetFEState() const { return m_state; }
 	void SetFEState(unsigned int state) { m_state = state; }

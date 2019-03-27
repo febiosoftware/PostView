@@ -2623,7 +2623,14 @@ void CGLModel::HideMaterial(int nmat)
 	FEMeshBase& mesh = *GetActiveMesh();
 
 	// Hide the elements with the material ID
-	for (int i=0; i<mesh.Elements(); ++i) if (mesh.Element(i).m_MatID == nmat) mesh.Element(i).Show(false);
+	for (int i = 0; i < mesh.Elements(); ++i)
+	{
+		FEElement& el = mesh.Element(i);
+		if (el.m_MatID == nmat)
+		{
+			el.Show(false);
+		}
+	}
 
 	// hide faces
 	// Faces are hidden if the adjacent element is hidden

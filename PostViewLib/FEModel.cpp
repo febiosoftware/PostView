@@ -922,8 +922,8 @@ void FEModel::UpdateMeshState(int ntime)
 
 		if ((data.m_state & StatusFlags::VISIBLE) == 0)
 		{
-			el.Show(false);
+			el.SetEroded(true);
 		}
-		else el.Show(true);
+		else el.SetEroded(false);
 	}
 }

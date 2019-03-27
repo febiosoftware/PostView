@@ -676,9 +676,11 @@ public:
 
 	void addTab(const QString& tabTitle, const QString& toolTip)
 	{
-		tab->addTab(tabTitle);
+		QString title = tabTitle;
+		if (tabTitle.isEmpty()) title = "Untitled";
+		tab->addTab(title);
 		tab->setCurrentIndex(tab->count() - 1);
-		tab->setTabToolTip(tab->count() - 1, toolTip);
+		if (toolTip.isEmpty() == false) tab->setTabToolTip(tab->count() - 1, toolTip);
 	}
 
 	void RemoveTab(int i)

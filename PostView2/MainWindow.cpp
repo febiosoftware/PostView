@@ -1882,7 +1882,7 @@ void CMainWindow::on_actionViewVPNext_triggered()
 void CMainWindow::UpdateMainToolbar(bool breset)
 {
 	CDocument* doc = GetActiveDocument();
-	if (doc == nullptr) return;
+	if ((doc == nullptr) || (doc->IsValid() == false)) return;
 
 	FEModel* pfem = doc->GetFEModel();
 	ui->selectData->BuildMenu(pfem, DATA_SCALAR);
@@ -1979,10 +1979,13 @@ void CMainWindow::MakeDocActive(CDocument* doc)
 		// set the window title
 		SetWindowTitle(QString(doc->GetFile()));
 
-		int layer = doc->GetGLModel()->m_layer;
-		CGLWidgetManager::GetInstance()->SetActiveLayer(layer);
-
-		ui->glview->UpdateWidgets();
+		CGLModel* m = doc->GetGLModel();
+		if (m)
+		{
+			int layer = m->m_layer;
+			CGLWidgetManager::GetInstance()->SetActiveLayer(layer);
+			ui->glview->UpdateWidgets();
+		}
 
 		// update all Ui components
 		UpdateUi(true);

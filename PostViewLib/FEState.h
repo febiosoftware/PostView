@@ -31,7 +31,7 @@ protected:
 //-----------------------------------------------------------------------------
 enum StatusFlags {
 	ACTIVE	= 0x01,			// item has data
-	VISIBLE	= 0x02			// item is visible
+	VISIBLE	= 0x02			// item is visible (i.e. not eroded)
 };
 
 //-----------------------------------------------------------------------------
