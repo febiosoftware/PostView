@@ -412,11 +412,6 @@ void CMainWindow::OpenFile(const QString& fileName, int nfilter)
 
 	std::string sfile = fileName.toStdString();
 
-	ui->actionColorMap->setDisabled(true);
-    ui->actionColorMap->setChecked(false);
-
-	SetWindowTitle("");
-
 	// create a file reader
 	FEFileReader* reader = 0;
 
@@ -490,9 +485,6 @@ void CMainWindow::OpenFile(const QString& fileName, int nfilter)
 		stitle = sfile.substr(npos+1);
 	}
 */
-	// deactivate the play tool bar
-	ui->playToolBar->setEnabled(false);
-
 	// Create a new document
 	CDocument* doc = new CDocument(this);
 

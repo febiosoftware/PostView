@@ -3,11 +3,89 @@
 #include <PostViewLib/constants.h>
 #include <QPainter>
 
-CDataFieldSelector::CDataFieldSelector(QWidget* parent) : QPushButton(parent)
+CDataSelector::CDataSelector()
 {
+
+}
+
+CDataSelector::~CDataSelector()
+{
+
+}
+
+CModelDataSelector::CModelDataSelector(FEModel* fem, Data_Tensor_Type ntype, bool btvec)
+{
+	m_fem = fem;
+	m_class = ntype;
+	m_bvec = btvec;
+	m_fem->AddDependant(this);
+}
+
+CModelDataSelector::~CModelDataSelector()
+{
+	if (m_fem) m_fem->RemoveDependant(this);
+}
+
+void CModelDataSelector::Update(FEModel* pfem)
+{
+	m_fem = pfem;
+	// TODO: update the menu
+}
+
+void CModelDataSelector::BuildMenu(QMenu* menu)
+{
+	// get the datamanager
+	if (m_fem == 0) return;
+	FEDataManager& dm = *m_fem->GetDataManager();
+
+	// loop over all data fields
+	int N = dm.DataFields();
+	FEDataFieldPtr pd = dm.FirstDataField();
+	for (int i = 0; i<N; ++i, ++pd)
+	{
+		FEDataField& d = *(*pd);
+		int dataClass = d.DataClass();
+		int dataComponents = d.components(m_class);
+		if (dataComponents > 0)
+		{
+			if ((dataComponents == 1) && (d.Type() != DATA_ARRAY))
+			{
+				int nfield = BUILD_FIELD(dataClass, i, 0);
+
+				QAction* pa = menu->addAction(QString::fromStdString(d.GetName()));
+				pa->setData(QVariant(nfield));
+			}
+			else
+			{
+				QMenu* sub = new QMenu(QString::fromStdString(d.GetName()), menu);
+				menu->addMenu(sub);
+
+				for (int n = 0; n<dataComponents; ++n)
+				{
+					int nfield = BUILD_FIELD(dataClass, i, n);
+					std::string s = d.componentName(n, m_class);
+
+					QAction* pa = sub->addAction(QString::fromStdString(s));
+					pa->setData(QVariant(nfield));
+
+					if (d.Type() == DATA_ARRAY_VEC3F)
+					{
+						if ((n > 0) && ((n + 1) % 4 == 0))
+						{
+							sub->addSeparator();
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+CDataSelectorButton::CDataSelectorButton(QWidget* parent) : QPushButton(parent)
+{
+	m_src = nullptr;
 	m_menu = new QMenu(this);
 	m_currentValue = -1;
-	m_fem = 0;
 
 	setStyleSheet("QPushButton { text-align : left; }");
 
@@ -16,167 +94,102 @@ CDataFieldSelector::CDataFieldSelector(QWidget* parent) : QPushButton(parent)
 	QObject::connect(m_menu, SIGNAL(triggered(QAction*)), this, SLOT(onAction(QAction*)));
 }
 
-CDataFieldSelector::~CDataFieldSelector()
+CDataSelectorButton::~CDataSelectorButton()
 {
-	if (m_fem) m_fem->RemoveDependant(this);
+	delete m_src;
 }
 
-void CDataFieldSelector::BuildMenu(FEModel* fem, Data_Tensor_Type nclass, bool btvec)
+// set the data selector
+void CDataSelectorButton::SetDataSelector(CDataSelector* dataSelector)
 {
-	// make sure the field selector is a dependant of the model 
-	if (m_fem != fem)
-	{
-		m_fem = fem;
-		if (fem) fem->AddDependant(this);
-	}
+	if (m_src) delete m_src;
+	m_src = dataSelector;
+	m_currentValue = -1;
+	UpdateMenu();
+}
 
-	// store the parameters
-	m_class = nclass;
-	m_bvec = btvec;
-
+void CDataSelectorButton::UpdateMenu()
+{
 	// get the current field
 	// we'll use it to restore the current selected option
 	int noldField = m_currentValue;
 	m_currentValue = -1;
 	setText("");
 
-	// get the datamanager
-	if (fem == 0) return;
-	FEDataManager& dm = *fem->GetDataManager();
-
 	// clear the menu
 	m_menu->clear();
 
-	// loop over all data fields
-	int N = dm.DataFields();
-	FEDataFieldPtr pd = dm.FirstDataField();
-	for (int i=0; i<N; ++i, ++pd)
-	{
-		FEDataField& d = *(*pd);
-		int dataClass = d.DataClass();
-		int dataComponents = d.components(nclass);
-		if (dataComponents > 0)
-		{
-			if ((dataComponents == 1) && (d.Type() != DATA_ARRAY))
-			{
-				int nfield = BUILD_FIELD(dataClass, i, 0);
+	// build a new menu
+	if (m_src) m_src->BuildMenu(m_menu);
 
-				QAction* pa = m_menu->addAction(QString::fromStdString(d.GetName()));
-				pa->setData(QVariant(nfield));
-
-				if (nfield == noldField)
-				{
-					setText(pa->text());
-					m_currentValue = noldField;
-				}
-			}
-			else
-			{
-				QMenu* sub = new QMenu(QString::fromStdString(d.GetName()), m_menu);
-				m_menu->addMenu(sub);
-
-				for (int n=0; n<dataComponents; ++n)
-				{
-					int nfield = BUILD_FIELD(dataClass, i, n);
-					std::string s = d.componentName(n, nclass);
-
-					QAction* pa = sub->addAction(QString::fromStdString(s));
-					pa->setData(QVariant(nfield));
-
-					if (d.Type() == DATA_ARRAY_VEC3F)
-					{
-						if ((n > 0) && ((n+1) % 4 == 0))
-						{
-							sub->addSeparator();
-						}
-					}
-
-					if (nfield == noldField)
-					{
-						setText(pa->text());
-						m_currentValue = noldField;
-					}
-				}
-			}
-		}
-	}
-
-	// if the old field was not found, send out a signal
-	if (m_currentValue == -1)
-		emit currentValueChanged(m_currentValue);
+	// try to set the old field
+	if (noldField != m_currentValue) setCurrentValue(noldField);
 }
 
-int CDataFieldSelector::currentValue() const
+int CDataSelectorButton::currentValue() const
 {
 	return m_currentValue;
 }
 
-void CDataFieldSelector::setCurrentValue(int newField)
+QAction* findAction(QMenu* menu, int searchValue)
+{
+	QList<QAction*> actions = menu->actions();
+	foreach(QAction* action, menu->actions())
+	{
+		if (action->isSeparator())
+		{
+			// separator, nothing to do
+		}
+		else if (action->menu())
+		{
+			// call findAction on the submenu
+			QAction* pa = findAction(action->menu(), searchValue);
+			if (pa) return pa;
+		}
+		else
+		{
+			int value = action->data().toInt();
+			if (value == searchValue) return action;
+		}
+	}
+	return nullptr;
+}
+
+void CDataSelectorButton::setCurrentValue(int newField)
 {
 	// make sure there is something to change
 	if (newField == m_currentValue) return;
 
-	if (m_fem)
+	// find the item
+	QAction* pa = findAction(m_menu, newField);
+	if (pa)
 	{
-		string fieldName;
-		FEDataManager& dm = *m_fem->GetDataManager();
-		int N = dm.DataFields();
-		FEDataFieldPtr pd = dm.FirstDataField();
-		for (int i = 0; i<N; ++i, ++pd)
-		{
-			FEDataField& d = *(*pd);
-			int dataClass = d.DataClass();
-			int dataComponents = d.components(m_class);
-			if (dataComponents > 0)
-			{
-				if (dataComponents == 1)
-				{
-					int nfield = BUILD_FIELD(dataClass, i, 0);
-					if (nfield == newField)
-					{
-						fieldName = d.GetName();
-						break;
-					}
-				}
-				else
-				{
-					for (int n = 0; n<dataComponents; ++n)
-					{
-						int nfield = BUILD_FIELD(dataClass, i, n);
-						if (nfield == newField)
-						{
-							fieldName = d.componentName(n, m_class);
-							break;
-						}
-					}
-				}
-			}
-		}
-
-		if (fieldName.empty() == false)
-		{
-			m_currentValue = newField;
-			setText(QString::fromStdString(fieldName));
-		}
-		else
-		{
-			m_currentValue = -1;
-			setText("");
-		}
-
-		emit currentValueChanged(m_currentValue);
+		m_currentValue = newField;
+		setText(pa->text());
 	}
+	else
+	{
+		m_currentValue = -1;
+		setText("");
+	}
+
+	emit currentValueChanged(m_currentValue);
 }
 
-void CDataFieldSelector::Update(FEModel* pfem)
-{
-	BuildMenu(pfem, m_class, m_bvec);
-}
-
-void CDataFieldSelector::onAction(QAction* pa)
+void CDataSelectorButton::onAction(QAction* pa)
 {
 	setText(pa->text());
 	m_currentValue = pa->data().toInt();
 
 	emit currentValueChanged(m_currentValue);
+}
+
+//=============================================================================
+CDataFieldSelector::CDataFieldSelector(QWidget* parent) : CDataSelectorButton(parent)
+{
+}
+
+void CDataFieldSelector::BuildMenu(FEModel* fem, Data_Tensor_Type ntype, bool btvec)
+{
+	SetDataSelector(new CModelDataSelector(fem, ntype, btvec));
 }
