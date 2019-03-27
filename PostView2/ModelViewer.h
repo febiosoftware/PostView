@@ -27,9 +27,6 @@ public:
 
 	void selectObject(CGLObject* po);
 
-protected:
-	void DocumentUpdate(CDocument* doc, bool bnewFlag) override;
-
 private slots:
 	void on_modelTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* prev);
 	void on_modelTree_itemDoubleClicked(QTreeWidgetItem* item, int column);

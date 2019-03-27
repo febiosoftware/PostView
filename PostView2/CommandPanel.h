@@ -6,7 +6,7 @@
 class CMainWindow;
 
 //-----------------------------------------------------------------------------
-class CCommandPanel : public QWidget, public CDocObserver
+class CCommandPanel : public QWidget
 {
 public:
 	CCommandPanel(CMainWindow* pwnd, QWidget* parent = 0);

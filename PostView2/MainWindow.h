@@ -11,12 +11,13 @@ class FEFileReader;
 class CFileThread;
 class CTimePanel;
 class CDocManager;
+class CGraphWindow;
 
 namespace Ui {
 	class CMainWindow;
 }
 
-class CMainWindow : public QMainWindow, public CDocObserver
+class CMainWindow : public QMainWindow
 {
 	Q_OBJECT
 
@@ -46,6 +47,9 @@ public:
 	// or an existing model is reloaded
 	// and also after a mouse release event
 	void UpdateUi(bool breset, QWidget* psender = 0);
+
+	// update all the command panels
+	void UpdateCommandPanels(bool breset, QWidget* psender = 0);
 
 	// upate the Model Viewer
 	void UpdateModelViewer(bool breset);
@@ -99,9 +103,6 @@ public:
 	// Set the window title
 	void SetWindowTitle(const QString& t);
 
-	// document was updated
-	void DocumentUpdate(CDocument* doc, bool bNewFlag) override;
-
 	// get the current them
 	int currentTheme();
 	
@@ -110,6 +111,15 @@ public:
 
 	// get the view settings
 	VIEWSETTINGS& GetViewSettings() { return m_ops; }
+
+	// show data in a graph window
+	void ShowData(const std::vector<double>& data, const QString& label);
+
+	// remove a graph from the list
+	void RemoveGraph(CGraphWindow* graph);
+
+	// Add a graph to the list of managed graph windows
+	void AddGraph(CGraphWindow* graph);
 
 public slots:
 	void on_actionOpen_triggered();

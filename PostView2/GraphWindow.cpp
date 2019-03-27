@@ -426,8 +426,8 @@ public:
 	QComboBox*			selectPlot;
 	QStackedWidget*		selectXSource;
 	QComboBox*			selectTime;
-	CDataFieldSelector*	selectX;
-	CDataFieldSelector*	selectY;
+	CDataSelectorButton*	selectX;
+	CDataSelectorButton*	selectY;
 	QToolBox*			tools;
 
 	QAction* actionSave;
@@ -518,21 +518,14 @@ public:
 	}
 };
 
-CGraphWindow::CGraphWindow(CMainWindow* pwnd) : m_wnd(pwnd), QMainWindow(pwnd), ui(new Ui::CGraphWindow)
+CGraphWindow::CGraphWindow(CMainWindow* pwnd) : m_wnd(pwnd), QMainWindow(pwnd), ui(new Ui::CGraphWindow), CDocObserver(pwnd->GetActiveDocument())
 {
 	m_nTrackTime = TRACK_TIME;
 	m_nUserMin = 0;
 	m_nUserMax = -1;
 
-	m_firstState = -1;
-	m_lastState = -1;
-
-	m_dataX = -1;
-	m_dataY = -1;
-	m_dataXPrev = -1;
-	m_dataYPrev = -1;
-
-	m_xtype = m_xtypeprev = -1;
+	// delete the window when it's closed
+	setAttribute(Qt::WA_DeleteOnClose);
 
 	ui->setupUi(this);
 	ui->ops->setUserRange(m_nUserMin, m_nUserMax);
@@ -541,467 +534,16 @@ CGraphWindow::CGraphWindow(CMainWindow* pwnd) : m_wnd(pwnd), QMainWindow(pwnd), 
 }
 
 //-----------------------------------------------------------------------------
-// If breset==true, a new model was loaded. 
-// If breset==false, the selection has changed
-void CGraphWindow::Update(bool breset, bool bfit)
+void CGraphWindow::closeEvent(QCloseEvent* closeEvent)
 {
-	CDocument* doc = m_wnd->GetActiveDocument();
-	if (doc->IsValid() == false) return;
-
-	if (breset)
-	{
-		ui->selectX->BuildMenu(doc->GetFEModel(), DATA_SCALAR);
-		ui->selectY->BuildMenu(doc->GetFEModel(), DATA_SCALAR);
-
-		m_dataXPrev = -1;
-		m_dataYPrev = -1;
-	}
-
-	// Currently, when the time step changes, Update is called with breset set to false.
-	// Depending on the time range settings, we may or may not need to update the track view.
-
-	// when the user sets the range, we don't have to do anything so let's return
-//	if (m_bUserRange && (breset == false)) return;
-
-	// get the document and current time point and time steps
-	int ntime  = doc->currentTime();
-	int nsteps = doc->GetTimeSteps();
-
-	// Figure out the time range
-	int nmin = 0, nmax = 0;
-	if (m_nTrackTime == TRACK_USER_RANGE)
-	{
-		// get the user defined range
-		nmin = m_nUserMin;
-		nmax = m_nUserMax;
-	}
-	else if (m_nTrackTime == TRACK_TIME)
-	{
-		TIMESETTINGS& timeSettings = doc->GetTimeSettings();
-		nmin = timeSettings.m_start;
-		nmax = timeSettings.m_end;
-	}
-	else if (m_nTrackTime == TRACK_CURRENT_TIME)
-	{
-		// simply set the min and max to the same value
-		nmin = nmax = ntime;
-	}
-
-	// validate range
-	if (nmin <       0) nmin = 0;
-	if (nmax ==     -1) nmax = nsteps - 1;
-	if (nmax >= nsteps) nmax = nsteps - 1;
-	if (nmax <    nmin) nmax = nmin;
-
-	// plot type
-	int ntype = ui->selectPlot->currentIndex();
-	int ncx = ui->selectTime->currentIndex();
-	switch (ntype)
-	{
-	case LINE_PLOT: m_xtype = ncx; break;
-	case SCATTER_PLOT: m_xtype = 2; break;
-	case TIME_SCATTER_PLOT: m_xtype = 3; break;
-	}
-
-	// get the field data
-	m_dataX = ui->selectX->currentValue();
-	m_dataY = ui->selectY->currentValue();
-	if ((ntype!=LINE_PLOT) && (m_dataX<=0))
-	{
-		ui->plot->clear();
-		return;
-	}
-	if (m_dataY<=0) 
-	{
-		ui->plot->clear();
-		return;
-	}
-
-	// When a reset is not required, see if we actually need to update anything
-	if ((breset == false) && (bfit == false))
-	{
-		if ((nmin == m_firstState) && (nmax == m_lastState) && (m_dataX == m_dataXPrev) && (m_dataY == m_dataYPrev) && (m_xtype == m_xtypeprev)) return;
-	}
-
-	// set current time point index (TODO: Not sure if this is still used)
-//	pview->SetCurrentTimeIndex(ntime);
-
-	CGLModel* po = doc->GetGLModel();
-	FEModel& fem = *doc->GetFEModel();
-
-	FEMeshBase& mesh = *doc->GetFEModel()->GetFEMesh(0);
-
-	// get the title
-	if (ntype == LINE_PLOT)
-	{
-		ui->plot->setTitle(ui->selectY->text());
-	}
-	else
-	{
-		QString xtext = ui->selectX->text();
-		QString ytext = ui->selectY->text();
-
-		ui->plot->setTitle(QString("%1 --- %2").arg(xtext).arg(ytext));
-	}
-
-	m_firstState = nmin;
-	m_lastState  = nmax;
-
-	// we need to update the displacement map for all time steps
-	// since the strain calculations depend on it
-	CGLDisplacementMap* pdm = po->GetDisplacementMap();
-	if (pdm)
-	{
-		for (int i=0; i<nsteps; ++i) po->GetDisplacementMap()->UpdateState(i);
-	}
-
-	// get the graph of the track view and clear it
-	ui->plot->clear();
-
-	// add selections
-	addSelectedNodes();
-	addSelectedEdges();
-	addSelectedFaces();
-	addSelectedElems();
-
-	// redraw
-	if ((m_dataX != m_dataXPrev) || (m_dataY != m_dataYPrev) || (m_xtype != m_xtypeprev) || bfit)
-	{
-		ui->plot->fitToData();
-	}
-
-	m_dataXPrev = m_dataX;
-	m_dataYPrev = m_dataY;
-	m_xtypeprev = m_xtype;
-
-	ui->plot->Update();
+	m_wnd->RemoveGraph(this);
 }
 
 //-----------------------------------------------------------------------------
-void CGraphWindow::addSelectedNodes()
+void CGraphWindow::DocumentDelete()
 {
-	CDocument* pdoc = m_wnd->GetActiveDocument();
-	FEModel& fem = *pdoc->GetFEModel();
-	FEMeshBase& mesh = *fem.GetFEMesh(0);
-
-	int nsteps = m_lastState - m_firstState + 1;
-	vector<float> xdata(nsteps);
-	vector<float> ydata(nsteps);
-
-	// get the selected nodes
-	int NN = mesh.Nodes();
-	switch (m_xtype)
-	{
-	case 0: // time values
-		{
-			for (int i=0; i<NN; i++)
-			{
-				FENode& node = mesh.Node(i);
-				if (node.IsSelected())
-				{
-					for (int j=0; j<nsteps; j++) xdata[j] = fem.GetState(j + m_firstState)->m_time;
-
-					// evaluate y-field
-					TrackNodeHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
-
-					CLineChartData* plot = new CLineChartData;
-					plot->setLabel(QString("N%1").arg(i+1));
-					for (int j=0; j<nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
-					ui->plot->addPlotData(plot);
-				}
-			}
-		}
-		break;
-	case 1: // step values
-		{
-			for (int i = 0; i<NN; i++)
-			{
-				FENode& node = mesh.Node(i);
-				if (node.IsSelected())
-				{
-					for (int j = 0; j<nsteps; j++) xdata[j] = (float)j + 1.f + m_firstState;
-
-					// evaluate y-field
-					TrackNodeHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
-
-					CLineChartData* plot = new CLineChartData;
-					plot->setLabel(QString("N%1").arg(i + 1));
-					for (int j = 0; j<nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
-					ui->plot->addPlotData(plot);
-				}
-			}
-		}
-		break;
-	case 2: // scatter
-		{
-			for (int i=0; i<NN; i++)
-			{
-				FENode& node = mesh.Node(i);
-				if (node.IsSelected())
-				{
-					TrackNodeHistory(i, &xdata[0], m_dataX, m_firstState, m_lastState);
-
-					// evaluate y-field
-					TrackNodeHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
-
-					CLineChartData* plot = new CLineChartData;
-					plot->setLabel(QString("N%1").arg(i+1));
-					for (int j=0; j<nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
-					ui->plot->addPlotData(plot);
-				}
-			}
-		}
-		break;
-	case 3: // time-scatter
-		{
-			int nsteps = m_lastState - m_firstState + 1;
-			if (nsteps > 32) nsteps = 32;
-			for (int i=m_firstState; i<m_firstState + nsteps; ++i)
-			{
-				CLineChartData* plot = new CLineChartData;
-				plot->setLabel(QString("%1").arg(fem.GetState(i)->m_time));
-				ui->plot->addPlotData(plot);
-			}
-
-			for (int i = 0; i<NN; i++)
-			{
-				FENode& node = mesh.Node(i);
-				if (node.IsSelected())
-				{
-					// evaluate x-field
-					TrackNodeHistory(i, &xdata[0], m_dataX, m_firstState, m_firstState + nsteps -1);
-
-					// evaluate y-field
-					TrackNodeHistory(i, &ydata[0], m_dataY, m_firstState, m_firstState + nsteps -1);
-
-					for (int j=0; j<nsteps; ++j)
-					{
-						CPlotData& p = ui->plot->getPlotData(j);
-						p.addPoint(xdata[j], ydata[j]);
-					}
-				}
-			}
-
-			// sort the plots 
-			int nplots = ui->plot->plots();
-			for (int i=0; i<nplots; ++i)
-			{
-				CPlotData& data = ui->plot->getPlotData(i);
-				data.sort();
-			}
-		}
-		break;
-	}
-}
-
-//-----------------------------------------------------------------------------
-void CGraphWindow::addSelectedEdges()
-{
-	CDocument* pdoc = m_wnd->GetActiveDocument();
-	FEModel& fem = *pdoc->GetFEModel();
-	FEMeshBase& mesh = *fem.GetFEMesh(0);
-
-	int nsteps = m_lastState - m_firstState + 1;
-	vector<float> xdata(nsteps);
-	vector<float> ydata(nsteps);
-
-	// get the selected nodes
-	int NL = mesh.Edges();
-	for (int i=0; i<NL; i++)
-	{
-		FEEdge& edge = mesh.Edge(i);
-		if (edge.IsSelected())
-		{
-			// evaluate x-field
-			switch (m_xtype)
-			{
-			case 0: 
-				for (int j=0; j<nsteps; j++) xdata[j] = fem.GetState(j + m_firstState)->m_time;
-				break;
-			case 1:
-				for (int j=0; j<nsteps; j++) xdata[j] = (float) j + 1.f + m_firstState;
-				break;
-			default:
-				TrackEdgeHistory(i, &xdata[0], m_dataX, m_firstState, m_lastState);
-			}
-
-			// evaluate y-field
-			TrackEdgeHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
-
-			CLineChartData* plot = new CLineChartData;
-			plot->setLabel(QString("L%1").arg(i+1));
-			for (int j=0; j<nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
-			ui->plot->addPlotData(plot);
-		}
-	}
-}
-
-//-----------------------------------------------------------------------------
-void CGraphWindow::addSelectedFaces()
-{
-	CDocument* pdoc = m_wnd->GetActiveDocument();
-	FEModel& fem = *pdoc->GetFEModel();
-	FEMeshBase& mesh = *fem.GetFEMesh(0);
-
-	int nsteps = m_lastState - m_firstState + 1;
-	vector<float> xdata(nsteps);
-	vector<float> ydata(nsteps);
-
-	// get the selected faces
-	int NF = mesh.Faces();
-	for (int i=0; i<NF; ++i)
-	{
-		FEFace& f = mesh.Face(i);
-		if (f.IsSelected())
-		{
-			// evaluate x-field
-			switch (m_xtype)
-			{
-			case 0: 
-				for (int j=0; j<nsteps; j++) xdata[j] = fem.GetState(j + m_firstState)->m_time;
-				break;
-			case 1:
-				for (int j=0; j<nsteps; j++) xdata[j] = (float) j + 1.f + m_firstState;
-				break;
-			default:
-				TrackFaceHistory(i, &xdata[0], m_dataX, m_firstState, m_lastState);
-			}
-
-			// evaluate y-field
-			TrackFaceHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
-
-			CLineChartData* plot = new CLineChartData;
-			plot->setLabel(QString("F%1").arg(i+1));
-			for (int j=0; j<nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
-			ui->plot->addPlotData(plot);
-		}
-	}
-}
-
-//-----------------------------------------------------------------------------
-void CGraphWindow::addSelectedElems()
-{
-	CDocument* pdoc = m_wnd->GetActiveDocument();
-	FEModel& fem = *pdoc->GetFEModel();
-	FEMeshBase& mesh = *fem.GetFEMesh(0);
-
-	int nsteps = m_lastState - m_firstState + 1;
-	vector<float> xdata(nsteps);
-	vector<float> ydata(nsteps);
-
-	// get the selected elements
-	int NE = mesh.Elements();
-	for (int i=0; i<NE; i++)
-	{
-		FEElement& e = mesh.Element(i);
-		if (e.IsSelected())
-		{
-			// evaluate x-field
-			switch (m_xtype)
-			{
-			case 0: 
-				for (int j=0; j<nsteps; j++) xdata[j] = fem.GetState(j + m_firstState)->m_time;
-				break;
-			case 1:
-				for (int j=0; j<nsteps; j++) xdata[j] = (float) j + 1.f + m_firstState;
-				break;
-			default:
-				TrackElementHistory(i, &xdata[0], m_dataX, m_firstState, m_lastState);
-			}
-
-			// evaluate y-field
-			TrackElementHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
-
-			CLineChartData* plot = new CLineChartData;
-			for (int j=0; j<nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
-			plot->setLabel(QString("E%1").arg(i+1));
-			ui->plot->addPlotData(plot);
-		}
-	}
-}
-
-//-----------------------------------------------------------------------------
-// Calculate time history of a node
-void CGraphWindow::TrackNodeHistory(int node, float* pval, int nfield, int nmin, int nmax)
-{
-	FEModel& fem = *m_wnd->GetActiveDocument()->GetFEModel();
-
-	int nsteps = fem.GetStates();
-	if (nmin <       0) nmin = 0;
-	if (nmax ==     -1) nmax = nsteps - 1;
-	if (nmax >= nsteps) nmax = nsteps - 1;
-	if (nmax <    nmin) nmax = nmin;
-	int nn = nmax - nmin + 1;
-
-	NODEDATA nd;
-	for (int n=0; n<nn; n++)
-	{
-		fem.EvaluateNode(node, n + nmin, nfield, nd);
-		pval[n] = nd.m_val;
-	}
-}
-
-//-----------------------------------------------------------------------------
-// Calculate time history of a edge
-void CGraphWindow::TrackEdgeHistory(int edge, float* pval, int nfield, int nmin, int nmax)
-{
-	FEModel& fem = *m_wnd->GetActiveDocument()->GetFEModel();
-
-	int nsteps = fem.GetStates();
-	if (nmin <       0) nmin = 0;
-	if (nmax ==     -1) nmax = nsteps - 1;
-	if (nmax >= nsteps) nmax = nsteps - 1;
-	if (nmax <    nmin) nmax = nmin;
-	int nn = nmax - nmin + 1;
-
-	EDGEDATA nd;
-	for (int n=0; n<nn; n++)
-	{
-		fem.EvaluateEdge(edge, n + nmin, nfield, nd);
-		pval[n] = nd.m_val;
-	}
-}
-
-//-----------------------------------------------------------------------------
-// Calculate time history of a face
-void CGraphWindow::TrackFaceHistory(int nface, float* pval, int nfield, int nmin, int nmax)
-{
-	FEModel& fem = *m_wnd->GetActiveDocument()->GetFEModel();
-
-	int nsteps = fem.GetStates();
-	if (nmin <       0) nmin = 0;
-	if (nmax ==     -1) nmax = nsteps - 1;
-	if (nmax >= nsteps) nmax = nsteps - 1;
-	if (nmax <    nmin) nmax = nmin;
-	int nn = nmax - nmin + 1;
-
-	float data[FEFace::MAX_NODES], val;
-	for (int n=0; n<nn; n++)
-	{
-		fem.EvaluateFace(nface, n + nmin, nfield, data, val);
-		pval[n] = val;
-	}
-}
-
-//-----------------------------------------------------------------------------
-// Calculate time history of an element
-void CGraphWindow::TrackElementHistory(int nelem, float* pval, int nfield, int nmin, int nmax)
-{
-	FEModel& fem = *m_wnd->GetActiveDocument()->GetFEModel();
-
-	int nsteps = fem.GetStates();
-	if (nmin <       0) nmin = 0;
-	if (nmax ==     -1) nmax = nsteps - 1;
-	if (nmax >= nsteps) nmax = nsteps - 1;
-	if (nmax <    nmin) nmax = nmin;
-	int nn = nmax - nmin + 1;
-
-	float data[FEGenericElement::MAX_NODES] = {0.f}, val;
-	for (int n=0; n<nn; n++)
-	{
-		fem.EvaluateElement(nelem, n + nmin, nfield, data, val);
-		pval[n] = val;
-	}
+	CDocObserver::DocumentDelete();
+	Update();
 }
 
 //-----------------------------------------------------------------------------
@@ -1111,4 +653,518 @@ void CGraphWindow::on_options_optionsChanged()
 	ui->plot->showDataMarks(marks);
 
 	Update(true);
+}
+
+//=============================================================================
+CDataGraphWindow::CDataGraphWindow(CMainWindow* wnd) : CGraphWindow(wnd)
+{
+
+}
+
+void CDataGraphWindow::SetData(const std::vector<double>& data, QString title)
+{
+	m_title = title;
+	m_data = data;
+	Update(true, true);
+}
+
+void CDataGraphWindow::Update(bool breset, bool bfit)
+{
+	ui->plot->clear();
+	CDocument* doc = GetDocument();
+	if (doc && doc->IsValid())
+	{
+		FEModel* fem = doc->GetFEModel();
+		int nsteps = fem->GetStates();
+		CLineChartData* plot = new CLineChartData;
+		for (int j = 0; j < nsteps; ++j)
+		{
+			FEState* ps = fem->GetState(j);
+			double yj = 0.0;
+			if (j < m_data.size()) yj = m_data[j];
+			plot->addPoint(ps->m_time, yj);
+		}
+		plot->setLabel(m_title);
+		ui->plot->addPlotData(plot);
+		ui->plot->fitToData();
+	}
+	ui->plot->Update();
+}
+
+//=============================================================================
+CModelGraphWindow::CModelGraphWindow(CMainWindow* wnd) : CGraphWindow(wnd)
+{
+	m_firstState = -1;
+	m_lastState = -1;
+
+	m_dataX = -1;
+	m_dataY = -1;
+	m_dataXPrev = -1;
+	m_dataYPrev = -1;
+
+	m_xtype = m_xtypeprev = -1;
+}
+
+//-----------------------------------------------------------------------------
+// If breset==true, a new model was loaded. 
+// If breset==false, the selection has changed
+void CModelGraphWindow::Update(bool breset, bool bfit)
+{
+	CDocument* doc = GetDocument();
+	if ((doc==nullptr) || (doc->IsValid() == false)) return;
+
+	if (breset)
+	{
+		ui->selectX->SetDataSelector(new CModelDataSelector(doc->GetFEModel(), DATA_SCALAR));
+		ui->selectY->SetDataSelector(new CModelDataSelector(doc->GetFEModel(), DATA_SCALAR));
+
+		m_dataXPrev = -1;
+		m_dataYPrev = -1;
+	}
+
+	// Currently, when the time step changes, Update is called with breset set to false.
+	// Depending on the time range settings, we may or may not need to update the track view.
+
+	// when the user sets the range, we don't have to do anything so let's return
+	//	if (m_bUserRange && (breset == false)) return;
+
+	// get the document and current time point and time steps
+	int ntime = doc->currentTime();
+	int nsteps = doc->GetTimeSteps();
+
+	// Figure out the time range
+	int nmin = 0, nmax = 0;
+	if (m_nTrackTime == TRACK_USER_RANGE)
+	{
+		// get the user defined range
+		nmin = m_nUserMin;
+		nmax = m_nUserMax;
+	}
+	else if (m_nTrackTime == TRACK_TIME)
+	{
+		TIMESETTINGS& timeSettings = doc->GetTimeSettings();
+		nmin = timeSettings.m_start;
+		nmax = timeSettings.m_end;
+	}
+	else if (m_nTrackTime == TRACK_CURRENT_TIME)
+	{
+		// simply set the min and max to the same value
+		nmin = nmax = ntime;
+	}
+
+	// validate range
+	if (nmin <       0) nmin = 0;
+	if (nmax == -1) nmax = nsteps - 1;
+	if (nmax >= nsteps) nmax = nsteps - 1;
+	if (nmax <    nmin) nmax = nmin;
+
+	// plot type
+	int ntype = ui->selectPlot->currentIndex();
+	int ncx = ui->selectTime->currentIndex();
+	switch (ntype)
+	{
+	case LINE_PLOT: m_xtype = ncx; break;
+	case SCATTER_PLOT: m_xtype = 2; break;
+	case TIME_SCATTER_PLOT: m_xtype = 3; break;
+	}
+
+	// get the field data
+	m_dataX = ui->selectX->currentValue();
+	m_dataY = ui->selectY->currentValue();
+	if ((ntype != LINE_PLOT) && (m_dataX <= 0))
+	{
+		ui->plot->clear();
+		return;
+	}
+	if (m_dataY <= 0)
+	{
+		ui->plot->clear();
+		return;
+	}
+
+	// When a reset is not required, see if we actually need to update anything
+	if ((breset == false) && (bfit == false))
+	{
+		if ((nmin == m_firstState) && (nmax == m_lastState) && (m_dataX == m_dataXPrev) && (m_dataY == m_dataYPrev) && (m_xtype == m_xtypeprev)) return;
+	}
+
+	// set current time point index (TODO: Not sure if this is still used)
+	//	pview->SetCurrentTimeIndex(ntime);
+
+	CGLModel* po = doc->GetGLModel();
+	FEModel& fem = *doc->GetFEModel();
+
+	FEMeshBase& mesh = *doc->GetFEModel()->GetFEMesh(0);
+
+	// get the title
+	if (ntype == LINE_PLOT)
+	{
+		ui->plot->setTitle(ui->selectY->text());
+	}
+	else
+	{
+		QString xtext = ui->selectX->text();
+		QString ytext = ui->selectY->text();
+
+		ui->plot->setTitle(QString("%1 --- %2").arg(xtext).arg(ytext));
+	}
+
+	m_firstState = nmin;
+	m_lastState = nmax;
+
+	// we need to update the displacement map for all time steps
+	// since the strain calculations depend on it
+	CGLDisplacementMap* pdm = po->GetDisplacementMap();
+	if (pdm)
+	{
+		for (int i = 0; i<nsteps; ++i) po->GetDisplacementMap()->UpdateState(i);
+	}
+
+	// get the graph of the track view and clear it
+	ui->plot->clear();
+
+	// add selections
+	addSelectedNodes();
+	addSelectedEdges();
+	addSelectedFaces();
+	addSelectedElems();
+
+	// redraw
+	if ((m_dataX != m_dataXPrev) || (m_dataY != m_dataYPrev) || (m_xtype != m_xtypeprev) || bfit)
+	{
+		ui->plot->fitToData();
+	}
+
+	m_dataXPrev = m_dataX;
+	m_dataYPrev = m_dataY;
+	m_xtypeprev = m_xtype;
+
+	ui->plot->Update();
+}
+
+//-----------------------------------------------------------------------------
+void CModelGraphWindow::addSelectedNodes()
+{
+	CDocument* pdoc = GetDocument();
+	FEModel& fem = *pdoc->GetFEModel();
+	FEMeshBase& mesh = *fem.GetFEMesh(0);
+
+	int nsteps = m_lastState - m_firstState + 1;
+	vector<float> xdata(nsteps);
+	vector<float> ydata(nsteps);
+
+	// get the selected nodes
+	int NN = mesh.Nodes();
+	switch (m_xtype)
+	{
+	case 0: // time values
+	{
+		for (int i = 0; i<NN; i++)
+		{
+			FENode& node = mesh.Node(i);
+			if (node.IsSelected())
+			{
+				for (int j = 0; j<nsteps; j++) xdata[j] = fem.GetState(j + m_firstState)->m_time;
+
+				// evaluate y-field
+				TrackNodeHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
+
+				CLineChartData* plot = new CLineChartData;
+				plot->setLabel(QString("N%1").arg(i + 1));
+				for (int j = 0; j<nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
+				ui->plot->addPlotData(plot);
+			}
+		}
+	}
+	break;
+	case 1: // step values
+	{
+		for (int i = 0; i<NN; i++)
+		{
+			FENode& node = mesh.Node(i);
+			if (node.IsSelected())
+			{
+				for (int j = 0; j<nsteps; j++) xdata[j] = (float)j + 1.f + m_firstState;
+
+				// evaluate y-field
+				TrackNodeHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
+
+				CLineChartData* plot = new CLineChartData;
+				plot->setLabel(QString("N%1").arg(i + 1));
+				for (int j = 0; j<nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
+				ui->plot->addPlotData(plot);
+			}
+		}
+	}
+	break;
+	case 2: // scatter
+	{
+		for (int i = 0; i<NN; i++)
+		{
+			FENode& node = mesh.Node(i);
+			if (node.IsSelected())
+			{
+				TrackNodeHistory(i, &xdata[0], m_dataX, m_firstState, m_lastState);
+
+				// evaluate y-field
+				TrackNodeHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
+
+				CLineChartData* plot = new CLineChartData;
+				plot->setLabel(QString("N%1").arg(i + 1));
+				for (int j = 0; j<nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
+				ui->plot->addPlotData(plot);
+			}
+		}
+	}
+	break;
+	case 3: // time-scatter
+	{
+		int nsteps = m_lastState - m_firstState + 1;
+		if (nsteps > 32) nsteps = 32;
+		for (int i = m_firstState; i<m_firstState + nsteps; ++i)
+		{
+			CLineChartData* plot = new CLineChartData;
+			plot->setLabel(QString("%1").arg(fem.GetState(i)->m_time));
+			ui->plot->addPlotData(plot);
+		}
+
+		for (int i = 0; i<NN; i++)
+		{
+			FENode& node = mesh.Node(i);
+			if (node.IsSelected())
+			{
+				// evaluate x-field
+				TrackNodeHistory(i, &xdata[0], m_dataX, m_firstState, m_firstState + nsteps - 1);
+
+				// evaluate y-field
+				TrackNodeHistory(i, &ydata[0], m_dataY, m_firstState, m_firstState + nsteps - 1);
+
+				for (int j = 0; j<nsteps; ++j)
+				{
+					CPlotData& p = ui->plot->getPlotData(j);
+					p.addPoint(xdata[j], ydata[j]);
+				}
+			}
+		}
+
+		// sort the plots 
+		int nplots = ui->plot->plots();
+		for (int i = 0; i<nplots; ++i)
+		{
+			CPlotData& data = ui->plot->getPlotData(i);
+			data.sort();
+		}
+	}
+	break;
+	}
+}
+
+//-----------------------------------------------------------------------------
+void CModelGraphWindow::addSelectedEdges()
+{
+	CDocument* pdoc = GetDocument();
+	FEModel& fem = *pdoc->GetFEModel();
+	FEMeshBase& mesh = *fem.GetFEMesh(0);
+
+	int nsteps = m_lastState - m_firstState + 1;
+	vector<float> xdata(nsteps);
+	vector<float> ydata(nsteps);
+
+	// get the selected nodes
+	int NL = mesh.Edges();
+	for (int i = 0; i<NL; i++)
+	{
+		FEEdge& edge = mesh.Edge(i);
+		if (edge.IsSelected())
+		{
+			// evaluate x-field
+			switch (m_xtype)
+			{
+			case 0:
+				for (int j = 0; j<nsteps; j++) xdata[j] = fem.GetState(j + m_firstState)->m_time;
+				break;
+			case 1:
+				for (int j = 0; j<nsteps; j++) xdata[j] = (float)j + 1.f + m_firstState;
+				break;
+			default:
+				TrackEdgeHistory(i, &xdata[0], m_dataX, m_firstState, m_lastState);
+			}
+
+			// evaluate y-field
+			TrackEdgeHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
+
+			CLineChartData* plot = new CLineChartData;
+			plot->setLabel(QString("L%1").arg(i + 1));
+			for (int j = 0; j<nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
+			ui->plot->addPlotData(plot);
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+void CModelGraphWindow::addSelectedFaces()
+{
+	CDocument* pdoc = GetDocument();
+	FEModel& fem = *pdoc->GetFEModel();
+	FEMeshBase& mesh = *fem.GetFEMesh(0);
+
+	int nsteps = m_lastState - m_firstState + 1;
+	vector<float> xdata(nsteps);
+	vector<float> ydata(nsteps);
+
+	// get the selected faces
+	int NF = mesh.Faces();
+	for (int i = 0; i<NF; ++i)
+	{
+		FEFace& f = mesh.Face(i);
+		if (f.IsSelected())
+		{
+			// evaluate x-field
+			switch (m_xtype)
+			{
+			case 0:
+				for (int j = 0; j<nsteps; j++) xdata[j] = fem.GetState(j + m_firstState)->m_time;
+				break;
+			case 1:
+				for (int j = 0; j<nsteps; j++) xdata[j] = (float)j + 1.f + m_firstState;
+				break;
+			default:
+				TrackFaceHistory(i, &xdata[0], m_dataX, m_firstState, m_lastState);
+			}
+
+			// evaluate y-field
+			TrackFaceHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
+
+			CLineChartData* plot = new CLineChartData;
+			plot->setLabel(QString("F%1").arg(i + 1));
+			for (int j = 0; j<nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
+			ui->plot->addPlotData(plot);
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+void CModelGraphWindow::addSelectedElems()
+{
+	CDocument* pdoc = GetDocument();
+	FEModel& fem = *pdoc->GetFEModel();
+	FEMeshBase& mesh = *fem.GetFEMesh(0);
+
+	int nsteps = m_lastState - m_firstState + 1;
+	vector<float> xdata(nsteps);
+	vector<float> ydata(nsteps);
+
+	// get the selected elements
+	int NE = mesh.Elements();
+	for (int i = 0; i<NE; i++)
+	{
+		FEElement& e = mesh.Element(i);
+		if (e.IsSelected())
+		{
+			// evaluate x-field
+			switch (m_xtype)
+			{
+			case 0:
+				for (int j = 0; j<nsteps; j++) xdata[j] = fem.GetState(j + m_firstState)->m_time;
+				break;
+			case 1:
+				for (int j = 0; j<nsteps; j++) xdata[j] = (float)j + 1.f + m_firstState;
+				break;
+			default:
+				TrackElementHistory(i, &xdata[0], m_dataX, m_firstState, m_lastState);
+			}
+
+			// evaluate y-field
+			TrackElementHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
+
+			CLineChartData* plot = new CLineChartData;
+			for (int j = 0; j<nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
+			plot->setLabel(QString("E%1").arg(i + 1));
+			ui->plot->addPlotData(plot);
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Calculate time history of a node
+void CModelGraphWindow::TrackNodeHistory(int node, float* pval, int nfield, int nmin, int nmax)
+{
+	FEModel& fem = *GetDocument()->GetFEModel();
+
+	int nsteps = fem.GetStates();
+	if (nmin <       0) nmin = 0;
+	if (nmax == -1) nmax = nsteps - 1;
+	if (nmax >= nsteps) nmax = nsteps - 1;
+	if (nmax <    nmin) nmax = nmin;
+	int nn = nmax - nmin + 1;
+
+	NODEDATA nd;
+	for (int n = 0; n<nn; n++)
+	{
+		fem.EvaluateNode(node, n + nmin, nfield, nd);
+		pval[n] = nd.m_val;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Calculate time history of a edge
+void CModelGraphWindow::TrackEdgeHistory(int edge, float* pval, int nfield, int nmin, int nmax)
+{
+	FEModel& fem = *GetDocument()->GetFEModel();
+
+	int nsteps = fem.GetStates();
+	if (nmin <       0) nmin = 0;
+	if (nmax == -1) nmax = nsteps - 1;
+	if (nmax >= nsteps) nmax = nsteps - 1;
+	if (nmax <    nmin) nmax = nmin;
+	int nn = nmax - nmin + 1;
+
+	EDGEDATA nd;
+	for (int n = 0; n<nn; n++)
+	{
+		fem.EvaluateEdge(edge, n + nmin, nfield, nd);
+		pval[n] = nd.m_val;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Calculate time history of a face
+void CModelGraphWindow::TrackFaceHistory(int nface, float* pval, int nfield, int nmin, int nmax)
+{
+	FEModel& fem = *GetDocument()->GetFEModel();
+
+	int nsteps = fem.GetStates();
+	if (nmin <       0) nmin = 0;
+	if (nmax == -1) nmax = nsteps - 1;
+	if (nmax >= nsteps) nmax = nsteps - 1;
+	if (nmax <    nmin) nmax = nmin;
+	int nn = nmax - nmin + 1;
+
+	float data[FEFace::MAX_NODES], val;
+	for (int n = 0; n<nn; n++)
+	{
+		fem.EvaluateFace(nface, n + nmin, nfield, data, val);
+		pval[n] = val;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Calculate time history of an element
+void CModelGraphWindow::TrackElementHistory(int nelem, float* pval, int nfield, int nmin, int nmax)
+{
+	FEModel& fem = *GetDocument()->GetFEModel();
+
+	int nsteps = fem.GetStates();
+	if (nmin <       0) nmin = 0;
+	if (nmax == -1) nmax = nsteps - 1;
+	if (nmax >= nsteps) nmax = nsteps - 1;
+	if (nmax <    nmin) nmax = nmin;
+	int nn = nmax - nmin + 1;
+
+	float data[FEGenericElement::MAX_NODES] = { 0.f }, val;
+	for (int n = 0; n<nn; n++)
+	{
+		fem.EvaluateElement(nelem, n + nmin, nfield, data, val);
+		pval[n] = val;
+	}
 }

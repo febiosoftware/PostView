@@ -148,6 +148,7 @@ public:
 
 	// face area
 	double FaceArea(FEFace& f);
+	double FaceArea(const vector<vec3f>& f, int faceType);
 
 	// element volume
 	float ElementVolume(int iel);

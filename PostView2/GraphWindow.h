@@ -2,6 +2,7 @@
 #include <QMainWindow>
 #include <PostViewLib/MathParser.h>
 #include "PlotWidget.h"
+#include "Document.h"
 
 class CMainWindow;
 class CGraphWidget;
@@ -141,7 +142,7 @@ public:
 };
 
 //=================================================================================================
-class CGraphWindow : public QMainWindow
+class CGraphWindow : public QMainWindow, public CDocObserver
 {
 	Q_OBJECT
 
@@ -163,14 +164,13 @@ public:
 public:
 	CGraphWindow(CMainWindow* wnd);
 
-	void Update(bool breset = true, bool bfit = false);
+	virtual void Update(bool breset = true, bool bfit = false) = 0;
+
+	void closeEvent(QCloseEvent* closeEvent) override;
 
 private:
-	// track mesh data
-	void TrackElementHistory(int nelem, float* pval, int nfield, int nmin=0, int nmax=-1);
-	void TrackFaceHistory   (int nface, float* pval, int nfield, int nmin=0, int nmax=-1);
-	void TrackEdgeHistory   (int edge , float* pval, int nfield, int nmin=0, int nmax=-1);
-	void TrackNodeHistory   (int node , float* pval, int nfield, int nmin=0, int nmax=-1);
+	// from CDocObserver
+	void DocumentDelete() override;
 
 private slots:
 	void on_selectTime_currentIndexChanged(int);
@@ -187,18 +187,50 @@ private slots:
 	void on_plot_doneZoomToRect();
 	void on_options_optionsChanged();
 
-private:
-	void addSelectedNodes();
-	void addSelectedEdges();
-	void addSelectedFaces();
-	void addSelectedElems();
-
-private:
+protected:
 	CMainWindow*		m_wnd;
 	Ui::CGraphWindow*	ui;
 
 	int		m_nTrackTime;
 	int		m_nUserMin, m_nUserMax;	//!< manual time step range
+};
+
+//=================================================================================================
+class CDataGraphWindow : public CGraphWindow
+{
+public:
+	CDataGraphWindow(CMainWindow* wnd);
+
+	void SetData(const std::vector<double>& data, QString title);
+
+	void Update(bool breset = true, bool bfit = false);
+
+private:
+	QString				m_title;
+	std::vector<double>	m_data;
+};
+
+//=================================================================================================
+// Specialized graph for displaying data from a model's selection
+class CModelGraphWindow : public CGraphWindow
+{
+public:
+	CModelGraphWindow(CMainWindow* wnd);
+
+	void Update(bool breset = true, bool bfit = false);
+
+private:
+	// track mesh data
+	void TrackElementHistory(int nelem, float* pval, int nfield, int nmin = 0, int nmax = -1);
+	void TrackFaceHistory(int nface, float* pval, int nfield, int nmin = 0, int nmax = -1);
+	void TrackEdgeHistory(int edge, float* pval, int nfield, int nmin = 0, int nmax = -1);
+	void TrackNodeHistory(int node, float* pval, int nfield, int nmin = 0, int nmax = -1);
+
+private:
+	void addSelectedNodes();
+	void addSelectedEdges();
+	void addSelectedFaces();
+	void addSelectedElems();
 
 private: // temporary variables used during update
 	int	m_xtype, m_xtypeprev;			// x-plot field option (0=time, 1=steps, 2=data field)
@@ -206,3 +238,4 @@ private: // temporary variables used during update
 	int	m_dataX, m_dataY;				// X and Y data field IDs
 	int	m_dataXPrev, m_dataYPrev;		// Previous X, Y data fields
 };
+

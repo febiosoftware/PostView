@@ -187,6 +187,24 @@ void ModelData::SetData(CGLModel* po)
 	}
 }
 
+//=============================================================================
+CDocObserver::CDocObserver(CDocument* doc) : m_doc(doc)
+{
+	if (m_doc) m_doc->AddObserver(this);
+}
+
+CDocObserver::~CDocObserver()
+{
+	if (m_doc) m_doc->RemoveObserver(this);
+}
+
+void CDocObserver::DocumentDelete()
+{
+	m_doc = nullptr;
+	DocumentUpdate(true);
+}
+
+//=============================================================================
 CDocument::CDocument(CMainWindow* pwnd) : m_wnd(pwnd)
 {
 	m_bValid = false;
@@ -210,6 +228,12 @@ CDocument::CDocument(CMainWindow* pwnd) : m_wnd(pwnd)
 
 CDocument::~CDocument()
 {
+	// remove all observers
+	for (int i = 0; i < m_Observers.size(); ++i)
+		m_Observers[i]->DocumentDelete();
+
+	m_Observers.clear();
+	
 	if (m_pGLModel) delete m_pGLModel;
 	if (m_pImp) delete m_pImp;
 	ClearPlots();
@@ -268,7 +292,7 @@ void CDocument::UpdateObservers(bool bnew)
 	for (int i=0; i<m_Observers.size(); ++i)
 	{
 		CDocObserver* observer = m_Observers[i];
-		if (observer) observer->DocumentUpdate(this, bnew);
+		if (observer) observer->DocumentUpdate(bnew);
 	}
 }
 

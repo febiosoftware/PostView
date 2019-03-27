@@ -793,49 +793,46 @@ void FEMeshBase::UpdateNormals(bool bsmooth)
 
 //-----------------------------------------------------------------------------
 // area of triangle
-double triangle_area(vec3f& r0, vec3f& r1, vec3f& r2)
+double triangle_area(const vec3f& r0, const vec3f& r1, const vec3f& r2)
 {
 	return ((r1 - r0)^(r2 - r0)).Length()*0.5f;
 }
 
 //-----------------------------------------------------------------------------
-// Calculate the area of a FEFace
 double FEMeshBase::FaceArea(FEFace &f)
 {
-	switch (f.Nodes())
+	const int N = f.Nodes();
+	vector<vec3f> nodes(N);
+	for (int i = 0; i < N; ++i)
+	{
+		nodes[i] = m_Node[f.node[i]].m_rt;
+	}
+	return FaceArea(nodes, N);
+}
+
+//-----------------------------------------------------------------------------
+double FEMeshBase::FaceArea(const vector<vec3f>& r, int faceType)
+{
+	switch (faceType)
 	{
 	case 3: 
 		{
-			vec3f r0 = m_Node[f.node[0]].m_rt;
-			vec3f r1 = m_Node[f.node[1]].m_rt;
-			vec3f r2 = m_Node[f.node[2]].m_rt;
-
-			return triangle_area(r0, r1, r2);
+			return triangle_area(r[0], r[1], r[2]);
 		}
 		break;
 	case 6:
 		{
-			vec3f r0 = m_Node[f.node[0]].m_rt;
-			vec3f r1 = m_Node[f.node[1]].m_rt;
-			vec3f r2 = m_Node[f.node[2]].m_rt;
-			vec3f r3 = m_Node[f.node[3]].m_rt;
-			vec3f r4 = m_Node[f.node[4]].m_rt;
-			vec3f r5 = m_Node[f.node[5]].m_rt;
 			double A = 0.0;
-			A += triangle_area(r0, r3, r5);
-			A += triangle_area(r3, r1, r4);
-			A += triangle_area(r2, r5, r4);
-			A += triangle_area(r3, r4, r5);
+			A += triangle_area(r[0], r[3], r[5]);
+			A += triangle_area(r[3], r[1], r[4]);
+			A += triangle_area(r[2], r[5], r[4]);
+			A += triangle_area(r[3], r[4], r[5]);
 			return A;
 		}
 		break;
 	case 7:
 		{
-			vec3f r0 = m_Node[f.node[0]].m_rt;
-			vec3f r1 = m_Node[f.node[1]].m_rt;
-			vec3f r2 = m_Node[f.node[2]].m_rt;
-
-			return triangle_area(r0, r1, r2);
+			return triangle_area(r[0], r[1], r[2]);
 		}
 		break;
 	case 4:
@@ -884,9 +881,6 @@ double FEMeshBase::FaceArea(FEFace &f)
 				bfirst = false;
 			}
 
-			vec3f rt[NELN];
-			for (i=0; i<NELN; ++i) rt[i] = m_Node[f.node[i]].m_rt;
-
 			float A = 0.f;
 			for (n=0; n<NINT; ++n)
 			{
@@ -894,13 +888,13 @@ double FEMeshBase::FaceArea(FEFace &f)
 				vec3f dxr, dxs;
 				for (i=0; i<NELN; ++i)
 				{
-					dxr.x += Gr[n][i]*rt[i].x;
-					dxr.y += Gr[n][i]*rt[i].y;
-					dxr.z += Gr[n][i]*rt[i].z;
+					dxr.x += Gr[n][i]*r[i].x;
+					dxr.y += Gr[n][i]*r[i].y;
+					dxr.z += Gr[n][i]*r[i].z;
 
-					dxs.x += Gs[n][i]*rt[i].x;
-					dxs.y += Gs[n][i]*rt[i].y;
-					dxs.z += Gs[n][i]*rt[i].z;
+					dxs.x += Gs[n][i]*r[i].x;
+					dxs.y += Gs[n][i]*r[i].y;
+					dxs.z += Gs[n][i]*r[i].z;
 				}
 
 				float detJ = (dxr ^ dxs).Length();

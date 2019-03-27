@@ -593,11 +593,6 @@ CModelViewer::CModelViewer(CMainWindow* pwnd, QWidget* parent) : CCommandPanel(p
 	ui->setupUi(this);
 }
 
-void CModelViewer::DocumentUpdate(CDocument* doc, bool bnewFlag)
-{
-	Update(true);
-}
-
 void CModelViewer::selectObject(CGLObject* po)
 {
 	if (po == 0) ui->m_tree->clearSelection();

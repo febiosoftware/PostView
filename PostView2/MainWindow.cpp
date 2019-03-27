@@ -294,26 +294,21 @@ CGLView* CMainWindow::GetGLView()
 	return ui->glview;
 }
 
-// document was updated
-void CMainWindow::DocumentUpdate(CDocument* doc, bool bNewFlag)
+// update all the command panels
+void CMainWindow::UpdateCommandPanels(bool breset, QWidget* psender)
 {
-	if (bNewFlag)
-	{
-		// let's pretend this comes from the model viewer, since the model viewer also gets this signal
-		UpdateUi(true, ui->modelViewer);
-		UpdateMainToolbar();
-	}
+	if (psender != ui->modelViewer) ui->modelViewer->Update(breset);
+	if (psender != ui->matPanel) ui->matPanel->Update(breset);
+	if (psender != ui->dataPanel) ui->dataPanel->Update(breset);
+	if (psender != ui->statePanel) ui->statePanel->Update(breset);
+	if (psender != ui->toolsPanel) ui->toolsPanel->Update(breset);
+	if (psender != ui->timePanel) ui->timePanel->Update(breset);
 }
 
 void CMainWindow::UpdateUi(bool breset, QWidget* psender)
 {
 	// update the command panels
-	if (psender != ui->modelViewer) ui->modelViewer->Update(breset);
-	if (psender != ui->matPanel   ) ui->matPanel->Update(breset);
-	if (psender != ui->dataPanel  ) ui->dataPanel->Update(breset);
-	if (psender != ui->statePanel ) ui->statePanel->Update(breset);
-	if (psender != ui->toolsPanel ) ui->toolsPanel->Update(breset);
-	if (psender != ui->timePanel  ) ui->timePanel->Update(breset);
+	UpdateCommandPanels(breset, psender);
 
 	// update all graph windows
 	UpdateGraphs(breset, breset);
@@ -360,6 +355,22 @@ void CMainWindow::UpdateView()
 void CMainWindow::UpdateTools(bool reset)
 {
 	ui->toolsPanel->Update(reset);
+}
+
+// remove a graph from the list
+void CMainWindow::RemoveGraph(CGraphWindow* graph)
+{
+	ui->graphList.removeOne(graph);
+}
+
+// Add a graph to the list of managed graph windows
+void CMainWindow::AddGraph(CGraphWindow* graph)
+{
+	CDocument* doc = GetActiveDocument();
+	QString title;
+	if (doc) title = " - " + QString::fromStdString(doc->GetFileName());
+	graph->setWindowTitle(QString("PostView2 : Graph%1%2").arg(ui->graphList.size() + 1).arg(title));
+	ui->graphList.push_back(graph);
 }
 
 void CMainWindow::UpdateGraphs(bool breset, bool bfit)
@@ -1367,36 +1378,13 @@ void CMainWindow::on_actionDisplacementMap_triggered()
 
 void CMainWindow::on_actionGraph_triggered()
 {
-	// let's find an unused graph
-	CGraphWindow* pg = 0;
-	if (ui->graphList.isEmpty() == false)
-	{
-		QList<CGraphWindow*>::iterator it;
-		for (it=ui->graphList.begin(); it != ui->graphList.end(); ++it)
-		{
-			if ((*it)->isVisible() == false)
-			{
-				pg = *it;
-				break;
-			}
-		}
-	}
+	CGraphWindow* pg = new CModelGraphWindow(this);
+	AddGraph(pg);
 
-	// couldn't find one so let's create a new one
-	if (pg == 0)
-	{
-		pg = new CGraphWindow(this);
-		pg->setWindowTitle(QString("PostView2 : Graph%1").arg(ui->graphList.size()+1));
-		ui->graphList.push_back(pg);
-	}
-
-	if (pg)
-	{
-		pg->show();
-		pg->raise();
-		pg->activateWindow();
-		pg->Update();
-	}
+	pg->show();
+	pg->raise();
+	pg->activateWindow();
+	pg->Update();
 }
 
 void CMainWindow::on_actionSummary_triggered()
@@ -1980,8 +1968,9 @@ void CMainWindow::MakeDocActive(CDocument* doc)
 		}
 
 		// update all Ui components
-		UpdateUi(true);
+		UpdateCommandPanels(true);
 
+		// update the main toolbar
 		UpdateMainToolbar(false);
 
 		// This is already done in UpdateMainToolbar so I can probably remove this
@@ -1994,6 +1983,10 @@ void CMainWindow::MakeDocActive(CDocument* doc)
 		{
 			ui->playToolBar->setDisabled(true);
 		}
+
+		// redraw
+		ui->glview->GetCamera().Update(true);
+		RedrawGL();
 	}
 	else
 	{
@@ -2423,4 +2416,16 @@ void CMainWindow::on_recentFiles_triggered(QAction* action)
 {
 	QString fileName = action->text();
 	OpenFile(fileName, 0);
+}
+
+// show data in a graph window
+void CMainWindow::ShowData(const std::vector<double>& data, const QString& label)
+{
+	CDataGraphWindow* graph = new CDataGraphWindow(this);
+	AddGraph(graph);
+
+	graph->SetData(data, label);
+	graph->show();
+	graph->raise();
+	graph->activateWindow();
 }

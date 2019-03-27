@@ -115,11 +115,20 @@ protected:
 class CDocObserver
 {
 public:
-	CDocObserver(){}
-	virtual ~CDocObserver(){}
+	CDocObserver(CDocument* doc);
+	virtual ~CDocObserver();
 
 	// bnewFlag is set when a new model was loaded
-	virtual void DocumentUpdate(CDocument* doc, bool bnewFlag) {}
+	virtual void DocumentUpdate(bool bnewFlag) {}
+
+	// this function is called when the document is about to be deleted
+	virtual void DocumentDelete();
+
+	// get the document
+	CDocument* GetDocument() { return m_doc; }
+
+private:
+	CDocument*	m_doc;
 };
 
 //-----------------------------------------------------------------------------
