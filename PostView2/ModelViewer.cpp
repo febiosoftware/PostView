@@ -197,7 +197,7 @@ public:
 			switch (i)
 			{
 			case 0: return m_map->GetEvalField(); break;
-			case 1: return m_map->GetColorMap()->GetSmooth(); break;
+			case 1: return m_map->GetColorSmooth(); break;
 			case 2: return m_map->GetColorMap()->GetColorMap();
 			case 3: return m_map->m_bDispNodeVals; break;
 			case 4: return m_map->GetRangeType(); break;
@@ -220,7 +220,7 @@ public:
 		switch (i)
 		{
 		case 0: m_wnd->SetCurrentDataField(v.toInt()); break;
-		case 1: m_map->GetColorMap()->SetSmooth(v.toBool()); break;
+		case 1: m_map->SetColorSmooth(v.toBool()); break;
 		case 2: m_map->GetColorMap()->SetColorMap(v.toInt()); break;
 		case 3: m_map->m_bDispNodeVals = v.toBool(); break;
 		case 4: m_map->SetRangeType(v.toInt()); break;

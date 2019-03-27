@@ -56,7 +56,7 @@ public:
 
 	// update the main toolbar
 	// (e.g. when the field drop down needs to be updated)
-	void UpdateMainToolbar();
+	void UpdateMainToolbar(bool breset = true);
 
 	// update the font toolbar
 	// (e.g. when a GL widget gets selected)s

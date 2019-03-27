@@ -1776,14 +1776,8 @@ void CMainWindow::on_actionViewSmooth_toggled(bool bchecked)
 		CGLColorMap* pcm = po->GetColorMap();
 		if (pcm)
 		{
-			CColorTexture* pc = pcm->GetColorMap();
-			if (pc)
-			{
-				bool b = pc->GetSmooth();
-				pc->SetSmooth(!b);
-				doc->UpdateFEModel();
-				RedrawGL();
-			}
+			pcm->SetColorSmooth(bchecked);
+			RedrawGL();
 		}
 	}
 }
@@ -1885,15 +1879,28 @@ void CMainWindow::on_actionViewVPNext_triggered()
 	}
 }
 
-void CMainWindow::UpdateMainToolbar()
+void CMainWindow::UpdateMainToolbar(bool breset)
 {
 	CDocument* doc = GetActiveDocument();
 	if (doc == nullptr) return;
 
 	FEModel* pfem = doc->GetFEModel();
 	ui->selectData->BuildMenu(pfem, DATA_SCALAR);
-//	ui->checkColormap(false);
-	ui->actionViewSmooth->setChecked(true);
+
+	if (breset == false)
+	{
+		CGLColorMap* map = doc->GetGLModel()->GetColorMap();
+		if (map)
+		{
+			int nfield = map->GetEvalField();
+			SetCurrentDataField(nfield);
+		}
+
+		ui->checkColormap(map->IsActive());
+		ui->actionViewSmooth->setChecked(map->GetColorSmooth());
+	}
+	else ui->actionViewSmooth->setChecked(true);
+
 	UpdatePlayToolbar(true);
 
 	CGLModel* m = doc->GetGLModel();
@@ -1980,7 +1987,7 @@ void CMainWindow::MakeDocActive(CDocument* doc)
 		// update all Ui components
 		UpdateUi(true);
 
-		UpdateMainToolbar();
+		UpdateMainToolbar(false);
 
 		// This is already done in UpdateMainToolbar so I can probably remove this
 		FEModel* fem = doc->GetFEModel();

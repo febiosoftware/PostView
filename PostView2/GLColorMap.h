@@ -47,6 +47,9 @@ public:
 	bool ShowLegend() { return m_pbar->visible(); }
 	void ShowLegend(bool b) { if (b) m_pbar->show(); else m_pbar->hide(); }
 
+	bool GetColorSmooth();
+	void SetColorSmooth(bool b);
+
 	void Activate(bool b) { CGLObject::Activate(b); ShowLegend(b); }
 
 private:

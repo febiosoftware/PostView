@@ -48,6 +48,18 @@ void CGLColorMap::SetEvalField(int n)
 }
 
 //-----------------------------------------------------------------------------
+bool CGLColorMap::GetColorSmooth()
+{
+	return m_Col.GetSmooth();
+}
+
+//-----------------------------------------------------------------------------
+void CGLColorMap::SetColorSmooth(bool b)
+{
+	m_Col.SetSmooth(b);
+}
+
+//-----------------------------------------------------------------------------
 void CGLColorMap::Update(int ntime, float dt, bool breset)
 {
 	// get the object
