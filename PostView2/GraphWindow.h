@@ -170,6 +170,7 @@ public:
 
 private:
 	// from CDocObserver
+	void DocumentUpdate(bool newDoc) override;
 	void DocumentDelete() override;
 
 private slots:

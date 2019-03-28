@@ -175,7 +175,9 @@ public:
 		vp[3] = m_viewport[3];
 	}
 
-	void PositionCam();
+	void PositionCamera();
+
+	void UpdateCamera(bool hitCameraTarget = false);
 
 	void UpdateWidgets(bool bposition = true);
 

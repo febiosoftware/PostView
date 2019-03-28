@@ -34,7 +34,7 @@ void Interpolator::Target(double g)
 }
 
 //-----------------------------------------------------------------------------
-bool Interpolator::Update()
+bool Interpolator::Next()
 {
 	if (m_banim)
 	{
@@ -84,7 +84,7 @@ void VecInterpolator::Target(vec3f v)
 }
 
 //-----------------------------------------------------------------------------
-bool VecInterpolator::Update()
+bool VecInterpolator::Next()
 {
 	if (m_banim)
 	{
@@ -100,7 +100,7 @@ bool VecInterpolator::Update()
 		{
 			double g = Interpolator::m_smooth;
 			double f = gain(g, m_at);
-			m_vt = m_v0*(1.0 - f) + m_v1*f;
+			m_vt = m_v0*(1.f - f) + m_v1*f;
 		}
 	}
 	return m_banim;
@@ -133,7 +133,7 @@ void QuatInterpolator::Target(quat4f q)
 }
 
 //-----------------------------------------------------------------------------
-bool QuatInterpolator::Update()
+bool QuatInterpolator::Next()
 {
 	if (m_banim)
 	{

@@ -80,7 +80,7 @@ void CGLCamera::Reset()
 	m_rot.Target(quat4f(0, vec3f(1,0,0)));
 	m_pos.Target(vec3f(0,0,0));
 	m_trg.Target(vec3f(0,0,0));
-	Update(true);
+	UpdatePosition(true);
 
 	m_bdecal = false;
 }
@@ -91,7 +91,7 @@ void CGLCamera::SetCameraSpeed(float f)
 	if (f > 1.f) f = 1.f;
 	if (f < 0.f) f = 0.f;
 	m_speed = f;
-	Interpolator::m_nsteps = 5 + (1.f - f)*60.f;
+	Interpolator::m_nsteps = 5 + (int)((1.f - f)*60.f);
 }
 
 void CGLCamera::SetCameraBias(float f)
@@ -113,13 +113,13 @@ bool CGLCamera::IsAnimating()
 }
 
 //-----------------------------------------------------------------------------
-void CGLCamera::Update(bool bhit)
+void CGLCamera::UpdatePosition(bool bhit)
 {
 	if (bhit == false)
 	{
-		m_pos.Update();
-		m_trg.Update();
-		m_rot.Update();
+		m_pos.Next();
+		m_trg.Next();
+		m_rot.Next();
 	}
 	else
 	{

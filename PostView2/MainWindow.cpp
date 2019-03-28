@@ -298,11 +298,11 @@ CGLView* CMainWindow::GetGLView()
 void CMainWindow::UpdateCommandPanels(bool breset, QWidget* psender)
 {
 	if (psender != ui->modelViewer) ui->modelViewer->Update(breset);
-	if (psender != ui->matPanel) ui->matPanel->Update(breset);
-	if (psender != ui->dataPanel) ui->dataPanel->Update(breset);
-	if (psender != ui->statePanel) ui->statePanel->Update(breset);
-	if (psender != ui->toolsPanel) ui->toolsPanel->Update(breset);
-	if (psender != ui->timePanel) ui->timePanel->Update(breset);
+	if (psender != ui->matPanel   ) ui->matPanel->Update(breset);
+	if (psender != ui->dataPanel  ) ui->dataPanel->Update(breset);
+	if (psender != ui->statePanel ) ui->statePanel->Update(breset);
+	if (psender != ui->toolsPanel ) ui->toolsPanel->Update(breset);
+	if (psender != ui->timePanel  ) ui->timePanel->Update(breset);
 }
 
 void CMainWindow::UpdateUi(bool breset, QWidget* psender)
@@ -314,10 +314,9 @@ void CMainWindow::UpdateUi(bool breset, QWidget* psender)
 	UpdateGraphs(breset, breset);
 
 	// update the gl view
-	if (GetActiveDocument())
-	{
-		ui->glview->GetCamera().Update(true);
-	}
+	ui->glview->UpdateCamera(true);
+
+	// redraw the Graphics View
 	RedrawGL();
 }
 
@@ -766,7 +765,9 @@ void CMainWindow::on_actionUpdate_triggered()
 		// update the UI
 		UpdateMainToolbar();
 		UpdatePlayToolbar(true);
-		UpdateUi(true);
+		UpdateCommandPanels(true);
+		ui->glview->UpdateCamera(true);
+		RedrawGL();
 	}
 }
 
@@ -1967,7 +1968,7 @@ void CMainWindow::MakeDocActive(CDocument* doc)
 			ui->glview->UpdateWidgets();
 		}
 
-		// update all Ui components
+		// update all command panels
 		UpdateCommandPanels(true);
 
 		// update the main toolbar
@@ -1985,7 +1986,7 @@ void CMainWindow::MakeDocActive(CDocument* doc)
 		}
 
 		// redraw
-		ui->glview->GetCamera().Update(true);
+		ui->glview->GetCamera().UpdatePosition(true);
 		RedrawGL();
 	}
 	else

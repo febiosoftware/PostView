@@ -401,7 +401,7 @@ void CDocument::ZoomExtents(bool bhit)
 		CGLCamera& cam = m_view.GetCamera();
 		cam.SetTarget(box.Center());
 		cam.SetTargetDistance(3.f*box.Radius());
-		if (bhit) cam.Update(bhit);
+		if (bhit) cam.UpdatePosition(bhit);
 	}
 }
 
@@ -557,7 +557,7 @@ bool CDocument::LoadFEModel(FEFileReader* pimp, const char* szfile, bool bup)
 		cam.Reset();
 		cam.SetTargetDistance(box.Radius()*3);
 		cam.SetTarget(box.Center());
-		cam.Update(true);
+		cam.UpdatePosition(true);
 
 		// set the current time
 		// this will also update the scene
@@ -569,6 +569,9 @@ bool CDocument::LoadFEModel(FEFileReader* pimp, const char* szfile, bool bup)
 
 	// store a copy of the imorpted file
 	strcpy(m_szfile, szfile);
+
+	// inform the observers
+	UpdateObservers(true);
 
 	// it's all good !
 	return true;

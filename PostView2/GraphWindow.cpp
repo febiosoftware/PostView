@@ -547,6 +547,12 @@ void CGraphWindow::DocumentDelete()
 }
 
 //-----------------------------------------------------------------------------
+void CGraphWindow::DocumentUpdate(bool newDoc)
+{
+	Update(newDoc, true);
+}
+
+//-----------------------------------------------------------------------------
 void CGraphWindow::on_selectTime_currentIndexChanged(int)
 {
 	Update(false);

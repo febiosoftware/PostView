@@ -305,7 +305,7 @@ public:
 		cam.SetTarget(r);
 		cam.SetTargetDistance(d);
 
-		cam.Update(true);
+		cam.UpdatePosition(true);
 	}
 
 private:

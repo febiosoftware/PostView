@@ -49,7 +49,7 @@ public:
 			gluPerspective(fov, ar, fnear, ffar);
 		}
 
-		view->PositionCam();
+		view->PositionCamera();
 
 		double p[16], m[16];
 		glGetDoublev(GL_PROJECTION_MATRIX, p);
@@ -574,7 +574,7 @@ void CGLView::paintGL()
 	glLightfv(GL_LIGHT0, GL_POSITION, fv);
 
 	// position the camera
-	PositionCam();
+	PositionCamera();
 
 	// render the model
 	if (pdoc->IsValid()) RenderModel();
@@ -627,7 +627,7 @@ void CGLView::paintGL()
 	// if the camera is animating, we need to redraw
 	if (GetCamera().IsAnimating())
 	{
-		GetCamera().Update();
+		GetCamera().UpdatePosition();
 		QTimer::singleShot(50, this, SLOT(repaintEvent()));
 	}
 }
@@ -721,7 +721,7 @@ void CGLView::wheelEvent(QWheelEvent* ev)
         else cam.Zoom(1.0f/0.95f);
     }
     repaint();
-	cam.Update(true);
+	cam.UpdatePosition(true);
 	update();
 }
 
@@ -817,7 +817,7 @@ void CGLView::mouseMoveEvent(QMouseEvent* ev)
 	}
 	m_xp = x;
 	m_yp = y;
-	pcam->Update(true);
+	pcam->UpdatePosition(true);
 
 	m_wnd->UpdateView();
 }
@@ -841,7 +841,7 @@ bool CGLView::gestureEvent(QNativeGestureEvent* ev)
         cam.Orbit(qz);
     }
     repaint();
-    cam.Update(true);
+    cam.UpdatePosition(true);
     update();
     return true;
 }
@@ -917,7 +917,7 @@ void CGLView::keyPressEvent(QKeyEvent* ev)
 	if (ev->isAccepted())
 	{
 		PanView(panDirection*panSpeed);
-		GetCamera().Update(true);
+		GetCamera().UpdatePosition(true);
 		update();
 	}
 }
@@ -1436,7 +1436,7 @@ Ray CGLView::PointToRay(int x, int y)
 		gluPerspective(m_fov, m_ar, m_fnear, m_ffar);
 	}
 
-	PositionCam();
+	PositionCamera();
 
 	double p[16], m[16];
 	glGetDoublev(GL_PROJECTION_MATRIX, p);
@@ -2790,7 +2790,16 @@ inline vec3f mult_matrix(GLfloat m[4][4], vec3f r)
 	return a;
 }
 
-void CGLView::PositionCam()
+void CGLView::UpdateCamera(bool hitCameraTarget)
+{
+	CDocument* doc = GetDocument();
+	if (doc && doc->IsValid())
+	{
+		doc->GetView()->GetCamera().UpdatePosition(hitCameraTarget);
+	}
+}
+
+void CGLView::PositionCamera()
 {
 	CDocument* pdoc = GetDocument();
 

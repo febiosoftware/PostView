@@ -47,7 +47,7 @@ public:
 	void Transform();
 
 	// update camera position (for animations)
-	void Update(bool bhit = false);
+	void UpdatePosition(bool bhit = false);
 
 	// set line-draw or decal mode
 	void LineDrawMode(bool b) { m_bdecal = b; }

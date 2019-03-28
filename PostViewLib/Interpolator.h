@@ -8,7 +8,7 @@ class Interpolator
 public:
 	Interpolator();
 
-	bool Update();
+	bool Next();
 
 	void Target(double g);
 
@@ -38,7 +38,7 @@ class VecInterpolator
 public:
 	VecInterpolator();
 
-	bool Update();
+	bool Next();
 
 	void Target(vec3f q);
 
@@ -65,7 +65,7 @@ class QuatInterpolator
 public:
 	QuatInterpolator();
 
-	bool Update();
+	bool Next();
 
 	void Target(quat4f q);
 
