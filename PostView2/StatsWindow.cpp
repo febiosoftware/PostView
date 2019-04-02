@@ -16,46 +16,19 @@
 #include "GLModel.h"
 #include "GLPlaneCutPlot.h"
 
-class Ui::CStatsWindow
+CStatsWindow::CStatsWindow(CMainWindow* wnd) : CGraphWindow(wnd)
 {
-public:
-	CPlotWidget*		plot;
-	QToolBar*			toolBar;
-
-public:
-	void setupUi(QMainWindow* parent)
-	{
-		plot = new CPlotWidget(parent);
-		plot->setObjectName("statsPlot");
-		plot->showLegend(false);
-		plot->setViewLocked(true);
-		plot->showPopup(false);
-		plot->showVerticalGridLines(false);
-		plot->showXAxis(false);
-		plot->ShowYAxis(false);
-		parent->setCentralWidget(plot);
-
-		toolBar = new QToolBar(parent);
-		QAction* actionSave = toolBar->addAction(QIcon(QString(":/icons/save.png")), "Save"); actionSave->setObjectName("actionSave");
-		QAction* actionClip = toolBar->addAction(QIcon(QString(":/icons/clipboard.png")), "Copy to clipboard"); actionClip->setObjectName("actionClip");
-
-		parent->addToolBar(Qt::TopToolBarArea, toolBar);
-
-		QMetaObject::connectSlotsByName(parent);
-	}
-};
-
-CStatsWindow::CStatsWindow(CMainWindow* wnd) : m_wnd(wnd), QMainWindow(wnd), ui(new Ui::CStatsWindow)
-{
-	setWindowTitle("PostView2: Statistics");
-	ui->setupUi(this);
+	QString title = "PostView2: Statistics";
+	CDocument* doc = GetDocument();
+	if (doc) title += " - " + QString::fromStdString(doc->GetFileName());
+	setWindowTitle(title);
 	setMinimumWidth(500);
 	resize(600, 500);
 }
 
-void CStatsWindow::Update(bool breset)
+void CStatsWindow::Update(bool breset, bool bfit)
 {
-	CDocument* doc = m_wnd->GetActiveDocument();
+	CDocument* doc = GetDocument();
 	if (doc->IsValid() == false) return;
 
 	FEMeshBase* pm = doc->GetFEModel()->GetFEMesh(0);
@@ -140,7 +113,7 @@ void CStatsWindow::Update(bool breset)
 		}
 	}
 
-	ui->plot->clear();
+	ClearPlots();
 	
 	if (bin.empty() == false)
 	{
@@ -152,34 +125,19 @@ void CStatsWindow::Update(bool breset)
 			double y = bin[i];
 			data->addPoint(x, y);
 		}
-		ui->plot->addPlotData(data);
+		AddPlotData(data);
 
 		UpdateSelection(true);
 	}
 
 	// redraw
-	ui->plot->fitToData();
-	ui->plot->repaint();
+	FitPlotsToData();
+	RedrawPlot();
+
+	UpdatePlots();
 }
 
 void CStatsWindow::UpdateSelection(bool breset)
 {
 
-}
-
-//-----------------------------------------------------------------------------
-void CStatsWindow::on_actionSave_triggered()
-{
-	QString fileName = QFileDialog::getSaveFileName(this, "Save Stats Data", QDir::currentPath(), QString("All files (*)"));
-	if (fileName.isEmpty() == false)
-	{
-		if (ui->plot->Save(fileName) == false)
-			QMessageBox::critical(this, "Save Stats Data", "A problem occurred saving the data.");
-	}
-}
-
-//-----------------------------------------------------------------------------
-void CStatsWindow::on_actionClip_triggered()
-{
-	ui->plot->OnCopyToClipboard();
 }

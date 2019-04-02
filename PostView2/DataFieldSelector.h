@@ -14,6 +14,30 @@ public:
 	virtual void BuildMenu(QMenu* menu) = 0;
 };
 
+// generic selector for displaying a list of options
+class CGenericDataSelector : public CDataSelector
+{
+public:
+	CGenericDataSelector();
+
+	void AddOption(const QString& opt);
+
+protected:
+	void BuildMenu(QMenu* menu) override;
+
+private:
+	QStringList	m_ops;
+};
+
+// Derived class that selects Time or Steps
+class CTimeStepSelector : public CDataSelector
+{
+public:
+	CTimeStepSelector();
+
+	void BuildMenu(QMenu* menu) override;
+};
+
 // Derived class that builds the menu of a CDataSelectorButton from the model's data
 class CModelDataSelector : public CDataSelector, public FEModelDependant
 {

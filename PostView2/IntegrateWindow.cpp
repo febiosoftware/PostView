@@ -16,91 +16,51 @@
 #include "GLModel.h"
 #include "GLPlaneCutPlot.h"
 
-class Ui::CIntegrateWindow
+CIntegrateWindow::CIntegrateWindow(CMainWindow* wnd) : CGraphWindow(wnd)
 {
-public:
-	CPlotWidget*		plot;
-	QToolBar*			toolBar;
-	QToolBar*			zoomBar;
-	QComboBox*			dataSource;
-
-	QAction*	actionZoomSelect;
-	bool		updating;	// flag indicating we're inside Update
-
-public:
-	void setupUi(QMainWindow* parent)
-	{
-		updating = false;
-
-		plot = new CPlotWidget(parent);
-		plot->setObjectName("summaryPlot");
-		plot->showLegend(false);
-		parent->setCentralWidget(plot);
-
-		toolBar = new QToolBar(parent);
-		QAction* actionSave = toolBar->addAction(QIcon(QString(":/icons/save.png")), "Save"); actionSave->setObjectName("actionSave");
-		QAction* actionClip = toolBar->addAction(QIcon(QString(":/icons/clipboard.png")), "Copy to clipboard"); actionClip->setObjectName("actionClip");
-		toolBar->addWidget(new QLabel("Source: "));
-		toolBar->addWidget(dataSource = new QComboBox);
-		dataSource->setObjectName("dataSource");
-		dataSource->setMinimumWidth(150);
-
-		zoomBar = new QToolBar(parent);
-		QAction* actionZoomWidth  = zoomBar->addAction(QIcon(QString(":/icons/zoom_width.png" )), "Zoom Width" ); actionZoomWidth->setObjectName("actionZoomWidth" );
-		QAction* actionZoomHeight = zoomBar->addAction(QIcon(QString(":/icons/zoom_height.png")), "Zoom Height"); actionZoomHeight->setObjectName("actionZoomHeight");
-		QAction* actionZoomFit    = zoomBar->addAction(QIcon(QString(":/icons/zoom_fit.png"   )), "Zoom Fit"   ); actionZoomFit->setObjectName("actionZoomFit"   );
-		actionZoomSelect = zoomBar->addAction(QIcon(QString(":/icons/zoom_select.png")), "Zoom Select"); actionZoomSelect->setObjectName("actionZoomSelect"); actionZoomSelect->setCheckable(true);
-		zoomBar->addSeparator();
-		QAction* actionProps = zoomBar->addAction(QIcon(QString(":/icons/properties.png")), "Properties"); actionProps->setObjectName("actionProps");
-
-		parent->addToolBar(Qt::TopToolBarArea, toolBar);
-		parent->addToolBar(Qt::BottomToolBarArea, zoomBar);
-
-		QMetaObject::connectSlotsByName(parent);
-	}
-};
-
-CIntegrateWindow::CIntegrateWindow(CMainWindow* wnd) : m_wnd(wnd), QMainWindow(wnd), ui(new Ui::CIntegrateWindow)
-{
-	setWindowTitle("PostView2: Integrate");
+	CDocument* doc = GetDocument();
+	QString title = "PostView2: Integrate";
+	if (doc) title += " - " + QString::fromStdString(doc->GetFileName());
+	setWindowTitle(title);
 	m_nsrc = -1;
-	ui->setupUi(this);
-	setMinimumWidth(500);
-	resize(600, 500);
 }
 
-void CIntegrateWindow::Update(bool breset)
+void CIntegrateWindow::Update(bool breset, bool bfit)
 {
-	CDocument* doc = m_wnd->GetActiveDocument();
+	CDocument* doc = GetDocument();
 	if (doc->IsValid() == false) return;
 
 	// update the source options
-	ui->updating = true;
+	m_updating = true;
 	if (breset || (m_nsrc == -1)) UpdateSourceOptions();
 
 	// Update integral
 	UpdateIntegral();
 
-	ui->updating = false;
+	m_updating = false;
+
 	// redraw
-	ui->plot->fitToData();
-	ui->plot->repaint();
+	FitPlotsToData();
+	RedrawPlot();
 }
 
 //-----------------------------------------------------------------------------
 void CIntegrateWindow::UpdateIntegral()
 {
 	// clear the view
-	ui->plot->clear();
+	ClearPlots();
 
 	// get the source object
-	CDocument* pdoc = m_wnd->GetActiveDocument();
+	CDocument* pdoc = GetDocument();
 
 	CGLModel* model = pdoc->GetGLModel();
 
+	int nsrc = GetCurrentYValue();
+	if (nsrc < 0) return;
+
 	char sztitle[256] = {0};
 	CLineChartData* data = new CLineChartData;
-	CGLPlaneCutPlot* pp = m_src[m_nsrc];
+	CGLPlaneCutPlot* pp = m_src[nsrc];
 	if (pp == 0) 
 	{
 		// update based on current selection
@@ -116,24 +76,23 @@ void CIntegrateWindow::UpdateIntegral()
 		sprintf(sztitle, "%s of %s", "Integral", pdoc->GetFieldString().c_str());
 	}
 	data->setLabel("Value");
-	ui->plot->setTitle(sztitle);
-	ui->plot->addPlotData(data);
-	ui->plot->fitToData();
+	SetPlotTitle(sztitle);
+	AddPlotData(data);
+	FitPlotsToData();
+
+	UpdatePlots();
 }
 
 //-----------------------------------------------------------------------------
 void CIntegrateWindow::UpdateSourceOptions()
 {
-	// clear the source options
-	ui->dataSource->clear();
-	m_src.clear();
-
 	// Add the selection source
-	ui->dataSource->addItem("current selection");
+	CGenericDataSelector* sel = new CGenericDataSelector();
+	sel->AddOption("current selection");
 	m_src.push_back((CGLPlaneCutPlot*) 0);
 
 	// get the document
-	CDocument* pdoc = m_wnd->GetActiveDocument();
+	CDocument* pdoc = GetDocument();
 
 	// add all plane cuts to the source options
 	GPlotList& plt = pdoc->GetPlotList();
@@ -144,20 +103,20 @@ void CIntegrateWindow::UpdateSourceOptions()
 		if (pp) 
 		{
 			string name = pp->GetName();
-			ui->dataSource->addItem(name.c_str());
+			sel->AddOption(QString::fromStdString(name));
 			m_src.push_back(pp);
 		}
 	}
 
 	if ((m_nsrc < 0) || (m_nsrc >= m_src.size()-1)) m_nsrc = 0;
-	ui->dataSource->setCurrentIndex(m_nsrc);
+	SetYDataSelector(sel, m_nsrc);
 }
 
 //-----------------------------------------------------------------------------
 void CIntegrateWindow::IntegrateSelection(CLineChartData& data)
 {
 	// get the document
-	CDocument* pdoc = m_wnd->GetActiveDocument();
+	CDocument* pdoc = GetDocument();
 	FEModel& fem = *pdoc->GetFEModel();
 	FEMeshBase& mesh = *fem.GetFEMesh(0);
 	CGLModel* po = pdoc->GetGLModel();
@@ -300,7 +259,7 @@ double CIntegrateWindow::IntegrateElems(FEMeshBase& mesh, FEState* ps)
 void CIntegrateWindow::IntegratePlaneCut(CGLPlaneCutPlot* pp, CLineChartData& data)
 {
 	// get the document
-	CDocument* pdoc = m_wnd->GetActiveDocument();
+	CDocument* pdoc = GetDocument();
 	FEModel& fem = *pdoc->GetFEModel();
 	CGLModel* po = pdoc->GetGLModel();
 
@@ -321,68 +280,5 @@ void CIntegrateWindow::IntegratePlaneCut(CGLPlaneCutPlot* pp, CLineChartData& da
 			FEState* ps = fem.GetState(i);
 			data.addPoint(ps->m_time, pp->Integrate(ps));
 		}
-	}
-}
-
-//-----------------------------------------------------------------------------
-void CIntegrateWindow::on_actionSave_triggered()
-{
-	QString fileName = QFileDialog::getSaveFileName(this, "Save Integrate Data", QDir::currentPath(), QString("All files (*)"));
-	if (fileName.isEmpty() == false)
-	{
-		if (ui->plot->Save(fileName) == false)
-			QMessageBox::critical(this, "Save Integrate Data", "A problem occurred saving the data.");
-	}
-}
-
-//-----------------------------------------------------------------------------
-void CIntegrateWindow::on_actionClip_triggered()
-{
-	ui->plot->OnCopyToClipboard();
-}
-
-//-----------------------------------------------------------------------------
-void CIntegrateWindow::on_actionProps_triggered()
-{
-	ui->plot->OnShowProps();
-}
-
-//-----------------------------------------------------------------------------
-void CIntegrateWindow::on_actionZoomWidth_triggered()
-{
-	ui->plot->OnZoomToWidth();
-}
-
-//-----------------------------------------------------------------------------
-void CIntegrateWindow::on_actionZoomHeight_triggered()
-{
-	ui->plot->OnZoomToHeight();
-}
-
-//-----------------------------------------------------------------------------
-void CIntegrateWindow::on_actionZoomFit_triggered()
-{
-	ui->plot->OnZoomToFit();
-}
-
-//-----------------------------------------------------------------------------
-void CIntegrateWindow::on_actionZoomSelect_toggled(bool bchecked)
-{
-	ui->plot->ZoomToRect(bchecked);
-}
-
-//-----------------------------------------------------------------------------
-void CIntegrateWindow::on_summaryPlot_doneZoomToRect()
-{
-	ui->actionZoomSelect->setChecked(false);
-}
-
-//-----------------------------------------------------------------------------
-void CIntegrateWindow::on_dataSource_currentIndexChanged(int index)
-{
-	if (ui->updating == false) 
-	{
-		m_nsrc = index;
-		Update(false);
 	}
 }

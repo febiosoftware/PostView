@@ -15,71 +15,24 @@
 #include "GLDataMap.h"
 #include "GLModel.h"
 
-class Ui::CSummaryWindow
+CSummaryWindow::CSummaryWindow(CMainWindow* wnd) : CGraphWindow(wnd)
 {
-public:
-	CPlotWidget*		plot;
-	QToolBar*			toolBar;
-	QToolBar*			zoomBar;
-	CDataFieldSelector*	selectData;
+	CDocument* doc = GetDocument();
+	QString title = "PostView2: Summary";
+	if (doc) title += " - " + QString::fromStdString(doc->GetFileName());
+	setWindowTitle(title);
 
-	QAction*	actionZoomSelect;
-	QCheckBox*	selectionOnly;
-	QCheckBox*	volumeAverage;
-
-public:
-	void setupUi(QMainWindow* parent)
-	{
-		plot = new CPlotWidget(parent);
-		plot->setObjectName("summaryPlot");
-		parent->setCentralWidget(plot);
-
-		toolBar = new QToolBar(parent);
-		QAction* actionSave = toolBar->addAction(QIcon(QString(":/icons/save.png")), "Save"); actionSave->setObjectName("actionSave");
-		QAction* actionClip = toolBar->addAction(QIcon(QString(":/icons/clipboard.png")), "Copy to clipboard"); actionClip->setObjectName("actionClip");
-		toolBar->addWidget(new QLabel("Data: "));
-
-		selectData = new CDataFieldSelector;
-		selectData->setObjectName("selectData");
-		selectData->setMinimumWidth(150);
-		toolBar->addWidget(selectData);
-		toolBar->addSeparator();
-		toolBar->addWidget(selectionOnly = new QCheckBox("Selection only")); selectionOnly->setObjectName("selectionOnly");
-		toolBar->addWidget(volumeAverage = new QCheckBox("Volume average")); volumeAverage->setObjectName("volumeAverage");
-
-		zoomBar = new QToolBar(parent);
-		QAction* actionZoomWidth  = zoomBar->addAction(QIcon(QString(":/icons/zoom_width.png" )), "Zoom Width" ); actionZoomWidth->setObjectName("actionZoomWidth" );
-		QAction* actionZoomHeight = zoomBar->addAction(QIcon(QString(":/icons/zoom_height.png")), "Zoom Height"); actionZoomHeight->setObjectName("actionZoomHeight");
-		QAction* actionZoomFit    = zoomBar->addAction(QIcon(QString(":/icons/zoom_fit.png"   )), "Zoom Fit"   ); actionZoomFit->setObjectName("actionZoomFit"   );
-		actionZoomSelect = zoomBar->addAction(QIcon(QString(":/icons/zoom_select.png")), "Zoom Select"); actionZoomSelect->setObjectName("actionZoomSelect"); actionZoomSelect->setCheckable(true);
-		zoomBar->addSeparator();
-		QAction* actionProps = zoomBar->addAction(QIcon(QString(":/icons/properties.png")), "Properties"); actionProps->setObjectName("actionProps");
-
-		parent->addToolBar(Qt::TopToolBarArea, toolBar);
-		parent->addToolBar(Qt::BottomToolBarArea, zoomBar);
-
-		QMetaObject::connectSlotsByName(parent);
-	}
-};
-
-CSummaryWindow::CSummaryWindow(CMainWindow* wnd) : m_wnd(wnd), QMainWindow(wnd), ui(new Ui::CSummaryWindow)
-{
-	setWindowTitle("PostView2: Summary");
 	m_ncurrentData = -1;
-
-	ui->setupUi(this);
-	setMinimumWidth(500);
-	resize(600, 500);
 }
 
-void CSummaryWindow::Update(bool breset)
+void CSummaryWindow::Update(bool breset, bool bfit)
 {
-	CDocument* doc = m_wnd->GetActiveDocument();
+	CDocument* doc = GetDocument();
 	if (breset)
 	{
 		if (doc->IsValid())
 		{
-			ui->selectData->BuildMenu(doc->GetFEModel(), DATA_SCALAR);
+			SetYDataSelector(new CModelDataSelector(doc->GetFEModel(), DATA_SCALAR));
 		}
 		else return;
 	}
@@ -93,20 +46,20 @@ void CSummaryWindow::Update(bool breset)
 	int nmode = po->GetSelectionMode();
 
 	// get the current data field
-	int ndata = ui->selectData->currentValue();
+	int ndata = GetCurrentYValue();
 	if (ndata <= 0) return;
 
 	// store current data
 	m_ncurrentData = ndata;
 
 	// get the text and make it the plot title
-	ui->plot->setTitle(ui->selectData->text());
+	SetPlotTitle("Summary of " + GetCurrentYText());
 
 	// see if selection only box is checked
-	bool bsel = ui->selectionOnly->isChecked();
+	bool bsel = false; // ui->selectionOnly->isChecked();
 
 	// see if volume average is checked
-	bool bvol = ui->volumeAverage->isChecked();
+	bool bvol = true; // ui->volumeAverage->isChecked();
 
 	// decide if we want to find the node/face/elem stat
 	int neval = -1;
@@ -117,7 +70,7 @@ void CSummaryWindow::Update(bool breset)
 	assert(neval >= 0);
 
 	// clear the graph
-	ui->plot->clear();
+	ClearPlots();
 
 	// get the number of time steps
 	int nsteps = doc->GetTimeSteps();
@@ -171,13 +124,15 @@ void CSummaryWindow::Update(bool breset)
 	}
 
 	// add the data
-	ui->plot->addPlotData(dataMax);
-	ui->plot->addPlotData(dataAvg);
-	ui->plot->addPlotData(dataMin);
+	AddPlotData(dataMax);
+	AddPlotData(dataAvg);
+	AddPlotData(dataMin);
 
 	// redraw
-	ui->plot->fitToData();
-	ui->plot->repaint();
+	FitPlotsToData();
+	RedrawPlot();
+
+	UpdatePlots();
 }
 
 //-----------------------------------------------------------------------------
@@ -316,77 +271,4 @@ CSummaryWindow::RANGE CSummaryWindow::EvalFaceRange(FEModel& fem, int nstate, bo
 	else rng.favg /= sum;
 
 	return rng;
-}
-
-//-----------------------------------------------------------------------------
-void CSummaryWindow::on_selectData_currentValueChanged(int index)
-{
-	Update(false);
-}
-
-//-----------------------------------------------------------------------------
-void CSummaryWindow::on_actionSave_triggered()
-{
-	QString fileName = QFileDialog::getSaveFileName(this, "Save Summary Data", QDir::currentPath(), QString("All files (*)"));
-	if (fileName.isEmpty() == false)
-	{
-		if (ui->plot->Save(fileName) == false)
-			QMessageBox::critical(this, "Save Summary Data", "A problem occurred saving the data.");
-	}
-}
-
-//-----------------------------------------------------------------------------
-void CSummaryWindow::on_actionClip_triggered()
-{
-	ui->plot->OnCopyToClipboard();
-}
-
-//-----------------------------------------------------------------------------
-void CSummaryWindow::on_actionProps_triggered()
-{
-	ui->plot->OnShowProps();
-}
-
-//-----------------------------------------------------------------------------
-void CSummaryWindow::on_actionZoomWidth_triggered()
-{
-	ui->plot->OnZoomToWidth();
-}
-
-//-----------------------------------------------------------------------------
-void CSummaryWindow::on_actionZoomHeight_triggered()
-{
-	ui->plot->OnZoomToHeight();
-}
-
-//-----------------------------------------------------------------------------
-void CSummaryWindow::on_actionZoomFit_triggered()
-{
-	ui->plot->OnZoomToFit();
-}
-
-//-----------------------------------------------------------------------------
-void CSummaryWindow::on_actionZoomSelect_toggled(bool bchecked)
-{
-	ui->plot->ZoomToRect(bchecked);
-}
-
-//-----------------------------------------------------------------------------
-void CSummaryWindow::on_summaryPlot_doneZoomToRect()
-{
-	ui->actionZoomSelect->setChecked(false);
-}
-
-//-----------------------------------------------------------------------------
-void CSummaryWindow::on_selectionOnly_clicked()
-{
-	m_ncurrentData = -1;
-	Update(false);
-}
-
-//-----------------------------------------------------------------------------
-void CSummaryWindow::on_volumeAverage_clicked()
-{
-	m_ncurrentData = -1;
-	Update(false);
 }

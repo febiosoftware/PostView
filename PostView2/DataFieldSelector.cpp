@@ -13,6 +13,37 @@ CDataSelector::~CDataSelector()
 
 }
 
+CGenericDataSelector::CGenericDataSelector()
+{
+
+}
+
+void CGenericDataSelector::AddOption(const QString& opt)
+{
+	m_ops.append(opt);
+}
+
+void CGenericDataSelector::BuildMenu(QMenu* menu)
+{
+	for (int i = 0; i < m_ops.count(); ++i)
+	{
+		QAction* pa = menu->addAction(m_ops.at(i));
+		pa->setData(i);
+	}
+}
+
+CTimeStepSelector::CTimeStepSelector()
+{
+
+}
+
+void CTimeStepSelector::BuildMenu(QMenu* menu)
+{
+	QAction* timeAction = menu->addAction("Time"); timeAction->setData(0);
+	QAction* stepAction = menu->addAction("Steps"); stepAction->setData(1);
+}
+
+
 CModelDataSelector::CModelDataSelector(FEModel* fem, Data_Tensor_Type ntype, bool btvec)
 {
 	m_fem = fem;

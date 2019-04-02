@@ -30,10 +30,10 @@
 OptionsUi::OptionsUi(CGraphWidget* graph, QWidget* parent) : CPlotTool(parent)
 {
 	QVBoxLayout* l = new QVBoxLayout;
-	l->addWidget(a[0] = new QRadioButton("Time step range"));
-	l->addWidget(a[1] = new QRadioButton("Current time step"));
-	l->addWidget(a[2] = new QRadioButton("User range:"));
-	l->addWidget(range = new QLineEdit);
+	l->addWidget(timeOption[0] = new QRadioButton("Time step range"));
+	l->addWidget(timeOption[1] = new QRadioButton("Current time step"));
+	l->addWidget(timeOption[2] = new QRadioButton("User range:"));
+	l->addWidget(timeRange = new QLineEdit);
 	l->addWidget(smoothLines = new QCheckBox("Smooth lines"));
 	l->addWidget(dataMarks   = new QCheckBox("Show data marks"));
 	l->addStretch();
@@ -42,12 +42,12 @@ OptionsUi::OptionsUi(CGraphWidget* graph, QWidget* parent) : CPlotTool(parent)
 	smoothLines->setChecked(true);
 	dataMarks->setChecked(true);
 
-	a[0]->setChecked(true);
+	timeOption[0]->setChecked(true);
 
-	QObject::connect(a[0], SIGNAL(clicked()), this, SLOT(onOptionsChanged()));
-	QObject::connect(a[1], SIGNAL(clicked()), this, SLOT(onOptionsChanged()));
-	QObject::connect(a[2], SIGNAL(clicked()), this, SLOT(onOptionsChanged()));
-	QObject::connect(range, SIGNAL(editingFinished()), this, SLOT(onOptionsChanged()));
+	QObject::connect(timeOption[0], SIGNAL(clicked()), this, SLOT(onOptionsChanged()));
+	QObject::connect(timeOption[1], SIGNAL(clicked()), this, SLOT(onOptionsChanged()));
+	QObject::connect(timeOption[2], SIGNAL(clicked()), this, SLOT(onOptionsChanged()));
+	QObject::connect(timeRange, SIGNAL(editingFinished()), this, SLOT(onOptionsChanged()));
 	QObject::connect(smoothLines, SIGNAL(stateChanged(int)), SLOT(onOptionsChanged()));
 	QObject::connect(dataMarks  , SIGNAL(stateChanged(int)), SLOT(onOptionsChanged()));
 }
@@ -59,9 +59,9 @@ void OptionsUi::onOptionsChanged()
 
 int OptionsUi::currentOption()
 {
-	if (a[0]->isChecked()) return 0;
-	if (a[1]->isChecked()) return 1;
-	if (a[2]->isChecked()) return 2;
+	if (timeOption[0]->isChecked()) return 0;
+	if (timeOption[1]->isChecked()) return 1;
+	if (timeOption[2]->isChecked()) return 2;
 	return -1;
 }
 
@@ -75,14 +75,14 @@ bool OptionsUi::showDataMarks()
 	return dataMarks->isChecked();
 }
 
-void OptionsUi::setUserRange(int imin, int imax)
+void OptionsUi::setUserTimeRange(int imin, int imax)
 {
-	range->setText(QString("%1:%2").arg(imin).arg(imax));
+	timeRange->setText(QString("%1:%2").arg(imin).arg(imax));
 }
 
-void OptionsUi::getUserRange(int& imin, int& imax)
+void OptionsUi::getUserTimeRange(int& imin, int& imax)
 {
-	QStringList l = range->text().split(':');
+	QStringList l = timeRange->text().split(':');
 	imin = imax = 0;
 	if (l.size() == 1)
 	{
@@ -99,6 +99,8 @@ void OptionsUi::getUserRange(int& imin, int& imax)
 
 RegressionUi::RegressionUi(CGraphWidget* graph, QWidget* parent) : CPlotTool(parent), m_graph(graph)
 {
+	m_src = new QComboBox;
+
 	m_fnc = new QComboBox;
 	m_fnc->addItem("Linear");
 	m_fnc->addItem("Quadratic");
@@ -118,6 +120,7 @@ RegressionUi::RegressionUi(CGraphWidget* graph, QWidget* parent) : CPlotTool(par
 	QFormLayout* f = new QFormLayout;
 	f->setLabelAlignment(Qt::AlignRight);
 	f->setMargin(0);
+	f->addRow("Source", m_src);
 	f->addRow("Function", h);
 	f->addRow("", m_math = new QLabel(""));
 	f->addRow(m_lbl[0] = new QLabel("a"), m_par[0] = new QLineEdit); m_lbl[0]->setBuddy(m_par[0]);
@@ -154,6 +157,14 @@ void RegressionUi::showParameters(int numParam)
 	else { m_lbl[2]->show(); m_par[2]->show(); }
 }
 
+void RegressionUi::clearParameters()
+{
+	m_bvalid = false;
+	m_par[0]->clear();
+	m_par[1]->clear();
+	m_par[2]->clear();
+}
+
 void RegressionUi::onFunctionChanged(int n)
 {
 	switch (n)
@@ -163,8 +174,7 @@ void RegressionUi::onFunctionChanged(int n)
 	case 2: showParameters(2); m_math->setText("<p>y = <b>a</b>*exp(<b>b</b>*x)</p>"); break;
 	}
 
-	Update();
-	m_bvalid = false;
+	clearParameters();
 	m_graph->repaint();
 }
 
@@ -176,7 +186,7 @@ void RegressionUi::onColorChanged(QColor c)
 
 void RegressionUi::onCalculate()
 {
-	Update();
+	clearParameters();
 
 	if (m_graph == 0) return;
 
@@ -184,7 +194,10 @@ void RegressionUi::onCalculate()
 	int plots = m_graph->plots();
 	if (plots == 0) return;
 
-	CPlotData& data = m_graph->getPlotData(0);
+	int n = m_src->currentIndex();
+	if ((n < 0) || (n >= plots)) return;
+
+	CPlotData& data = m_graph->getPlotData(n);
 	int N = data.size();
 	vector<pair<double, double> > pt(N);
 	for (int i=0; i<N; ++i)
@@ -283,12 +296,15 @@ void RegressionUi::draw(QPainter& p)
 
 void RegressionUi::Update()
 {
-	m_bvalid = false;
-	m_par[0]->clear();
-	m_par[1]->clear();
-	m_par[2]->clear();
+	int nplots = m_graph->plots();
+	m_src->clear();
+	for (int i = 0; i < nplots; ++i)
+	{
+		QString l = m_graph->getPlotData(i).label();
+		m_src->addItem(l);
+	}
+	clearParameters();
 }
-
 
 void RegressionUi::hideEvent(QHideEvent* ev)
 {
@@ -420,20 +436,21 @@ void CGraphWidget::Update()
 class Ui::CGraphWindow
 {
 public:
-	CGraphWidget*		plot;
-	QToolBar*			toolBar;
-	QToolBar*			zoomBar;
-	QComboBox*			selectPlot;
-	QStackedWidget*		selectXSource;
-	QComboBox*			selectTime;
-	CDataSelectorButton*	selectX;
-	CDataSelectorButton*	selectY;
-	QToolBox*			tools;
+	CGraphWidget*			plot;			// central graph widget
+	QToolBar*				toolBar;		// top tool bar
+	QToolBar*				zoomBar;		// bottom tool bar
+	QComboBox*				selectPlot;		// choose the plot type
+	CDataSelectorButton*	selectX;		// select the X data field
+	CDataSelectorButton*	selectY;		// select the Y data field
+	QToolBox*				tools;			// the tools panel
 
 	QAction* actionSave;
 	QAction* actionClipboard;
 	QAction* actionProps;
 	QAction* actionZoomSelect;
+
+	QAction* actionSelectX;
+	QAction* actionSelectY;
 
 	OptionsUi*	ops;
 
@@ -461,41 +478,45 @@ public:
 		tools->addItem(tool, "Math plot");
 		plot->addTool(tool);
 
+		// create plot selection combobox
+		selectPlot = new QComboBox;
+		selectPlot->setObjectName("selectPlot");
+		selectPlot->addItem("Line");
+		selectPlot->addItem("Scatter");
+		selectPlot->addItem("Time-Scatter");
+
+		// create X data selection box
+		selectX = new CDataFieldSelector;
+		selectX->setObjectName("selectX");
+		selectX->setMinimumWidth(150);
+
+		QWidget* x = new QWidget;
+		QHBoxLayout* hx = new QHBoxLayout;
+		hx->setMargin(0);
+		hx->addWidget(new QLabel(" X: "));
+		hx->addWidget(selectX);
+		x->setLayout(hx);
+
+		// create Y data selection box
+		selectY = new CDataFieldSelector;
+		selectY->setObjectName("selectY");
+		selectY->setMinimumWidth(150);
+
+		QWidget* y = new QWidget;
+		QHBoxLayout* hy = new QHBoxLayout;
+		hy->setMargin(0);
+		hy->addWidget(new QLabel(" Y: "));
+		hy->addWidget(selectY);
+		y->setLayout(hy);
+
 		toolBar = new QToolBar(parent);
-		{
-			selectPlot = new QComboBox;
-			selectPlot->setObjectName("selectPlot");
-			selectPlot->addItem("Line");
-			selectPlot->addItem("Scatter");
-			selectPlot->addItem("Time-Scatter");
-
-			selectXSource = new QStackedWidget;
-			{
-				selectTime = new QComboBox;
-				selectTime->setObjectName("selectTime");
-				selectTime->addItem("Time");
-				selectTime->addItem("Steps");
-
-				selectX = new CDataFieldSelector;
-				selectX->setObjectName("selectX");
-				selectX->setMinimumWidth(150);
-			}
-			selectXSource->addWidget(selectTime);
-			selectXSource->addWidget(selectX);
-			selectXSource->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-
-			selectY = new CDataFieldSelector;
-			selectY->setObjectName("selectY");
-			selectY->setMinimumWidth(150);
-		}
 		actionSave = toolBar->addAction(QIcon(QString(":/icons/save.png")), "Save"); actionSave->setObjectName("actionSave");
 		actionClipboard = toolBar->addAction(QIcon(QString(":/icons/clipboard.png")), "Copy to clipboard"); actionClipboard->setObjectName("actionClipboard");
+
 		toolBar->addWidget(new QLabel("Type: "));
 		toolBar->addWidget(selectPlot);
-		toolBar->addWidget(new QLabel(" X: "));
-		toolBar->addWidget(selectXSource);
-		toolBar->addWidget(new QLabel(" Y: "));
-		toolBar->addWidget(selectY);
+		actionSelectX = toolBar->addWidget(x);
+		actionSelectY = toolBar->addWidget(y);
 		QPushButton* showTools = new QPushButton("Tools");
 		showTools->setCheckable(true);
 		showTools->setChecked(false);
@@ -528,7 +549,12 @@ CGraphWindow::CGraphWindow(CMainWindow* pwnd) : m_wnd(pwnd), QMainWindow(pwnd), 
 	setAttribute(Qt::WA_DeleteOnClose);
 
 	ui->setupUi(this);
-	ui->ops->setUserRange(m_nUserMin, m_nUserMax);
+
+	// hide the selectors by default
+	ui->actionSelectX->setVisible(false);
+	ui->actionSelectY->setVisible(false);
+
+	ui->ops->setUserTimeRange(m_nUserMin, m_nUserMax);
 	setMinimumWidth(500);
 	resize(800, 600);
 }
@@ -537,6 +563,160 @@ CGraphWindow::CGraphWindow(CMainWindow* pwnd) : m_wnd(pwnd), QMainWindow(pwnd), 
 void CGraphWindow::closeEvent(QCloseEvent* closeEvent)
 {
 	m_wnd->RemoveGraph(this);
+}
+
+//-----------------------------------------------------------------------------
+CPlotWidget* CGraphWindow::GetPlotWidget()
+{
+	return ui->plot;
+}
+
+//-----------------------------------------------------------------------------
+int CGraphWindow::GetTimeTrackOption()
+{
+	return m_nTrackTime;
+}
+
+//-----------------------------------------------------------------------------
+void CGraphWindow::GetUserTimeRange(int& minTime, int& maxTime)
+{
+	minTime = m_nUserMin;
+	maxTime = m_nUserMax;
+}
+
+//-----------------------------------------------------------------------------
+void CGraphWindow::GetTimeRange(int& minTime, int& maxTime)
+{
+	CDocument* doc = GetDocument();
+
+	// get the document and current time point and time steps
+	int ntime = doc->currentTime();
+	int nsteps = doc->GetTimeSteps();
+
+	// Figure out the time range
+	int nmin = 0, nmax = 0;
+	int trackTime = GetTimeTrackOption();
+	if (trackTime == TRACK_USER_RANGE)
+	{
+		// get the user defined range
+		GetUserTimeRange(nmin, nmax);
+	}
+	else if (trackTime == TRACK_TIME)
+	{
+		TIMESETTINGS& timeSettings = doc->GetTimeSettings();
+		nmin = timeSettings.m_start;
+		nmax = timeSettings.m_end;
+	}
+	else if (trackTime == TRACK_CURRENT_TIME)
+	{
+		// simply set the min and max to the same value
+		nmin = nmax = ntime;
+	}
+
+	// validate range
+	if (nmin <       0) nmin = 0;
+	if (nmax == -1) nmax = nsteps - 1;
+	if (nmax >= nsteps) nmax = nsteps - 1;
+	if (nmax <    nmin) nmax = nmin;
+
+	minTime = nmin;
+	maxTime = nmax;
+}
+
+//-----------------------------------------------------------------------------
+void CGraphWindow::ClearPlots()
+{
+	ui->plot->clear();
+}
+
+//-----------------------------------------------------------------------------
+void CGraphWindow::AddPlotData(CPlotData* plot)
+{
+	ui->plot->addPlotData(plot);
+}
+
+//-----------------------------------------------------------------------------
+void CGraphWindow::UpdatePlots()
+{
+	ui->plot->Update();
+}
+
+//-----------------------------------------------------------------------------
+// redraw the plot widget
+void CGraphWindow::RedrawPlot()
+{
+	ui->plot->repaint();
+}
+
+//-----------------------------------------------------------------------------
+void CGraphWindow::FitPlotsToData()
+{
+	ui->plot->fitToData();
+}
+
+//-----------------------------------------------------------------------------
+void CGraphWindow::SetPlotTitle(const QString& title)
+{
+	ui->plot->setTitle(title);
+}
+
+//-----------------------------------------------------------------------------
+void CGraphWindow::SetXDataSelector(CDataSelector* sel, int nval)
+{
+	ui->selectX->SetDataSelector(sel);
+	if (sel)
+	{
+		ui->actionSelectX->setVisible(true);
+		if (nval != -1) ui->selectX->setCurrentValue(nval);
+	}
+	else ui->actionSelectX->setVisible(false);
+}
+
+//-----------------------------------------------------------------------------
+void CGraphWindow::SetYDataSelector(CDataSelector* sel, int nval)
+{
+	ui->selectY->SetDataSelector(sel);
+	if (sel)
+	{
+		ui->actionSelectY->setVisible(true);
+		if (nval != -1) ui->selectY->setCurrentValue(nval);
+	}
+	else ui->actionSelectY->setVisible(false);
+}
+
+//-----------------------------------------------------------------------------
+// get the text of the current selection in the X data selector
+QString CGraphWindow::GetCurrentXText()
+{
+	return ui->selectX->text();
+}
+
+//-----------------------------------------------------------------------------
+// get the data value associated with the current X selection
+int CGraphWindow::GetCurrentXValue()
+{
+	return ui->selectX->currentValue();
+}
+
+//-----------------------------------------------------------------------------
+// get the text of the current selection in the Y data selector
+QString CGraphWindow::GetCurrentYText()
+{
+	return ui->selectY->text();
+}
+
+//-----------------------------------------------------------------------------
+// get the data value associated with the current Y selection
+int CGraphWindow::GetCurrentYValue()
+{
+	return ui->selectY->currentValue();
+}
+
+//-----------------------------------------------------------------------------
+// get the current plot type
+int CGraphWindow::GetCurrentPlotType()
+{
+	return ui->selectPlot->currentIndex();
 }
 
 //-----------------------------------------------------------------------------
@@ -550,12 +730,6 @@ void CGraphWindow::DocumentDelete()
 void CGraphWindow::DocumentUpdate(bool newDoc)
 {
 	Update(newDoc, true);
-}
-
-//-----------------------------------------------------------------------------
-void CGraphWindow::on_selectTime_currentIndexChanged(int)
-{
-	Update(false);
 }
 
 //-----------------------------------------------------------------------------
@@ -573,11 +747,7 @@ void CGraphWindow::on_selectY_currentValueChanged(int)
 //-----------------------------------------------------------------------------
 void CGraphWindow::on_selectPlot_currentIndexChanged(int index)
 {
-	if (index == 0)
-		ui->selectXSource->setCurrentIndex(0);
-	else 
-		ui->selectXSource->setCurrentIndex(1);
-	Update(false);
+	Update(true);
 }
 
 //-----------------------------------------------------------------------------
@@ -643,8 +813,8 @@ void CGraphWindow::on_options_optionsChanged()
 	case 1: m_nTrackTime = TRACK_CURRENT_TIME; break;
 	case 2: m_nTrackTime = TRACK_USER_RANGE; 
 		{
-			ui->ops->getUserRange(m_nUserMin, m_nUserMax);
-			ui->ops->setUserRange(m_nUserMin, m_nUserMax);
+			ui->ops->getUserTimeRange(m_nUserMin, m_nUserMax);
+			ui->ops->setUserTimeRange(m_nUserMin, m_nUserMax);
 		}
 		break;
 	default:
@@ -676,7 +846,7 @@ void CDataGraphWindow::SetData(const std::vector<double>& data, QString title)
 
 void CDataGraphWindow::Update(bool breset, bool bfit)
 {
-	ui->plot->clear();
+	ClearPlots();
 	CDocument* doc = GetDocument();
 	if (doc && doc->IsValid())
 	{
@@ -691,10 +861,10 @@ void CDataGraphWindow::Update(bool breset, bool bfit)
 			plot->addPoint(ps->m_time, yj);
 		}
 		plot->setLabel(m_title);
-		ui->plot->addPlotData(plot);
-		ui->plot->fitToData();
+		AddPlotData(plot);
+		FitPlotsToData();
 	}
-	ui->plot->Update();
+	UpdatePlots();
 }
 
 //=============================================================================
@@ -721,8 +891,13 @@ void CModelGraphWindow::Update(bool breset, bool bfit)
 
 	if (breset)
 	{
-		ui->selectX->SetDataSelector(new CModelDataSelector(doc->GetFEModel(), DATA_SCALAR));
-		ui->selectY->SetDataSelector(new CModelDataSelector(doc->GetFEModel(), DATA_SCALAR));
+		int plot = GetCurrentPlotType();
+		if (plot == LINE_PLOT)
+			SetXDataSelector(new CTimeStepSelector(), 0);
+		else
+			SetXDataSelector(new CModelDataSelector(doc->GetFEModel(), DATA_SCALAR));
+
+		SetYDataSelector(new CModelDataSelector(doc->GetFEModel(), DATA_SCALAR));
 
 		m_dataXPrev = -1;
 		m_dataYPrev = -1;
@@ -734,40 +909,19 @@ void CModelGraphWindow::Update(bool breset, bool bfit)
 	// when the user sets the range, we don't have to do anything so let's return
 	//	if (m_bUserRange && (breset == false)) return;
 
-	// get the document and current time point and time steps
-	int ntime = doc->currentTime();
-	int nsteps = doc->GetTimeSteps();
-
-	// Figure out the time range
+	// Get the time step range
 	int nmin = 0, nmax = 0;
-	if (m_nTrackTime == TRACK_USER_RANGE)
-	{
-		// get the user defined range
-		nmin = m_nUserMin;
-		nmax = m_nUserMax;
-	}
-	else if (m_nTrackTime == TRACK_TIME)
-	{
-		TIMESETTINGS& timeSettings = doc->GetTimeSettings();
-		nmin = timeSettings.m_start;
-		nmax = timeSettings.m_end;
-	}
-	else if (m_nTrackTime == TRACK_CURRENT_TIME)
-	{
-		// simply set the min and max to the same value
-		nmin = nmax = ntime;
-	}
-
-	// validate range
-	if (nmin <       0) nmin = 0;
-	if (nmax == -1) nmax = nsteps - 1;
-	if (nmax >= nsteps) nmax = nsteps - 1;
-	if (nmax <    nmin) nmax = nmin;
+	GetTimeRange(nmin, nmax);
 
 	// plot type
-	int ntype = ui->selectPlot->currentIndex();
-	int ncx = ui->selectTime->currentIndex();
-	switch (ntype)
+	int nplotType = GetCurrentPlotType();
+
+	// data selector values
+	m_dataX = GetCurrentXValue();
+	m_dataY = GetCurrentYValue();
+
+	int ncx = m_dataX;
+	switch (nplotType)
 	{
 	case LINE_PLOT: m_xtype = ncx; break;
 	case SCATTER_PLOT: m_xtype = 2; break;
@@ -775,16 +929,16 @@ void CModelGraphWindow::Update(bool breset, bool bfit)
 	}
 
 	// get the field data
-	m_dataX = ui->selectX->currentValue();
-	m_dataY = ui->selectY->currentValue();
-	if ((ntype != LINE_PLOT) && (m_dataX <= 0))
+	m_dataX = GetCurrentXValue();
+	m_dataY = GetCurrentYValue();
+	if ((nplotType != LINE_PLOT) && (m_dataX <= 0))
 	{
-		ui->plot->clear();
+		ClearPlots();
 		return;
 	}
 	if (m_dataY <= 0)
 	{
-		ui->plot->clear();
+		ClearPlots();
 		return;
 	}
 
@@ -803,16 +957,16 @@ void CModelGraphWindow::Update(bool breset, bool bfit)
 	FEMeshBase& mesh = *doc->GetFEModel()->GetFEMesh(0);
 
 	// get the title
-	if (ntype == LINE_PLOT)
+	if (nplotType == LINE_PLOT)
 	{
-		ui->plot->setTitle(ui->selectY->text());
+		SetPlotTitle(GetCurrentYText());
 	}
 	else
 	{
-		QString xtext = ui->selectX->text();
-		QString ytext = ui->selectY->text();
+		QString xtext = GetCurrentXText();
+		QString ytext = GetCurrentYText();
 
-		ui->plot->setTitle(QString("%1 --- %2").arg(xtext).arg(ytext));
+		SetPlotTitle(QString("%1 --- %2").arg(xtext).arg(ytext));
 	}
 
 	m_firstState = nmin;
@@ -820,6 +974,7 @@ void CModelGraphWindow::Update(bool breset, bool bfit)
 
 	// we need to update the displacement map for all time steps
 	// since the strain calculations depend on it
+	int nsteps = doc->GetTimeSteps();
 	CGLDisplacementMap* pdm = po->GetDisplacementMap();
 	if (pdm)
 	{
@@ -827,7 +982,7 @@ void CModelGraphWindow::Update(bool breset, bool bfit)
 	}
 
 	// get the graph of the track view and clear it
-	ui->plot->clear();
+	ClearPlots();
 
 	// add selections
 	addSelectedNodes();
@@ -838,14 +993,14 @@ void CModelGraphWindow::Update(bool breset, bool bfit)
 	// redraw
 	if ((m_dataX != m_dataXPrev) || (m_dataY != m_dataYPrev) || (m_xtype != m_xtypeprev) || bfit)
 	{
-		ui->plot->fitToData();
+		FitPlotsToData();
 	}
 
 	m_dataXPrev = m_dataX;
 	m_dataYPrev = m_dataY;
 	m_xtypeprev = m_xtype;
 
-	ui->plot->Update();
+	UpdatePlots();
 }
 
 //-----------------------------------------------------------------------------
@@ -878,7 +1033,7 @@ void CModelGraphWindow::addSelectedNodes()
 				CLineChartData* plot = new CLineChartData;
 				plot->setLabel(QString("N%1").arg(i + 1));
 				for (int j = 0; j<nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
-				ui->plot->addPlotData(plot);
+				AddPlotData(plot);
 			}
 		}
 	}
@@ -898,7 +1053,7 @@ void CModelGraphWindow::addSelectedNodes()
 				CLineChartData* plot = new CLineChartData;
 				plot->setLabel(QString("N%1").arg(i + 1));
 				for (int j = 0; j<nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
-				ui->plot->addPlotData(plot);
+				AddPlotData(plot);
 			}
 		}
 	}
@@ -918,7 +1073,7 @@ void CModelGraphWindow::addSelectedNodes()
 				CLineChartData* plot = new CLineChartData;
 				plot->setLabel(QString("N%1").arg(i + 1));
 				for (int j = 0; j<nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
-				ui->plot->addPlotData(plot);
+				AddPlotData(plot);
 			}
 		}
 	}
@@ -931,7 +1086,7 @@ void CModelGraphWindow::addSelectedNodes()
 		{
 			CLineChartData* plot = new CLineChartData;
 			plot->setLabel(QString("%1").arg(fem.GetState(i)->m_time));
-			ui->plot->addPlotData(plot);
+			AddPlotData(plot);
 		}
 
 		for (int i = 0; i<NN; i++)
@@ -947,17 +1102,17 @@ void CModelGraphWindow::addSelectedNodes()
 
 				for (int j = 0; j<nsteps; ++j)
 				{
-					CPlotData& p = ui->plot->getPlotData(j);
+					CPlotData& p = GetPlotWidget()->getPlotData(j);
 					p.addPoint(xdata[j], ydata[j]);
 				}
 			}
 		}
 
 		// sort the plots 
-		int nplots = ui->plot->plots();
+		int nplots = GetPlotWidget()->plots();
 		for (int i = 0; i<nplots; ++i)
 		{
-			CPlotData& data = ui->plot->getPlotData(i);
+			CPlotData& data = GetPlotWidget()->getPlotData(i);
 			data.sort();
 		}
 	}
@@ -1002,7 +1157,7 @@ void CModelGraphWindow::addSelectedEdges()
 			CLineChartData* plot = new CLineChartData;
 			plot->setLabel(QString("L%1").arg(i + 1));
 			for (int j = 0; j<nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
-			ui->plot->addPlotData(plot);
+			AddPlotData(plot);
 		}
 	}
 }
@@ -1044,7 +1199,7 @@ void CModelGraphWindow::addSelectedFaces()
 			CLineChartData* plot = new CLineChartData;
 			plot->setLabel(QString("F%1").arg(i + 1));
 			for (int j = 0; j<nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
-			ui->plot->addPlotData(plot);
+			AddPlotData(plot);
 		}
 	}
 }
@@ -1086,7 +1241,7 @@ void CModelGraphWindow::addSelectedElems()
 			CLineChartData* plot = new CLineChartData;
 			for (int j = 0; j<nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
 			plot->setLabel(QString("E%1").arg(i + 1));
-			ui->plot->addPlotData(plot);
+			AddPlotData(plot);
 		}
 	}
 }

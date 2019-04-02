@@ -78,9 +78,6 @@ public:
 	// (e.g. when selection has changed)
 	void UpdateGraphs(bool breset = true, bool bfit = false);
 
-	// update summary window
-	void UpdateSummary(bool reset = true);
-
 	// update the tool window
 	// (e.g. when selection was changed)
 	void UpdateTools(bool reset = false);

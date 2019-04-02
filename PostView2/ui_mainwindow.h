@@ -111,9 +111,6 @@ public:
 	QAction*		actionFontItalic;
 
 	QList<CGraphWindow*>	graphList;
-	CSummaryWindow*			summaryWindow;
-	CIntegrateWindow*		integrateWindow;
-	CStatsWindow*			statsWindow;
 
 	QStatusBar*		statusBar;
 	QProgressBar*	fileProgress;
@@ -135,9 +132,6 @@ public:
 	// build the UI
 	void setupUi(CMainWindow* MainWindow)
 	{
-		summaryWindow = 0;
-		integrateWindow = 0;
-		statsWindow = 0;
 		pwnd = MainWindow;
 
 		m_theme = 0;

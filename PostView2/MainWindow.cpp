@@ -380,18 +380,6 @@ void CMainWindow::UpdateGraphs(bool breset, bool bfit)
 		for (it=ui->graphList.begin(); it != ui->graphList.end(); ++it)
 			if ((*it)->isVisible()) (*it)->Update(breset, bfit);
 	}
-
-	if (ui->integrateWindow && ui->integrateWindow->isVisible()) 
-		ui->integrateWindow->Update(false);
-
-	if (ui->statsWindow && ui->statsWindow->isVisible()) 
-		ui->statsWindow->Update(false);
-}
-
-void CMainWindow::UpdateSummary(bool breset)
-{
-	if (ui->summaryWindow && ui->summaryWindow->isVisible())
-		ui->summaryWindow->Update(breset);
 }
 
 QMenu* CMainWindow::BuildContextMenu()
@@ -1390,38 +1378,36 @@ void CMainWindow::on_actionGraph_triggered()
 
 void CMainWindow::on_actionSummary_triggered()
 {
-	if (ui->summaryWindow == 0)
-	{
-		ui->summaryWindow = new CSummaryWindow(this);
-	}
-	ui->summaryWindow->Update(true);
-	ui->summaryWindow->show();
-	ui->summaryWindow->raise();
-	ui->summaryWindow->activateWindow();
+	CSummaryWindow* summaryWindow = new CSummaryWindow(this);
+
+	summaryWindow->Update(true);
+	summaryWindow->show();
+	summaryWindow->raise();
+	summaryWindow->activateWindow();
+
+	AddGraph(summaryWindow);
 }
 
 void CMainWindow::on_actionStats_triggered()
 {
-	if (ui->statsWindow == 0)
-	{
-		ui->statsWindow = new CStatsWindow(this);
-	}
-	ui->statsWindow->Update(true);
-	ui->statsWindow->show();
-	ui->statsWindow->raise();
-	ui->statsWindow->activateWindow();
+	CStatsWindow* statsWindow = new CStatsWindow(this);
+	statsWindow->Update(true);
+	statsWindow->show();
+	statsWindow->raise();
+	statsWindow->activateWindow();
+
+	AddGraph(statsWindow);
 }
 
 void CMainWindow::on_actionIntegrate_triggered()
 {
-	if (ui->integrateWindow == 0)
-	{
-		ui->integrateWindow = new CIntegrateWindow(this);
-	}
-	ui->integrateWindow->Update(true);
-	ui->integrateWindow->show();
-	ui->integrateWindow->raise();
-	ui->integrateWindow->activateWindow();
+	CIntegrateWindow* integrateWindow = new CIntegrateWindow(this);
+	integrateWindow->Update(true);
+	integrateWindow->show();
+	integrateWindow->raise();
+	integrateWindow->activateWindow();
+
+	AddGraph(integrateWindow);
 }
 
 void CMainWindow::on_actionColorMap_toggled(bool bchecked)
@@ -1466,11 +1452,7 @@ void CMainWindow::on_selectData_currentValueChanged(int index)
 		RedrawGL();
 	}
 
-	if (ui->integrateWindow && ui->integrateWindow->isVisible()) 
-		ui->integrateWindow->Update(true);
-
-	if (ui->statsWindow && ui->statsWindow->isVisible()) 
-		ui->statsWindow->Update(true);
+	UpdateGraphs(false);
 
 	if (ui->modelViewer->isVisible()) ui->modelViewer->Update(false);
 }

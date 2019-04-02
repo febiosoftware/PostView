@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'GraphWindow.h'
 **
-** Created by: The Qt Meta Object Compiler version 67 (Qt 5.6.1)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.8.0)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -12,12 +12,14 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'GraphWindow.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
-#error "This file was generated using the moc from 5.6.1. It"
+#error "This file was generated using the moc from 5.8.0. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
 
 QT_BEGIN_MOC_NAMESPACE
+QT_WARNING_PUSH
+QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_OptionsUi_t {
     QByteArrayData data[4];
     char stringdata0[43];
@@ -328,8 +330,8 @@ int MathPlot::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     return _id;
 }
 struct qt_meta_stringdata_CGraphWindow_t {
-    QByteArrayData data[16];
-    char stringdata0[394];
+    QByteArrayData data[15];
+    char stringdata0[360];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -339,26 +341,24 @@ struct qt_meta_stringdata_CGraphWindow_t {
 static const qt_meta_stringdata_CGraphWindow_t qt_meta_stringdata_CGraphWindow = {
     {
 QT_MOC_LITERAL(0, 0, 12), // "CGraphWindow"
-QT_MOC_LITERAL(1, 13, 33), // "on_selectTime_currentIndexCha..."
-QT_MOC_LITERAL(2, 47, 0), // ""
-QT_MOC_LITERAL(3, 48, 30), // "on_selectX_currentValueChanged"
-QT_MOC_LITERAL(4, 79, 30), // "on_selectY_currentValueChanged"
-QT_MOC_LITERAL(5, 110, 33), // "on_selectPlot_currentIndexCha..."
-QT_MOC_LITERAL(6, 144, 23), // "on_actionSave_triggered"
-QT_MOC_LITERAL(7, 168, 28), // "on_actionClipboard_triggered"
-QT_MOC_LITERAL(8, 197, 24), // "on_actionProps_triggered"
-QT_MOC_LITERAL(9, 222, 28), // "on_actionZoomWidth_triggered"
-QT_MOC_LITERAL(10, 251, 29), // "on_actionZoomHeight_triggered"
-QT_MOC_LITERAL(11, 281, 26), // "on_actionZoomFit_triggered"
-QT_MOC_LITERAL(12, 308, 27), // "on_actionZoomSelect_toggled"
-QT_MOC_LITERAL(13, 336, 8), // "bchecked"
-QT_MOC_LITERAL(14, 345, 22), // "on_plot_doneZoomToRect"
-QT_MOC_LITERAL(15, 368, 25) // "on_options_optionsChanged"
+QT_MOC_LITERAL(1, 13, 30), // "on_selectX_currentValueChanged"
+QT_MOC_LITERAL(2, 44, 0), // ""
+QT_MOC_LITERAL(3, 45, 30), // "on_selectY_currentValueChanged"
+QT_MOC_LITERAL(4, 76, 33), // "on_selectPlot_currentIndexCha..."
+QT_MOC_LITERAL(5, 110, 23), // "on_actionSave_triggered"
+QT_MOC_LITERAL(6, 134, 28), // "on_actionClipboard_triggered"
+QT_MOC_LITERAL(7, 163, 24), // "on_actionProps_triggered"
+QT_MOC_LITERAL(8, 188, 28), // "on_actionZoomWidth_triggered"
+QT_MOC_LITERAL(9, 217, 29), // "on_actionZoomHeight_triggered"
+QT_MOC_LITERAL(10, 247, 26), // "on_actionZoomFit_triggered"
+QT_MOC_LITERAL(11, 274, 27), // "on_actionZoomSelect_toggled"
+QT_MOC_LITERAL(12, 302, 8), // "bchecked"
+QT_MOC_LITERAL(13, 311, 22), // "on_plot_doneZoomToRect"
+QT_MOC_LITERAL(14, 334, 25) // "on_options_optionsChanged"
 
     },
-    "CGraphWindow\0on_selectTime_currentIndexChanged\0"
-    "\0on_selectX_currentValueChanged\0"
-    "on_selectY_currentValueChanged\0"
+    "CGraphWindow\0on_selectX_currentValueChanged\0"
+    "\0on_selectY_currentValueChanged\0"
     "on_selectPlot_currentIndexChanged\0"
     "on_actionSave_triggered\0"
     "on_actionClipboard_triggered\0"
@@ -377,7 +377,7 @@ static const uint qt_meta_data_CGraphWindow[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      13,   14, // methods
+      12,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -385,32 +385,30 @@ static const uint qt_meta_data_CGraphWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    1,   79,    2, 0x08 /* Private */,
-       3,    1,   82,    2, 0x08 /* Private */,
-       4,    1,   85,    2, 0x08 /* Private */,
-       5,    1,   88,    2, 0x08 /* Private */,
-       6,    0,   91,    2, 0x08 /* Private */,
-       7,    0,   92,    2, 0x08 /* Private */,
-       8,    0,   93,    2, 0x08 /* Private */,
-       9,    0,   94,    2, 0x08 /* Private */,
-      10,    0,   95,    2, 0x08 /* Private */,
-      11,    0,   96,    2, 0x08 /* Private */,
-      12,    1,   97,    2, 0x08 /* Private */,
-      14,    0,  100,    2, 0x08 /* Private */,
-      15,    0,  101,    2, 0x08 /* Private */,
+       1,    1,   74,    2, 0x08 /* Private */,
+       3,    1,   77,    2, 0x08 /* Private */,
+       4,    1,   80,    2, 0x08 /* Private */,
+       5,    0,   83,    2, 0x08 /* Private */,
+       6,    0,   84,    2, 0x08 /* Private */,
+       7,    0,   85,    2, 0x08 /* Private */,
+       8,    0,   86,    2, 0x08 /* Private */,
+       9,    0,   87,    2, 0x08 /* Private */,
+      10,    0,   88,    2, 0x08 /* Private */,
+      11,    1,   89,    2, 0x08 /* Private */,
+      13,    0,   92,    2, 0x08 /* Private */,
+      14,    0,   93,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void, QMetaType::Int,    2,
     QMetaType::Void, QMetaType::Int,    2,
     QMetaType::Void, QMetaType::Int,    2,
-    QMetaType::Void, QMetaType::Int,    2,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Bool,   13,
+    QMetaType::Void, QMetaType::Bool,   12,
     QMetaType::Void,
     QMetaType::Void,
 
@@ -423,19 +421,18 @@ void CGraphWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
         CGraphWindow *_t = static_cast<CGraphWindow *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->on_selectTime_currentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 1: _t->on_selectX_currentValueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 2: _t->on_selectY_currentValueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 3: _t->on_selectPlot_currentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 4: _t->on_actionSave_triggered(); break;
-        case 5: _t->on_actionClipboard_triggered(); break;
-        case 6: _t->on_actionProps_triggered(); break;
-        case 7: _t->on_actionZoomWidth_triggered(); break;
-        case 8: _t->on_actionZoomHeight_triggered(); break;
-        case 9: _t->on_actionZoomFit_triggered(); break;
-        case 10: _t->on_actionZoomSelect_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 11: _t->on_plot_doneZoomToRect(); break;
-        case 12: _t->on_options_optionsChanged(); break;
+        case 0: _t->on_selectX_currentValueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 1: _t->on_selectY_currentValueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 2: _t->on_selectPlot_currentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 3: _t->on_actionSave_triggered(); break;
+        case 4: _t->on_actionClipboard_triggered(); break;
+        case 5: _t->on_actionProps_triggered(); break;
+        case 6: _t->on_actionZoomWidth_triggered(); break;
+        case 7: _t->on_actionZoomHeight_triggered(); break;
+        case 8: _t->on_actionZoomFit_triggered(); break;
+        case 9: _t->on_actionZoomSelect_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 10: _t->on_plot_doneZoomToRect(); break;
+        case 11: _t->on_options_optionsChanged(); break;
         default: ;
         }
     }
@@ -457,6 +454,8 @@ void *CGraphWindow::qt_metacast(const char *_clname)
     if (!_clname) return Q_NULLPTR;
     if (!strcmp(_clname, qt_meta_stringdata_CGraphWindow.stringdata0))
         return static_cast<void*>(const_cast< CGraphWindow*>(this));
+    if (!strcmp(_clname, "CDocObserver"))
+        return static_cast< CDocObserver*>(const_cast< CGraphWindow*>(this));
     return QMainWindow::qt_metacast(_clname);
 }
 
@@ -466,14 +465,15 @@ int CGraphWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 13)
+        if (_id < 12)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 13;
+        _id -= 12;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 13)
+        if (_id < 12)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 13;
+        _id -= 12;
     }
     return _id;
 }
+QT_WARNING_POP
 QT_END_MOC_NAMESPACE

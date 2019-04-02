@@ -1023,7 +1023,6 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 
 					m_wnd->UpdateTools(true);
 					m_wnd->UpdateGraphs(false, true);
-					m_wnd->UpdateSummary(false);
 				}
 			}
 		}

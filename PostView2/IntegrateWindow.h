@@ -1,27 +1,24 @@
 #pragma once
 #include <QMainWindow>
 #include <vector>
+#include "Document.h"
+#include "GraphWindow.h"
 
 class CMainWindow;
 class CGLPlaneCutPlot;
 class FEMeshBase;
 class FEState;
-
-namespace Ui {
-	class CIntegrateWindow;
-};
-
 class FEModel;
 class CLineChartData;
 
-class CIntegrateWindow : public QMainWindow
+class CIntegrateWindow : public CGraphWindow
 {
 	Q_OBJECT
 
 public:
 	CIntegrateWindow(CMainWindow* wnd);
 
-	void Update(bool breset = true);
+	void Update(bool breset = true, bool bfit = false) override;
 
 private:
 	double IntegrateNodes(FEMeshBase& mesh, FEState* ps);
@@ -35,20 +32,8 @@ private:
 	void IntegrateSelection(CLineChartData& data);
 	void IntegratePlaneCut(CGLPlaneCutPlot* pp, CLineChartData& data);
 
-private slots:
-	void on_actionSave_triggered();
-	void on_actionClip_triggered();
-	void on_actionProps_triggered();
-	void on_actionZoomWidth_triggered();
-	void on_actionZoomHeight_triggered();
-	void on_actionZoomFit_triggered();
-	void on_actionZoomSelect_toggled(bool bchecked);
-	void on_summaryPlot_doneZoomToRect();
-	void on_dataSource_currentIndexChanged(int);
-
 private:
-	CMainWindow*		m_wnd;
-	Ui::CIntegrateWindow*	ui;
 	std::vector<CGLPlaneCutPlot*>	m_src;
-	int	m_nsrc;
+	int		m_nsrc;
+	bool	m_updating;
 };

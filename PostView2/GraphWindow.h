@@ -11,6 +11,7 @@ class QRadioButton;
 class QCheckBox;
 class QComboBox;
 class QLabel;
+class CDataSelector;
 
 namespace Ui {
 	class CGraphWindow;
@@ -36,15 +37,15 @@ class OptionsUi : public CPlotTool
 	Q_OBJECT
 
 public:
-	QRadioButton*	a[3];
-	QLineEdit*	range;
-	QCheckBox*	smoothLines;
-	QCheckBox*	dataMarks;
+	QRadioButton*	timeOption[3];
+	QLineEdit*		timeRange;
+	QCheckBox*		smoothLines;
+	QCheckBox*		dataMarks;
 
 public:
 	int currentOption();
-	void setUserRange(int imin, int imax);
-	void getUserRange(int& imin, int& imax);
+	void setUserTimeRange(int imin, int imax);
+	void getUserTimeRange(int& imin, int& imax);
 
 	bool lineSmoothing();
 
@@ -77,6 +78,7 @@ public:
 
 private:
 	void showParameters(int numParam);
+	void clearParameters();
 
 public slots:
 	void onCalculate();
@@ -89,6 +91,7 @@ private:
 	bool	m_bvalid;
 
 private:
+	QComboBox*	m_src;
 	QComboBox*	m_fnc;
 	QLabel*		m_math;
 
@@ -168,13 +171,62 @@ public:
 
 	void closeEvent(QCloseEvent* closeEvent) override;
 
+	// get the plot widget
+	CPlotWidget* GetPlotWidget();
+
+public:
+	int GetTimeTrackOption();
+	void GetUserTimeRange(int& userMin, int& userMax);
+	void GetTimeRange(int& minTime, int& maxTime);
+
+public: // convenience functions for modifying the plot widget
+
+	// clear all plots
+	void ClearPlots();
+
+	// add a plot
+	void AddPlotData(CPlotData* plot);
+
+	// update all plots
+	void UpdatePlots();
+
+	// redraw the plot widget
+	void RedrawPlot();
+
+	// Fit all plots to the its data
+	void FitPlotsToData();
+
+	// set the title of the plot widget
+	void SetPlotTitle(const QString& title);
+
+public:
+	// set the data selector for the X field
+	void SetXDataSelector(CDataSelector* sel, int nval = -1);
+
+	// set the data selector for the Y field
+	void SetYDataSelector(CDataSelector* sel, int nval = -1);
+
+	// get the text of the current selection in the X data selector
+	QString GetCurrentXText();
+
+	// get the data value associated with the current X selection
+	int GetCurrentXValue();
+
+	// get the text of the current selection in the Y data selector
+	QString GetCurrentYText();
+
+	// get the data value associated with the current X selection
+	int GetCurrentYValue();
+
+	// get the current plot type
+	int GetCurrentPlotType();
+
 private:
 	// from CDocObserver
 	void DocumentUpdate(bool newDoc) override;
 	void DocumentDelete() override;
 
 private slots:
-	void on_selectTime_currentIndexChanged(int);
 	void on_selectX_currentValueChanged(int);
 	void on_selectY_currentValueChanged(int);
 	void on_selectPlot_currentIndexChanged(int);
@@ -188,7 +240,7 @@ private slots:
 	void on_plot_doneZoomToRect();
 	void on_options_optionsChanged();
 
-protected:
+private:
 	CMainWindow*		m_wnd;
 	Ui::CGraphWindow*	ui;
 

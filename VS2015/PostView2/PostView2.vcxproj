@@ -203,10 +203,18 @@
     <ClInclude Include="..\..\PostView2\GLTensorPlot.h" />
     <ClInclude Include="..\..\PostView2\GLVectorPlot.h" />
     <ClInclude Include="..\..\PostView2\GLView.h" />
-    <ClInclude Include="..\..\PostView2\GraphWindow.h" />
+    <CustomBuild Include="..\..\PostView2\GraphWindow.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </CustomBuild>
     <ClInclude Include="..\..\PostView2\ImgAnimation.h" />
     <ClInclude Include="..\..\PostView2\ImportLinesTool.h" />
-    <ClInclude Include="..\..\PostView2\IntegrateWindow.h" />
+    <CustomBuild Include="..\..\PostView2\IntegrateWindow.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </CustomBuild>
     <ClInclude Include="..\..\PostView2\ViewSettings.h" />
     <CustomBuild Include="..\..\PostView2\MainWindow.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
@@ -237,10 +245,18 @@
     <ClInclude Include="..\..\PostView2\ShellThicknessTool.h" />
     <ClInclude Include="..\..\PostView2\SphereFitTool.h" />
     <ClInclude Include="..\..\PostView2\StatePanel.h" />
-    <ClInclude Include="..\..\PostView2\StatsWindow.h" />
+    <CustomBuild Include="..\..\PostView2\StatsWindow.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </CustomBuild>
     <ClInclude Include="..\..\PostView2\stdafx.h" />
     <ClInclude Include="..\..\PostView2\StrainMapTool.h" />
-    <ClInclude Include="..\..\PostView2\SummaryWindow.h" />
+    <CustomBuild Include="..\..\PostView2\SummaryWindow.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </CustomBuild>
     <ClInclude Include="..\..\PostView2\targetver.h" />
     <ClInclude Include="..\..\PostView2\TimeController.h" />
     <ClInclude Include="..\..\PostView2\TimePanel.h" />
