@@ -668,7 +668,7 @@ bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 				FEVTKExport w;
 				w.ExportAllStates(dlg.m_ops[0]);
 				bret = w.Save(fem, szfilename);
-				error = w.GetErrorMessage();
+				error = "Failed reading VTK file";
 			}
 		}
 		break;
