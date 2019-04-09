@@ -685,6 +685,10 @@ bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 		b.setIcon(QMessageBox::Critical);
 		b.exec();
 	}
+	else
+	{
+		QMessageBox::information(this, "PostView2", "Success saving file!");
+	}
 	return bret;
 }
 
