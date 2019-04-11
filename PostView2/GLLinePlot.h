@@ -15,13 +15,21 @@ public:
 	float GetLineWidth() { return m_line; }
 	void SetLineWidth(float f) { m_line = f; }
 
-	GLCOLOR GetLineColor() { return m_col; }
-	void SetLineColor(GLCOLOR c) { m_col = c; }
+	GLCOLOR GetSolidColor() { return m_col; }
+	void SetSolidColor(GLCOLOR c) { m_col = c; }
 
 	int GetRenderMode() { return m_nmode; }
 	void SetRenderMode(int m) { m_nmode = m; }
 
+	int GetColorMode() { return m_ncolor; }
+	void SetColorMode(int m);
+
 	CPropertyList* propertyList();
+
+	CColorTexture* GetColorMap() { return &m_Col; }
+	void UpdateTexture() { m_Col.UpdateTexture(); }
+
+	void Update(int ntime, float dt, bool breset);
 
 protected:
 	void RenderLines(FEState& s);
@@ -31,6 +39,11 @@ private:
 	float		m_line;		//!< line thickness
 	GLCOLOR		m_col;		//!< rendering color
 	int			m_nmode;	//!< rendering mode
+	int			m_ncolor;	//!< color option
+	CColorTexture	m_Col;	//!< line color (when m_ncolor is not solid)
+
+private:
+	vec2f	m_rng;
 };
 
 //-----------------------------------------------------------------------------

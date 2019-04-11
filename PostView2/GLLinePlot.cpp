@@ -8,8 +8,18 @@ class CLineProps : public CPropertyList
 public:
 	CLineProps(CGLLinePlot* p) : m_line(p)
 	{
+		QStringList cols;
+
+		for (int i = 0; i<ColorMapManager::ColorMaps(); ++i)
+		{
+			string name = ColorMapManager::GetColorMapName(i);
+			cols << name.c_str();
+		}
+
 		addProperty("line width" , CProperty::Float);
-		addProperty("color"      , CProperty::Color);
+		addProperty("Color mode" , CProperty::Enum)->setEnumValues(QStringList() << "Solid" << "X-position" << "y-position" << "z-position");
+		addProperty("Solid color", CProperty::Color);
+		addProperty("Color map"  , CProperty::Enum)->setEnumValues(cols);
 		addProperty("render mode", CProperty::Enum )->setEnumValues(QStringList() << "lines" << "3D lines");
 	}
 
@@ -18,8 +28,10 @@ public:
 		switch (i)
 		{
 		case 0: return m_line->GetLineWidth(); break;
-		case 1: return toQColor(m_line->GetLineColor()); break;
-		case 3: return m_line->GetRenderMode(); break;
+		case 1: return m_line->GetColorMode(); break;
+		case 2: return toQColor(m_line->GetSolidColor()); break;
+		case 3: return m_line->GetColorMap()->GetColorMap();
+		case 4: return m_line->GetRenderMode(); break;
 		}
 		return QVariant();
 	}
@@ -29,8 +41,10 @@ public:
 		switch (i)
 		{
 		case 0: m_line->SetLineWidth(v.toFloat()); break;
-		case 1: m_line->SetLineColor(toGLColor(v.value<QColor>())); break;
-		case 2: m_line->SetRenderMode(v.toInt()); break;
+		case 1: m_line->SetColorMode(v.toInt()); break;
+		case 2: m_line->SetSolidColor(toGLColor(v.value<QColor>())); break;
+		case 3: m_line->GetColorMap()->SetColorMap(v.toInt()); break;
+		case 4: m_line->SetRenderMode(v.toInt()); break;
 		}
 	}
 
@@ -48,7 +62,11 @@ CGLLinePlot::CGLLinePlot(CGLModel* po) : CGLPlot(po)
 
 	m_line = 4.f;
 	m_nmode = 0;
+	m_ncolor = 0;
 	m_col = GLCOLOR(255, 0, 0);
+
+	m_rng.x = 0.f;
+	m_rng.y = 1.f;
 }
 
 //-----------------------------------------------------------------------------
@@ -61,11 +79,17 @@ CPropertyList* CGLLinePlot::propertyList()
 	return new CLineProps(this);
 }
 
+void CGLLinePlot::SetColorMode(int m) 
+{
+	m_ncolor = m;
+	Update(GetModel()->currentTimeIndex(), 0.0, false);
+}
+
 //-----------------------------------------------------------------------------
 void CGLLinePlot::Render(CGLContext& rc)
 {
 	CGLModel& glm = *GetModel();
-	FEModel& fem = *glm.GetFEModel();;
+	FEModel& fem = *glm.GetFEModel();
 	int ns = glm.currentTimeIndex();
 
 	GLfloat zero[4] = { 0.f };
@@ -111,21 +135,54 @@ void CGLLinePlot::Render(CGLContext& rc)
 //-----------------------------------------------------------------------------
 void CGLLinePlot::RenderLines(FEState& s)
 {
-	glBegin(GL_LINES);
+	if (m_ncolor == 0)
 	{
-		int NL = s.Lines();
-		for (int i=0; i<NL; ++i)
+		glBegin(GL_LINES);
 		{
-			LINEDATA& l = s.Line(i);
-			glVertex3f(l.m_r0.x, l.m_r0.y, l.m_r0.z);
-			glVertex3f(l.m_r1.x, l.m_r1.y, l.m_r1.z);
+			int NL = s.Lines();
+			for (int i = 0; i < NL; ++i)
+			{
+				LINEDATA& l = s.Line(i);
+				glVertex3f(l.m_r0.x, l.m_r0.y, l.m_r0.z);
+				glVertex3f(l.m_r1.x, l.m_r1.y, l.m_r1.z);
+			}
 		}
+		glEnd();
 	}
-	glEnd();
+	else
+	{
+		CColorMap& map = ColorMapManager::GetColorMap(m_Col.GetColorMap());
+
+		float vmin = m_rng.x;
+		float vmax = m_rng.y;
+		if (vmin == vmax) vmax++;
+
+		glBegin(GL_LINES);
+		{
+			int NL = s.Lines();
+			for (int i = 0; i < NL; ++i)
+			{
+				LINEDATA& l = s.Line(i);
+
+				float f0 = (l.m_val[0] - vmin) / (vmax - vmin);
+				float f1 = (l.m_val[1] - vmin) / (vmax - vmin);
+
+				GLCOLOR c0 = map.map(f0);
+				GLCOLOR c1 = map.map(f1);
+
+				glColor3ub(c0.r, c0.g, c0.b);
+				glVertex3f(l.m_r0.x, l.m_r0.y, l.m_r0.z);
+				glColor3ub(c1.r, c1.g, c1.b);
+				glVertex3f(l.m_r1.x, l.m_r1.y, l.m_r1.z);
+			}
+		}
+		glEnd();
+
+	}
 }
 
 //-----------------------------------------------------------------------------
-void glxCylinder(float H, float R)
+void glxCylinder(float H, float R, float t0 = 0.f, float t1 = 1.f)
 {
 	glBegin(GL_QUAD_STRIP);
 	const int N = 8;
@@ -135,8 +192,8 @@ void glxCylinder(float H, float R)
 		double x = cos(w);
 		double y = sin(w);
 		glNormal3d(x, y, 0.0);
-		glVertex3d(R*x, R*y, H);
-		glVertex3d(R*x, R*y, 0);
+		glTexCoord1d(t1); glVertex3d(R*x, R*y, H);
+		glTexCoord1d(t0); glVertex3d(R*x, R*y, 0);
 	}
 	glEnd();
 }
@@ -144,29 +201,115 @@ void glxCylinder(float H, float R)
 //-----------------------------------------------------------------------------
 void CGLLinePlot::Render3DLines(FEState& s)
 {
-	int NL = s.Lines();
-	for (int i=0; i<NL; ++i)
+	if (m_ncolor == 0)
 	{
-		LINEDATA& l = s.Line(i);
-		vec3f n = l.m_r1 - l.m_r0;
-		float L = n.Length();
-		n.Normalize();
-
-		glPushMatrix();
+		int NL = s.Lines();
+		for (int i = 0; i < NL; ++i)
 		{
-			glTranslatef(l.m_r0.x, l.m_r0.y, l.m_r0.z);
+			LINEDATA& l = s.Line(i);
+			vec3f n = l.m_r1 - l.m_r0;
+			float L = n.Length();
+			n.Normalize();
 
-			quat4f q(vec3f(0,0,1), n);
-			vec3f r = q.GetVector();
-			double angle = 180*q.GetAngle()/PI;
-			if ((angle != 0.0) && (r.Length() > 0))
-				glRotatef((float) angle, (float) r.x, (float) r.y, (float) r.z);	
+			glPushMatrix();
+			{
+				glTranslatef(l.m_r0.x, l.m_r0.y, l.m_r0.z);
 
-			// render cylinder
-			glxCylinder(L, m_line);
+				quat4f q(vec3f(0, 0, 1), n);
+				vec3f r = q.GetVector();
+				double angle = 180 * q.GetAngle() / PI;
+				if ((angle != 0.0) && (r.Length() > 0))
+					glRotatef((float)angle, (float)r.x, (float)r.y, (float)r.z);
+
+				// render cylinder
+				glxCylinder(L, m_line);
+			}
+			glPopMatrix();
 		}
-		glPopMatrix();
 	}
+	else
+	{
+		glColor3ub(255, 255, 255);
+
+		glPushAttrib(GL_ENABLE_BIT);
+		glEnable(GL_TEXTURE_1D);
+		m_Col.GetTexture().MakeCurrent();
+
+		float vmin = m_rng.x;
+		float vmax = m_rng.y;
+		if (vmin == vmax) vmax++;
+
+		int NL = s.Lines();
+		for (int i = 0; i < NL; ++i)
+		{
+			LINEDATA& l = s.Line(i);
+			vec3f n = l.m_r1 - l.m_r0;
+			float L = n.Length();
+			n.Normalize();
+
+			glPushMatrix();
+			{
+				glTranslatef(l.m_r0.x, l.m_r0.y, l.m_r0.z);
+
+				quat4f q(vec3f(0, 0, 1), n);
+				vec3f r = q.GetVector();
+				double angle = 180 * q.GetAngle() / PI;
+				if ((angle != 0.0) && (r.Length() > 0))
+					glRotatef((float)angle, (float)r.x, (float)r.y, (float)r.z);
+
+				float f0 = (l.m_val[0] - vmin) / (vmax - vmin);
+				float f1 = (l.m_val[1] - vmin) / (vmax - vmin);
+
+				// render cylinder
+				glxCylinder(L, m_line, f0, f1);
+			}
+			glPopMatrix();
+		}
+
+		glPopAttrib();
+	}
+}
+
+float line_data(vec3f& p, int ndata)
+{
+	switch (ndata)
+	{
+	case 1: return p.x; break;
+	case 2: return p.y; break;
+	case 3: return p.z; break;
+	}
+	return 0.f;
+}
+
+void CGLLinePlot::Update(int ntime, float dt, bool breset)
+{
+	if (m_ncolor == 0) return;
+
+	CGLModel& glm = *GetModel();
+	FEModel& fem = *glm.GetFEModel();
+
+	FEState& s = *fem.GetState(ntime);
+	int NL = s.Lines();
+
+	float vmax = -1e99;
+	float vmin = 1e99;
+
+	for (int i = 0; i < NL; ++i)
+	{
+		LINEDATA& line = s.Line(i);
+
+		line.m_val[0] = line_data(line.m_r0, m_ncolor);
+		line.m_val[1] = line_data(line.m_r1, m_ncolor);
+
+		if (line.m_val[0] > vmax) vmax = line.m_val[0];
+		if (line.m_val[0] < vmin) vmin = line.m_val[0];
+
+		if (line.m_val[1] > vmax) vmax = line.m_val[1];
+		if (line.m_val[1] < vmin) vmin = line.m_val[1];
+	}
+
+	m_rng.x = vmin;
+	m_rng.y = vmax;
 }
 
 //=============================================================================

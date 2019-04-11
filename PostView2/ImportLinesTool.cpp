@@ -15,6 +15,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include "GLLinePlot.h"
+#include "MainWindow.h"
 
 class CImportLinesToolUI : public QWidget
 {
@@ -33,7 +34,7 @@ public:
 		QVBoxLayout* pv = new QVBoxLayout;
 		{
 			QHBoxLayout* ph = new QHBoxLayout;
-			name = new QLineEdit(QString("Name%1").arg(m_ncount));
+			name = new QLineEdit(QString("Lines%1").arg(m_ncount));
 			QLabel* pl = new QLabel("Name"); pl->setBuddy(name);
 			ph->addWidget(pl);
 			ph->addWidget(name);
@@ -100,11 +101,12 @@ void CImportLinesTool::OnApply()
 			// add a line plot for visualizing the line data
 			CGLLinePlot* pgl = new CGLLinePlot(doc->GetGLModel());
 			doc->AddPlot(pgl);
-			pgl->SetName(fileName);
+			pgl->SetName(ui->name->text().toStdString());
 
 			ui->m_ncount++;
 			ui->name->setText(QString("Lines%1").arg(ui->m_ncount));
 
+			m_wnd->UpdateModelViewer(true);
 			updateUi();
 		}
 		else

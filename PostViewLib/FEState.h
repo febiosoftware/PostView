@@ -67,6 +67,7 @@ struct LINEDATA
 {
 	vec3f	m_r0;
 	vec3f	m_r1;
+	float	m_val[2];
 };
 
 struct POINTDATA
