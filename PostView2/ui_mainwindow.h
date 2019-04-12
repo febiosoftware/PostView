@@ -516,6 +516,7 @@ public:
 		// Create the toolbar
 		QToolBar* mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
+		mainToolBar->setWindowTitle("Main Toolbar");
         MainWindow->addToolBar(Qt::TopToolBarArea, mainToolBar);
 
 		actionColorMap = addAction("Toggle colormap" , "actionColorMap"       , ":/icons/colormap.png");
@@ -566,6 +567,7 @@ public:
 		// --- Post Tool bar
 		QToolBar* postToolbar = new QToolBar(MainWindow);
 		postToolbar->setObjectName("postToolbar");
+		postToolbar->setWindowTitle("Plot Toolbar");
 		postToolbar->addAction(actionPlaneCut      );
 		postToolbar->addAction(actionVectorPlot    );
 		postToolbar->addAction(actionTensorPlot);
@@ -581,6 +583,7 @@ public:
 		// Play tool bar
 		playToolBar = new QToolBar(MainWindow);
         playToolBar->setObjectName(QStringLiteral("playToolBar"));
+		playToolBar->setWindowTitle("Animate Toolbar");
         MainWindow->addToolBar(Qt::TopToolBarArea, playToolBar);
 
 		QAction* actionFirst = addAction("first", "actionFirst", ":/icons/back.png");
@@ -615,6 +618,7 @@ public:
 		// Font tool bar
 		pFontToolBar = new QToolBar(MainWindow);
 		pFontToolBar->setObjectName("FontToolBar");
+		pFontToolBar->setWindowTitle("Font Toolbar");
 		MainWindow->addToolBarBreak();
 		MainWindow->addToolBar(Qt::TopToolBarArea, pFontToolBar);
 
