@@ -80,7 +80,7 @@ void CImportLinesTool::OnApply()
 		bool bsuccess = false;
 		const char* szfile = fileName.c_str();
 		const char* szext = strrchr(szfile, '.');
-		if (strcmp(szext, ".ang2") == 0)
+		if (szext  && (strcmp(szext, ".ang2") == 0))
 		{
 			// Read AngioFE2 format
 			int nret = ReadAng2Format(szfile);
