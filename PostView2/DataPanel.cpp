@@ -850,6 +850,7 @@ void CDataPanel::on_FilterButton_clicked()
 					QMessageBox::critical(this, "Data Filter", "Cannot apply this filter.");
 				}
 
+				m_wnd->UpdateMainToolbar(true);
 				Update(true);
 				doc.UpdateFEModel(true);
 				m_wnd->RedrawGL();
