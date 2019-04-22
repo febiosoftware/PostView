@@ -135,7 +135,7 @@ void CDataSelectorButton::SetDataSelector(CDataSelector* dataSelector)
 {
 	if (m_src) delete m_src;
 	m_src = dataSelector;
-	m_currentValue = -1;
+//	m_currentValue = -1;
 	UpdateMenu();
 }
 

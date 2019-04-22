@@ -277,6 +277,8 @@ CPlotWidget::CPlotWidget(QWidget* parent, int w, int h) : QWidget(parent)
 	m_bsmoothLines = true;
 	m_bshowDataMarks = true;
 
+	m_bautoRngUpdate = true;
+
 	// set default colors
 	m_bgCol = QColor(255, 255, 255);
 	m_gridCol = QColor(192, 192, 192);
@@ -492,6 +494,11 @@ void CPlotWidget::addPlotData(CPlotData* p)
 	p->setColor(CPalette::color(N));
 
 	m_data.push_back(p);
+
+	if (m_bautoRngUpdate)
+	{
+		fitToData(false);
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -548,7 +555,26 @@ void CPlotWidget::fitHeightToData()
 }
 
 //-----------------------------------------------------------------------------
-void CPlotWidget::fitToData()
+inline bool ContainsRect(QRectF& r0, QRectF& r1)
+{
+	if ((r1.left() >= r0.left()) && (r1.right() <= r0.right()) &&
+		(r1.top() >= r0.top()) && (r1.bottom() <= r0.bottom())) return true;
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+inline QRectF UnitedRect(QRectF& r0, QRectF& r1)
+{
+	QRectF r(r0);
+	if (r1.left() < r.left()) r.setLeft(r1.left());
+	if (r1.right() > r.right()) r.setRight(r1.right());
+	if (r1.top() < r.top()) r.setTop(r1.top());
+	if (r1.bottom() > r.bottom()) r.setBottom(r1.bottom());
+	return r;
+}
+
+//-----------------------------------------------------------------------------
+void CPlotWidget::fitToData(bool downSize)
 {
 	if (m_data.empty()) return;
 
@@ -558,7 +584,16 @@ void CPlotWidget::fitToData()
 		QRectF ri = m_data[i]->boundRect();
 		r = rectUnion(r, ri);
 	}
-	setViewRect(r);
+
+	if (downSize == false)
+	{
+		// only update the rect if the new rect does not fit in the old rect
+		if (ContainsRect(m_viewRect, r) == false)
+		{
+			setViewRect(UnitedRect(m_viewRect, r));
+		}
+	}
+	else setViewRect(r);
 }
 
 //-----------------------------------------------------------------------------

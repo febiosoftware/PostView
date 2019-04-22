@@ -135,7 +135,7 @@ public:
 	// change the view so that it fits the data
 	void fitWidthToData();
 	void fitHeightToData();
-	void fitToData();
+	void fitToData(bool downSize = true);
 	void fitToRect(const QRect& rt);
 
 	void setViewRect(const QRectF& rt);
@@ -179,6 +179,9 @@ public:
 	void showDataMarks(bool b) { m_bshowDataMarks = b; }
 
 	void scaleAxisLabels(bool b) { m_bscaleAxisLabels = b; }
+
+	bool autoRangeUpdate() const { return m_bautoRngUpdate; }
+	void setAutoRangeUpdate(bool b) { m_bautoRngUpdate = b; }
 
 	QPointF SnapToGrid(const QPointF& p);
 
@@ -269,6 +272,7 @@ private:
 	bool				m_bdrawYLines;
 	bool				m_bscaleAxisLabels;
 	bool				m_bfullScreenMode;
+	bool				m_bautoRngUpdate;
 
 	int		m_chartStyle;
 	CAxisFormat		m_xAxis;

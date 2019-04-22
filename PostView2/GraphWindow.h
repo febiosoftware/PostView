@@ -41,6 +41,7 @@ public:
 	QLineEdit*		timeRange;
 	QCheckBox*		smoothLines;
 	QCheckBox*		dataMarks;
+	QCheckBox*		autoRange;
 
 public:
 	int currentOption();
@@ -50,6 +51,8 @@ public:
 	bool lineSmoothing();
 
 	bool showDataMarks();
+
+	bool autoRangeUpdate();
 
 public slots:
 	void onOptionsChanged();

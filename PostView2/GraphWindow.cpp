@@ -36,20 +36,23 @@ OptionsUi::OptionsUi(CGraphWidget* graph, QWidget* parent) : CPlotTool(parent)
 	l->addWidget(timeRange = new QLineEdit);
 	l->addWidget(smoothLines = new QCheckBox("Smooth lines"));
 	l->addWidget(dataMarks   = new QCheckBox("Show data marks"));
+	l->addWidget(autoRange   = new QCheckBox("auto update plot range"));
 	l->addStretch();
 	setLayout(l);
 
 	smoothLines->setChecked(true);
 	dataMarks->setChecked(true);
+	autoRange->setChecked(true);
 
 	timeOption[0]->setChecked(true);
 
 	QObject::connect(timeOption[0], SIGNAL(clicked()), this, SLOT(onOptionsChanged()));
 	QObject::connect(timeOption[1], SIGNAL(clicked()), this, SLOT(onOptionsChanged()));
 	QObject::connect(timeOption[2], SIGNAL(clicked()), this, SLOT(onOptionsChanged()));
-	QObject::connect(timeRange, SIGNAL(editingFinished()), this, SLOT(onOptionsChanged()));
-	QObject::connect(smoothLines, SIGNAL(stateChanged(int)), SLOT(onOptionsChanged()));
-	QObject::connect(dataMarks  , SIGNAL(stateChanged(int)), SLOT(onOptionsChanged()));
+	QObject::connect(timeRange    , SIGNAL(editingFinished()), this, SLOT(onOptionsChanged()));
+	QObject::connect(smoothLines  , SIGNAL(stateChanged(int)), SLOT(onOptionsChanged()));
+	QObject::connect(dataMarks    , SIGNAL(stateChanged(int)), SLOT(onOptionsChanged()));
+	QObject::connect(autoRange  ,   SIGNAL(stateChanged(int)), SLOT(onOptionsChanged()));
 }
 
 void OptionsUi::onOptionsChanged()
@@ -73,6 +76,11 @@ bool OptionsUi::lineSmoothing()
 bool OptionsUi::showDataMarks()
 {
 	return dataMarks->isChecked();
+}
+
+bool OptionsUi::autoRangeUpdate()
+{
+	return autoRange->isChecked();
 }
 
 void OptionsUi::setUserTimeRange(int imin, int imax)
@@ -828,6 +836,9 @@ void CGraphWindow::on_options_optionsChanged()
 	bool marks = ui->ops->showDataMarks();
 	ui->plot->showDataMarks(marks);
 
+	bool autoRng = ui->ops->autoRangeUpdate();
+	ui->plot->setAutoRangeUpdate(autoRng);
+
 	Update(true);
 }
 
@@ -1080,40 +1091,50 @@ void CModelGraphWindow::addSelectedNodes()
 	break;
 	case 3: // time-scatter
 	{
-		int nsteps = m_lastState - m_firstState + 1;
-		if (nsteps > 32) nsteps = 32;
-		for (int i = m_firstState; i<m_firstState + nsteps; ++i)
-		{
-			CLineChartData* plot = new CLineChartData;
-			plot->setLabel(QString("%1").arg(fem.GetState(i)->m_time));
-			AddPlotData(plot);
-		}
-
-		for (int i = 0; i<NN; i++)
+		vector<int> sel;
+		for (int i = 0; i < NN; i++)
 		{
 			FENode& node = mesh.Node(i);
-			if (node.IsSelected())
-			{
-				// evaluate x-field
-				TrackNodeHistory(i, &xdata[0], m_dataX, m_firstState, m_firstState + nsteps - 1);
-
-				// evaluate y-field
-				TrackNodeHistory(i, &ydata[0], m_dataY, m_firstState, m_firstState + nsteps - 1);
-
-				for (int j = 0; j<nsteps; ++j)
-				{
-					CPlotData& p = GetPlotWidget()->getPlotData(j);
-					p.addPoint(xdata[j], ydata[j]);
-				}
-			}
+			if (node.IsSelected()) sel.push_back(i);
 		}
 
-		// sort the plots 
-		int nplots = GetPlotWidget()->plots();
-		for (int i = 0; i<nplots; ++i)
+		if (sel.empty() == false)
 		{
-			CPlotData& data = GetPlotWidget()->getPlotData(i);
-			data.sort();
+			int nsteps = m_lastState - m_firstState + 1;
+			if (nsteps > 32) nsteps = 32;
+			for (int i = m_firstState; i < m_firstState + nsteps; ++i)
+			{
+				CLineChartData* plot = new CLineChartData;
+				plot->setLabel(QString("%1").arg(fem.GetState(i)->m_time));
+				AddPlotData(plot);
+			}
+
+			for (int i = 0; i < (int)sel.size(); i++)
+			{
+				FENode& node = mesh.Node(sel[i]);
+				if (node.IsSelected())
+				{
+					// evaluate x-field
+					TrackNodeHistory(i, &xdata[0], m_dataX, m_firstState, m_firstState + nsteps - 1);
+
+					// evaluate y-field
+					TrackNodeHistory(i, &ydata[0], m_dataY, m_firstState, m_firstState + nsteps - 1);
+
+					for (int j = 0; j < nsteps; ++j)
+					{
+						CPlotData& p = GetPlotWidget()->getPlotData(j);
+						p.addPoint(xdata[j], ydata[j]);
+					}
+				}
+			}
+
+			// sort the plots 
+			int nplots = GetPlotWidget()->plots();
+			for (int i = 0; i < nplots; ++i)
+			{
+				CPlotData& data = GetPlotWidget()->getPlotData(i);
+				data.sort();
+			}
 		}
 	}
 	break;
@@ -1217,32 +1238,118 @@ void CModelGraphWindow::addSelectedElems()
 
 	// get the selected elements
 	int NE = mesh.Elements();
-	for (int i = 0; i<NE; i++)
+	switch (m_xtype)
 	{
-		FEElement& e = mesh.Element(i);
-		if (e.IsSelected())
+	case 0:
+		for (int i = 0; i < NE; i++)
 		{
-			// evaluate x-field
-			switch (m_xtype)
+			FEElement& e = mesh.Element(i);
+			if (e.IsSelected())
 			{
-			case 0:
-				for (int j = 0; j<nsteps; j++) xdata[j] = fem.GetState(j + m_firstState)->m_time;
-				break;
-			case 1:
-				for (int j = 0; j<nsteps; j++) xdata[j] = (float)j + 1.f + m_firstState;
-				break;
-			default:
+				// evaluate x-field
+				for (int j = 0; j < nsteps; j++) xdata[j] = fem.GetState(j + m_firstState)->m_time;
+
+				// evaluate y-field
+				TrackElementHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
+
+				CLineChartData* plot = new CLineChartData;
+				for (int j = 0; j < nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
+				plot->setLabel(QString("E%1").arg(i + 1));
+				AddPlotData(plot);
+			}
+		}
+		break;
+	case 1:
+		for (int i = 0; i < NE; i++)
+		{
+			FEElement& e = mesh.Element(i);
+			if (e.IsSelected())
+			{
+				// evaluate x-field
+				for (int j = 0; j < nsteps; j++) xdata[j] = (float)j + 1.f + m_firstState;
+
+				// evaluate y-field
+				TrackElementHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
+
+				CLineChartData* plot = new CLineChartData;
+				for (int j = 0; j < nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
+				plot->setLabel(QString("E%1").arg(i + 1));
+				AddPlotData(plot);
+			}
+		}
+		break;
+	case 2:
+		for (int i = 0; i < NE; i++)
+		{
+			FEElement& e = mesh.Element(i);
+			if (e.IsSelected())
+			{
+				// evaluate x-field
 				TrackElementHistory(i, &xdata[0], m_dataX, m_firstState, m_lastState);
+
+				// evaluate y-field
+				TrackElementHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
+
+				CLineChartData* plot = new CLineChartData;
+				for (int j = 0; j < nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
+				plot->setLabel(QString("E%1").arg(i + 1));
+				AddPlotData(plot);
+			}
+		}
+		break;
+	case 3:	// time-scatter
+	{
+		vector<int> sel;
+		for (int i = 0; i < NE; i++)
+		{
+			FEElement& e = mesh.Element(i);
+			if (e.IsSelected()) sel.push_back(i);
+		}
+
+		if (sel.empty() == false)
+		{
+			int nsteps = m_lastState - m_firstState + 1;
+			if (nsteps > 32) nsteps = 32;
+			for (int i = m_firstState; i < m_firstState + nsteps; ++i)
+			{
+				CLineChartData* plot = new CLineChartData;
+				plot->setLabel(QString("%1").arg(fem.GetState(i)->m_time));
+				AddPlotData(plot);
 			}
 
-			// evaluate y-field
-			TrackElementHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
+			for (int i = 0; i < (int)sel.size(); i++)
+			{
+				FEElement& e = mesh.Element(sel[i]);
+				if (e.IsSelected())
+				{
+					// evaluate x-field
+					TrackElementHistory(i, &xdata[0], m_dataX, m_firstState, m_lastState);
 
-			CLineChartData* plot = new CLineChartData;
-			for (int j = 0; j<nsteps; ++j) plot->addPoint(xdata[j], ydata[j]);
-			plot->setLabel(QString("E%1").arg(i + 1));
-			AddPlotData(plot);
+					// evaluate y-field
+					TrackElementHistory(i, &ydata[0], m_dataY, m_firstState, m_lastState);
+
+					for (int j = 0; j < nsteps; ++j)
+					{
+						CPlotData& p = GetPlotWidget()->getPlotData(j);
+						p.addPoint(xdata[j], ydata[j]);
+					}
+				}
+			}
+
+			// sort the plots 
+			CPlotWidget* w = GetPlotWidget();
+			int nplots = w->plots();
+			for (int i = 0; i < nplots; ++i)
+			{
+				CPlotData& data = GetPlotWidget()->getPlotData(i);
+				data.sort();
+			}
+
+			if (w->autoRangeUpdate())
+				w->fitToData(false);
 		}
+	}
+	break;
 	}
 }
 
