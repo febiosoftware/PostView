@@ -60,6 +60,8 @@
 		D5C53DB71F86D97E0014FA22 /* DlgAddEquation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5C53DB61F86D97E0014FA22 /* DlgAddEquation.cpp */; };
 		D5E08BA320A5E5BE00275FAB /* libGLWLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5E08BA220A5E5BE00275FAB /* libGLWLib.a */; };
 		D5E0E6A71E72390D006FE591 /* moc_DataFieldSelector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5E0E6A61E72390D006FE591 /* moc_DataFieldSelector.cpp */; };
+		D5F8C897226FBD54008597AF /* DocManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5F8C894226FBD54008597AF /* DocManager.cpp */; };
+		D5F8C898226FBD54008597AF /* ViewSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5F8C896226FBD54008597AF /* ViewSettings.cpp */; };
 		D5FAC5C821792BC8005E4684 /* StrainMapTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FAC5C721792BC8005E4684 /* StrainMapTool.cpp */; };
 		D5FAC5D221793358005E4684 /* moc_StrainMapTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FAC5D121793357005E4684 /* moc_StrainMapTool.cpp */; };
 		D5FF7A401D72756B003D2CBD /* 3PointAngleTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79AA1D72756B003D2CBD /* 3PointAngleTool.cpp */; };
@@ -238,6 +240,10 @@
 		D5C53DB61F86D97E0014FA22 /* DlgAddEquation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgAddEquation.cpp; sourceTree = "<group>"; };
 		D5E08BA220A5E5BE00275FAB /* libGLWLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libGLWLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5E0E6A61E72390D006FE591 /* moc_DataFieldSelector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_DataFieldSelector.cpp; sourceTree = "<group>"; };
+		D5F8C893226FBD53008597AF /* ViewSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewSettings.h; sourceTree = "<group>"; };
+		D5F8C894226FBD54008597AF /* DocManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DocManager.cpp; sourceTree = "<group>"; };
+		D5F8C895226FBD54008597AF /* DocManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocManager.h; sourceTree = "<group>"; };
+		D5F8C896226FBD54008597AF /* ViewSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ViewSettings.cpp; sourceTree = "<group>"; };
 		D5FAC5C621792BC7005E4684 /* StrainMapTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StrainMapTool.h; sourceTree = "<group>"; };
 		D5FAC5C721792BC8005E4684 /* StrainMapTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StrainMapTool.cpp; sourceTree = "<group>"; };
 		D5FAC5D121793357005E4684 /* moc_StrainMapTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_StrainMapTool.cpp; sourceTree = "<group>"; };
@@ -503,6 +509,8 @@
 				D5FF79C91D72756B003D2CBD /* DlgViewSettings.h */,
 				D5FF79CA1D72756B003D2CBD /* DlgWidgetProps.cpp */,
 				D5FF79CB1D72756B003D2CBD /* DlgWidgetProps.h */,
+				D5F8C894226FBD54008597AF /* DocManager.cpp */,
+				D5F8C895226FBD54008597AF /* DocManager.h */,
 				D5FF79CC1D72756B003D2CBD /* Document.cpp */,
 				D5FF79CD1D72756B003D2CBD /* Document.h */,
 				D53598BE1E901C0500584A4F /* DragBox.cpp */,
@@ -649,6 +657,8 @@
 				D5FF7A3E1D72756B003D2CBD /* ui_mainwindow.h */,
 				D52C6FAF1D75DCA300DF804B /* ui_timepanel.h */,
 				D5FF7A3F1D72756B003D2CBD /* version.h */,
+				D5F8C896226FBD54008597AF /* ViewSettings.cpp */,
+				D5F8C893226FBD53008597AF /* ViewSettings.h */,
 			);
 			name = PostView2;
 			path = ../../PostView2;
@@ -722,6 +732,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -754,6 +765,7 @@
 				D5FF7A5B1D72756B003D2CBD /* GLPlot.cpp in Sources */,
 				D53292BB1E453447002798B3 /* DlgExportAscii.cpp in Sources */,
 				D5FF7A461D72756B003D2CBD /* CommandPanel.cpp in Sources */,
+				D5F8C897226FBD54008597AF /* DocManager.cpp in Sources */,
 				D5FF7A561D72756B003D2CBD /* GLLinePlot.cpp in Sources */,
 				D5FF7A841D72756B003D2CBD /* PlotMixTool.cpp in Sources */,
 				D52F507A218C96E30094F7D1 /* DlgExportVTK.cpp in Sources */,
@@ -839,6 +851,7 @@
 				D5FF7A591D72756B003D2CBD /* GLPlane.cpp in Sources */,
 				D5FF7A901D72756B003D2CBD /* SphereFitTool.cpp in Sources */,
 				D5FF7A511D72756B003D2CBD /* FEKinemat.cpp in Sources */,
+				D5F8C898226FBD54008597AF /* ViewSettings.cpp in Sources */,
 				D5FF7A6E1D72756B003D2CBD /* moc_FileViewer.cpp in Sources */,
 				D5FF7A7C1D72756B003D2CBD /* moc_SphereFitTool.cpp in Sources */,
 				D5FF7A891D72756B003D2CBD /* PropertyList.cpp in Sources */,
