@@ -1247,12 +1247,14 @@ bool FEModel::EvaluateFace(int n, int ntime, int nfield, float* data, float& val
 			val += data[i]; 
 		}
 		val /= (float) N;
+		ntag = 1;
 	}
 	else if (IS_ELEM_FIELD(nfield))
 	{
 		assert((f.m_elem[0] >= 0) && (f.m_elem[0] < mesh->Elements()));
-		float edata[FEGenericElement::MAX_NODES] = {0.f}, val;
+		float edata[FEGenericElement::MAX_NODES] = {0.f};
 		EvaluateElement(f.m_elem[0], ntime, nfield, edata, val);
+		ntag = 1;
 		switch (mesh->Element(f.m_elem[0]).Type())
 		{
 		case FE_TET4:

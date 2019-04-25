@@ -710,16 +710,23 @@ CDlgViewSettings::CDlgViewSettings(CMainWindow* pwnd) : ui(new Ui::CDlgViewSetti
 
 	CDocument* pdoc = m_pwnd->GetActiveDocument();
 	VIEWSETTINGS& view = m_pwnd->GetViewSettings();
-	CGLCamera& cam = pdoc->GetView()->GetCamera();
+
+	CGView* cgview = pdoc->GetView();
+
+	// NOTE: view can be null if no document was loaded.
+	// Probably need to make these settings view independent!
+	if (cgview)
+	{
+		CGLCamera& cam = cgview->GetCamera();
+		ui->m_cam->m_speed = cam.GetCameraSpeed();
+		ui->m_cam->m_bias = cam.GetCameraBias();
+	}
 
 	ui->m_render = new CRenderingProps;
 	ui->m_bg     = new CBackgroundProps;
 	ui->m_light  = new CLightingProps;
 	ui->m_cam    = new CCameraProps;
 	ui->m_select = new CSelectionProps;
-
-	ui->m_cam->m_speed = cam.GetCameraSpeed();
-	ui->m_cam->m_bias = cam.GetCameraBias();
 
 	ui->Set(pwnd);
 
@@ -765,12 +772,16 @@ void CDlgViewSettings::apply()
 {
 	CDocument* pdoc = m_pwnd->GetActiveDocument();
 	VIEWSETTINGS& view = m_pwnd->GetViewSettings();
-	CGLCamera& cam = pdoc->GetView()->GetCamera();
+
+	CGView* cgview = pdoc->GetView();
+	if (cgview)
+	{
+		CGLCamera& cam = cgview->GetCamera();
+		cam.SetCameraSpeed(ui->m_cam->m_speed);
+		cam.SetCameraBias(ui->m_cam->m_bias);
+	}
 
 	ui->Get(m_pwnd);
-
-	cam.SetCameraSpeed(ui->m_cam->m_speed);
-	cam.SetCameraBias(ui->m_cam->m_bias);
 
 	CPaletteManager& PM = CPaletteManager::GetInstance();
 	PM.SetCurrentIndex(ui->m_pal->pal->currentIndex());
