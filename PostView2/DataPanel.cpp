@@ -618,6 +618,7 @@ void CDataPanel::on_AddStandard_triggered()
 		}
 
 		// update the data list
+		m_wnd->UpdateMainToolbar(true);
 		Update(true);
 	}
 }
@@ -650,6 +651,7 @@ void CDataPanel::on_AddFromFile_triggered()
 		}
 
 		// update the data list
+		m_wnd->UpdateMainToolbar(true);
 		Update(true);
 	}
 }
@@ -699,6 +701,7 @@ void CDataPanel::on_AddEquation_triggered()
 		}
 		
 		// update the data list
+		m_wnd->UpdateMainToolbar(true);
 		Update(true);
 	}
 }

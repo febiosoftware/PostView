@@ -1115,10 +1115,10 @@ void CModelGraphWindow::addSelectedNodes()
 				if (node.IsSelected())
 				{
 					// evaluate x-field
-					TrackNodeHistory(i, &xdata[0], m_dataX, m_firstState, m_firstState + nsteps - 1);
+					TrackNodeHistory(sel[i], &xdata[0], m_dataX, m_firstState, m_firstState + nsteps - 1);
 
 					// evaluate y-field
-					TrackNodeHistory(i, &ydata[0], m_dataY, m_firstState, m_firstState + nsteps - 1);
+					TrackNodeHistory(sel[i], &ydata[0], m_dataY, m_firstState, m_firstState + nsteps - 1);
 
 					for (int j = 0; j < nsteps; ++j)
 					{

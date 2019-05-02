@@ -713,6 +713,14 @@ CDlgViewSettings::CDlgViewSettings(CMainWindow* pwnd) : ui(new Ui::CDlgViewSetti
 
 	CGView* cgview = pdoc->GetView();
 
+	ui->m_render = new CRenderingProps;
+	ui->m_bg     = new CBackgroundProps;
+	ui->m_light  = new CLightingProps;
+	ui->m_cam    = new CCameraProps;
+	ui->m_select = new CSelectionProps;
+
+	ui->Set(pwnd);
+
 	// NOTE: view can be null if no document was loaded.
 	// Probably need to make these settings view independent!
 	if (cgview)
@@ -721,14 +729,6 @@ CDlgViewSettings::CDlgViewSettings(CMainWindow* pwnd) : ui(new Ui::CDlgViewSetti
 		ui->m_cam->m_speed = cam.GetCameraSpeed();
 		ui->m_cam->m_bias = cam.GetCameraBias();
 	}
-
-	ui->m_render = new CRenderingProps;
-	ui->m_bg     = new CBackgroundProps;
-	ui->m_light  = new CLightingProps;
-	ui->m_cam    = new CCameraProps;
-	ui->m_select = new CSelectionProps;
-
-	ui->Set(pwnd);
 
 	ui->setupUi(this);
 
