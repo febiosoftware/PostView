@@ -87,9 +87,6 @@ public:
 	// TODO: Add properties list for data fields (e.g. strains and curvature could use this)
 	// strain parameters
 	int		m_nref;	// reference state
-
-	// used by mesh data to see if an item has been assigned a value
-	vector<int>		m_item;
 };
 
 //-----------------------------------------------------------------------------
@@ -102,7 +99,6 @@ public:
 	virtual FEDataField* Clone() const
 	{
 		FEDataField_T<T>* newData = new FEDataField_T<T>(GetName());
-		newData->m_item = m_item;
 		return newData;
 	}
 

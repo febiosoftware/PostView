@@ -110,7 +110,7 @@ template <typename T, Data_Format fmt> class FEFaceData : public FEFaceData_T<T,
 template <typename T> class FEFaceData<T, DATA_ITEM> : public FEFaceData_T<T, DATA_ITEM>
 {
 public:
-	FEFaceData(FEState* state, FEDataField* pdf) : FEFaceData_T<T, DATA_ITEM>(state, pdf), m_face(pdf->m_item)
+	FEFaceData(FEState* state, FEDataField* pdf) : FEFaceData_T<T, DATA_ITEM>(state, pdf)
 	{ 
 		if (m_face.empty())
 			m_face.assign(state->GetFEMesh()->Faces(), -1); 
@@ -135,14 +135,14 @@ public:
 
 protected:
 	vector<T>		m_data;
-	vector<int>&	m_face;
+	vector<int>		m_face;
 };
 
 // *** specialization for DATA_REGION format ***
 template <typename T> class FEFaceData<T, DATA_REGION> : public FEFaceData_T<T, DATA_REGION>
 {
 public:
-	FEFaceData(FEState* state, FEDataField* pdf) : FEFaceData_T<T, DATA_REGION>(state, pdf), m_face(pdf->m_item)
+	FEFaceData(FEState* state, FEDataField* pdf) : FEFaceData_T<T, DATA_REGION>(state, pdf)
 	{ 
 		if (m_face.empty())
 			m_face.assign(state->GetFEMesh()->Faces(), -1); 
@@ -172,7 +172,7 @@ public:
 
 protected:
 	vector<T>		m_data;
-	vector<int>&	m_face;
+	vector<int>		m_face;
 };
 
 
@@ -180,7 +180,7 @@ protected:
 template <typename T> class FEFaceData<T, DATA_COMP> : public FEFaceData_T<T, DATA_COMP>
 {
 public:
-	FEFaceData(FEState* state, FEDataField* pdf) : FEFaceData_T<T, DATA_COMP>(state, pdf), m_face(pdf->m_item)
+	FEFaceData(FEState* state, FEDataField* pdf) : FEFaceData_T<T, DATA_COMP>(state, pdf)
 	{ 
 		if (m_face.empty())
 			m_face.assign(state->GetFEMesh()->Faces(), -1); 
@@ -209,7 +209,7 @@ public:
 
 protected:
 	vector<T>		m_data;
-	vector<int>&	m_face;
+	vector<int>		m_face;
 };
 
 // *** specialization for DATA_NODE format ***
@@ -217,7 +217,7 @@ protected:
 template <typename T> class FEFaceData<T, DATA_NODE> : public FEFaceData_T<T, DATA_NODE>
 {
 public:
-	FEFaceData(FEState* state, FEDataField* pdf) : FEFaceData_T<T, DATA_NODE>(state, pdf), m_face(pdf->m_item)
+	FEFaceData(FEState* state, FEDataField* pdf) : FEFaceData_T<T, DATA_NODE>(state, pdf)
 	{
 		if (m_face.empty())
 		{
@@ -252,7 +252,7 @@ public:
 
 protected:
 	vector<T>		m_data;
-	vector<int>&	m_face;
+	vector<int>		m_face;
 	vector<int>		m_indx; 
 };
 
@@ -274,7 +274,7 @@ public:
 class FEElemArrayDataItem : public FEElemItemData
 {
 public:
-	FEElemArrayDataItem(FEState* state, int nsize, FEDataField* pdf) : FEElemItemData(state, DATA_ARRAY, DATA_ITEM), m_elem(pdf->m_item)
+	FEElemArrayDataItem(FEState* state, int nsize, FEDataField* pdf) : FEElemItemData(state, DATA_ARRAY, DATA_ITEM)
 	{
 		int NE = state->GetFEMesh()->Elements();
 		m_stride = nsize;
@@ -306,14 +306,14 @@ public:
 protected:
 	int				m_stride;
 	vector<float>	m_data;
-	vector<int>&	m_elem;
+	vector<int>		m_elem;
 };
 
 //-----------------------------------------------------------------------------
 class FEElemArrayDataNode : public FEElemItemData
 {
 public:
-	FEElemArrayDataNode(FEState* state, int nsize, FEDataField* pdf) : FEElemItemData(state, DATA_ARRAY, DATA_NODE), m_elem(pdf->m_item)
+	FEElemArrayDataNode(FEState* state, int nsize, FEDataField* pdf) : FEElemItemData(state, DATA_ARRAY, DATA_NODE)
 	{
 		FEMeshBase& m = *state->GetFEMesh();
 		m_stride = nsize;
@@ -346,7 +346,7 @@ public:
 protected:
 	int m_stride;
 	vector<float>	m_data;
-	vector<int>&	m_elem;
+	vector<int>		m_elem;
 	vector<int>		m_indx;
 };
 
@@ -355,7 +355,7 @@ protected:
 class FEElemArrayVec3Data : public FEElemItemData
 {
 public:
-	FEElemArrayVec3Data(FEState* state, int nsize, FEDataField* pdf) : FEElemItemData(state, DATA_ARRAY_VEC3F, DATA_ITEM), m_elem(pdf->m_item)
+	FEElemArrayVec3Data(FEState* state, int nsize, FEDataField* pdf) : FEElemItemData(state, DATA_ARRAY_VEC3F, DATA_ITEM)
 	{
 		int NE = state->GetFEMesh()->Elements();
 		m_stride = nsize;
@@ -393,7 +393,7 @@ public:
 protected:
 	int				m_stride;
 	vector<float>	m_data;
-	vector<int>&	m_elem;
+	vector<int>		m_elem;
 };
 
 
@@ -449,7 +449,7 @@ protected:
 template <typename T> class FEElementData<T, DATA_REGION> : public FEElemData_T<T, DATA_REGION>
 {
 public:
-	FEElementData(FEState* state, FEDataField* pdf) : FEElemData_T<T, DATA_REGION>(state, pdf), m_elem(pdf->m_item)
+	FEElementData(FEState* state, FEDataField* pdf) : FEElemData_T<T, DATA_REGION>(state, pdf)
 	{
 		if (m_elem.empty())
 			m_elem.assign(state->GetFEMesh()->Elements(), -1); 
@@ -487,14 +487,14 @@ public:
 
 protected:
 	vector<T>		m_data;
-	vector<int>&	m_elem;
+	vector<int>		m_elem;
 };
 
 // *** specialization for DATA_COMP format ***
 template <typename T> class FEElementData<T, DATA_COMP> : public FEElemData_T<T, DATA_COMP>
 {
 public:
-	FEElementData(FEState* state, FEDataField* pdf) : FEElemData_T<T, DATA_COMP>(state, pdf) //, m_elem(pdf->m_item)
+	FEElementData(FEState* state, FEDataField* pdf) : FEElemData_T<T, DATA_COMP>(state, pdf)
 	{
 		if (m_elem.empty())
 		{
@@ -532,7 +532,7 @@ protected:
 template <typename T> class FEElementData<T, DATA_NODE> : public FEElemData_T<T, DATA_NODE>
 {
 public:
-	FEElementData(FEState* state, FEDataField* pdf) : FEElemData_T<T, DATA_NODE>(state, pdf), m_elem(pdf->m_item)
+	FEElementData(FEState* state, FEDataField* pdf) : FEElemData_T<T, DATA_NODE>(state, pdf)
 	{
 		FEMeshBase& m = *state->GetFEMesh();
 		if (m_elem.empty())
@@ -566,7 +566,7 @@ public:
 
 protected:
 	vector<T>		m_data;
-	vector<int>&	m_elem;
+	vector<int>		m_elem;
 	vector<int>		m_indx;
 };
 
