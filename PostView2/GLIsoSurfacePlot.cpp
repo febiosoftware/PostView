@@ -92,7 +92,7 @@ CGLIsoSurfacePlot::CGLIsoSurfacePlot(CGLModel* po) : CGLPlot(po)
 	m_nslices = 5;
 	m_bsmooth = true;
 	m_bcut_hidden = false;
-	m_nfield = BUILD_FIELD(1,0,0);
+	m_nfield = 0;
 
 	m_rangeType = RNG_DYNAMIC;
 	m_rngMin = 0.;
@@ -137,6 +137,8 @@ void CGLIsoSurfacePlot::SetSlices(int nslices)
 
 void CGLIsoSurfacePlot::Render(CGLContext& rc)
 {
+	if (m_nfield == 0) return;
+
 	glPushAttrib(GL_ENABLE_BIT | GL_LIGHTING_BIT);
 	{
 		glColor4ub(255,255,255,255);
@@ -310,6 +312,7 @@ void CGLIsoSurfacePlot::Update(int ntime, float dt, bool breset)
 {
 	m_lastTime = ntime;
 	m_lastdt = dt;
+	if (m_nfield == 0) return;
 
 	CGLModel* mdl = GetModel();
 

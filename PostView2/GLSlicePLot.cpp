@@ -93,7 +93,7 @@ CGLSlicePlot::CGLSlicePlot(CGLModel* po) : CGLPlot(po)
 	m_norm = vec3f(1,0,0);
 
 	m_nslices = 10;
-	m_nfield = BUILD_FIELD(1,0,0);
+	m_nfield = 0;
 
 	m_Col.SetDivisions(m_nslices);
 	m_Col.SetSmooth(false);
@@ -127,6 +127,7 @@ void CGLSlicePlot::SetSlices(int nslices) { m_nslices = nslices; m_Col.SetDivisi
 
 void CGLSlicePlot::Render(CGLContext& rc)
 {
+	if (m_nfield == 0) return;
 	m_box = GetModel()->GetFEModel()->GetBoundingBox();
 
 	GLTexture1D& tex = m_Col.GetTexture();
@@ -283,6 +284,7 @@ void CGLSlicePlot::Update(int ntime, float dt, bool breset)
 		m_rng.resize(NS);
 		m_val.resize(NN);
 	}
+	if (m_nfield == 0) return;
 
 	// see if we need to update this state
 	if (breset ||(m_map.GetTag(ntime) != m_nfield))
