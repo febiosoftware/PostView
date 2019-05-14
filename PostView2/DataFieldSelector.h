@@ -79,6 +79,9 @@ public:
 	// set the current field ID
 	void setCurrentValue(int n);
 
+	// set the current value based on string
+	bool setCurrentValue(const char* sz);
+
 protected slots:
 	void onAction(QAction* pa);
 

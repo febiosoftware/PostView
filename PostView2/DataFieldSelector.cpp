@@ -186,6 +186,31 @@ QAction* findAction(QMenu* menu, int searchValue)
 	return nullptr;
 }
 
+QAction* findAction(QMenu* menu, const char* szname)
+{
+	QList<QAction*> actions = menu->actions();
+	foreach(QAction* action, menu->actions())
+	{
+		if (action->isSeparator())
+		{
+			// separator, nothing to do
+		}
+		else if (action->menu())
+		{
+			// call findAction on the submenu
+			QAction* pa = findAction(action->menu(), szname);
+			if (pa) return pa;
+		}
+		else
+		{
+			QString actionText = action->text();
+			if (actionText == szname) return action;
+		}
+	}
+	return nullptr;
+}
+
+
 void CDataSelectorButton::setCurrentValue(int newField)
 {
 	// make sure there is something to change
@@ -205,6 +230,31 @@ void CDataSelectorButton::setCurrentValue(int newField)
 	}
 
 	emit currentValueChanged(m_currentValue);
+}
+
+// set the current value based on string
+bool CDataSelectorButton::setCurrentValue(const char* sz)
+{
+	bool bsuccess = false;
+	QAction* pa = findAction(m_menu, sz);
+	if (pa)
+	{
+		bsuccess = true;
+		int value = pa->data().toInt();
+		if (value == m_currentValue) return true;
+
+		m_currentValue = value;
+		setText(pa->text());
+	}
+	else
+	{
+		m_currentValue = -1;
+		setText("");
+	}
+
+	emit currentValueChanged(m_currentValue);
+
+	return bsuccess;
 }
 
 void CDataSelectorButton::onAction(QAction* pa)

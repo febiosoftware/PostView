@@ -18,3 +18,22 @@ public:
 private:
 	CDlgExportLSDYNA_UI*	ui;
 };
+
+class CDlgExportLSDYNAPlot_UI;
+
+class FEModel;
+
+class CDlgExportLSDYNAPlot : public QDialog
+{
+public:
+	CDlgExportLSDYNAPlot(FEModel* fem, QWidget* parent);
+
+	void accept();
+
+public:
+	bool	m_flag[6];
+	int		m_code[6];
+
+private:
+	CDlgExportLSDYNAPlot_UI*	ui;
+};

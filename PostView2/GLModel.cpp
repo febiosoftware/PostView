@@ -43,7 +43,11 @@ CGLModel::CGLModel(FEModel* ps)
 	int ndisp = -1;
 	for (int i=0; i<pdm->DataFields(); ++i, ++pd)
 	{
-		if (((*pd)->Type() == DATA_VEC3F) && ((*pd)->GetName() == "displacement")) ndisp = i;
+		if ((*pd)->Type() == DATA_VEC3F)
+		{
+			std::string sname = (*pd)->GetName();
+			if ((sname == "displacement") || (sname == "Displacement")) ndisp = i;
+		}
 	}
 
 	m_pdis = 0;

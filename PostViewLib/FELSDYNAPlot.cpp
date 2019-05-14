@@ -141,23 +141,23 @@ bool FELSDYNAPlotImport::ReadHeader(FEModel& fem)
 
 	for (int i=0; i<LSDYNA_MAXFIELDS; ++i) m_nfield[i] = -1;
 
-	int nn = 0, ne = 0;
+	int nd = 0;
 	// nodal data
-	if (m_hdr.flagU) { pdm->AddDataField(new FEDataField_T<FENodeData<vec3f> >("Displacement", EXPORT_DATA)); m_nfield[LSDYNA_DISP] = nn++; }
-	if (m_hdr.flagV) { pdm->AddDataField(new FEDataField_T<FENodeData<vec3f> >("Velocity"    , EXPORT_DATA)); m_nfield[LSDYNA_VEL ] = nn++; }
-	if (m_hdr.flagA) { pdm->AddDataField(new FEDataField_T<FENodeData<vec3f> >("Acceleration", EXPORT_DATA)); m_nfield[LSDYNA_ACC ] = nn++; }
-	if (m_hdr.flagT) { pdm->AddDataField(new FEDataField_T<FENodeData<float> >("Temperature" , EXPORT_DATA)); m_nfield[LSDYNA_TEMP] = nn++; }
-	pdm->AddDataField(new FEDataField_T<FENodeInitPos >("Initial position"));
-	pdm->AddDataField(new FEDataField_T<FENodePosition>("Position"));
+	if (m_hdr.flagU) { pdm->AddDataField(new FEDataField_T<FENodeData<vec3f> >("displacement", EXPORT_DATA)); m_nfield[LSDYNA_DISP] = nd++; }
+	if (m_hdr.flagV) { pdm->AddDataField(new FEDataField_T<FENodeData<vec3f> >("velocity"    , EXPORT_DATA)); m_nfield[LSDYNA_VEL ] = nd++; }
+	if (m_hdr.flagA) { pdm->AddDataField(new FEDataField_T<FENodeData<vec3f> >("acceleration", EXPORT_DATA)); m_nfield[LSDYNA_ACC ] = nd++; }
+	if (m_hdr.flagT) { pdm->AddDataField(new FEDataField_T<FENodeData<float> >("temperature" , EXPORT_DATA)); m_nfield[LSDYNA_TEMP] = nd++; }
+	pdm->AddDataField(new FEDataField_T<FENodeInitPos >("Initial position")); nd++;
+	pdm->AddDataField(new FEDataField_T<FENodePosition>("Position")); nd++;
 
 	// add some additional data
 	if (m_hdr.flagU)
 	{
 		// element data
-		pdm->AddDataField(new FEDataField_T<FEElementData<mat3fs,DATA_ITEM> >("Stress", EXPORT_DATA)); m_nfield[LSDYNA_STRESS] = ne++;
-		pdm->AddDataField(new FEDataField_T<FEElementData<float ,DATA_ITEM> >("Pressure", EXPORT_DATA)); m_nfield[LSDYNA_PRESSURE] = ne++;
-		pdm->AddDataField(new FEDataField_T<FEElementData<float,DATA_ITEM>  >("Plastic strain", EXPORT_DATA)); m_nfield[LSDYNA_PLASTIC] = ne++;
-		if (m_hdr.nv2d == 44) { pdm->AddDataField(new FEDataField_T<FEElementData<mat3fs,DATA_ITEM> >("Shell strain", EXPORT_DATA)); m_nfield[LSDYNA_SHELL_STRAIN] = ne++; }
+		pdm->AddDataField(new FEDataField_T<FEElementData<mat3fs,DATA_ITEM> >("stress", EXPORT_DATA)); m_nfield[LSDYNA_STRESS] = nd++;
+		pdm->AddDataField(new FEDataField_T<FEElementData<float ,DATA_ITEM> >("pressure", EXPORT_DATA)); m_nfield[LSDYNA_PRESSURE] = nd++;
+		pdm->AddDataField(new FEDataField_T<FEElementData<float,DATA_ITEM>  >("plastic strain", EXPORT_DATA)); m_nfield[LSDYNA_PLASTIC] = nd++;
+		if (m_hdr.nv2d == 44) { pdm->AddDataField(new FEDataField_T<FEElementData<mat3fs,DATA_ITEM> >("shell strain", EXPORT_DATA)); m_nfield[LSDYNA_SHELL_STRAIN] = nd++; }
 
 		// additional element data
 		pdm->AddDataField(new FEStrainDataField("Lagrange strain", FEStrainDataField::LAGRANGE));

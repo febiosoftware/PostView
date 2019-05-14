@@ -668,7 +668,18 @@ bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 				FEVTKExport w;
 				w.ExportAllStates(dlg.m_ops[0]);
 				bret = w.Save(fem, szfilename);
-				error = "Failed reading VTK file";
+				error = "Failed writing VTK file";
+			}
+		}
+		break;
+	case 8:
+		{
+			CDlgExportLSDYNAPlot dlg(&fem, this);
+			if (dlg.exec())
+			{
+				FELSDYNAPlotExport ls;
+				bret = ls.Save(fem, szfilename, dlg.m_flag, dlg.m_code);
+				error = "Failed writing LSDYNA database file";
 			}
 		}
 		break;
@@ -785,13 +796,14 @@ void CMainWindow::on_actionSave_triggered()
 {
 	QStringList filters;
 	filters << "FEBio xplt files (*.xplt)"
-			<< "FEBio files (*.feb)"
-			<< "ASCII files (*.*)"
-			<< "VRML files (*.wrl)"
-			<< "LSDYNA Keyword (*.k)"
-			<< "BYU files(*.byu)"
-			<< "NIKE3D files (*.n)"
-			<< "VTK files (*.vtk)";
+		<< "FEBio files (*.feb)"
+		<< "ASCII files (*.*)"
+		<< "VRML files (*.wrl)"
+		<< "LSDYNA Keyword (*.k)"
+		<< "BYU files(*.byu)"
+		<< "NIKE3D files (*.n)"
+		<< "VTK files (*.vtk)"
+		<< "LSDYNA database (*.d3plot)";
 
 	QFileDialog dlg(this, "Save");
 	dlg.setFileMode(QFileDialog::AnyFile);
