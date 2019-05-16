@@ -17,7 +17,8 @@ public:
 		}
 
 		addProperty("line width" , CProperty::Float);
-		addProperty("Color mode" , CProperty::Enum)->setEnumValues(QStringList() << "Solid" << "X-position" << "y-position" << "z-position");
+		addProperty("Color mode" , CProperty::Enum)->setEnumValues(QStringList() << "Solid" << "Model Data");
+		addProperty("Data field", CProperty::DataScalar);
 		addProperty("Solid color", CProperty::Color);
 		addProperty("Color map"  , CProperty::Enum)->setEnumValues(cols);
 		addProperty("render mode", CProperty::Enum )->setEnumValues(QStringList() << "lines" << "3D lines");
@@ -29,9 +30,10 @@ public:
 		{
 		case 0: return m_line->GetLineWidth(); break;
 		case 1: return m_line->GetColorMode(); break;
-		case 2: return toQColor(m_line->GetSolidColor()); break;
-		case 3: return m_line->GetColorMap()->GetColorMap();
-		case 4: return m_line->GetRenderMode(); break;
+		case 2: return m_line->GetDataField(); break;
+		case 3: return toQColor(m_line->GetSolidColor()); break;
+		case 4: return m_line->GetColorMap()->GetColorMap();
+		case 5: return m_line->GetRenderMode(); break;
 		}
 		return QVariant();
 	}
@@ -42,9 +44,10 @@ public:
 		{
 		case 0: m_line->SetLineWidth(v.toFloat()); break;
 		case 1: m_line->SetColorMode(v.toInt()); break;
-		case 2: m_line->SetSolidColor(toGLColor(v.value<QColor>())); break;
-		case 3: m_line->GetColorMap()->SetColorMap(v.toInt()); break;
-		case 4: m_line->SetRenderMode(v.toInt()); break;
+		case 2: m_line->SetDataField(v.toInt()); break;
+		case 3: m_line->SetSolidColor(toGLColor(v.value<QColor>())); break;
+		case 4: m_line->GetColorMap()->SetColorMap(v.toInt()); break;
+		case 5: m_line->SetRenderMode(v.toInt()); break;
 		}
 	}
 
@@ -64,6 +67,7 @@ CGLLinePlot::CGLLinePlot(CGLModel* po) : CGLPlot(po)
 	m_nmode = 0;
 	m_ncolor = 0;
 	m_col = GLCOLOR(255, 0, 0);
+	m_nfield = -1;
 
 	m_rng.x = 0.f;
 	m_rng.y = 1.f;
@@ -82,6 +86,12 @@ CPropertyList* CGLLinePlot::propertyList()
 void CGLLinePlot::SetColorMode(int m) 
 {
 	m_ncolor = m;
+	Update(GetModel()->currentTimeIndex(), 0.0, false);
+}
+
+void CGLLinePlot::SetDataField(int n)
+{ 
+	m_nfield = n; 
 	Update(GetModel()->currentTimeIndex(), 0.0, false);
 }
 
@@ -270,20 +280,9 @@ void CGLLinePlot::Render3DLines(FEState& s)
 	}
 }
 
-float line_data(vec3f& p, int ndata)
-{
-	switch (ndata)
-	{
-	case 1: return p.x; break;
-	case 2: return p.y; break;
-	case 3: return p.z; break;
-	}
-	return 0.f;
-}
-
 void CGLLinePlot::Update(int ntime, float dt, bool breset)
 {
-	if (m_ncolor == 0) return;
+	if ((m_ncolor == 0) || (m_nfield == -1)) return;
 
 	CGLModel& glm = *GetModel();
 	FEModel& fem = *glm.GetFEModel();
@@ -294,12 +293,15 @@ void CGLLinePlot::Update(int ntime, float dt, bool breset)
 	float vmax = -1e99;
 	float vmin = 1e99;
 
+	NODEDATA nd1, nd2;
 	for (int i = 0; i < NL; ++i)
 	{
 		LINEDATA& line = s.Line(i);
 
-		line.m_val[0] = line_data(line.m_r0, m_ncolor);
-		line.m_val[1] = line_data(line.m_r1, m_ncolor);
+		fem.EvaluateNode(line.m_r0, ntime, m_nfield, nd1);
+		fem.EvaluateNode(line.m_r1, ntime, m_nfield, nd2);
+		line.m_val[0] = nd1.m_val;
+		line.m_val[1] = nd2.m_val;
 
 		if (line.m_val[0] > vmax) vmax = line.m_val[0];
 		if (line.m_val[0] < vmin) vmin = line.m_val[0];

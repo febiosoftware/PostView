@@ -496,6 +496,16 @@ double FEElement::eval(double* d, double r, double s, double t)
 }
 
 //-----------------------------------------------------------------------------
+float FEElement::eval(float* d, double r, double s, double t)
+{
+	double H[FEGenericElement::MAX_NODES];
+	shape(H, r, s, t);
+	double a = 0.0;
+	for (int i = 0; i<Nodes(); ++i) a += H[i] * d[i];
+	return (float) a;
+}
+
+//-----------------------------------------------------------------------------
 vec3f FEElement::eval(vec3f* d, double r, double s, double t)
 {
 	double H[FEGenericElement::MAX_NODES];

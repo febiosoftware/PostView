@@ -775,6 +775,28 @@ void FEModel::EvaluateNode(int n, int ntime, int nfield, NODEDATA& d)
 }
 
 //-----------------------------------------------------------------------------
+void FEModel::EvaluateNode(const vec3f& p, int ntime, int nfield, NODEDATA& d)
+{
+	// find the element in which this point lies
+	FEMeshBase& mesh = *GetState(ntime)->GetFEMesh();
+	int elid = -1;
+	double r[3];
+	if (FindElementRef(mesh, p, elid, r) == false)
+	{
+		d.m_ntag = 0; 
+		return;
+	}
+	FEElement& el = mesh.Element(elid);
+
+	// evaluate the nodal values
+	float v[FEGenericElement::MAX_NODES] = { 0.f }, val = 0.f;
+	EvaluateElement(elid, ntime, nfield, v, val);
+
+	d.m_ntag = 1;
+	d.m_val = el.eval(v, r[0], r[1], r[2]);
+}
+
+//-----------------------------------------------------------------------------
 // Calculate field value of edge n at time ntime
 void FEModel::EvaluateEdge(int n, int ntime, int nfield, EDGEDATA& d)
 {

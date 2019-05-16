@@ -24,6 +24,9 @@ public:
 	int GetColorMode() { return m_ncolor; }
 	void SetColorMode(int m);
 
+	int GetDataField() { return m_nfield; }
+	void SetDataField(int n);
+
 	CPropertyList* propertyList();
 
 	CColorTexture* GetColorMap() { return &m_Col; }
@@ -40,6 +43,7 @@ private:
 	GLCOLOR		m_col;		//!< rendering color
 	int			m_nmode;	//!< rendering mode
 	int			m_ncolor;	//!< color option
+	int			m_nfield;
 	CColorTexture	m_Col;	//!< line color (when m_ncolor is not solid)
 
 private:

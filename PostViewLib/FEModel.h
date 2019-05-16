@@ -144,6 +144,9 @@ public:
 	bool EvaluateFace   (int n, int ntime, int nfield, float* data, float& val);
 	bool EvaluateElement(int n, int ntime, int nfield, float* data, float& val);
 
+	// evaluate based on point
+	void EvaluateNode(const vec3f& r, int ntime, int nfield, NODEDATA& d);
+
 	// evaluate vector functions
 	vec3f EvaluateNodeVector(int n, int ntime, int nvec);
 	bool EvaluateFaceVector(int n, int ntime, int nvec, vec3f& r);

@@ -98,6 +98,9 @@ public:
 	double eval(double* d, double r, double s, double t);
 
 	// evaluate a vector expression at iso-points (r,s)
+	float eval(float* d, double r, double s, double t);
+
+	// evaluate a vector expression at iso-points (r,s)
 	vec3f eval(vec3f* v, double r, double s, double t);
 
 	// shape function derivatives
