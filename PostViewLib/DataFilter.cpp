@@ -736,7 +736,7 @@ bool DataGradient(FEModel& fem, int vecField, int sclField)
 				if (s.GetFormat() == DATA_NODE)
 				{
 					vector<int> tag(NN, 0);
-					FEElementData<float, DATA_NODE>* ps = dynamic_cast<FEElementData<float, DATA_NODE>*>(&s);
+					FEElemData_T<float, DATA_NODE>* ps = dynamic_cast<FEElemData_T<float, DATA_NODE>*>(&s);
 
 					float ed[FEGenericElement::MAX_NODES] = {0.f};
 					for (int i=0; i<mesh->Elements(); ++i)
@@ -754,6 +754,50 @@ bool DataGradient(FEModel& fem, int vecField, int sclField)
 					}
 					for (int i=0; i<NN; ++i)
 						if (tag[i] > 0) d[i] /= (double) tag[i];
+				}
+				else if (s.GetFormat() == DATA_ITEM)
+				{
+					vector<int> tag(NN, 0);
+					FEElemData_T<float, DATA_ITEM>* ps = dynamic_cast<FEElemData_T<float, DATA_ITEM>*>(&s);
+
+					float ed =  0.f;
+					for (int i = 0; i<mesh->Elements(); ++i)
+					{
+						FEElement& el = mesh->Element(i);
+						if (ps->active(i))
+						{
+							ps->eval(i, &ed);
+							for (int j = 0; j<el.Nodes(); ++j)
+							{
+								d[el.m_node[j]] += ed;
+								tag[el.m_node[j]]++;
+							}
+						}
+					}
+					for (int i = 0; i<NN; ++i)
+						if (tag[i] > 0) d[i] /= (double)tag[i];
+				}
+				else if (s.GetFormat() == DATA_COMP)
+				{
+					vector<int> tag(NN, 0);
+					FEElemData_T<float, DATA_COMP>* ps = dynamic_cast<FEElemData_T<float, DATA_COMP>*>(&s);
+
+					float ed[FEGenericElement::MAX_NODES] = { 0.f };
+					for (int i = 0; i<mesh->Elements(); ++i)
+					{
+						FEElement& el = mesh->Element(i);
+						if (ps->active(i))
+						{
+							ps->eval(i, ed);
+							for (int j = 0; j<el.Nodes(); ++j)
+							{
+								d[el.m_node[j]] += ed[j];
+								tag[el.m_node[j]]++;
+							}
+						}
+					}
+					for (int i = 0; i<NN; ++i)
+						if (tag[i] > 0) d[i] /= (double)tag[i];
 				}
 			}
 		}
