@@ -17,7 +17,7 @@ public:
 		}
 
 		addProperty("line width" , CProperty::Float);
-		addProperty("Color mode" , CProperty::Enum)->setEnumValues(QStringList() << "Solid" << "Model Data");
+		addProperty("Color mode" , CProperty::Enum)->setEnumValues(QStringList() << "Solid" << "Line Data" << "Model Data");
 		addProperty("Data field", CProperty::DataScalar);
 		addProperty("Solid color", CProperty::Color);
 		addProperty("Color map"  , CProperty::Enum)->setEnumValues(cols);
@@ -282,32 +282,56 @@ void CGLLinePlot::Render3DLines(FEState& s)
 
 void CGLLinePlot::Update(int ntime, float dt, bool breset)
 {
-	if ((m_ncolor == 0) || (m_nfield == -1)) return;
-
-	CGLModel& glm = *GetModel();
-	FEModel& fem = *glm.GetFEModel();
-
-	FEState& s = *fem.GetState(ntime);
-	int NL = s.Lines();
+	if ((m_ncolor == 0) || ((m_ncolor==2)&&(m_nfield == -1))) return;
 
 	float vmax = -1e99;
 	float vmin = 1e99;
-
-	NODEDATA nd1, nd2;
-	for (int i = 0; i < NL; ++i)
+	if (m_ncolor == 1)
 	{
-		LINEDATA& line = s.Line(i);
+		CGLModel& glm = *GetModel();
+		FEModel& fem = *glm.GetFEModel();
 
-		fem.EvaluateNode(line.m_r0, ntime, m_nfield, nd1);
-		fem.EvaluateNode(line.m_r1, ntime, m_nfield, nd2);
-		line.m_val[0] = nd1.m_val;
-		line.m_val[1] = nd2.m_val;
+		FEState& s = *fem.GetState(ntime);
+		int NL = s.Lines();
 
-		if (line.m_val[0] > vmax) vmax = line.m_val[0];
-		if (line.m_val[0] < vmin) vmin = line.m_val[0];
+		for (int i = 0; i < NL; ++i)
+		{
+			LINEDATA& line = s.Line(i);
 
-		if (line.m_val[1] > vmax) vmax = line.m_val[1];
-		if (line.m_val[1] < vmin) vmin = line.m_val[1];
+			line.m_val[0] = line.m_user_data[0];
+			line.m_val[1] = line.m_user_data[1];
+
+			if (line.m_val[0] > vmax) vmax = line.m_val[0];
+			if (line.m_val[0] < vmin) vmin = line.m_val[0];
+
+			if (line.m_val[1] > vmax) vmax = line.m_val[1];
+			if (line.m_val[1] < vmin) vmin = line.m_val[1];
+		}
+	}
+	else if (m_ncolor == 2)
+	{
+		CGLModel& glm = *GetModel();
+		FEModel& fem = *glm.GetFEModel();
+
+		FEState& s = *fem.GetState(ntime);
+		int NL = s.Lines();
+
+		NODEDATA nd1, nd2;
+		for (int i = 0; i < NL; ++i)
+		{
+			LINEDATA& line = s.Line(i);
+
+			fem.EvaluateNode(line.m_r0, ntime, m_nfield, nd1);
+			fem.EvaluateNode(line.m_r1, ntime, m_nfield, nd2);
+			line.m_val[0] = nd1.m_val;
+			line.m_val[1] = nd2.m_val;
+
+			if (line.m_val[0] > vmax) vmax = line.m_val[0];
+			if (line.m_val[0] < vmin) vmin = line.m_val[0];
+
+			if (line.m_val[1] > vmax) vmax = line.m_val[1];
+			if (line.m_val[1] < vmin) vmin = line.m_val[1];
+		}
 	}
 
 	m_rng.x = vmin;

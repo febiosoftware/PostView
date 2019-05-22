@@ -10,9 +10,10 @@
 #include <GL/gl.h>
 #endif
 #include "ImageSlicer.h"
+#include "ImageModel.h"
 #include <assert.h>
 
-CImageSlicer::CImageSlicer()
+CImageSlicer::CImageSlicer(CImageModel* img) : CGLImageRenderer(img)
 {
 	m_op = 0;
 	m_off = 0.5;
@@ -26,10 +27,12 @@ CImageSlicer::~CImageSlicer()
 {
 }
 
-void CImageSlicer::Create(C3DImage& im3d, BOUNDINGBOX box)
+void CImageSlicer::Create()
 {
+	C3DImage& im3d = *GetImageModel()->Get3DImage();
+
 	// store the bounding box
-	m_box = box;
+	m_box = GetImageModel()->GetBoundingBox();
 
 	// get the original image dimensions
 	int w = im3d.Width();
@@ -106,7 +109,7 @@ void CImageSlicer::BuildLUT()
 
 //-----------------------------------------------------------------------------
 //! Render textures
-void CImageSlicer::Render()
+void CImageSlicer::Render(CGLContext& rc)
 {
 	if (m_texID == 0)
 	{

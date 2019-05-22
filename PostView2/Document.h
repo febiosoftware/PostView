@@ -14,11 +14,9 @@ class CMainWindow;
 class CGLPlot;
 class CGLObject;
 class CGLVisual;
-class C3DImage;
-class CVolRender;
-class CImageSlicer;
 class CPalette;
 class CDocument;
+class CImageModel;
 
 class FEModel;
 class FEState;
@@ -273,12 +271,13 @@ public:
 	// ---------------------------------------
 
 	// add a 3D image
-	void Add3DImage(C3DImage* pimg, double x0, double y0, double z0, double x1, double y1, double z1, int nvisOption = 0);
+	void AddImageModel(CImageModel* img);
 
-	C3DImage* Get3DImage() { return m_pImg; }
-	CVolRender* GetVolumeRenderer() { return m_pVR; }
+	// number of image models
+	int ImageModels() const { return (int)m_img.size(); }
 
-	CImageSlicer* GetImageSlicer() { return m_pIS; }
+	// get image model
+	CImageModel* GetImageModel(int i) { return m_img[i]; }
 
 	// Add a data field
 	// NOTE: the ndata relates to the index in DataPanel::on_AddStandard_triggered
@@ -309,9 +308,7 @@ protected:
 	list<CGLVisual*>	m_pObj;		// additional objects
 	GPlotList			m_pPlot;	// list of plots
 
-	C3DImage*		m_pImg;	//!< 3D image
-	CVolRender*		m_pVR;	//!< volume renderer
-	CImageSlicer*	m_pIS;	//!< image slicer
+	std::vector<CImageModel*>	m_img;
 
 	FEFileReader*	m_pImp;			// last used file importer
 	char			m_szfile[1024];	// file name of current model

@@ -10,9 +10,10 @@
 #include <GLWLib/GLWidget.h>
 #include "GLModel.h"
 #include "GLPlaneCutPlot.h"
-#include "GLContext.h"
+#include <PostViewLib/GLContext.h>
 #include <PostViewLib/VolRender.h>
 #include <PostViewLib/ImageSlicer.h>
+#include <PostViewLib/ImageModel.h>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QtCore/QTimer>
@@ -2671,16 +2672,10 @@ void CGLView::RenderDoc()
 
 		// setup the rendering context
 		CGLContext rc(this);
+		rc.m_q = cam.GetOrientation();
 
 		// first we render all the plots
 		RenderPlots(rc);
-
-		// render the image slicer if present
-		CImageSlicer* pis = pdoc->GetImageSlicer();
-		if (pis && pis->IsActive())
-		{
-			pis->Render();
-		}
 
 		// activate all clipping planes
 		CGLPlaneCutPlot::EnableClipPlanes();
@@ -2712,12 +2707,17 @@ void CGLView::RenderDoc()
 		CGLPlaneCutPlot::DisableClipPlanes();
 
 		// render the volume image data if present
-		CVolRender* pvr = pdoc->GetVolumeRenderer();
-		if (pvr && pvr->IsActive())
+		for (int i = 0; i < pdoc->ImageModels(); ++i)
 		{
-			CGLCamera& cam = GetCamera();
-			quat4f q = cam.GetOrientation();
-			pvr->Render(q);
+			CImageModel* img = pdoc->GetImageModel(i);
+			for (int j = 0; j < img->ImageRenderers(); ++j)
+			{
+				CGLImageRenderer* pir = img->GetImageRenderer(j);
+				if (pir && pir->IsActive())
+				{
+					pir->Render(rc);
+				}
+			}
 		}
 	}
 	glPopAttrib();

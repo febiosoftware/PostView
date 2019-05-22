@@ -165,6 +165,7 @@ struct FRAG
 	int		iel;	// element in which tip lies
 	double	r[3];	// iso-coords of tip
 	vec3f	r0;		// reference position of tip
+	double	user_data;
 };
 
 vec3f GetCoordinatesFromFrag(FEModel& fem, int nstate, FRAG& a)
@@ -210,6 +211,9 @@ int CImportLinesTool::ReadAng2Format(const char* szfile)
 	// the flags say if vessels can grow inside a material or not
 	int mats = fem.Materials();
 	vector<bool> flags(mats, true);
+
+	// number of user-defined data fields in line file.
+	int ndataFields = 0;
 
 	switch (version)
 	{
@@ -257,11 +261,13 @@ int CImportLinesTool::ReadAng2Format(const char* szfile)
 			// copy line data
 			for (int i=0; i<raw.size(); ++i)
 			{
-				vec3f r0 = GetCoordinatesFromFrag(fem, nstate, raw[i].first );
-				vec3f r1 = GetCoordinatesFromFrag(fem, nstate, raw[i].second);
+				FRAG& a = raw[i].first;
+				FRAG& b = raw[i].second;
+				vec3f r0 = GetCoordinatesFromFrag(fem, nstate, a);
+				vec3f r1 = GetCoordinatesFromFrag(fem, nstate, b);
 
 				// add the line
-				s.AddLine(r0, r1);
+				s.AddLine(r0, r1, a.user_data, b.user_data);
 			}
 		}
 
@@ -274,16 +280,27 @@ int CImportLinesTool::ReadAng2Format(const char* szfile)
 		if (fread(&ftime, sizeof(float), 1, fp) != 1) { fclose(fp); return 2; }
 
 		// read the segments
+		int nd = 6 + 2 * ndataFields;
+		vector<float> d(nd, 0.f);
 		for (int i=0; i<segs; ++i)
 		{
-			float d[6] = {0.0f};
-			if (fread(d, sizeof(float), 6, fp) != 6) { fclose(fp); return 2; }
+			if (fread(&d[0], sizeof(float), nd, fp) != 8) { fclose(fp); return 2; }
 
 			// store the raw coordinates
-			vec3f a0 = vec3f(d[0], d[1], d[2]);
-			vec3f b0 = vec3f(d[3], d[4], d[5]);
+			float* c = &d[0];
+			vec3f a0 = vec3f(c[0], c[1], c[2]); c += 3 + ndataFields;
+			vec3f b0 = vec3f(c[0], c[1], c[2]);
+
+			float va = 0.f, vb = 0.f;
+			if (ndataFields > 0)
+			{
+				va = d[3];
+				vb = d[6 + ndataFields];
+			}
 
 			FRAG a, b;
+			a.user_data = va;
+			b.user_data = vb;
 			if (find.FindElement(a0, a.iel, a.r) == false) a.iel = -1;
 			if (find.FindElement(b0, b.iel, b.r) == false) b.iel = -1;
 			raw.push_back(pair<FRAG, FRAG>(a, b));
@@ -293,7 +310,7 @@ int CImportLinesTool::ReadAng2Format(const char* szfile)
 			vec3f r1 = GetCoordinatesFromFrag(fem, nstate, b);
 
 			// add the line data
-			s.AddLine(r0, r1);
+			s.AddLine(r0, r1, va, vb);
 		}
 
 		// next state

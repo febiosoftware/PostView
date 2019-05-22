@@ -1,19 +1,21 @@
 #pragma once
-#include "GLObject.h"
 #include "3DImage.h"
 #include "bbox.h"
+#include "GLImageRenderer.h"
 
-class CImageSlicer : public CGLObject
+class CImageModel;
+
+class CImageSlicer : public CGLImageRenderer
 {
 public:
-	CImageSlicer();
+	CImageSlicer(CImageModel* img);
 	~CImageSlicer();
 
-	void Create(C3DImage& im, BOUNDINGBOX box);
+	void Create();
 
 	void Update();
 
-	void Render();
+	void Render(CGLContext& rc) override;
 
 	int GetOrientation() const { return m_op; }
 	void SetOrientation(int n) { m_op = n; }

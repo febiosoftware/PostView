@@ -11,6 +11,9 @@
 #include "Document.h"
 #include <PostViewLib/3DImage.h>
 #include "MainWindow.h"
+#include <PostViewLib/ImageModel.h>
+#include <PostViewLib/VolRender.h>
+#include <PostViewLib/ImageSlicer.h>
 
 class CAddImage3DToolUI : public QWidget
 {
@@ -139,7 +142,35 @@ void CAddImage3DTool::OnApply()
 
 		int nops = ui->vis->currentIndex();
 
-		doc->Add3DImage(pimg, xmin, ymin, zmin, xmax, ymax, zmax, nops);
+		const char* ch = sfile.c_str();
+		const char* fileTitle = strrchr(ch, '\\');
+		if (fileTitle == nullptr)
+		{
+			fileTitle = strrchr(ch, '/');
+			if (fileTitle == nullptr) fileTitle = ch;
+			else fileTitle++;
+		}
+		else fileTitle++;
+
+		BOUNDINGBOX box(xmin, ymin, zmin, xmax, ymax, zmax);
+		CImageModel* img = new CImageModel;
+		img->Set3DImage(pimg, box);
+		img->SetName(fileTitle);
+
+		if (nops == 0)
+		{
+			CVolRender* vr = new CVolRender(img);
+			vr->Create();
+			img->AddImageRenderer(vr);
+		}
+		else
+		{
+			CImageSlicer* is = new CImageSlicer(img);
+			is->Create();
+			img->AddImageRenderer(is);
+		}
+
+		doc->AddImageModel(img);
 		m_wnd->UpdateUi(true);
 	}
 }

@@ -13,6 +13,7 @@
 #include <PostViewLib/Palette.h>
 #include <PostViewLib/FEAsciiExport.h>
 #include "GLModel.h"
+#include <PostViewLib/ImageModel.h>
 
 #ifdef WIN32
 	#include "direct.h"	// for getcwd, chdir
@@ -211,10 +212,6 @@ CDocument::CDocument(CMainWindow* pwnd) : m_wnd(pwnd)
 
 	m_szfile[0] = 0;
 
-	m_pImg = 0;
-	m_pVR = 0;
-	m_pIS = 0;
-
 	m_fem = 0;
 	m_pGLModel = 0;
 	m_pImp = 0;
@@ -313,9 +310,9 @@ void CDocument::Reset()
 	// clear the object list
 	ClearObjects();
 
-	if (m_pImg) { delete m_pImg; m_pImg = 0; }
-	if (m_pVR ) { delete m_pVR ; m_pVR  = 0; }
-	if (m_pIS ) { delete m_pIS ; m_pIS  = 0; }
+	// clear image models
+	for (int i = 0; i < (int)m_img.size(); ++i) delete m_img[i];
+	m_img.clear();
 }
 
 //-----------------------------------------------------------------------------
@@ -1954,15 +1951,30 @@ void CDocument::DeleteObject(CGLObject *po)
 		CGView* pview = GetView();
 		pview->DeleteKey(pt);
 	}
+	else if (dynamic_cast<CImageModel*>(po))
+	{
+		CImageModel* img = dynamic_cast<CImageModel*>(po);
+		for (int i = 0; i < (int)m_img.size(); ++i)
+		{
+			if (m_img[i] == img)
+			{
+				delete img;
+				m_img.erase(m_img.begin() + i);
+				break;
+			}
+		}
+	}
 	else if (dynamic_cast<CImageSlicer*>(po))
 	{
-		delete m_pIS;
-		m_pIS = 0;
+		CImageSlicer* slicer = dynamic_cast<CImageSlicer*>(po);
+		CImageModel* img = slicer->GetImageModel();
+		img->RemoveRenderer(slicer);
 	}
 	else if (dynamic_cast<CVolRender*>(po))
 	{
-		delete m_pVR;
-		m_pVR = 0;
+		CVolRender* vr = dynamic_cast<CVolRender*>(po);
+		CImageModel* img = vr->GetImageModel();
+		img->RemoveRenderer(vr);
 	}
 	else if (dynamic_cast<CGLDisplacementMap*>(po))
 	{
@@ -1975,29 +1987,9 @@ void CDocument::DeleteObject(CGLObject *po)
 }
 
 //------------------------------------------------------------------------------------------
-void CDocument::Add3DImage(C3DImage* pimg, double x0, double y0, double z0, double x1, double y1, double z1, int nvisOption)
+void CDocument::AddImageModel(CImageModel* img)
 {
-	BOUNDINGBOX box;
-	box.x0 = x0;
-	box.y0 = y0;
-	box.z0 = z0;
-	box.x1 = x1;
-	box.y1 = y1;
-	box.z1 = z1;
-
-	if (m_pImg) delete m_pImg;
-	m_pImg = pimg;
-
-	if (nvisOption == 0)
-	{
-		m_pVR = new CVolRender;
-		m_pVR->Create(*m_pImg, box);
-	}
-	else
-	{
-		m_pIS = new CImageSlicer;
-		m_pIS->Create(*m_pImg, box);
-	}
+	m_img.push_back(img);
 }
 
 //------------------------------------------------------------------------------------------

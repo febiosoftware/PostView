@@ -14,12 +14,14 @@
 #include <GL/gl.h>
 #endif
 #include "VolRender.h"
+#include "GLContext.h"
+#include "ImageModel.h"
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CVolRender::CVolRender()
+CVolRender::CVolRender(CImageModel* img) : CGLImageRenderer(img)
 {
 	m_pImx = m_pImy = m_pImz = 0;
 	m_nx = m_ny = m_nz = 0;
@@ -66,8 +68,12 @@ void CVolRender::Clear()
 
 //-----------------------------------------------------------------------------
 // Create new data for volume renderer
-void CVolRender::Create(C3DImage& im3d, BOUNDINGBOX box)
+void CVolRender::Create()
 {
+	C3DImage& im3d = *GetImageModel()->Get3DImage();
+
+	m_box = GetImageModel()->GetBoundingBox();
+
 	// get the original image dimensions
 	int w = im3d.Width();
 	int h = im3d.Height();
@@ -94,9 +100,6 @@ void CVolRender::Create(C3DImage& im3d, BOUNDINGBOX box)
 
 	m_pImz = new CRGBAImage[m_nz];
 	for (int i=0; i<m_nz; i++) m_pImz[i].Create(m_nx, m_ny);
-
-	// copy the box
-	m_box = box;
 
 	// calculate alpha scale factors
 	int nd = m_nx;
@@ -262,7 +265,7 @@ void CVolRender::DepthCueZ(CRGBAImage& im, int n)
 
 //-----------------------------------------------------------------------------
 //! Render textures
-void CVolRender::Render(quat4f q)
+void CVolRender::Render(CGLContext& rc)
 {
 	if (m_texID == 0)
 	{
@@ -285,7 +288,9 @@ void CVolRender::Render(quat4f q)
 
 //	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
+	
 	vec3f r(0,0,1);
+	quat4f q = rc.m_q;
 	q.Inverse().RotateVector(r);
 
 	double x = fabs(r.x);

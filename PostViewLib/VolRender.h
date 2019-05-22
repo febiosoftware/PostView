@@ -11,20 +11,23 @@
 
 #include "3DImage.h"
 #include "bbox.h"
+#include "GLImageRenderer.h"
 
-class CVolRender : public CGLObject
+class CImageModel;
+
+class CVolRender : public CGLImageRenderer
 {
 public:
-	CVolRender();
+	CVolRender(CImageModel* img);
 	virtual ~CVolRender();
 
 	void Clear();
 
-	void Create(C3DImage& im, BOUNDINGBOX box);
+	void Create();
 
 	void Update();
 
-	void Render(quat4f q);
+	void Render(CGLContext& rc) override;
 
 	void Reset();
 

@@ -5,7 +5,7 @@
 #include "stdafx.h"
 #include "GLPlaneCutPlot.h"
 #include "Document.h"
-#include "GLContext.h"
+#include <PostViewLib/GLContext.h>
 #include "GLView.h"
 #include "PropertyList.h"
 #include "ViewSettings.h"

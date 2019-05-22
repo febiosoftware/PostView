@@ -25,6 +25,8 @@
 #include <PostViewLib/3DImage.h>
 #include <PostViewLib/VolRender.h>
 #include <PostViewLib/ImageSlicer.h>
+#include <PostViewLib/ImageModel.h>
+#include <PostViewLib/GLImageRenderer.h>
 
 //-----------------------------------------------------------------------------
 class CModelProps : public CPropertyList
@@ -383,6 +385,56 @@ private:
 };
 
 //-----------------------------------------------------------------------------
+class CImageModelProps : public CPropertyList
+{
+public:
+	CImageModelProps(CImageModel* img)
+	{
+		m_img = img;
+
+		addProperty("x-min", CProperty::Float);
+		addProperty("y-min", CProperty::Float);
+		addProperty("z-min", CProperty::Float);
+		addProperty("x-max", CProperty::Float);
+		addProperty("y-max", CProperty::Float);
+		addProperty("z-max", CProperty::Float);
+	}
+
+	QVariant GetPropertyValue(int i)
+	{
+		BOUNDINGBOX box = m_img->GetBoundingBox();
+		switch (i)
+		{
+		case 0: return box.x0; break;
+		case 1: return box.y0; break;
+		case 2: return box.z0; break;
+		case 3: return box.x1; break;
+		case 4: return box.y1; break;
+		case 5: return box.z1; break;
+		}
+		return QVariant();
+	}
+
+	void SetPropertyValue(int i, const QVariant& val)
+	{
+		BOUNDINGBOX& box = m_img->GetBoundingBox();
+		switch (i)
+		{
+		case 0: box.x0 = val.toFloat(); break;
+		case 1: box.y0 = val.toFloat(); break;
+		case 2: box.z0 = val.toFloat(); break;
+		case 3: box.x1 = val.toFloat(); break;
+		case 4: box.y1 = val.toFloat(); break;
+		case 5: box.z1 = val.toFloat(); break;
+		}
+	}
+
+private:
+	CImageModel*	m_img;
+};
+
+
+//-----------------------------------------------------------------------------
 class CVolRenderProps : public CPropertyList
 {
 public:
@@ -720,28 +772,46 @@ void CModelViewer::Update(bool breset)
 				m_obj.push_back(&plot);
 			}
 
-			CVolRender* volRender = pdoc->GetVolumeRenderer();
-			if (volRender)
+			for (int i = 0; i < pdoc->ImageModels(); ++i)
 			{
-				CModelTreeItem* pi = new CModelTreeItem(volRender, ui->m_tree);
-				pi->setText(0, "Volume Render");
-//				pi->setTextColor(0, volRender->IsActive() ? Qt::black : Qt::gray);
-				pi->setIcon(0, QIcon(QString(":/icons/volrender.png")));
-				ui->m_list.push_back(new CVolRenderProps(m_wnd, volRender));
-				pi->setData(0, Qt::UserRole, (int) (ui->m_list.size() - 1));
-				m_obj.push_back(volRender);
-			}
+				CImageModel* img = pdoc->GetImageModel(i);
 
-			CImageSlicer* imgSlice = pdoc->GetImageSlicer();
-			if (imgSlice)
-			{
-				CModelTreeItem* pi = new CModelTreeItem(imgSlice, ui->m_tree);
-				pi->setText(0, "Image Slicer");
-//				pi->setTextColor(0, imgSlice->IsActive() ? Qt::black : Qt::gray);
-				pi->setIcon(0, QIcon(QString(":/icons/imageslice.png")));
-				ui->m_list.push_back(new CImageSlicerProps(m_wnd, imgSlice));
-				pi->setData(0, Qt::UserRole, (int)(ui->m_list.size() - 1));
-				m_obj.push_back(imgSlice);
+				CModelTreeItem* pi1 = new CModelTreeItem(img, ui->m_tree);
+				pi1->setText(0, QString::fromStdString(img->GetName()));
+				pi1->setIcon(0, QIcon(QString(":/icons/image.png")));
+				ui->m_list.push_back(new CImageModelProps(img));
+				pi1->setData(0, Qt::UserRole, (int)(ui->m_list.size() - 1));
+				m_obj.push_back(img);
+				pi1->setExpanded(true);
+
+				for (int j = 0; j < img->ImageRenderers(); ++j)
+				{
+					CGLImageRenderer* render = img->GetImageRenderer(j);
+
+					CVolRender* volRender = dynamic_cast<CVolRender*>(render);
+					if (volRender)
+					{
+						CModelTreeItem* pi = new CModelTreeItem(volRender, pi1);
+						pi->setText(0, "Volume Render");
+						//				pi->setTextColor(0, volRender->IsActive() ? Qt::black : Qt::gray);
+						pi->setIcon(0, QIcon(QString(":/icons/volrender.png")));
+						ui->m_list.push_back(new CVolRenderProps(m_wnd, volRender));
+						pi->setData(0, Qt::UserRole, (int)(ui->m_list.size() - 1));
+						m_obj.push_back(volRender);
+					}
+
+					CImageSlicer* imgSlice = dynamic_cast<CImageSlicer*>(render);
+					if (imgSlice)
+					{
+						CModelTreeItem* pi = new CModelTreeItem(imgSlice, pi1);
+						pi->setText(0, "Image Slicer");
+						//				pi->setTextColor(0, imgSlice->IsActive() ? Qt::black : Qt::gray);
+						pi->setIcon(0, QIcon(QString(":/icons/imageslice.png")));
+						ui->m_list.push_back(new CImageSlicerProps(m_wnd, imgSlice));
+						pi->setData(0, Qt::UserRole, (int)(ui->m_list.size() - 1));
+						m_obj.push_back(imgSlice);
+					}
+				}
 			}
 	
 			CGView& view = *pdoc->GetView();

@@ -1,4 +1,5 @@
 #pragma once
+#include "math3d.h"
 
 class CGLView;
 
@@ -10,5 +11,6 @@ public:
 
 public:
 	CGLView*	m_pview;
-	int	m_x, m_y;
+	int			m_x, m_y;
+	quat4f		m_q;
 };

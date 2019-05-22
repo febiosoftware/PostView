@@ -68,6 +68,7 @@ struct LINEDATA
 	vec3f	m_r0;
 	vec3f	m_r1;
 	float	m_val[2];
+	float	m_user_data[2];
 };
 
 struct POINTDATA
@@ -89,7 +90,7 @@ public:
 
 	int GetID() const;
 
-	void AddLine(vec3f a, vec3f b);
+	void AddLine(vec3f a, vec3f b, float data_a = 0.f, float data_b = 0.f);
 
 	void AddPoint(vec3f a, int nlabel = 0);
 

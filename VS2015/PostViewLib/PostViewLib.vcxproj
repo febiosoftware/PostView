@@ -189,6 +189,8 @@
     <ClInclude Include="..\..\PostViewLib\FEVTKImport.h" />
     <ClInclude Include="..\..\PostViewLib\GDecoration.h" />
     <ClInclude Include="..\..\PostViewLib\GLCamera.h" />
+    <ClInclude Include="..\..\PostViewLib\GLContext.h" />
+    <ClInclude Include="..\..\PostViewLib\GLImageRenderer.h" />
     <ClInclude Include="..\..\PostViewLib\GLObject.h" />
     <ClInclude Include="..\..\PostViewLib\GLTexture1D.h" />
     <ClInclude Include="..\..\PostViewLib\GMeshImport.h" />
@@ -197,6 +199,7 @@
     <ClInclude Include="..\..\PostViewLib\hex27.h" />
     <ClInclude Include="..\..\PostViewLib\hex8.h" />
     <ClInclude Include="..\..\PostViewLib\Image.h" />
+    <ClInclude Include="..\..\PostViewLib\ImageModel.h" />
     <ClInclude Include="..\..\PostViewLib\ImageSlicer.h" />
     <ClInclude Include="..\..\PostViewLib\Interpolator.h" />
     <ClInclude Include="..\..\PostViewLib\Intersect.h" />
@@ -275,11 +278,13 @@
     <ClCompile Include="..\..\PostViewLib\FEVTKImport.cpp" />
     <ClCompile Include="..\..\PostViewLib\GDecoration.cpp" />
     <ClCompile Include="..\..\PostViewLib\GLCamera.cpp" />
+    <ClCompile Include="..\..\PostViewLib\GLContext.cpp" />
     <ClCompile Include="..\..\PostViewLib\GLObject.cpp" />
     <ClCompile Include="..\..\PostViewLib\GLTexture1D.cpp" />
     <ClCompile Include="..\..\PostViewLib\GMeshImport.cpp" />
     <ClCompile Include="..\..\PostViewLib\GView.cpp" />
     <ClCompile Include="..\..\PostViewLib\Image.cpp" />
+    <ClCompile Include="..\..\PostViewLib\ImageModel.cpp" />
     <ClCompile Include="..\..\PostViewLib\ImageSlicer.cpp" />
     <ClCompile Include="..\..\PostViewLib\integrate.cpp" />
     <ClCompile Include="..\..\PostViewLib\Interpolator.cpp" />
