@@ -1111,14 +1111,8 @@ void CGLView::RenderBkGround(GLCOLOR c1, GLCOLOR c2, int style)
 }
 
 //-----------------------------------------------------------------------------
-void CGLView::RenderBox()
+void CGLView::RenderBox(const BOUNDINGBOX& box)
 {
-	CDocument* pdoc = GetDocument();
-	VIEWSETTINGS& ops = GetViewSettings();
-	BOUNDINGBOX box = pdoc->GetBoundingBox();
-
-	glColor3ub(ops.fgcol.r, ops.fgcol.g, ops.fgcol.b);
-
 	// push attributes
 	glPushAttrib(GL_ENABLE_BIT);
 
@@ -2692,8 +2686,14 @@ void CGLView::RenderDoc()
 			// render the GL model
 			po->Render(rc, view.m_bmesh, view.m_boutline, view.m_fspringthick);
 
+			CDocument* pdoc = GetDocument();
+			VIEWSETTINGS& ops = GetViewSettings();
+			BOUNDINGBOX box = pdoc->GetBoundingBox();
+
+			glColor3ub(ops.fgcol.r, ops.fgcol.g, ops.fgcol.b);
+
 			// render the bounding box
-			if (view.m_bBox) RenderBox();
+			if (view.m_bBox) RenderBox(box);
 		}
 
 		// render the other objects
@@ -2710,12 +2710,18 @@ void CGLView::RenderDoc()
 		for (int i = 0; i < pdoc->ImageModels(); ++i)
 		{
 			CImageModel* img = pdoc->GetImageModel(i);
-			for (int j = 0; j < img->ImageRenderers(); ++j)
+			if (img->IsActive())
 			{
-				CGLImageRenderer* pir = img->GetImageRenderer(j);
-				if (pir && pir->IsActive())
+				glColor3ub(255, 128, 128);
+				BOUNDINGBOX& box = img->GetBoundingBox();
+				RenderBox(box);
+				for (int j = 0; j < img->ImageRenderers(); ++j)
 				{
-					pir->Render(rc);
+					CGLImageRenderer* pir = img->GetImageRenderer(j);
+					if (pir && pir->IsActive())
+					{
+						pir->Render(rc);
+					}
 				}
 			}
 		}

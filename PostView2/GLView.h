@@ -217,7 +217,7 @@ protected:
 	void RenderBkGround(GLCOLOR c1, GLCOLOR c2, int style);
 	void RenderRubberBand();
 	void RenderWidgets();
-	void RenderBox();
+	void RenderBox(const BOUNDINGBOX& box);
 	void RenderPlots(CGLContext& rc);
 
 	// calculate a ray based on screen position (x, y)
