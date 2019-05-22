@@ -12,8 +12,6 @@
 #include <PostViewLib/3DImage.h>
 #include "MainWindow.h"
 #include <PostViewLib/ImageModel.h>
-#include <PostViewLib/VolRender.h>
-#include <PostViewLib/ImageSlicer.h>
 
 class CAddImage3DToolUI : public QWidget
 {
@@ -22,7 +20,6 @@ public:
 	CFloatInput *pxmin, *pymin, *pzmin;
 	CFloatInput *pxmax, *pymax, *pzmax;
 	QLineEdit* pfile;
-	QComboBox*	vis;
 
 public:
 	CAddImage3DToolUI(QObject* parent)
@@ -53,11 +50,6 @@ public:
 		grid->addWidget(pl = new QLabel("z-max"), 5, 2); grid->addWidget(pzmax = new CFloatInput, 5, 3); pl->setBuddy(pzmax); pzmax->setFixedWidth(70);
 
 		pv->addLayout(grid);
-
-		vis = new QComboBox;
-		vis->addItem("Volume Rendering");
-		vis->addItem("Image slicer");
-		pv->addWidget(vis);
 
 		QPushButton* apply = new QPushButton("Load");
 		pv->addWidget(apply);
@@ -140,8 +132,6 @@ void CAddImage3DTool::OnApply()
 			return;
 		}
 
-		int nops = ui->vis->currentIndex();
-
 		const char* ch = sfile.c_str();
 		const char* fileTitle = strrchr(ch, '\\');
 		if (fileTitle == nullptr)
@@ -156,19 +146,6 @@ void CAddImage3DTool::OnApply()
 		CImageModel* img = new CImageModel;
 		img->Set3DImage(pimg, box);
 		img->SetName(fileTitle);
-
-		if (nops == 0)
-		{
-			CVolRender* vr = new CVolRender(img);
-			vr->Create();
-			img->AddImageRenderer(vr);
-		}
-		else
-		{
-			CImageSlicer* is = new CImageSlicer(img);
-			is->Create();
-			img->AddImageRenderer(is);
-		}
 
 		doc->AddImageModel(img);
 		m_wnd->UpdateUi(true);

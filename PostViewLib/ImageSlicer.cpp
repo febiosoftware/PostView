@@ -12,9 +12,15 @@
 #include "ImageSlicer.h"
 #include "ImageModel.h"
 #include <assert.h>
+#include <sstream>
 
 CImageSlicer::CImageSlicer(CImageModel* img) : CGLImageRenderer(img)
 {
+	static int n = 1;
+	stringstream ss;
+	ss << "ImageSlicer" << n++;
+	SetName(ss.str());
+
 	m_op = 0;
 	m_off = 0.5;
 	m_col1 = GLCOLOR(  0,   0,   0);

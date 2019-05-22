@@ -340,6 +340,8 @@ public:
 		QAction* actionDisplacementMap = addAction("Displacement map" , "actionDisplacementMap", ":/icons/distort.png");
 		QAction* actionStreamLinePlot  = addAction("Stream lines plot", "actionStreamLinePlot" , ":/icons/streamlines.png");
 		QAction* actionParticleFlowPlot= addAction("Particle flow plot", "actionParticleFlowPlot" , ":/icons/particle.png");
+		QAction* actionImageSlicer     = addAction("Image slicer"     , "actionImageSlicer"       , ":/icons/imageslice.png");
+		QAction* actionVolumeRender    = addAction("Volume render"    , "actionVolumeRender"      , ":/icons/volrender.png");
 		QAction* actionGraph           = addAction("New Graph ..."    , "actionGraph"          , ":/icons/chart.png"); actionGraph->setShortcut(Qt::Key_F3);
 		QAction* actionSummary         = addAction("Summary ..."      , "actionSummary"        ); actionSummary->setShortcut(Qt::Key_F4);
 		QAction* actionStats           = addAction("Statistics  ..."  , "actionStats"          );
@@ -471,6 +473,9 @@ public:
 		menuPost->addAction(actionStreamLinePlot);
 		menuPost->addAction(actionParticleFlowPlot);
 		menuPost->addSeparator();
+		menuPost->addAction(actionImageSlicer);
+		menuPost->addAction(actionVolumeRender);
+		menuPost->addSeparator();
 		menuPost->addAction(actionGraph);
 		menuPost->addSeparator();
 		menuPost->addAction(actionSummary);
@@ -575,6 +580,8 @@ public:
 		postToolbar->addAction(actionSlicePlot     );
 		postToolbar->addAction(actionStreamLinePlot);
 		postToolbar->addAction(actionParticleFlowPlot);
+		postToolbar->addAction(actionImageSlicer);
+		postToolbar->addAction(actionVolumeRender);
 		postToolbar->addSeparator();
 		postToolbar->addAction(actionGraph);
 		postToolbar->addAction(actionIntegrate);

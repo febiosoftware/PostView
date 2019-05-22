@@ -16,6 +16,7 @@
 #include "VolRender.h"
 #include "GLContext.h"
 #include "ImageModel.h"
+#include <sstream>
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -23,6 +24,11 @@
 
 CVolRender::CVolRender(CImageModel* img) : CGLImageRenderer(img)
 {
+	static int n = 1;
+	stringstream ss;
+	ss << "VolumeRender" << n++;
+	SetName(ss.str());
+
 	m_pImx = m_pImy = m_pImz = 0;
 	m_nx = m_ny = m_nz = 0;
 

@@ -1931,20 +1931,6 @@ void CDocument::DeleteObject(CGLObject *po)
 			}
 		}
 	}
-	else if (dynamic_cast<CGLVisual*>(po))
-	{
-		list<CGLVisual*>::iterator it = m_pObj.begin();
-		for (int i = 0; i<(int)m_pObj.size(); ++i, ++it)
-		{
-			CGLVisual* pv = (*it);
-			if (pv == po)
-			{
-				delete pv;
-				m_pObj.erase(it);
-				break;
-			}
-		}
-	}
 	else if (dynamic_cast<GLCameraTransform*>(po))
 	{
 		GLCameraTransform* pt = dynamic_cast<GLCameraTransform*>(po);
@@ -1983,6 +1969,20 @@ void CDocument::DeleteObject(CGLObject *po)
 		assert(map == m->GetDisplacementMap());
 		m->RemoveDisplacementMap();
 		UpdateFEModel(true);
+	}
+	else if (dynamic_cast<CGLVisual*>(po))
+	{
+		list<CGLVisual*>::iterator it = m_pObj.begin();
+		for (int i = 0; i<(int)m_pObj.size(); ++i, ++it)
+		{
+			CGLVisual* pv = (*it);
+			if (pv == po)
+			{
+				delete pv;
+				m_pObj.erase(it);
+				break;
+			}
+		}
 	}
 }
 

@@ -52,6 +52,9 @@
 #include "AVIAnimation.h"
 #include "MPEGAnimation.h"
 #include "DocManager.h"
+#include <PostViewLib/ImageModel.h>
+#include <PostViewLib/ImageSlicer.h>
+#include <PostViewLib/VolRender.h>
 #include <string>
 #include <QStyleFactory>
 
@@ -1320,6 +1323,42 @@ void CMainWindow::on_actionParticleFlowPlot_triggered()
 	ui->modelViewer->parentWidget()->raise();
 
 	RedrawGL();
+}
+
+void CMainWindow::on_actionImageSlicer_triggered()
+{
+	CGLObject* po = ui->modelViewer->selectedObject();
+	CImageModel* img = dynamic_cast<CImageModel*>(po);
+	if (img == nullptr)
+	{
+		QMessageBox::critical(this, "PostView", "Please select an image data set first.");
+	}
+	else
+	{
+		CImageSlicer* slicer = new CImageSlicer(img);
+		slicer->Create();
+		img->AddImageRenderer(slicer);
+		ui->modelViewer->Update(true);
+		ui->modelViewer->selectObject(slicer);
+	}
+}
+
+void CMainWindow::on_actionVolumeRender_triggered()
+{
+	CGLObject* po = ui->modelViewer->selectedObject();
+	CImageModel* img = dynamic_cast<CImageModel*>(po);
+	if (img == nullptr)
+	{
+		QMessageBox::critical(this, "PostView", "Please select an image data set first.");
+	}
+	else
+	{
+		CVolRender* vr = new CVolRender(img);
+		vr->Create();
+		img->AddImageRenderer(vr);
+		ui->modelViewer->Update(true);
+		ui->modelViewer->selectObject(vr);
+	}
 }
 
 void CMainWindow::on_actionIsosurfacePlot_triggered()

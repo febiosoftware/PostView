@@ -2,6 +2,7 @@
 #include <QBoxLayout>
 #include <QTreeWidget>
 #include <QTableWidget>
+#include <QTabWidget>
 #include <QMessageBox>
 #include <QHeaderView>
 #include <QCheckBox>
@@ -27,6 +28,7 @@
 #include <PostViewLib/ImageSlicer.h>
 #include <PostViewLib/ImageModel.h>
 #include <PostViewLib/GLImageRenderer.h>
+#include "ImageViewer.h"
 
 //-----------------------------------------------------------------------------
 class CModelProps : public CPropertyList
@@ -568,6 +570,11 @@ public:
 	::CPropertyListView*	m_props;
 	QVector<CPropertyList*>	m_list;
 
+	CImageViewer*	m_imgView;
+
+	QTabWidget*	m_tab;
+
+
 	QLineEdit* name;
 	QCheckBox* enabled;
 
@@ -617,10 +624,21 @@ public:
 
 		phl->addLayout(bl);
 */
+
 		pvl->addLayout(phl);
+
+		m_tab = new QTabWidget;
 		m_props = new ::CPropertyListView;
 		m_props->setObjectName("props");
-		pvl->addWidget(m_props);
+		m_tab->addTab(m_props, "Properties");
+//		tab->setTabPosition(QTabWidget::West);
+
+		m_imgView = new CImageViewer;
+//		m_tab->addTab(m_imgView, "Image Viewer");
+
+		m_imgView->hide();
+
+		pvl->addWidget(m_tab);
 		w->setLayout(pvl);
 
 		psplitter->addWidget(m_tree);
@@ -637,6 +655,24 @@ public:
 
 		CGLObject* po = item->Object();
 		return po;
+	}
+
+	void ShowImageViewer(CImageModel* img)
+	{
+		if (m_tab->count() == 1)
+		{
+			m_imgView->SetImageModel(img);
+			m_tab->addTab(m_imgView, "Image Viewer");
+		}
+	}
+
+	void HideImageViewer()
+	{
+		if (m_tab->count() == 2)
+		{
+			m_imgView->SetImageModel(nullptr);
+			m_tab->removeTab(1);
+		}
 	}
 };
 
@@ -669,6 +705,13 @@ void CModelViewer::selectObject(CGLObject* po)
 	}
 }
 
+CGLObject* CModelViewer::selectedObject()
+{
+	CModelTreeItem* item = dynamic_cast<CModelTreeItem*>(ui->m_tree->currentItem());
+	if (item == nullptr) return nullptr;
+	return item->Object();
+}
+
 void CModelViewer::UpdateView()
 {
 	QTreeWidgetItem* psel = ui->m_tree->currentItem();
@@ -699,6 +742,9 @@ void CModelViewer::Update(bool breset)
 
 		// clear object list
 		m_obj.clear();
+
+		// hide the image viewer
+		ui->HideImageViewer();
 
 		ui->name->clear();
 
@@ -792,7 +838,7 @@ void CModelViewer::Update(bool breset)
 					if (volRender)
 					{
 						CModelTreeItem* pi = new CModelTreeItem(volRender, pi1);
-						pi->setText(0, "Volume Render");
+						pi->setText(0, QString::fromStdString(render->GetName()));
 						//				pi->setTextColor(0, volRender->IsActive() ? Qt::black : Qt::gray);
 						pi->setIcon(0, QIcon(QString(":/icons/volrender.png")));
 						ui->m_list.push_back(new CVolRenderProps(m_wnd, volRender));
@@ -804,7 +850,7 @@ void CModelViewer::Update(bool breset)
 					if (imgSlice)
 					{
 						CModelTreeItem* pi = new CModelTreeItem(imgSlice, pi1);
-						pi->setText(0, "Image Slicer");
+						pi->setText(0, QString::fromStdString(render->GetName()));
 						//				pi->setTextColor(0, imgSlice->IsActive() ? Qt::black : Qt::gray);
 						pi->setIcon(0, QIcon(QString(":/icons/imageslice.png")));
 						ui->m_list.push_back(new CImageSlicerProps(m_wnd, imgSlice));
@@ -849,6 +895,7 @@ void CModelViewer::Update(bool breset)
 
 void CModelViewer::on_modelTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* prev)
 {
+	ui->HideImageViewer();
 	if (current)
 	{
 		CModelTreeItem* item = dynamic_cast<CModelTreeItem*>(current);
@@ -859,6 +906,12 @@ void CModelViewer::on_modelTree_currentItemChanged(QTreeWidgetItem* current, QTr
 			{
 				ui->enabled->setEnabled(true);
 				ui->enabled->setChecked(po->IsActive());
+
+				if (dynamic_cast<CImageModel*>(po))
+				{
+					CImageModel* img = dynamic_cast<CImageModel*>(po);
+					ui->ShowImageViewer(img);
+				}
 			}
 			else 
 			{
