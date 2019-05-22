@@ -45,10 +45,14 @@ public:
 	void value(double* pg, int n);
 	void value(vec3f r) { sprintf(m_szval, "%15.7e,%15.7e,%15.7e", r.x, r.y, r.z); }
 
+	int add_attribute(const char* szn, const std::string& s);
 	int add_attribute(const char* szn, const char* szv);
 	int add_attribute(const char* szn, int n);
 	int add_attribute(const char* szn, bool b);
 	int add_attribute(const char* szn, double g);
+	int add_attribute(const char* szn, GLCOLOR& c);
+	int add_attribute(const char* szn, double* v, int n);
+	int add_attribute(const char* szn, int* d, int n);
 
 	void set_attribute(int nid, const char* szv);
 	void set_attribute(int nid, int n);
@@ -69,12 +73,20 @@ protected:
 class XMLWriter  
 {
 public:
+	enum OUTPUT_STYLE {
+		DEFAULT,
+		ANDROID
+	};
+
+public:
 	XMLWriter();
 	virtual ~XMLWriter();
 	
 	bool open(const char* szfile);
 
 	void close();
+
+	void SetOutputStyle(OUTPUT_STYLE os);
 
 	void add_branch(XMLElement& el, bool bclear = true);
 	void add_branch(const char* szname);
@@ -102,6 +114,8 @@ protected:
 protected:
 	FILE*	m_fp;
 	int		m_level;
+
+	OUTPUT_STYLE	m_os;
 
 	char	m_tag[MAX_TAGS][256];
 	char	m_sztab[256];

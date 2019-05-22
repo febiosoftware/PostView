@@ -537,6 +537,11 @@ void CMainWindow::checkFileProgress()
 void CMainWindow::AddDocument(CDocument* doc)
 {
 	m_DocManager->AddDocument(doc);
+	AddDocumentTab(doc);
+}
+
+void CMainWindow::AddDocumentTab(CDocument* doc)
+{
 	ui->addTab(QString::fromStdString(doc->GetFileName()), doc->GetFile());
 }
 
@@ -863,35 +868,24 @@ void CMainWindow::on_actionOpenSession_triggered()
 		std::string sfile = filename.toStdString();
 		const char* szfile = sfile.c_str();
 
-		CDocument* pdoc = GetActiveDocument();
+		int docs = m_DocManager->Documents();
+
 		// try to open the session
 		if (m_DocManager->OpenSession(szfile) == false)
 		{
 			QMessageBox::critical(this, "PostView", "Failed restoring session.");
-//			ShowTimeController(false);
-			ui->playToolBar->setDisabled(true);
 		}
-		else
+
+		// add all the new docs
+		for (int i = docs; i < m_DocManager->Documents(); ++i)
 		{
-			int N = pdoc->GetFEModel()->GetStates();
-//			ShowTimeController(N > 1);
+			AddDocumentTab(m_DocManager->GetDocument(i));
+		}
 
-			const char* ch = strrchr(szfile, '\\');
-			if (ch == 0) 
-			{
-				ch = strrchr(szfile, '/'); 
-				if (ch == 0) ch = szfile; else ch++;
-			} else ch++;
-
-			QString title; title = QString(ch);
-			SetWindowTitle(title);
-			
-			ui->selectData->BuildMenu(pdoc->GetFEModel(), DATA_SCALAR);
-			if (pdoc->GetFEModel()->GetStates() > 0) ui->playToolBar->setEnabled(true);
-			else ui->playToolBar->setDisabled(true);
-
-			// update all Ui components
-			UpdateUi(true);
+		if ((docs == 0) && (m_DocManager->Documents() > 0))
+		{
+			// Make it the active document
+			MakeDocActive(m_DocManager->GetDocument(0));
 		}
 	}
 }

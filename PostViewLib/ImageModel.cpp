@@ -17,6 +17,11 @@ CImageModel::~CImageModel()
 	m_render.clear();
 }
 
+void CImageModel::SetFileName(const std::string& fileName)
+{
+	m_file = fileName;
+}
+
 void CImageModel::Set3DImage(C3DImage* img, BOUNDINGBOX b)
 {
 	assert(m_pImg == nullptr);

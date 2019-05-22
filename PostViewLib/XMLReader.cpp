@@ -4,12 +4,123 @@
 
 #include "stdafx.h"
 #include "XMLReader.h"
+#include <assert.h>
 
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
+
+int parse_csv(char* sz, double* f, int n)
+{
+	int nread = 0;
+	for (int i = 0; i<n; ++i)
+	{
+		char* sze = strchr(sz, ',');
+		if (sze) *sze = 0;
+
+		f[i] = atof(sz);
+		nread++;
+
+		if (sze)
+		{
+			*sze = ',';
+			sz = sze + 1;
+		}
+		else break;
+	}
+	return nread;
+}
+
+int parse_csv(char* sz, float* f, int n)
+{
+	int nread = 0;
+	for (int i = 0; i<n; ++i)
+	{
+		char* sze = strchr(sz, ',');
+		if (sze) *sze = 0;
+
+		f[i] = (float)atof(sz);
+		nread++;
+
+		if (sze)
+		{
+			*sze = ',';
+			sz = sze + 1;
+		}
+		else break;
+	}
+	return nread;
+}
+
+int parse_csv(char* sz, int* d, int n)
+{
+	int nread = 0;
+	for (int i = 0; i<n; ++i)
+	{
+		char* sze = strchr(sz, ',');
+		if (sze) *sze = 0;
+
+		d[i] = atoi(sz);
+		nread++;
+
+		if (sze)
+		{
+			*sze = ',';
+			sz = sze + 1;
+		}
+		else break;
+	}
+	return nread;
+}
+
+
+void XMLAtt::value(bool& v)
+{
+	if (stricmp(m_szval, "true") == 0) v = true;
+	else v = false;
+}
+
+void XMLAtt::value(int& v)
+{
+	v = atoi(m_szval);
+}
+
+void XMLAtt::value(float& v)
+{
+	v = (float)atof(m_szval);
+}
+
+void XMLAtt::value(double& v)
+{
+	v = atof(m_szval);
+}
+
+void XMLAtt::value(GLCOLOR& v)
+{
+	int r, g, b, a;
+	sscanf(m_szval, "#%2X%2X%2X%2X", &r, &g, &b, &a);
+	v.r = r;
+	v.g = g;
+	v.b = b;
+	v.a = a;
+}
+
+void XMLAtt::value(std::string& s)
+{
+	s = m_szval;
+}
+
+int XMLAtt::value(double* v, int n)
+{
+	return parse_csv(m_szval, v, n);
+}
+
+int XMLAtt::value(int* v, int n)
+{
+	return parse_csv(m_szval, v, n);
+}
 
 //////////////////////////////////////////////////////////////////////
 // XMLTag
@@ -39,63 +150,21 @@ XMLTag::XMLTag()
 
 void XMLTag::value(double* pf, int n)
 {
-	char* sz = m_szval;
-
-	for (int i=0; i<n; ++i)
-	{
-		char* sze = strchr(sz, ',');
-		if (sze) *sze = 0;
-
-		pf[i] = atof(sz);
-
-		if (sze)
-		{
-			*sze = ',';
-			sz = sze+1;
-		}
-	}	
+	parse_csv(m_szval, pf, n);
 }
  
 //////////////////////////////////////////////////////////////////////
 
 void XMLTag::value(float* pf, int n)
 {
-	char* sz = m_szval;
-
-	for (int i=0; i<n; ++i)
-	{
-		char* sze = strchr(sz, ',');
-		if (sze) *sze = 0;
-
-		pf[i] = (float) atof(sz);
-
-		if (sze)
-		{
-			*sze = ',';
-			sz = sze+1;
-		}
-	}	
+	parse_csv(m_szval, pf, n);
 }
 
 //////////////////////////////////////////////////////////////////////
 
 void XMLTag::value(int* pi, int n)
 {
-	char* sz = m_szval;
-
-	for (int i=0; i<n; ++i)
-	{
-		char* sze = strchr(sz, ',');
-		if (sze) *sze = 0;
-
-		pi[i] = atoi(sz);
-
-		if (sze)
-		{
-			*sze = ',';
-			sz = sze+1;
-		}
-	}	
+	parse_csv(m_szval, pi, n);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -349,6 +418,8 @@ void XMLReader::ReadTag(XMLTag& tag)
 
 		++n;
 		++tag.m_natt;
+
+		assert(tag.m_natt <= XMLTag::MAX_ATT);
 	}
 
 	if (!tag.isend() && !tag.isempty())

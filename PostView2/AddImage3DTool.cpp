@@ -146,6 +146,7 @@ void CAddImage3DTool::OnApply()
 		CImageModel* img = new CImageModel;
 		img->Set3DImage(pimg, box);
 		img->SetName(fileTitle);
+		img->SetFileName(sfile);
 
 		doc->AddImageModel(img);
 		m_wnd->UpdateUi(true);

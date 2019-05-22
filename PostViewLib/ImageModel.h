@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <string>
 #include "bbox.h"
 #include "GLObject.h"
 
@@ -11,6 +12,9 @@ class CImageModel : public CGLObject
 public:
 	CImageModel();
 	~CImageModel();
+
+	void SetFileName(const std::string& fileName);
+	std::string GetFileName() { return m_file; }
 
 	void Set3DImage(C3DImage* img, BOUNDINGBOX b);
 
@@ -25,6 +29,7 @@ public:
 	BOUNDINGBOX& GetBoundingBox() { return m_box; }
 
 private:
+	std::string		m_file;						//!< file name of image data
 	BOUNDINGBOX		m_box;						//!< physical dimensions of image
 	C3DImage*		m_pImg;						//!< 3D image
 	std::vector<CGLImageRenderer*>	m_render;	//!< image renderers

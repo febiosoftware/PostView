@@ -230,6 +230,7 @@ private:
 	void StopAnimation();
 
 	void AddDocument(CDocument* doc);
+	void AddDocumentTab(CDocument* doc);
 
 	void MakeDocActive(CDocument* doc);
 

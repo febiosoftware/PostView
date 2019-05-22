@@ -26,14 +26,21 @@ public:
 	char	m_sztag[MAX_TAG];
 
 public:
-	void value(int& val) { val = atoi(m_szval); }
-
 	template <typename T> T value() { return T(0); }
 
 	const char* cvalue() { return m_szval; }
 
-	bool operator == (const char* szval) { return (strcmp(szval, m_szval) == 0); }
-	bool operator != (const char* szval) { return (strcmp(szval, m_szval) != 0); }
+	void value(bool& v);
+	void value(int& v);
+	void value(float& v);
+	void value(double& v);
+	void value(GLCOLOR& v);
+	void value(std::string& s);
+	int value(double* v, int n);
+	int value(int* v, int n);
+
+	bool operator == (const char* szval) { return (strcmp(szval, m_sztag) == 0); }
+	bool operator != (const char* szval) { return (strcmp(szval, m_sztag) != 0); }
 };
 
 template <> inline int XMLAtt::value<int>() { return atoi(m_szval); }
@@ -45,7 +52,7 @@ class XMLTag
 {
 public:
 	enum {MAX_TAG   = 256};
-	enum {MAX_ATT   =   8};
+	enum {MAX_ATT   =  32};
 	enum {MAX_LEVEL =  16};
 
 public:

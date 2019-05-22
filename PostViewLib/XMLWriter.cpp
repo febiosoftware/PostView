@@ -34,6 +34,14 @@ void XMLElement::value(double* pg, int n)
 	}
 }
 
+int XMLElement::add_attribute(const char* szn, const std::string& s)
+{
+	strcpy(m_attn[m_natt], szn);
+	strcpy(m_attv[m_natt], s.c_str());
+	m_natt++;
+	return m_natt - 1;
+}
+
 int XMLElement::add_attribute(const char* szn, const char* szv)
 {
 	strcpy(m_attn[m_natt], szn);
@@ -53,7 +61,7 @@ int XMLElement::add_attribute(const char* szn, int n)
 int XMLElement::add_attribute(const char* szn, bool b)
 {
 	strcpy(m_attn[m_natt], szn);
-	sprintf(m_attv[m_natt], "%d", (int) b);
+	sprintf(m_attv[m_natt], "%s", (b?"true":"false"));
 	m_natt++;
 	return m_natt-1;
 }
@@ -64,6 +72,40 @@ int XMLElement::add_attribute(const char* szn, double g)
 	sprintf(m_attv[m_natt], "%lg", g);
 	m_natt++;
 	return m_natt-1;
+}
+
+int XMLElement::add_attribute(const char* szn, GLCOLOR& c)
+{
+	strcpy(m_attn[m_natt], szn);
+	sprintf(m_attv[m_natt], "#%02X%02X%02X%02X", c.r, c.g, c.b, c.a);
+	m_natt++;
+	return m_natt - 1;
+}
+
+int XMLElement::add_attribute(const char* szn, double* v, int n)
+{
+	strcpy(m_attn[m_natt], szn);
+	char* sz = m_attv[m_natt];
+	for (int i = 0; i < n; ++i)
+	{
+		sprintf(sz, "%lg", v[i]); sz += strlen(sz);
+		if (i != n - 1) { sprintf(sz, ", "); sz += strlen(sz); }
+	}
+	m_natt++;
+	return m_natt - 1;
+}
+
+int XMLElement::add_attribute(const char* szn, int* d, int n)
+{
+	strcpy(m_attn[m_natt], szn);
+	char* sz = m_attv[m_natt];
+	for (int i = 0; i < n; ++i)
+	{
+		sprintf(sz, "%d", d[i]); sz += strlen(sz);
+		if (i != n - 1) { sprintf(sz, ", "); sz += strlen(sz); }
+	}
+	m_natt++;
+	return m_natt - 1;
 }
 
 void XMLElement::set_attribute(int nid, const char* szv)
@@ -78,7 +120,7 @@ void XMLElement::set_attribute(int nid, int n)
 
 void XMLElement::set_attribute(int nid, bool b)
 {
-	sprintf(m_attv[nid], "%d", (int) b);
+	sprintf(m_attv[nid], "%s", (b?"true":"false"));
 }
 
 void XMLElement::set_attribute(int nid, double g)
@@ -112,6 +154,8 @@ bool XMLWriter::open(const char* szfile)
 
 	// write the first line
 	fprintf(m_fp, "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
+
+	m_os = DEFAULT;
 	
 	return (m_fp != 0);
 }
@@ -119,6 +163,11 @@ bool XMLWriter::open(const char* szfile)
 void XMLWriter::close()
 {
 	if (m_fp) fclose(m_fp); m_fp = 0;
+}
+
+void XMLWriter::SetOutputStyle(OUTPUT_STYLE os)
+{
+	m_os = os;
 }
 
 void XMLWriter::inc_level()
@@ -157,15 +206,29 @@ void XMLWriter::add_branch(XMLElement& el, bool bclear)
 	char szformat[256] = {0};
 	sprintf(szformat, "%s<%%s", m_sztab);
 
-	fprintf(m_fp, szformat, el.m_sztag);
-
-	for (int i=0; i<el.m_natt; ++i)
+	if (m_os == OUTPUT_STYLE::DEFAULT)
 	{
-		fprintf(m_fp, " %s=\"%s\"", el.m_attn[i], el.m_attv[i]);
+		fprintf(m_fp, szformat, el.m_sztag);
+
+		for (int i = 0; i < el.m_natt; ++i)
+		{
+			fprintf(m_fp, " %s=\"%s\"", el.m_attn[i], el.m_attv[i]);
+		}
+	}
+	else
+	{
+		fprintf(m_fp, "\n");
+		fprintf(m_fp, szformat, el.m_sztag);
+		fprintf(m_fp, "\n");
+		for (int i = 0; i < el.m_natt; ++i)
+		{
+			fprintf(m_fp, "%s", m_sztab);
+			fprintf(m_fp, "\t%s=\"%s\"", el.m_attn[i], el.m_attv[i]);
+			if (i != el.m_natt - 1) fprintf(m_fp, "\n");
+		}
 	}
 
 	fprintf(m_fp, ">%s\n", el.m_szval);
-
 	strcpy(m_tag[m_level], el.m_sztag);
 
 	inc_level();
@@ -188,11 +251,26 @@ void XMLWriter::add_empty(XMLElement& el, bool bclear)
 	char szformat[256] = {0};
 	sprintf(szformat, "%s<%%s", m_sztab);
 
-	fprintf(m_fp, szformat, el.m_sztag);
-
-	for (int i=0; i<el.m_natt; ++i)
+	if (m_os == OUTPUT_STYLE::DEFAULT)
 	{
-		fprintf(m_fp, " %s=\"%s\"", el.m_attn[i], el.m_attv[i]);
+		fprintf(m_fp, szformat, el.m_sztag);
+
+		for (int i = 0; i < el.m_natt; ++i)
+		{
+			fprintf(m_fp, " %s=\"%s\"", el.m_attn[i], el.m_attv[i]);
+		}
+	}
+	else
+	{
+		fprintf(m_fp, "\n");
+		fprintf(m_fp, szformat, el.m_sztag);
+		fprintf(m_fp, "\n");
+		for (int i = 0; i < el.m_natt; ++i)
+		{
+			fprintf(m_fp, "%s", m_sztab);
+			fprintf(m_fp, "\t%s=\"%s\"", el.m_attn[i], el.m_attv[i]);
+			if (i != el.m_natt - 1) fprintf(m_fp, "\n");
+		}
 	}
 
 	fprintf(m_fp, "/>\n");
@@ -269,6 +347,7 @@ void XMLWriter::close_branch()
 		char szformat[256] = {0};
 		sprintf(szformat, "%s</%%s>\n", m_sztab);
 
+		if (m_os == ANDROID) fprintf(m_fp, "\n");
 		fprintf(m_fp, szformat, m_tag[m_level]);
 	}
 }
