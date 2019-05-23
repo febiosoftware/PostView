@@ -4,7 +4,7 @@
 #include "GLImageRenderer.h"
 #include <assert.h>
 
-CImageModel::CImageModel()
+CImageModel::CImageModel(CGLModel* mdl) : CGLObject(mdl)
 {
 	m_pImg = 0;
 	m_box = BOUNDINGBOX(0.f, 0.f, 0.f, 1.f, 1.f, 1.f);

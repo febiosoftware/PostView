@@ -181,6 +181,8 @@ void CGLModel::Update(bool breset)
 
 	// update the colormap
 	if (m_pcol && m_pcol->IsActive()) m_pcol->Update(m_nTime, dt, breset);
+
+	GetFEModel()->UpdateDependants();
 }
 
 //-----------------------------------------------------------------------------

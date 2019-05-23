@@ -10,7 +10,7 @@ class CGLImageRenderer;
 class CImageModel : public CGLObject
 {
 public:
-	CImageModel();
+	CImageModel(CGLModel* mdl);
 	~CImageModel();
 
 	void SetFileName(const std::string& fileName);

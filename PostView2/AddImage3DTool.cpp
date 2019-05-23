@@ -143,7 +143,7 @@ void CAddImage3DTool::OnApply()
 		else fileTitle++;
 
 		BOUNDINGBOX box(xmin, ymin, zmin, xmax, ymax, zmax);
-		CImageModel* img = new CImageModel;
+		CImageModel* img = new CImageModel(doc->GetGLModel());
 		img->Set3DImage(pimg, box);
 		img->SetName(fileTitle);
 		img->SetFileName(sfile);

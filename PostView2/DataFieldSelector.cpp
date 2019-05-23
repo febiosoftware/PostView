@@ -59,7 +59,6 @@ CModelDataSelector::~CModelDataSelector()
 
 void CModelDataSelector::Update(FEModel* pfem)
 {
-	m_fem = pfem;
 	// TODO: update the menu
 }
 

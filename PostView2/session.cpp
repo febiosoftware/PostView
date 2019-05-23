@@ -449,7 +449,7 @@ bool CDocManager::OpenSession(const std::string& sfile)
 				{
 					const char* szname = tag.AttributeValue("name", true);
 					if (szname == 0) szname = "image";
-					CImageModel* img = new CImageModel;
+					CImageModel* img = new CImageModel(doc->GetGLModel());
 					img->SetName(szname);
 
 					char szfile[1024] = { 0 };
