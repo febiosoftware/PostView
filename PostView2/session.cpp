@@ -50,54 +50,49 @@ bool CDocManager::SaveSession(const std::string& sfile)
 {
 	XMLWriter xml;
 	if (xml.open(sfile.c_str()) == false) return false;
-
-	XMLElement root("postview_session");
-	root.add_attribute("version", "2.0");
-	xml.add_branch(root);
+	xml.add_branch("postview_spec");
 	{
-		xml.SetOutputStyle(XMLWriter::ANDROID);
-
-		for (int i = 0; i < (int)m_docList.size(); ++i)
+		for (int i=0; i<Documents(); ++i)
 		{
-			CDocument* doc = m_docList[i];
+			CDocument* doc = GetDocument(i);
 
-			const char* szfile = doc->GetFile();
 			XMLElement e;
 			e.name("Model");
 
-			CGLModel* pmdl = doc->GetGLModel();
-			FEModel* pfem = pmdl->GetFEModel();
-
-			int ntime = pmdl->currentTime();
-
-			// set the attributes
-			e.add_attribute("source", szfile);
-			e.add_attribute("active_state", ntime);
-			e.add_attribute("show_ghost", pmdl->m_bghost);
-			e.add_attribute("line_color", pmdl->m_line_col);
-			e.add_attribute("node_color", pmdl->m_node_col);
-			e.add_attribute("selection_color", pmdl->m_sel_col);
-			e.add_attribute("smooth_angle", pmdl->GetSmoothingAngle());
-			e.add_attribute("elem_div", pmdl->GetSubDivisions());
-			e.add_attribute("shell2hex", pmdl->m_bShell2Hex);
-			e.add_attribute("shellref", pmdl->m_nshellref);
-			e.add_attribute("smooth", pmdl->m_bsmooth);
-			e.add_attribute("render_mode", pmdl->GetRenderMode());
+			// only store the filename
+			const char* sz = doc->GetFile();
+			e.add_attribute("file", sz);
 
 			// store model data
+			CGLModel* pmdl = doc->GetGLModel();
+			FEModel* pfem = pmdl->GetFEModel();
 			xml.add_branch(e);
 			{
+				int ntime = doc->currentTime();
+				xml.add_leaf("state", ntime);
+
+				xml.add_leaf("show_ghost", pmdl->m_bghost);
+				xml.add_leaf("line_color", pmdl->m_line_col);
+				xml.add_leaf("node_color", pmdl->m_node_col);
+				xml.add_leaf("selection_color", pmdl->m_sel_col);
+				xml.add_leaf("smooth_angle", pmdl->GetSmoothingAngle());
+				xml.add_leaf("elem_div", pmdl->GetSubDivisions());
+				xml.add_leaf("shell2hex", pmdl->m_bShell2Hex);
+				xml.add_leaf("shellref", pmdl->m_nshellref);
+				xml.add_leaf("smooth", pmdl->m_bsmooth);
+				xml.add_leaf("render_mode", pmdl->GetRenderMode());
+
 				// Displacement Map properties
 				CGLDisplacementMap* pd = pmdl->GetDisplacementMap();
 				if (pd)
 				{
-					int nfield = pfem->GetDisplacementField();
-					string sfield = pfem->getDataString(nfield, Data_Tensor_Type::DATA_VECTOR);
-					XMLElement e("DisplacementMap");
-					e.add_attribute("enable", pd->IsActive());
-					e.add_attribute("field", sfield.c_str());
-					e.add_attribute("scale", pd->GetScale());
-					xml.add_empty(e);
+					xml.add_branch("Displacement");
+					{
+						xml.add_leaf("enable", pd->IsActive());
+						xml.add_leaf("field", pfem->GetDisplacementField());
+						xml.add_leaf("scale", pd->GetScale());
+					}
+					xml.close_branch();
 				}
 
 				// Color Map properties
@@ -105,52 +100,31 @@ bool CDocManager::SaveSession(const std::string& sfile)
 				if (pc)
 				{
 					CColorTexture* pmap = pc->GetColorMap();
-					XMLElement e("ColorMap");
+					xml.add_branch("ColorMap");
+					{
+						xml.add_leaf("enable", pc->IsActive());
+						xml.add_leaf("field", pc->GetEvalField());
+						xml.add_leaf("smooth", pmap->GetSmooth());
+						xml.add_leaf("map", pmap->GetColorMap());
+						xml.add_leaf("nodal_values", pc->DisplayNodalValues());
+						xml.add_leaf("range_type", pc->GetRangeType());
+						xml.add_leaf("range_divs", pmap->GetDivisions());
+						xml.add_leaf("show_legend", pc->ShowLegend());
 
-					string sfield = pfem->getDataString(pc->GetEvalField(), Data_Tensor_Type::DATA_SCALAR);
-
-					e.add_attribute("enable", pc->IsActive());
-					e.add_attribute("field", sfield.c_str());
-					e.add_attribute("smooth", pmap->GetSmooth());
-					e.add_attribute("map", pmap->GetColorMap());
-					e.add_attribute("nodal_values", pc->DisplayNodalValues());
-					e.add_attribute("range_type", pc->GetRangeType());
-					e.add_attribute("range_divs", pmap->GetDivisions());
-					e.add_attribute("show_legend", pc->ShowLegend());
-
-					float d[2];
-					pc->GetRange(d);
-					e.add_attribute("user_min", d[0]);
-					e.add_attribute("user_max", d[1]);
-					
-					xml.add_empty(e);
-				}
-
-				// store image data
-				for (int i = 0; i < doc->ImageModels(); ++i)
-				{
-					CImageModel* im = doc->GetImageModel(0);
-
-					XMLElement e("3DImage");
-					e.add_attribute("name", im->GetName());
-					e.add_attribute("source", im->GetFileName());
-
-					C3DImage* im3d = im->Get3DImage();
-					int dim[3] = { im3d->Width(), im3d->Height(), im3d->Depth() };
-					e.add_attribute("dimensions", dim, 3);
-
-					BOUNDINGBOX b = im->GetBoundingBox();
-					double f[6] = { b.x0, b.y0, b.z0, b.x1, b.y1, b.z1 };
-					e.add_attribute("box", f, 6);
-
-					xml.add_empty(e);
+						float d[2];
+						pc->GetRange(d);
+						xml.add_leaf("user_max", d[1]);
+						xml.add_leaf("user_min", d[0]);
+					}
+					xml.close_branch();
 				}
 
 				// store plots
-/*				if (m_pPlot.empty() == false)
+				GPlotList& plotList = doc->GetPlotList();
+				if (plotList.empty() == false)
 				{
 					GPlotList::iterator pi;
-					for (pi = m_pPlot.begin(); pi != m_pPlot.end(); ++pi)
+					for (pi = plotList.begin(); pi != plotList.end(); ++pi)
 					{
 						CGLPlot* p = *pi;
 						if (dynamic_cast<CGLPlaneCutPlot*>(p))
@@ -174,8 +148,29 @@ bool CDocManager::SaveSession(const std::string& sfile)
 					}
 				}
 
+				// image models
+				for (int j = 0; j < doc->ImageModels(); ++j)
+				{
+					CImageModel* img = doc->GetImageModel(j);
+
+					XMLElement e("ImageStack");
+					e.add_attribute("id", j + 1);
+					e.add_attribute("name", img->GetName());
+					xml.add_branch(e);
+					{
+						C3DImage* im = img->Get3DImage();
+						int dim[3] = { im->Width(), im->Height(), im->Depth() };
+						BOUNDINGBOX bb = img->GetBoundingBox();
+						float b[6] = { bb.x0, bb.y0, bb.z0, bb.x1, bb.y1, bb.z1};
+						xml.add_leaf("file", img->GetFileName());
+						xml.add_leaf("size", dim, 3);
+						xml.add_leaf("box", b, 6);
+					}
+					xml.close_branch();
+				}
+
 				// View properties
-				CGView* pv = GetView();
+				CGView* pv = doc->GetView();
 				if (pv)
 				{
 					CGLCamera& cam = pv->GetCamera();
@@ -184,8 +179,8 @@ bool CDocManager::SaveSession(const std::string& sfile)
 					vec3f v = q.GetVector()*w;
 					vec3f r = cam.GetPosition();
 					float d = cam.GetTargetDistance();
-					int nproj = GetViewSettings().m_nproj;
-					int nconv = GetViewSettings().m_nconv;
+//					int nproj = GetViewSettings().m_nproj;
+//					int nconv = GetViewSettings().m_nconv;
 
 					xml.add_branch("View");
 					{
@@ -196,8 +191,8 @@ bool CDocManager::SaveSession(const std::string& sfile)
 						xml.add_leaf("y-pos", r.y);
 						xml.add_leaf("z-pos", r.z);
 						xml.add_leaf("target", d);
-						xml.add_leaf("projection", nproj);
-						xml.add_leaf("convention", nconv);
+//						xml.add_leaf("projection", nproj);
+//						xml.add_leaf("convention", nconv);
 
 						int N = pv->CameraKeys();
 						for (int i=0; i<N; ++i)
@@ -259,7 +254,7 @@ bool CDocManager::SaveSession(const std::string& sfile)
 			xml.close_branch();
 
 			// store the view settings
-			xml.add_branch("Settings");
+/*			xml.add_branch("Settings");
 			{
 				VIEWSETTINGS& v = GetViewSettings();
 				xml.add_leaf("bgcol1", v.bgcol1);
@@ -285,10 +280,9 @@ bool CDocManager::SaveSession(const std::string& sfile)
 				xml.add_leaf("line_thickness", v.m_flinethick);
 				xml.add_leaf("spring_thickness", v.m_fspringthick);
 				xml.add_leaf("point_size", v.m_fpointsize);
-				*/
 			}
 			xml.close_branch();
-		}
+*/		}
 	}
 	xml.close_branch();
 
@@ -307,6 +301,17 @@ void get_file_path(const char* szfilename, char* szpath)
 }
 
 //-----------------------------------------------------------------------------
+void make_file_path(char* szout, const char* szfile, const char* szpath)
+{
+	strcpy(szout, szfile);
+
+	// if not, use the same path as the session file
+	char* ch = strrchr(szout, '\\');
+	if (ch == 0) ch = strrchr(szout, '/');
+	if (ch == 0) sprintf(szout, "%s%s", szpath, szfile);
+}
+
+//-----------------------------------------------------------------------------
 // Restore a saved session
 bool CDocManager::OpenSession(const std::string& sfile)
 {
@@ -317,7 +322,7 @@ bool CDocManager::OpenSession(const std::string& sfile)
 
 	// try to open the file
 	XMLTag tag;
-	if (xml.FindTag("postview_session", tag) == false) { fclose(fp); return false; }
+	if (xml.FindTag("postview_spec", tag) == false) { fclose(fp); return false; }
 
 	// get the path of the file
 	char szpath[1024] = {0};
@@ -329,18 +334,13 @@ bool CDocManager::OpenSession(const std::string& sfile)
 	{
 		if (tag == "Model")
 		{
-			const char* szfile = tag.AttributeValue("source");
+			const char* szfile = tag.AttributeValue("file");
 			FEFileReader* pimp = GetFileReader(szfile);
 			if (pimp == 0) { fclose(fp); return false; }
 
 			// see if there is a path defined
 			char szfilename[1024];
-			strcpy(szfilename, szfile);
-
-			// if not, use the same path as the session file
-			char* ch = strrchr(szfilename, '\\');
-			if (ch==0) ch = strrchr(szfilename, '/');
-			if (ch==0) sprintf(szfilename, "%s%s", szpath, szfile);
+			make_file_path(szfilename, szfile, szpath);
 
 			// create a new document
 			CDocument* doc = new CDocument(m_wnd);
@@ -352,9 +352,7 @@ bool CDocManager::OpenSession(const std::string& sfile)
 				fclose(fp); 
 				return false; 
 			}
-
-			// if successful, add it do the manager
-			AddDocument(doc);
+			else AddDocument(doc);
 
 			int ntime = doc->currentTime();
 
@@ -366,39 +364,34 @@ bool CDocManager::OpenSession(const std::string& sfile)
 			int n;
 			bool b;
 
-			// parse the other attributes
-			for (int i = 0; i < tag.m_natt; ++i)
-			{
-				XMLAtt& att = tag.m_att[i];
-				if      (att == "show_ghost"     ) att.value(pmdl->m_bghost);
-				else if (att == "line_color"     ) att.value(pmdl->m_line_col);
-				else if (att == "node_color"     ) att.value(pmdl->m_node_col);
-				else if (att == "selection_color") att.value(pmdl->m_sel_col);
-				else if (att == "smooth_angle"   ) { att.value(g); pmdl->SetSmoothingAngle(g); }
-				else if (att == "elem_div"       ) { att.value(n); pmdl->SetSubDivisions(n); }
-				else if (att == "shell2hex"      ) att.value(pmdl->m_bShell2Hex);
-				else if (att == "smooth"         ) att.value(pmdl->m_bsmooth);
-				else if (att == "render_mode"    ) { att.value(n); pmdl->SetRenderMode(n); }
-				else if (att == "state"          ) att.value(ntime);
-			}
-
 			xml.NextTag(tag);
 			do
 			{
-				if (tag == "Displacement")
+				if      (tag == "show_ghost"  ) tag.value(pmdl->m_bghost);
+				else if (tag == "line_color"  ) tag.value(pmdl->m_line_col);
+				else if (tag == "node_color"  ) tag.value(pmdl->m_node_col);
+				else if (tag == "selection_color") tag.value(pmdl->m_sel_col);
+				else if (tag == "smooth_angle") { tag.value(g); pmdl->SetSmoothingAngle(g); }
+				else if (tag == "elem_div"    ) { tag.value(n); pmdl->SetSubDivisions(n); }
+				else if (tag == "shell2hex"   ) tag.value(pmdl->m_bShell2Hex);
+				else if (tag == "smooth"      ) tag.value(pmdl->m_bsmooth); 
+				else if (tag == "render_mode" ) { tag.value(n); pmdl->SetRenderMode(n); }
+				else if (tag == "state") tag.value(ntime);
+				else if (tag == "Displacement")
 				{
 					CGLDisplacementMap* pd = pmdl->GetDisplacementMap();
 					assert(pd);
 					if (pd)
 					{
-						for (int i = 0; i < tag.m_natt; ++i)
+						xml.NextTag(tag);
+						do
 						{
-							XMLAtt& att = tag.m_att[i];
-							
-							if (att == "field") {}// { tag.value(n); pfem->SetDisplacementField(n); }
-							else if (att == "scale") { tag.value(f); pd->SetScale(f); }
-							else if (att == "enable") { tag.value(b); pd->Activate(b); }
+							if (tag == "field") { tag.value(n); pfem->SetDisplacementField(n); }
+							else if (tag == "scale") { tag.value(f); pd->SetScale(f); }
+							else if (tag == "enable") { tag.value(b); pd->Activate(b); }
+							xml.NextTag(tag);
 						}
+						while (!tag.isend());
 					}
 				}
 				else if (tag == "ColorMap")
@@ -408,56 +401,26 @@ bool CDocManager::OpenSession(const std::string& sfile)
 					assert(pc);
 					if (pc)
 					{
-						for (int i = 0; i < tag.m_natt; ++i)
+						xml.NextTag(tag);
+						do
 						{
-							XMLAtt& att = tag.m_att[i];
-							if (att == "field") {}// { tag.value(n); pc->SetEvalField(n); }
-							else if (att == "map") { att.value(n); pmap->SetColorMap(n); }
-							else if (att == "smooth") { att.value(b); pmap->SetSmooth(b); }
-							else if (att == "nodal_value") { att.value(b); pc->DisplayNodalValues(b); }
-							else if (att == "range_type") { att.value(n); pc->SetRangeType(n); }
-							else if (att == "range_divs") { att.value(n); pmap->SetDivisions(n); }
-							else if (att == "show_legend") { att.value(b); pc->ShowLegend(b); }
-							else if (att == "user_max") { att.value(f); pc->SetRangeMax(f); }
-							else if (att == "user_min") { att.value(f); pc->SetRangeMin(f); }
-							else if (att == "enable") { att.value(b); pc->Activate(b); }
+							if (tag == "field") { tag.value(n); pc->SetEvalField(n); }
+							else if (tag == "map") { tag.value(n); pmap->SetColorMap(n); }
+							else if (tag == "smooth") { tag.value(b); pmap->SetSmooth(b); }
+							else if (tag == "nodal_value") { tag.value(b); pc->DisplayNodalValues(b); }
+							else if (tag == "range_type") { tag.value(n); pc->SetRangeType(n); }
+							else if (tag == "range_divs") { tag.value(n); pmap->SetDivisions(n); }
+							else if (tag == "show_legend") { tag.value(b); pc->ShowLegend(b); }
+							else if (tag == "user_max") { tag.value(f); pc->SetRangeMax(f); }
+							else if (tag == "user_min") { tag.value(f); pc->SetRangeMin(f); }
+							else if (tag == "enable") { tag.value(b); pc->Activate(b); }
+							else xml.SkipTag(tag);
+							xml.NextTag(tag);
 						}
+						while (!tag.isend());
 					}
 				}
-				else if (tag == "3DImage")
-				{
-					string fileName, sname;
-					int dim[3] = { 0 };
-					double box[6] = { 0 };
-
-					for (int i = 0; i < tag.m_natt; ++i)
-					{
-						XMLAtt& att = tag.m_att[i];
-						if      (att == "name"      ) att.value(sname);
-						else if (att == "source"    ) att.value(fileName);
-						else if (att == "dimensions") att.value(dim, 3);
-						else if (att == "box"       ) att.value(box, 6);
-					}
-
-					C3DImage* im = new C3DImage;
-					im->Create(dim[0], dim[1], dim[2]);
-					if (im->LoadFromFile(fileName.c_str(), 8) == false)
-					{
-						delete im;
-						fclose(fp);
-						return false;
-					}
-
-					BOUNDINGBOX b(box[0], box[1], box[2], box[3], box[4], box[5]);
-
-					CImageModel* img = new CImageModel;
-					img->SetName(sname);
-					img->Set3DImage(im, b);
-					img->SetFileName(fileName);
-
-					doc->AddImageModel(img);
-				}
-/*				else if (tag == "plot")
+				else if (tag == "plot")
 				{
 					const char* sztype = tag.AttributeValue("type");
 					if (strcmp(sztype, "planecut") == 0)
@@ -478,13 +441,51 @@ bool CDocManager::OpenSession(const std::string& sfile)
 							xml.NextTag(tag);
 						}
 						while (!tag.isend());
-						AddPlot(pg);
+						doc->AddPlot(pg);
 					}
 					else xml.SkipTag(tag);
 				}
+				else if (tag == "ImageStack")
+				{
+					const char* szname = tag.AttributeValue("name", true);
+					if (szname == 0) szname = "image";
+					CImageModel* img = new CImageModel;
+					img->SetName(szname);
+
+					char szfile[1024] = { 0 };
+					int dim[3];
+					float b[6];
+
+					xml.NextTag(tag);
+					do
+					{
+						if (tag == "file") tag.value(szfile);
+						else if (tag == "size") tag.value(dim, 3);
+						else if (tag == "box") tag.value(b, 6);
+						xml.NextTag(tag);
+					}
+					while (!tag.isend());
+
+					make_file_path(szfilename, szfile, szpath);
+
+					C3DImage* im = new C3DImage;
+					im->Create(dim[0], dim[1], dim[2]);
+					if (im->LoadFromFile(szfilename, 8) == false)
+					{
+						delete im;
+						delete img;
+						fclose(fp);
+						return false;
+					}
+
+					BOUNDINGBOX box(b[0], b[1], b[2], b[3], b[4], b[5]);
+
+					img->Set3DImage(im, box);
+					doc->AddImageModel(img);
+				}
 				else if (tag == "View")
 				{
-					CGView* pv = GetView();
+					CGView* pv = doc->GetView();
 					assert(pv);
 					if (pv)
 					{
@@ -540,10 +541,10 @@ bool CDocManager::OpenSession(const std::string& sfile)
 						cam.SetTargetDistance(f);
 						cam.SetTarget(r);
 						cam.SetOrientation(q);
-						cam.Update(true);
+						cam.UpdatePosition(true);
 						
-						GetViewSettings().m_nproj = nproj;
-                        GetViewSettings().m_nconv = nconv;
+//						GetViewSettings().m_nproj = nproj;
+//                        GetViewSettings().m_nconv = nconv;
 					}
 				}
 				else if (tag == "Material")
@@ -579,7 +580,7 @@ bool CDocManager::OpenSession(const std::string& sfile)
 					}
 					else xml.SkipTag(tag);
 				}
-*/				else xml.SkipTag(tag);
+				else xml.SkipTag(tag);
 
 				xml.NextTag(tag);
 			}
@@ -587,9 +588,9 @@ bool CDocManager::OpenSession(const std::string& sfile)
 
 			if (ntime != doc->currentTime()) doc->SetCurrentTime(ntime);
 		}
-		else if (tag == "Settings")
+/*		else if (tag == "Settings")
 		{
-/*			// read the view settings
+			// read the view settings
 			VIEWSETTINGS& v = GetViewSettings();
 			xml.NextTag(tag);
 			do
@@ -621,8 +622,8 @@ bool CDocManager::OpenSession(const std::string& sfile)
 				xml.NextTag(tag);
 			}
 			while (!tag.isend());
-*/		}
-		else xml.SkipTag(tag);
+		}
+*/		else xml.SkipTag(tag);
 		xml.NextTag(tag);
 	}
 	while (!tag.isend());

@@ -661,18 +661,18 @@ public:
 	{
 		if (m_tab->count() == 1)
 		{
-			m_imgView->SetImageModel(img);
 			m_tab->addTab(m_imgView, "Image Viewer");
 		}
+		m_imgView->SetImageModel(img);
 	}
 
 	void HideImageViewer()
 	{
 		if (m_tab->count() == 2)
 		{
-			m_imgView->SetImageModel(nullptr);
 			m_tab->removeTab(1);
 		}
+		m_imgView->SetImageModel(nullptr);
 	}
 };
 
@@ -895,7 +895,6 @@ void CModelViewer::Update(bool breset)
 
 void CModelViewer::on_modelTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* prev)
 {
-	ui->HideImageViewer();
 	if (current)
 	{
 		CModelTreeItem* item = dynamic_cast<CModelTreeItem*>(current);
@@ -912,15 +911,18 @@ void CModelViewer::on_modelTree_currentItemChanged(QTreeWidgetItem* current, QTr
 					CImageModel* img = dynamic_cast<CImageModel*>(po);
 					ui->ShowImageViewer(img);
 				}
+				else ui->HideImageViewer();
 			}
 			else 
 			{
+				ui->HideImageViewer();
 				ui->enabled->setEnabled(false);
 				ui->enabled->setChecked(true);
 			}
 		}
 		else
 		{
+			ui->HideImageViewer();
 			ui->enabled->setEnabled(false);
 			ui->enabled->setChecked(false);
 		}
@@ -929,7 +931,11 @@ void CModelViewer::on_modelTree_currentItemChanged(QTreeWidgetItem* current, QTr
 		QVariant v = current->data(0, Qt::UserRole);
 		ui->m_props->Update(ui->m_list[v.toInt()]);
 	}
-	else ui->m_props->Update(0);
+	else
+	{
+		ui->HideImageViewer();
+		ui->m_props->Update(0);
+	}
 }
 
 void CModelViewer::on_modelTree_itemDoubleClicked(QTreeWidgetItem* item, int column)

@@ -96,11 +96,12 @@ public:
 	void add_leaf  (XMLElement& el, bool bclear = true);
 
 	void add_leaf(const char* szn, const char* szv);
-
+	void add_leaf(const char* szn, std::string& s);
 	void add_leaf(const char* szn, int    n){ char szv[256]; sprintf(szv, "%d" , n); add_leaf(szn, szv); }
 	void add_leaf(const char* szn, bool   b){ char szv[256]; sprintf(szv, "%d" , b); add_leaf(szn, szv); }
 	void add_leaf(const char* szn, double g){ char szv[256]; sprintf(szv, "%lg", g); add_leaf(szn, szv); }
 	void add_leaf(const char* szn, int *pi, int n);
+	void add_leaf(const char* szn, float* pf, int n);
 	void add_leaf(const char* szn, double* pg, int n);
 	void add_leaf(const char* szn, const vec3f& r){ char szv[256]; sprintf(szv, "%g,%g,%g", r.x, r.y, r.z); add_leaf(szn, szv); }
 	void add_leaf(const char* szn, GLCOLOR& c) { char szv[256]; sprintf(szv, "%d,%d,%d,%d", (int) c.r, (int) c.g, (int) c.b, (int) c.a); add_leaf(szn, szv); }

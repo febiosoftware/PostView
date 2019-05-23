@@ -305,6 +305,33 @@ void XMLWriter::add_leaf(const char* szn, const char* szv)
 	fprintf(m_fp, ">%s</%s>\n", szv, szn);
 }
 
+void XMLWriter::add_leaf(const char* szn, std::string& s)
+{
+	char szformat[256] = { 0 };
+	sprintf(szformat, "%s<%%s", m_sztab);
+
+	fprintf(m_fp, szformat, szn);
+
+	fprintf(m_fp, ">%s</%s>\n", s.c_str(), szn);
+}
+
+void XMLWriter::add_leaf(const char* szn, float* pf, int n)
+{
+	char szformat[256] = { 0 };
+	sprintf(szformat, "%s<%%s>", m_sztab);
+
+	fprintf(m_fp, szformat, szn);
+
+	if (n>0)
+	{
+		fprintf(m_fp, "%g", pf[0]);
+		for (int i = 1; i<n; ++i) fprintf(m_fp, ", %g", pf[i]);
+	}
+
+	fprintf(m_fp, "</%s>\n", szn);
+
+}
+
 void XMLWriter::add_leaf(const char* szn, double* pg, int n)
 {
 	char szformat[256] = {0};
