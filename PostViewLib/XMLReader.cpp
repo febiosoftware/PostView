@@ -78,7 +78,7 @@ int parse_csv(char* sz, int* d, int n)
 
 void XMLAtt::value(bool& v)
 {
-	if (stricmp(m_szval, "true") == 0) v = true;
+	if (strcasecmp(m_szval, "true") == 0) v = true;
 	else v = false;
 }
 

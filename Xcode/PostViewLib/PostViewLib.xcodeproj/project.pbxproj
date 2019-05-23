@@ -48,6 +48,11 @@
 		D5D410281DAD891F007BBA0D /* ImageSlicer.h in Headers */ = {isa = PBXBuildFile; fileRef = D5D410241DAD891F007BBA0D /* ImageSlicer.h */; };
 		D5D410291DAD891F007BBA0D /* Palette.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5D410251DAD891F007BBA0D /* Palette.cpp */; };
 		D5D4102A1DAD891F007BBA0D /* Palette.h in Headers */ = {isa = PBXBuildFile; fileRef = D5D410261DAD891F007BBA0D /* Palette.h */; };
+		D5EB78E6229704A80063769C /* GLContext.h in Headers */ = {isa = PBXBuildFile; fileRef = D5EB78E1229704A80063769C /* GLContext.h */; };
+		D5EB78E7229704A80063769C /* GLImageRenderer.h in Headers */ = {isa = PBXBuildFile; fileRef = D5EB78E2229704A80063769C /* GLImageRenderer.h */; };
+		D5EB78E8229704A80063769C /* GLContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5EB78E3229704A80063769C /* GLContext.cpp */; };
+		D5EB78E9229704A80063769C /* ImageModel.h in Headers */ = {isa = PBXBuildFile; fileRef = D5EB78E4229704A80063769C /* ImageModel.h */; };
+		D5EB78EA229704A80063769C /* ImageModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5EB78E5229704A80063769C /* ImageModel.cpp */; };
 		D5F309121CFBB65700F76762 /* 3DImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5F308991CFBB65700F76762 /* 3DImage.cpp */; };
 		D5F309131CFBB65700F76762 /* 3DImage.h in Headers */ = {isa = PBXBuildFile; fileRef = D5F3089A1CFBB65700F76762 /* 3DImage.h */; };
 		D5F309141CFBB65700F76762 /* Animation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5F3089B1CFBB65700F76762 /* Animation.cpp */; };
@@ -215,6 +220,11 @@
 		D5D410241DAD891F007BBA0D /* ImageSlicer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageSlicer.h; sourceTree = "<group>"; };
 		D5D410251DAD891F007BBA0D /* Palette.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Palette.cpp; sourceTree = "<group>"; };
 		D5D410261DAD891F007BBA0D /* Palette.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Palette.h; sourceTree = "<group>"; };
+		D5EB78E1229704A80063769C /* GLContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLContext.h; sourceTree = "<group>"; };
+		D5EB78E2229704A80063769C /* GLImageRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLImageRenderer.h; sourceTree = "<group>"; };
+		D5EB78E3229704A80063769C /* GLContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLContext.cpp; sourceTree = "<group>"; };
+		D5EB78E4229704A80063769C /* ImageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageModel.h; sourceTree = "<group>"; };
+		D5EB78E5229704A80063769C /* ImageModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImageModel.cpp; sourceTree = "<group>"; };
 		D5F3088A1CFBB64400F76762 /* libPostViewLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPostViewLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5F308991CFBB65700F76762 /* 3DImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = 3DImage.cpp; sourceTree = "<group>"; };
 		D5F3089A1CFBB65700F76762 /* 3DImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = 3DImage.h; sourceTree = "<group>"; };
@@ -474,6 +484,9 @@
 				D5F308EC1CFBB65700F76762 /* GDecoration.h */,
 				D5F308ED1CFBB65700F76762 /* GLCamera.cpp */,
 				D5F308EE1CFBB65700F76762 /* GLCamera.h */,
+				D5EB78E3229704A80063769C /* GLContext.cpp */,
+				D5EB78E1229704A80063769C /* GLContext.h */,
+				D5EB78E2229704A80063769C /* GLImageRenderer.h */,
 				D5F308EF1CFBB65700F76762 /* GLObject.cpp */,
 				D5F308F01CFBB65700F76762 /* GLObject.h */,
 				D5F308F11CFBB65700F76762 /* GLTexture1D.cpp */,
@@ -487,6 +500,8 @@
 				D53B0320207EF07900E6B5F5 /* hex27.h */,
 				D5F308F71CFBB65700F76762 /* Image.cpp */,
 				D5F308F81CFBB65700F76762 /* Image.h */,
+				D5EB78E5229704A80063769C /* ImageModel.cpp */,
+				D5EB78E4229704A80063769C /* ImageModel.h */,
 				D5D410231DAD891F007BBA0D /* ImageSlicer.cpp */,
 				D5D410241DAD891F007BBA0D /* ImageSlicer.h */,
 				D5F308F91CFBB65700F76762 /* integrate.cpp */,
@@ -564,6 +579,7 @@
 				D5F309361CFBB65700F76762 /* FEFileExport.h in Headers */,
 				D5F3095B1CFBB65700F76762 /* FEState.h in Headers */,
 				D5F3092A1CFBB65700F76762 /* FEBioPlotExport.h in Headers */,
+				D5EB78E6229704A80063769C /* GLContext.h in Headers */,
 				D5F309711CFBB65700F76762 /* Image.h in Headers */,
 				D5F3096B1CFBB65700F76762 /* GLTexture1D.h in Headers */,
 				D5F309861CFBB65700F76762 /* XMLReader.h in Headers */,
@@ -592,6 +608,7 @@
 				D5F3097B1CFBB65700F76762 /* PltArchive.h in Headers */,
 				D5F309841CFBB65700F76762 /* VRMLExporter.h in Headers */,
 				D5F3093C1CFBB65700F76762 /* FELSDYNAExport.h in Headers */,
+				D5EB78E9229704A80063769C /* ImageModel.h in Headers */,
 				D5F3095F1CFBB65700F76762 /* FEU3DImport.h in Headers */,
 				D5F309761CFBB65700F76762 /* lusolver.h in Headers */,
 				D53B0339207EF07A00E6B5F5 /* tet20.h in Headers */,
@@ -604,6 +621,7 @@
 				D53B033A207EF07A00E6B5F5 /* FENode.h in Headers */,
 				D5F309151CFBB65700F76762 /* Animation.h in Headers */,
 				D53B0335207EF07A00E6B5F5 /* penta15.h in Headers */,
+				D5EB78E7229704A80063769C /* GLImageRenderer.h in Headers */,
 				D5F309741CFBB65700F76762 /* Interpolator.h in Headers */,
 				D5F309301CFBB65700F76762 /* FEDistanceMap.h in Headers */,
 				D5F309591CFBB65700F76762 /* FERAWImageReader.h in Headers */,
@@ -678,6 +696,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = D5F308811CFBB64400F76762;
@@ -709,6 +728,7 @@
 				D53B0332207EF07A00E6B5F5 /* FEEdge.cpp in Sources */,
 				D5F309541CFBB65700F76762 /* FEPlotMix.cpp in Sources */,
 				D5F309141CFBB65700F76762 /* Animation.cpp in Sources */,
+				D5EB78E8229704A80063769C /* GLContext.cpp in Sources */,
 				D5F3093D1CFBB65700F76762 /* FELSDYNAimport.cpp in Sources */,
 				D5F309251CFBB65700F76762 /* FEASCIIImport.cpp in Sources */,
 				D5A65E161DBFA55800B44009 /* xpltReader2.cpp in Sources */,
@@ -752,6 +772,7 @@
 				D5F309331CFBB65700F76762 /* FEFEBioExport.cpp in Sources */,
 				D5D410271DAD891F007BBA0D /* ImageSlicer.cpp in Sources */,
 				D5F309241CFBB65700F76762 /* evaluate.cpp in Sources */,
+				D5EB78EA229704A80063769C /* ImageModel.cpp in Sources */,
 				D5F3097C1CFBB65700F76762 /* SphereFit.cpp in Sources */,
 				D5F309701CFBB65700F76762 /* Image.cpp in Sources */,
 				D5F3095E1CFBB65700F76762 /* FEU3DImport.cpp in Sources */,
