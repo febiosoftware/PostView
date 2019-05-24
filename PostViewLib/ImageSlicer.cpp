@@ -21,10 +21,10 @@ CImageSlicer::CImageSlicer(CImageModel* img) : CGLImageRenderer(img)
 	ss << "ImageSlicer" << n++;
 	SetName(ss.str());
 
+	m_Col.SetColorMap(ColorMapManager::GRAY);
+
 	m_op = 0;
 	m_off = 0.5;
-	m_col1 = GLCOLOR(  0,   0,   0);
-	m_col2 = GLCOLOR(255, 255, 255);
 	m_texID = 0;
 	m_reloadTexture = true;
 }
@@ -103,13 +103,17 @@ void CImageSlicer::Update()
 
 void CImageSlicer::BuildLUT()
 {
+	CColorMap& map = m_Col.ColorMap();
+
 	// build the LUT
 	for (int i = 0; i<256; ++i)
 	{
-		m_LUTC[0][i] = m_col1.r + (m_col2.r - m_col1.r)*i / 255;
-		m_LUTC[1][i] = m_col1.g + (m_col2.g - m_col1.g)*i / 255;
-		m_LUTC[2][i] = m_col1.b + (m_col2.b - m_col1.b)*i / 255;
-		m_LUTC[3][i] = m_col1.a + (m_col2.a - m_col1.a)*i / 255;
+		float w = (float)i / 255.f;
+		GLCOLOR c = map.map(w);
+		m_LUTC[0][i] = c.r;
+		m_LUTC[1][i] = c.g;
+		m_LUTC[2][i] = c.b;
+		m_LUTC[3][i] = c.a;
 	}
 }
 

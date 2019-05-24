@@ -442,6 +442,14 @@ class CVolRenderProps : public CPropertyList
 public:
 	CVolRenderProps(CMainWindow* wnd, CVolRender* vr) : m_wnd(wnd), m_vr(vr)
 	{
+		QStringList cols;
+
+		for (int i = 0; i<ColorMapManager::ColorMaps(); ++i)
+		{
+			string name = ColorMapManager::GetColorMapName(i);
+			cols << name.c_str();
+		}
+
 		addProperty("alpha scale", CProperty::Float)->setFloatRange(0.0, 1.0);
 		addProperty("min intensity", CProperty::Int)->setIntRange(0, 255);
 		addProperty("max intensity", CProperty::Int)->setIntRange(0, 255);
@@ -449,8 +457,7 @@ public:
 		addProperty("max alpha", CProperty::Int)->setIntRange(0, 255);
 		addProperty("Amin", CProperty::Int)->setIntRange(0, 255);
 		addProperty("Amax", CProperty::Int)->setIntRange(0, 255);
-		addProperty("Color 1", CProperty::Color);
-		addProperty("Color 2", CProperty::Color);
+		addProperty("Color map", CProperty::Enum)->setEnumValues(cols);
 		addProperty("Ambient color", CProperty::Color);
 		addProperty("Lighting effect", CProperty::Bool);
 //		addProperty("Light direction", CProperty::DataVec3);
@@ -467,11 +474,10 @@ public:
 		case  4: return m_vr->m_A1; break;
 		case  5: return m_vr->m_Amin; break;
 		case  6: return m_vr->m_Amax; break;
-		case  7: return toQColor(m_vr->m_col1); break;
-		case  8: return toQColor(m_vr->m_col2); break;
-		case  9: return toQColor(m_vr->m_amb); break;
-		case 10: return m_vr->m_blight; break;
-//		case 11: return m_vr->GetLightPosition(); break;
+		case  7: return m_vr->GetColorMap(); break;
+		case  8: return toQColor(m_vr->m_amb); break;
+		case  9: return m_vr->m_blight; break;
+//		case 10: return m_vr->GetLightPosition(); break;
 		}
 		return QVariant();
 	}
@@ -487,11 +493,10 @@ public:
 		case  4: m_vr->m_A1 = val.toInt(); break;
 		case  5: m_vr->m_Amin = val.toInt(); break;
 		case  6: m_vr->m_Amax = val.toInt(); break;
-		case  7: m_vr->m_col1 = toGLColor(val.value<QColor>()); break;
-		case  8: m_vr->m_col2 = toGLColor(val.value<QColor>()); break;
-		case  9: m_vr->m_amb  = toGLColor(val.value<QColor>()); break;
-		case 10: m_vr->m_blight = val.toBool(); break;
-//		case 11: break;
+		case  7: m_vr->SetColorMap(val.value<int>()); break;
+		case  8: m_vr->m_amb  = toGLColor(val.value<QColor>()); break;
+		case  9: m_vr->m_blight = val.toBool(); break;
+//		case 10: break;
 		}
 
 		m_vr->Update();
@@ -509,12 +514,19 @@ class CImageSlicerProps : public CPropertyList
 public:
 	CImageSlicerProps(CMainWindow* wnd, CImageSlicer* is) : m_wnd(wnd), m_is(is)
 	{
+		QStringList cols;
+
+		for (int i = 0; i<ColorMapManager::ColorMaps(); ++i)
+		{
+			string name = ColorMapManager::GetColorMapName(i);
+			cols << name.c_str();
+		}
+
 		QStringList ops;
 		ops << "X" << "Y" << "Z";
 		addProperty("Image orientation", CProperty::Enum)->setEnumValues(ops);
 		addProperty("Image offset"     , CProperty::Float)->setFloatRange(0.0, 1.0);
-		addProperty("Color 1", CProperty::Color);
-		addProperty("Color 2", CProperty::Color);
+		addProperty("Color map"        , CProperty::Enum)->setEnumValues(cols);
 	}
 
 	QVariant GetPropertyValue(int i)
@@ -523,8 +535,7 @@ public:
 		{
 		case  0: return m_is->GetOrientation(); break;
 		case  1: return m_is->GetOffset(); break;
-		case  2: return toQColor(m_is->GetColor1()); break;
-		case  3: return toQColor(m_is->GetColor2()); break;
+		case  2: return m_is->GetColorMap(); break;
 		}
 		return QVariant();
 	}
@@ -535,8 +546,7 @@ public:
 		{
 		case  0: m_is->SetOrientation(val.toInt()); break;
 		case  1: m_is->SetOffset(val.toDouble()); break;
-		case  2: m_is->SetColor1(toGLColor(val.value<QColor>())); break;
-		case  3: m_is->SetColor2(toGLColor(val.value<QColor>())); break;
+		case  2: m_is->SetColorMap(val.value<int>()); break;
 		}
 		m_is->Update();
 		m_wnd->RedrawGL();

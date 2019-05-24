@@ -80,6 +80,8 @@ public:
 	void SetColorMap(int n);
 	int GetColorMap() const;
 
+	CColorMap& ColorMap();
+
 private:
 	int		m_colorMap;		// index of template to use
 	int		m_ndivs;		// number of divisions

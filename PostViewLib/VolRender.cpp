@@ -30,6 +30,7 @@ CVolRender::CVolRender(CImageModel* img) : CGLImageRenderer(img)
 	SetName(ss.str());
 
 	m_pImx = m_pImy = m_pImz = 0;
+	m_sliceX = m_sliceY = m_sliceZ = 0;
 	m_nx = m_ny = m_nz = 0;
 
 	m_blight = false;
@@ -48,8 +49,7 @@ CVolRender::~CVolRender()
 
 void CVolRender::Reset()
 {
-	m_col1 = GLCOLOR(0,0,0);
-	m_col2 = GLCOLOR(255,255,255);
+	m_Col.SetColorMap(ColorMapManager::GRAY);
 	m_amb = GLCOLOR(0,0,0);
 
 	m_alpha = 0.1f;
@@ -67,6 +67,10 @@ void CVolRender::Reset()
 
 void CVolRender::Clear()
 {
+	delete [] m_sliceX; m_sliceX = 0;
+	delete [] m_sliceY; m_sliceY = 0;
+	delete [] m_sliceZ; m_sliceZ = 0;
+
 	delete [] m_pImx; m_pImx = 0; m_nx = 0;
 	delete [] m_pImy; m_pImy = 0; m_ny = 0;
 	delete [] m_pImz; m_pImz = 0; m_nz = 0;
@@ -97,15 +101,42 @@ void CVolRender::Create()
 	// resample image
 	im3d.StretchBlt(m_im3d);
 
-	// allocate new texture images
+	// allocate slices
+	m_sliceX = new CImage[m_nx];
 	m_pImx = new CRGBAImage[m_nx];
-	for (int i=0; i<m_nx; i++) m_pImx[i].Create(m_ny, m_nz);
+	for (int i = 0; i < m_nx; ++i)
+	{
+		m_sliceX[i].Create(m_ny, m_nz);
+		m_pImx[i].Create(m_ny, m_nz);
+	}
 
+	m_sliceY = new CImage[m_ny]; 
 	m_pImy = new CRGBAImage[m_ny];
-	for (int i=0; i<m_ny; i++) m_pImy[i].Create(m_nx, m_nz);
-
+	for (int i = 0; i < m_ny; ++i)
+	{
+		m_sliceY[i].Create(m_nx, m_nz);
+		m_pImy[i].Create(m_nx, m_nz);
+	}
+	
+	m_sliceZ = new CImage[m_nz]; 
 	m_pImz = new CRGBAImage[m_nz];
-	for (int i=0; i<m_nz; i++) m_pImz[i].Create(m_nx, m_ny);
+	for (int i = 0; i < m_nz; ++i)
+	{
+		m_sliceZ[i].Create(m_nx, m_ny);
+		m_pImz[i].Create(m_nx, m_ny);
+	}
+
+#pragma omp parallel default(shared)
+	{
+#pragma omp for
+		for (int i = 0; i < m_nx; ++i) m_im3d.GetSliceX(m_sliceX[i], i);
+
+#pragma omp for
+		for (int i = 0; i < m_ny; ++i) m_im3d.GetSliceY(m_sliceY[i], i);
+
+#pragma omp for
+		for (int i = 0; i < m_nz; ++i) m_im3d.GetSliceZ(m_sliceZ[i], i);
+	}
 
 	// calculate alpha scale factors
 	int nd = m_nx;
@@ -129,15 +160,19 @@ void CVolRender::CalcAttenuation()
 	vec3f l = m_light; l.Normalize();
 
 	C3DGradientMap map(m_im3d, m_box);
-	for (int k=0; k<m_nz; ++k)
-		for (int j=0; j<m_ny; ++j)
-			for (int i=0; i<m_nx; ++i)
+
+#pragma omp parallel for default(shared)
+	for (int k = 0; k < m_nz; ++k)
+	{
+		for (int j = 0; j < m_ny; ++j)
+			for (int i = 0; i < m_nx; ++i)
 			{
 				vec3f f = map.Value(i, j, k); f.Normalize();
 				float a = f*l;
 				if (a < 0.f) a = 0.f;
-				m_att.value(i, j, k) = (byte) (255.f*a);
+				m_att.value(i, j, k) = (byte)(255.f*a);
 			}
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -151,45 +186,56 @@ void CVolRender::Update()
 		m_bcalc_lighting = false;
 	}
 
+	CColorMap& map = m_Col.ColorMap();
+
 	// build the LUT
 	int DI = m_I1 - m_I0;
 	if (DI == 0) DI = 1;
-	for (int i=0; i<256; ++i)
+	for (int i = 0; i < 256; ++i)
 	{
-		m_LUT[i] = (i < m_I0 ? 0 : (i > m_I1 ? 255 : 1+253*(i - m_I0)/DI));
-		
-		m_LUTC[0][i] = m_col1.r + (m_col2.r - m_col1.r)*i/255;
-		m_LUTC[1][i] = m_col1.g + (m_col2.g - m_col1.g)*i/255;
-		m_LUTC[2][i] = m_col1.b + (m_col2.b - m_col1.b)*i/255;
-		m_LUTC[3][i] = (i == 0 ? m_Amin : (i == 255 ? m_Amax : (m_A0 + i*(m_A1 - m_A0)/255) ));
+		m_LUT[i] = (i < m_I0 ? 0 : (i > m_I1 ? 255 : 1 + 253 * (i - m_I0) / DI));
+
+		float w = (float)i / 255.f;
+		GLCOLOR c = map.map(w);
+
+		m_LUTC[0][i] = c.r;
+		m_LUTC[1][i] = c.g;
+		m_LUTC[2][i] = c.b;
+		m_LUTC[3][i] = (i == 0 ? m_Amin : (i == 255 ? m_Amax : (m_A0 + i*(m_A1 - m_A0) / 255)));
 	}
 
-	// create the x-images
-	CImage im;
-	im.Create(m_ny, m_nz);
-	for (int i=0; i<m_nx; i++) 
-	{
-		m_im3d.GetSliceX(im, i);
-		Colorize(m_pImx[i], im);
-		if (m_blight) DepthCueX(m_pImx[i], i);
-	}
+	UpdateRGBImages();
+}
 
-	// create the y-images
-	im.Create(m_nx, m_nz);
-	for (int i=0; i<m_ny; i++) 
+void CVolRender::UpdateRGBImages()
+{
+	#pragma omp parallel default(shared)
 	{
-		m_im3d.GetSliceY(im, i);
-		Colorize(m_pImy[i], im);
-		if (m_blight) DepthCueY(m_pImy[i], i);
-	}
+		#pragma omp for 
+		for (int i = 0; i < m_nx; i++)
+		{
+			CImage& im = m_sliceX[i];
+			Colorize(m_pImx[i], im);
+			if (m_blight) DepthCueX(m_pImx[i], i);
+		}
 
-	// create the z-images
-	im.Create(m_nx, m_ny);
-	for (int i=0; i<m_nz; i++) 
-	{
-		m_im3d.GetSliceZ(im, i);
-		Colorize(m_pImz[i], im);
-		if (m_blight) DepthCueZ(m_pImz[i], i);
+		// create the y-images
+		#pragma omp for 
+		for (int i = 0; i < m_ny; i++)
+		{
+			CImage& im = m_sliceY[i];
+			Colorize(m_pImy[i], im);
+			if (m_blight) DepthCueY(m_pImy[i], i);
+		}
+
+		// create the z-images
+		#pragma omp for 
+		for (int i = 0; i < m_nz; i++)
+		{
+			CImage& im = m_sliceZ[i];
+			Colorize(m_pImz[i], im);
+			if (m_blight) DepthCueZ(m_pImz[i], i);
+		}
 	}
 }
 
@@ -303,9 +349,9 @@ void CVolRender::Render(CGLContext& rc)
 	double y = fabs(r.y);
 	double z = fabs(r.z);
 
-	if ((x>y) && (x>z)) RenderX(r.x > 0 ? 1 : -1);
-	if ((y>x) && (y>z)) RenderY(r.y > 0 ? 1 : -1);
-	if ((z>y) && (z>x)) RenderZ(r.z > 0 ? 1 : -1);
+	if ((x > y) && (x > z)) { RenderX(r.x > 0 ? 1 : -1); }
+	if ((y > x) && (y > z)) { RenderY(r.y > 0 ? 1 : -1); }
+	if ((z > y) && (z > x)) { RenderZ(r.z > 0 ? 1 : -1); }
 
 	glDisable(GL_TEXTURE_2D);
 	glEnable(GL_LIGHTING);

@@ -167,7 +167,7 @@ void CGLIsoSurfacePlot::Render(CGLContext& rc)
 
 			float w = (ref - m_crng.x)/crng;
 
-			CColorMap& map = ColorMapManager::GetColorMap(m_Col.GetColorMap());
+			CColorMap& map = m_Col.ColorMap();
 			GLCOLOR col = map.map(w);
 
 			RenderSlice(ref, col);

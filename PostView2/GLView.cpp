@@ -2704,8 +2704,6 @@ void CGLView::RenderDoc()
 			if ((*ot)->IsActive()) (*ot)->Render(rc);
 		}
 
-		CGLPlaneCutPlot::DisableClipPlanes();
-
 		// render the volume image data if present
 		for (int i = 0; i < pdoc->ImageModels(); ++i)
 		{
@@ -2725,6 +2723,8 @@ void CGLView::RenderDoc()
 				}
 			}
 		}
+
+		CGLPlaneCutPlot::DisableClipPlanes();
 	}
 	glPopAttrib();
 }

@@ -37,6 +37,9 @@ public:
 	vec3f GetLightPosition() { return m_light; }
 	void SetLightPosition(vec3f r) { m_light = r; m_bcalc_lighting = true; }
 
+	int GetColorMap() const { return m_Col.GetColorMap(); }
+	void SetColorMap(int n) { m_Col.SetColorMap(n); }
+
 protected:
 	void RenderX(int inc);
 	void RenderY(int inc);
@@ -49,18 +52,24 @@ protected:
 	void DepthCueY(CRGBAImage& im, int n);
 	void DepthCueZ(CRGBAImage& im, int n);
 
+	void UpdateRGBImages();
+
 public:
-	GLCOLOR	m_col1, m_col2;		// the two colors
+	CColorTexture	m_Col;		//!< color texture
 	GLCOLOR	m_amb;				//!< ambient color
 	int		m_I0, m_I1;			// intensity range
 	int		m_A0, m_A1;			// transparency range
 	int		m_Amin, m_Amax;		// clamp transparency levels
 	float	m_alpha;			// alpha scale factor
-	bool	m_blight;	// use lighting
+	bool	m_blight;			// use lighting
 
 protected:
 	C3DImage		m_im3d;	// resampled 3D image data
 	C3DImage		m_att;	// attenuation map (for lighting)
+
+	CImage*	m_sliceX;
+	CImage*	m_sliceY;
+	CImage*	m_sliceZ;
 
 	CRGBAImage*	m_pImx;	// Image array in x-direction
 	CRGBAImage*	m_pImy;	// Image array in y-direction

@@ -23,11 +23,8 @@ public:
 	double GetOffset() const { return m_off; }
 	void SetOffset(double f) { m_off = f; }
 
-	GLCOLOR GetColor1() const { return m_col1; }
-	GLCOLOR GetColor2() const { return m_col2; }
-
-	void SetColor1(const GLCOLOR& c) { m_col1 = c; }
-	void SetColor2(const GLCOLOR& c) { m_col2 = c; }
+	int GetColorMap() const { return m_Col.GetColorMap(); }
+	void SetColorMap(int n) { m_Col.SetColorMap(n); }
 
 private:
 	void BuildLUT();
@@ -41,7 +38,8 @@ private:
 
 	int		m_op;	// x,y,z
 	double	m_off;	// offset (0 - 1)
-	GLCOLOR	m_col1, m_col2;
+
+	CColorTexture	m_Col;
 
 	unsigned int m_texID;
 };

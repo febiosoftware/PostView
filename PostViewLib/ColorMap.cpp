@@ -303,6 +303,10 @@ int CColorTexture::GetColorMap() const
 	return m_colorMap;
 }
 
+CColorMap& CColorTexture::ColorMap()
+{
+	return ColorMapManager::GetColorMap(m_colorMap);
+}
 
 //=============================================================================
 class ColorMapTemplate
