@@ -82,8 +82,6 @@ void CVolRender::Create()
 {
 	C3DImage& im3d = *GetImageModel()->Get3DImage();
 
-	m_box = GetImageModel()->GetBoundingBox();
-
 	// get the original image dimensions
 	int w = im3d.Width();
 	int h = im3d.Height();
@@ -159,7 +157,9 @@ void CVolRender::CalcAttenuation()
 
 	vec3f l = m_light; l.Normalize();
 
-	C3DGradientMap map(m_im3d, m_box);
+	BOUNDINGBOX& b = GetImageModel()->GetBoundingBox();
+
+	C3DGradientMap map(m_im3d, b);
 
 #pragma omp parallel for default(shared)
 	for (int k = 0; k < m_nz; ++k)
@@ -375,18 +375,20 @@ void CVolRender::RenderX(int inc)
 	double e0 = 0.0;
 	double e1 = 1.0 - e0;
 
+	BOUNDINGBOX& box = GetImageModel()->GetBoundingBox();
+
 	for (int i=n0; i != n1; i += inc)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, 4, m_ny, m_nz, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_pImx[i].GetBytes());
 
-		x = m_box.x0 + i*(m_box.x1 - m_box.x0)*fx;
+		x = box.x0 + i*(box.x1 - box.x0)*fx;
 
 		glBegin(GL_QUADS);
 		{
-			glTexCoord2d(e0,e0); glVertex3d(x, m_box.y0, m_box.z0);
-			glTexCoord2d(e1,e0); glVertex3d(x, m_box.y1, m_box.z0);
-			glTexCoord2d(e1,e1); glVertex3d(x, m_box.y1, m_box.z1);
-			glTexCoord2d(e0,e1); glVertex3d(x, m_box.y0, m_box.z1);
+			glTexCoord2d(e0,e0); glVertex3d(x, box.y0, box.z0);
+			glTexCoord2d(e1,e0); glVertex3d(x, box.y1, box.z0);
+			glTexCoord2d(e1,e1); glVertex3d(x, box.y1, box.z1);
+			glTexCoord2d(e0,e1); glVertex3d(x, box.y0, box.z1);
 		}
 		glEnd();
 	}
@@ -410,18 +412,20 @@ void CVolRender::RenderY(int inc)
 	double e0 = 0.0;
 	double e1 = 1.0 - e0;
 
+	BOUNDINGBOX& box = GetImageModel()->GetBoundingBox();
+
 	for (int i=n0; i != n1; i += inc)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, 4, m_nx, m_nz, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_pImy[i].GetBytes());
 
-		y = m_box.y0 + i*(m_box.y1 - m_box.y0)*fy;
+		y = box.y0 + i*(box.y1 - box.y0)*fy;
 
 		glBegin(GL_QUADS);
 		{
-			glTexCoord2d(e0,e0); glVertex3d(m_box.x0, y, m_box.z0);
-			glTexCoord2d(e1,e0); glVertex3d(m_box.x1, y, m_box.z0);
-			glTexCoord2d(e1,e1); glVertex3d(m_box.x1, y, m_box.z1);
-			glTexCoord2d(e0,e1); glVertex3d(m_box.x0, y, m_box.z1);
+			glTexCoord2d(e0,e0); glVertex3d(box.x0, y, box.z0);
+			glTexCoord2d(e1,e0); glVertex3d(box.x1, y, box.z0);
+			glTexCoord2d(e1,e1); glVertex3d(box.x1, y, box.z1);
+			glTexCoord2d(e0,e1); glVertex3d(box.x0, y, box.z1);
 		}
 		glEnd();
 	}
@@ -445,18 +449,20 @@ void CVolRender::RenderZ(int inc)
 	double e0 = 0.0;
 	double e1 = 1.0 - e0;
 
+	BOUNDINGBOX& box = GetImageModel()->GetBoundingBox();
+
 	for (int i=n0; i != n1; i += inc)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, 4, m_nx, m_ny, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_pImz[i].GetBytes());
 
-		z = m_box.z0 + i*(m_box.z1 - m_box.z0)*fz;
+		z = box.z0 + i*(box.z1 - box.z0)*fz;
 
 		glBegin(GL_QUADS);
 		{
-			glTexCoord2d(e0,e0); glVertex3d(m_box.x0, m_box.y0, z);
-			glTexCoord2d(e1,e0); glVertex3d(m_box.x1, m_box.y0, z);
-			glTexCoord2d(e1,e1); glVertex3d(m_box.x1, m_box.y1, z);
-			glTexCoord2d(e0,e1); glVertex3d(m_box.x0, m_box.y1, z);
+			glTexCoord2d(e0,e0); glVertex3d(box.x0, box.y0, z);
+			glTexCoord2d(e1,e0); glVertex3d(box.x1, box.y0, z);
+			glTexCoord2d(e1,e1); glVertex3d(box.x1, box.y1, z);
+			glTexCoord2d(e0,e1); glVertex3d(box.x0, box.y1, z);
 		}
 		glEnd();
 	}

@@ -31,9 +31,6 @@ public:
 
 	void Reset();
 
-	BOUNDINGBOX GetBoundingBox() { return m_box; }
-	void SetBoundingBox(BOUNDINGBOX box) { m_box = box; }
-
 	vec3f GetLightPosition() { return m_light; }
 	void SetLightPosition(vec3f r) { m_light = r; m_bcalc_lighting = true; }
 
@@ -84,8 +81,6 @@ protected:
 
 	bool	m_bcalc_lighting;	//!< calculate shading?
 	vec3f	m_light;	// light direction
-
-	BOUNDINGBOX	m_box;
 
 	int	m_LUT[256], m_LUTC[4][256];
 };

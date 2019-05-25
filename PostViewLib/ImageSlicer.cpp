@@ -37,9 +37,6 @@ void CImageSlicer::Create()
 {
 	C3DImage& im3d = *GetImageModel()->Get3DImage();
 
-	// store the bounding box
-	m_box = GetImageModel()->GetBoundingBox();
-
 	// get the original image dimensions
 	int w = im3d.Width();
 	int h = im3d.Height();
@@ -145,6 +142,8 @@ void CImageSlicer::Render(CGLContext& rc)
 		m_reloadTexture = false;
 	}
 
+	BOUNDINGBOX box = GetImageModel()->GetBoundingBox();
+
 	glEnable(GL_TEXTURE_2D);
 	glDisable(GL_LIGHTING);
 
@@ -155,19 +154,19 @@ void CImageSlicer::Render(CGLContext& rc)
 	switch (m_op)
 	{
 	case 0:
-		x[0] = x[1] = x[2] = x[3] = m_box.x0 + m_off*(m_box.x1 - m_box.x0);
-		y[0] = y[3] = m_box.y1;  y[1] = y[2] = m_box.y0;
-		z[0] = z[1] = m_box.z0;  z[2] = z[3] = m_box.z1;
+		x[0] = x[1] = x[2] = x[3] = box.x0 + m_off*(box.x1 - box.x0);
+		y[0] = y[3] = box.y1;  y[1] = y[2] = box.y0;
+		z[0] = z[1] = box.z0;  z[2] = z[3] = box.z1;
 		break;
 	case 1:
-		y[0] = y[1] = y[2] = y[3] = m_box.y0 + m_off*(m_box.y1 - m_box.y0);
-		x[0] = x[3] = m_box.x1;  x[1] = x[2] = m_box.x0;
-		z[0] = z[1] = m_box.z0;  z[2] = z[3] = m_box.z1;
+		y[0] = y[1] = y[2] = y[3] = box.y0 + m_off*(box.y1 - box.y0);
+		x[0] = x[3] = box.x1;  x[1] = x[2] = box.x0;
+		z[0] = z[1] = box.z0;  z[2] = z[3] = box.z1;
 		break;
 	case 2:
-		z[0] = z[1] = z[2] = z[3] = m_box.z0 + m_off*(m_box.z1 - m_box.z0);
-		x[0] = x[3] = m_box.x1;  x[1] = x[2] = m_box.x0;
-		y[0] = y[1] = m_box.y0;  y[2] = y[3] = m_box.y1;
+		z[0] = z[1] = z[2] = z[3] = box.z0 + m_off*(box.z1 - box.z0);
+		x[0] = x[3] = box.x1;  x[1] = x[2] = box.x0;
+		y[0] = y[1] = box.y0;  y[2] = y[3] = box.y1;
 		break;
 	}
 

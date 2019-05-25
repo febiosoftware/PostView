@@ -33,7 +33,6 @@ private:
 	C3DImage		m_im3d;	// resampled 3D image data
 	CRGBAImage		m_im;	// 2D image that will be displayed
 	int				m_LUTC[4][256];	// color lookup table
-	BOUNDINGBOX		m_box;
 	bool			m_reloadTexture;
 
 	int		m_op;	// x,y,z
