@@ -58,6 +58,7 @@ public:
 	int		m_A0, m_A1;			// transparency range
 	int		m_Amin, m_Amax;		// clamp transparency levels
 	float	m_alpha;			// alpha scale factor
+	float	m_shadeStrength;
 	bool	m_blight;			// use lighting
 
 protected:

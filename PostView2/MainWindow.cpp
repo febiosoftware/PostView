@@ -1334,6 +1334,7 @@ void CMainWindow::on_actionImageSlicer_triggered()
 		img->AddImageRenderer(slicer);
 		ui->modelViewer->Update(true);
 		ui->modelViewer->selectObject(slicer);
+		RedrawGL();
 	}
 }
 
@@ -1352,6 +1353,7 @@ void CMainWindow::on_actionVolumeRender_triggered()
 		img->AddImageRenderer(vr);
 		ui->modelViewer->Update(true);
 		ui->modelViewer->selectObject(vr);
+		RedrawGL();
 	}
 }
 

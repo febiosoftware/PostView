@@ -460,6 +460,7 @@ public:
 		addProperty("Color map", CProperty::Enum)->setEnumValues(cols);
 		addProperty("Ambient color", CProperty::Color);
 		addProperty("Lighting effect", CProperty::Bool);
+		addProperty("Lighting strength", CProperty::Float);
 //		addProperty("Light direction", CProperty::DataVec3);
 	}
 
@@ -477,6 +478,7 @@ public:
 		case  7: return m_vr->GetColorMap(); break;
 		case  8: return toQColor(m_vr->m_amb); break;
 		case  9: return m_vr->m_blight; break;
+		case 10: return m_vr->m_shadeStrength; break;
 //		case 10: return m_vr->GetLightPosition(); break;
 		}
 		return QVariant();
@@ -496,6 +498,7 @@ public:
 		case  7: m_vr->SetColorMap(val.value<int>()); break;
 		case  8: m_vr->m_amb  = toGLColor(val.value<QColor>()); break;
 		case  9: m_vr->m_blight = val.toBool(); break;
+		case 10: m_vr->m_shadeStrength = val.toFloat(); break;
 //		case 10: break;
 		}
 

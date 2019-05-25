@@ -57,6 +57,8 @@ void CVolRender::Reset()
 	m_blight = false;
 	m_bcalc_lighting = true;
 
+	m_shadeStrength = 0.2f;
+
 	m_I0 = 0;
 	m_I1 = 255;
 	m_A0 = 0;
@@ -271,6 +273,9 @@ void CVolRender::DepthCueX(CRGBAImage& im, int n)
 		for (int i=0; i<nx; ++i, p += 4)
 		{
 			byte a = m_att.value(n, i, j);
+
+			a = m_shadeStrength*a + (1.f - m_shadeStrength)*255;
+
 			p[0] = (byte) ((p[0]*a + m_amb.r*(255 - a))/255);
 			p[1] = (byte) ((p[1]*a + m_amb.g*(255 - a))/255);
 			p[2] = (byte) ((p[2]*a + m_amb.b*(255 - a))/255);
@@ -290,6 +295,7 @@ void CVolRender::DepthCueY(CRGBAImage& im, int n)
 		for (int i=0; i<nx; ++i, p += 4)
 		{
 			byte a = m_att.value(i, n, j);
+			a = m_shadeStrength*a + (1.f - m_shadeStrength) * 255;
 			p[0] = (byte) ((p[0]*a + m_amb.r*(255 - a))/255);
 			p[1] = (byte) ((p[1]*a + m_amb.g*(255 - a))/255);
 			p[2] = (byte) ((p[2]*a + m_amb.b*(255 - a))/255);
@@ -309,6 +315,7 @@ void CVolRender::DepthCueZ(CRGBAImage& im, int n)
 		for (int i=0; i<nx; ++i, p += 4)
 		{
 			byte a = m_att.value(i, j, n);
+			a = m_shadeStrength*a + (1.f - m_shadeStrength) * 255;
 			p[0] = (byte) ((p[0]*a + m_amb.r*(255 - a))/255);
 			p[1] = (byte) ((p[1]*a + m_amb.g*(255 - a))/255);
 			p[2] = (byte) ((p[2]*a + m_amb.b*(255 - a))/255);
