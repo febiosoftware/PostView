@@ -162,7 +162,8 @@ bool CDocManager::SaveSession(const std::string& sfile)
 						int dim[3] = { im->Width(), im->Height(), im->Depth() };
 						BOUNDINGBOX bb = img->GetBoundingBox();
 						float b[6] = { bb.x0, bb.y0, bb.z0, bb.x1, bb.y1, bb.z1};
-						xml.add_leaf("file", img->GetFileName());
+                        string fname = img->GetFileName();
+						xml.add_leaf("file", fname);
 						xml.add_leaf("size", dim, 3);
 						xml.add_leaf("box", b, 6);
 					}
