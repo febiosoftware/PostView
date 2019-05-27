@@ -206,6 +206,7 @@
     <ClInclude Include="..\..\PostViewLib\Intersect.h" />
     <ClInclude Include="..\..\PostViewLib\LinearRegression.h" />
     <ClInclude Include="..\..\PostViewLib\lusolver.h" />
+    <ClInclude Include="..\..\PostViewLib\MarchingCubes.h" />
     <ClInclude Include="..\..\PostViewLib\math3d.h" />
     <ClInclude Include="..\..\PostViewLib\MathParser.h" />
     <ClInclude Include="..\..\PostViewLib\Palette.h" />
@@ -293,6 +294,7 @@
     <ClCompile Include="..\..\PostViewLib\LinearRegression.cpp" />
     <ClCompile Include="..\..\PostViewLib\lusolver.cpp" />
     <ClCompile Include="..\..\PostViewLib\lut.cpp" />
+    <ClCompile Include="..\..\PostViewLib\MarchingCubes.cpp" />
     <ClCompile Include="..\..\PostViewLib\math3d.cpp" />
     <ClCompile Include="..\..\PostViewLib\MathParser.cpp" />
     <ClCompile Include="..\..\PostViewLib\Palette.cpp" />

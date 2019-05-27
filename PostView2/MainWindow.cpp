@@ -55,6 +55,7 @@
 #include <PostViewLib/ImageModel.h>
 #include <PostViewLib/ImageSlicer.h>
 #include <PostViewLib/VolRender.h>
+#include <PostViewLib/MarchingCubes.h>
 #include <string>
 #include <QStyleFactory>
 
@@ -887,6 +888,9 @@ void CMainWindow::on_actionOpenSession_triggered()
 			// Make it the active document
 			MakeDocActive(m_DocManager->GetDocument(0));
 		}
+
+		ui->modelViewer->parentWidget()->raise();
+		ui->modelViewer->parentWidget()->show();
 	}
 }
 
@@ -1353,6 +1357,25 @@ void CMainWindow::on_actionVolumeRender_triggered()
 		img->AddImageRenderer(vr);
 		ui->modelViewer->Update(true);
 		ui->modelViewer->selectObject(vr);
+		RedrawGL();
+	}
+}
+
+void CMainWindow::on_actionMarchingCubes_triggered()
+{
+	CGLObject* po = ui->modelViewer->selectedObject();
+	CImageModel* img = dynamic_cast<CImageModel*>(po);
+	if (img == nullptr)
+	{
+		QMessageBox::critical(this, "PostView", "Please select an image data set first.");
+	}
+	else
+	{
+		CMarchingCubes* mc = new CMarchingCubes(img);
+		mc->Create();
+		img->AddImageRenderer(mc);
+		ui->modelViewer->Update(true);
+		ui->modelViewer->selectObject(mc);
 		RedrawGL();
 	}
 }

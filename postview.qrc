@@ -61,5 +61,6 @@
 		<file>icons/font_inc_neg.png</file>
 		<file>icons/font_italic_neg.png</file>
 		<file>icons/image.png</file>
+		<file>icons/marching_cubes.png</file>
     </qresource>
 </RCC>
