@@ -13,6 +13,8 @@
 #include "MarchingCubes.h"
 #include "ImageModel.h"
 #include "3DImage.h"
+#include <sstream>
+using namespace std;
 
 extern int LUT[256][15];
 extern int ET_HEX[12][2];
@@ -31,16 +33,27 @@ void TriMesh::Reserve(size_t nsize)
 	m_Face.reserve(nsize);
 }
 
-void TriMesh::Merge(TriMesh& tri)
+void TriMesh::Resize(size_t nsize)
 {
+	m_Face.resize(nsize);
+}
+
+void TriMesh::Merge(TriMesh& tri, int ncount)
+{
+	if (ncount < 0) ncount = tri.Faces();
 	int N = (int)m_Face.size();
-	m_Face.resize(m_Face.size() + tri.m_Face.size());
-	for (size_t i = 0; i < tri.m_Face.size(); ++i)
+	m_Face.resize(m_Face.size() + ncount);
+	for (size_t i = 0; i < ncount; ++i)
 		m_Face[N + i] = tri.m_Face[i];
 }
 
 CMarchingCubes::CMarchingCubes(CImageModel* img) : CGLImageRenderer(img)
 {
+	static int n = 1;
+	stringstream ss;
+	ss << "ImageIsosurface" << n++;
+	SetName(ss.str());
+
 	m_val = 0.5f;
 	m_oldVal = -1.f;
 	m_bsmooth = true;
@@ -50,6 +63,13 @@ CMarchingCubes::CMarchingCubes(CImageModel* img) : CGLImageRenderer(img)
 CMarchingCubes::~CMarchingCubes()
 {
 
+}
+
+void CMarchingCubes::SetSmooth(bool b)
+{ 
+	m_bsmooth = b; 
+	m_oldVal = -1.f;
+	Create();
 }
 
 void CMarchingCubes::Create()
@@ -66,6 +86,7 @@ void CMarchingCubes::Create()
 	int NX = im3d.Width();
 	int NY = im3d.Height();
 	int NZ = im3d.Depth();
+	if ((NX == 1) || (NY == 1) || (NZ == 1)) return;
 
 	float ref = m_val * 255;
 
@@ -73,10 +94,16 @@ void CMarchingCubes::Create()
 
 	#pragma omp parallel default(shared)
 	{
+		const int MAX_FACES = 1000000;
 		TriMesh temp;
-		temp.Reserve(1000000);
+		temp.Resize(MAX_FACES);
+		int nfaces = 0;
 		float val[8];
 		vec3f r[8], g[8];
+
+		float dxi = (b.x1 - b.x0) / (NX - 1);
+		float dyi = (b.y1 - b.y0) / (NY - 1);
+		float dzi = (b.z1 - b.z0) / (NZ - 1);
 
 		#pragma omp for schedule(dynamic)
 		for (int k = 0; k < NZ - 1; ++k)
@@ -86,15 +113,18 @@ void CMarchingCubes::Create()
 				for (int i = 0; i < NX - 1; ++i)
 				{
 					// get the voxel's values
-					val[0] = im3d.value(i, j, k);
+					if (i == 0)
+					{
+						val[0] = im3d.value(i, j, k);
+						val[4] = im3d.value(i, j, k + 1);
+						val[3] = im3d.value(i, j + 1, k);
+						val[7] = im3d.value(i, j + 1, k + 1);
+					}
+
 					val[1] = im3d.value(i + 1, j, k);
 					val[2] = im3d.value(i + 1, j + 1, k);
-					val[3] = im3d.value(i, j + 1, k);
-
-					val[4] = im3d.value(i, j, k + 1);
 					val[5] = im3d.value(i + 1, j, k + 1);
 					val[6] = im3d.value(i + 1, j + 1, k + 1);
-					val[7] = im3d.value(i, j + 1, k + 1);
 
 					// calculate the case of the element
 					int ncase = 0;
@@ -104,24 +134,27 @@ void CMarchingCubes::Create()
 					if ((ncase != 0) && (ncase != 255))
 					{
 						// get the corners
-						r[0].x = b.x0 + i    *(b.x1 - b.x0) / (NX - 1); r[0].y = b.y0 + j    *(b.y1 - b.y0) / (NY - 1); r[0].z = b.z0 + k    *(b.z1 - b.z0) / (NZ - 1);
-						r[1].x = b.x0 + (i + 1)*(b.x1 - b.x0) / (NX - 1); r[1].y = b.y0 + j    *(b.y1 - b.y0) / (NY - 1); r[1].z = b.z0 + k    *(b.z1 - b.z0) / (NZ - 1);
-						r[2].x = b.x0 + (i + 1)*(b.x1 - b.x0) / (NX - 1); r[2].y = b.y0 + (j + 1)*(b.y1 - b.y0) / (NY - 1); r[2].z = b.z0 + k    *(b.z1 - b.z0) / (NZ - 1);
-						r[3].x = b.x0 + i    *(b.x1 - b.x0) / (NX - 1); r[3].y = b.y0 + (j + 1)*(b.y1 - b.y0) / (NY - 1); r[3].z = b.z0 + k    *(b.z1 - b.z0) / (NZ - 1);
-						r[4].x = b.x0 + i    *(b.x1 - b.x0) / (NX - 1); r[4].y = b.y0 + j    *(b.y1 - b.y0) / (NY - 1); r[4].z = b.z0 + (k + 1)*(b.z1 - b.z0) / (NZ - 1);
-						r[5].x = b.x0 + (i + 1)*(b.x1 - b.x0) / (NX - 1); r[5].y = b.y0 + j    *(b.y1 - b.y0) / (NY - 1); r[5].z = b.z0 + (k + 1)*(b.z1 - b.z0) / (NZ - 1);
-						r[6].x = b.x0 + (i + 1)*(b.x1 - b.x0) / (NX - 1); r[6].y = b.y0 + (j + 1)*(b.y1 - b.y0) / (NY - 1); r[6].z = b.z0 + (k + 1)*(b.z1 - b.z0) / (NZ - 1);
-						r[7].x = b.x0 + i    *(b.x1 - b.x0) / (NX - 1); r[7].y = b.y0 + (j + 1)*(b.y1 - b.y0) / (NY - 1); r[7].z = b.z0 + (k + 1)*(b.z1 - b.z0) / (NZ - 1);
+						r[0].x = b.x0 + i      *dxi; r[0].y = b.y0 + j      *dyi; r[0].z = b.z0 + k      *dzi;
+						r[1].x = b.x0 + (i + 1)*dxi; r[1].y = b.y0 + j      *dyi; r[1].z = b.z0 + k      *dzi;
+						r[2].x = b.x0 + (i + 1)*dxi; r[2].y = b.y0 + (j + 1)*dyi; r[2].z = b.z0 + k      *dzi;
+						r[3].x = b.x0 + i      *dxi; r[3].y = b.y0 + (j + 1)*dyi; r[3].z = b.z0 + k      *dzi;
+						r[4].x = b.x0 + i      *dxi; r[4].y = b.y0 + j      *dyi; r[4].z = b.z0 + (k + 1)*dzi;
+						r[5].x = b.x0 + (i + 1)*dxi; r[5].y = b.y0 + j      *dyi; r[5].z = b.z0 + (k + 1)*dzi;
+						r[6].x = b.x0 + (i + 1)*dxi; r[6].y = b.y0 + (j + 1)*dyi; r[6].z = b.z0 + (k + 1)*dzi;
+						r[7].x = b.x0 + i      *dxi; r[7].y = b.y0 + (j + 1)*dyi; r[7].z = b.z0 + (k + 1)*dzi;
 
 						// calculate gradients
-						g[0] = grad.Value(i, j, k);
-						g[1] = grad.Value(i + 1, j, k);
-						g[2] = grad.Value(i + 1, j + 1, k);
-						g[3] = grad.Value(i, j + 1, k);
-						g[4] = grad.Value(i, j, k + 1);
-						g[5] = grad.Value(i + 1, j, k + 1);
-						g[6] = grad.Value(i + 1, j + 1, k + 1);
-						g[7] = grad.Value(i, j + 1, k + 1);
+						if (m_bsmooth)
+						{
+							g[0] = grad.Value(i, j, k);
+							g[1] = grad.Value(i + 1, j, k);
+							g[2] = grad.Value(i + 1, j + 1, k);
+							g[3] = grad.Value(i, j + 1, k);
+							g[4] = grad.Value(i, j, k + 1);
+							g[5] = grad.Value(i + 1, j, k + 1);
+							g[6] = grad.Value(i + 1, j + 1, k + 1);
+							g[7] = grad.Value(i, j + 1, k + 1);
+						}
 					}
 
 					// loop over faces
@@ -131,7 +164,7 @@ void CMarchingCubes::Create()
 						if (*pf == -1) break;
 
 						// calculate nodal positions
-						TriMesh::TRI tri;
+						TriMesh::TRI& tri = temp.Face(nfaces++);
 						for (int m = 0; m < 3; m++)
 						{
 							int n1 = ET_HEX[pf[m]][0];
@@ -141,26 +174,43 @@ void CMarchingCubes::Create()
 
 							tri.m_node[m] = r[n1] * (1 - w) + r[n2] * w;
 
-							vec3f normal = g[n1] * (1 - w) + g[n2] * w;
-							normal.Normalize();
-							tri.m_norm[m] = -normal;
+							if (m_bsmooth)
+							{
+								vec3f normal = g[n1] * (1 - w) + g[n2] * w;
+								normal.Normalize();
+								tri.m_norm[m] = -normal;
+							}
 						}
 
-						vec3f normal = (tri.m_node[1] - tri.m_node[0]) ^ (tri.m_node[2] - tri.m_node[0]);
-						normal.Normalize();
-						tri.m_faceNorm = normal;
-
-						// add it to the (temp) mesh
-						temp.AddFace(tri);
+						if (m_bsmooth == false)
+						{
+							vec3f normal = (tri.m_node[1] - tri.m_node[0]) ^ (tri.m_node[2] - tri.m_node[0]);
+							normal.Normalize();
+							tri.m_norm[0] = normal;
+							tri.m_norm[1] = normal;
+							tri.m_norm[2] = normal;
+						}
 
 						pf += 3;
+
+						if (nfaces == MAX_FACES)
+						{
+							#pragma omp critical
+							m_mesh.Merge(temp, nfaces);
+							nfaces = 0;
+						}
 					}
+
+					val[0] = val[1];
+					val[4] = val[5];
+					val[3] = val[2];
+					val[7] = val[6];
 				}
 			}
 		}
 
 		#pragma omp critical
-		m_mesh.Merge(temp);
+		m_mesh.Merge(temp, nfaces);
 	}
 }
 
@@ -177,22 +227,12 @@ void CMarchingCubes::Render(CGLContext& rc)
 	for (int i = 0; i < m_mesh.Faces(); ++i)
 	{
 		TriMesh::TRI& face = m_mesh.Face(i);
-		if (m_bsmooth)
-		{
-			glNormal3f(face.m_norm[0].x, face.m_norm[0].y, face.m_norm[0].z);
-			glVertex3f(face.m_node[0].x, face.m_node[0].y, face.m_node[0].z);
-			glNormal3f(face.m_norm[1].x, face.m_norm[1].y, face.m_norm[1].z);
-			glVertex3f(face.m_node[1].x, face.m_node[1].y, face.m_node[1].z);
-			glNormal3f(face.m_norm[2].x, face.m_norm[2].y, face.m_norm[2].z);
-			glVertex3f(face.m_node[2].x, face.m_node[2].y, face.m_node[2].z);
-		}
-		else
-		{
-			glNormal3f(face.m_faceNorm.x, face.m_faceNorm.y, face.m_faceNorm.z);
-			glVertex3f(face.m_node[0].x, face.m_node[0].y, face.m_node[0].z);
-			glVertex3f(face.m_node[1].x, face.m_node[1].y, face.m_node[1].z);
-			glVertex3f(face.m_node[2].x, face.m_node[2].y, face.m_node[2].z);
-		}
+		glNormal3f(face.m_norm[0].x, face.m_norm[0].y, face.m_norm[0].z);
+		glVertex3f(face.m_node[0].x, face.m_node[0].y, face.m_node[0].z);
+		glNormal3f(face.m_norm[1].x, face.m_norm[1].y, face.m_norm[1].z);
+		glVertex3f(face.m_node[1].x, face.m_node[1].y, face.m_node[1].z);
+		glNormal3f(face.m_norm[2].x, face.m_norm[2].y, face.m_norm[2].z);
+		glVertex3f(face.m_node[2].x, face.m_node[2].y, face.m_node[2].z);
 	}
 	glEnd();
 }

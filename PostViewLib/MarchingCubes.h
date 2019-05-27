@@ -12,7 +12,6 @@ public:
 	{
 		vec3f	m_node[3];
 		vec3f	m_norm[3];
-		vec3f	m_faceNorm;
 	};
 
 public:
@@ -20,9 +19,11 @@ public:
 
 	void Clear();
 
-	void Merge(TriMesh& tri);
+	void Merge(TriMesh& tri, int ncount = -1);
 
 	void Reserve(size_t nsize);
+
+	void Resize(size_t nsize);
 
 	TRI& Face(int i) { return m_Face[i]; }
 	int Faces() const { return (int)m_Face.size(); }
@@ -43,7 +44,7 @@ public:
 	void SetIsoValue(float v);
 
 	bool GetSmooth() const { return m_bsmooth; }
-	void SetSmooth(bool b) { m_bsmooth = b; }
+	void SetSmooth(bool b);
 
 	GLCOLOR GetColor() const { return m_col; }
 	void SetColor(GLCOLOR c) { m_col = c; }
