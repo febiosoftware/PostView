@@ -570,6 +570,8 @@ public:
 		addProperty("isosurface value", CProperty::Float)->setFloatRange(0.0, 1.0);
 		addProperty("smooth surface", CProperty::Bool);
 		addProperty("surface color", CProperty::Color);
+		addProperty("close surface", CProperty::Bool);
+		addProperty("invert space", CProperty::Bool);
 	}
 
 	QVariant GetPropertyValue(int i)
@@ -579,6 +581,8 @@ public:
 		case 0: return m_mc->GetIsoValue(); break;
 		case 1: return m_mc->GetSmooth(); break;
 		case 2: return toQColor(m_mc->GetColor()); break;
+		case 3: return m_mc->GetCloseSurface(); break;
+		case 4: return m_mc->GetInvertSpace(); break;
 		}
 		return QVariant();
 	}
@@ -590,6 +594,8 @@ public:
 		case 0: m_mc->SetIsoValue(val.toFloat()); break;
 		case 1: m_mc->SetSmooth(val.toBool()); break;
 		case 2: m_mc->SetColor(toGLColor(val.value<QColor>())); break;
+		case 3: m_mc->SetCloseSurface(val.toBool()); break;
+		case 4: m_mc->SetInvertSpace(val.toBool()); break;
 		}
 	}
 

@@ -14,10 +14,13 @@
 #include "ImageModel.h"
 #include "3DImage.h"
 #include <sstream>
+#include <assert.h>
 using namespace std;
 
 extern int LUT[256][15];
 extern int ET_HEX[12][2];
+extern int LUT2D_tri[16][9];
+extern int ET2D[4][2];
 
 TriMesh::TriMesh()
 {
@@ -57,6 +60,8 @@ CMarchingCubes::CMarchingCubes(CImageModel* img) : CGLImageRenderer(img)
 	m_val = 0.5f;
 	m_oldVal = -1.f;
 	m_bsmooth = true;
+	m_bcloseSurface = true;
+	m_binvertSpace = false;
 	m_col = GLCOLOR(200, 185, 185);
 }
 
@@ -70,6 +75,18 @@ void CMarchingCubes::SetSmooth(bool b)
 	m_bsmooth = b; 
 	m_oldVal = -1.f;
 //	Create();
+}
+
+void CMarchingCubes::SetInvertSpace(bool b)
+{ 
+	m_binvertSpace = b; 
+	m_oldVal = -1.f;
+}
+
+void CMarchingCubes::SetCloseSurface(bool b)
+{
+	m_bcloseSurface = b;
+	m_oldVal = -1.f;
 }
 
 void CMarchingCubes::Update()
@@ -93,7 +110,13 @@ void CMarchingCubes::Create()
 	int NZ = im3d.Depth();
 	if ((NX == 1) || (NY == 1) || (NZ == 1)) return;
 
-	float ref = m_val * 255;
+	float dxi = (b.x1 - b.x0) / (NX - 1);
+	float dyi = (b.y1 - b.y0) / (NY - 1);
+	float dzi = (b.z1 - b.z0) / (NZ - 1);
+
+	byte ref = (byte)(m_val * 255.f);
+	float fref = (float)ref;
+	m_ref = ref;
 
 	C3DGradientMap grad(im3d, b);
 
@@ -103,12 +126,8 @@ void CMarchingCubes::Create()
 		TriMesh temp;
 		temp.Resize(MAX_FACES);
 		int nfaces = 0;
-		float val[8];
+		byte val[8];
 		vec3f r[8], g[8];
-
-		float dxi = (b.x1 - b.x0) / (NX - 1);
-		float dyi = (b.y1 - b.y0) / (NY - 1);
-		float dzi = (b.z1 - b.z0) / (NZ - 1);
 
 		#pragma omp for schedule(dynamic, 5)
 		for (int k = 0; k < NZ - 1; ++k)
@@ -133,14 +152,28 @@ void CMarchingCubes::Create()
 
 					// calculate the case of the voxel
 					int ncase = 0;
-					if (val[0] <= ref) ncase |= 0x01;
-					if (val[1] <= ref) ncase |= 0x02;
-					if (val[2] <= ref) ncase |= 0x04;
-					if (val[3] <= ref) ncase |= 0x08;
-					if (val[4] <= ref) ncase |= 0x10;
-					if (val[5] <= ref) ncase |= 0x20;
-					if (val[6] <= ref) ncase |= 0x40;
-					if (val[7] <= ref) ncase |= 0x80;
+					if (m_binvertSpace)
+					{
+						if (val[0] < ref) ncase |= 0x01;
+						if (val[1] < ref) ncase |= 0x02;
+						if (val[2] < ref) ncase |= 0x04;
+						if (val[3] < ref) ncase |= 0x08;
+						if (val[4] < ref) ncase |= 0x10;
+						if (val[5] < ref) ncase |= 0x20;
+						if (val[6] < ref) ncase |= 0x40;
+						if (val[7] < ref) ncase |= 0x80;
+					}
+					else
+					{
+						if (val[0] > ref) ncase |= 0x01;
+						if (val[1] > ref) ncase |= 0x02;
+						if (val[2] > ref) ncase |= 0x04;
+						if (val[3] > ref) ncase |= 0x08;
+						if (val[4] > ref) ncase |= 0x10;
+						if (val[5] > ref) ncase |= 0x20;
+						if (val[6] > ref) ncase |= 0x40;
+						if (val[7] > ref) ncase |= 0x80;
+					}
 
 					// cases 0 and 255 don't generate triangles, so don't waste time on these
 					if ((ncase != 0) && (ncase != 255))
@@ -181,7 +214,8 @@ void CMarchingCubes::Create()
 								int n1 = ET_HEX[pf[m]][0];
 								int n2 = ET_HEX[pf[m]][1];
 
-								float w = (ref - val[n1]) / (val[n2] - val[n1]);
+								float w = (fref - (float)val[n1]) / ((float)val[n2] - (float)val[n1]);
+								assert((w >= 0.f) && (w <= 1.f));
 
 								tri.m_node[m] = r[n1] * (1.f - w) + r[n2] * w;
 
@@ -189,7 +223,7 @@ void CMarchingCubes::Create()
 								{
 									vec3f normal = g[n1] * (1.f - w) + g[n2] * w;
 									normal.Normalize();
-									tri.m_norm[m] = -normal;
+									tri.m_norm[m] = (m_binvertSpace ? -normal : normal);
 								}
 							}
 
@@ -224,6 +258,154 @@ void CMarchingCubes::Create()
 
 		#pragma omp critical
 		m_mesh.Merge(temp, nfaces);
+	}
+
+	// create surface meshes
+	if (m_bcloseSurface)
+	{
+		byte val[4];
+		vec3f r[4];
+
+		// X-planes
+		for (int i = 0; i <= NX - 1; i += NX - 1)
+		{
+			vec3f faceNormal(1.f, 0.f, 0.f);
+
+			float x = (i == 0 ? b.x0 : b.x1);
+
+			for (int k = 0; k < NZ - 1; k++)
+			{
+				for (int j = 0; j < NY - 1; ++j)
+				{
+					// get the pixel's values
+					val[0] = im3d.value(i, j, k);
+					val[1] = im3d.value(i, j + 1, k);
+					val[2] = im3d.value(i, j + 1, k + 1);
+					val[3] = im3d.value(i, j, k + 1);
+
+					// get the corners
+					r[0].x = x; r[0].y = b.y0 + j      *dyi; r[0].z = b.z0 + k*dzi;
+					r[1].x = x; r[1].y = b.y0 + (j + 1)*dyi; r[1].z = b.z0 + k*dzi;
+					r[2].x = x; r[2].y = b.y0 + (j + 1)*dyi; r[2].z = b.z0 + (k + 1)*dzi;
+					r[3].x = x; r[3].y = b.y0 + j      *dyi; r[3].z = b.z0 + (k + 1)*dzi;
+
+					// add the triangles
+					AddSurfaceTris(val, r, faceNormal);
+				}
+			}
+		}
+
+		// Y-planes
+		for (int j = 0; j <= NY - 1; j += NY - 1)
+		{
+			vec3f faceNormal(0.f, -1.f, 0.f);
+
+			float y = (j == 0 ? b.y0 : b.y1);
+
+			for (int k = 0; k < NZ - 1; k++)
+			{
+				for (int i = 0; i < NX - 1; ++i)
+				{
+					// get the pixel's values
+					val[0] = im3d.value(i  , j, k);
+					val[1] = im3d.value(i+1, j, k);
+					val[2] = im3d.value(i+1, j, k + 1);
+					val[3] = im3d.value(i  , j, k + 1);
+
+					// get the corners
+					r[0].x = b.x0 + i    *dxi; r[0].y = y; r[0].z = b.z0 + k*dzi;
+					r[1].x = b.x0 + (i+1)*dxi; r[1].y = y; r[1].z = b.z0 + k*dzi;
+					r[2].x = b.x0 + (i+1)*dxi; r[2].y = y; r[2].z = b.z0 + (k + 1)*dzi;
+					r[3].x = b.x0 + i    *dxi; r[3].y = y; r[3].z = b.z0 + (k + 1)*dzi;
+
+					// add the triangles
+					AddSurfaceTris(val, r, faceNormal);
+				}
+			}
+		}
+
+		// Z-planes
+		for (int k = 0; k <= NZ - 1; k += NZ - 1)
+		{
+			vec3f faceNormal(0.f, 0.f, 1.f);
+
+			float z = (k == 0 ? b.z0 : b.z1);
+
+			for (int j = 0; j < NY - 1; ++j)
+			{
+				for (int i = 0; i < NX - 1; ++i)
+				{
+					// get the pixel's values
+					val[0] = im3d.value(i    , j    , k);
+					val[1] = im3d.value(i + 1, j    , k);
+					val[2] = im3d.value(i + 1, j + 1, k);
+					val[3] = im3d.value(i    , j + 1, k);
+
+					// get the corners
+					r[0].x = b.x0 + i      *dxi; r[0].y = b.y0 + j      *dyi; r[0].z = z;
+					r[1].x = b.x0 + (i + 1)*dxi; r[1].y = b.y0 + j      *dyi; r[1].z = z;
+					r[2].x = b.x0 + (i + 1)*dxi; r[2].y = b.y0 + (j + 1)*dyi; r[2].z = z;
+					r[3].x = b.x0 + i      *dxi; r[3].y = b.y0 + (j + 1)*dyi; r[3].z = z;
+
+					// add the triangles
+					AddSurfaceTris(val, r, faceNormal);
+				}
+			}
+		}
+	}
+}
+
+void CMarchingCubes::AddSurfaceTris(byte val[4], vec3f r[4], const vec3f& faceNormal)
+{
+	// calculate the case of the voxel
+	int ncase = 0;
+	if (m_binvertSpace)
+	{
+		if (val[0] < m_ref) ncase |= 0x01;
+		if (val[1] < m_ref) ncase |= 0x02;
+		if (val[2] < m_ref) ncase |= 0x04;
+		if (val[3] < m_ref) ncase |= 0x08;
+	}
+	else
+	{
+		if (val[0] > m_ref) ncase |= 0x01;
+		if (val[1] > m_ref) ncase |= 0x02;
+		if (val[2] > m_ref) ncase |= 0x04;
+		if (val[3] > m_ref) ncase |= 0x08;
+	}
+
+	float fref = (float)m_ref;
+
+	// loop over faces
+	int* pf = LUT2D_tri[ncase];
+	for (int l = 0; l < 3; l++)
+	{
+		if (*pf == -1) break;
+
+		// calculate nodal positions
+		TriMesh::TRI tri;
+		for (int m = 0; m < 3; m++)
+		{
+			int node = pf[m];
+			if (node < 4)
+			{
+				tri.m_node[m] = r[node];
+			}
+			else
+			{
+				int n1 = ET2D[node - 4][0];
+				int n2 = ET2D[node - 4][1];
+
+				float w = (fref - (float)val[n1]) / ((float)val[n2] - (float)val[n1]);
+				tri.m_node[m] = r[n1] * (1.f - w) + r[n2] * w;
+			}
+
+			tri.m_norm[m] = faceNormal;
+		}
+
+		m_mesh.AddFace(tri);
+
+		pf += 3;
 	}
 }
 

@@ -39,6 +39,8 @@ public:
 
 	byte* GetPixel(int i, int j) { return m_pb + (j*m_cx + i); }
 
+	byte value(int i, int j) { return m_pb[j*m_cx + i]; }
+
 	void Zero() { for (int i=0; i<m_cx*m_cy; i++) m_pb[i] = 0; }
 
 protected:

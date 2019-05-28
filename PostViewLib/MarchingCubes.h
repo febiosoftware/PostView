@@ -49,6 +49,12 @@ public:
 	GLCOLOR GetColor() const { return m_col; }
 	void SetColor(GLCOLOR c) { m_col = c; }
 
+	bool GetInvertSpace() const { return m_binvertSpace; }
+	void SetInvertSpace(bool b);
+
+	bool GetCloseSurface() const { return m_bcloseSurface; }
+	void SetCloseSurface(bool b);
+
 	void Create();
 
 	void Render(CGLContext& rc) override;
@@ -56,8 +62,15 @@ public:
 	void Update() override;
 
 private:
+	void AddSurfaceTris(byte val[4], vec3f r[4], const vec3f& faceNormal);
+
+private:
 	float	m_val, m_oldVal;		// iso-surface value
 	bool	m_bsmooth;
+	bool	m_bcloseSurface;
+	bool	m_binvertSpace;
 	GLCOLOR	m_col;
 	TriMesh	m_mesh;
+
+	byte m_ref;
 };
