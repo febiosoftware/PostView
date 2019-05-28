@@ -69,12 +69,17 @@ void CMarchingCubes::SetSmooth(bool b)
 { 
 	m_bsmooth = b; 
 	m_oldVal = -1.f;
+//	Create();
+}
+
+void CMarchingCubes::Update()
+{
+	if (m_oldVal == m_val) return;
 	Create();
 }
 
 void CMarchingCubes::Create()
 {
-	if (m_oldVal == m_val) return;
 	m_oldVal = m_val;
 
 	m_mesh.Clear();
@@ -105,7 +110,7 @@ void CMarchingCubes::Create()
 		float dyi = (b.y1 - b.y0) / (NY - 1);
 		float dzi = (b.z1 - b.z0) / (NZ - 1);
 
-		#pragma omp for schedule(dynamic)
+		#pragma omp for schedule(dynamic, 5)
 		for (int k = 0; k < NZ - 1; ++k)
 		{
 			for (int j = 0; j < NY - 1; ++j)
@@ -116,8 +121,8 @@ void CMarchingCubes::Create()
 					if (i == 0)
 					{
 						val[0] = im3d.value(i, j, k);
-						val[4] = im3d.value(i, j, k + 1);
 						val[3] = im3d.value(i, j + 1, k);
+						val[4] = im3d.value(i, j, k + 1);
 						val[7] = im3d.value(i, j + 1, k + 1);
 					}
 
@@ -126,11 +131,18 @@ void CMarchingCubes::Create()
 					val[5] = im3d.value(i + 1, j, k + 1);
 					val[6] = im3d.value(i + 1, j + 1, k + 1);
 
-					// calculate the case of the element
+					// calculate the case of the voxel
 					int ncase = 0;
-					for (int l = 0; l < 8; ++l)
-						if (val[l] <= ref) ncase |= (1 << l);
+					if (val[0] <= ref) ncase |= 0x01;
+					if (val[1] <= ref) ncase |= 0x02;
+					if (val[2] <= ref) ncase |= 0x04;
+					if (val[3] <= ref) ncase |= 0x08;
+					if (val[4] <= ref) ncase |= 0x10;
+					if (val[5] <= ref) ncase |= 0x20;
+					if (val[6] <= ref) ncase |= 0x40;
+					if (val[7] <= ref) ncase |= 0x80;
 
+					// cases 0 and 255 don't generate triangles, so don't waste time on these
 					if ((ncase != 0) && (ncase != 255))
 					{
 						// get the corners
@@ -155,52 +167,53 @@ void CMarchingCubes::Create()
 							g[6] = grad.Value(i + 1, j + 1, k + 1);
 							g[7] = grad.Value(i, j + 1, k + 1);
 						}
-					}
 
-					// loop over faces
-					int* pf = LUT[ncase];
-					for (int l = 0; l < 5; l++)
-					{
-						if (*pf == -1) break;
-
-						// calculate nodal positions
-						TriMesh::TRI& tri = temp.Face(nfaces++);
-						for (int m = 0; m < 3; m++)
+						// loop over faces
+						int* pf = LUT[ncase];
+						for (int l = 0; l < 5; l++)
 						{
-							int n1 = ET_HEX[pf[m]][0];
-							int n2 = ET_HEX[pf[m]][1];
+							if (*pf == -1) break;
 
-							float w = (ref - val[n1]) / (val[n2] - val[n1]);
-
-							tri.m_node[m] = r[n1] * (1 - w) + r[n2] * w;
-
-							if (m_bsmooth)
+							// calculate nodal positions
+							TriMesh::TRI& tri = temp.Face(nfaces++);
+							for (int m = 0; m < 3; m++)
 							{
-								vec3f normal = g[n1] * (1 - w) + g[n2] * w;
+								int n1 = ET_HEX[pf[m]][0];
+								int n2 = ET_HEX[pf[m]][1];
+
+								float w = (ref - val[n1]) / (val[n2] - val[n1]);
+
+								tri.m_node[m] = r[n1] * (1.f - w) + r[n2] * w;
+
+								if (m_bsmooth)
+								{
+									vec3f normal = g[n1] * (1.f - w) + g[n2] * w;
+									normal.Normalize();
+									tri.m_norm[m] = -normal;
+								}
+							}
+
+							if (m_bsmooth == false)
+							{
+								vec3f normal = (tri.m_node[1] - tri.m_node[0]) ^ (tri.m_node[2] - tri.m_node[0]);
 								normal.Normalize();
-								tri.m_norm[m] = -normal;
+								tri.m_norm[0] = normal;
+								tri.m_norm[1] = normal;
+								tri.m_norm[2] = normal;
+							}
+
+							pf += 3;
+
+							if (nfaces == MAX_FACES)
+							{
+								#pragma omp critical
+								m_mesh.Merge(temp, nfaces);
+								nfaces = 0;
 							}
 						}
-
-						if (m_bsmooth == false)
-						{
-							vec3f normal = (tri.m_node[1] - tri.m_node[0]) ^ (tri.m_node[2] - tri.m_node[0]);
-							normal.Normalize();
-							tri.m_norm[0] = normal;
-							tri.m_norm[1] = normal;
-							tri.m_norm[2] = normal;
-						}
-
-						pf += 3;
-
-						if (nfaces == MAX_FACES)
-						{
-							#pragma omp critical
-							m_mesh.Merge(temp, nfaces);
-							nfaces = 0;
-						}
 					}
 
+					// keep this for next i
 					val[0] = val[1];
 					val[4] = val[5];
 					val[3] = val[2];
@@ -217,7 +230,6 @@ void CMarchingCubes::Create()
 void CMarchingCubes::SetIsoValue(float v)
 {
 	m_val = v;
-	Create();
 }
 
 void CMarchingCubes::Render(CGLContext& rc)

@@ -15,6 +15,7 @@ public:
 
 	// update contents
 	virtual void Update(int ntime, float dt, bool breset) {}
+	virtual void Update() {}
 
 	// get the name
 	const std::string& GetName() const;

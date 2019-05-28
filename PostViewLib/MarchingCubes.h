@@ -53,6 +53,8 @@ public:
 
 	void Render(CGLContext& rc) override;
 
+	void Update() override;
+
 private:
 	float	m_val, m_oldVal;		// iso-surface value
 	bool	m_bsmooth;

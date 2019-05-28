@@ -565,7 +565,7 @@ private:
 class CMarchingCubesProps : public CPropertyList
 {
 public:
-	CMarchingCubesProps(CMainWindow* wnd, CMarchingCubes* mc) : m_wnd(wnd), m_mc(mc)
+	CMarchingCubesProps(CMarchingCubes* mc) : m_mc(mc)
 	{
 		addProperty("isosurface value", CProperty::Float)->setFloatRange(0.0, 1.0);
 		addProperty("smooth surface", CProperty::Bool);
@@ -591,11 +591,9 @@ public:
 		case 1: m_mc->SetSmooth(val.toBool()); break;
 		case 2: m_mc->SetColor(toGLColor(val.value<QColor>())); break;
 		}
-		m_wnd->RedrawGL();
 	}
 
 private:
-	CMainWindow*	m_wnd;
 	CMarchingCubes*	m_mc;
 };
 
@@ -918,7 +916,7 @@ void CModelViewer::Update(bool breset)
 						pi->setText(0, QString::fromStdString(render->GetName()));
 						//				pi->setTextColor(0, imgSlice->IsActive() ? Qt::black : Qt::gray);
 						pi->setIcon(0, QIcon(QString(":/icons/marching_cubes.png")));
-						ui->m_list.push_back(new CMarchingCubesProps(m_wnd, marchCube));
+						ui->m_list.push_back(new CMarchingCubesProps(marchCube));
 						pi->setData(0, Qt::UserRole, (int)(ui->m_list.size() - 1));
 						m_obj.push_back(marchCube);
 					}
@@ -1043,6 +1041,8 @@ void CModelViewer::on_deleteButton_clicked()
 
 void CModelViewer::on_props_dataChanged()
 {
+	CGLObject* po = selectedObject();
+	if (po) po->Update();
 	m_wnd->RedrawGL();
 }
 
