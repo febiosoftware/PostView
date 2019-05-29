@@ -218,20 +218,24 @@ protected:
 class GLSafeFrame : public GLWidget
 {
 public:
+	enum STATE {
+		FREE,
+		FIXED_SIZE,
+		LOCKED
+	};
+
+public:
 	GLSafeFrame(int x, int y, int w, int h);
 
-	void resize(int x, int y, int w, int h)
-	{
-		if (!m_block) GLWidget::resize(x, y, w, h);
-	}
+	void resize(int x, int y, int W, int H) override;
 
 	bool is_inside(int x, int y);
 
 	void draw(QPainter* painter);
 
-	void lock(bool b) { m_block = b; }
-	bool islocked() { return m_block; }
+	void SetState(STATE state) { m_state = state; }
+	int GetState() { return m_state; }
 
 protected:
-	bool	m_block;
+	int		m_state;
 };

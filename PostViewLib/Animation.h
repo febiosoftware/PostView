@@ -24,6 +24,7 @@ public:
 	virtual int Write(QImage& im) = 0;
 	virtual bool IsValid() = 0;
 	virtual void Close();
+	virtual int Frames() = 0;
 };
 
 #endif // !defined(AFX_ANIMATION_H__AF14AE44_13BD_4E97_B6F6_80E8009C9276__INCLUDED_)

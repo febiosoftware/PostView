@@ -15,6 +15,7 @@ public:
 	int Write(QImage& im);
 	void Close();
 	bool IsValid() { return (m_pfile != NULL); }
+	int Frames() override { return m_nsample; }
 
 protected:
 	PAVIFILE	m_pfile;	// the avifile pointer

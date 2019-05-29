@@ -831,7 +831,13 @@ void GLTriad::draw(QPainter* painter)
 
 GLSafeFrame::GLSafeFrame(int x, int y, int w, int h) : GLWidget(x, y, w, h)
 {
-	m_block = false;
+	m_state = FREE;
+}
+
+void GLSafeFrame::resize(int x, int y, int W, int H)
+{
+	if (m_state == FREE) GLWidget::resize(x, y, W, H);
+	else if (m_state == FIXED_SIZE) GLWidget::resize(x, y, w(), h());
 }
 
 void GLSafeFrame::draw(QPainter* painter)
@@ -842,10 +848,12 @@ void GLSafeFrame::draw(QPainter* painter)
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_LIGHTING);
 
-	if (m_block)
-		glColor3ub(255, 0, 0);
-	else
-		glColor3ub(255, 255, 0);
+	switch (m_state)
+	{
+	case FREE      : glColor3ub(255, 255, 0); break;
+	case FIXED_SIZE: glColor3ub(255, 128, 0); break;
+	case LOCKED    : glColor3ub(255, 0, 0); break;
+	}
 
 	glLineWidth(2.f);
 	int x0 = x()-1;

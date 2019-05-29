@@ -12,6 +12,7 @@ public:
 	int Write(QImage& im);
 	void Close();
 	bool IsValid();
+	int Frames() override { return m_ncnt; }
 
 	virtual bool SaveFrame(QImage& im, const char* szfile) = 0;
 

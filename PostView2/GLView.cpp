@@ -625,6 +625,20 @@ void CGLView::paintGL()
 		}
 	}
 
+	if ((m_nanim == ANIM_PAUSED) && (m_panim != 0))
+	{
+		QPainter painter(this);
+		painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+		QTextOption to;
+		QFont font = painter.font();
+		font.setPointSize(24);
+		painter.setFont(font);
+		painter.setPen(QPen(Qt::red));
+		to.setAlignment(Qt::AlignRight | Qt::AlignTop);
+		painter.drawText(rect(), "Recording paused", to);
+		painter.end();
+	}
+
 	// if the camera is animating, we need to redraw
 	if (GetCamera().IsAnimating())
 	{
@@ -3029,7 +3043,7 @@ bool CGLView::NewAnimation(const char* szfile, CAnimation* panim, GLenum fmt)
 	else
 	{
 		// lock the frame
-		m_pframe->lock(true);
+		m_pframe->SetState(GLSafeFrame::FIXED_SIZE);
 
 		// set the animation mode to paused
 		m_nanim = ANIM_PAUSED;
@@ -3055,6 +3069,8 @@ void CGLView::StartAnimation()
 		// set the animation mode to recording
 		m_nanim = ANIM_RECORDING;
 
+		// lock the frame
+		m_pframe->SetState(GLSafeFrame::LOCKED);
 		repaint();
 	}
 }
@@ -3066,6 +3082,11 @@ void CGLView::StopAnimation()
 		// stop the animation
 		m_nanim = ANIM_STOPPED;
 
+		if (m_panim->Frames() == 0)
+		{
+			QMessageBox::warning(this, "PostView2", "This animation contains no frames. Only an empty video file was saved.");
+		}
+
 		// close the stream
 		m_panim->Close();
 
@@ -3074,7 +3095,7 @@ void CGLView::StopAnimation()
 		m_panim = 0;
 
 		// unlock the frame
-		m_pframe->lock(false);
+		m_pframe->SetState(GLSafeFrame::FREE);
 
 		repaint();
 	}
@@ -3086,6 +3107,7 @@ void CGLView::PauseAnimation()
 	{
 		// pause the recording
 		m_nanim = ANIM_PAUSED;
+		m_pframe->SetState(GLSafeFrame::FIXED_SIZE);
 		repaint();
 	}
 }

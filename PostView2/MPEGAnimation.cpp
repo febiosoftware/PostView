@@ -69,6 +69,7 @@ int CMPEGAnimation::Create(const char *szfile, int cx, int cy, float fps)
 	yuv_frame->format = av_codec_context->pix_fmt;
 	yuv_frame->width = av_codec_context->width;
 	yuv_frame->height = av_codec_context->height;
+	yuv_frame->pts = 0;
 
 	int yuv_frame_bytes = av_image_get_buffer_size(AV_PIX_FMT_YUV420P, av_codec_context->width, av_codec_context->height, 32);
 
@@ -138,25 +139,27 @@ bool CMPEGAnimation::Rgb24ToYuv420p(QImage &im)
 void CMPEGAnimation::Close()
 {
     // get the delayed frames
-	int got_packet;
-	do
-    {
-        fflush(stdout);
-        
-        int ret = avcodec_encode_video2(av_codec_context, &av_packet, NULL, &got_packet);
-        
-        if (ret < 0)
-        {
-            break;
-        }
-        
-        if (got_packet)
-        {
-            fwrite(av_packet.data, 1, av_packet.size, file);
-            av_free_packet(&av_packet);
-        }
-    }
-    while (got_packet);
+	if (m_nframe > 0)
+	{
+		int got_packet;
+		do
+		{
+			fflush(stdout);
+
+			int ret = avcodec_encode_video2(av_codec_context, &av_packet, NULL, &got_packet);
+
+			if (ret < 0)
+			{
+				break;
+			}
+
+			if (got_packet)
+			{
+				fwrite(av_packet.data, 1, av_packet.size, file);
+				av_free_packet(&av_packet);
+			}
+		} while (got_packet);
+	}
 
     // add sequence end code to have a real video file
     uint8_t endcode[] = {0, 0, 1, 0xb7};

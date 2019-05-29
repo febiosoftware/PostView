@@ -24,7 +24,8 @@ public:
     int Write(QImage& im) override;
     void Close();
     bool IsValid() { return (file != NULL); }
-    
+	int Frames() override { return m_nframe; };
+
 protected:
     FILE *file; // a file pointer
     AVCodecContext *av_codec_context; // save the stream infomation
