@@ -2472,7 +2472,7 @@ QImage CGLView::CaptureScreen()
 		QImage im = grabFramebuffer();
 		
 		// crop based on the capture frame
-		return im.copy(m_pframe->x(), m_pframe->y(), m_pframe->w(), m_pframe->h());
+		return im.copy(m_dpr*m_pframe->x(), m_dpr*m_pframe->y(), m_dpr*m_pframe->w(), m_dpr*m_pframe->h());
 	}
 	else return grabFramebuffer();
 }
@@ -3025,8 +3025,8 @@ bool CGLView::NewAnimation(const char* szfile, CAnimation* panim, GLenum fmt)
 	int cy = height();
 	if (m_pframe && m_pframe->visible())
 	{
-		cx = m_pframe->w();
-		cy = m_pframe->h();
+		cx = m_dpr*m_pframe->w();
+		cy = m_dpr*m_pframe->h();
 	}
 
 	// get the frame rate

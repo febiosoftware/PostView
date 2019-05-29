@@ -40,6 +40,8 @@
 		D5A65E151DBFA55800B44009 /* xpltFileReader.h in Headers */ = {isa = PBXBuildFile; fileRef = D5A65E111DBFA55800B44009 /* xpltFileReader.h */; };
 		D5A65E161DBFA55800B44009 /* xpltReader2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E121DBFA55800B44009 /* xpltReader2.cpp */; };
 		D5A65E171DBFA55800B44009 /* xpltReader2.h in Headers */ = {isa = PBXBuildFile; fileRef = D5A65E131DBFA55800B44009 /* xpltReader2.h */; };
+		D5B5F61C229F22F200E721BA /* MarchingCubes.h in Headers */ = {isa = PBXBuildFile; fileRef = D5B5F61A229F22F100E721BA /* MarchingCubes.h */; };
+		D5B5F61D229F22F200E721BA /* MarchingCubes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5B5F61B229F22F200E721BA /* MarchingCubes.cpp */; };
 		D5C53DB11F86D95F0014FA22 /* FEMathData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5C53DAD1F86D9580014FA22 /* FEMathData.cpp */; };
 		D5C53DB21F86D95F0014FA22 /* MathParser.h in Headers */ = {isa = PBXBuildFile; fileRef = D5C53DAE1F86D9580014FA22 /* MathParser.h */; };
 		D5C53DB31F86D95F0014FA22 /* FEMathData.h in Headers */ = {isa = PBXBuildFile; fileRef = D5C53DAF1F86D9590014FA22 /* FEMathData.h */; };
@@ -212,6 +214,8 @@
 		D5A65E111DBFA55800B44009 /* xpltFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xpltFileReader.h; sourceTree = "<group>"; };
 		D5A65E121DBFA55800B44009 /* xpltReader2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xpltReader2.cpp; sourceTree = "<group>"; };
 		D5A65E131DBFA55800B44009 /* xpltReader2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xpltReader2.h; sourceTree = "<group>"; };
+		D5B5F61A229F22F100E721BA /* MarchingCubes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MarchingCubes.h; sourceTree = "<group>"; };
+		D5B5F61B229F22F200E721BA /* MarchingCubes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MarchingCubes.cpp; sourceTree = "<group>"; };
 		D5C53DAD1F86D9580014FA22 /* FEMathData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FEMathData.cpp; sourceTree = "<group>"; };
 		D5C53DAE1F86D9580014FA22 /* MathParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MathParser.h; sourceTree = "<group>"; };
 		D5C53DAF1F86D9590014FA22 /* FEMathData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FEMathData.h; sourceTree = "<group>"; };
@@ -514,6 +518,8 @@
 				D5F308FC1CFBB65700F76762 /* lusolver.cpp */,
 				D5F308FD1CFBB65700F76762 /* lusolver.h */,
 				D5F308FE1CFBB65700F76762 /* lut.cpp */,
+				D5B5F61B229F22F200E721BA /* MarchingCubes.cpp */,
+				D5B5F61A229F22F100E721BA /* MarchingCubes.h */,
 				D5F308FF1CFBB65700F76762 /* math3d.cpp */,
 				D5F309001CFBB65700F76762 /* math3d.h */,
 				D5C53DB01F86D9590014FA22 /* MathParser.cpp */,
@@ -631,6 +637,7 @@
 				D5842FE41EC2BC95004FC215 /* Intersect.h in Headers */,
 				D53B0338207EF07A00E6B5F5 /* FEFace.h in Headers */,
 				D5F309531CFBB65700F76762 /* FENodeFaceTable.h in Headers */,
+				D5B5F61C229F22F200E721BA /* MarchingCubes.h in Headers */,
 				D5F309801CFBB65700F76762 /* U3DFile.h in Headers */,
 				D53B0337207EF07A00E6B5F5 /* tet10.h in Headers */,
 				D5F3094F1CFBB65700F76762 /* FENodeElemList.h in Headers */,
@@ -715,6 +722,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D5F309781CFBB65700F76762 /* math3d.cpp in Sources */,
+				D5B5F61D229F22F200E721BA /* MarchingCubes.cpp in Sources */,
 				D5F309641CFBB65700F76762 /* GDecoration.cpp in Sources */,
 				D5F309891CFBB65700F76762 /* xpltReader.cpp in Sources */,
 				D5F3094C1CFBB65700F76762 /* FENikeImport.cpp in Sources */,
