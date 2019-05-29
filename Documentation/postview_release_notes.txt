@@ -2,6 +2,21 @@
 = PostView Release Notes                                               =
 ========================================================================
 
+Version 2.4.3 - 5/29/2019
+=========================
+
+- A bug was fixed that caused a crash when an empty animation was stopped.
+
+- A bug was fixed that captured the wrong part of the screen when recording animations on screens with high device pixel ratios. 
+
+- The Graphics View will now inform users when a recording is paused: the capture frame will be orange and words RECORDING PAUSED appear on the screen. 
+
+- When right-clicking the toolbars, the names of the toolbars will show up (previously, only empty check boxes appeared for toolbars). 
+
+- A message will be shown when a file was saved successfully. 
+
+- A bug was fixed that was not causing the field selector to be updated after a filter was applied to a data field. 
+
 
 Version 2.4.2 - 4/9/2018
 ==========================
