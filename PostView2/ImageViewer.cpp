@@ -132,7 +132,7 @@ void CImageViewer::Update()
 	im3d.GetSliceZ(im, slice);
 	ui->m_slider->setToolTip(QString::number(slice));
 
-	QImage qim(im.GetBytes(), im.Width(), im.Height(), QImage::Format::Format_Grayscale8);
+	QImage qim(im.GetBytes(), im.Width(), im.Height(), im.Width(), QImage::Format::Format_Grayscale8);
 
 	QPixmap pixmap = QPixmap::fromImage(qim);
 

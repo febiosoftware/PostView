@@ -4,8 +4,7 @@
 #include <PostViewLib/FEModel.h>
 #include <PostViewLib/FEFileReader.h>
 #include <PostViewLib/3DImage.h>
-#include <PostViewLib/VolRender.h>
-#include <PostViewLib/ImageSlicer.h>
+#include <PostViewLib/GLImageRenderer.h>
 #include <PostViewLib/FEMeshData_T.h>
 #include "GLPlot.h"
 #include "GLModel.h"
@@ -1950,17 +1949,11 @@ void CDocument::DeleteObject(CGLObject *po)
 			}
 		}
 	}
-	else if (dynamic_cast<CImageSlicer*>(po))
+	else if (dynamic_cast<CGLImageRenderer*>(po))
 	{
-		CImageSlicer* slicer = dynamic_cast<CImageSlicer*>(po);
-		CImageModel* img = slicer->GetImageModel();
-		img->RemoveRenderer(slicer);
-	}
-	else if (dynamic_cast<CVolRender*>(po))
-	{
-		CVolRender* vr = dynamic_cast<CVolRender*>(po);
-		CImageModel* img = vr->GetImageModel();
-		img->RemoveRenderer(vr);
+		CGLImageRenderer* ir = dynamic_cast<CGLImageRenderer*>(po);
+		CImageModel* img = ir->GetImageModel();
+		img->RemoveRenderer(ir);
 	}
 	else if (dynamic_cast<CGLDisplacementMap*>(po))
 	{
