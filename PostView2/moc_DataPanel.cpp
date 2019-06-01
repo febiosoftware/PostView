@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'DataPanel.h'
 **
-** Created by: The Qt Meta Object Compiler version 67 (Qt 5.6.1)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.12.0)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -12,15 +12,17 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'DataPanel.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
-#error "This file was generated using the moc from 5.6.1. It"
+#error "This file was generated using the moc from 5.12.0. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
 
 QT_BEGIN_MOC_NAMESPACE
+QT_WARNING_PUSH
+QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_CDataPanel_t {
-    QByteArrayData data[12];
-    char stringdata0[251];
+    QByteArrayData data[13];
+    char stringdata0[263];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -39,8 +41,9 @@ QT_MOC_LITERAL(6, 109, 23), // "on_DeleteButton_clicked"
 QT_MOC_LITERAL(7, 133, 23), // "on_FilterButton_clicked"
 QT_MOC_LITERAL(8, 157, 23), // "on_ExportButton_clicked"
 QT_MOC_LITERAL(9, 181, 19), // "on_dataList_clicked"
-QT_MOC_LITERAL(10, 201, 28), // "on_fieldName_editingFinished"
-QT_MOC_LITERAL(11, 230, 20) // "on_props_dataChanged"
+QT_MOC_LITERAL(10, 201, 11), // "QModelIndex"
+QT_MOC_LITERAL(11, 213, 28), // "on_fieldName_editingFinished"
+QT_MOC_LITERAL(12, 242, 20) // "on_props_dataChanged"
 
     },
     "CDataPanel\0on_AddStandard_triggered\0"
@@ -48,7 +51,7 @@ QT_MOC_LITERAL(11, 230, 20) // "on_props_dataChanged"
     "on_AddEquation_triggered\0on_CopyButton_clicked\0"
     "on_DeleteButton_clicked\0on_FilterButton_clicked\0"
     "on_ExportButton_clicked\0on_dataList_clicked\0"
-    "on_fieldName_editingFinished\0"
+    "QModelIndex\0on_fieldName_editingFinished\0"
     "on_props_dataChanged"
 };
 #undef QT_MOC_LITERAL
@@ -56,7 +59,7 @@ QT_MOC_LITERAL(11, 230, 20) // "on_props_dataChanged"
 static const uint qt_meta_data_CDataPanel[] = {
 
  // content:
-       7,       // revision
+       8,       // revision
        0,       // classname
        0,    0, // classinfo
       10,   14, // methods
@@ -75,8 +78,8 @@ static const uint qt_meta_data_CDataPanel[] = {
        7,    0,   69,    2, 0x08 /* Private */,
        8,    0,   70,    2, 0x08 /* Private */,
        9,    1,   71,    2, 0x08 /* Private */,
-      10,    0,   74,    2, 0x08 /* Private */,
-      11,    0,   75,    2, 0x08 /* Private */,
+      11,    0,   74,    2, 0x08 /* Private */,
+      12,    0,   75,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
@@ -86,7 +89,7 @@ static const uint qt_meta_data_CDataPanel[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QModelIndex,    2,
+    QMetaType::Void, 0x80000000 | 10,    2,
     QMetaType::Void,
     QMetaType::Void,
 
@@ -114,10 +117,14 @@ void CDataPanel::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
     }
 }
 
-const QMetaObject CDataPanel::staticMetaObject = {
-    { &CCommandPanel::staticMetaObject, qt_meta_stringdata_CDataPanel.data,
-      qt_meta_data_CDataPanel,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
-};
+QT_INIT_METAOBJECT const QMetaObject CDataPanel::staticMetaObject = { {
+    &CCommandPanel::staticMetaObject,
+    qt_meta_stringdata_CDataPanel.data,
+    qt_meta_data_CDataPanel,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
 
 
 const QMetaObject *CDataPanel::metaObject() const
@@ -127,9 +134,9 @@ const QMetaObject *CDataPanel::metaObject() const
 
 void *CDataPanel::qt_metacast(const char *_clname)
 {
-    if (!_clname) return Q_NULLPTR;
+    if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_meta_stringdata_CDataPanel.stringdata0))
-        return static_cast<void*>(const_cast< CDataPanel*>(this));
+        return static_cast<void*>(this);
     return CCommandPanel::qt_metacast(_clname);
 }
 
@@ -172,7 +179,7 @@ QT_MOC_LITERAL(2, 25, 0) // ""
 static const uint qt_meta_data_CDlgAddDataFile[] = {
 
  // content:
-       7,       // revision
+       8,       // revision
        0,       // classname
        0,    0, // classinfo
        1,   14, // methods
@@ -204,10 +211,14 @@ void CDlgAddDataFile::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int 
     Q_UNUSED(_a);
 }
 
-const QMetaObject CDlgAddDataFile::staticMetaObject = {
-    { &QDialog::staticMetaObject, qt_meta_stringdata_CDlgAddDataFile.data,
-      qt_meta_data_CDlgAddDataFile,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
-};
+QT_INIT_METAOBJECT const QMetaObject CDlgAddDataFile::staticMetaObject = { {
+    &QDialog::staticMetaObject,
+    qt_meta_stringdata_CDlgAddDataFile.data,
+    qt_meta_data_CDlgAddDataFile,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
 
 
 const QMetaObject *CDlgAddDataFile::metaObject() const
@@ -217,9 +228,9 @@ const QMetaObject *CDlgAddDataFile::metaObject() const
 
 void *CDlgAddDataFile::qt_metacast(const char *_clname)
 {
-    if (!_clname) return Q_NULLPTR;
+    if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_meta_stringdata_CDlgAddDataFile.stringdata0))
-        return static_cast<void*>(const_cast< CDlgAddDataFile*>(this));
+        return static_cast<void*>(this);
     return QDialog::qt_metacast(_clname);
 }
 
@@ -239,4 +250,5 @@ int CDlgAddDataFile::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     }
     return _id;
 }
+QT_WARNING_POP
 QT_END_MOC_NAMESPACE

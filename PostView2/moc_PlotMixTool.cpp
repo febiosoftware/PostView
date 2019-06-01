@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'PlotMixTool.h'
 **
-** Created by: The Qt Meta Object Compiler version 67 (Qt 5.6.1)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.12.0)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -12,12 +12,14 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'PlotMixTool.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
-#error "This file was generated using the moc from 5.6.1. It"
+#error "This file was generated using the moc from 5.12.0. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
 
 QT_BEGIN_MOC_NAMESPACE
+QT_WARNING_PUSH
+QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_CPlotMixTool_t {
     QByteArrayData data[7];
     char stringdata0[60];
@@ -46,7 +48,7 @@ QT_MOC_LITERAL(6, 52, 7) // "OnApply"
 static const uint qt_meta_data_CPlotMixTool[] = {
 
  // content:
-       7,       // revision
+       8,       // revision
        0,       // classname
        0,    0, // classinfo
        5,   14, // methods
@@ -90,10 +92,14 @@ void CPlotMixTool::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
     Q_UNUSED(_a);
 }
 
-const QMetaObject CPlotMixTool::staticMetaObject = {
-    { &CAbstractTool::staticMetaObject, qt_meta_stringdata_CPlotMixTool.data,
-      qt_meta_data_CPlotMixTool,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
-};
+QT_INIT_METAOBJECT const QMetaObject CPlotMixTool::staticMetaObject = { {
+    &CAbstractTool::staticMetaObject,
+    qt_meta_stringdata_CPlotMixTool.data,
+    qt_meta_data_CPlotMixTool,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
 
 
 const QMetaObject *CPlotMixTool::metaObject() const
@@ -103,9 +109,9 @@ const QMetaObject *CPlotMixTool::metaObject() const
 
 void *CPlotMixTool::qt_metacast(const char *_clname)
 {
-    if (!_clname) return Q_NULLPTR;
+    if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_meta_stringdata_CPlotMixTool.stringdata0))
-        return static_cast<void*>(const_cast< CPlotMixTool*>(this));
+        return static_cast<void*>(this);
     return CAbstractTool::qt_metacast(_clname);
 }
 
@@ -151,7 +157,7 @@ QT_MOC_LITERAL(4, 34, 7) // "OnApply"
 static const uint qt_meta_data_CKinematTool[] = {
 
  // content:
-       7,       // revision
+       8,       // revision
        0,       // classname
        0,    0, // classinfo
        3,   14, // methods
@@ -189,10 +195,14 @@ void CKinematTool::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
     Q_UNUSED(_a);
 }
 
-const QMetaObject CKinematTool::staticMetaObject = {
-    { &CAbstractTool::staticMetaObject, qt_meta_stringdata_CKinematTool.data,
-      qt_meta_data_CKinematTool,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
-};
+QT_INIT_METAOBJECT const QMetaObject CKinematTool::staticMetaObject = { {
+    &CAbstractTool::staticMetaObject,
+    qt_meta_stringdata_CKinematTool.data,
+    qt_meta_data_CKinematTool,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
 
 
 const QMetaObject *CKinematTool::metaObject() const
@@ -202,9 +212,9 @@ const QMetaObject *CKinematTool::metaObject() const
 
 void *CKinematTool::qt_metacast(const char *_clname)
 {
-    if (!_clname) return Q_NULLPTR;
+    if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_meta_stringdata_CKinematTool.stringdata0))
-        return static_cast<void*>(const_cast< CKinematTool*>(this));
+        return static_cast<void*>(this);
     return CAbstractTool::qt_metacast(_clname);
 }
 
@@ -224,4 +234,5 @@ int CKinematTool::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     }
     return _id;
 }
+QT_WARNING_POP
 QT_END_MOC_NAMESPACE

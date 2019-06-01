@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'DataFieldSelector.h'
 **
-** Created by: The Qt Meta Object Compiler version 67 (Qt 5.8.0)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.12.0)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -12,7 +12,7 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'DataFieldSelector.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
-#error "This file was generated using the moc from 5.8.0. It"
+#error "This file was generated using the moc from 5.12.0. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -48,7 +48,7 @@ QT_MOC_LITERAL(6, 61, 2) // "pa"
 static const uint qt_meta_data_CDataSelectorButton[] = {
 
  // content:
-       7,       // revision
+       8,       // revision
        0,       // classname
        0,    0, // classinfo
        2,   14, // methods
@@ -85,10 +85,9 @@ void CDataSelectorButton::qt_static_metacall(QObject *_o, QMetaObject::Call _c, 
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
         int *result = reinterpret_cast<int *>(_a[0]);
-        void **func = reinterpret_cast<void **>(_a[1]);
         {
-            typedef void (CDataSelectorButton::*_t)(int );
-            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&CDataSelectorButton::currentValueChanged)) {
+            using _t = void (CDataSelectorButton::*)(int );
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&CDataSelectorButton::currentValueChanged)) {
                 *result = 0;
                 return;
             }
@@ -96,10 +95,14 @@ void CDataSelectorButton::qt_static_metacall(QObject *_o, QMetaObject::Call _c, 
     }
 }
 
-const QMetaObject CDataSelectorButton::staticMetaObject = {
-    { &QPushButton::staticMetaObject, qt_meta_stringdata_CDataSelectorButton.data,
-      qt_meta_data_CDataSelectorButton,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
-};
+QT_INIT_METAOBJECT const QMetaObject CDataSelectorButton::staticMetaObject = { {
+    &QPushButton::staticMetaObject,
+    qt_meta_stringdata_CDataSelectorButton.data,
+    qt_meta_data_CDataSelectorButton,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
 
 
 const QMetaObject *CDataSelectorButton::metaObject() const
@@ -109,9 +112,9 @@ const QMetaObject *CDataSelectorButton::metaObject() const
 
 void *CDataSelectorButton::qt_metacast(const char *_clname)
 {
-    if (!_clname) return Q_NULLPTR;
+    if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_meta_stringdata_CDataSelectorButton.stringdata0))
-        return static_cast<void*>(const_cast< CDataSelectorButton*>(this));
+        return static_cast<void*>(this);
     return QPushButton::qt_metacast(_clname);
 }
 
@@ -135,7 +138,7 @@ int CDataSelectorButton::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 // SIGNAL 0
 void CDataSelectorButton::currentValueChanged(int _t1)
 {
-    void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 0, _a);
 }
 QT_WARNING_POP

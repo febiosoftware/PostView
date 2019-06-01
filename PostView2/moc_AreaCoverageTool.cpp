@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'AreaCoverageTool.h'
 **
-** Created by: The Qt Meta Object Compiler version 67 (Qt 5.6.1)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.12.0)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -12,12 +12,14 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'AreaCoverageTool.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
-#error "This file was generated using the moc from 5.6.1. It"
+#error "This file was generated using the moc from 5.12.0. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
 
 QT_BEGIN_MOC_NAMESPACE
+QT_WARNING_PUSH
+QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_CAreaCoverageTool_t {
     QByteArrayData data[5];
     char stringdata0[47];
@@ -44,7 +46,7 @@ QT_MOC_LITERAL(4, 39, 7) // "OnApply"
 static const uint qt_meta_data_CAreaCoverageTool[] = {
 
  // content:
-       7,       // revision
+       8,       // revision
        0,       // classname
        0,    0, // classinfo
        3,   14, // methods
@@ -82,10 +84,14 @@ void CAreaCoverageTool::qt_static_metacall(QObject *_o, QMetaObject::Call _c, in
     Q_UNUSED(_a);
 }
 
-const QMetaObject CAreaCoverageTool::staticMetaObject = {
-    { &CAbstractTool::staticMetaObject, qt_meta_stringdata_CAreaCoverageTool.data,
-      qt_meta_data_CAreaCoverageTool,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
-};
+QT_INIT_METAOBJECT const QMetaObject CAreaCoverageTool::staticMetaObject = { {
+    &CAbstractTool::staticMetaObject,
+    qt_meta_stringdata_CAreaCoverageTool.data,
+    qt_meta_data_CAreaCoverageTool,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
 
 
 const QMetaObject *CAreaCoverageTool::metaObject() const
@@ -95,9 +101,9 @@ const QMetaObject *CAreaCoverageTool::metaObject() const
 
 void *CAreaCoverageTool::qt_metacast(const char *_clname)
 {
-    if (!_clname) return Q_NULLPTR;
+    if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_meta_stringdata_CAreaCoverageTool.stringdata0))
-        return static_cast<void*>(const_cast< CAreaCoverageTool*>(this));
+        return static_cast<void*>(this);
     return CAbstractTool::qt_metacast(_clname);
 }
 
@@ -117,4 +123,5 @@ int CAreaCoverageTool::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     }
     return _id;
 }
+QT_WARNING_POP
 QT_END_MOC_NAMESPACE

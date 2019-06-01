@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'DlgWidgetProps.h'
 **
-** Created by: The Qt Meta Object Compiler version 67 (Qt 5.6.1)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.12.0)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -12,12 +12,14 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'DlgWidgetProps.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
-#error "This file was generated using the moc from 5.6.1. It"
+#error "This file was generated using the moc from 5.12.0. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
 
 QT_BEGIN_MOC_NAMESPACE
+QT_WARNING_PUSH
+QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_CDlgBoxProps_t {
     QByteArrayData data[5];
     char stringdata0[48];
@@ -44,7 +46,7 @@ QT_MOC_LITERAL(4, 41, 6) // "button"
 static const uint qt_meta_data_CDlgBoxProps[] = {
 
  // content:
-       7,       // revision
+       8,       // revision
        0,       // classname
        0,    0, // classinfo
        1,   14, // methods
@@ -75,10 +77,14 @@ void CDlgBoxProps::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
     }
 }
 
-const QMetaObject CDlgBoxProps::staticMetaObject = {
-    { &QDialog::staticMetaObject, qt_meta_stringdata_CDlgBoxProps.data,
-      qt_meta_data_CDlgBoxProps,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
-};
+QT_INIT_METAOBJECT const QMetaObject CDlgBoxProps::staticMetaObject = { {
+    &QDialog::staticMetaObject,
+    qt_meta_stringdata_CDlgBoxProps.data,
+    qt_meta_data_CDlgBoxProps,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
 
 
 const QMetaObject *CDlgBoxProps::metaObject() const
@@ -88,9 +94,9 @@ const QMetaObject *CDlgBoxProps::metaObject() const
 
 void *CDlgBoxProps::qt_metacast(const char *_clname)
 {
-    if (!_clname) return Q_NULLPTR;
+    if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_meta_stringdata_CDlgBoxProps.stringdata0))
-        return static_cast<void*>(const_cast< CDlgBoxProps*>(this));
+        return static_cast<void*>(this);
     return QDialog::qt_metacast(_clname);
 }
 
@@ -136,7 +142,7 @@ QT_MOC_LITERAL(4, 44, 6) // "button"
 static const uint qt_meta_data_CDlgLegendProps[] = {
 
  // content:
-       7,       // revision
+       8,       // revision
        0,       // classname
        0,    0, // classinfo
        1,   14, // methods
@@ -167,10 +173,14 @@ void CDlgLegendProps::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int 
     }
 }
 
-const QMetaObject CDlgLegendProps::staticMetaObject = {
-    { &QDialog::staticMetaObject, qt_meta_stringdata_CDlgLegendProps.data,
-      qt_meta_data_CDlgLegendProps,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
-};
+QT_INIT_METAOBJECT const QMetaObject CDlgLegendProps::staticMetaObject = { {
+    &QDialog::staticMetaObject,
+    qt_meta_stringdata_CDlgLegendProps.data,
+    qt_meta_data_CDlgLegendProps,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
 
 
 const QMetaObject *CDlgLegendProps::metaObject() const
@@ -180,9 +190,9 @@ const QMetaObject *CDlgLegendProps::metaObject() const
 
 void *CDlgLegendProps::qt_metacast(const char *_clname)
 {
-    if (!_clname) return Q_NULLPTR;
+    if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_meta_stringdata_CDlgLegendProps.stringdata0))
-        return static_cast<void*>(const_cast< CDlgLegendProps*>(this));
+        return static_cast<void*>(this);
     return QDialog::qt_metacast(_clname);
 }
 
@@ -228,7 +238,7 @@ QT_MOC_LITERAL(4, 43, 6) // "button"
 static const uint qt_meta_data_CDlgTriadProps[] = {
 
  // content:
-       7,       // revision
+       8,       // revision
        0,       // classname
        0,    0, // classinfo
        1,   14, // methods
@@ -259,10 +269,14 @@ void CDlgTriadProps::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
     }
 }
 
-const QMetaObject CDlgTriadProps::staticMetaObject = {
-    { &QDialog::staticMetaObject, qt_meta_stringdata_CDlgTriadProps.data,
-      qt_meta_data_CDlgTriadProps,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
-};
+QT_INIT_METAOBJECT const QMetaObject CDlgTriadProps::staticMetaObject = { {
+    &QDialog::staticMetaObject,
+    qt_meta_stringdata_CDlgTriadProps.data,
+    qt_meta_data_CDlgTriadProps,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
 
 
 const QMetaObject *CDlgTriadProps::metaObject() const
@@ -272,9 +286,9 @@ const QMetaObject *CDlgTriadProps::metaObject() const
 
 void *CDlgTriadProps::qt_metacast(const char *_clname)
 {
-    if (!_clname) return Q_NULLPTR;
+    if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_meta_stringdata_CDlgTriadProps.stringdata0))
-        return static_cast<void*>(const_cast< CDlgTriadProps*>(this));
+        return static_cast<void*>(this);
     return QDialog::qt_metacast(_clname);
 }
 
@@ -323,7 +337,7 @@ QT_MOC_LITERAL(6, 66, 6) // "nindex"
 static const uint qt_meta_data_CDlgCaptureFrameProps[] = {
 
  // content:
-       7,       // revision
+       8,       // revision
        0,       // classname
        0,    0, // classinfo
        2,   14, // methods
@@ -357,10 +371,14 @@ void CDlgCaptureFrameProps::qt_static_metacall(QObject *_o, QMetaObject::Call _c
     }
 }
 
-const QMetaObject CDlgCaptureFrameProps::staticMetaObject = {
-    { &QDialog::staticMetaObject, qt_meta_stringdata_CDlgCaptureFrameProps.data,
-      qt_meta_data_CDlgCaptureFrameProps,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
-};
+QT_INIT_METAOBJECT const QMetaObject CDlgCaptureFrameProps::staticMetaObject = { {
+    &QDialog::staticMetaObject,
+    qt_meta_stringdata_CDlgCaptureFrameProps.data,
+    qt_meta_data_CDlgCaptureFrameProps,
+    qt_static_metacall,
+    nullptr,
+    nullptr
+} };
 
 
 const QMetaObject *CDlgCaptureFrameProps::metaObject() const
@@ -370,9 +388,9 @@ const QMetaObject *CDlgCaptureFrameProps::metaObject() const
 
 void *CDlgCaptureFrameProps::qt_metacast(const char *_clname)
 {
-    if (!_clname) return Q_NULLPTR;
+    if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_meta_stringdata_CDlgCaptureFrameProps.stringdata0))
-        return static_cast<void*>(const_cast< CDlgCaptureFrameProps*>(this));
+        return static_cast<void*>(this);
     return QDialog::qt_metacast(_clname);
 }
 
@@ -392,4 +410,5 @@ int CDlgCaptureFrameProps::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     }
     return _id;
 }
+QT_WARNING_POP
 QT_END_MOC_NAMESPACE
