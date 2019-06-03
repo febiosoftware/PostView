@@ -866,31 +866,7 @@ void CMainWindow::on_actionOpenSession_triggered()
 	QString filename = QFileDialog::getOpenFileName(this, "Open session file", 0, "PostView session (*.pvs)");
 	if (filename.isEmpty() == false)
 	{
-		std::string sfile = filename.toStdString();
-		const char* szfile = sfile.c_str();
-
-		int docs = m_DocManager->Documents();
-
-		// try to open the session
-		if (m_DocManager->OpenSession(szfile) == false)
-		{
-			QMessageBox::critical(this, "PostView", "Failed restoring session.");
-		}
-
-		// add all the new docs
-		for (int i = docs; i < m_DocManager->Documents(); ++i)
-		{
-			AddDocumentTab(m_DocManager->GetDocument(i));
-		}
-
-		if ((docs == 0) && (m_DocManager->Documents() > 0))
-		{
-			// Make it the active document
-			MakeDocActive(m_DocManager->GetDocument(0));
-		}
-
-		ui->modelViewer->parentWidget()->raise();
-		ui->modelViewer->parentWidget()->show();
+		OpenSession(filename);
 	}
 }
 
@@ -905,7 +881,46 @@ void CMainWindow::on_actionSaveSession_triggered()
 		{
 			QMessageBox::critical(this, "PostView", "Failed storing PostView session.");
 		}
+		else
+		{
+			// add file to recent list
+			ui->addToRecentSessions(fileName);
+		}
 	}
+}
+
+void CMainWindow::OpenSession(const QString& fileName)
+{
+	std::string sfile = fileName.toStdString();
+	const char* szfile = sfile.c_str();
+
+	int docs = m_DocManager->Documents();
+
+	// try to open the session
+	if (m_DocManager->OpenSession(szfile) == false)
+	{
+		QMessageBox::critical(this, "PostView", "Failed restoring session.");
+	}
+	else
+	{
+		// add file to recent list
+		ui->addToRecentSessions(fileName);
+	}
+
+	// add all the new docs
+	for (int i = docs; i < m_DocManager->Documents(); ++i)
+	{
+		AddDocumentTab(m_DocManager->GetDocument(i));
+	}
+
+	if ((docs == 0) && (m_DocManager->Documents() > 0))
+	{
+		// Make it the active document
+		MakeDocActive(m_DocManager->GetDocument(0));
+	}
+
+	ui->modelViewer->parentWidget()->raise();
+	ui->modelViewer->parentWidget()->show();
 }
 
 void CMainWindow::on_actionQuit_triggered()
@@ -2230,6 +2245,7 @@ void CMainWindow::writeSettings()
 	if (folders.isEmpty() == false) settings.setValue("folders", folders);
 
 	if (ui->m_recentFiles.isEmpty() == false) settings.setValue("recentFiles", ui->m_recentFiles);
+	if (ui->m_recentSessions.isEmpty() == false) settings.setValue("recentSessions", ui->m_recentSessions);
 }
 
 void CMainWindow::readSettings()
@@ -2321,6 +2337,9 @@ void CMainWindow::readSettings()
 
 	QStringList recentFiles = settings.value("recentFiles").toStringList();
 	ui->setRecentFiles(recentFiles);
+
+	QStringList recentSessions = settings.value("recentSessions").toStringList();
+	ui->setRecentSessions(recentSessions);
 
 	// update the menu and toolbar to reflect the correct settings
 	UpdateMainToolbar();
@@ -2473,6 +2492,12 @@ void CMainWindow::on_recentFiles_triggered(QAction* action)
 {
 	QString fileName = action->text();
 	OpenFile(fileName, 0);
+}
+
+void CMainWindow::on_recentSessions_triggered(QAction* action)
+{
+	QString fileName = action->text();
+	OpenSession(fileName);
 }
 
 // show data in a graph window

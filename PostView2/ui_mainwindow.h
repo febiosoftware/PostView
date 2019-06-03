@@ -58,8 +58,10 @@ public:
 	QMenu* menuView;
 	QMenu* menuHelp; 
 	QMenu* menuRecentFiles;
+	QMenu* menuRecentSessions;
 
 	QActionGroup* recentFilesActionGroup;
+	QActionGroup* recentSessionActionGroup;
 
 	QAction* actionViewSettings;
 	QAction* actionViewCapture; 
@@ -119,6 +121,7 @@ public:
 	QString currentPath;
 
 	QStringList	m_recentFiles;
+	QStringList	m_recentSessions;
 
 	bool	m_update_spin;
 
@@ -408,9 +411,12 @@ public:
 		menuHelp   = new QMenu("Help"  , menuBar);
 
 		menuRecentFiles = new QMenu("Recent Files");
-
 		recentFilesActionGroup = new QActionGroup(MainWindow);
 		recentFilesActionGroup->setObjectName("recentFiles");
+
+		menuRecentSessions = new QMenu("Recent Session Files");
+		recentSessionActionGroup = new QActionGroup(MainWindow);
+		recentSessionActionGroup->setObjectName("recentSessions");
 
 		QActionGroup* pag = new QActionGroup(MainWindow);
 		pag->addAction(selectNodes);
@@ -442,6 +448,7 @@ public:
 		menuFile->addSeparator();
 		menuFile->addAction(actionOpenSession);
 		menuFile->addAction(actionSaveSession);
+		menuFile->addAction(menuRecentSessions->menuAction());
 		menuFile->addSeparator();
 		menuFile->addAction(actionQuit);
 
@@ -645,6 +652,18 @@ public:
 		actionColorMap->setChecked(b);
 	}
 
+	void updateFileList(QMenu* menu, QActionGroup* action, QStringList& recentFiles)
+	{
+		int N = recentFiles.count();
+		if (N > MAX_RECENT_FILES) N = MAX_RECENT_FILES;
+		for (int i = 0; i < N; ++i)
+		{
+			QString file = recentFiles.at(i);
+			QAction* pa = menu->addAction(file);
+			action->addAction(pa);
+		}
+	}
+
 	void setRecentFiles(QStringList& recentFiles)
 	{
 		m_recentFiles = recentFiles;
@@ -652,34 +671,47 @@ public:
 		int N = m_recentFiles.count();
 		if (N > MAX_RECENT_FILES) N = MAX_RECENT_FILES;
 
-		for (int i = 0; i < N; ++i)
+		updateFileList(menuRecentFiles, recentFilesActionGroup, recentFiles);
+	}
+
+	void setRecentSessions(QStringList& recentSessions)
+	{
+		m_recentSessions = recentSessions;
+
+		int N = m_recentSessions.count();
+		if (N > MAX_RECENT_FILES) N = MAX_RECENT_FILES;
+
+		updateFileList(menuRecentSessions, recentSessionActionGroup, recentSessions);
+	}
+
+	void addToFileList(QStringList& fileList, const QString& file, QMenu* menu, QActionGroup* action)
+	{
+		// see if the file already exists or not
+		if (fileList.contains(file)) return;
+
+		// add a new file item
+		fileList.append(file);
+		QAction* pa = menu->addAction(file);
+		action->addAction(pa);
+
+		int N = fileList.count();
+		if (N > MAX_RECENT_FILES)
 		{
-			QString file = m_recentFiles.at(i);
-
-			QAction* pa = menuRecentFiles->addAction(file);
-
-			recentFilesActionGroup->addAction(pa);
+			// remove the first one
+			fileList.removeAt(0);
+			QAction* pa = menu->actions().first();
+			menu->removeAction(pa);
 		}
 	}
 
 	void addToRecentFiles(const QString& file)
 	{
-		// see if the file already exists or not
-		if (m_recentFiles.contains(file)) return;
+		addToFileList(m_recentFiles, file, menuRecentFiles, recentFilesActionGroup);
+	}
 
-		// add a new file item
-		m_recentFiles.append(file);
-		QAction* pa = menuRecentFiles->addAction(file);
-		recentFilesActionGroup->addAction(pa);
-
-		int N = m_recentFiles.count();
-		if (N > MAX_RECENT_FILES)
-		{
-			// remove the first one
-			m_recentFiles.removeAt(0);
-			QAction* pa = menuRecentFiles->actions().first();
-			menuRecentFiles->removeAction(pa);
-		}
+	void addToRecentSessions(const QString& file)
+	{
+		addToFileList(m_recentSessions, file, menuRecentSessions, recentSessionActionGroup);
 	}
 
 	void addTab(const QString& tabTitle, const QString& toolTip)

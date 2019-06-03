@@ -28,6 +28,8 @@ public:
 	void OpenFile(const QString& fileName, int nfilter);
 	bool SaveFile(const QString& fileName, int nfilter);
 
+	void OpenSession(const QString& fileName);
+
 	CDocument* GetActiveDocument();
 
 	CDocument* NewDocument(const std::string& docTitle);
@@ -223,6 +225,7 @@ public slots:
 	void onCancelFileRead();
 
 	void on_recentFiles_triggered(QAction* action);
+	void on_recentSessions_triggered(QAction* action);
 
 	void onTimer();
 
