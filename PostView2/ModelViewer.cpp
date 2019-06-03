@@ -29,6 +29,7 @@
 #include <PostViewLib/ImageModel.h>
 #include <PostViewLib/GLImageRenderer.h>
 #include <PostViewLib/MarchingCubes.h>
+#include "GLMirrorPlane.h"
 #include "ImageViewer.h"
 
 //-----------------------------------------------------------------------------
@@ -858,13 +859,14 @@ void CModelViewer::Update(bool breset)
 				CGLPlot& plot = *(*it);
 				CModelTreeItem* pi1 = new CModelTreeItem(&plot, ui->m_tree);
 
-				if      (dynamic_cast<CGLPlaneCutPlot  *>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/cut.png")));
-				else if (dynamic_cast<CGLVectorPlot    *>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/vectors.png")));
-				else if (dynamic_cast<CGLSlicePlot     *>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/slice.png")));
-				else if (dynamic_cast<CGLIsoSurfacePlot*>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/isosurface.png")));
-				else if (dynamic_cast<CGLStreamLinePlot*>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/streamlines.png")));
+				if      (dynamic_cast<CGLPlaneCutPlot    *>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/cut.png")));
+				else if (dynamic_cast<CGLVectorPlot      *>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/vectors.png")));
+				else if (dynamic_cast<CGLSlicePlot       *>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/slice.png")));
+				else if (dynamic_cast<CGLIsoSurfacePlot  *>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/isosurface.png")));
+				else if (dynamic_cast<CGLStreamLinePlot  *>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/streamlines.png")));
 				else if (dynamic_cast<CGLParticleFlowPlot*>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/particle.png")));
 				else if (dynamic_cast<GLTensorPlot*       >(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/tensor.png")));
+				else if (dynamic_cast<CGLMirrorPlane*	  >(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/mirror.png")));
 
 				string name = plot.GetName();
 

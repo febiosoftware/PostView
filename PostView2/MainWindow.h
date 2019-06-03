@@ -145,6 +145,7 @@ public slots:
 	void on_actionZoomExtents_triggered();
 
 	void on_actionPlaneCut_triggered();
+	void on_actionMirrorPlane_triggered();
 	void on_actionVectorPlot_triggered();
 	void on_actionTensorPlot_triggered();
 	void on_actionIsosurfacePlot_triggered();

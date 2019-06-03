@@ -2681,6 +2681,9 @@ void CGLView::RenderDoc()
 		// setup the rendering context
 		CGLContext rc(this);
 		rc.m_q = cam.GetOrientation();
+		rc.m_showMesh = view.m_bmesh;
+		rc.m_showOutline = view.m_boutline;
+		rc.m_springThick = view.m_fspringthick;
 
 		// first we render all the plots
 		RenderPlots(rc);
@@ -2698,7 +2701,7 @@ void CGLView::RenderDoc()
 		if (po && po->IsActive())
 		{
 			// render the GL model
-			po->Render(rc, view.m_bmesh, view.m_boutline, view.m_fspringthick);
+			po->Render(rc);
 
 			CDocument* pdoc = GetDocument();
 			VIEWSETTINGS& ops = GetViewSettings();

@@ -29,6 +29,7 @@
 #include <PostViewLib/FEAsciiExport.h>
 #include <PostViewLib/VRMLExporter.h>
 #include "GLPlaneCutPlot.h"
+#include "GLMirrorPlane.h"
 #include "GLIsoSurfacePlot.h"
 #include "GLSlicePLot.h"
 #include "GLVectorPlot.h"
@@ -1262,6 +1263,21 @@ void CMainWindow::on_actionPlaneCut_triggered()
 	if (doc->IsValid() == false) return;
 
 	CGLPlaneCutPlot* pp = new CGLPlaneCutPlot(doc->GetGLModel());
+	doc->AddPlot(pp);
+
+	ui->modelViewer->Update(true);
+	ui->modelViewer->selectObject(pp);
+	ui->modelViewer->parentWidget()->raise();
+	RedrawGL();
+}
+
+void CMainWindow::on_actionMirrorPlane_triggered()
+{
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+	if (doc->IsValid() == false) return;
+
+	CGLMirrorPlane* pp = new CGLMirrorPlane(doc->GetGLModel());
 	doc->AddPlot(pp);
 
 	ui->modelViewer->Update(true);

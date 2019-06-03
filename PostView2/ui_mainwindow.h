@@ -336,6 +336,7 @@ public:
 
 		// --- Post menu ---
 		QAction* actionPlaneCut        = addAction("Plane cut"        , "actionPlaneCut"       , ":/icons/cut.png");
+		QAction* actionMirrorPlane	   = addAction("Mirror plane"     , "actionMirrorPlane"    , ":/icons/mirror.png");
 		QAction* actionVectorPlot      = addAction("Vector plot"      , "actionVectorPlot"     , ":/icons/vectors.png");
 		QAction* actionTensorPlot      = addAction("Tensor plot"      , "actionTensorPlot"     , ":/icons/tensor.png");
 		QAction* actionIsosurfacePlot  = addAction("Isosurface plot"  , "actionIsosurfacePlot" , ":/icons/isosurface.png");
@@ -352,6 +353,7 @@ public:
 		QAction* actionIntegrate       = addAction("Integrate ..."    , "actionIntegrate"      , ":/icons/integrate.png");
 
 		actionPlaneCut->setWhatsThis("<font color=\"black\"><h3>Plane cut</h3>Add a plane cut plot to the model. A plane cut plot allows users to create a cross section of the mesh.</font>");
+		actionMirrorPlane->setWhatsThis("<font color=\"black\"><h3>Mirror plane</h3>Renders a mirrorred version of the model.</font>");
 		actionVectorPlot->setWhatsThis("<font color=\"black\"><h3>Vector plot</h3>Add a vector plot to the model. Vectors plots can show vector data in the model");
 		actionTensorPlot->setWhatsThis("<font color=\"black\"><h3>Tensor plot</h3>Add a tensor plot to the model. Tensor plots can show 2nd order tensor data in the model");
 		actionIsosurfacePlot->setWhatsThis("<font color=\"black\"><h3>Iso-surface plot</h3>Add an iso-surface plot to the model. An iso-surface plot shows surfaces that have the same value. You may need to make the model transparent in order to see the iso surfaces.");
@@ -473,6 +475,7 @@ public:
 
 		menuBar->addAction(menuPost->menuAction());
 		menuPost->addAction(actionPlaneCut);
+		menuPost->addAction(actionMirrorPlane);
 		menuPost->addAction(actionVectorPlot);
 		menuPost->addAction(actionTensorPlot);
 		menuPost->addAction(actionIsosurfacePlot);
@@ -582,16 +585,17 @@ public:
 		QToolBar* postToolbar = new QToolBar(MainWindow);
 		postToolbar->setObjectName("postToolbar");
 		postToolbar->setWindowTitle("Plot Toolbar");
-		postToolbar->addAction(actionPlaneCut      );
-		postToolbar->addAction(actionVectorPlot    );
-		postToolbar->addAction(actionTensorPlot);
-		postToolbar->addAction(actionIsosurfacePlot);
-		postToolbar->addAction(actionSlicePlot     );
-		postToolbar->addAction(actionStreamLinePlot);
+		postToolbar->addAction(actionPlaneCut        );
+		postToolbar->addAction(actionMirrorPlane     );
+		postToolbar->addAction(actionVectorPlot      );
+		postToolbar->addAction(actionTensorPlot      );
+		postToolbar->addAction(actionIsosurfacePlot  );
+		postToolbar->addAction(actionSlicePlot       );
+		postToolbar->addAction(actionStreamLinePlot  );
 		postToolbar->addAction(actionParticleFlowPlot);
-		postToolbar->addAction(actionImageSlicer);
-		postToolbar->addAction(actionVolumeRender);
-		postToolbar->addAction(actionMarchingCubes);
+		postToolbar->addAction(actionImageSlicer     );
+		postToolbar->addAction(actionVolumeRender    );
+		postToolbar->addAction(actionMarchingCubes   );
 		postToolbar->addSeparator();
 		postToolbar->addAction(actionGraph);
 		postToolbar->addAction(actionIntegrate);

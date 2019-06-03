@@ -13,4 +13,8 @@ public:
 	CGLView*	m_pview;
 	int			m_x, m_y;
 	quat4f		m_q;
+
+	bool		m_showMesh;
+	bool		m_showOutline;
+	float		m_springThick;
 };

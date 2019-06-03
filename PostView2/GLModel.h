@@ -124,7 +124,7 @@ public:
 
 public:
 	// call this to render the model
-	void Render(CGLContext& rc, bool showMesh, bool showOutline, float springthick);
+	void Render(CGLContext& rc);
 
 public:
 	void RenderNodes(FEModel* ps, CGLContext& rc);
@@ -200,10 +200,6 @@ protected:
 	void RenderFace1Outline(FEFace& face, FEMeshBase* pm);
 	void RenderFace2Outline(FEFace& face, FEMeshBase* pm, int ndivs);
 	void RenderFace3Outline(FEFace& face, FEMeshBase* pm, int ndivs);
-
-private:
-	// Needed by CGLVisual but not used
-	void Render(CGLContext& rc) {}
 
 public:
 	float currentTime() const { return m_fTime; }

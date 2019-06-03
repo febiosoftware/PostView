@@ -308,17 +308,17 @@ void CGLModel::RemoveDisplacementMap()
 }
 
 //-----------------------------------------------------------------------------
-void CGLModel::Render(CGLContext& rc, bool showMesh, bool showOutline, float springthick)
+void CGLModel::Render(CGLContext& rc)
 {
 	// get the FE model
 	FEModel* fem = GetFEModel();
 
-	m_bshowMesh = showMesh;
+	m_bshowMesh = rc.m_showMesh;
 
 	// Render discrete elements
 	float lineWidth;
 	glGetFloatv(GL_LINE_WIDTH, &lineWidth);
-	glLineWidth(springthick);
+	glLineWidth(rc.m_springThick);
 	RenderDiscrete(rc);
 	glLineWidth(lineWidth);
 
@@ -348,7 +348,7 @@ void CGLModel::Render(CGLContext& rc, bool showMesh, bool showOutline, float spr
 	// render the ghost
 	if (m_bghost) RenderGhost(rc);
 
-	if (showOutline)
+	if (rc.m_showOutline)
 	{
 		RenderOutline(rc);
 	}

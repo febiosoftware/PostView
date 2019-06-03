@@ -237,6 +237,7 @@
     <ClInclude Include="..\..\PostView2\GLIsoSurfacePlot.h" />
     <ClInclude Include="..\..\PostView2\GLLinePlot.h" />
     <ClInclude Include="..\..\PostView2\GLMesh.h" />
+    <ClInclude Include="..\..\PostView2\GLMirrorPlane.h" />
     <ClInclude Include="..\..\PostView2\GLModel.h" />
     <ClInclude Include="..\..\PostView2\GLParticleFlowPlot.h" />
     <ClInclude Include="..\..\PostView2\GLPlane.h" />
@@ -413,6 +414,7 @@
     <ClCompile Include="..\..\PostView2\GLIsoSurfacePlot.cpp" />
     <ClCompile Include="..\..\PostView2\GLLinePlot.cpp" />
     <ClCompile Include="..\..\PostView2\GLMesh.cpp" />
+    <ClCompile Include="..\..\PostView2\GLMirrorPlane.cpp" />
     <ClCompile Include="..\..\PostView2\GLModel.cpp" />
     <ClCompile Include="..\..\PostView2\GLParticleFlowPlot.cpp" />
     <ClCompile Include="..\..\PostView2\GLPlane.cpp" />
