@@ -1,15 +1,7 @@
-// GLVectorPlot.h: interface for the CGLVectorPlot class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_GLVECTORPLOT_H__79896D5C_D71B_46BC_8BD8_729668134D62__INCLUDED_)
-#define AFX_GLVECTORPLOT_H__79896D5C_D71B_46BC_8BD8_729668134D62__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "GLPlot.h"
+
+class GLUquadric;
 
 class CGLVectorPlot : public CGLPlot 
 {
@@ -72,6 +64,10 @@ public:
 
 	void UpdateTexture() { m_Col.UpdateTexture(); }
 
+private:
+	// render a vector n at position r
+	void RenderVector(const vec3f& r, vec3f v, GLUquadric* pglyph);
+
 protected:
 	float	m_scale;
 	float	m_dens;
@@ -92,8 +88,8 @@ protected:
 	DataMap<vec3f>	m_map;	// nodal values map
 	
 	int				m_ntime;	// current time at which this plot is evaluated
-	vector<vec3f>	m_val;	// current nodal values
+	vector<vec3f>	m_val;	// current values
 	vec2f			m_crng;	// current range
-};
 
-#endif // !defined(AFX_GLVECTORPLOT_H__79896D5C_D71B_46BC_8BD8_729668134D62__INCLUDED_)
+	float			m_fscale;	// total scale factor for rendering
+};
