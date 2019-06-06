@@ -141,6 +141,8 @@ void CGLVectorPlot::Render(CGLContext& rc)
 	GLfloat specular[] = {0.0f,0.0f,0.0f,1};
 	GLfloat emission[] = {0,0,0,1};
 
+	glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission);
@@ -150,7 +152,7 @@ void CGLVectorPlot::Render(CGLContext& rc)
 	glPushAttrib(GL_LIGHTING_BIT);
 
 	// create the cylinder object
-//	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHTING);
 	GLUquadricObj* pglyph = gluNewQuadric();
 	gluQuadricNormals(pglyph, GLU_SMOOTH);
 
@@ -184,6 +186,7 @@ void CGLVectorPlot::Render(CGLContext& rc)
 	if (m_nglyph == GLYPH_LINE) glDisable(GL_LIGHTING);
 	else
 	{
+		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
 
 		GLfloat dif[] = {1.f, 1.f, 1.f, 1.f};
@@ -270,6 +273,7 @@ void CGLVectorPlot::Render(CGLContext& rc)
 	// restore attributes
 	glPopAttrib();
 
+	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 }
 
 void CGLVectorPlot::RenderVector(const vec3f& r, vec3f v, GLUquadric* pglyph)
