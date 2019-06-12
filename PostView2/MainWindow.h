@@ -199,6 +199,7 @@ public slots:
 	void on_actionViewVPSave_triggered();
 	void on_actionViewVPPrev_triggered();
 	void on_actionViewVPNext_triggered();
+	void on_actionSyncViews_triggered();
 
 	void on_actionRecordNew_triggered();
 	void on_actionRecordStart_triggered();
@@ -238,6 +239,8 @@ private:
 	void AddDocumentTab(CDocument* doc);
 
 	void MakeDocActive(CDocument* doc);
+
+	void keyPressEvent(QKeyEvent* ev);
 
 private:
 	void writeSettings();

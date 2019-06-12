@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_CMainWindow_t {
-    QByteArrayData data[101];
-    char stringdata0[2588];
+    QByteArrayData data[102];
+    char stringdata0[2617];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -106,32 +106,33 @@ QT_MOC_LITERAL(71, 1935, 26), // "on_actionViewTrack_toggled"
 QT_MOC_LITERAL(72, 1962, 29), // "on_actionViewVPSave_triggered"
 QT_MOC_LITERAL(73, 1992, 29), // "on_actionViewVPPrev_triggered"
 QT_MOC_LITERAL(74, 2022, 29), // "on_actionViewVPNext_triggered"
-QT_MOC_LITERAL(75, 2052, 28), // "on_actionRecordNew_triggered"
-QT_MOC_LITERAL(76, 2081, 30), // "on_actionRecordStart_triggered"
-QT_MOC_LITERAL(77, 2112, 30), // "on_actionRecordPause_triggered"
-QT_MOC_LITERAL(78, 2143, 29), // "on_actionRecordStop_triggered"
-QT_MOC_LITERAL(79, 2173, 23), // "on_actionHelp_triggered"
-QT_MOC_LITERAL(80, 2197, 24), // "on_actionAbout_triggered"
-QT_MOC_LITERAL(81, 2222, 31), // "on_fontStyle_currentFontChanged"
-QT_MOC_LITERAL(82, 2254, 4), // "font"
-QT_MOC_LITERAL(83, 2259, 24), // "on_fontSize_valueChanged"
-QT_MOC_LITERAL(84, 2284, 19), // "on_fontBold_toggled"
-QT_MOC_LITERAL(85, 2304, 7), // "checked"
-QT_MOC_LITERAL(86, 2312, 21), // "on_fontItalic_toggled"
-QT_MOC_LITERAL(87, 2334, 26), // "on_selectTime_valueChanged"
-QT_MOC_LITERAL(88, 2361, 27), // "on_selectAngle_valueChanged"
-QT_MOC_LITERAL(89, 2389, 21), // "on_tab_currentChanged"
-QT_MOC_LITERAL(90, 2411, 24), // "on_tab_tabCloseRequested"
-QT_MOC_LITERAL(91, 2436, 19), // "finishedReadingFile"
-QT_MOC_LITERAL(92, 2456, 7), // "success"
-QT_MOC_LITERAL(93, 2464, 11), // "errorString"
-QT_MOC_LITERAL(94, 2476, 17), // "checkFileProgress"
-QT_MOC_LITERAL(95, 2494, 16), // "onCancelFileRead"
-QT_MOC_LITERAL(96, 2511, 24), // "on_recentFiles_triggered"
-QT_MOC_LITERAL(97, 2536, 8), // "QAction*"
-QT_MOC_LITERAL(98, 2545, 6), // "action"
-QT_MOC_LITERAL(99, 2552, 27), // "on_recentSessions_triggered"
-QT_MOC_LITERAL(100, 2580, 7) // "onTimer"
+QT_MOC_LITERAL(75, 2052, 28), // "on_actionSyncViews_triggered"
+QT_MOC_LITERAL(76, 2081, 28), // "on_actionRecordNew_triggered"
+QT_MOC_LITERAL(77, 2110, 30), // "on_actionRecordStart_triggered"
+QT_MOC_LITERAL(78, 2141, 30), // "on_actionRecordPause_triggered"
+QT_MOC_LITERAL(79, 2172, 29), // "on_actionRecordStop_triggered"
+QT_MOC_LITERAL(80, 2202, 23), // "on_actionHelp_triggered"
+QT_MOC_LITERAL(81, 2226, 24), // "on_actionAbout_triggered"
+QT_MOC_LITERAL(82, 2251, 31), // "on_fontStyle_currentFontChanged"
+QT_MOC_LITERAL(83, 2283, 4), // "font"
+QT_MOC_LITERAL(84, 2288, 24), // "on_fontSize_valueChanged"
+QT_MOC_LITERAL(85, 2313, 19), // "on_fontBold_toggled"
+QT_MOC_LITERAL(86, 2333, 7), // "checked"
+QT_MOC_LITERAL(87, 2341, 21), // "on_fontItalic_toggled"
+QT_MOC_LITERAL(88, 2363, 26), // "on_selectTime_valueChanged"
+QT_MOC_LITERAL(89, 2390, 27), // "on_selectAngle_valueChanged"
+QT_MOC_LITERAL(90, 2418, 21), // "on_tab_currentChanged"
+QT_MOC_LITERAL(91, 2440, 24), // "on_tab_tabCloseRequested"
+QT_MOC_LITERAL(92, 2465, 19), // "finishedReadingFile"
+QT_MOC_LITERAL(93, 2485, 7), // "success"
+QT_MOC_LITERAL(94, 2493, 11), // "errorString"
+QT_MOC_LITERAL(95, 2505, 17), // "checkFileProgress"
+QT_MOC_LITERAL(96, 2523, 16), // "onCancelFileRead"
+QT_MOC_LITERAL(97, 2540, 24), // "on_recentFiles_triggered"
+QT_MOC_LITERAL(98, 2565, 8), // "QAction*"
+QT_MOC_LITERAL(99, 2574, 6), // "action"
+QT_MOC_LITERAL(100, 2581, 27), // "on_recentSessions_triggered"
+QT_MOC_LITERAL(101, 2609, 7) // "onTimer"
 
     },
     "CMainWindow\0on_actionOpen_triggered\0"
@@ -202,6 +203,7 @@ QT_MOC_LITERAL(100, 2580, 7) // "onTimer"
     "on_actionViewVPSave_triggered\0"
     "on_actionViewVPPrev_triggered\0"
     "on_actionViewVPNext_triggered\0"
+    "on_actionSyncViews_triggered\0"
     "on_actionRecordNew_triggered\0"
     "on_actionRecordStart_triggered\0"
     "on_actionRecordPause_triggered\0"
@@ -228,7 +230,7 @@ static const uint qt_meta_data_CMainWindow[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-      90,   14, // methods
+      91,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -236,96 +238,97 @@ static const uint qt_meta_data_CMainWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,  464,    2, 0x0a /* Public */,
-       3,    0,  465,    2, 0x0a /* Public */,
-       4,    0,  466,    2, 0x0a /* Public */,
-       5,    0,  467,    2, 0x0a /* Public */,
-       6,    0,  468,    2, 0x0a /* Public */,
-       7,    0,  469,    2, 0x0a /* Public */,
-       8,    0,  470,    2, 0x0a /* Public */,
-       9,    0,  471,    2, 0x0a /* Public */,
-      10,    0,  472,    2, 0x0a /* Public */,
-      11,    0,  473,    2, 0x0a /* Public */,
-      12,    0,  474,    2, 0x0a /* Public */,
-      13,    0,  475,    2, 0x0a /* Public */,
-      14,    0,  476,    2, 0x0a /* Public */,
-      15,    0,  477,    2, 0x0a /* Public */,
-      16,    0,  478,    2, 0x0a /* Public */,
-      17,    1,  479,    2, 0x0a /* Public */,
-      19,    0,  482,    2, 0x0a /* Public */,
-      20,    0,  483,    2, 0x0a /* Public */,
-      21,    0,  484,    2, 0x0a /* Public */,
-      22,    0,  485,    2, 0x0a /* Public */,
-      23,    0,  486,    2, 0x0a /* Public */,
-      24,    0,  487,    2, 0x0a /* Public */,
-      25,    0,  488,    2, 0x0a /* Public */,
-      26,    0,  489,    2, 0x0a /* Public */,
-      27,    0,  490,    2, 0x0a /* Public */,
-      28,    0,  491,    2, 0x0a /* Public */,
-      29,    0,  492,    2, 0x0a /* Public */,
-      30,    0,  493,    2, 0x0a /* Public */,
-      31,    0,  494,    2, 0x0a /* Public */,
-      32,    0,  495,    2, 0x0a /* Public */,
-      33,    0,  496,    2, 0x0a /* Public */,
-      34,    0,  497,    2, 0x0a /* Public */,
-      35,    0,  498,    2, 0x0a /* Public */,
-      36,    0,  499,    2, 0x0a /* Public */,
-      37,    0,  500,    2, 0x0a /* Public */,
-      38,    0,  501,    2, 0x0a /* Public */,
-      39,    0,  502,    2, 0x0a /* Public */,
-      40,    0,  503,    2, 0x0a /* Public */,
-      41,    0,  504,    2, 0x0a /* Public */,
-      42,    0,  505,    2, 0x0a /* Public */,
-      43,    0,  506,    2, 0x0a /* Public */,
-      44,    0,  507,    2, 0x0a /* Public */,
-      45,    0,  508,    2, 0x0a /* Public */,
-      46,    0,  509,    2, 0x0a /* Public */,
-      47,    1,  510,    2, 0x0a /* Public */,
-      49,    1,  513,    2, 0x0a /* Public */,
-      51,    1,  516,    2, 0x0a /* Public */,
-      52,    0,  519,    2, 0x0a /* Public */,
-      53,    0,  520,    2, 0x0a /* Public */,
-      54,    0,  521,    2, 0x0a /* Public */,
-      55,    0,  522,    2, 0x0a /* Public */,
-      56,    0,  523,    2, 0x0a /* Public */,
-      57,    0,  524,    2, 0x0a /* Public */,
-      58,    1,  525,    2, 0x0a /* Public */,
-      59,    1,  528,    2, 0x0a /* Public */,
-      60,    1,  531,    2, 0x0a /* Public */,
-      61,    0,  534,    2, 0x0a /* Public */,
-      62,    0,  535,    2, 0x0a /* Public */,
-      63,    0,  536,    2, 0x0a /* Public */,
-      64,    0,  537,    2, 0x0a /* Public */,
-      65,    0,  538,    2, 0x0a /* Public */,
-      66,    0,  539,    2, 0x0a /* Public */,
-      67,    1,  540,    2, 0x0a /* Public */,
-      68,    1,  543,    2, 0x0a /* Public */,
-      69,    1,  546,    2, 0x0a /* Public */,
-      70,    1,  549,    2, 0x0a /* Public */,
-      71,    1,  552,    2, 0x0a /* Public */,
-      72,    0,  555,    2, 0x0a /* Public */,
-      73,    0,  556,    2, 0x0a /* Public */,
-      74,    0,  557,    2, 0x0a /* Public */,
-      75,    0,  558,    2, 0x0a /* Public */,
-      76,    0,  559,    2, 0x0a /* Public */,
-      77,    0,  560,    2, 0x0a /* Public */,
-      78,    0,  561,    2, 0x0a /* Public */,
-      79,    0,  562,    2, 0x0a /* Public */,
-      80,    0,  563,    2, 0x0a /* Public */,
-      81,    1,  564,    2, 0x0a /* Public */,
-      83,    1,  567,    2, 0x0a /* Public */,
-      84,    1,  570,    2, 0x0a /* Public */,
-      86,    1,  573,    2, 0x0a /* Public */,
-      87,    1,  576,    2, 0x0a /* Public */,
-      88,    1,  579,    2, 0x0a /* Public */,
-      89,    1,  582,    2, 0x0a /* Public */,
-      90,    1,  585,    2, 0x0a /* Public */,
-      91,    2,  588,    2, 0x0a /* Public */,
-      94,    0,  593,    2, 0x0a /* Public */,
-      95,    0,  594,    2, 0x0a /* Public */,
-      96,    1,  595,    2, 0x0a /* Public */,
-      99,    1,  598,    2, 0x0a /* Public */,
-     100,    0,  601,    2, 0x0a /* Public */,
+       1,    0,  469,    2, 0x0a /* Public */,
+       3,    0,  470,    2, 0x0a /* Public */,
+       4,    0,  471,    2, 0x0a /* Public */,
+       5,    0,  472,    2, 0x0a /* Public */,
+       6,    0,  473,    2, 0x0a /* Public */,
+       7,    0,  474,    2, 0x0a /* Public */,
+       8,    0,  475,    2, 0x0a /* Public */,
+       9,    0,  476,    2, 0x0a /* Public */,
+      10,    0,  477,    2, 0x0a /* Public */,
+      11,    0,  478,    2, 0x0a /* Public */,
+      12,    0,  479,    2, 0x0a /* Public */,
+      13,    0,  480,    2, 0x0a /* Public */,
+      14,    0,  481,    2, 0x0a /* Public */,
+      15,    0,  482,    2, 0x0a /* Public */,
+      16,    0,  483,    2, 0x0a /* Public */,
+      17,    1,  484,    2, 0x0a /* Public */,
+      19,    0,  487,    2, 0x0a /* Public */,
+      20,    0,  488,    2, 0x0a /* Public */,
+      21,    0,  489,    2, 0x0a /* Public */,
+      22,    0,  490,    2, 0x0a /* Public */,
+      23,    0,  491,    2, 0x0a /* Public */,
+      24,    0,  492,    2, 0x0a /* Public */,
+      25,    0,  493,    2, 0x0a /* Public */,
+      26,    0,  494,    2, 0x0a /* Public */,
+      27,    0,  495,    2, 0x0a /* Public */,
+      28,    0,  496,    2, 0x0a /* Public */,
+      29,    0,  497,    2, 0x0a /* Public */,
+      30,    0,  498,    2, 0x0a /* Public */,
+      31,    0,  499,    2, 0x0a /* Public */,
+      32,    0,  500,    2, 0x0a /* Public */,
+      33,    0,  501,    2, 0x0a /* Public */,
+      34,    0,  502,    2, 0x0a /* Public */,
+      35,    0,  503,    2, 0x0a /* Public */,
+      36,    0,  504,    2, 0x0a /* Public */,
+      37,    0,  505,    2, 0x0a /* Public */,
+      38,    0,  506,    2, 0x0a /* Public */,
+      39,    0,  507,    2, 0x0a /* Public */,
+      40,    0,  508,    2, 0x0a /* Public */,
+      41,    0,  509,    2, 0x0a /* Public */,
+      42,    0,  510,    2, 0x0a /* Public */,
+      43,    0,  511,    2, 0x0a /* Public */,
+      44,    0,  512,    2, 0x0a /* Public */,
+      45,    0,  513,    2, 0x0a /* Public */,
+      46,    0,  514,    2, 0x0a /* Public */,
+      47,    1,  515,    2, 0x0a /* Public */,
+      49,    1,  518,    2, 0x0a /* Public */,
+      51,    1,  521,    2, 0x0a /* Public */,
+      52,    0,  524,    2, 0x0a /* Public */,
+      53,    0,  525,    2, 0x0a /* Public */,
+      54,    0,  526,    2, 0x0a /* Public */,
+      55,    0,  527,    2, 0x0a /* Public */,
+      56,    0,  528,    2, 0x0a /* Public */,
+      57,    0,  529,    2, 0x0a /* Public */,
+      58,    1,  530,    2, 0x0a /* Public */,
+      59,    1,  533,    2, 0x0a /* Public */,
+      60,    1,  536,    2, 0x0a /* Public */,
+      61,    0,  539,    2, 0x0a /* Public */,
+      62,    0,  540,    2, 0x0a /* Public */,
+      63,    0,  541,    2, 0x0a /* Public */,
+      64,    0,  542,    2, 0x0a /* Public */,
+      65,    0,  543,    2, 0x0a /* Public */,
+      66,    0,  544,    2, 0x0a /* Public */,
+      67,    1,  545,    2, 0x0a /* Public */,
+      68,    1,  548,    2, 0x0a /* Public */,
+      69,    1,  551,    2, 0x0a /* Public */,
+      70,    1,  554,    2, 0x0a /* Public */,
+      71,    1,  557,    2, 0x0a /* Public */,
+      72,    0,  560,    2, 0x0a /* Public */,
+      73,    0,  561,    2, 0x0a /* Public */,
+      74,    0,  562,    2, 0x0a /* Public */,
+      75,    0,  563,    2, 0x0a /* Public */,
+      76,    0,  564,    2, 0x0a /* Public */,
+      77,    0,  565,    2, 0x0a /* Public */,
+      78,    0,  566,    2, 0x0a /* Public */,
+      79,    0,  567,    2, 0x0a /* Public */,
+      80,    0,  568,    2, 0x0a /* Public */,
+      81,    0,  569,    2, 0x0a /* Public */,
+      82,    1,  570,    2, 0x0a /* Public */,
+      84,    1,  573,    2, 0x0a /* Public */,
+      85,    1,  576,    2, 0x0a /* Public */,
+      87,    1,  579,    2, 0x0a /* Public */,
+      88,    1,  582,    2, 0x0a /* Public */,
+      89,    1,  585,    2, 0x0a /* Public */,
+      90,    1,  588,    2, 0x0a /* Public */,
+      91,    1,  591,    2, 0x0a /* Public */,
+      92,    2,  594,    2, 0x0a /* Public */,
+      95,    0,  599,    2, 0x0a /* Public */,
+      96,    0,  600,    2, 0x0a /* Public */,
+      97,    1,  601,    2, 0x0a /* Public */,
+     100,    1,  604,    2, 0x0a /* Public */,
+     101,    0,  607,    2, 0x0a /* Public */,
 
  // slots: parameters
     QMetaType::Void,
@@ -404,19 +407,20 @@ static const uint qt_meta_data_CMainWindow[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::QFont,   82,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::QFont,   83,
     QMetaType::Void, QMetaType::Int,   50,
-    QMetaType::Void, QMetaType::Bool,   85,
+    QMetaType::Void, QMetaType::Bool,   86,
     QMetaType::Void, QMetaType::Bool,   48,
     QMetaType::Void, QMetaType::Int,   50,
     QMetaType::Void, QMetaType::Int,   50,
     QMetaType::Void, QMetaType::Int,   50,
     QMetaType::Void, QMetaType::Int,   50,
-    QMetaType::Void, QMetaType::Bool, QMetaType::QString,   92,   93,
+    QMetaType::Void, QMetaType::Bool, QMetaType::QString,   93,   94,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 97,   98,
-    QMetaType::Void, 0x80000000 | 97,   98,
+    QMetaType::Void, 0x80000000 | 98,   99,
+    QMetaType::Void, 0x80000000 | 98,   99,
     QMetaType::Void,
 
        0        // eod
@@ -498,26 +502,27 @@ void CMainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         case 67: _t->on_actionViewVPSave_triggered(); break;
         case 68: _t->on_actionViewVPPrev_triggered(); break;
         case 69: _t->on_actionViewVPNext_triggered(); break;
-        case 70: _t->on_actionRecordNew_triggered(); break;
-        case 71: _t->on_actionRecordStart_triggered(); break;
-        case 72: _t->on_actionRecordPause_triggered(); break;
-        case 73: _t->on_actionRecordStop_triggered(); break;
-        case 74: _t->on_actionHelp_triggered(); break;
-        case 75: _t->on_actionAbout_triggered(); break;
-        case 76: _t->on_fontStyle_currentFontChanged((*reinterpret_cast< const QFont(*)>(_a[1]))); break;
-        case 77: _t->on_fontSize_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 78: _t->on_fontBold_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 79: _t->on_fontItalic_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 80: _t->on_selectTime_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 81: _t->on_selectAngle_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 82: _t->on_tab_currentChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 83: _t->on_tab_tabCloseRequested((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 84: _t->finishedReadingFile((*reinterpret_cast< bool(*)>(_a[1])),(*reinterpret_cast< const QString(*)>(_a[2]))); break;
-        case 85: _t->checkFileProgress(); break;
-        case 86: _t->onCancelFileRead(); break;
-        case 87: _t->on_recentFiles_triggered((*reinterpret_cast< QAction*(*)>(_a[1]))); break;
-        case 88: _t->on_recentSessions_triggered((*reinterpret_cast< QAction*(*)>(_a[1]))); break;
-        case 89: _t->onTimer(); break;
+        case 70: _t->on_actionSyncViews_triggered(); break;
+        case 71: _t->on_actionRecordNew_triggered(); break;
+        case 72: _t->on_actionRecordStart_triggered(); break;
+        case 73: _t->on_actionRecordPause_triggered(); break;
+        case 74: _t->on_actionRecordStop_triggered(); break;
+        case 75: _t->on_actionHelp_triggered(); break;
+        case 76: _t->on_actionAbout_triggered(); break;
+        case 77: _t->on_fontStyle_currentFontChanged((*reinterpret_cast< const QFont(*)>(_a[1]))); break;
+        case 78: _t->on_fontSize_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 79: _t->on_fontBold_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 80: _t->on_fontItalic_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 81: _t->on_selectTime_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 82: _t->on_selectAngle_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 83: _t->on_tab_currentChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 84: _t->on_tab_tabCloseRequested((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 85: _t->finishedReadingFile((*reinterpret_cast< bool(*)>(_a[1])),(*reinterpret_cast< const QString(*)>(_a[2]))); break;
+        case 86: _t->checkFileProgress(); break;
+        case 87: _t->onCancelFileRead(); break;
+        case 88: _t->on_recentFiles_triggered((*reinterpret_cast< QAction*(*)>(_a[1]))); break;
+        case 89: _t->on_recentSessions_triggered((*reinterpret_cast< QAction*(*)>(_a[1]))); break;
+        case 90: _t->onTimer(); break;
         default: ;
         }
     }
@@ -552,13 +557,13 @@ int CMainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 90)
+        if (_id < 91)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 90;
+        _id -= 91;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 90)
+        if (_id < 91)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 90;
+        _id -= 91;
     }
     return _id;
 }

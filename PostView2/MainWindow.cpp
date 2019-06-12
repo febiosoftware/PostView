@@ -1947,6 +1947,30 @@ void CMainWindow::on_actionViewVPNext_triggered()
 	}
 }
 
+// sync the views of all documents to the currently active one
+void CMainWindow::on_actionSyncViews_triggered()
+{
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+
+	CGView& view = *doc->GetView();
+	CGLCamera& cam = view.GetCamera();
+	GLCameraTransform transform;
+	cam.GetTransform(transform);
+	for (int i = 0; i < m_DocManager->Documents(); ++i)
+	{
+		CDocument* doci = m_DocManager->GetDocument(i);
+		if (doci != doc)
+		{
+			CGLCamera& cami = doci->GetView()->GetCamera();
+
+			// copy the transforms
+			cami.SetTransform(transform);
+			cami.UpdatePosition(true);
+		}
+	}
+}
+
 void CMainWindow::UpdateMainToolbar(bool breset)
 {
 	CDocument* doc = GetActiveDocument();
@@ -2036,6 +2060,40 @@ void CMainWindow::on_tab_tabCloseRequested(int i)
 	m_activeDoc = nullptr;
 	m_DocManager->RemoveDocument(i);
 	ui->RemoveTab(i);
+}
+
+void CMainWindow::keyPressEvent(QKeyEvent* ev)
+{
+	switch (ev->key())
+	{
+	case Qt::Key_Backtab:
+	case Qt::Key_Tab:
+		if (ev->modifiers() & Qt::ControlModifier)
+		{
+			ev->accept();
+
+			int docs = m_DocManager->Documents();
+			if (docs > 1)
+			{
+				// activate the next document
+				int i = ui->tab->currentIndex();
+
+				// activate next or prev one 
+				if (ev->key() == Qt::Key_Backtab)
+				{
+					i--;
+					if (i < 0) i = docs - 1;
+				}
+				else
+				{
+					++i;
+					if (i >= docs) i = 0;
+				}
+				ui->tab->setCurrentIndex(i);
+			}
+		}
+		break;
+	}
 }
 
 void CMainWindow::MakeDocActive(CDocument* doc)

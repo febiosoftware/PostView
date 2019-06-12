@@ -81,6 +81,7 @@ public:
 	QAction* actionViewVPPrev;   
 	QAction* actionViewVPNext;   
 	QAction* actionViewShowTags;
+	QAction* actionSyncViews;
 
 	QAction* selectNodes;
 	QAction* selectEdges;
@@ -394,6 +395,7 @@ public:
 		actionViewVPSave     = addAction("Save viewpoint",         "actionViewVPSave"    ); actionViewVPSave->setShortcut(Qt::CTRL + Qt::Key_K);
 		actionViewVPPrev     = addAction("Prev viewpoint",         "actionViewVPPrev"    ); actionViewVPPrev->setShortcut(Qt::CTRL + Qt::Key_J);
 		actionViewVPNext     = addAction("Next viewpoint",         "actionViewVPNext"    ); actionViewVPNext->setShortcut(Qt::CTRL + Qt::Key_L);
+		actionSyncViews      = addAction("Sync all views"         ,"actionSyncViews"     );
 
 		QAction* whatsThis = QWhatsThis::createAction(MainWindow);
 		whatsThis->setWhatsThis("<font color=\"black\">Click this to enter What's This mode. When selected any ui item can be selected and a brief description of the feature is shown");
@@ -524,6 +526,8 @@ public:
 		menuView->addAction(actionViewVPSave    );
 		menuView->addAction(actionViewVPPrev    );
 		menuView->addAction(actionViewVPNext    );
+		menuView->addSeparator();
+		menuView->addAction(actionSyncViews);
 		menuView->addSeparator();
 
 		menuBar->addAction(menuHelp->menuAction());
