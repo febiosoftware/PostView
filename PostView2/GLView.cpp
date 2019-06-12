@@ -8,6 +8,7 @@
 #include "MainWindow.h"
 #include "Document.h"
 #include <GLWLib/GLWidget.h>
+#include <QBitmap>
 #include "GLModel.h"
 #include "GLPlaneCutPlot.h"
 #include <PostViewLib/GLContext.h>
@@ -19,6 +20,7 @@
 #include <QtCore/QTimer>
 #include <QMenu>
 #include <QMessageBox>
+#include "version.h"
 
 class WorldToScreen
 {
@@ -402,7 +404,7 @@ int CGLView::GetViewConvention()
 void CGLView::initializeGL()
 {
 	GLfloat ones[] = {1.f, 1.f, 1.f, 1.f};
-	glClearColor(1.f, 0.f, 0.5f, 1.f);
+	glClearColor(0.15f, 0.15f, 0.15f, 1.f);
 
 	VIEWSETTINGS& view = GetViewSettings();
 
@@ -1051,17 +1053,39 @@ void CGLView::mouseReleaseEvent(QMouseEvent* ev)
 
 void CGLView::Clear()
 {
-	// get the document
-	CDocument* pdoc = GetDocument();
-
-	// get the scene's view settings
-	VIEWSETTINGS view = GetViewSettings();
-
 	// clear the scene
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-	// render the background
-	RenderBkGround(view.bgcol1, view.bgcol2, view.bgstyle);
+	// get the document
+	CDocument* pdoc = GetDocument();
+	if (pdoc)
+	{
+		// get the scene's view settings
+		VIEWSETTINGS view = GetViewSettings();
+
+		// render the background
+		RenderBkGround(view.bgcol1, view.bgcol2, view.bgstyle);
+	}
+	else
+	{
+		QPainter painter(this);
+		painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+
+		QPixmap pix;
+		pix.load(QString(":/icons/postview_grayscale.png"));
+
+		QImage img = pix.toImage();
+		painter.drawImage(width() / 2 - img.width() / 2, height() / 2 - img.height() / 2, img);
+		painter.setPen(QColor::fromRgb(164, 164, 164));
+		QFont font = painter.font();
+		font.setPointSize(32);
+		painter.setFont(font);
+
+		QString s("PostView ");
+		s += QString::number(VERSION) + "." + QString::number(SUBVERSION);
+		painter.drawText(0, height() / 2 + img.height() / 2 + 10, width(), 40, Qt::AlignCenter, s);
+		painter.end();
+	}
 }
 
 void CGLView::RenderBkGround(GLCOLOR c1, GLCOLOR c2, int style)

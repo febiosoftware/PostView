@@ -627,7 +627,7 @@ public:
 
 	void Set(::CMainWindow* wnd)
 	{
-		CDocument& doc = *wnd->GetActiveDocument();
+		CDocument* doc = wnd->GetActiveDocument();
 
 		VIEWSETTINGS& view = wnd->GetViewSettings();
 		m_render->m_bproj = view.m_nproj == RENDER_PERSP;
@@ -647,7 +647,7 @@ public:
 		m_light->m_ambient = view.m_ambient;
 		m_light->m_bshadow = view.m_bShadows;
 		m_light->m_shadow = view.m_shadow_intensity;
-		m_light->m_pos = doc.GetLightPosition();
+		if (doc) m_light->m_pos = doc->GetLightPosition();
 
 		m_select->m_bconnect = view.m_bconn;
 		m_select->m_ntagInfo = view.m_ntagInfo;
@@ -657,7 +657,7 @@ public:
 
 	void Get(::CMainWindow* wnd)
 	{
-		CDocument& doc = *wnd->GetActiveDocument();
+		CDocument* doc = wnd->GetActiveDocument();
 
 		VIEWSETTINGS& view = wnd->GetViewSettings();
 		view.m_nproj       = (m_render->m_bproj ? RENDER_PERSP : RENDER_ORTHO);
@@ -677,7 +677,7 @@ public:
 		view.m_ambient   = m_light->m_ambient;
 		view.m_bShadows  = m_light->m_bshadow;
 		view.m_shadow_intensity = m_light->m_shadow;
-		doc.SetLightPosition(m_light->m_pos);
+		if (doc) doc->SetLightPosition(m_light->m_pos);
 
 		view.m_bconn    = m_select->m_bconnect;
 		view.m_ntagInfo = m_select->m_ntagInfo;
@@ -708,10 +708,7 @@ CDlgViewSettings::CDlgViewSettings(CMainWindow* pwnd) : ui(new Ui::CDlgViewSetti
 {
 	m_pwnd = pwnd;
 
-	CDocument* pdoc = m_pwnd->GetActiveDocument();
 	VIEWSETTINGS& view = m_pwnd->GetViewSettings();
-
-	CGView* cgview = pdoc->GetView();
 
 	ui->m_render = new CRenderingProps;
 	ui->m_bg     = new CBackgroundProps;
@@ -723,6 +720,8 @@ CDlgViewSettings::CDlgViewSettings(CMainWindow* pwnd) : ui(new Ui::CDlgViewSetti
 
 	// NOTE: view can be null if no document was loaded.
 	// Probably need to make these settings view independent!
+	CDocument* pdoc = m_pwnd->GetActiveDocument();
+	CGView* cgview = (pdoc ? pdoc->GetView() : nullptr);
 	if (cgview)
 	{
 		CGLCamera& cam = cgview->GetCamera();
@@ -770,10 +769,10 @@ void CDlgViewSettings::hideEvent(QHideEvent* ev)
 
 void CDlgViewSettings::apply()
 {
-	CDocument* pdoc = m_pwnd->GetActiveDocument();
 	VIEWSETTINGS& view = m_pwnd->GetViewSettings();
 
-	CGView* cgview = pdoc->GetView();
+	CDocument* pdoc = m_pwnd->GetActiveDocument();
+	CGView* cgview = (pdoc ? pdoc->GetView() : nullptr);
 	if (cgview)
 	{
 		CGLCamera& cam = cgview->GetCamera();
@@ -787,7 +786,7 @@ void CDlgViewSettings::apply()
 	PM.SetCurrentIndex(ui->m_pal->pal->currentIndex());
 
 	// we need to update the color maps that are used in the model tree
-	pdoc->UpdateColorMaps();
+	if (pdoc) pdoc->UpdateColorMaps();
 	m_pwnd->UpdateModelViewer(true);
 	m_pwnd->RedrawGL();
 }

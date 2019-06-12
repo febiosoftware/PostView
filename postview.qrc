@@ -63,5 +63,6 @@
 		<file>icons/image.png</file>
 		<file>icons/marching_cubes.png</file>
 		<file>icons/mirror.png</file>
+		<file>icons/postview_grayscale.png</file>
     </qresource>
 </RCC>
