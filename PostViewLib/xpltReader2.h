@@ -26,6 +26,8 @@ protected:
 			PLT_DIC_ITEM_TYPE			= 0x01020002,
 			PLT_DIC_ITEM_FMT			= 0x01020003,
 			PLT_DIC_ITEM_NAME			= 0x01020004,
+			PLT_DIC_ITEM_ARRAYSIZE		= 0x01020005,	// added in version 0x05
+			PLT_DIC_ITEM_ARRAYNAME		= 0x01020006,	// added in version 0x05
 			PLT_DIC_GLOBAL				= 0x01021000,
 //			PLT_DIC_MATERIAL			= 0x01022000,	// this was removed
 			PLT_DIC_NODAL				= 0x01023000,
@@ -93,7 +95,7 @@ protected:
 	enum {FEBIO_TAG = 0x00464542 };
 
 	// variable types
-	enum Var_Type { FLOAT, VEC3F, MAT3FS, MAT3FD, TENS4FS, MAT3F };
+	enum Var_Type { FLOAT, VEC3F, MAT3FS, MAT3FD, TENS4FS, MAT3F, ARRAY, ARRAY_VEC3F };
 
 	// variable format
 	enum Var_Fmt { FMT_NODE, FMT_ITEM, FMT_MULT, FMT_REGION };
@@ -123,11 +125,21 @@ protected:
 	enum { DI_NAME_SIZE = 64 };
 
 public:
-	struct DICT_ITEM
+	class DICT_ITEM
 	{
+	public:
+		DICT_ITEM();
+		DICT_ITEM(const DICT_ITEM& item);
+
+	public:
 		unsigned int	ntype;
 		unsigned int	nfmt;
 		char			szname[DI_NAME_SIZE];
+
+		unsigned int	index;	// index into data manager list
+
+		unsigned int	arraySize;	// only used for array variables (plt version 0x05)
+		vector<string>	arrayNames;	// (optional) names of array components
 	};
 
 	class Dictionary
@@ -292,8 +304,8 @@ protected:
 	bool ReadElemData    (FEModel& fem, FEState* pstate);
 	bool ReadFaceData    (FEModel& fem, FEState* pstate);
 
-	bool ReadElemData_NODE(FEMeshBase& m, Domain& d, FEMeshData& s, int ntype);
-	bool ReadElemData_ITEM(Domain& d, FEMeshData& s, int ntype);
+	bool ReadElemData_NODE(FEMeshBase& m, Domain& d, FEMeshData& s, int ntype, int arrSize);
+	bool ReadElemData_ITEM(Domain& d, FEMeshData& s, int ntype, int arrSize);
 	bool ReadElemData_MULT(Domain& d, FEMeshData& s, int ntype);
 
 	bool ReadFaceData_NODE(FEMeshBase& m, Surface& s, FEMeshData& data, int ntype);
