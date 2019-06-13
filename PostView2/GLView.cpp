@@ -1076,9 +1076,10 @@ void CGLView::Clear()
 
 		QImage img = pix.toImage();
 		painter.drawImage(width() / 2 - img.width() / 2, height() / 2 - img.height() / 2, img);
-		painter.setPen(QColor::fromRgb(164, 164, 164));
+		painter.setPen(QColor::fromRgb(96, 96, 96));
 		QFont font = painter.font();
 		font.setPointSize(32);
+		font.setLetterSpacing(QFont::AbsoluteSpacing, 20.0);
 		painter.setFont(font);
 
 		QString s("PostView ");

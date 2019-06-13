@@ -120,6 +120,10 @@ public:
 	// Add a graph to the list of managed graph windows
 	void AddGraph(CGraphWindow* graph);
 
+private:
+	void dragEnterEvent(QDragEnterEvent* event) override;
+	void dropEvent(QDropEvent* event) override;
+
 public slots:
 	void on_actionOpen_triggered();
 	void on_actionSave_triggered();

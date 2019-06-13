@@ -6,6 +6,7 @@
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 #include <QDesktopServices>
+#include <QtCore/QMimeData>
 #include "DocManager.h"
 #include "Document.h"
 #include "GLModel.h"
@@ -117,6 +118,8 @@ CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMai
 
 	// make sure the file viewer is visible
 	ui->fileViewer->parentWidget()->raise();
+
+	setAcceptDrops(true);
 }
 
 CMainWindow::~CMainWindow()
@@ -126,6 +129,33 @@ CMainWindow::~CMainWindow()
 CDocument*	CMainWindow::GetActiveDocument()
 { 
 	return m_activeDoc;
+}
+
+void CMainWindow::dragEnterEvent(QDragEnterEvent* event)
+{
+	const QMimeData* mime = event->mimeData();
+	if (mime->hasFormat("text/uri-list"))
+	{
+		event->accept();
+	}
+}
+
+void CMainWindow::dropEvent(QDropEvent* event)
+{
+	QString fileName = event->mimeData()->text();
+
+	const QMimeData* mimeData = event->mimeData();
+	if (mimeData->hasUrls())
+	{
+		QList<QUrl> urlList = mimeData->urls();
+
+		// extract the local paths of the files
+		QString fileName;
+		fileName = urlList.at(0).toLocalFile();
+
+		// call a function to open the files
+		OpenFile(fileName, -1);
+	}
 }
 
 CDocument* CMainWindow::NewDocument(const std::string& docTitle)
