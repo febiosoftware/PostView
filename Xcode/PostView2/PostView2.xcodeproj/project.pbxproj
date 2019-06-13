@@ -56,6 +56,7 @@
 		D5B805C2223BEF5C00198805 /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5B805BF223BEF5C00198805 /* QtGui.framework */; };
 		D5B805C3223BEF5C00198805 /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5B805C0223BEF5C00198805 /* QtWidgets.framework */; };
 		D5B805C4223BEF5C00198805 /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5B805C1223BEF5C00198805 /* QtCore.framework */; };
+		D5B84E1D22B2EE86006834BF /* GLMirrorPlane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5B84E1C22B2EE86006834BF /* GLMirrorPlane.cpp */; };
 		D5C20C622038851000BFB643 /* moc_FileThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5C20C612038851000BFB643 /* moc_FileThread.cpp */; };
 		D5C53DB71F86D97E0014FA22 /* DlgAddEquation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5C53DB61F86D97E0014FA22 /* DlgAddEquation.cpp */; };
 		D5E08BA320A5E5BE00275FAB /* libGLWLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5E08BA220A5E5BE00275FAB /* libGLWLib.a */; };
@@ -236,6 +237,8 @@
 		D5B805BF223BEF5C00198805 /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt/5.12.0/lib/QtGui.framework; sourceTree = "<group>"; };
 		D5B805C0223BEF5C00198805 /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt/5.12.0/lib/QtWidgets.framework; sourceTree = "<group>"; };
 		D5B805C1223BEF5C00198805 /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt/5.12.0/lib/QtCore.framework; sourceTree = "<group>"; };
+		D5B84E1B22B2EE86006834BF /* GLMirrorPlane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLMirrorPlane.h; sourceTree = "<group>"; };
+		D5B84E1C22B2EE86006834BF /* GLMirrorPlane.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLMirrorPlane.cpp; sourceTree = "<group>"; };
 		D5C20C612038851000BFB643 /* moc_FileThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_FileThread.cpp; sourceTree = "<group>"; };
 		D5C53DB51F86D97E0014FA22 /* DlgAddEquation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgAddEquation.h; sourceTree = "<group>"; };
 		D5C53DB61F86D97E0014FA22 /* DlgAddEquation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgAddEquation.cpp; sourceTree = "<group>"; };
@@ -535,6 +538,8 @@
 				D5FF79D91D72756B003D2CBD /* GLLinePlot.h */,
 				D5FF79DA1D72756B003D2CBD /* GLMesh.cpp */,
 				D5FF79DB1D72756B003D2CBD /* GLMesh.h */,
+				D5B84E1C22B2EE86006834BF /* GLMirrorPlane.cpp */,
+				D5B84E1B22B2EE86006834BF /* GLMirrorPlane.h */,
 				D5FF79DC1D72756B003D2CBD /* GLModel.cpp */,
 				D5FF79DD1D72756B003D2CBD /* GLModel.h */,
 				D53B031B207EF04A00E6B5F5 /* GLParticleFlowPlot.cpp */,
@@ -791,6 +796,7 @@
 				D5FF7A731D72756B003D2CBD /* moc_MainWindow.cpp in Sources */,
 				D5FF7A8F1D72756B003D2CBD /* ShellThicknessTool.cpp in Sources */,
 				D5FF7A961D72756B003D2CBD /* ToolsPanel.cpp in Sources */,
+				D5B84E1D22B2EE86006834BF /* GLMirrorPlane.cpp in Sources */,
 				D5FF7A4D1D72756B003D2CBD /* DlgTimeSettings.cpp in Sources */,
 				D5EB78E0229704860063769C /* moc_ImageViewer.cpp in Sources */,
 				D5FF7A5E1D72756B003D2CBD /* GLView.cpp in Sources */,
