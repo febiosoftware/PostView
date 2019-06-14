@@ -357,26 +357,29 @@ CGLView::~CGLView()
 void CGLView::UpdateWidgets(bool bposition)
 {
 	CDocument* pdoc = GetDocument();
-	const string& title = pdoc->GetTitle();
-	m_ptitle->copy_label(title.c_str());
+	if (pdoc)
+	{
+		const string& title = pdoc->GetTitle();
+		m_ptitle->copy_label(title.c_str());
 
-	int Y = 0;
-	if (bposition)
-		m_ptitle->resize(0, 0, m_ptitle->w(), m_ptitle->h());
+		int Y = 0;
+		if (bposition)
+			m_ptitle->resize(0, 0, m_ptitle->w(), m_ptitle->h());
 
-	m_ptitle->fit_to_size();
-	Y = m_ptitle->y() + m_ptitle->h();
+		m_ptitle->fit_to_size();
+		Y = m_ptitle->y() + m_ptitle->h();
 
-	if (bposition)
-		m_psubtitle->resize(0, Y, m_psubtitle->w(), m_psubtitle->h());
+		if (bposition)
+			m_psubtitle->resize(0, Y, m_psubtitle->w(), m_psubtitle->h());
 
-	m_psubtitle->fit_to_size();
+		m_psubtitle->fit_to_size();
 
-	// set a min width for the subtitle otherwise the time values may get cropped
-	if (m_psubtitle->w() < 150)
-		m_psubtitle->resize(m_psubtitle->x(), m_psubtitle->y(), 150, m_psubtitle->h());
+		// set a min width for the subtitle otherwise the time values may get cropped
+		if (m_psubtitle->w() < 150)
+			m_psubtitle->resize(m_psubtitle->x(), m_psubtitle->y(), 150, m_psubtitle->h());
 
-	repaint();
+		repaint();
+	}
 }
 
 CDocument* CGLView::GetDocument()
@@ -506,6 +509,7 @@ void CGLView::setupProjectionMatrix()
 {
 	// get the scene's bounding box
 	CDocument* doc = GetDocument();
+	if (doc == nullptr) return;
 	BOUNDINGBOX box = doc->GetBoundingBox();
 
 	// set up the projection Matrix
@@ -1186,6 +1190,7 @@ void CGLView::RenderBox(const BOUNDINGBOX& box)
 void CGLView::RenderWidgets()
 {
 	CDocument* pdoc = GetDocument();
+	if (pdoc == nullptr) return;
 
 	VIEWSETTINGS& view = GetViewSettings();
 
@@ -1230,6 +1235,7 @@ CGLCamera& CGLView::GetCamera()
 void CGLView::RenderTags()
 {
 	CDocument* pdoc = GetDocument();
+	if (pdoc == nullptr) return;
 	BOUNDINGBOX box = pdoc->GetBoundingBox();
 	CGLModel* model = pdoc->GetGLModel();
 
@@ -1418,6 +1424,7 @@ void CGLView::RenderTags()
 void CGLView::PanView(vec3f r)
 {
 	CDocument* pdoc = GetDocument();
+	if (pdoc == nullptr) return;
 	CGLCamera* pcam = &GetCamera();
 
 	if (GetViewSettings().m_nproj == RENDER_ORTHO)
@@ -1533,6 +1540,7 @@ Ray CGLView::PointToRay(int x, int y)
 void CGLView::ZoomRect(MyPoint p0, MyPoint p1)
 {
 	CDocument* pdoc = GetDocument();
+	if (pdoc == nullptr) return;
 
 	CGLCamera* pcam = &GetCamera();
 
@@ -1736,7 +1744,7 @@ bool regionFaceIntersect(WorldToScreen& transform, const SelectRegion& region, F
 void CGLView::RegionSelectElements(const SelectRegion& region, int mode)
 {
 	CDocument* pdoc = GetDocument();
-	if (pdoc->IsValid() == false) return;
+	if ((pdoc==nullptr) || (pdoc->IsValid() == false)) return;
 
 	VIEWSETTINGS& view = GetViewSettings();
 
@@ -1791,7 +1799,7 @@ void CGLView::RegionSelectElements(const SelectRegion& region, int mode)
 void CGLView::RegionSelectFaces(const SelectRegion& region, int mode)
 {
 	CDocument* pdoc = GetDocument();
-	if (pdoc->IsValid() == false) return;
+	if ((pdoc == nullptr) || (pdoc->IsValid() == false)) return;
 
 	VIEWSETTINGS& view = GetViewSettings();
 
@@ -1831,7 +1839,7 @@ void CGLView::RegionSelectFaces(const SelectRegion& region, int mode)
 void CGLView::RegionSelectNodes(const SelectRegion& region, int mode)
 {
 	CDocument* pdoc = GetDocument();
-	if (pdoc->IsValid() == false) return;
+	if ((pdoc == nullptr) || (pdoc->IsValid() == false)) return;
 
 	VIEWSETTINGS& view = GetViewSettings();
 
@@ -1880,7 +1888,7 @@ void CGLView::RegionSelectNodes(const SelectRegion& region, int mode)
 void CGLView::RegionSelectEdges(const SelectRegion& region, int mode)
 {
 	CDocument* pdoc = GetDocument();
-	if (pdoc->IsValid() == false) return;
+	if ((pdoc == nullptr) || (pdoc->IsValid() == false)) return;
 
 	VIEWSETTINGS& view = GetViewSettings();
 
@@ -2061,7 +2069,7 @@ void CGLView::SelectElements(int x0, int y0, int mode)
 {
 	// Make sure we have a valid model
 	CDocument* pdoc = GetDocument();
-	if (pdoc->IsValid() == false) return;
+	if ((pdoc == nullptr) || (pdoc->IsValid() == false)) return;
 
 	// get the active mesh
 	CGLModel& mdl = *pdoc->GetGLModel();
@@ -2338,7 +2346,7 @@ void CGLView::TagBackfacingEdges(FEMeshBase& mesh)
 void CGLView::SelectNodes(int x0, int y0, int mode)
 {
 	CDocument* pdoc = GetDocument();
-	if (pdoc->IsValid() == false) return;
+	if ((pdoc == nullptr) || (pdoc->IsValid() == false)) return;
 
 	int S = 4 * m_dpr;
 	BoxRegion box(x0 - S, y0 - S, x0 + S, y0 + S);
@@ -2421,7 +2429,7 @@ void CGLView::SelectNodes(int x0, int y0, int mode)
 void CGLView::SelectEdges(int x0, int y0, int mode)
 {
 	CDocument* pdoc = GetDocument();
-	if (pdoc->IsValid() == false) return;
+	if ((pdoc == nullptr) || (pdoc->IsValid() == false)) return;
 
 	VIEWSETTINGS& view = GetViewSettings();
 
@@ -2546,6 +2554,8 @@ void CGLView::RenderRubberBand()
 	int y1 = m_p1.y;
 
 	CDocument* pdoc = GetDocument();
+	if ((pdoc == nullptr) || (pdoc->IsValid() == false)) return;
+
 	CGLModel* model = pdoc->GetGLModel();
 	int nstyle = -1;
 	if (model) nstyle = model->GetSelectionStyle();
@@ -2589,6 +2599,8 @@ void CGLView::RenderRubberBand()
 void CGLView::RenderModel()
 {
 	CDocument* pdoc = GetDocument();
+	if ((pdoc == nullptr) || (pdoc->IsValid() == false)) return;
+
 	VIEWSETTINGS& view = GetViewSettings();
 
 	FEModel* ps = pdoc->GetFEModel();
@@ -2675,6 +2687,8 @@ void CGLView::RenderModel()
 void CGLView::RenderPlots(CGLContext& rc)
 {
 	CDocument* pdoc = GetDocument();
+	if ((pdoc == nullptr) || (pdoc->IsValid() == false)) return;
+
 	list<CGLPlot*>& PL = pdoc->GetPlotList();
 	list<CGLPlot*>::iterator it = PL.begin();
 	for (int i=0; i<(int) PL.size(); ++i, ++it)
@@ -2693,7 +2707,7 @@ void CGLView::RenderPlots(CGLContext& rc)
 void CGLView::RenderDoc()
 {
 	CDocument* pdoc = GetDocument();
-	if (pdoc->IsValid() == false) return;
+	if ((pdoc == nullptr) || (pdoc->IsValid() == false)) return;
 
 	glPushAttrib(GL_ENABLE_BIT);
 	{
@@ -2728,7 +2742,6 @@ void CGLView::RenderDoc()
 			// render the GL model
 			po->Render(rc);
 
-			CDocument* pdoc = GetDocument();
 			VIEWSETTINGS& ops = GetViewSettings();
 			BOUNDINGBOX box = pdoc->GetBoundingBox();
 
@@ -2793,6 +2806,8 @@ void CGLView::RenderTrack()
 	if (m_btrack == false) return;
 
 	CDocument* pdoc = GetDocument();
+	if ((pdoc == nullptr) || (pdoc->IsValid() == false)) return;
+
 	FEMeshBase* pm = pdoc->GetActiveMesh();
 	int* nt = m_ntrack;
 
@@ -2849,6 +2864,7 @@ void CGLView::UpdateCamera(bool hitCameraTarget)
 void CGLView::PositionCamera()
 {
 	CDocument* pdoc = GetDocument();
+	if ((pdoc == nullptr) || (pdoc->IsValid() == false)) return;
 
 	// position the camera
 	GetCamera().Transform();
@@ -2924,17 +2940,17 @@ void CGLView::PositionCamera()
 void CGLView::OnZoomExtents()
 {
 	CDocument* pdoc = GetDocument();
-	pdoc->ZoomExtents();
+	if (pdoc) pdoc->ZoomExtents();
 	repaint();
 }
 
 void CGLView::OnZoomSelect()
 {
 	CDocument* pdoc = GetDocument();
-	BOUNDINGBOX box = pdoc->GetSelectionBox();
-
-	if (box.IsValid())
+	if (pdoc && pdoc->IsValid())
 	{
+		BOUNDINGBOX box = pdoc->GetSelectionBox();
+
 		if (box.Radius() < 1e-8f)
 		{
 			float L = 1.f;
@@ -3018,6 +3034,8 @@ void CGLView::SetView(View_Mode n)
 	m_nview = n;
 
 	CDocument* pdoc = GetDocument();
+	if ((pdoc == nullptr) || (pdoc->IsValid() == false)) return;
+
 	CGLCamera* pcam = &GetCamera();
 	pcam->SetOrientation(q);
 	repaint();
@@ -3037,6 +3055,8 @@ void CGLView::showWidgets(bool b)
 void CGLView::setPerspective(bool b)
 {
 	CDocument* pdoc = GetDocument();
+	if ((pdoc == nullptr) || (pdoc->IsValid() == false)) return;
+
 	VIEWSETTINGS& view = GetViewSettings();
 
 	view.m_nproj = (b ? RENDER_PERSP : RENDER_ORTHO);
@@ -3150,37 +3170,36 @@ void CGLView::TrackSelection(bool b)
 	{
 		m_btrack = false;
 		CDocument* pdoc = GetDocument();
-		if (pdoc->IsValid())
-		{
-			CGLModel* model = pdoc->GetGLModel(); assert(model);
+		if ((pdoc == nullptr) || (pdoc->IsValid() == false)) return;
 
-			int nmode = model->GetSelectionMode();
-			FEMeshBase* pm = pdoc->GetActiveMesh();
-			if (nmode == SELECT_ELEMS)
+		CGLModel* model = pdoc->GetGLModel(); assert(model);
+
+		int nmode = model->GetSelectionMode();
+		FEMeshBase* pm = pdoc->GetActiveMesh();
+		if (nmode == SELECT_ELEMS)
+		{
+			const vector<FEElement*> selElems = pdoc->GetGLModel()->GetElementSelection();
+			for (int i=0; i<(int) selElems.size(); ++i) 
 			{
-				const vector<FEElement*> selElems = pdoc->GetGLModel()->GetElementSelection();
-				for (int i=0; i<(int) selElems.size(); ++i) 
-				{
-					FEElement& el = *selElems[i];
-					int* n = el.m_node;
-					m_ntrack[0] = n[0];
-					m_ntrack[1] = n[1];
-					m_ntrack[2] = n[2];
-					m_btrack = true; 
-					break; 
-				}
+				FEElement& el = *selElems[i];
+				int* n = el.m_node;
+				m_ntrack[0] = n[0];
+				m_ntrack[1] = n[1];
+				m_ntrack[2] = n[2];
+				m_btrack = true; 
+				break; 
 			}
-			else if (nmode == SELECT_NODES)
+		}
+		else if (nmode == SELECT_NODES)
+		{
+			int ns = 0;
+			for (int i=0; i<pm->Nodes(); ++i)
 			{
-				int ns = 0;
-				for (int i=0; i<pm->Nodes(); ++i)
+				if (pm->Node(i).IsSelected()) m_ntrack[ns++] = i;
+				if (ns == 3)
 				{
-					if (pm->Node(i).IsSelected()) m_ntrack[ns++] = i;
-					if (ns == 3)
-					{
-						m_btrack = true;
-						break;
-					}
+					m_btrack = true;
+					break;
 				}
 			}
 		}

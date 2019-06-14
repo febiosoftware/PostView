@@ -3489,6 +3489,9 @@ void CGLModel::UpdateInternalSurfaces(bool eval)
 	{
 		FEDomain& dom = mesh.Domain(m);
 		int NE = dom.Elements();
+
+		float f1 = m_ps->GetMaterial(m)->transparency;
+
 		for (int i=0; i<NE; ++i)
 		{
 			FEElement& el = dom.Element(i);
@@ -3496,22 +3499,34 @@ void CGLModel::UpdateInternalSurfaces(bool eval)
 			{
 				for (int j=0; j<el.Faces(); ++j)
 				{
-					if (el.m_pElem[j] && ((el.m_pElem[j]->IsSelected() != el.IsSelected()) || !el.m_pElem[j]->IsVisible()))
+					FEElement* pen = el.m_pElem[j];
+					if (pen)
 					{
-						el.GetFace(j, face);
-						face.m_elem[0] = el.m_lid; // store the element ID. This is used for selection ???
-						face.m_elem[1] = el.m_pElem[j]->m_lid;
+						bool badd = (pen->IsSelected() != el.IsSelected()) || !pen->IsVisible();
 
-						// calculate the face normals
-						vec3f& r0 = mesh.Node(face.node[0]).m_r0;
-						vec3f& r1 = mesh.Node(face.node[1]).m_r0;
-						vec3f& r2 = mesh.Node(face.node[2]).m_r0;
+						if ((badd == false) && (el.m_MatID != pen->m_MatID))
+						{
+							float f2 = m_ps->GetMaterial(pen->m_MatID)->transparency;
+							if (f1 > f2) badd = true;
+						}
 
-						face.m_fn = (r1 - r0) ^ (r2 - r0);
-						face.m_fn.Normalize();
-						face.m_nsg = 0;
+						if (badd)
+						{
+							el.GetFace(j, face);
+							face.m_elem[0] = el.m_lid; // store the element ID. This is used for selection ???
+							face.m_elem[1] = pen->m_lid;
 
-						m_innerSurface[m]->add(face);
+							// calculate the face normals
+							vec3f& r0 = mesh.Node(face.node[0]).m_r0;
+							vec3f& r1 = mesh.Node(face.node[1]).m_r0;
+							vec3f& r2 = mesh.Node(face.node[2]).m_r0;
+
+							face.m_fn = (r1 - r0) ^ (r2 - r0);
+							face.m_fn.Normalize();
+							face.m_nsg = 0;
+
+							m_innerSurface[m]->add(face);
+						}
 					}
 				}
 			}

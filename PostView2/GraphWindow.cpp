@@ -596,6 +596,7 @@ void CGraphWindow::GetUserTimeRange(int& minTime, int& maxTime)
 void CGraphWindow::GetTimeRange(int& minTime, int& maxTime)
 {
 	CDocument* doc = GetDocument();
+	if ((doc == nullptr) || (doc->IsValid() == false)) return;
 
 	// get the document and current time point and time steps
 	int ntime = doc->currentTime();

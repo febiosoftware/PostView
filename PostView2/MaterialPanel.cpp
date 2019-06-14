@@ -335,6 +335,7 @@ void CMaterialPanel::on_props_dataChanged(int nprop)
 {
 	// Get the model
 	CDocument& doc = *GetActiveDocument();
+	CGLModel& mdl = *doc.GetGLModel();
 	FEModel& fem = *doc.GetFEModel();
 
 	// get the current material
@@ -385,5 +386,6 @@ void CMaterialPanel::on_props_dataChanged(int nprop)
 		}
 	}
 
+	mdl.Update(false);
 	m_wnd->RedrawGL();
 }
