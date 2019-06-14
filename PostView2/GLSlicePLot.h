@@ -47,6 +47,9 @@ public:
 	float GetUserRangeMin() const { return m_fmin; }
 	void SetUserRangeMin(float f) { m_fmin = f; }
 
+	float GetSliceOffset() const { return m_offset; }
+	void SetSliceOffset(float f);
+
 	CPropertyList* propertyList();
 
 	void UpdateTexture() { m_Col.UpdateTexture(); }
@@ -61,6 +64,7 @@ protected:
 
 	int			m_nrange;		//!< range option (0=dynamic, 1=user)
 	float		m_fmin, m_fmax;	//!< user-defined range 
+	float		m_offset;
 
 	int				m_nfield;	// data field
 	CColorTexture	m_Col;		// colormap

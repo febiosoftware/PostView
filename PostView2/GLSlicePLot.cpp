@@ -30,12 +30,13 @@ public:
 		addProperty("Allow clipping", CProperty::Bool);
 		addProperty("Show legend"   , CProperty::Bool);
 		addProperty("Slices"        , CProperty::Int);
+		addProperty("Slice offset"  , CProperty::Float)->setFloatRange(0.0, 1.0);
 		addProperty("Range"         , CProperty::Enum)->setEnumValues(QStringList() << "dynamic" << "user");
 		addProperty("Range max"     , CProperty::Float);
 		addProperty("Range min"     , CProperty::Float);
 		addProperty("X-normal"      , CProperty::Float);
 		addProperty("Y-normal"      , CProperty::Float);
-		addProperty("Z-norma"       , CProperty::Float);
+		addProperty("Z-normal"      , CProperty::Float);
 	}
 
 	QVariant GetPropertyValue(int i)
@@ -47,12 +48,13 @@ public:
 		case 2: return m_slice->AllowClipping(); break;
 		case 3: return m_slice->ShowLegend(); break;
 		case 4: return m_slice->GetSlices(); break;
-		case 5: return m_slice->GetRangeType(); break;
-		case 6: return m_slice->GetUserRangeMax(); break;
-		case 7: return m_slice->GetUserRangeMin(); break;
-		case 8: return m_slice->GetPlaneNormal().x; break;
-		case 9: return m_slice->GetPlaneNormal().y; break;
-		case 10: return m_slice->GetPlaneNormal().z; break;
+		case 5: return m_slice->GetSliceOffset(); break;
+		case 6: return m_slice->GetRangeType(); break;
+		case 7: return m_slice->GetUserRangeMax(); break;
+		case 8: return m_slice->GetUserRangeMin(); break;
+		case 9: return m_slice->GetPlaneNormal().x; break;
+		case 10: return m_slice->GetPlaneNormal().y; break;
+		case 11: return m_slice->GetPlaneNormal().z; break;
 		}
 		return QVariant();
 	}
@@ -68,14 +70,15 @@ public:
 		case 2: m_slice->AllowClipping(v.toBool()); break;
 		case 3: m_slice->ShowLegend(v.toBool()); break;
 		case 4: m_slice->SetSlices(v.toInt()); break;
-		case 5: m_slice->SetRangeType(v.toInt()); break;
-		case 6: m_slice->SetUserRangeMax(v.toFloat()); break;
-		case 7: m_slice->SetUserRangeMin(v.toFloat()); break;
-		case 8: plane = vec3f(v.toFloat(), n.y, n.z);
+		case 5: m_slice->SetSliceOffset(v.toFloat()); break;
+		case 6: m_slice->SetRangeType(v.toInt()); break;
+		case 7: m_slice->SetUserRangeMax(v.toFloat()); break;
+		case 8: m_slice->SetUserRangeMin(v.toFloat()); break;
+		case 9: plane = vec3f(v.toFloat(), n.y, n.z);
 			m_slice->SetPlaneNormal(plane); break;
-		case 9: plane = vec3f(n.x, v.toFloat(), n.z);
+		case 10: plane = vec3f(n.x, v.toFloat(), n.z);
 			m_slice->SetPlaneNormal(plane); break;
-		case 10: plane = vec3f(n.x, n.y, v.toFloat());
+		case 11: plane = vec3f(n.x, n.y, v.toFloat());
 			m_slice->SetPlaneNormal(plane); break;
 		}
 	}
@@ -94,6 +97,7 @@ CGLSlicePlot::CGLSlicePlot(CGLModel* po) : CGLPlot(po)
 
 	m_nslices = 10;
 	m_nfield = 0;
+	m_offset = 0.5f;
 
 	m_Col.SetDivisions(m_nslices);
 	m_Col.SetSmooth(false);
@@ -123,7 +127,12 @@ int CGLSlicePlot::GetSlices() { return m_nslices; }
 void CGLSlicePlot::SetSlices(int nslices) { m_nslices = nslices; m_Col.SetDivisions(nslices); }
 
 
-///////////////////////////////////////////////////////////////////////////////
+void CGLSlicePlot::SetSliceOffset(float f) 
+{ 
+	m_offset = f; 
+	if (m_offset < 0.f) m_offset = 0.f;
+	if (m_offset > 1.f) m_offset = 1.f;
+}
 
 void CGLSlicePlot::Render(CGLContext& rc)
 {
@@ -140,11 +149,29 @@ void CGLSlicePlot::Render(CGLContext& rc)
 	vec3f n = m_norm;
 	n.Normalize();
 	m_box.Range(n, fmin, fmax);
-	for (int i=1; i<m_nslices+1; ++i)
+	float Df = fabs(fmax - fmin);
+	if (Df != 0.f)
 	{
-		float f = (float) i / (float) (m_nslices+1);
-		float ref = fmin + f*(fmax - fmin);
+		fmin += 1e-3*Df;
+		fmax -= 1e-3*Df;
+	}
+	glColor3ub(255, 255, 255);
+	if (m_nslices == 1)
+	{
+		float ref = fmin + m_offset*(fmax - fmin);
 		RenderSlice(ref);
+	}
+	else
+	{
+		float df = m_offset / m_nslices;
+		fmin += df;
+		fmax -= df;
+		for (int i = 0; i < m_nslices; ++i)
+		{
+			float f = (float)i / (float)(m_nslices - 1);
+			float ref = fmin + f*(fmax - fmin);
+			RenderSlice(ref);
+		}
 	}
 	glDisable(GL_TEXTURE_1D);
 	glPopAttrib();
