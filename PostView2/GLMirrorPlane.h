@@ -18,6 +18,7 @@ public:
 	int		m_plane;
 	float	m_transparency;
 	bool	m_showPlane;
+	float	m_offset;
 
 private:
 	vec3f	m_norm;

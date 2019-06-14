@@ -10,6 +10,7 @@ public:
 		addProperty("Mirror Plane", CProperty::Enum)->setEnumValues(QStringList() << "X" << "Y" << "Z");
 		addProperty("Show plane", CProperty::Bool);
 		addProperty("Transparency", CProperty::Float)->setFloatRange(0.0, 1.0);
+		addProperty("Offset", CProperty::Float);
 	}
 
 	QVariant GetPropertyValue(int i)
@@ -19,6 +20,7 @@ public:
 		case 0: return m_mirrorPlane->m_plane; break;
 		case 1: return m_mirrorPlane->m_showPlane; break;
 		case 2: return m_mirrorPlane->m_transparency; break;
+		case 3: return m_mirrorPlane->m_offset; break;
 		}
 		return QVariant();
 	}
@@ -30,6 +32,7 @@ public:
 		case 0: m_mirrorPlane->m_plane = v.toInt(); break;
 		case 1: m_mirrorPlane->m_showPlane = v.toBool(); break;
 		case 2: m_mirrorPlane->m_transparency = v.toFloat(); break;
+		case 3: m_mirrorPlane->m_offset = v.toFloat(); break;
 		}
 	}
 
@@ -47,6 +50,7 @@ CGLMirrorPlane::CGLMirrorPlane(CGLModel* fem) : CGLPlot(fem)
 	m_plane = 0;
 	m_showPlane = true;
 	m_transparency = 0.25f;
+	m_offset = 0.f;
 }
 
 CPropertyList* CGLMirrorPlane::propertyList()
@@ -70,6 +74,7 @@ void CGLMirrorPlane::Render(CGLContext& rc)
 
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
+	glTranslatef(-m_offset*m_norm.x, -m_offset*m_norm.y, -m_offset*m_norm.z);
 	glScalef(scl.x, scl.y, scl.z);
 
 	glFrontFace(GL_CW);
@@ -101,6 +106,7 @@ void CGLMirrorPlane::RenderPlane()
 	glPushMatrix();
 
 	glTranslatef(rc.x, rc.y, rc.z);
+	glTranslatef(-0.5f*m_offset*m_norm.x, -0.5f*m_offset*m_norm.y, -0.5f*m_offset*m_norm.z);
 
 	quat4f q = quat4f(vec3f(0, 0, 1), m_norm);
 	float w = q.GetAngle();
