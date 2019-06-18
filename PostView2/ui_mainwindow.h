@@ -692,23 +692,58 @@ public:
 		updateFileList(menuRecentSessions, recentSessionActionGroup, recentSessions);
 	}
 
-	void addToFileList(QStringList& fileList, const QString& file, QMenu* menu, QActionGroup* action)
+	void addToFileList(QStringList& dstList, const QString& file, QMenu* menu, QActionGroup* actionGroup)
 	{
-		// see if the file already exists or not
-		if (fileList.contains(file)) return;
+		QString fileName = file;
 
-		// add a new file item
-		fileList.append(file);
-		QAction* pa = menu->addAction(file);
-		action->addAction(pa);
+#ifdef WIN32
+		// on windows, make sure that allfile names use backslashes
+		fileName.replace('/', '\\');
+#endif
 
-		int N = fileList.count();
-		if (N > MAX_RECENT_FILES)
+		QList<QAction*> actionList = menu->actions();
+		if (actionList.isEmpty())
 		{
-			// remove the first one
-			fileList.removeAt(0);
-			QAction* pa = menu->actions().first();
-			menu->removeAction(pa);
+			dstList.append(fileName);
+			QAction* action = menu->addAction(fileName);
+			actionGroup->addAction(action);
+		}
+		else
+		{
+			// we need the first action so that we can insert before it
+			QAction* firstAction = actionList.at(0);
+
+			// see if the file already exists or not
+			int n = dstList.indexOf(fileName);
+			if (n >= 0)
+			{
+				// if the file exists, we move it to the top
+				if (n != 0)
+				{
+					QAction* action = actionList.at(n);
+					menu->removeAction(action);
+					menu->insertAction(firstAction, action);
+
+					dstList.removeAt(n);
+					dstList.push_front(fileName);
+				}
+			}
+			else
+			{
+				int N = dstList.count();
+				if (N >= MAX_RECENT_FILES)
+				{
+					// remove the last one
+					dstList.removeLast();
+					menu->removeAction(actionList.last());
+				}
+
+				// add a new file item
+				dstList.push_front(fileName);
+				QAction* pa = new QAction(fileName);
+				menu->insertAction(firstAction, pa);
+				actionGroup->addAction(pa);
+			}
 		}
 	}
 

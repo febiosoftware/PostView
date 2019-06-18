@@ -3506,8 +3506,9 @@ void CGLModel::UpdateInternalSurfaces(bool eval)
 
 						if ((badd == false) && (el.m_MatID != pen->m_MatID))
 						{
-							float f2 = m_ps->GetMaterial(pen->m_MatID)->transparency;
-							if (f1 > f2) badd = true;
+							FEMaterial* pm2 = m_ps->GetMaterial(pen->m_MatID);
+							float f2 = pm2->transparency;
+							if ((f1 > f2) || (pm2->m_nrender == RENDER_MODE_WIRE)) badd = true;
 						}
 
 						if (badd)
