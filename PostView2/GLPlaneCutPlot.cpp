@@ -378,6 +378,7 @@ void CGLPlaneCutPlot::RenderMesh()
 			case FE_PENTA6 : nt = PEN_NT; break;
             case FE_PENTA15: nt = PEN_NT; break;
             case FE_TET4   : nt = TET_NT; break;
+            case FE_TET5   : nt = TET_NT; break;
 			case FE_TET10  : nt = TET_NT; break;
 			case FE_TET15  : nt = TET_NT; break;
 			case FE_TET20  : nt = TET_NT; break;
@@ -586,6 +587,7 @@ void CGLPlaneCutPlot::UpdateSlice()
 							case FE_PENTA6 : nt = PEN_NT; break;
                             case FE_PENTA15: nt = PEN_NT; break;
                             case FE_TET4   : nt = TET_NT; break;
+                            case FE_TET5   : nt = TET_NT; break;
 							case FE_TET10  : nt = TET_NT; break;
 							case FE_TET15  : nt = TET_NT; break;
 							case FE_TET20  : nt = TET_NT; break;
@@ -754,6 +756,7 @@ float CGLPlaneCutPlot::Integrate(FEState* ps)
 			case FE_PENTA6 : nt = PEN_NT; break;
             case FE_PENTA15: nt = PEN_NT; break;
             case FE_TET4   : nt = TET_NT; break;
+            case FE_TET5   : nt = TET_NT; break;
 			case FE_TET10  : nt = TET_NT; break;
 			case FE_TET15  : nt = TET_NT; break;
 			case FE_TET20  : nt = TET_NT; break;

@@ -69,6 +69,7 @@ void VectorMap::Gradient(int ntime, std::vector<float> &v)
 				}
 				break;
 			case FE_TET4:
+			case FE_TET5:
 			case FE_TET10:
 			case FE_TET15:
 			case FE_TET20:

@@ -142,6 +142,7 @@ void FEElementLibrary::InitLibrary()
 	addElement(FE_HEX20  , ELEM_HEX  , ELEM_SOLID, 20, 6, 0);
 	addElement(FE_HEX27  , ELEM_HEX  , ELEM_SOLID, 27, 6, 0);
 	addElement(FE_PYRA5  , ELEM_PYRA , ELEM_SOLID,  5, 5, 0);
+	addElement(FE_TET5   , ELEM_TET  , ELEM_SOLID,  5, 4, 0);
 }
 
 const ElemTraits* FEElementLibrary::GetTraits(FEElemType type)
@@ -268,6 +269,7 @@ void FEElement::GetFace(int i, FEFace& f) const
 		break;
 
 	case FE_TET4:
+	case FE_TET5:
 		f.m_ntype = FACE_TRI3;
 		f.node[0] = m_node[FT_TET[i][0]];
 		f.node[1] = m_node[FT_TET[i][1]];
@@ -471,6 +473,7 @@ void FEElement::shape(double *H, double r, double s, double t)
 	switch (Type())
 	{
 	case FE_TET4   : TET4   ::shape(H, r, s, t); break;
+	case FE_TET5   : TET5   ::shape(H, r, s, t); break;
 	case FE_HEX8   : HEX8   ::shape(H, r, s, t); break;
 	case FE_PENTA6 : PENTA6 ::shape(H, r, s, t); break;
 	case FE_PYRA5  : PYRA5  ::shape(H, r, s, t); break;
@@ -521,6 +524,7 @@ void FEElement::shape_deriv(double* Hr, double* Hs, double* Ht, double r, double
 	switch (Type())
 	{
 	case FE_TET4   : TET4   ::shape_deriv(Hr, Hs, Ht, r, s, t); break;
+	case FE_TET5   : TET5   ::shape_deriv(Hr, Hs, Ht, r, s, t); break;
 	case FE_HEX8   : HEX8   ::shape_deriv(Hr, Hs, Ht, r, s, t); break;
 	case FE_PENTA6 : PENTA6 ::shape_deriv(Hr, Hs, Ht, r, s, t); break;
 	case FE_PYRA5  : PYRA5  ::shape_deriv(Hr, Hs, Ht, r, s, t); break;
@@ -544,6 +548,7 @@ void FEElement::iso_coord(int n, double q[3])
 	switch (Type())
 	{
 	case FE_TET4   : TET4   ::iso_coord(n, q); break;
+	case FE_TET5   : TET5   ::iso_coord(n, q); break;
 	case FE_HEX8   : HEX8   ::iso_coord(n, q); break;
 	case FE_PENTA6 : PENTA6 ::iso_coord(n, q); break;
 	case FE_PYRA5  : PYRA5  ::iso_coord(n, q); break;

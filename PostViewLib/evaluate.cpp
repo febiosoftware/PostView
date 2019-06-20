@@ -438,7 +438,8 @@ void FEModel::EvalElemField(int ntime, int nfield)
 			switch (mesh->Element(f.m_elem[0]).Type())
 			{
 			case FE_TET4:
-				{
+			case FE_TET5:
+			{
 					const int* fn = FT_TET[f.m_elem[1]];
 					fd.value(i, 0) = elemData.value(f.m_elem[0], fn[0]);
 					fd.value(i, 1) = elemData.value(f.m_elem[0], fn[1]);
@@ -1280,7 +1281,8 @@ bool FEModel::EvaluateFace(int n, int ntime, int nfield, float* data, float& val
 		switch (mesh->Element(f.m_elem[0]).Type())
 		{
 		case FE_TET4:
-			{
+		case FE_TET5:
+		{
 				const int* fn = FT_TET[f.m_elem[1]];
 				data[0] = edata[fn[0]];
 				data[1] = edata[fn[1]];

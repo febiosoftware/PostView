@@ -237,6 +237,7 @@ double CIntegrateWindow::IntegrateElems(FEMeshBase& mesh, FEState* ps)
 				v[0] = v[0]; r[0] = r[0];
 				break;
 			case FE_TET4:
+			case FE_TET5:
 				v[7] = v[3]; r[7] = r[3];
 				v[6] = v[3]; r[6] = r[3];
 				v[5] = v[3]; r[5] = r[3];

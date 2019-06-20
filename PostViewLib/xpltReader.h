@@ -89,7 +89,7 @@ protected:
 	enum Elem_Type { 
 		PLT_ELEM_HEX8, 
 		PLT_ELEM_PENTA, 
-		PLT_ELEM_TET, 
+		PLT_ELEM_TET4, 
 		PLT_ELEM_QUAD, 
 		PLT_ELEM_TRI, 
 		PLT_ELEM_TRUSS, 
@@ -103,7 +103,8 @@ protected:
         PLT_ELEM_PENTA15,
         PLT_ELEM_TET20,
 		PLT_ELEM_TRI10,
-		PLT_ELEM_PYRA5
+		PLT_ELEM_PYRA5,
+		PLT_ELEM_TET5
 	};
 
 	// size of name variables

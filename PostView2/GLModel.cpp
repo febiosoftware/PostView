@@ -1881,6 +1881,7 @@ void CGLModel::RenderElementOutline(FEElement& el, FEMeshBase* pm)
             };
             break;
         case FE_TET4:
+		case FE_TET5:
 		case FE_TET20:
 			{
 				int (*et)[2] = ET_TET;

@@ -734,7 +734,8 @@ bool XpltReader::ReadDomainSection(FEModel &fem)
 					case PLT_ELEM_HEX8   : ne =  8; break;
 					case PLT_ELEM_PENTA  : ne =  6; break;
                     case PLT_ELEM_PENTA15: ne =  15; break;
-                    case PLT_ELEM_TET    : ne =  4; break;
+                    case PLT_ELEM_TET4   : ne =  4; break;
+                    case PLT_ELEM_TET5   : ne =  5; break;
 					case PLT_ELEM_QUAD   : ne =  4; break;
 					case PLT_ELEM_TRI    : ne =  3; break;
 					case PLT_ELEM_TRUSS  : ne =  2; break;
@@ -977,7 +978,7 @@ bool XpltReader::BuildMesh(FEModel &fem)
 		if ((domType != PLT_ELEM_TRUSS) && 
 			(domType != PLT_ELEM_TRI) && 
 			(domType != PLT_ELEM_QUAD) && 
-			(domType != PLT_ELEM_TET) && 
+			(domType != PLT_ELEM_TET4) && 
 			(domType != PLT_ELEM_PENTA) && 
 			(domType != PLT_ELEM_HEX8) &&
 			(domType != PLT_ELEM_PYRA5)) blinear = false;
@@ -985,7 +986,7 @@ bool XpltReader::BuildMesh(FEModel &fem)
 
 	FEMeshBase* pmesh = 0;
 
-	if (ntype == PLT_ELEM_TET)
+	if (ntype == PLT_ELEM_TET4)
 	{
 		pmesh = new FEMeshTet4;
 		pmesh->Create(NN, NE);
@@ -1049,7 +1050,7 @@ bool XpltReader::BuildMesh(FEModel &fem)
 					{
 					case PLT_ELEM_HEX8 : etype = FE_HEX8  ; break;
 					case PLT_ELEM_PENTA: etype = FE_PENTA6; break;
-					case PLT_ELEM_TET  : etype = FE_TET4  ; break;
+					case PLT_ELEM_TET4 : etype = FE_TET4  ; break;
 					case PLT_ELEM_QUAD : etype = FE_QUAD4 ; break;
 					case PLT_ELEM_TRI  : etype = FE_TRI3  ; break;
 					case PLT_ELEM_TRUSS: etype = FE_LINE2 ; break;
@@ -1087,7 +1088,8 @@ bool XpltReader::BuildMesh(FEModel &fem)
 					case PLT_ELEM_HEX8   : etype = FE_HEX8  ; break;
 					case PLT_ELEM_PENTA  : etype = FE_PENTA6; break;
                     case PLT_ELEM_PENTA15: etype = FE_PENTA15; break;
-                    case PLT_ELEM_TET    : etype = FE_TET4  ; break;
+                    case PLT_ELEM_TET4   : etype = FE_TET4  ; break;
+					case PLT_ELEM_TET5   : etype = FE_TET5; break;
 					case PLT_ELEM_QUAD   : etype = FE_QUAD4 ; break;
 					case PLT_ELEM_TRI    : etype = FE_TRI3  ; break;
 					case PLT_ELEM_TRUSS  : etype = FE_LINE2 ; break;
@@ -1475,7 +1477,8 @@ bool XpltReader::ReadElemData_NODE(FEMeshBase& m, XpltReader::Domain &d, FEMeshD
 	case PLT_ELEM_HEX8   : ne =  8; break;
 	case PLT_ELEM_PENTA  : ne =  6; break;
     case PLT_ELEM_PENTA15: ne =  15; break;
-    case PLT_ELEM_TET    : ne =  4; break;
+    case PLT_ELEM_TET4   : ne =  4; break;
+    case PLT_ELEM_TET5   : ne =  5; break;
 	case PLT_ELEM_QUAD   : ne =  4; break;
 	case PLT_ELEM_TRI    : ne =  3; break;
 	case PLT_ELEM_TRUSS  : ne =  2; break;
@@ -1682,7 +1685,8 @@ bool XpltReader::ReadElemData_MULT(XpltReader::Domain& dom, FEMeshData& s, int n
 	case PLT_ELEM_HEX8   : ne =  8; break;
 	case PLT_ELEM_PENTA  : ne =  6; break;
     case PLT_ELEM_PENTA15: ne =  15; break;
-    case PLT_ELEM_TET    : ne =  4; break;
+    case PLT_ELEM_TET4   : ne =  4; break;
+	case PLT_ELEM_TET5   : ne =  5; break;
 	case PLT_ELEM_QUAD   : ne =  4; break;
 	case PLT_ELEM_TRI    : ne =  3; break;
 	case PLT_ELEM_TRUSS  : ne =  2; break;

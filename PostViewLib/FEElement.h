@@ -35,7 +35,8 @@ enum FEElemType {
     FE_HEX8,
 	FE_HEX20,
 	FE_HEX27,
-	FE_PYRA5
+	FE_PYRA5,
+	FE_TET5
 };
 
 //-----------------------------------------------------------------------------
@@ -162,6 +163,7 @@ template <> class FEElementTraits<FE_HEX8   >{ public: enum {Nodes =  8}; enum {
 template <> class FEElementTraits<FE_HEX20  >{ public: enum {Nodes = 20}; enum {Faces = 6}; enum {Edges = 0}; static FEElemType Type() { return FE_HEX20 ; }};
 template <> class FEElementTraits<FE_HEX27  >{ public: enum {Nodes = 27}; enum {Faces = 6}; enum {Edges = 0}; static FEElemType Type() { return FE_HEX27 ; }};
 template <> class FEElementTraits<FE_PYRA5  >{ public: enum {Nodes =  5}; enum {Faces = 5}; enum {Edges = 0}; static FEElemType Type() { return FE_PYRA5 ; }};
+template <> class FEElementTraits<FE_TET5   >{ public: enum {Nodes =  5}; enum {Faces = 4}; enum {Edges = 0}; static FEElemType Type() { return FE_TET5  ; }};
 
 template <class T> class FEElementBase : public FEElement
 {
@@ -206,6 +208,7 @@ typedef FEElementBase< FEElementTraits<FE_HEX8   > > FEHex8;
 typedef FEElementBase< FEElementTraits<FE_HEX20  > > FEHex20;
 typedef FEElementBase< FEElementTraits<FE_HEX27  > > FEHex27;
 typedef FEElementBase< FEElementTraits<FE_PYRA5  > > FEPyra5;
+typedef FEElementBase< FEElementTraits<FE_TET5   > > FETet5;
 
 //-----------------------------------------------------------------------------
 // Generice element class that can represent any of the supported element classes

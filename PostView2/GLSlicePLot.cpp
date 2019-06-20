@@ -223,6 +223,7 @@ void CGLSlicePlot::RenderSlice(float ref)
 			case FE_PENTA6 : nt = PEN_NT; break;
             case FE_PENTA15: nt = PEN_NT; break;
             case FE_TET4   : nt = TET_NT; break;
+            case FE_TET5   : nt = TET_NT; break;
 			default:
 				assert(false);
 				return;
