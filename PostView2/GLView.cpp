@@ -2767,12 +2767,14 @@ void CGLView::RenderDoc()
 			{
 				glColor3ub(255, 128, 128);
 				BOUNDINGBOX& box = img->GetBoundingBox();
-				RenderBox(box);
+				if (img->ShowBox()) RenderBox(box);
 				for (int j = 0; j < img->ImageRenderers(); ++j)
 				{
 					CGLImageRenderer* pir = img->GetImageRenderer(j);
 					if (pir && pir->IsActive())
 					{
+						if (pir->AllowClipping()) CGLPlaneCutPlot::EnableClipPlanes();
+						else CGLPlaneCutPlot::DisableClipPlanes();
 						pir->Render(rc);
 					}
 				}

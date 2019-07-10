@@ -396,6 +396,7 @@ public:
 	{
 		m_img = img;
 
+		addProperty("show box", CProperty::Bool);
 		addProperty("x-min", CProperty::Float);
 		addProperty("y-min", CProperty::Float);
 		addProperty("z-min", CProperty::Float);
@@ -409,12 +410,13 @@ public:
 		BOUNDINGBOX box = m_img->GetBoundingBox();
 		switch (i)
 		{
-		case 0: return box.x0; break;
-		case 1: return box.y0; break;
-		case 2: return box.z0; break;
-		case 3: return box.x1; break;
-		case 4: return box.y1; break;
-		case 5: return box.z1; break;
+		case 0: return m_img->ShowBox(); break;
+		case 1: return box.x0; break;
+		case 2: return box.y0; break;
+		case 3: return box.z0; break;
+		case 4: return box.x1; break;
+		case 5: return box.y1; break;
+		case 6: return box.z1; break;
 		}
 		return QVariant();
 	}
@@ -424,12 +426,13 @@ public:
 		BOUNDINGBOX& box = m_img->GetBoundingBox();
 		switch (i)
 		{
-		case 0: box.x0 = val.toFloat(); break;
-		case 1: box.y0 = val.toFloat(); break;
-		case 2: box.z0 = val.toFloat(); break;
-		case 3: box.x1 = val.toFloat(); break;
-		case 4: box.y1 = val.toFloat(); break;
-		case 5: box.z1 = val.toFloat(); break;
+		case 0: m_img->ShowBox(val.toBool()); break;
+		case 1: box.x0 = val.toFloat(); break;
+		case 2: box.y0 = val.toFloat(); break;
+		case 3: box.z0 = val.toFloat(); break;
+		case 4: box.x1 = val.toFloat(); break;
+		case 5: box.y1 = val.toFloat(); break;
+		case 6: box.z1 = val.toFloat(); break;
 		}
 	}
 
@@ -460,10 +463,11 @@ public:
 		addProperty("Amin", CProperty::Int)->setIntRange(0, 255);
 		addProperty("Amax", CProperty::Int)->setIntRange(0, 255);
 		addProperty("Color map", CProperty::Enum)->setEnumValues(cols);
-		addProperty("Ambient color", CProperty::Color);
 		addProperty("Lighting effect", CProperty::Bool);
 		addProperty("Lighting strength", CProperty::Float);
-//		addProperty("Light direction", CProperty::DataVec3);
+		addProperty("Ambient color", CProperty::Color);
+		addProperty("Specular color", CProperty::Color);
+		//		addProperty("Light direction", CProperty::DataVec3);
 	}
 
 	QVariant GetPropertyValue(int i)
@@ -478,9 +482,10 @@ public:
 		case  5: return m_vr->m_Amin; break;
 		case  6: return m_vr->m_Amax; break;
 		case  7: return m_vr->GetColorMap(); break;
-		case  8: return toQColor(m_vr->m_amb); break;
-		case  9: return m_vr->m_blight; break;
-		case 10: return m_vr->m_shadeStrength; break;
+		case  8: return m_vr->m_blight; break;
+		case  9: return m_vr->m_shadeStrength; break;
+		case 10: return toQColor(m_vr->m_amb); break;
+		case 11: return toQColor(m_vr->m_spc); break;
 //		case 10: return m_vr->GetLightPosition(); break;
 		}
 		return QVariant();
@@ -498,9 +503,10 @@ public:
 		case  5: m_vr->m_Amin = val.toInt(); break;
 		case  6: m_vr->m_Amax = val.toInt(); break;
 		case  7: m_vr->SetColorMap(val.value<int>()); break;
-		case  8: m_vr->m_amb  = toGLColor(val.value<QColor>()); break;
-		case  9: m_vr->m_blight = val.toBool(); break;
-		case 10: m_vr->m_shadeStrength = val.toFloat(); break;
+		case  8: m_vr->m_blight = val.toBool(); break;
+		case  9: m_vr->m_shadeStrength = val.toFloat(); break;
+		case 10: m_vr->m_amb = toGLColor(val.value<QColor>()); break;
+		case 11: m_vr->m_spc = toGLColor(val.value<QColor>()); break;
 //		case 10: break;
 		}
 
@@ -573,6 +579,7 @@ public:
 		addProperty("surface color", CProperty::Color);
 		addProperty("close surface", CProperty::Bool);
 		addProperty("invert space", CProperty::Bool);
+		addProperty("allow clipping", CProperty::Bool);
 	}
 
 	QVariant GetPropertyValue(int i)
@@ -584,6 +591,7 @@ public:
 		case 2: return toQColor(m_mc->GetColor()); break;
 		case 3: return m_mc->GetCloseSurface(); break;
 		case 4: return m_mc->GetInvertSpace(); break;
+		case 5: return m_mc->AllowClipping(); break;
 		}
 		return QVariant();
 	}
@@ -597,6 +605,7 @@ public:
 		case 2: m_mc->SetColor(toGLColor(val.value<QColor>())); break;
 		case 3: m_mc->SetCloseSurface(val.toBool()); break;
 		case 4: m_mc->SetInvertSpace(val.toBool()); break;
+		case 5: m_mc->AllowClipping(val.toBool()); break;
 		}
 	}
 

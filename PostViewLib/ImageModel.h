@@ -28,9 +28,14 @@ public:
 
 	BOUNDINGBOX& GetBoundingBox() { return m_box; }
 
+	bool ShowBox() const;
+
+	void ShowBox(bool b);
+
 private:
 	std::string		m_file;						//!< file name of image data
 	BOUNDINGBOX		m_box;						//!< physical dimensions of image
 	C3DImage*		m_pImg;						//!< 3D image
+	bool			m_showBox;					//!< show box in Graphics View
 	std::vector<CGLImageRenderer*>	m_render;	//!< image renderers
 };

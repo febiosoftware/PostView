@@ -37,6 +37,8 @@ CVolRender::CVolRender(CImageModel* img) : CGLImageRenderer(img)
 	m_bcalc_lighting = true;
 	m_light = vec3f(-1.f, -1.f, -1.f);
 
+	m_spc = GLCOLOR(255, 255, 255);
+
 	m_texID = 0;
 
 	Reset();
@@ -272,13 +274,12 @@ void CVolRender::DepthCueX(CRGBAImage& im, int n)
 	for (int j=0; j<ny; ++j)
 		for (int i=0; i<nx; ++i, p += 4)
 		{
-			byte a = m_att.value(n, i, j);
-
-			a = m_shadeStrength*a + (1.f - m_shadeStrength)*255;
-
-			p[0] = (byte) ((p[0]*a + m_amb.r*(255 - a))/255);
-			p[1] = (byte) ((p[1]*a + m_amb.g*(255 - a))/255);
-			p[2] = (byte) ((p[2]*a + m_amb.b*(255 - a))/255);
+			float a = m_att.value(n, i, j) / 255.f;
+			float w = m_shadeStrength*a + (1.f - m_shadeStrength);
+			float s = m_shadeStrength*a*a;
+			p[0] = (byte) (((p[0]*(1.f - s) + s*m_spc.r)*w + m_amb.r*(1.f - w)));
+			p[1] = (byte) (((p[1]*(1.f - s) + s*m_spc.g)*w + m_amb.g*(1.f - w)));
+			p[2] = (byte) (((p[2]*(1.f - s) + s*m_spc.r)*w + m_amb.b*(1.f - w)));
 		}
 }
 
@@ -294,11 +295,12 @@ void CVolRender::DepthCueY(CRGBAImage& im, int n)
 	for (int j=0; j<ny; ++j)
 		for (int i=0; i<nx; ++i, p += 4)
 		{
-			byte a = m_att.value(i, n, j);
-			a = m_shadeStrength*a + (1.f - m_shadeStrength) * 255;
-			p[0] = (byte) ((p[0]*a + m_amb.r*(255 - a))/255);
-			p[1] = (byte) ((p[1]*a + m_amb.g*(255 - a))/255);
-			p[2] = (byte) ((p[2]*a + m_amb.b*(255 - a))/255);
+			float a = m_att.value(i, n, j) / 255.f;
+			float w = m_shadeStrength*a + (1.f - m_shadeStrength);
+			float s = m_shadeStrength*a*a;
+			p[0] = (byte) (((p[0]*(1.f - s) + s*m_spc.r)*w + m_amb.r*(1.f - w)));
+			p[1] = (byte) (((p[1]*(1.f - s) + s*m_spc.g)*w + m_amb.g*(1.f - w)));
+			p[2] = (byte) (((p[2]*(1.f - s) + s*m_spc.r)*w + m_amb.b*(1.f - w)));
 		}
 }
 
@@ -314,11 +316,12 @@ void CVolRender::DepthCueZ(CRGBAImage& im, int n)
 	for (int j=0; j<ny; ++j)
 		for (int i=0; i<nx; ++i, p += 4)
 		{
-			byte a = m_att.value(i, j, n);
-			a = m_shadeStrength*a + (1.f - m_shadeStrength) * 255;
-			p[0] = (byte) ((p[0]*a + m_amb.r*(255 - a))/255);
-			p[1] = (byte) ((p[1]*a + m_amb.g*(255 - a))/255);
-			p[2] = (byte) ((p[2]*a + m_amb.b*(255 - a))/255);
+			float a = m_att.value(i, j, n) / 255.f;
+			float w = m_shadeStrength*a + (1.f - m_shadeStrength);
+			float s = m_shadeStrength*a*a;
+			p[0] = (byte) (((p[0]*(1.f - s) + s*m_spc.r)*w + m_amb.r*(1.f - w)));
+			p[1] = (byte) (((p[1]*(1.f - s) + s*m_spc.g)*w + m_amb.g*(1.f - w)));
+			p[2] = (byte) (((p[2]*(1.f - s) + s*m_spc.r)*w + m_amb.b*(1.f - w)));
 		}
 }
 

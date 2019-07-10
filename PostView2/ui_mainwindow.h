@@ -367,9 +367,9 @@ public:
 
 		// --- Record menu ---
 		QAction* actionRecordNew   = addAction("New ...", "actionRecordNew"  );
-		QAction* actionRecordStart = addAction("Start"  , "actionRecordStart");
-		QAction* actionRecordPause = addAction("Pause"  , "actionRecordPause");
-		QAction* actionRecordStop  = addAction("Stop"   , "actionRecordStop" );
+		QAction* actionRecordStart = addAction("Start"  , "actionRecordStart"); actionRecordStart->setShortcut(Qt::Key_F6);
+		QAction* actionRecordPause = addAction("Pause"  , "actionRecordPause"); actionRecordPause->setShortcut(Qt::Key_F7);
+		QAction* actionRecordStop  = addAction("Stop"   , "actionRecordStop" ); actionRecordStop->setShortcut(Qt::Key_F8);
 
 		actionRecordNew->setWhatsThis("<font color=\"black\">Click this to open a file dialog box and create a new animation file.");
 		actionRecordStart->setWhatsThis("<font color=\"black\">Click to start recording an animation. You must create an animation file first before you can start recording.");

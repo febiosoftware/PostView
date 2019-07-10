@@ -54,6 +54,7 @@ protected:
 public:
 	CColorTexture	m_Col;		//!< color texture
 	GLCOLOR	m_amb;				//!< ambient color
+	GLCOLOR m_spc;				//!< specular color
 	int		m_I0, m_I1;			// intensity range
 	int		m_A0, m_A1;			// transparency range
 	int		m_Amin, m_Amax;		// clamp transparency levels
