@@ -82,7 +82,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(QT512DIR)\include;$(QT512DIR)\include\QtGui;$(QT512DIR)\include\QtWidgets;$(SolutionDir)..;$(ZLIBDIR);$(GLEWDIR)\include\GL;$(FFMPEGDIR)\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(QT512DIR)\include;$(QT512DIR)\include\QtGui;$(QT512DIR)\include\QtWidgets;$(QT512DIR)\include\QtCharts;$(SolutionDir)..;$(ZLIBDIR);$(GLEWDIR)\include\GL;$(FFMPEGDIR)\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)x64\Release;$(QT512DIR)\lib;$(GLEWDIR)\lib\Release\x64;$(FFMPEGDIR)\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -111,7 +111,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;postviewlib.lib;glwlib.lib;glew32.lib;opengl32.lib;glu32.lib;$(ZLIBDIR)\contrib\vstudio\vc14\Debug\zlibstaticd.lib;vfw32.lib;avcodec.lib;avutil.lib;swscale.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;Qt5Chartsd.lib;postviewlib.lib;glwlib.lib;glew32.lib;opengl32.lib;glu32.lib;$(ZLIBDIR)\contrib\vstudio\vc14\Debug\zlibstaticd.lib;vfw32.lib;avcodec.lib;avutil.lib;swscale.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -147,7 +147,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Qt5Core.lib;Qt5Gui.lib;Qt5Widgets.lib;postviewlib.lib;glwlib.lib;glew32.lib;opengl32.lib;glu32.lib;$(ZLIBDIR)\contrib\vstudio\vc14\Release\zlibstatic.lib;vfw32.lib;avcodec.lib;avutil.lib;swscale.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qt5Core.lib;Qt5Gui.lib;Qt5Widgets.lib;Qt5Charts.lib;postviewlib.lib;glwlib.lib;glew32.lib;opengl32.lib;glu32.lib;$(ZLIBDIR)\contrib\vstudio\vc14\Release\zlibstatic.lib;vfw32.lib;avcodec.lib;avutil.lib;swscale.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
@@ -262,6 +262,7 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </CustomBuild>
+    <ClInclude Include="..\..\PostView2\Histogram.h" />
     <ClInclude Include="..\..\PostView2\ImgAnimation.h" />
     <CustomBuild Include="..\..\PostView2\ImportLinesTool.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QT512DIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
@@ -426,6 +427,7 @@
     <ClCompile Include="..\..\PostView2\GLVectorPlot.cpp" />
     <ClCompile Include="..\..\PostView2\GLView.cpp" />
     <ClCompile Include="..\..\PostView2\GraphWindow.cpp" />
+    <ClCompile Include="..\..\PostView2\Histogram.cpp" />
     <ClCompile Include="..\..\PostView2\ImageViewer.cpp" />
     <ClCompile Include="..\..\PostView2\ImgAnimation.cpp" />
     <ClCompile Include="..\..\PostView2\ImportLinesTool.cpp" />

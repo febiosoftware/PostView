@@ -31,6 +31,7 @@
 #include <PostViewLib/MarchingCubes.h>
 #include "GLMirrorPlane.h"
 #include "ImageViewer.h"
+#include "Histogram.h"
 
 //-----------------------------------------------------------------------------
 class CModelProps : public CPropertyList
@@ -639,6 +640,8 @@ public:
 
 	CImageViewer*	m_imgView;
 
+	CHistogramViewer* m_histo;
+
 	QTabWidget*	m_tab;
 
 
@@ -703,7 +706,10 @@ public:
 		m_imgView = new CImageViewer;
 //		m_tab->addTab(m_imgView, "Image Viewer");
 
+		m_histo = new CHistogramViewer;
+
 		m_imgView->hide();
+		m_histo->hide();
 
 		pvl->addWidget(m_tab);
 		w->setLayout(pvl);
@@ -729,17 +735,21 @@ public:
 		if (m_tab->count() == 1)
 		{
 			m_tab->addTab(m_imgView, "Image Viewer");
+			m_tab->addTab(m_histo, "Histogram");
 		}
 		m_imgView->SetImageModel(img);
+		m_histo->SetImageModel(img);
 	}
 
 	void HideImageViewer()
 	{
-		if (m_tab->count() == 2)
+		if (m_tab->count() != 1)
 		{
+			m_tab->removeTab(2);
 			m_tab->removeTab(1);
 		}
 		m_imgView->SetImageModel(nullptr);
+		m_histo->SetImageModel(nullptr);
 	}
 };
 

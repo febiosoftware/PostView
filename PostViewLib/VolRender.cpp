@@ -84,7 +84,8 @@ void CVolRender::Clear()
 // Create new data for volume renderer
 void CVolRender::Create()
 {
-	C3DImage& im3d = *GetImageModel()->Get3DImage();
+	CImageModel& img = *GetImageModel();
+	C3DImage& im3d = *img.Get3DImage();
 
 	// get the original image dimensions
 	int w = im3d.Width();
@@ -141,13 +142,17 @@ void CVolRender::Create()
 	}
 
 	// calculate alpha scale factors
-	int nd = m_nx;
-	if (m_ny > nd) nd = m_ny;
-	if (m_nz > nd) nd = m_nz;
-
-	m_ax = (double) nd / (double) m_nx;
-	m_ay = (double) nd / (double) m_ny;
-	m_az = (double) nd / (double) m_nz;
+/*	BOUNDINGBOX b = img.GetBoundingBox();
+	float fx = b.Width() / m_nx;
+	float fy = b.Height() / m_ny;
+	float fz = b.Depth() / m_nz;
+	float f = fx;
+	if (fy > f) f = fy;
+	if (fz > f) f = fz;
+*/
+	m_ax = 1.0;// f / fx;// (double)nd / (double)m_nx;
+	m_ay = 1.0;// f / fy;// (double)nd / (double)m_ny;
+	m_az = 1.0;// f / fz;// (double)nd / (double)m_nz;
 
 	// update image data
 	Update();
