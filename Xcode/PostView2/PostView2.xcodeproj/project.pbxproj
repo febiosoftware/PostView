@@ -63,6 +63,8 @@
 		D5E0E6A71E72390D006FE591 /* moc_DataFieldSelector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5E0E6A61E72390D006FE591 /* moc_DataFieldSelector.cpp */; };
 		D5EB78DF229704860063769C /* ImageViewer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5EB78DC229704860063769C /* ImageViewer.cpp */; };
 		D5EB78E0229704860063769C /* moc_ImageViewer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5EB78DD229704860063769C /* moc_ImageViewer.cpp */; };
+		D5EEDE1222D7E37000A849BC /* Histogram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5EEDE1022D7E37000A849BC /* Histogram.cpp */; };
+		D5EEDE1422D7E3D200A849BC /* QtCharts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5EEDE1322D7E3D200A849BC /* QtCharts.framework */; };
 		D5F8C897226FBD54008597AF /* DocManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5F8C894226FBD54008597AF /* DocManager.cpp */; };
 		D5F8C898226FBD54008597AF /* ViewSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5F8C896226FBD54008597AF /* ViewSettings.cpp */; };
 		D5FAC5C821792BC8005E4684 /* StrainMapTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FAC5C721792BC8005E4684 /* StrainMapTool.cpp */; };
@@ -247,6 +249,9 @@
 		D5EB78DC229704860063769C /* ImageViewer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImageViewer.cpp; sourceTree = "<group>"; };
 		D5EB78DD229704860063769C /* moc_ImageViewer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_ImageViewer.cpp; sourceTree = "<group>"; };
 		D5EB78DE229704860063769C /* ImageViewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageViewer.h; sourceTree = "<group>"; };
+		D5EEDE1022D7E37000A849BC /* Histogram.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Histogram.cpp; sourceTree = "<group>"; };
+		D5EEDE1122D7E37000A849BC /* Histogram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Histogram.h; sourceTree = "<group>"; };
+		D5EEDE1322D7E3D200A849BC /* QtCharts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCharts.framework; path = ../../../../../../../../../../usr/local/Cellar/qt/5.12.0/lib/QtCharts.framework; sourceTree = "<group>"; };
 		D5F8C893226FBD53008597AF /* ViewSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewSettings.h; sourceTree = "<group>"; };
 		D5F8C894226FBD54008597AF /* DocManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DocManager.cpp; sourceTree = "<group>"; };
 		D5F8C895226FBD54008597AF /* DocManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocManager.h; sourceTree = "<group>"; };
@@ -419,6 +424,7 @@
 				D52F508E218C9C370094F7D1 /* libiconv.2.dylib in Frameworks */,
 				D52C6FB51D75DCE900DF804B /* libPostViewLib.a in Frameworks */,
 				D5E08BA320A5E5BE00275FAB /* libGLWLib.a in Frameworks */,
+				D5EEDE1422D7E3D200A849BC /* QtCharts.framework in Frameworks */,
 				D5B805C2223BEF5C00198805 /* QtGui.framework in Frameworks */,
 				D5B805C3223BEF5C00198805 /* QtWidgets.framework in Frameworks */,
 				D5B805C4223BEF5C00198805 /* QtCore.framework in Frameworks */,
@@ -562,6 +568,8 @@
 				D5FF79E91D72756B003D2CBD /* GLView.h */,
 				D5FF79EE1D72756B003D2CBD /* GraphWindow.cpp */,
 				D5FF79EF1D72756B003D2CBD /* GraphWindow.h */,
+				D5EEDE1022D7E37000A849BC /* Histogram.cpp */,
+				D5EEDE1122D7E37000A849BC /* Histogram.h */,
 				D5EB78DC229704860063769C /* ImageViewer.cpp */,
 				D5EB78DE229704860063769C /* ImageViewer.h */,
 				D511143E1ECC973100B8849F /* ImgAnimation.cpp */,
@@ -675,6 +683,7 @@
 		D5FF7AA61D727B52003D2CBD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D5EEDE1322D7E3D200A849BC /* QtCharts.framework */,
 				D52F5108218D0B280094F7D1 /* libx265.165.dylib */,
 				D52F50FE218D07EF0094F7D1 /* libmp3lame.0.dylib */,
 				D52F50FA218D07AD0094F7D1 /* libxvidcore.4.dylib */,
@@ -858,6 +867,7 @@
 				D518E6851F8436970028AA8F /* CIntInput.cpp in Sources */,
 				D5FF7A631D72756B003D2CBD /* IntegrateWindow.cpp in Sources */,
 				D5FF7A931D72756B003D2CBD /* stdafx.cpp in Sources */,
+				D5EEDE1222D7E37000A849BC /* Histogram.cpp in Sources */,
 				D5FF7A591D72756B003D2CBD /* GLPlane.cpp in Sources */,
 				D5FF7A901D72756B003D2CBD /* SphereFitTool.cpp in Sources */,
 				D5FF7A511D72756B003D2CBD /* FEKinemat.cpp in Sources */,
@@ -1099,6 +1109,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/usr/local/opt/qt/Frameworks,
+					/usr/local/Cellar/qt/5.12.0/lib,
 				);
 				HEADER_SEARCH_PATHS = (
 					/usr/local/opt/qt/include/QtWidgets,
@@ -1134,6 +1145,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/usr/local/opt/qt/Frameworks,
+					/usr/local/Cellar/qt/5.12.0/lib,
 				);
 				HEADER_SEARCH_PATHS = (
 					/usr/local/opt/qt/include/QtWidgets,
