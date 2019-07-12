@@ -143,11 +143,15 @@ void GLTensorPlot::Update(int ntime, float dt, bool breset)
 	if (m_map.States() == 0)
 	{
 		int NS = pfem->GetStates();
+
+		// pick the max of nodes and elements
 		int NN = pm->Nodes();
+		int NE = pm->Elements();
+		int NM = (NN > NE ? NN : NE);
 
 		TENSOR dummy;
-		m_map.Create(NS, NN, dummy, -1);
-		m_val.resize(NN);
+		m_map.Create(NS, NM, dummy, -1);
+		m_val.resize(NM);
 	}
 
 	// check the tag
@@ -162,18 +166,20 @@ void GLTensorPlot::Update(int ntime, float dt, bool breset)
 		vector<TENSOR>& val = m_map.State(ntime);
 
 		TENSOR t;
-		for (int i = 0; i<pm->Nodes(); ++i)
+		if (IS_ELEM_FIELD(m_ntensor))
 		{
-			switch (m_nmethod)
+			for (int i = 0; i < pm->Elements(); ++i)
 			{
-			case VEC_EIGEN:
+				switch (m_nmethod)
 				{
-					mat3f m = pfem->EvaluateNodeTensor(i, ntime, m_ntensor, DATA_MAT3FS);
+				case VEC_EIGEN:
+				{
+					mat3f m = pfem->EvaluateElemTensor(i, ntime, m_ntensor, DATA_MAT3FS);
 
 					mat3fs s = m.sym();
 					s.eigen(t.r, t.l);
 
-					vec3f n = t.r[0]^t.r[1];
+					vec3f n = t.r[0] ^ t.r[1];
 					if (n*t.r[2] < 0.f)
 					{
 						t.r[2] = -t.r[2];
@@ -184,7 +190,66 @@ void GLTensorPlot::Update(int ntime, float dt, bool breset)
 					val[i] = t;
 				}
 				break;
-			case VEC_COLUMN:
+				case VEC_COLUMN:
+				{
+					mat3f m = pfem->EvaluateElemTensor(i, ntime, m_ntensor);
+					t.r[0] = m.col(0);
+					t.r[1] = m.col(1);
+					t.r[2] = m.col(2);
+
+					t.l[0] = t.r[0].Length();
+					t.l[1] = t.r[1].Length();
+					t.l[2] = t.r[2].Length();
+
+					t.f = 0.f;
+
+					val[i] = t;
+				}
+				break;
+				case VEC_ROW:
+				{
+					mat3f m = pfem->EvaluateElemTensor(i, ntime, m_ntensor);
+					t.r[0] = m.row(0);
+					t.r[1] = m.row(1);
+					t.r[2] = m.row(2);
+
+					t.l[0] = t.r[0].Length();
+					t.l[1] = t.r[1].Length();
+					t.l[2] = t.r[2].Length();
+
+					t.f = 0.f;
+
+					val[i] = t;
+				}
+				break;
+				}
+			}
+		}
+		else
+		{
+			for (int i = 0; i < pm->Nodes(); ++i)
+			{
+				switch (m_nmethod)
+				{
+				case VEC_EIGEN:
+				{
+					mat3f m = pfem->EvaluateNodeTensor(i, ntime, m_ntensor, DATA_MAT3FS);
+
+					mat3fs s = m.sym();
+					s.eigen(t.r, t.l);
+
+					vec3f n = t.r[0] ^ t.r[1];
+					if (n*t.r[2] < 0.f)
+					{
+						t.r[2] = -t.r[2];
+						t.l[2] = -t.l[2];
+					}
+					t.f = s.von_mises();
+
+					val[i] = t;
+				}
+				break;
+				case VEC_COLUMN:
 				{
 					mat3f m = pfem->EvaluateNodeTensor(i, ntime, m_ntensor);
 					t.r[0] = m.col(0);
@@ -200,7 +265,7 @@ void GLTensorPlot::Update(int ntime, float dt, bool breset)
 					val[i] = t;
 				}
 				break;
-			case VEC_ROW:
+				case VEC_ROW:
 				{
 					mat3f m = pfem->EvaluateNodeTensor(i, ntime, m_ntensor);
 					t.r[0] = m.row(0);
@@ -216,6 +281,7 @@ void GLTensorPlot::Update(int ntime, float dt, bool breset)
 					val[i] = t;
 				}
 				break;
+				}
 			}
 		}
 	}
@@ -230,9 +296,11 @@ void GLTensorPlot::Render(CGLContext& rc)
 {
 	if (m_ntensor == 0) return;
 
-	GLfloat ambient[] = { 0.1f, 0.1f, 0.1f, 1.f };
-	GLfloat specular[] = { 0.0f, 0.0f, 0.0f, 1 };
-	GLfloat emission[] = { 0, 0, 0, 1 };
+	GLfloat ambient[] = { 0.1f,0.1f,0.1f,1.f };
+	GLfloat specular[] = { 0.0f,0.0f,0.0f,1 };
+	GLfloat emission[] = { 0,0,0,1 };
+
+	glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
 
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
@@ -240,13 +308,11 @@ void GLTensorPlot::Render(CGLContext& rc)
 	//	glMateriali(GL_FRONT_AND_BACK, GL_SHININESS, 32);
 
 	// store attributes
-	glPushAttrib(GL_LIGHTING_BIT | GL_ENABLE_BIT);
-	glEnable(GL_NORMALIZE);
+	glPushAttrib(GL_LIGHTING_BIT);
 
 	// create the cylinder object
-	//	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHTING);
 	GLUquadricObj* pglyph = gluNewQuadric();
-
 	gluQuadricNormals(pglyph, GLU_SMOOTH);
 
 	CGLModel* mdl = GetModel();
@@ -259,94 +325,169 @@ void GLTensorPlot::Render(CGLContext& rc)
 
 	float scale = 0.02f*m_scale*pfem->GetBoundingBox().Radius();
 
-	glEnable(GL_COLOR_MATERIAL);
-
-	GLfloat dif[] = { 1.f, 1.f, 1.f, 1.f };
-
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, dif);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, dif);
-
-	pm->SetNodeTags(0);
-	for (int i = 0; i<pm->Elements(); ++i)
+	if (m_nglyph == Glyph_Line) glDisable(GL_LIGHTING);
+	else
 	{
-		FEElement& e = pm->Element(i);
-		FEMaterial* mat = ps->GetMaterial(e.m_MatID);
-		if (mat->benable && (m_bshowHidden || mat->visible()))
-		{
-			int n = e.Nodes();
-			for (int j = 0; j<n; ++j) pm->Node(e.m_node[j]).m_ntag = 1;
-		}
+		glEnable(GL_LIGHTING);
+		glEnable(GL_COLOR_MATERIAL);
+
+		GLfloat dif[] = { 1.f, 1.f, 1.f, 1.f };
+
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, dif);
+		glLightfv(GL_LIGHT0, GL_AMBIENT, dif);
 	}
 
-	if (m_bshowHidden == false)
+	if (IS_ELEM_FIELD(m_ntensor))
 	{
-		// make sure no vector is drawn for hidden nodes
-		for (int i = 0; i<pm->Nodes(); ++i)
+		pm->SetElementTags(0);
+		for (int i = 0; i < pm->Elements(); ++i)
+		{
+			FEElement& e = pm->Element(i);
+			FEMaterial* mat = ps->GetMaterial(e.m_MatID);
+			if (mat->benable && (m_bshowHidden || mat->visible()))
+			{
+				e.m_ntag = 1;
+			}
+		}
+
+		if (m_bshowHidden == false)
+		{
+			// make sure no vector is drawn for hidden elements
+			for (int i = 0; i < pm->Elements(); ++i)
+			{
+				FEElement& elem = pm->Element(i);
+				if (elem.IsVisible() == false) elem.m_ntag = 0;
+			}
+		}
+
+		float auto_scale = 1.f;
+		if (m_bautoscale)
+		{
+			float Lmax = 0.f;
+			for (int i = 0; i < pm->Elements(); ++i)
+			{
+				for (int j = 0; j < 3; ++j)
+				{
+					float L = fabs(m_val[i].l[j]);
+					if (L > Lmax) Lmax = L;
+				}
+			}
+			if (Lmax == 0.f) Lmax = 1.f;
+			auto_scale = 1.f / Lmax;
+		}
+
+		CColorMap& map = ColorMapManager::GetColorMap(m_Col.GetColorMap());
+		float fmax = 1.f;
+		if (m_ncol == Glyph_Col_Norm)
+		{
+			fmax = 0.f;
+			for (int i = 0; i < pm->Elements(); ++i)
+			{
+				float f = m_val[i].f;
+				if (f > fmax) fmax = f;
+			}
+			if (fmax == 0.f) fmax = 1.f;
+		}
+
+		for (int i = 0; i < pm->Elements(); ++i)
+		{
+			FEElement& elem = pm->Element(i);
+			if ((frand() <= m_dens) && elem.m_ntag)
+			{
+				vec3f r = pm->ElementCenter(elem);
+
+				TENSOR& t = m_val[i];
+
+				if (m_ncol == Glyph_Col_Norm)
+				{
+					float w = t.f / fmax;
+					GLCOLOR c = map.map(w);
+					glColor3ub(c.r, c.g, c.b);
+				}
+
+				glTranslatef(r.x, r.y, r.z);
+				RenderGlyphs(t, scale*auto_scale, pglyph);
+				glTranslatef(-r.x, -r.y, -r.z);
+			}
+		}
+	}
+	else
+	{
+		pm->SetNodeTags(0);
+		for (int i = 0; i < pm->Elements(); ++i)
+		{
+			FEElement& e = pm->Element(i);
+			FEMaterial* mat = ps->GetMaterial(e.m_MatID);
+			if (mat->benable && (m_bshowHidden || mat->visible()))
+			{
+				int n = e.Nodes();
+				for (int j = 0; j < n; ++j) pm->Node(e.m_node[j]).m_ntag = 1;
+			}
+		}
+
+		if (m_bshowHidden == false)
+		{
+			// make sure no vector is drawn for hidden nodes
+			for (int i = 0; i < pm->Nodes(); ++i)
+			{
+				FENode& node = pm->Node(i);
+				if (node.IsVisible() == false) node.m_ntag = 0;
+			}
+		}
+
+		float auto_scale = 1.f;
+		if (m_bautoscale)
+		{
+			float Lmax = 0.f;
+			for (int i = 0; i < pm->Nodes(); ++i)
+			{
+				for (int j = 0; j < 3; ++j)
+				{
+					float L = fabs(m_val[i].l[j]);
+					if (L > Lmax) Lmax = L;
+				}
+			}
+			if (Lmax == 0.f) Lmax = 1.f;
+			auto_scale = 1.f / Lmax;
+		}
+
+		CColorMap& map = ColorMapManager::GetColorMap(m_Col.GetColorMap());
+		float fmax = 1.f;
+		if (m_ncol == Glyph_Col_Norm)
+		{
+			fmax = 0.f;
+			for (int i = 0; i < pm->Nodes(); ++i)
+			{
+				float f = m_val[i].f;
+				if (f > fmax) fmax = f;
+			}
+			if (fmax == 0.f) fmax = 1.f;
+		}
+
+		if (m_nglyph == Glyph_Line) glDisable(GL_LIGHTING);
+
+		glColor3ub(m_gcl.r, m_gcl.g, m_gcl.b);
+
+		for (int i = 0; i < pm->Nodes(); ++i)
 		{
 			FENode& node = pm->Node(i);
-			if (node.IsVisible() == false) node.m_ntag = 0;
-		}
-	}
-
-	float auto_scale = 1.f;
-	if (m_bautoscale)
-	{
-		float Lmax = 0.f;
-		for (int i = 0; i<pm->Nodes(); ++i)
-		{
-			for (int j=0; j<3; ++j)
+			if ((frand() <= m_dens) && node.m_ntag)
 			{
-				float L = fabs(m_val[i].l[j]);
-				if (L > Lmax) Lmax = L;
+				vec3f r = node.m_rt;
+
+				TENSOR& t = m_val[i];
+
+				if (m_ncol == Glyph_Col_Norm)
+				{
+					float w = t.f / fmax;
+					GLCOLOR c = map.map(w);
+					glColor3ub(c.r, c.g, c.b);
+				}
+
+				glTranslatef(r.x, r.y, r.z);
+				RenderGlyphs(t, scale*auto_scale, pglyph);
+				glTranslatef(-r.x, -r.y, -r.z);
 			}
-		}
-		if (Lmax == 0.f) Lmax = 1.f;
-		auto_scale = 1.f / Lmax;
-	}
-
-	CColorMap& map = ColorMapManager::GetColorMap(m_Col.GetColorMap());
-	float fmax = 1.f;
-	if (m_ncol == Glyph_Col_Norm)
-	{
-		fmax = 0.f;
-		for (int i=0; i<pm->Nodes(); ++i)
-		{
-			float f = m_val[i].f;
-			if (f > fmax) fmax = f;
-		}
-		if (fmax == 0.f) fmax = 1.f;
-	}
-
-	if (m_nglyph == Glyph_Line) glDisable(GL_LIGHTING);
-
-	glColor3ub(m_gcl.r, m_gcl.g, m_gcl.b);
-
-	for (int i = 0; i<pm->Nodes(); ++i)
-	{
-		FENode& node = pm->Node(i);
-		if ((frand() <= m_dens) && node.m_ntag)
-		{
-			vec3f r = node.m_rt;
-
-			TENSOR& t = m_val[i];
-
-			if (m_ncol == Glyph_Col_Norm)
-			{
-				float w = t.f / fmax;
-				GLCOLOR c = map.map(w);
-				glColor3ub(c.r, c.g, c.b);
-			}
-
-			glTranslatef(r.x, r.y, r.z);
-
-			switch (m_nglyph)
-			{
-			case Glyph_Arrow : RenderArrows(t, scale*auto_scale, pglyph); break;
-			case Glyph_Line  : RenderLines (t, scale*auto_scale, pglyph); break;
-			case Glyph_Sphere: RenderSphere(t, scale*auto_scale, pglyph); break;
-			case Glyph_Box   : RenderBox   (t, scale*auto_scale, pglyph); break;
-			}
-			glTranslatef(-r.x, -r.y, -r.z);
 		}
 	}
 
@@ -354,6 +495,19 @@ void GLTensorPlot::Render(CGLContext& rc)
 
 	// restore attributes
 	glPopAttrib();
+
+	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+}
+
+void GLTensorPlot::RenderGlyphs(TENSOR& t, float scale, GLUquadricObj* glyph)
+{
+	switch (m_nglyph)
+	{
+	case Glyph_Arrow : RenderArrows(t, scale, glyph); break;
+	case Glyph_Line  : RenderLines (t, scale, glyph); break;
+	case Glyph_Sphere: RenderSphere(t, scale, glyph); break;
+	case Glyph_Box   : RenderBox   (t, scale, glyph); break;
+	}
 }
 
 void GLTensorPlot::RenderArrows(GLTensorPlot::TENSOR& t, float scale, GLUquadricObj* pglyph)

@@ -78,6 +78,7 @@ public:
 	void SetNormalize(bool b) { m_bnormalize = b; }
 
 protected:
+	void RenderGlyphs(TENSOR& t, float scale, GLUquadricObj* glyph);
 	void RenderArrows(TENSOR& t, float scale, GLUquadricObj* glyph);
 	void RenderLines(TENSOR& t, float scale, GLUquadricObj* glyph);
 	void RenderSphere(TENSOR& t, float scale, GLUquadricObj* glyph);
