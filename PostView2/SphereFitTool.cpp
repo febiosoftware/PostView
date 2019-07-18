@@ -9,6 +9,7 @@
 #include "Document.h"
 #include <PostViewLib/FEModel.h>
 #include <PostViewLib/SphereFit.h>
+using namespace Post;
 
 class CSphereFitToolUI : public QWidget
 {

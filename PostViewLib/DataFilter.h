@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 
+namespace Post {
+
 class FEDataField;
 
 //-----------------------------------------------------------------------------
@@ -26,3 +28,5 @@ bool DataGradient(FEModel& fem, int vecField, int sclField);
 //-----------------------------------------------------------------------------
 // Extract a component from a data field
 FEDataField* DataComponent(FEModel& fem, FEDataField* dataField, int ncomp, const std::string& sname);
+
+}

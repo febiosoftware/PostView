@@ -2,6 +2,8 @@
 #include "FERAWImageReader.h"
 #include "FEMeshData_T.h"
 
+using namespace Post;
+
 //-----------------------------------------------------------------------------
 FERAWImageReader::FERAWImageReader() : FEFileReader("RAW")
 {

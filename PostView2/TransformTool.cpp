@@ -2,6 +2,7 @@
 #include "TransformTool.h"
 #include "Document.h"
 #include <PostViewLib/FEModel.h>
+using namespace Post;
 
 //-----------------------------------------------------------------------------
 CTransformTool::Props::Props(CTransformTool* ptool) : m_ptool(ptool)

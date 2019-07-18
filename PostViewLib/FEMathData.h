@@ -2,6 +2,8 @@
 #include "FEMeshData_T.h"
 #include "MathParser.h"
 
+namespace Post {
+
 class FEMathDataField;
 class FEMathVec3DataField;
 
@@ -99,3 +101,4 @@ public:
 private:
 	std::string	m_eq[3];		//!< equation string
 };
+}

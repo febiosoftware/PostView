@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "GLContext.h"
+using namespace Post;
 
-CGLContext::CGLContext(CGLView* pv)
+CGLContext::CGLContext()
 {
-	m_pview = pv;
+	m_cam = nullptr;
 }
 
 CGLContext::~CGLContext(void)

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "FEAsciiExport.h"
 #include <stdio.h>
+using namespace Post;
 
 void print_format(char* szfmt, int id, float val, FILE* fp)
 {

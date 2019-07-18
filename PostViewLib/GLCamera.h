@@ -1,17 +1,9 @@
-// GLCamera.h: interface for the CGLCamera class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_GLCAMERA_H__31B2A627_DB97_4CDD_B655_7FA0180C4A89__INCLUDED_)
-#define AFX_GLCAMERA_H__31B2A627_DB97_4CDD_B655_7FA0180C4A89__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "math3d.h"
 #include "Interpolator.h"
 #include "GLObject.h"
+
+namespace Post {
 
 //-----------------------------------------------------------------------------
 class GLCameraTransform : public CGLObject
@@ -89,6 +81,9 @@ public:
 	// set the target + distance
 	void SetTarget(const vec3f& r);
 
+	// set the target in local coordinates
+	void SetLocalTarget(const vec3f& r);
+
 	// set the orientation of the camera
 	void SetOrientation(quat4f q) { m_rot.Target(q); }
 
@@ -124,6 +119,4 @@ private:
 	float	m_speed;
 	float	m_bias;
 };
-
-
-#endif // !defined(AFX_GLCAMERA_H__31B2A627_DB97_4CDD_B655_7FA0180C4A89__INCLUDED_)
+}

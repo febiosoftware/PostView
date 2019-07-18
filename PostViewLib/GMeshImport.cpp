@@ -3,6 +3,7 @@
 #include "color.h"
 #include "FEModel.h"
 #include "FEMesh.h"
+using namespace Post;
 
 GMeshImport::GMeshImport(void) : FEFileReader("GMesh")
 {

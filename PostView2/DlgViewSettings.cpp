@@ -1,7 +1,3 @@
-// DlgViewSettings.cpp: implementation of the CDlgViewSettings class.
-//
-//////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "DlgViewSettings.h"
 #include "MainWindow.h"
@@ -21,6 +17,7 @@
 #include <QSpinBox>
 #include <QInputDialog>
 #include "MainWindow.h"
+using namespace Post;
 
 //-----------------------------------------------------------------------------
 class CRenderingProps : public CPropertyList
@@ -97,8 +94,8 @@ public:
 		addProperty("Background color 2", CProperty::Color);
 		addProperty("Background style", CProperty::Enum)->setEnumValues(QStringList()<<"Color 1"<<"Color 2" << "Fade horizontal" << "Fade vertical" << "Fade diagonally"); 
 
-		m_col1 = GLCOLOR(0,0,0);
-		m_col2 = GLCOLOR(0,0,0);
+		m_col1 = GLColor(0,0,0);
+		m_col2 = GLColor(0,0,0);
 		m_nstyle = 0;
 		m_ntheme = 0;
 	}
@@ -128,8 +125,8 @@ public:
 	}
 
 public:
-	GLCOLOR	m_col1;
-	GLCOLOR	m_col2;
+	GLColor	m_col1;
+	GLColor	m_col2;
 	int		m_nstyle;
 	int		m_ntheme;
 };
@@ -324,7 +321,7 @@ void ColorGradient::paintEvent(QPaintEvent* ev)
 	for (int i=0; i<rt.width(); ++i)
 	{
 		float w = (float) i / rt.width();
-		GLCOLOR c = m_map.map(w);
+		GLColor c = m_map.map(w);
 		p.setPen(QColor(c.r, c.g, c.b));
 		p.drawLine(x0 + i, y1, x0 + i, y2);
 	}

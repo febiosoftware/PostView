@@ -12,6 +12,7 @@
 #include <QInputDialog>
 #include <QFormLayout>
 #include <QDialogButtonBox>
+using namespace Post;
 
 class CStateModel : public QAbstractTableModel
 {

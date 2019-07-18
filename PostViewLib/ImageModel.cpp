@@ -3,6 +3,7 @@
 #include "3DImage.h"
 #include "GLImageRenderer.h"
 #include <assert.h>
+using namespace Post;
 
 CImageModel::CImageModel(CGLModel* mdl) : CGLObject(mdl)
 {

@@ -1,6 +1,8 @@
 #pragma once
 #include "math3d.h"
 
+namespace Post {
+
 //=============================================================================
 //! This class implements an interpolator that interpolates between two values.
 class Interpolator 
@@ -83,3 +85,4 @@ public:
 	double	m_da;	// update value
 	bool	m_banim;
 };
+}

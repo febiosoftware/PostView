@@ -3,9 +3,9 @@
 
 void VIEWSETTINGS::Defaults()
 {
-	bgcol1 = GLCOLOR(255,255,255);
-	bgcol2 = GLCOLOR(128,128,255);
-	fgcol  = GLCOLOR(0,0,0);
+	bgcol1 = GLColor(255,255,255);
+	bgcol2 = GLColor(128,128,255);
+	fgcol  = GLColor(0,0,0);
 	bgstyle = BG_FADE_VERT;
 	m_shadow_intensity = 0.5f;
 	m_bmesh		 = false;

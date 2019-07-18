@@ -34,7 +34,7 @@ public:
 	void value(int& v);
 	void value(float& v);
 	void value(double& v);
-	void value(GLCOLOR& v);
+	void value(GLColor& v);
 	void value(std::string& s);
 	int value(double* v, int n);
 	int value(int* v, int n);
@@ -116,11 +116,11 @@ public:
 	void value(int* pi, int n);
 	void value(vec3f& v);
 	void value(bool& b) { b = (atoi(m_szval) == 1); }
-	void value(GLCOLOR& c) 
+	void value(GLColor& c) 
 	{
 		int n[4] = {0,0,0,255};
 		value(n, 4);
-		c = GLCOLOR((byte) n[0], (byte) n[1], (byte) n[2], (byte) n[3]);
+		c = GLColor((byte) n[0], (byte) n[1], (byte) n[2], (byte) n[3]);
 	}
 
 	const char* szvalue() { return m_szval; }

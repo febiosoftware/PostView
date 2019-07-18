@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "FEFace.h"
+using namespace Post;
 
 //-----------------------------------------------------------------------------
 FEFace::FEFace()

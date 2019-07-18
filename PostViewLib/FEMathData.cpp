@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "FEMathData.h"
 
+using namespace Post;
+
 FEMathData::FEMathData(FEState* state, FEMathDataField* pdf) : FENodeData_T<float>(state, pdf)
 {
 	m_pdf = pdf;

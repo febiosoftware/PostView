@@ -3,6 +3,7 @@
 #include "MainWindow.h"
 #include "Document.h"
 #include <PostViewLib/FEFileReader.h>
+using namespace Post;
 
 CFileThread::CFileThread(CMainWindow* wnd, CDocument* doc, FEFileReader* file, const QString& fileName) : m_wnd(wnd), m_doc(doc), m_fileReader(file), m_fileName(fileName)
 {

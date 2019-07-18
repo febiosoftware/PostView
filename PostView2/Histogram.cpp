@@ -3,6 +3,7 @@
 #include <PostViewLib/ImageModel.h>
 #include <PostViewLib/3DImage.h>
 #include <QtCharts/QLineSeries>
+using namespace Post;
 
 CHistogramViewer::CHistogramViewer(QWidget* parent) : QChartView(parent)
 {

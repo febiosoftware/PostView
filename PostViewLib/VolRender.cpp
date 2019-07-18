@@ -1,7 +1,3 @@
-// VolRender.cpp: implementation of the CVolRender class.
-//
-//////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #ifdef WIN32
 #include <Windows.h>
@@ -17,6 +13,7 @@
 #include "GLContext.h"
 #include "ImageModel.h"
 #include <sstream>
+using namespace Post;
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -37,7 +34,7 @@ CVolRender::CVolRender(CImageModel* img) : CGLImageRenderer(img)
 	m_bcalc_lighting = true;
 	m_light = vec3f(-1.f, -1.f, -1.f);
 
-	m_spc = GLCOLOR(255, 255, 255);
+	m_spc = GLColor(255, 255, 255);
 
 	m_texID = 0;
 
@@ -52,7 +49,7 @@ CVolRender::~CVolRender()
 void CVolRender::Reset()
 {
 	m_Col.SetColorMap(ColorMapManager::GRAY);
-	m_amb = GLCOLOR(0,0,0);
+	m_amb = GLColor(0,0,0);
 
 	m_alpha = 0.1f;
 
@@ -205,7 +202,7 @@ void CVolRender::Update()
 		m_LUT[i] = (i < m_I0 ? 0 : (i > m_I1 ? 255 : 1 + 253 * (i - m_I0) / DI));
 
 		float w = (float)i / 255.f;
-		GLCOLOR c = map.map(w);
+		GLColor c = map.map(w);
 
 		m_LUTC[0][i] = c.r;
 		m_LUTC[1][i] = c.g;

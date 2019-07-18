@@ -16,6 +16,8 @@ typedef off_t off_type;
 
 //-----------------------------------------------------------------------------
 // forward declaration of model class
+namespace Post {
+
 class FEModel;
 
 //-----------------------------------------------------------------------------
@@ -67,3 +69,5 @@ private:
 	off_type		m_nfilesize;	//!< size of file
 	bool			m_cancelled;	//!< file read was cancelled
 };
+
+}

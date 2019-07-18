@@ -4,6 +4,8 @@
 #include "bbox.h"
 #include "GLObject.h"
 
+namespace Post {
+
 class C3DImage;
 class CGLImageRenderer;
 
@@ -39,3 +41,4 @@ private:
 	bool			m_showBox;					//!< show box in Graphics View
 	std::vector<CGLImageRenderer*>	m_render;	//!< image renderers
 };
+}

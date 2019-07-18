@@ -2,6 +2,7 @@
 #include "FEBioPlotExport.h"
 #include "FEModel.h"
 #include "FEMeshData_T.h"
+using namespace Post;
 
 //=============================================================================
 // MeshPartition

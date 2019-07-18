@@ -1,16 +1,18 @@
 #pragma once
 #include "math3d.h"
 
-class CGLView;
+namespace Post {
+
+class CGLCamera;
 
 class CGLContext
 {
 public:
-	CGLContext(CGLView* pv);
-	~CGLContext(void);
+	CGLContext();
+	~CGLContext();
 
 public:
-	CGLView*	m_pview;
+	CGLCamera*	m_cam;
 	int			m_x, m_y;
 	quat4f		m_q;
 
@@ -18,3 +20,4 @@ public:
 	bool		m_showOutline;
 	float		m_springThick;
 };
+}

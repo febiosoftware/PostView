@@ -3,6 +3,7 @@
 #include "ui_timepanel.h"
 #include "MainWindow.h"
 #include "Document.h"
+using namespace Post;
 
 CTimePanel::CTimePanel(CMainWindow* wnd, QWidget* parent) : QWidget(parent), m_wnd(wnd), ui(new Ui::CTimePanel)
 {

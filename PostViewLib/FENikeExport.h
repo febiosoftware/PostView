@@ -1,6 +1,7 @@
 #pragma once
 #include "FEFileExport.h"
 
+namespace Post {
 //-----------------------------------------------------------------------------
 // Export model to a nike3d file
 class FENikeExport : public FEFileExport
@@ -11,3 +12,5 @@ public:
 
 	bool Save(FEModel& fem, const char* szfile);
 };
+
+}

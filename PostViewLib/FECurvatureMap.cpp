@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "FECurvatureMap.h"
+using namespace Post;
 
 //-----------------------------------------------------------------------------
 void FECongruencyMap::Surface::BuildNodeList(FEMeshBase& mesh)

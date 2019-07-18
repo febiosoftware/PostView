@@ -5,7 +5,7 @@
 #include "PostViewLib/XMLReader.h"
 #include "PostViewLib/FEBioImport.h"
 #include "PostViewLib/FELSDYNAPlot.h"
-#include "PostViewLib/xpltFileReader.h"
+#include "XPLTLib/xpltFileReader.h"
 #include "PostViewLib/FELSDYNAimport.h"
 #include "PostViewLib/GMeshImport.h"
 #include "PostViewLib/FENikeImport.h"
@@ -13,10 +13,11 @@
 #include "PostViewLib/FEASCIIImport.h"
 #include "PostViewLib/FEVTKImport.h"
 #include "PostViewLib/FEU3DImport.h"
-#include "GLModel.h"
-#include "GLPlaneCutPlot.h"
+#include <PostGL/GLModel.h>
+#include <PostGL/GLPlaneCutPlot.h>
 #include <PostViewLib/ImageModel.h>
 #include <PostViewLib/3DImage.h>
+using namespace Post;
 
 //-----------------------------------------------------------------------------
 // choose a file importer based on extension

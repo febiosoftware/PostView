@@ -4,6 +4,8 @@
 #include "math3d.h"
 #include <assert.h>
 
+namespace Post {
+
 //-----------------------------------------------------------------------------
 // Different face types (do not change the order)
 enum FEFaceType {
@@ -122,3 +124,4 @@ public:
 	// evaluate a vector expression at iso-points (r,s)
 	vec3f eval(vec3f* v, double r, double s);
 };
+}

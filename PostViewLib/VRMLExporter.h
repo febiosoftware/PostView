@@ -3,9 +3,7 @@
 #include "FEModel.h"
 #include <list>
 #include <stdio.h>
-
-using namespace std;
-
+namespace Post {
 class VRMLExporter
 {
 public:
@@ -32,3 +30,5 @@ protected:
 	FILE*	m_fp;
 	char	m_sztab[256];
 };
+
+}

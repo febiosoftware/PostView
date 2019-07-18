@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "AddPointTool.h"
 #include "Document.h"
-#include "GLModel.h"
+#include <PostGL/GLModel.h>
 
 //-----------------------------------------------------------------------------
 CAddPointTool::Props::Props(CAddPointTool* ptool) : m_ptool(ptool)

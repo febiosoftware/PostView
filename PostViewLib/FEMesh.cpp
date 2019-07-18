@@ -6,6 +6,8 @@
 #include "FEMesh.h"
 #include <stack>
 
+using namespace Post;
+
 //=============================================================================
 
 //-----------------------------------------------------------------------------
@@ -1510,7 +1512,7 @@ void project_inside_element(FEElement& el, const vec3f& p, double r[3], vec3f* x
 }
 
 //-----------------------------------------------------------------------------
-bool ProjectInsideReferenceElement(FEMeshBase& m, FEElement& el, const vec3f& p, double r[3])
+bool Post::ProjectInsideReferenceElement(FEMeshBase& m, FEElement& el, const vec3f& p, double r[3])
 {
 	r[0] = r[1] = r[2] = 0.f;
 	int ne = el.Nodes();
@@ -1523,7 +1525,7 @@ bool ProjectInsideReferenceElement(FEMeshBase& m, FEElement& el, const vec3f& p,
 }
 
 //-----------------------------------------------------------------------------
-bool ProjectInsideElement(FEMeshBase& m, FEElement& el, const vec3f& p, double r[3])
+bool Post::ProjectInsideElement(FEMeshBase& m, FEElement& el, const vec3f& p, double r[3])
 {
 	r[0] = r[1] = r[2] = 0.f;
 	int ne = el.Nodes();
@@ -1536,7 +1538,7 @@ bool ProjectInsideElement(FEMeshBase& m, FEElement& el, const vec3f& p, double r
 }
 
 //-----------------------------------------------------------------------------
-bool FindElementRef(FEMeshBase& m, const vec3f& p, int& nelem, double r[3])
+bool Post::FindElementRef(FEMeshBase& m, const vec3f& p, int& nelem, double r[3])
 {
 	vec3f y[FEGenericElement::MAX_NODES];
 	int NE = m.Elements();
@@ -1589,7 +1591,7 @@ bool FindElementRef(FEMeshBase& m, const vec3f& p, int& nelem, double r[3])
 }
 
 //-----------------------------------------------------------------------------
-bool FindElementInReferenceFrame(FEMeshBase& m, const vec3f& p, int& nelem, double r[3])
+bool Post::FindElementInReferenceFrame(FEMeshBase& m, const vec3f& p, int& nelem, double r[3])
 {
 	vec3f y[FEGenericElement::MAX_NODES];
 	int NE = m.Elements();

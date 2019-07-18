@@ -36,16 +36,16 @@ public:
 
 	virtual void draw(QPainter* painter) = 0;
 
-	void set_color(GLCOLOR fgc, GLCOLOR bgc);
+	void set_color(GLColor fgc, GLColor bgc);
 
-	void set_fg_color(GLCOLOR c) { m_fgc = c; }
-	void set_fg_color(GLubyte r, GLubyte g, GLubyte b, GLubyte a = 255) { m_fgc = GLCOLOR(r,g,b,a); }
-	GLCOLOR get_fg_color() { return m_fgc; }
+	void set_fg_color(GLColor c) { m_fgc = c; }
+	void set_fg_color(GLubyte r, GLubyte g, GLubyte b, GLubyte a = 255) { m_fgc = GLColor(r,g,b,a); }
+	GLColor get_fg_color() { return m_fgc; }
 
 	void set_bg_style(int n) { m_nbg = n; }
-	void set_bg_color(GLCOLOR c1, GLCOLOR c2) { m_bgc[0] = c1; m_bgc[1] = c2; }
-	void set_bg_color(GLubyte r, GLubyte g, GLubyte b, GLubyte a = 255) { m_bgc[0] = GLCOLOR(r,g,b,a); }
-	GLCOLOR get_bg_color(int i) { return m_bgc[i]; }
+	void set_bg_color(GLColor c1, GLColor c2) { m_bgc[0] = c1; m_bgc[1] = c2; }
+	void set_bg_color(GLubyte r, GLubyte g, GLubyte b, GLubyte a = 255) { m_bgc[0] = GLColor(r,g,b,a); }
+	GLColor get_bg_color(int i) { return m_bgc[i]; }
 	int get_bg_style() { return m_nbg; }
 
 	void copy_label(const char* szlabel);
@@ -94,7 +94,7 @@ public:
 	void set_layer(unsigned int l) { m_layer = l; }
 
 public:
-	static void set_base_color(GLCOLOR c) { m_base = c; }
+	static void set_base_color(GLColor c) { m_base = c; }
 
 protected:
 	int m_x, m_y;
@@ -110,13 +110,13 @@ protected:
 
 	unsigned int m_layer;
 
-	GLCOLOR	m_fgc;
-	GLCOLOR m_bgc[2];
+	GLColor	m_fgc;
+	GLColor m_bgc[2];
 	int		m_nbg;	// background style
 
 	static GLWidget* m_pfocus;	// the widget that has the focus
 
-	static	GLCOLOR	m_base;	// base color
+	static	GLColor	m_base;	// base color
 
 	bool	m_bshow;	// show the widget or not
 
@@ -139,7 +139,7 @@ protected:
 
 public:
 	bool	m_bshadow;	// render shadows
-	GLCOLOR	m_shc;		// shadow color
+	GLColor	m_shc;		// shadow color
 	int		m_margin;
 };
 
@@ -152,7 +152,7 @@ public:
 	enum { HORIZONTAL, VERTICAL };
 
 public:
-	GLLegendBar(CColorTexture* pm, int x, int y, int w, int h, int orientation = VERTICAL);
+	GLLegendBar(Post::CColorTexture* pm, int x, int y, int w, int h, int orientation = VERTICAL);
 
 	void draw(QPainter* painter);
 
@@ -192,7 +192,7 @@ protected:
 	float	m_fmin;		// min of range
 	float	m_fmax;		// max of range
 
-	CColorTexture*		m_pMap;
+	Post::CColorTexture*		m_pMap;
 };
 
 //-----------------------------------------------------------------------------

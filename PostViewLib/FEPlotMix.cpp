@@ -1,9 +1,11 @@
 #include "stdafx.h"
 #include "FEPlotMix.h"
 #include "FELSDYNAPlot.h"
-#include "xpltFileReader.h"
+#include <XPLTLib/xpltFileReader.h>
 #include "FEDataManager.h"
 #include "FEMeshData_T.h"
+
+using namespace Post;
 
 //------------------------------------------------------------------------------
 // FEPlotMix

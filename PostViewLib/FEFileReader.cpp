@@ -1,6 +1,7 @@
 #include "FEFileReader.h"
 #include <stdarg.h>
 using namespace std;
+using namespace Post;
 
 #ifdef WIN32
 #define ftell64(a)     _ftelli64(a)

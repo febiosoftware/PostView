@@ -32,11 +32,11 @@ public:
 	void disable() { benable = false; }
 
 public:
-	GLCOLOR	diffuse;		// diffuse material color
-	GLCOLOR	ambient;		// ambient material color
-	GLCOLOR	specular;		// specular material color
-	GLCOLOR emission;		// emission material color
-	GLCOLOR meshcol;		// mesh color
+	GLColor	diffuse;		// diffuse material color
+	GLColor	ambient;		// ambient material color
+	GLColor	specular;		// specular material color
+	GLColor emission;		// emission material color
+	GLColor meshcol;		// mesh color
 	float	shininess;		// shininess [0..1]
 	float	transparency;	// transparency [0..1]
 	bool	benable;		// material enabled or not

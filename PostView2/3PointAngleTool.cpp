@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "3PointAngleTool.h"
 #include "Document.h"
-#include "GLModel.h"
+#include <PostGL/GLModel.h>
+using namespace Post;
 
 //-----------------------------------------------------------------------------
 class C3PointAngleDecoration : public GDecoration

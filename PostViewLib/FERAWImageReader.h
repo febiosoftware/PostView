@@ -1,7 +1,9 @@
 #pragma once
 #include "FEFileReader.h"
 
-//-----------------------------------------------------------------------------
+namespace Post {
+
+	//-----------------------------------------------------------------------------
 // This class reads in a RAW image file and converts it to a mesh.
 // The pixels of the image correspond to nodes
 //
@@ -31,3 +33,4 @@ public:
 protected:
 	OPTIONS	m_ops;
 };
+}

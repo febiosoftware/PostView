@@ -5,6 +5,8 @@
 #include <string>
 using namespace std;
 
+namespace Post {
+
 class FEModel;
 
 class FEAreaCoverage
@@ -56,3 +58,4 @@ protected:
 	FEModel*	m_fem;
 	string  	m_name;
 };
+}

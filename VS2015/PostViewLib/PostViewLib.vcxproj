@@ -70,7 +70,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ZLIBDIR);$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)..;$(ZLIBDIR);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(ZLIBDIR);$(IncludePath)</IncludePath>
@@ -213,6 +213,7 @@
     <ClInclude Include="..\..\PostViewLib\penta15.h" />
     <ClInclude Include="..\..\PostViewLib\penta6.h" />
     <ClInclude Include="..\..\PostViewLib\PltArchive.h" />
+    <ClInclude Include="..\..\PostViewLib\PostView.h" />
     <ClInclude Include="..\..\PostViewLib\pyra5.h" />
     <ClInclude Include="..\..\PostViewLib\SphereFit.h" />
     <ClInclude Include="..\..\PostViewLib\stdafx.h" />
@@ -222,13 +223,11 @@
     <ClInclude Include="..\..\PostViewLib\tet4.h" />
     <ClInclude Include="..\..\PostViewLib\tools.h" />
     <ClInclude Include="..\..\PostViewLib\U3DFile.h" />
+    <ClInclude Include="..\..\PostViewLib\ValArray.h" />
     <ClInclude Include="..\..\PostViewLib\VolRender.h" />
     <ClInclude Include="..\..\PostViewLib\VRMLExporter.h" />
     <ClInclude Include="..\..\PostViewLib\XMLReader.h" />
     <ClInclude Include="..\..\PostViewLib\XMLWriter.h" />
-    <ClInclude Include="..\..\PostViewLib\xpltFileReader.h" />
-    <ClInclude Include="..\..\PostViewLib\xpltReader.h" />
-    <ClInclude Include="..\..\PostViewLib\xpltReader2.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\PostViewLib\3DImage.cpp" />
@@ -293,22 +292,20 @@
     <ClCompile Include="..\..\PostViewLib\Intersect.cpp" />
     <ClCompile Include="..\..\PostViewLib\LinearRegression.cpp" />
     <ClCompile Include="..\..\PostViewLib\lusolver.cpp" />
-    <ClCompile Include="..\..\PostViewLib\lut.cpp" />
     <ClCompile Include="..\..\PostViewLib\MarchingCubes.cpp" />
     <ClCompile Include="..\..\PostViewLib\math3d.cpp" />
     <ClCompile Include="..\..\PostViewLib\MathParser.cpp" />
     <ClCompile Include="..\..\PostViewLib\Palette.cpp" />
     <ClCompile Include="..\..\PostViewLib\PltArchive.cpp" />
+    <ClCompile Include="..\..\PostViewLib\PostView.cpp" />
     <ClCompile Include="..\..\PostViewLib\SphereFit.cpp" />
     <ClCompile Include="..\..\PostViewLib\tools.cpp" />
     <ClCompile Include="..\..\PostViewLib\U3DFile.cpp" />
+    <ClCompile Include="..\..\PostViewLib\ValArray.cpp" />
     <ClCompile Include="..\..\PostViewLib\VolRender.cpp" />
     <ClCompile Include="..\..\PostViewLib\VRMLExporter.cpp" />
     <ClCompile Include="..\..\PostViewLib\XMLReader.cpp" />
     <ClCompile Include="..\..\PostViewLib\XMLWriter.cpp" />
-    <ClCompile Include="..\..\PostViewLib\xpltFileReader.cpp" />
-    <ClCompile Include="..\..\PostViewLib\xpltReader.cpp" />
-    <ClCompile Include="..\..\PostViewLib\xpltReader2.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

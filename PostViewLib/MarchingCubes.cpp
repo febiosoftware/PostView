@@ -16,6 +16,7 @@
 #include <sstream>
 #include <assert.h>
 using namespace std;
+using namespace Post;
 
 extern int LUT[256][15];
 extern int ET_HEX[12][2];
@@ -62,7 +63,7 @@ CMarchingCubes::CMarchingCubes(CImageModel* img) : CGLImageRenderer(img)
 	m_bsmooth = true;
 	m_bcloseSurface = true;
 	m_binvertSpace = false;
-	m_col = GLCOLOR(200, 185, 185);
+	m_col = GLColor(200, 185, 185);
 }
 
 CMarchingCubes::~CMarchingCubes()

@@ -1,5 +1,6 @@
 #include "Archive.h"
 #include <assert.h>
+using namespace Post;
 
 #ifdef WIN32
     #define ftell64(a)     _ftelli64(a)
@@ -17,7 +18,7 @@
 #endif
 
 //-----------------------------------------------------------------------------
-void mread(void* pdest, size_t Size, size_t Cnt, void** psrc)
+void Post::mread(void* pdest, size_t Size, size_t Cnt, void** psrc)
 {
 	size_t nsize = Size*Cnt;
 	memcpy(pdest, *psrc, nsize);

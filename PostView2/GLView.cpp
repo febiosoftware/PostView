@@ -9,8 +9,8 @@
 #include "Document.h"
 #include <GLWLib/GLWidget.h>
 #include <QBitmap>
-#include "GLModel.h"
-#include "GLPlaneCutPlot.h"
+#include <PostGL/GLModel.h>
+#include <PostGL/GLPlaneCutPlot.h>
 #include <PostViewLib/GLContext.h>
 #include <PostViewLib/VolRender.h>
 #include <PostViewLib/ImageSlicer.h>
@@ -21,6 +21,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include "version.h"
+using namespace Post;
 
 class WorldToScreen
 {
@@ -592,10 +593,6 @@ void CGLView::paintGL()
 	// render the tags
 	if (view.m_bTags && pdoc->IsValid()) RenderTags();
 
-	// give the command window a chance to render stuff
-	CGLContext cgl(this);
-	cgl.m_x = cgl.m_y = 0;
-
 	// set the projection Matrix to ortho2d so we can draw some stuff on the screen
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -1093,7 +1090,7 @@ void CGLView::Clear()
 	}
 }
 
-void CGLView::RenderBkGround(GLCOLOR c1, GLCOLOR c2, int style)
+void CGLView::RenderBkGround(GLColor c1, GLColor c2, int style)
 {
 	const int w = width();
 	const int h = height();
@@ -2718,7 +2715,8 @@ void CGLView::RenderDoc()
 		glDisable(GL_CULL_FACE);
 
 		// setup the rendering context
-		CGLContext rc(this);
+		CGLContext rc;
+		rc.m_cam = &GetCamera();
 		rc.m_q = cam.GetOrientation();
 		rc.m_showMesh = view.m_bmesh;
 		rc.m_showOutline = view.m_boutline;

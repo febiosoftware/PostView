@@ -1,5 +1,8 @@
+#include "stdafx.h"
 #include "FEPointCongruency.h"
 #include "FEModel.h"
+
+using namespace Post;
 
 //-----------------------------------------------------------------------------
 FEPointCongruency::FEPointCongruency()

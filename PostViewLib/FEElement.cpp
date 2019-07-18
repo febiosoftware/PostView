@@ -14,6 +14,7 @@
 #include "hex20.h"
 #include "hex27.h"
 #include "penta15.h"
+using namespace Post;
 
 //-----------------------------------------------------------------------------
 // Face lookup tables

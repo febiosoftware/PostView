@@ -15,12 +15,13 @@
 #include "GLWidget.h"
 #include <assert.h>
 #include "PostView2/convert.h"
+using namespace Post;
 
 //-----------------------------------------------------------------------------
 
 GLWidget* GLWidget::m_pfocus = 0;
 
-GLCOLOR GLWidget::m_base = GLCOLOR(0,0,0);
+GLColor GLWidget::m_base = GLColor(0,0,0);
 
 GLWidget::GLWidget(int x, int y, int w, int h, const char* szlabel)
 {
@@ -34,8 +35,8 @@ GLWidget::GLWidget(int x, int y, int w, int h, const char* szlabel)
 	m_szlabel = (char*) szlabel;
 
 	m_fgc = m_base;
-	m_bgc[0] = GLCOLOR(0,0,0,0);
-	m_bgc[1] = GLCOLOR(0,0,0,0);
+	m_bgc[0] = GLColor(0,0,0,0);
+	m_bgc[1] = GLColor(0,0,0,0);
 	m_nbg = NONE;
 
 	m_font = QFont("Helvetica", 13);
@@ -94,7 +95,7 @@ bool GLWidget::is_inside(int x, int y)
 GLBox::GLBox(int x, int y, int w, int h, const char *szlabel) : GLWidget(x, y, w, h, szlabel)
 {
 	m_bshadow = false;
-	m_shc = GLCOLOR(200,200,200);
+	m_shc = GLColor(200,200,200);
 	m_margin = 5;
 }
 
@@ -595,7 +596,7 @@ void GLLegendBar::draw_discrete_horz(QPainter* painter)
 
 				glColor3ub(m_fgc.r,m_fgc.g,m_fgc.b);
 
-				GLCOLOR c = map.map((float) f);
+				GLColor c = map.map((float) f);
 				glColor3ub(c.r, c.g, c.b);
 
 				glLineWidth(5.f);
@@ -613,7 +614,7 @@ void GLLegendBar::draw_discrete_horz(QPainter* painter)
 
 				glColor3ub(m_fgc.r,m_fgc.g,m_fgc.b);
 
-				GLCOLOR c = map.map((float)f);
+				GLColor c = map.map((float)f);
 				glColor3ub(c.r, c.g, c.b);
 
 				glLineWidth(5.f);

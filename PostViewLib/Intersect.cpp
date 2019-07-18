@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "Intersect.h"
+using namespace Post;
 
 //-----------------------------------------------------------------------------
 // Find intersection of a ray with a triangle
-bool IntersectTriangle(const Ray& ray, const Triangle& tri, Intersection& intersection, bool evalNormal)
+bool Post::IntersectTriangle(const Ray& ray, const Triangle& tri, Intersection& intersection, bool evalNormal)
 {
 	const double tol = 0.01;
 
@@ -51,7 +52,7 @@ bool IntersectTriangle(const Ray& ray, const Triangle& tri, Intersection& inters
 }
 
 //-----------------------------------------------------------------------------
-bool FastIntersectQuad(const Ray& ray, const Quad& quad, Intersection& intersect)
+bool Post::FastIntersectQuad(const Ray& ray, const Quad& quad, Intersection& intersect)
 {
 	Triangle tri[2] = {
 		{ quad.r0, quad.r1, quad.r2 },
@@ -62,7 +63,7 @@ bool FastIntersectQuad(const Ray& ray, const Quad& quad, Intersection& intersect
 
 //-----------------------------------------------------------------------------
 // Find intersection of a ray with a quad
-bool IntersectQuad(const Ray& ray, const Quad& quad, Intersection& intersect)
+bool Post::IntersectQuad(const Ray& ray, const Quad& quad, Intersection& intersect)
 {
 	const double tol = 0.01;
 
@@ -138,7 +139,7 @@ bool IntersectQuad(const Ray& ray, const Quad& quad, Intersection& intersect)
 }
 
 //-----------------------------------------------------------------------------
-bool FindFaceIntersection(const Ray& ray, const FEMeshBase& mesh, const FEFace& face, Intersection& q)
+bool Post::FindFaceIntersection(const Ray& ray, const FEMeshBase& mesh, const FEFace& face, Intersection& q)
 {
 	q.m_index = -1;
 

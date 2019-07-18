@@ -3,7 +3,8 @@
 #include <vector>
 #include <list>
 #include "math3d.h"
-using namespace std;
+
+namespace Post {
 
 class FESTLimport : public FEFileReader
 {
@@ -26,8 +27,10 @@ protected:
 	int find_node(vec3f& r, const double eps = 1e-12);
 
 protected:
-	FEModel*		m_pfem;
-	list<FACET>		m_Face;
-	vector<vec3f>	m_Node;
-	int				m_nline;	// line counter
+	FEModel*			m_pfem;
+	std::list<FACET>	m_Face;
+	std::vector<vec3f>	m_Node;
+	int					m_nline;	// line counter
 };
+
+}

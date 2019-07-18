@@ -2,6 +2,7 @@
 #include "FEBioImport.h"
 #include "FEModel.h"
 #include "FEMesh.h"
+using namespace Post;
 
 FEBioImport::FEBioImport(void) : FEFileReader("FEBio input")
 {

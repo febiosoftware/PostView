@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "FEEdge.h"
 #include <assert.h>
+using namespace Post;
 
 //-----------------------------------------------------------------------------
 FEEdge::FEEdge()

@@ -100,8 +100,8 @@ void *CImageViewer::qt_metacast(const char *_clname)
     if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_meta_stringdata_CImageViewer.stringdata0))
         return static_cast<void*>(this);
-    if (!strcmp(_clname, "FEModelDependant"))
-        return static_cast< FEModelDependant*>(this);
+    if (!strcmp(_clname, "Post::FEModelDependant"))
+        return static_cast< Post::FEModelDependant*>(this);
     return QWidget::qt_metacast(_clname);
 }
 

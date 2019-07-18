@@ -3,8 +3,8 @@
 #include "FEFileReader.h"
 #include "math3d.h"
 #include <vector>
-using namespace std;
 
+namespace Post{
 class GMeshImport : public FEFileReader
 {
 	struct NODE 
@@ -30,6 +30,7 @@ protected:
 	bool BuildMesh(FEModel& fem);
 
 protected:
-	vector<NODE>	m_Node;
-	vector<ELEM>	m_Elem;
+	std::vector<NODE>	m_Node;
+	std::vector<ELEM>	m_Elem;
 };
+}

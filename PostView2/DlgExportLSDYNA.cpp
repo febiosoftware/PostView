@@ -6,6 +6,7 @@
 #include <QFormLayout>
 #include <QMessageBox>
 #include "DataFieldSelector.h"
+using namespace Post;
 
 class CDlgExportLSDYNA_UI
 {

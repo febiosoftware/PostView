@@ -13,6 +13,7 @@
 #include <assert.h>
 #include <string>
 using namespace std;
+using namespace Post;
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -49,7 +50,7 @@ void CColorMap::operator = (const CColorMap& m)
 	}
 }
 
-GLCOLOR CColorMap::map(float fval) const
+GLColor CColorMap::map(float fval) const
 {
 	int n = m_ncol - 1;
 	if (fval <= m_pos[0]) return m_col[0];
@@ -61,10 +62,10 @@ GLCOLOR CColorMap::map(float fval) const
 	float dp = m_pos[l] - m_pos[l-1];
 	if (dp != 0.f) dp = 1.f/dp; else dp = 1.f;
 
-	GLCOLOR c1 = m_col[l];
-	GLCOLOR c2 = m_col[l-1];
+	GLColor c1 = m_col[l];
+	GLColor c2 = m_col[l-1];
 
-	GLCOLOR col;
+	GLColor col;
 	col.r = byte(((fval - m_pos[l-1])*c1.r + (m_pos[l]-fval)*c2.r) * dp);
 	col.g = byte(((fval - m_pos[l-1])*c1.g + (m_pos[l]-fval)*c2.g) * dp);
 	col.b = byte(((fval - m_pos[l-1])*c1.b + (m_pos[l]-fval)*c2.b) * dp);
@@ -77,121 +78,121 @@ void CColorMap::gray()
 {
 	m_ncol = 5;
 
-	m_pos[0] = 0.00f; m_col[0] = GLCOLOR(  0,  0,  0);
-	m_pos[1] = 0.25f; m_col[1] = GLCOLOR( 64, 64, 64);
-	m_pos[2] = 0.50f; m_col[2] = GLCOLOR(128,128,128);
-	m_pos[3] = 0.75f; m_col[3] = GLCOLOR(192,192,192);
-	m_pos[4] = 1.00f; m_col[4] = GLCOLOR(255,255,255);
+	m_pos[0] = 0.00f; m_col[0] = GLColor(  0,  0,  0);
+	m_pos[1] = 0.25f; m_col[1] = GLColor( 64, 64, 64);
+	m_pos[2] = 0.50f; m_col[2] = GLColor(128,128,128);
+	m_pos[3] = 0.75f; m_col[3] = GLColor(192,192,192);
+	m_pos[4] = 1.00f; m_col[4] = GLColor(255,255,255);
 }
 
 void CColorMap::jet()
 {
 	m_ncol = 5;
 
-	m_pos[0] = 0.00f; m_col[0] = GLCOLOR(0, 0, 255);
-	m_pos[1] = 0.40f; m_col[1] = GLCOLOR(0, 255, 255);
-	m_pos[2] = 0.50f; m_col[2] = GLCOLOR(0, 255, 0);
-	m_pos[3] = 0.60f; m_col[3] = GLCOLOR(255, 255, 0);
-	m_pos[4] = 1.00f; m_col[4] = GLCOLOR(255, 0, 0);
+	m_pos[0] = 0.00f; m_col[0] = GLColor(0, 0, 255);
+	m_pos[1] = 0.40f; m_col[1] = GLColor(0, 255, 255);
+	m_pos[2] = 0.50f; m_col[2] = GLColor(0, 255, 0);
+	m_pos[3] = 0.60f; m_col[3] = GLColor(255, 255, 0);
+	m_pos[4] = 1.00f; m_col[4] = GLColor(255, 0, 0);
 }
 
 void CColorMap::red()
 {
 	m_ncol = 5;
 
-	m_pos[0] = 0.00f; m_col[0] = GLCOLOR(0, 0, 0);
-	m_pos[1] = 0.25f; m_col[1] = GLCOLOR(64, 0, 0);
-	m_pos[2] = 0.50f; m_col[2] = GLCOLOR(128, 0, 0);
-	m_pos[3] = 0.75f; m_col[3] = GLCOLOR(192, 0, 0);
-	m_pos[4] = 1.00f; m_col[4] = GLCOLOR(255, 0, 0);
+	m_pos[0] = 0.00f; m_col[0] = GLColor(0, 0, 0);
+	m_pos[1] = 0.25f; m_col[1] = GLColor(64, 0, 0);
+	m_pos[2] = 0.50f; m_col[2] = GLColor(128, 0, 0);
+	m_pos[3] = 0.75f; m_col[3] = GLColor(192, 0, 0);
+	m_pos[4] = 1.00f; m_col[4] = GLColor(255, 0, 0);
 }
 
 void CColorMap::green()
 {
 	m_ncol = 5;
 
-	m_pos[0] = 0.00f; m_col[0] = GLCOLOR(0, 0, 0);
-	m_pos[1] = 0.25f; m_col[1] = GLCOLOR(0, 64, 0);
-	m_pos[2] = 0.50f; m_col[2] = GLCOLOR(0, 128, 0);
-	m_pos[3] = 0.75f; m_col[3] = GLCOLOR(0, 192, 0);
-	m_pos[4] = 1.00f; m_col[4] = GLCOLOR(0, 255, 0);
+	m_pos[0] = 0.00f; m_col[0] = GLColor(0, 0, 0);
+	m_pos[1] = 0.25f; m_col[1] = GLColor(0, 64, 0);
+	m_pos[2] = 0.50f; m_col[2] = GLColor(0, 128, 0);
+	m_pos[3] = 0.75f; m_col[3] = GLColor(0, 192, 0);
+	m_pos[4] = 1.00f; m_col[4] = GLColor(0, 255, 0);
 }
 
 void CColorMap::blue()
 {
 	m_ncol = 5;
 
-	m_pos[0] = 0.00f; m_col[0] = GLCOLOR(0, 0, 0);
-	m_pos[1] = 0.25f; m_col[1] = GLCOLOR(0, 0, 64);
-	m_pos[2] = 0.50f; m_col[2] = GLCOLOR(0, 0, 128);
-	m_pos[3] = 0.75f; m_col[3] = GLCOLOR(0, 0, 192);
-	m_pos[4] = 1.00f; m_col[4] = GLCOLOR(0, 0, 255);
+	m_pos[0] = 0.00f; m_col[0] = GLColor(0, 0, 0);
+	m_pos[1] = 0.25f; m_col[1] = GLColor(0, 0, 64);
+	m_pos[2] = 0.50f; m_col[2] = GLColor(0, 0, 128);
+	m_pos[3] = 0.75f; m_col[3] = GLColor(0, 0, 192);
+	m_pos[4] = 1.00f; m_col[4] = GLColor(0, 0, 255);
 }
 
 void CColorMap::autumn()
 {
 	m_ncol = 5;
 
-	m_pos[0] = 0.00f; m_col[0] = GLCOLOR(50, 50, 0);
-	m_pos[1] = 0.25f; m_col[1] = GLCOLOR(100, 50, 0);
-	m_pos[2] = 0.50f; m_col[2] = GLCOLOR(150, 75, 0);
-	m_pos[3] = 0.75f; m_col[3] = GLCOLOR(200, 150, 0);
-	m_pos[4] = 1.00f; m_col[4] = GLCOLOR(255, 200, 0);
+	m_pos[0] = 0.00f; m_col[0] = GLColor(50, 50, 0);
+	m_pos[1] = 0.25f; m_col[1] = GLColor(100, 50, 0);
+	m_pos[2] = 0.50f; m_col[2] = GLColor(150, 75, 0);
+	m_pos[3] = 0.75f; m_col[3] = GLColor(200, 150, 0);
+	m_pos[4] = 1.00f; m_col[4] = GLColor(255, 200, 0);
 }
 
 void CColorMap::winter()
 {
 	m_ncol = 5;
 
-	m_pos[0] = 0.00f; m_col[0] = GLCOLOR(255, 0, 255);
-	m_pos[1] = 0.25f; m_col[1] = GLCOLOR(128, 0, 255);
-	m_pos[2] = 0.50f; m_col[2] = GLCOLOR(0, 0, 255);
-	m_pos[3] = 0.75f; m_col[3] = GLCOLOR(0, 255, 255);
-	m_pos[4] = 1.00f; m_col[4] = GLCOLOR(255, 255, 255);
+	m_pos[0] = 0.00f; m_col[0] = GLColor(255, 0, 255);
+	m_pos[1] = 0.25f; m_col[1] = GLColor(128, 0, 255);
+	m_pos[2] = 0.50f; m_col[2] = GLColor(0, 0, 255);
+	m_pos[3] = 0.75f; m_col[3] = GLColor(0, 255, 255);
+	m_pos[4] = 1.00f; m_col[4] = GLColor(255, 255, 255);
 }
 
 void CColorMap::spring()
 {
 	m_ncol = 5;
 
-	m_pos[0] = 0.00f; m_col[0] = GLCOLOR(0, 255, 0);
-	m_pos[1] = 0.25f; m_col[1] = GLCOLOR(128, 255, 0);
-	m_pos[2] = 0.50f; m_col[2] = GLCOLOR(255, 255, 0);
-	m_pos[3] = 0.75f; m_col[3] = GLCOLOR(255, 255, 128);
-	m_pos[4] = 1.00f; m_col[4] = GLCOLOR(255, 255, 255);
+	m_pos[0] = 0.00f; m_col[0] = GLColor(0, 255, 0);
+	m_pos[1] = 0.25f; m_col[1] = GLColor(128, 255, 0);
+	m_pos[2] = 0.50f; m_col[2] = GLColor(255, 255, 0);
+	m_pos[3] = 0.75f; m_col[3] = GLColor(255, 255, 128);
+	m_pos[4] = 1.00f; m_col[4] = GLColor(255, 255, 255);
 }
 
 void CColorMap::summer()
 {
 	m_ncol = 5;
 
-	m_pos[0] = 0.00f; m_col[0] = GLCOLOR(255, 128, 0);
-	m_pos[1] = 0.25f; m_col[1] = GLCOLOR(255, 128, 0);
-	m_pos[2] = 0.50f; m_col[2] = GLCOLOR(255, 255, 0);
-	m_pos[3] = 0.75f; m_col[3] = GLCOLOR(255, 255, 128);
-	m_pos[4] = 1.00f; m_col[4] = GLCOLOR(255, 255, 255);
+	m_pos[0] = 0.00f; m_col[0] = GLColor(255, 128, 0);
+	m_pos[1] = 0.25f; m_col[1] = GLColor(255, 128, 0);
+	m_pos[2] = 0.50f; m_col[2] = GLColor(255, 255, 0);
+	m_pos[3] = 0.75f; m_col[3] = GLColor(255, 255, 128);
+	m_pos[4] = 1.00f; m_col[4] = GLColor(255, 255, 255);
 }
 
 void CColorMap::rbb()
 {
 	m_ncol = 5;
 
-	m_pos[0] = 0.00f; m_col[0] = GLCOLOR(128, 128, 255);
-	m_pos[1] = 0.25f; m_col[1] = GLCOLOR(0, 0, 255);
-	m_pos[2] = 0.50f; m_col[2] = GLCOLOR(0, 0, 0);
-	m_pos[3] = 0.75f; m_col[3] = GLCOLOR(255, 0, 0);
-	m_pos[4] = 1.00f; m_col[4] = GLCOLOR(255, 128, 128); // salmon
+	m_pos[0] = 0.00f; m_col[0] = GLColor(128, 128, 255);
+	m_pos[1] = 0.25f; m_col[1] = GLColor(0, 0, 255);
+	m_pos[2] = 0.50f; m_col[2] = GLColor(0, 0, 0);
+	m_pos[3] = 0.75f; m_col[3] = GLColor(255, 0, 0);
+	m_pos[4] = 1.00f; m_col[4] = GLColor(255, 128, 128); // salmon
 }
 
 void CColorMap::fire()
 {
 	m_ncol = 5;
 
-	m_pos[0] = 0.00f; m_col[0] = GLCOLOR(0, 0, 0); // black
-	m_pos[1] = 0.25f; m_col[1] = GLCOLOR(128, 0, 255); // purple
-	m_pos[2] = 0.50f; m_col[2] = GLCOLOR(255, 0, 0); // red
-	m_pos[3] = 0.75f; m_col[3] = GLCOLOR(255, 255, 0); // yellow
-	m_pos[4] = 1.00f; m_col[4] = GLCOLOR(255, 255, 255); // white
+	m_pos[0] = 0.00f; m_col[0] = GLColor(0, 0, 0); // black
+	m_pos[1] = 0.25f; m_col[1] = GLColor(128, 0, 255); // purple
+	m_pos[2] = 0.50f; m_col[2] = GLColor(255, 0, 0); // red
+	m_pos[3] = 0.75f; m_col[3] = GLColor(255, 255, 0); // yellow
+	m_pos[4] = 1.00f; m_col[4] = GLColor(255, 255, 255); // white
 }
 
 //-----------------------------------------------------------------------------
@@ -200,7 +201,7 @@ void CColorMap::Invert()
 {
 	for (int i=0; i<m_ncol/2; ++i)
 	{
-		GLCOLOR c = m_col[i];
+		GLColor c = m_col[i];
 		m_col[i] = m_col[m_ncol-i-1];
 		m_col[m_ncol-i-1] = c;
 	}
@@ -246,7 +247,7 @@ void CColorTexture::UpdateTexture()
 	if ((m_colorMap < 0) || (m_colorMap >= ColorMapManager::ColorMaps())) m_colorMap = ColorMapManager::GetDefaultMap();
 	CColorMap& map = ColorMapManager::GetColorMap(m_colorMap);
 
-	GLCOLOR c;
+	GLColor c;
 	for (int i = 0; i<n; i++, pb += 3)
 	{
 		float f = (float)(i*N / n);
@@ -309,7 +310,7 @@ CColorMap& CColorTexture::ColorMap()
 }
 
 //=============================================================================
-class ColorMapTemplate
+class Post::ColorMapTemplate
 {
 public:
 	ColorMapTemplate(){}

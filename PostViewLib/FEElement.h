@@ -1,18 +1,10 @@
-// FEElement.h: interface for the FEElement class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_FEELEMENT_H__F82D0D55_F582_4ABE_9D02_C9FC5FC72C6C__INCLUDED_)
-#define AFX_FEELEMENT_H__F82D0D55_F582_4ABE_9D02_C9FC5FC72C6C__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "math3d.h"
 #include "FEItem.h"
 #include "FEFace.h"
 #include <assert.h>
+
+namespace Post {
 
 //-----------------------------------------------------------------------------
 // Different element types
@@ -259,5 +251,4 @@ private:
 private:
 	static vector<ElemTraits>	m_lib;
 };
-
-#endif // !defined(AFX_FEELEMENT_H__F82D0D55_F582_4ABE_9D02_C9FC5FC72C6C__INCLUDED_)
+}

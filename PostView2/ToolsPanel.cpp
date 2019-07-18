@@ -17,7 +17,7 @@
 #include <PostViewLib/FEMesh.h>
 #include <PostViewLib/FEModel.h>
 #include <PostViewLib/GDecoration.h>
-#include "GLModel.h"
+#include <PostGL/GLModel.h>
 #include "PointDistanceTool.h"
 #include "3PointAngleTool.h"
 #include "4PointAngleTool.h"

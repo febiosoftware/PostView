@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "FEDataField.h"
 #include "FEMeshData_T.h"
+using namespace Post;
 
 FEDataField::FEDataField(const std::string& name, Data_Type ntype, Data_Format nfmt, Data_Class ncls, unsigned int flag)
 {

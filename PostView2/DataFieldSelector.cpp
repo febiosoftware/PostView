@@ -2,6 +2,7 @@
 #include <PostViewLib/FEModel.h>
 #include <PostViewLib/constants.h>
 #include <QPainter>
+using namespace Post;
 
 CDataSelector::CDataSelector()
 {

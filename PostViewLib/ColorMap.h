@@ -1,26 +1,19 @@
-// ColorMap.h: interface for the CColorMap class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_COLORMAP_H__5CE5C222_17D8_4BD3_8CDB_D4FF17C64525__INCLUDED_)
-#define AFX_COLORMAP_H__5CE5C222_17D8_4BD3_8CDB_D4FF17C64525__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "GLTexture1D.h"
 #include "color.h"
 #include <vector>
 #include <string>
 using namespace std;
 
-#define MAX_MAP_COLORS	9
+namespace Post {
 
 class CGLTexture1D;
 
 class CColorMap  
 {
+public:
+	enum { MAX_MAP_COLORS = 9 };
+
 public:
 	CColorMap();
 	CColorMap(const CColorMap& map);
@@ -40,13 +33,13 @@ public:
 	void rbb   ();
 	void fire  ();
 
-	GLCOLOR map(float fval) const;
+	GLColor map(float fval) const;
 
 	int Colors() const { return m_ncol; }
 	void SetColors(int n) { m_ncol = n; }
 
-	GLCOLOR GetColor(int i) const { return m_col[i]; }
-	void SetColor(int i, GLCOLOR c) { m_col[i] = c; }
+	GLColor GetColor(int i) const { return m_col[i]; }
+	void SetColor(int i, GLColor c) { m_col[i] = c; }
 
 	float GetColorPos(int i) const { return m_pos[i]; }
 	void SetColorPos(int i, float v) { m_pos[i] = v; }
@@ -55,7 +48,7 @@ public:
 
 protected:
 	int		m_ncol;
-	GLCOLOR	m_col[MAX_MAP_COLORS];
+	GLColor	m_col[MAX_MAP_COLORS];
 	float	m_pos[MAX_MAP_COLORS];
 };
 
@@ -147,5 +140,4 @@ private:
 private:
 	static vector<class ColorMapTemplate>	m_map;
 };
-
-#endif // !defined(AFX_COLORMAP_H__5CE5C222_17D8_4BD3_8CDB_D4FF17C64525__INCLUDED_)
+}

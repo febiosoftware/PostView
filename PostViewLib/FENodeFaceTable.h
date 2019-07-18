@@ -1,7 +1,8 @@
 #pragma once
 #include <vector>
-using namespace std;
 
+namespace Post {
+	
 class FEMeshBase;
 
 class FENodeFaceTable
@@ -15,5 +16,6 @@ protected:
 
 protected:
 	FEMeshBase*	m_pm;
-	vector<vector<int> >	m_NFT;
+	std::vector< std::vector<int> >	m_NFT;
 };
+}

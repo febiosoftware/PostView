@@ -2,6 +2,7 @@
 #include "ShellThicknessTool.h"
 #include "Document.h"
 #include <PostViewLib/FEModel.h>
+using namespace Post;
 
 //-----------------------------------------------------------------------------
 CShellThicknessTool::Props::Props(CShellThicknessTool* ptool) : m_ptool(ptool)

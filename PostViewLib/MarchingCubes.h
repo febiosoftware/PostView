@@ -3,6 +3,9 @@
 #include <vector>
 #include "math3d.h"
 #include "color.h"
+
+namespace Post {
+
 class CImageModel;
 
 class TriMesh
@@ -46,8 +49,8 @@ public:
 	bool GetSmooth() const { return m_bsmooth; }
 	void SetSmooth(bool b);
 
-	GLCOLOR GetColor() const { return m_col; }
-	void SetColor(GLCOLOR c) { m_col = c; }
+	GLColor GetColor() const { return m_col; }
+	void SetColor(GLColor c) { m_col = c; }
 
 	bool GetInvertSpace() const { return m_binvertSpace; }
 	void SetInvertSpace(bool b);
@@ -69,8 +72,9 @@ private:
 	bool	m_bsmooth;
 	bool	m_bcloseSurface;
 	bool	m_binvertSpace;
-	GLCOLOR	m_col;
+	GLColor	m_col;
 	TriMesh	m_mesh;
 
 	byte m_ref;
 };
+}

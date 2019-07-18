@@ -10,6 +10,7 @@
 #define FE_ERODED		0x20		// the item is "eroded" and should be treated as no longer present
 // Even when not hidden, the item may not be shown since e.g. the material is hidden
 
+namespace Post {
 //-----------------------------------------------------------------------------
 // base class for mesh item classes.
 //
@@ -62,3 +63,4 @@ public:
 
 	unsigned int m_state;	// the state flag of the mesh(-item)
 };
+}

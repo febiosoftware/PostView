@@ -1,7 +1,8 @@
 #pragma once
 #include "FEElement.h"
 #include <vector>
-using namespace std;
+
+namespace Post {
 
 //-----------------------------------------------------------------------------
 // Forward declaration of the mesh class
@@ -35,3 +36,5 @@ protected:
 	vector<int>		m_index;	// offset in edge list
 	vector<int>		m_edge;		// edge list
 };
+
+}

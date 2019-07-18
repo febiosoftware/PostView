@@ -1,13 +1,4 @@
-// FEModel.h: interface for the FEModel class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_FESCENE_H__A88C5C01_5318_4768_8424_1F59D461D94C__INCLUDED_)
-#define AFX_FESCENE_H__A88C5C01_5318_4768_8424_1F59D461D94C__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
 #include "FEMesh.h"
 #include "FEMaterial.h"
@@ -16,6 +7,8 @@
 #include "bbox.h"
 #include <vector>
 using namespace std;
+
+namespace Post {
 
 //-----------------------------------------------------------------------------
 class MetaData
@@ -218,5 +211,4 @@ protected:
 
 	static FEModel*	m_pThis;
 };
-
-#endif // !defined(AFX_FESCENE_H__A88C5C01_5318_4768_8424_1F59D461D94C__INCLUDED_)
+} // namespace Post

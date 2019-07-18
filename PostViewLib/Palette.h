@@ -14,17 +14,17 @@ public:
 	const string& Name() const { return m_name; }
 
 	// add a color
-	void AddColor(const GLCOLOR& c);
+	void AddColor(const GLColor& c);
 
 	// return number of colors
 	int Colors() const;
 
 	// return a color
 	// (out-of-range returns black)
-	GLCOLOR Color(int i) const;
+	GLColor Color(int i) const;
 	
 private:
-	vector<GLCOLOR>	m_col;
+	vector<GLColor>	m_col;
 	string			m_name;
 };
 

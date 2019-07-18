@@ -12,9 +12,12 @@
 // forward declarations
 class CMainWindow;
 class CDocument;
-class CGLModel;
-class CGLContext;
-class FEMeshBase;
+
+namespace Post {
+	class FEMeshBase;
+	class CGLModel;
+	class CGLContext;
+}
 
 //-----------------------------------------------------------------------------
 // Animation modes
@@ -34,14 +37,6 @@ enum View_Mode {
 	VIEW_RIGHT,
 	VIEW_FRONT,
 	VIEW_BACK
-};
-
-//-----------------------------------------------------------------------------
-// view conventions
-enum View_Convention {
-    CONV_FR_XZ,
-    CONV_FR_XY,
-    CONV_US_XY
 };
 
 //-----------------------------------------------------------------------------
@@ -71,7 +66,7 @@ inline bool operator == (const MyPoint& p1, const MyPoint& p2)
 // helper structur for picking nodes
 struct GLNODE_PICK
 {
-	FEMeshBase*	m_pm;
+	Post::FEMeshBase*	m_pm;
 	int		m_node;
 };
 
@@ -127,7 +122,9 @@ private:
 	int m_y0, m_y1;
 };
 
-class CGLCamera;
+namespace Post {
+	class CGLCamera;
+}
 
 class CGLView : public QOpenGLWidget
 {
@@ -137,7 +134,7 @@ public:
 	CGLView(CMainWindow* pwnd, QWidget* parent = 0);
 	~CGLView();
 
-	CGLCamera& GetCamera();
+	Post::CGLCamera& GetCamera();
 
 	QImage CaptureScreen();
 
@@ -191,8 +188,8 @@ public:
 	ANIMATION_MODE AnimationMode() const;
 	bool HasRecording() const;
 
-	bool FindFaceIntersection(const Ray& ray, const FEMeshBase& mesh, Intersection& q);
-	bool FindElementIntersection(const Ray& ray, const FEMeshBase& mesh, Intersection& q);
+	bool FindFaceIntersection(const Post::Ray& ray, const Post::FEMeshBase& mesh, Post::Intersection& q);
+	bool FindElementIntersection(const Post::Ray& ray, const Post::FEMeshBase& mesh, Post::Intersection& q);
 
 protected:
 	void initializeGL();
@@ -214,14 +211,14 @@ protected slots:
 protected:
 	void Clear();
 
-	void RenderBkGround(GLCOLOR c1, GLCOLOR c2, int style);
+	void RenderBkGround(GLColor c1, GLColor c2, int style);
 	void RenderRubberBand();
 	void RenderWidgets();
 	void RenderBox(const BOUNDINGBOX& box);
-	void RenderPlots(CGLContext& rc);
+	void RenderPlots(Post::CGLContext& rc);
 
 	// calculate a ray based on screen position (x, y)
-	Ray PointToRay(int x, int y);
+	Post::Ray PointToRay(int x, int y);
 
 	// Render the model
 	void RenderModel();
@@ -241,10 +238,10 @@ protected:
 	void RegionSelectNodes   (const SelectRegion& region, int mode);
 	void RegionSelectEdges   (const SelectRegion& region, int mode);
 
-	void TagBackfacingElements(FEMeshBase& mesh);
-	void TagBackfacingFaces(FEMeshBase& mesh);
-	void TagBackfacingNodes(FEMeshBase& mesh);
-	void TagBackfacingEdges(FEMeshBase& mesh);
+	void TagBackfacingElements(Post::FEMeshBase& mesh);
+	void TagBackfacingFaces(Post::FEMeshBase& mesh);
+	void TagBackfacingNodes(Post::FEMeshBase& mesh);
+	void TagBackfacingEdges(Post::FEMeshBase& mesh);
 
 	void AddRegionPoint(int x, int y);
 

@@ -50,7 +50,7 @@ public:
 	int add_attribute(const char* szn, int n);
 	int add_attribute(const char* szn, bool b);
 	int add_attribute(const char* szn, double g);
-	int add_attribute(const char* szn, GLCOLOR& c);
+	int add_attribute(const char* szn, GLColor& c);
 	int add_attribute(const char* szn, double* v, int n);
 	int add_attribute(const char* szn, int* d, int n);
 
@@ -104,7 +104,7 @@ public:
 	void add_leaf(const char* szn, float* pf, int n);
 	void add_leaf(const char* szn, double* pg, int n);
 	void add_leaf(const char* szn, const vec3f& r){ char szv[256]; sprintf(szv, "%g,%g,%g", r.x, r.y, r.z); add_leaf(szn, szv); }
-	void add_leaf(const char* szn, GLCOLOR& c) { char szv[256]; sprintf(szv, "%d,%d,%d,%d", (int) c.r, (int) c.g, (int) c.b, (int) c.a); add_leaf(szn, szv); }
+	void add_leaf(const char* szn, GLColor& c) { char szv[256]; sprintf(szv, "%d,%d,%d,%d", (int) c.r, (int) c.g, (int) c.b, (int) c.a); add_leaf(szn, szv); }
 
 	void close_branch();
 

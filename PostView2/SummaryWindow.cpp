@@ -12,8 +12,9 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <PostViewLib/constants.h>
-#include "GLDataMap.h"
-#include "GLModel.h"
+#include <PostGL/GLDataMap.h>
+#include <PostGL/GLModel.h>
+using namespace Post;
 
 CSummaryWindow::CSummaryWindow(CMainWindow* wnd) : CGraphWindow(wnd)
 {

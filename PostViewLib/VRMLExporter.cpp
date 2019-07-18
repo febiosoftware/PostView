@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "VRMLExporter.h"
-
+using namespace Post;
 //-----------------------------------------------------------------------------
 
 VRMLExporter::VRMLExporter(void)
@@ -189,7 +189,7 @@ void VRMLExporter::write_mesh()
 	{
 		FEFace& face = mesh.Face(i);
 		int matid = mesh.Element(face.m_elem[0]).m_MatID;
-		GLCOLOR& col = m_pscene->GetMaterial(matid)->diffuse;
+		GLColor& col = m_pscene->GetMaterial(matid)->diffuse;
 		r = (float) col.r *f;
 		g = (float) col.g *f;
 		b = (float) col.b *f;

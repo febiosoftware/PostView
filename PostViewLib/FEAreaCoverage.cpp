@@ -3,7 +3,7 @@
 #include "FEModel.h"
 #include "FEMeshData_T.h"
 #include "Intersect.h"
-
+using namespace Post;
 
 //-----------------------------------------------------------------------------
 void FEAreaCoverage::Surface::Create(FEMeshBase& mesh)

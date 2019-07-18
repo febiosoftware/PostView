@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "FEFEBioExport.h"
 #include "XMLWriter.h"
+using namespace Post;
 
 const char* elementTypeStr(int ntype)
 {

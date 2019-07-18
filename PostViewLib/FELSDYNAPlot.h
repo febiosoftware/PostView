@@ -1,6 +1,8 @@
 #pragma once
 #include "FEFileReader.h"
 
+namespace Post {
+
 struct PLOTHEADER
 {
 	char	Title[40];		// title of the problem
@@ -84,3 +86,4 @@ class FELSDYNAPlotExport
 public:
 	bool Save(FEModel& fem, const char* szfile, bool bflag[6], int ncode[6]);
 };
+}

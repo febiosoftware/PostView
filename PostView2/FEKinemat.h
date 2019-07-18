@@ -1,7 +1,6 @@
 #pragma once
 #include <list>
 #include <PostViewLib/math3d.h>
-using namespace std;
 
 class CDocument;
 

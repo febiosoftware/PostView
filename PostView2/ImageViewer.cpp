@@ -11,7 +11,8 @@
 #include <QLabel>
 #include <QComboBox>
 #include <PostViewLib/FEModel.h>
-#include "GLModel.h"
+#include <PostGL/GLModel.h>
+using namespace Post;
 
 class CImageViewer::Ui
 {

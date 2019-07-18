@@ -18,13 +18,14 @@
 #include "MainWindow.h"
 #include "Document.h"
 #include <PostViewLib/FEModel.h>
-#include "GLModel.h"
+#include <PostGL/GLModel.h>
 #include <QtCore/QAbstractTableModel>
 #include <PostViewLib/DataFilter.h>
 #include "PropertyListView.h"
 #include <PostViewLib/FEMeshData_T.h>
 #include <PostViewLib/FEMathData.h>
 #include "DlgAddEquation.h"
+using namespace Post;
 
 class CCurvatureProps : public CPropertyList
 {

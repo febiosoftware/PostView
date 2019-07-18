@@ -39,21 +39,21 @@ public:
 };
 
 // Derived class that builds the menu of a CDataSelectorButton from the model's data
-class CModelDataSelector : public CDataSelector, public FEModelDependant
+class CModelDataSelector : public CDataSelector, public Post::FEModelDependant
 {
 public:
-	CModelDataSelector(FEModel* fem, Data_Tensor_Type ntype, bool btvec = false);
+	CModelDataSelector(Post::FEModel* fem, Post::Data_Tensor_Type ntype, bool btvec = false);
 	~CModelDataSelector();
 
 	void BuildMenu(QMenu* menu) override;
 
 public:
 	// inherited from FEModelDependant
-	void Update(FEModel* pfem);
+	void Update(Post::FEModel* pfem);
 
 private:
-	FEModel*			m_fem;
-	Data_Tensor_Type	m_class;
+	Post::FEModel*			m_fem;
+	Post::Data_Tensor_Type	m_class;
 	bool m_bvec;
 };
 
@@ -99,5 +99,5 @@ class CDataFieldSelector : public CDataSelectorButton
 public:
 	CDataFieldSelector(QWidget* parent = nullptr);
 
-	void BuildMenu(FEModel* fem, Data_Tensor_Type ntype, bool btvec = false);
+	void BuildMenu(Post::FEModel* fem, Post::Data_Tensor_Type ntype, bool btvec = false);
 };

@@ -12,6 +12,7 @@
 #include "CIntInput.h"
 #include "FEKinemat.h"
 #include "MainWindow.h"
+using namespace Post;
 
 class CPlotMixToolUI : public QWidget
 {

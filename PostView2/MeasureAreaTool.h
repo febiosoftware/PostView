@@ -4,8 +4,11 @@
 
 //-----------------------------------------------------------------------------
 class CDocument;
-class FEState;
-class FEFace;
+
+namespace Post {
+	class FEState;
+	class FEFace;
+}
 
 //-----------------------------------------------------------------------------
 // This tool measures the angle between three consecutively selected nodes
@@ -35,7 +38,7 @@ public:
 	void update(bool breset) override;
 
 private:
-	double getValue(FEState* state, const std::vector<FEFace*>& selection);
+	double getValue(Post::FEState* state, const std::vector<Post::FEFace*>& selection);
 
 private:
 	int		m_nsel;		// selected faces

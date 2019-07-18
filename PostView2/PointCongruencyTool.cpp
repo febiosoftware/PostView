@@ -11,6 +11,7 @@
 #include <PostViewLib/SphereFit.h>
 #include "PropertyListView.h"
 #include <PostViewLib/FEPointCongruency.h>
+using namespace Post;
 
 class CPointCongruencyToolUI : public QWidget
 {

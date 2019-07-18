@@ -5,6 +5,8 @@
 
 //-----------------------------------------------------------------------------
 // forward declaration of the FEModel class
+namespace Post {
+
 class FEModel;
 
 //-----------------------------------------------------------------------------
@@ -130,3 +132,4 @@ public:
 
 	FEMeshData* CreateData(FEState* pstate) override;
 };
+}

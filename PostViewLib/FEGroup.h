@@ -3,6 +3,7 @@
 #include <vector>
 using namespace std;
 
+namespace Post {
 //-----------------------------------------------------------------------------
 // forward declaration of the mesh class
 class FEMeshBase;
@@ -96,3 +97,4 @@ public:
 public:
 	vector<int>	m_Node;
 };
+}

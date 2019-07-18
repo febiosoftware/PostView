@@ -21,10 +21,10 @@ public:
 
 	void paintEvent(QPaintEvent* ev) override;
 
-	void setColorMap(const CColorMap& m);
+	void setColorMap(const Post::CColorMap& m);
 
 private:
-	CColorMap	m_map;
+	Post::CColorMap	m_map;
 };
 
 class CColormapWidget : public QWidget
@@ -34,7 +34,7 @@ class CColormapWidget : public QWidget
 public:
 	CColormapWidget(QWidget* parent = 0);
 
-	void updateColorMap(const CColorMap& map);
+	void updateColorMap(const Post::CColorMap& map);
 
 	void clearGrid();
 

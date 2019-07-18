@@ -14,9 +14,10 @@
 #include <QLabel>
 #include <QFileDialog>
 #include <QMessageBox>
-#include "GLLinePlot.h"
+#include <PostGL/GLLinePlot.h>
 #include <PostViewLib/FEDistanceMap.h>
 #include <PostViewLib/FECurvatureMap.h>
+using namespace Post;
 
 class CDistanceMapToolUI : public QWidget
 {

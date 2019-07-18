@@ -4,6 +4,8 @@
 #include <ctype.h>
 #include "color.h"
 
+using namespace Post;
+
 FESTLimport::FESTLimport(void) : FEFileReader("STL")
 {
 

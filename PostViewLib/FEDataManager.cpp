@@ -2,6 +2,7 @@
 #include "FEDataManager.h"
 #include "FEModel.h"
 #include "constants.h"
+using namespace Post;
 
 FEDataManager::FEDataManager(FEModel* pm)
 {

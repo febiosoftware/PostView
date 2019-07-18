@@ -2,6 +2,8 @@
 #include "FENodeEdgeList.h"
 #include "FEMesh.h"
 
+using namespace Post;
+
 FENodeEdgeList::FENodeEdgeList(void)
 {
 	m_pm = 0; 

@@ -1,15 +1,16 @@
 #include "stdafx.h"
 #include "Interpolator.h"
+using namespace Post;
 
 int Interpolator::m_nsteps = 20;
 double Interpolator::m_smooth = 0.8;
 
-double bias(double g, double x)
+static double bias(double g, double x)
 {
     return pow(x,log(g)/log(0.5));
 }
 
-double gain(double g, double x)
+static double gain(double g, double x)
 {
   if (x < 0.5) return bias(1-g,2.0*x)*0.5;
      else return 1 - bias(1-g,2-2*x)*0.5;

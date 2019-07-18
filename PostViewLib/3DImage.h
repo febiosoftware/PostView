@@ -13,6 +13,8 @@
 #include "GLObject.h"
 #include "bbox.h"
 
+namespace Post {
+
 //-----------------------------------------------------------------------------
 // A class for representing 3D image stacks
 class C3DImage : public CGLObject
@@ -76,6 +78,7 @@ private:
 	C3DImage&	m_im;
 	BOUNDINGBOX	m_box;
 };
+}
 
 //-----------------------------------------------------------------------------
 // helper functions

@@ -2,6 +2,8 @@
 #include "FEItem.h"
 #include "math3d.h"
 
+namespace Post {
+
 //-----------------------------------------------------------------------------
 // Different edge types
 enum FEEdgeType {
@@ -48,3 +50,4 @@ public:
 	// evaluate a vector expression at iso-points (r,s)
 	vec3f eval(vec3f* v, double r);
 };
+}

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "FELSDYNAExport.h"
+using namespace Post;
 
 //-----------------------------------------------------------------------------
 FELSDYNAExport::FELSDYNAExport()

@@ -4,7 +4,10 @@
 
 //-----------------------------------------------------------------------------
 class QTreeWidgetItem;
-class CGLObject;
+
+namespace Post {
+	class CGLObject;
+}
 
 //-----------------------------------------------------------------------------
 namespace Ui {
@@ -25,9 +28,9 @@ public:
 	// this is called when the view needs to be updated
 	void UpdateView();
 
-	void selectObject(CGLObject* po);
+	void selectObject(Post::CGLObject* po);
 
-	CGLObject* selectedObject();
+	Post::CGLObject* selectedObject();
 
 private slots:
 	void on_modelTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* prev);
@@ -40,6 +43,6 @@ private slots:
 //	void on_applyButton_clicked();
 
 private:
-	Ui::CModelViewer*			ui;
-	std::vector<CGLObject*>		m_obj;
+	Ui::CModelViewer*				ui;
+	std::vector<Post::CGLObject*>	m_obj;
 };

@@ -6,7 +6,10 @@
 
 class CMainWindow;
 class QModelIndex;
-class FEDataField;
+
+namespace Post {
+	class FEDataField;
+}
 
 namespace Ui {
 	class CDataPanel;
@@ -67,7 +70,7 @@ public:
 	CDlgFilter(QWidget* parent);
 
 	void setDataOperands(const std::vector<QString>& opNames);
-	void setDataField(FEDataField* pdf);
+	void setDataField(Post::FEDataField* pdf);
 
 	int getArrayComponent();
 

@@ -4,8 +4,9 @@
 #include "constants.h"
 #include "FEMeshData_T.h"
 #include "evaluate.h"
+using namespace Post;
 
-bool DataScale(FEModel& fem, int nfield, double scale)
+bool Post::DataScale(FEModel& fem, int nfield, double scale)
 {
 	FEMeshBase& mesh = *fem.GetFEMesh(0);
 	float fscale = (float) scale;
@@ -500,7 +501,7 @@ bool DataSmoothStep(FEModel& fem, int nfield, double theta)
 
 //-----------------------------------------------------------------------------
 // Apply a smoothing operation on data
-bool DataSmooth(FEModel& fem, int nfield, double theta, int niters)
+bool Post::DataSmooth(FEModel& fem, int nfield, double theta, int niters)
 {
 	for (int n = 0; n<niters; ++n) 
 	{
@@ -519,7 +520,7 @@ double flt_div(double d, double s) { return d/s; }
 double flt_err(double d, double s) { return fabs(d - s); }
 
 //-----------------------------------------------------------------------------
-bool DataArithmetic(FEModel& fem, int nfield, int nop, int noperand)
+bool Post::DataArithmetic(FEModel& fem, int nfield, int nop, int noperand)
 {
 	int ndst = FIELD_CODE(nfield);
 	int nsrc = FIELD_CODE(noperand);
@@ -691,7 +692,7 @@ bool DataArithmetic(FEModel& fem, int nfield, int nop, int noperand)
 }
 
 //-----------------------------------------------------------------------------
-bool DataGradient(FEModel& fem, int vecField, int sclField)
+bool Post::DataGradient(FEModel& fem, int vecField, int sclField)
 {
 	int nvec = FIELD_CODE(vecField);
 	int nscl = FIELD_CODE(sclField);
@@ -999,7 +1000,7 @@ void extractElemDataComponentNODE(Data_Type ntype, FEMeshData& dst, FEMeshData& 
 	}
 }
 
-FEDataField* DataComponent(FEModel& fem, FEDataField* pdf, int ncomp, const std::string& sname)
+FEDataField* Post::DataComponent(FEModel& fem, FEDataField* pdf, int ncomp, const std::string& sname)
 {
 	if (pdf == 0) return 0;
 

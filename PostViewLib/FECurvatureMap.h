@@ -3,6 +3,8 @@
 #include "math3d.h"
 #include "FEMeshData_T.h"
 
+namespace Post {
+
 //-----------------------------------------------------------------------------
 // This class measures the congruency between two surfaces
 class FECongruencyMap
@@ -64,3 +66,4 @@ protected:
 
 	double	m_tol;	// projection tolerance
 };
+}

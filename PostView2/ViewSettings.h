@@ -16,9 +16,9 @@
 // View Settings
 struct VIEWSETTINGS
 {
-	GLCOLOR	bgcol1;
-	GLCOLOR	bgcol2;
-	GLCOLOR	fgcol;
+	GLColor	bgcol1;
+	GLColor	bgcol2;
+	GLColor	fgcol;
 
 	int		bgstyle;
 

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "FEMesh.h"
-
+using namespace Post;
 //-----------------------------------------------------------------------------
 // Integration rule for quads
 // first index is integration point, second is node

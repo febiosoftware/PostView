@@ -3,6 +3,7 @@
 #include "Document.h"
 #include "PostViewLib/FELSDYNAimport.h"
 #include "PostViewLib/FEMeshData_T.h"
+using namespace Post;
 
 //-----------------------------------------------------------------------------
 vec3f FEKinemat::KINE::apply(const vec3f& r)

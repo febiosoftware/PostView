@@ -2,6 +2,8 @@
 #include "FEU3DImport.h"
 #include "U3DFile.h"
 
+using namespace Post;
+
 FEU3DImport::FEU3DImport() : FEFileReader("U3D")
 {
 }

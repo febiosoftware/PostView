@@ -1,7 +1,3 @@
-// GLCamera.cpp: implementation of the CGLCamera class.
-//
-//////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "GLCamera.h"
 #ifdef WIN32
@@ -20,6 +16,8 @@
 static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
+
+using namespace Post;
 
 //-----------------------------------------------------------------------------
 void glxTranslate(const vec3f& r)
@@ -185,6 +183,12 @@ void CGLCamera::Zoom(float f)
 void CGLCamera::SetTarget(const vec3f& r)
 {
 	m_pos.Target(r);
+}
+
+// set the target in local coordinates
+void CGLCamera::SetLocalTarget(const vec3f& r)
+{
+	m_trg.Target(r);
 }
 
 void CGLCamera::SetViewDirection(const vec3f &r)

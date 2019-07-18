@@ -1,6 +1,8 @@
 #pragma once
 #include "FEModel.h"
 
+namespace Post {
+
 class FEASCIIExport
 {
 public:
@@ -17,3 +19,4 @@ public:
 	bool	m_bfnormals;	// export facet normals
 	char	m_szfmt[256];	// format string
 };
+}

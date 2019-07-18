@@ -101,7 +101,7 @@ void XMLAtt::value(double& v)
 	v = atof(m_szval);
 }
 
-void XMLAtt::value(GLCOLOR& v)
+void XMLAtt::value(GLColor& v)
 {
 	int r, g, b, a;
 	sscanf(m_szval, "#%2X%2X%2X%2X", &r, &g, &b, &a);

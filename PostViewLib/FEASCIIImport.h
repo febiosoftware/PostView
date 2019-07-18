@@ -1,11 +1,10 @@
 #pragma once
-
 #include "FEFileReader.h"
-
 #include <list>
 #include <vector>
 using namespace std;
 
+namespace Post {
 //-----------------------------------------------------------------------------
 // Imports a Tecplot data text file
 class FEASCIIImport : public FEFileReader
@@ -74,3 +73,4 @@ protected:
 private:
 	char	m_szline[256];
 };
+}

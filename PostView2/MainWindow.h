@@ -7,11 +7,14 @@
 #include "Document.h"
 
 class CGLView;
-class FEFileReader;
 class CFileThread;
 class CTimePanel;
 class CDocManager;
 class CGraphWindow;
+
+namespace Post {
+	class FEFileReader;
+}
 
 namespace Ui {
 	class CMainWindow;

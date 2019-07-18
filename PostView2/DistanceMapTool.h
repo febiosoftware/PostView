@@ -1,7 +1,5 @@
 #pragma once
 #include "Tool.h"
-#include <vector>
-using namespace std;
 
 //-----------------------------------------------------------------------------
 class CDocument;

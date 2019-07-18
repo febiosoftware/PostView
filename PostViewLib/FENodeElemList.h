@@ -4,6 +4,7 @@
 #include <vector>
 using namespace std;
 
+namespace Post {
 //-----------------------------------------------------------------------------
 // Forward declaration of the mesh class
 class FEMeshBase;
@@ -33,3 +34,4 @@ protected:
 	FEMeshBase*	m_pm;
 	vector<vector<NodeElemRef> >	m_NEL;
 };
+}

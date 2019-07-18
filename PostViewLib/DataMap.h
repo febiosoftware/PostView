@@ -4,6 +4,7 @@
 #include <vector>
 using namespace std;
 
+namespace Post {
 class FEMeshBase;
 
 //-----------------------------------------------------------------------------
@@ -43,3 +44,4 @@ public:
 	// calculate the data gradient
 	void Gradient(int ntime, vector<float>& v);
 };
+}

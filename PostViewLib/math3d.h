@@ -5,10 +5,17 @@
 #include <vector>
 using namespace std;
 
+#ifndef PI
 #define PI 3.1415926f
+#endif
 
+#ifndef DEG2RAD
 #define DEG2RAD (PI/180.f)
+#endif
+
+#ifndef RAD2DEG
 #define RAD2DEG (180.f/PI)
+#endif
 
 #define MAX(a,b) ((a)>(b)?(a):(b))
 #define MIN(a,b) ((a)<(b)?(a):(b))

@@ -6,13 +6,13 @@
 #include <PostViewLib/3DImage.h>
 #include <PostViewLib/GLImageRenderer.h>
 #include <PostViewLib/FEMeshData_T.h>
-#include "GLPlot.h"
-#include "GLModel.h"
+#include <PostGL/GLPlot.h>
+#include <PostGL/GLModel.h>
 #include <PostViewLib/constants.h>
 #include <PostViewLib/Palette.h>
 #include <PostViewLib/FEAsciiExport.h>
-#include "GLModel.h"
 #include <PostViewLib/ImageModel.h>
+using namespace Post;
 
 #ifdef WIN32
 	#include "direct.h"	// for getcwd, chdir
@@ -426,13 +426,13 @@ void CDocument::ApplyPalette(const CPalette& pal)
 	int nmat = m_fem->Materials();
 	for (int i = 0; i<nmat; i++)
 	{
-		GLCOLOR c = pal.Color(i % NCOL);
+		GLColor c = pal.Color(i % NCOL);
 
 		FEMaterial& m = *m_fem->GetMaterial(i);
 		m.diffuse = c;
 		m.ambient = c;
-		m.specular = GLCOLOR(128, 128, 128);
-		m.emission = GLCOLOR(0, 0, 0);
+		m.specular = GLColor(128, 128, 128);
+		m.emission = GLColor(0, 0, 0);
 		m.shininess = 0.5f;
 		m.transparency = 1.f;
 	}

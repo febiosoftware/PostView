@@ -1,17 +1,10 @@
-// VolRender.h: interface for the CVolRender class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_VOLRENDER_H__C7D04B9A_3A3A_4CB1_AA86_488412332A7A__INCLUDED_)
-#define AFX_VOLRENDER_H__C7D04B9A_3A3A_4CB1_AA86_488412332A7A__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
 #include "3DImage.h"
 #include "bbox.h"
 #include "GLImageRenderer.h"
+
+namespace Post {
 
 class CImageModel;
 
@@ -52,9 +45,9 @@ protected:
 	void UpdateRGBImages();
 
 public:
-	CColorTexture	m_Col;		//!< color texture
-	GLCOLOR	m_amb;				//!< ambient color
-	GLCOLOR m_spc;				//!< specular color
+	Post::CColorTexture	m_Col;		//!< color texture
+	GLColor	m_amb;				//!< ambient color
+	GLColor m_spc;				//!< specular color
 	int		m_I0, m_I1;			// intensity range
 	int		m_A0, m_A1;			// transparency range
 	int		m_Amin, m_Amax;		// clamp transparency levels
@@ -86,5 +79,4 @@ protected:
 
 	int	m_LUT[256], m_LUTC[4][256];
 };
-
-#endif // !defined(AFX_VOLRENDER_H__C7D04B9A_3A3A_4CB1_AA86_488412332A7A__INCLUDED_)
+}

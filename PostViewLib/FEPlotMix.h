@@ -1,6 +1,8 @@
 #pragma once
 #include "FEModel.h"
 
+namespace Post {
+
 class FEPlotMix
 {
 public:
@@ -12,3 +14,4 @@ public:
 protected:
 	void ClearStates(FEModel& fem);
 };
+}

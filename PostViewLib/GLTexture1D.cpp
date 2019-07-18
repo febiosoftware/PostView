@@ -1,7 +1,3 @@
-// GLTexture1D.cpp: implementation of the CGLTexture1D class.
-//
-//////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #ifdef WIN32
 #include <Windows.h>
@@ -14,6 +10,7 @@
 #include <GL/gl.h>
 #endif
 #include "GLTexture1D.h"
+using namespace Post;
 
 GLTexture1D::GLTexture1D()
 {

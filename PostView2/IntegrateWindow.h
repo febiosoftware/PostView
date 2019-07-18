@@ -5,11 +5,14 @@
 #include "GraphWindow.h"
 
 class CMainWindow;
-class CGLPlaneCutPlot;
-class FEMeshBase;
-class FEState;
-class FEModel;
 class CLineChartData;
+
+namespace Post {
+	class FEMeshBase;
+	class FEState;
+	class FEModel;
+	class CGLPlaneCutPlot;
+}
 
 class CIntegrateWindow : public CGraphWindow
 {
@@ -21,19 +24,19 @@ public:
 	void Update(bool breset = true, bool bfit = false) override;
 
 private:
-	double IntegrateNodes(FEMeshBase& mesh, FEState* ps);
-	double IntegrateEdges(FEMeshBase& mesh, FEState* ps);
-	double IntegrateFaces(FEMeshBase& mesh, FEState* ps);
-	double IntegrateElems(FEMeshBase& mesh, FEState* ps);
+	double IntegrateNodes(Post::FEMeshBase& mesh, Post::FEState* ps);
+	double IntegrateEdges(Post::FEMeshBase& mesh, Post::FEState* ps);
+	double IntegrateFaces(Post::FEMeshBase& mesh, Post::FEState* ps);
+	double IntegrateElems(Post::FEMeshBase& mesh, Post::FEState* ps);
 
 	void UpdateSourceOptions();
 
 	void UpdateIntegral();
 	void IntegrateSelection(CLineChartData& data);
-	void IntegratePlaneCut(CGLPlaneCutPlot* pp, CLineChartData& data);
+	void IntegratePlaneCut(Post::CGLPlaneCutPlot* pp, CLineChartData& data);
 
 private:
-	std::vector<CGLPlaneCutPlot*>	m_src;
+	std::vector<Post::CGLPlaneCutPlot*>	m_src;
 	int		m_nsrc;
 	bool	m_updating;
 };

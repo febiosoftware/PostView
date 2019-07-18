@@ -12,6 +12,7 @@
 #include <PostViewLib/3DImage.h>
 #include "MainWindow.h"
 #include <PostViewLib/ImageModel.h>
+using namespace Post;
 
 class CAddImage3DToolUI : public QWidget
 {

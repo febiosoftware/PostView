@@ -1,6 +1,8 @@
 #pragma once
 #include "FEFileReader.h"
 
+namespace Post {
+
 class FEMeshBase;
 
 class FENikeImport : public FEFileReader
@@ -29,3 +31,4 @@ protected:
 
 	FEMeshBase*	m_pm;
 };
+}

@@ -1,7 +1,9 @@
 #pragma once
 #include "FEFileExport.h"
 
-//-----------------------------------------------------------------------------
+namespace Post {
+
+	//-----------------------------------------------------------------------------
 class FEVTKExport : public FEFileExport
 {
 public:
@@ -31,3 +33,4 @@ private:
 private:
 	FILE*	m_fp;
 };
+}

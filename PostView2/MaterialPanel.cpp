@@ -10,6 +10,7 @@
 #include "Document.h"
 #include "PropertyListView.h"
 #include <PostViewLib/FEModel.h>
+using namespace Post;
 
 class MaterialProps : public CPropertyList
 {
@@ -144,7 +145,7 @@ public:
 		QMetaObject::connectSlotsByName(parent);
 	}
 
-	void setColor(QListWidgetItem* item, GLCOLOR c)
+	void setColor(QListWidgetItem* item, GLColor c)
 	{
 		QPixmap pix(24, 24);
 		pix.fill(QColor(c.r, c.g, c.b));
@@ -325,7 +326,7 @@ void CMaterialPanel::on_editName_editingFinished()
 	}
 }
 
-void CMaterialPanel::SetItemColor(int nmat, GLCOLOR c)
+void CMaterialPanel::SetItemColor(int nmat, GLColor c)
 {
 	QListWidgetItem* item = ui->m_list->item(nmat);
 	ui->setColor(item, c);

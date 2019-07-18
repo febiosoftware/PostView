@@ -11,6 +11,8 @@
 
 extern int ET_HEX[12][2];
 
+namespace Post {
+
 FEModel* FEModel::m_pThis = 0;
 
 //=============================================================================
@@ -926,4 +928,5 @@ void FEModel::UpdateMeshState(int ntime)
 		}
 		else el.SetEroded(false);
 	}
+}
 }

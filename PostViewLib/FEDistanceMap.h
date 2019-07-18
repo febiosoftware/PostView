@@ -1,6 +1,8 @@
 #pragma once
 #include "FEModel.h"
 
+namespace Post {
+
 //-----------------------------------------------------------------------------
 // This class maps the distance between two surfaces and adds a field variable
 // to the mesh
@@ -53,3 +55,4 @@ public:
 	double	m_tol;			//!< projection tolerance
 	bool	m_bsigned;		//!< signed or non-signed distance
 };
+}

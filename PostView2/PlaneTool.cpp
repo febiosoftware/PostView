@@ -6,8 +6,9 @@
 #include <QGroupBox>
 #include <QPushButton>
 #include "Document.h"
-#include "GLModel.h"
+#include <PostGL/GLModel.h>
 #include <PostViewLib/FEMesh.h>
+using namespace Post;
 
 //-----------------------------------------------------------------------------
 class CPlaneDecoration : public GDecoration

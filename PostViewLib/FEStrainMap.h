@@ -2,6 +2,8 @@
 #include "FEModel.h"
 #include <vector>
 
+namespace Post {
+
 class FEModel;
 
 class FEStrainMap
@@ -60,3 +62,4 @@ protected:
 
 	double	m_tol;
 };
+}

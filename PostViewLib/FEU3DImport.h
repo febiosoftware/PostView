@@ -1,6 +1,7 @@
 #pragma once
 #include "FEFileReader.h"
-using namespace std;
+
+namespace Post {
 
 class FEU3DImport : public FEFileReader
 {
@@ -9,3 +10,5 @@ public:
 
 	bool Load(FEModel& fem, const char* szfile);
 };
+
+}

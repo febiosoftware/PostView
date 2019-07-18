@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GLObject.h"
 #include <string.h>
+using namespace Post;
 
 CGLObject::CGLObject(CGLModel* mdl) : m_pModel(mdl)
 {

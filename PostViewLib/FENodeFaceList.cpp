@@ -2,6 +2,8 @@
 #include "FENodeFaceList.h"
 #include "FEMesh.h"
 
+using namespace Post;
+
 //-----------------------------------------------------------------------------
 void FENodeFaceList::Build(FEMeshBase* pm)
 {

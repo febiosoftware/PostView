@@ -24,15 +24,15 @@ int CPalette::Colors() const
 	return (int)m_col.size(); 
 }
 
-void CPalette::AddColor(const GLCOLOR& c)
+void CPalette::AddColor(const GLColor& c)
 {
 	m_col.push_back(c);
 }
 
-GLCOLOR CPalette::Color(int i) const
+GLColor CPalette::Color(int i) const
 {
 	if ((i>=0) && (i< Colors())) return m_col[i];
-	return GLCOLOR(0,0,0);
+	return GLColor(0,0,0);
 }
 
 //=============================================================================
@@ -43,31 +43,31 @@ CPaletteManager::CPaletteManager()
 	// add standard palette
 	CPalette pal("Standard");
 
-	pal.AddColor(GLCOLOR(128, 255, 0));
-	pal.AddColor(GLCOLOR(128,  0,255));
-	pal.AddColor(GLCOLOR(  0,  0,255));
-	pal.AddColor(GLCOLOR(255,255,  0));
-	pal.AddColor(GLCOLOR(255,  0,255));
-	pal.AddColor(GLCOLOR(  0,255,255));
-	pal.AddColor(GLCOLOR(255,128,  0));
-	pal.AddColor(GLCOLOR(255,  0,128));
-	pal.AddColor(GLCOLOR(255,  0,  0));
-	pal.AddColor(GLCOLOR(  0,255,128));
-	pal.AddColor(GLCOLOR(  0,255,  0));
-	pal.AddColor(GLCOLOR(  0,128,255));
-	pal.AddColor(GLCOLOR(128,  0,  0));
-	pal.AddColor(GLCOLOR(  0,128,  0));
-	pal.AddColor(GLCOLOR(  0,  0,128));
-	pal.AddColor(GLCOLOR(128,128,  0));
-	pal.AddColor(GLCOLOR(128,  0,128));
-	pal.AddColor(GLCOLOR(  0,128,128));
-	pal.AddColor(GLCOLOR(255,255,255));
-	pal.AddColor(GLCOLOR(192,192,192));
-	pal.AddColor(GLCOLOR(164,164,164));
-	pal.AddColor(GLCOLOR(128,128,128));
-	pal.AddColor(GLCOLOR( 92, 92, 92));
-	pal.AddColor(GLCOLOR( 64, 64, 64));
-	pal.AddColor(GLCOLOR( 32, 32, 32));
+	pal.AddColor(GLColor(128, 255, 0));
+	pal.AddColor(GLColor(128,  0,255));
+	pal.AddColor(GLColor(  0,  0,255));
+	pal.AddColor(GLColor(255,255,  0));
+	pal.AddColor(GLColor(255,  0,255));
+	pal.AddColor(GLColor(  0,255,255));
+	pal.AddColor(GLColor(255,128,  0));
+	pal.AddColor(GLColor(255,  0,128));
+	pal.AddColor(GLColor(255,  0,  0));
+	pal.AddColor(GLColor(  0,255,128));
+	pal.AddColor(GLColor(  0,255,  0));
+	pal.AddColor(GLColor(  0,128,255));
+	pal.AddColor(GLColor(128,  0,  0));
+	pal.AddColor(GLColor(  0,128,  0));
+	pal.AddColor(GLColor(  0,  0,128));
+	pal.AddColor(GLColor(128,128,  0));
+	pal.AddColor(GLColor(128,  0,128));
+	pal.AddColor(GLColor(  0,128,128));
+	pal.AddColor(GLColor(255,255,255));
+	pal.AddColor(GLColor(192,192,192));
+	pal.AddColor(GLColor(164,164,164));
+	pal.AddColor(GLColor(128,128,128));
+	pal.AddColor(GLColor( 92, 92, 92));
+	pal.AddColor(GLColor( 64, 64, 64));
+	pal.AddColor(GLColor( 32, 32, 32));
 
 	AddPalette(pal);
 
@@ -122,7 +122,7 @@ bool CPaletteManager::Save(const string& file, const CPalette& pal)
 			int NCOL = pal.Colors();
 			for (int i=0; i<NCOL; ++i)
 			{
-				GLCOLOR c = pal.Color(i);
+				GLColor c = pal.Color(i);
 				int v[3] = {c.r, c.g, c.b};
 				xml.add_leaf("color", v, 3);
 			}
@@ -175,7 +175,7 @@ bool CPaletteManager::Load(const string& file)
 						int c[3] = {0,0,0};
 						tag.value(c, 3);
 
-						GLCOLOR col((byte) c[0], (byte) c[1], (byte) c[2]);
+						GLColor col((byte) c[0], (byte) c[1], (byte) c[2]);
 						pal.AddColor(col);
 
 						++tag;

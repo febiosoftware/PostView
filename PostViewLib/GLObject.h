@@ -1,5 +1,8 @@
 #pragma once
 #include <string>
+
+namespace Post {
+
 class CGLContext;
 class CGLModel;
 
@@ -52,3 +55,4 @@ public:
 private:
 	bool	m_bclip;	// allow the object to be clipped
 };
+}

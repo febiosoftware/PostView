@@ -2,7 +2,8 @@
 #include "PointDistanceTool.h"
 #include <PostViewLib/GDecoration.h>
 #include "Document.h"
-#include "GLModel.h"
+#include <PostGL/GLModel.h>
+using namespace Post;
 
 class CPointDistanceDecoration : public GDecoration
 {

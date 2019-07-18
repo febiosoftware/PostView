@@ -8,6 +8,8 @@
 #include "Archive.h"
 using namespace std;
 
+namespace Post {
+
 //-----------------------------------------------------------------------------
 //! helper class for writing buffered data to file
 class FileStream
@@ -324,3 +326,4 @@ protected:
 	bool			m_bend;		// chunk end flag
 	stack<CHUNK*>	m_Chunk;
 };
+}

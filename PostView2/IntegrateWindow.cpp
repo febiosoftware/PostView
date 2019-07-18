@@ -12,9 +12,10 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <PostViewLib/constants.h>
-#include "GLDataMap.h"
-#include "GLModel.h"
-#include "GLPlaneCutPlot.h"
+#include <PostGL/GLDataMap.h>
+#include <PostGL/GLModel.h>
+#include <PostGL/GLPlaneCutPlot.h>
+using namespace Post;
 
 CIntegrateWindow::CIntegrateWindow(CMainWindow* wnd) : CGraphWindow(wnd)
 {

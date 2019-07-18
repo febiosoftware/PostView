@@ -3,6 +3,8 @@
 #include "FEModel.h"
 #include "FEMeshData_T.h"
 
+using namespace Post;
+
 enum VTK_CELLTYPE {
 	VTK_VERTEX =                 1,
 	VTK_POLY_VERTEX =            2,

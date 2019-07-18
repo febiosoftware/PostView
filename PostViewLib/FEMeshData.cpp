@@ -3,6 +3,8 @@
 #include "FEModel.h"
 #include "FEPointCongruency.h"
 
+using namespace Post;
+
 extern int ET_HEX[12][2];
 extern int DIAG_HEX[16][2];
 
@@ -29,7 +31,7 @@ void FEMeshDataList::clear()
 
 //-----------------------------------------------------------------------------
 // evaluate the spatial gradient of the shape functions in elem at point q at state
-void shape_grad(FEModel& fem, int elem, double q[3], int nstate, vec3f* G)
+void Post::shape_grad(FEModel& fem, int elem, double q[3], int nstate, vec3f* G)
 {
 	// get the mesh
 	FEState& state = *fem.GetState(nstate);

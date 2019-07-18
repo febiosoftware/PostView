@@ -1,6 +1,7 @@
 #pragma once
 #include "FEFileExport.h"
 
+namespace Post {
 //-----------------------------------------------------------------------------
 // Export model to a FEBio file
 class FEFEBioExport : public FEFileExport
@@ -11,3 +12,4 @@ public:
 
 	bool Save(FEModel& fem, const char* szfile);
 };
+}

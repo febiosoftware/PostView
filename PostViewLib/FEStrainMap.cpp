@@ -3,6 +3,8 @@
 #include "FEMeshData_T.h"
 #include "tools.h"
 
+using namespace Post;
+
 //-----------------------------------------------------------------------------
 void FEStrainMap::Surface::BuildNodeList(FEMeshBase& mesh)
 {

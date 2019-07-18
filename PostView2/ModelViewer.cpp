@@ -12,26 +12,27 @@
 #include "MainWindow.h"
 #include "Document.h"
 #include "PropertyListView.h"
-#include "GLModel.h"
+#include <PostGL/GLModel.h>
 #include <PostViewLib/FEModel.h>
-#include "GLPlot.h"
-#include "GLPlaneCutPlot.h"
-#include "GLVectorPlot.h"
-#include "GLSlicePLot.h"
-#include "GLIsoSurfacePlot.h"
-#include "GLLinePlot.h"
-#include "GLStreamLinePlot.h"
-#include "GLParticleFlowPlot.h"
-#include "GLTensorPlot.h"
+#include <PostGL/GLPlot.h>
+#include <PostGL/GLPlaneCutPlot.h>
+#include <PostGL/GLVectorPlot.h>
+#include <PostGL/GLSlicePLot.h>
+#include <PostGL/GLIsoSurfacePlot.h>
+#include <PostGL/GLLinePlot.h>
+#include <PostGL/GLStreamLinePlot.h>
+#include <PostGL/GLParticleFlowPlot.h>
+#include <PostGL/GLTensorPlot.h>
 #include <PostViewLib/3DImage.h>
 #include <PostViewLib/VolRender.h>
 #include <PostViewLib/ImageSlicer.h>
 #include <PostViewLib/ImageModel.h>
 #include <PostViewLib/GLImageRenderer.h>
 #include <PostViewLib/MarchingCubes.h>
-#include "GLMirrorPlane.h"
+#include <PostGL/GLMirrorPlane.h>
 #include "ImageViewer.h"
 #include "Histogram.h"
+using namespace Post;
 
 //-----------------------------------------------------------------------------
 class CModelProps : public CPropertyList

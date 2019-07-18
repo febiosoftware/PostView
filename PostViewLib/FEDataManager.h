@@ -3,6 +3,7 @@
 #include <vector>
 using namespace std;
 
+namespace Post {
 //-----------------------------------------------------------------------------
 // The data manager stores the attributes (name and type) of the different
 // data fields.
@@ -37,3 +38,4 @@ protected:
 	vector<FEDataField*>	m_Data;
 	FEModel*	m_pm;
 };
+}

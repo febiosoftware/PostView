@@ -111,7 +111,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;Qt5Chartsd.lib;postviewlib.lib;glwlib.lib;glew32.lib;opengl32.lib;glu32.lib;$(ZLIBDIR)\contrib\vstudio\vc14\Debug\zlibstaticd.lib;vfw32.lib;avcodec.lib;avutil.lib;swscale.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;Qt5Chartsd.lib;postviewlib.lib;xpltlib.lib;postgl.lib;glwlib.lib;glew32.lib;opengl32.lib;glu32.lib;$(ZLIBDIR)\contrib\vstudio\vc14\Debug\zlibstaticd.lib;vfw32.lib;avcodec.lib;avutil.lib;swscale.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -231,22 +231,6 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </CustomBuild>
-    <ClInclude Include="..\..\PostView2\GLColorMap.h" />
-    <ClInclude Include="..\..\PostView2\GLDataMap.h" />
-    <ClInclude Include="..\..\PostView2\GLDisplacementMap.h" />
-    <ClInclude Include="..\..\PostView2\GLIsoSurfacePlot.h" />
-    <ClInclude Include="..\..\PostView2\GLLinePlot.h" />
-    <ClInclude Include="..\..\PostView2\GLMesh.h" />
-    <ClInclude Include="..\..\PostView2\GLMirrorPlane.h" />
-    <ClInclude Include="..\..\PostView2\GLModel.h" />
-    <ClInclude Include="..\..\PostView2\GLParticleFlowPlot.h" />
-    <ClInclude Include="..\..\PostView2\GLPlane.h" />
-    <ClInclude Include="..\..\PostView2\GLPlaneCutPlot.h" />
-    <ClInclude Include="..\..\PostView2\GLPlot.h" />
-    <ClInclude Include="..\..\PostView2\GLSlicePLot.h" />
-    <ClInclude Include="..\..\PostView2\GLStreamLinePlot.h" />
-    <ClInclude Include="..\..\PostView2\GLTensorPlot.h" />
-    <ClInclude Include="..\..\PostView2\GLVectorPlot.h" />
     <CustomBuild Include="..\..\PostView2\GLView.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QT512DIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
@@ -409,22 +393,6 @@
     <ClCompile Include="..\..\PostView2\FEKinemat.cpp" />
     <ClCompile Include="..\..\PostView2\FileThread.cpp" />
     <ClCompile Include="..\..\PostView2\FileViewer.cpp" />
-    <ClCompile Include="..\..\PostView2\GLColorMap.cpp" />
-    <ClCompile Include="..\..\PostView2\GLDataMap.cpp" />
-    <ClCompile Include="..\..\PostView2\GLDisplacementMap.cpp" />
-    <ClCompile Include="..\..\PostView2\GLIsoSurfacePlot.cpp" />
-    <ClCompile Include="..\..\PostView2\GLLinePlot.cpp" />
-    <ClCompile Include="..\..\PostView2\GLMesh.cpp" />
-    <ClCompile Include="..\..\PostView2\GLMirrorPlane.cpp" />
-    <ClCompile Include="..\..\PostView2\GLModel.cpp" />
-    <ClCompile Include="..\..\PostView2\GLParticleFlowPlot.cpp" />
-    <ClCompile Include="..\..\PostView2\GLPlane.cpp" />
-    <ClCompile Include="..\..\PostView2\GLPlaneCutPlot.cpp" />
-    <ClCompile Include="..\..\PostView2\GLPlot.cpp" />
-    <ClCompile Include="..\..\PostView2\GLSlicePLot.cpp" />
-    <ClCompile Include="..\..\PostView2\GLStreamLinePlot.cpp" />
-    <ClCompile Include="..\..\PostView2\GLTensorPlot.cpp" />
-    <ClCompile Include="..\..\PostView2\GLVectorPlot.cpp" />
     <ClCompile Include="..\..\PostView2\GLView.cpp" />
     <ClCompile Include="..\..\PostView2\GraphWindow.cpp" />
     <ClCompile Include="..\..\PostView2\Histogram.cpp" />
@@ -432,6 +400,7 @@
     <ClCompile Include="..\..\PostView2\ImgAnimation.cpp" />
     <ClCompile Include="..\..\PostView2\ImportLinesTool.cpp" />
     <ClCompile Include="..\..\PostView2\IntegrateWindow.cpp" />
+    <ClCompile Include="..\..\PostView2\lut.cpp" />
     <ClCompile Include="..\..\PostView2\MainWindow.cpp" />
     <ClCompile Include="..\..\PostView2\MaterialPanel.cpp" />
     <ClCompile Include="..\..\PostView2\MeasureAreaTool.cpp" />
@@ -483,7 +452,6 @@
     <ClCompile Include="..\..\PostView2\PropertyListForm.cpp" />
     <ClCompile Include="..\..\PostView2\PropertyListView.cpp" />
     <ClCompile Include="..\..\PostView2\qrc_postview.cpp" />
-    <ClCompile Include="..\..\PostView2\render.cpp" />
     <ClCompile Include="..\..\PostView2\session.cpp" />
     <ClCompile Include="..\..\PostView2\ShellThicknessTool.cpp" />
     <ClCompile Include="..\..\PostView2\SphereFitTool.cpp" />

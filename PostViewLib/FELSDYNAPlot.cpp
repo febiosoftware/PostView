@@ -4,6 +4,8 @@
 #include "constants.h"
 #include "FEMeshData_T.h"
 
+using namespace Post;
+
 // this function performs a big-endian to little endian or vice versa byteswap
 // this is used by the plotfile import routine
 void byteswap(int* pi, int n)

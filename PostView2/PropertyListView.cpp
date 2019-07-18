@@ -17,6 +17,7 @@
 #include "DataFieldSelector.h"
 #include <PostViewLib/FEModel.h>
 #include "DragBox.h"
+using namespace Post;
 
 //-----------------------------------------------------------------------------
 class CPropertyListModel : public QAbstractTableModel

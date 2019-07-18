@@ -3,6 +3,8 @@
 #include "math3d.h"
 using namespace std;
 
+namespace Post {
+
 class FEModel;
 class FEState;
 class FEMeshBase;
@@ -130,3 +132,4 @@ template <> class FEDataTypeTraits<DATA_TENS4FS>{ public: typedef tens4fs dataTy
 
 
 void shape_grad(FEModel& fem, int elem, double q[3], int nstate, vec3f* G);
+}

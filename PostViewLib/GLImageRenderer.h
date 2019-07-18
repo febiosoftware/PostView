@@ -1,6 +1,8 @@
 #pragma once
 #include "GLObject.h"
 
+namespace Post {
+
 class CImageModel;
 
 class CGLImageRenderer : public CGLVisual
@@ -13,3 +15,4 @@ public:
 private:
 	CImageModel*	m_img;
 };
+}

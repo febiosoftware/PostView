@@ -2,6 +2,7 @@
 #include "FEItem.h"
 #include "math3d.h"
 
+namespace Post {
 //-----------------------------------------------------------------------------
 // Class describing a node of the mesh
 class FENode : public FEItem
@@ -15,3 +16,4 @@ public:
 	bool	m_bext;	// interior or exterior node
 	float	m_tex;	// nodal texture coordinate
 };
+}

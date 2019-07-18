@@ -3,6 +3,7 @@
 #include "FEMeshData_T.h"
 #include <stdio.h>
 #include "tools.h"
+using namespace Post;
 
 //-----------------------------------------------------------------------------
 void FEDistanceMap::Surface::BuildNodeList(FEMeshBase& mesh)

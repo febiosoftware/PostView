@@ -1,13 +1,4 @@
-// FEMesh.h: interface for the FEMeshBase class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_FEMESH_H__4E540300_07D8_4732_BB8D_6570BB162180__INCLUDED_)
-#define AFX_FEMESH_H__4E540300_07D8_4732_BB8D_6570BB162180__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
 #include "FENode.h"
 #include "FEElement.h"
@@ -18,6 +9,8 @@
 #include <utility>
 #include <vector>
 using namespace std;
+
+namespace Post {
 
 //-----------------------------------------------------------------------------
 class FEMeshBase
@@ -308,5 +301,4 @@ inline bool FEFindElement::FindElement(const vec3f& x, int& nelem, double r[3])
 {
 	return (m_nframe == 0 ? FindInReferenceFrame(x, nelem, r) : FindInCurrentFrame(x, nelem, r));
 }
-
-#endif // !defined(AFX_FEMESH_H__4E540300_07D8_4732_BB8D_6570BB162180__INCLUDED_)
+}

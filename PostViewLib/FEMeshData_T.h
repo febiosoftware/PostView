@@ -6,6 +6,8 @@
 #include <set>
 using namespace std;
 
+namespace Post {
+
 //=============================================================================
 // 
 //    N O D E   D A T A
@@ -949,3 +951,4 @@ private:
 	int	m_nstress;	// total stress field
 	int	m_nflp;		// fluid pressure field
 };
+}

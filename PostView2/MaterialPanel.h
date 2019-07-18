@@ -19,7 +19,7 @@ public:
 	void UpdateStates();
 
 private:
-	void SetItemColor(int item, GLCOLOR c);
+	void SetItemColor(int item, GLColor c);
 
 private slots:
 	void on_materialList_currentRowChanged(int nrow);

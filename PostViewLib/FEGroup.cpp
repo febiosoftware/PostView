@@ -2,6 +2,7 @@
 #include "FEGroup.h"
 #include "FEMesh.h"
 #include <string.h>
+using namespace Post;
 
 //-----------------------------------------------------------------------------
 void FEGroup::SetName(const char* szname)

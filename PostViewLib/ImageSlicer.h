@@ -3,6 +3,8 @@
 #include "bbox.h"
 #include "GLImageRenderer.h"
 
+namespace Post {
+
 class CImageModel;
 
 class CImageSlicer : public CGLImageRenderer
@@ -38,7 +40,8 @@ private:
 	int		m_op;	// x,y,z
 	double	m_off;	// offset (0 - 1)
 
-	CColorTexture	m_Col;
+	Post::CColorTexture	m_Col;
 
 	unsigned int m_texID;
 };
+}

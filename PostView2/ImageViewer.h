@@ -2,9 +2,11 @@
 #include <QWidget>
 #include <PostViewLib/FEModel.h>
 
-class CImageModel;
+namespace Post {
+	class CImageModel;
+}
 
-class CImageViewer : public QWidget, public FEModelDependant
+class CImageViewer : public QWidget, public Post::FEModelDependant
 {
 	Q_OBJECT
 
@@ -14,11 +16,11 @@ protected:
 public:
 	CImageViewer(QWidget* parent = nullptr);
 
-	void SetImageModel(CImageModel* img);
+	void SetImageModel(Post::CImageModel* img);
 
 	void Update();
 
-	void Update(FEModel* fem) override;
+	void Update(Post::FEModel* fem) override;
 
 private:
 	void UpdatePath();

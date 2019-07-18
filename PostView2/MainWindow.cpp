@@ -9,8 +9,8 @@
 #include <QtCore/QMimeData>
 #include "DocManager.h"
 #include "Document.h"
-#include "GLModel.h"
-#include <PostViewLib/xpltFileReader.h>
+#include <PostGL/GLModel.h>
+#include <XPLTLib/xpltFileReader.h>
 #include <PostViewLib/FEFEBioExport.h>
 #include <PostViewLib/FELSDYNAExport.h>
 #include <PostViewLib/FENikeExport.h>
@@ -29,14 +29,14 @@
 #include <PostViewLib/FERAWImageReader.h>
 #include <PostViewLib/FEAsciiExport.h>
 #include <PostViewLib/VRMLExporter.h>
-#include "GLPlaneCutPlot.h"
-#include "GLMirrorPlane.h"
-#include "GLIsoSurfacePlot.h"
-#include "GLSlicePLot.h"
-#include "GLVectorPlot.h"
-#include "GLTensorPlot.h"
-#include "GLStreamLinePlot.h"
-#include "GLParticleFlowPlot.h"
+#include <PostGL/GLPlaneCutPlot.h>
+#include <PostGL/GLMirrorPlane.h>
+#include <PostGL/GLIsoSurfacePlot.h>
+#include <PostGL/GLSlicePLot.h>
+#include <PostGL/GLVectorPlot.h>
+#include <PostGL/GLTensorPlot.h>
+#include <PostGL/GLStreamLinePlot.h>
+#include <PostGL/GLParticleFlowPlot.h>
 #include "DlgViewSettings.h"
 #include "DlgExportXPLT.h"
 #include "DlgExportLSDYNA.h"
@@ -60,6 +60,7 @@
 #include <PostViewLib/MarchingCubes.h>
 #include <string>
 #include <QStyleFactory>
+using namespace Post;
 
 // create a dark style theme (work in progress)
 void darkStyle()
@@ -105,11 +106,11 @@ CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMai
 		darkStyle();
 
 		VIEWSETTINGS& view = GetViewSettings();
-		view.bgcol1 = GLCOLOR(83, 83, 83);
-		view.bgcol2 = GLCOLOR(0, 0, 0);
+		view.bgcol1 = GLColor(83, 83, 83);
+		view.bgcol2 = GLColor(0, 0, 0);
 		view.bgstyle = BG_COLOR_1;
 
-		GLWidget::set_base_color(GLCOLOR(255,255,255));
+		GLWidget::set_base_color(GLColor(255,255,255));
 
 		// adjust some toolbar buttons
 		ui->actionFontBold->setIcon(QIcon(":/icons/font_bold_neg.png"));
@@ -2247,7 +2248,7 @@ void CMainWindow::closeEvent(QCloseEvent* ev)
 	ev->accept();
 }
 
-QByteArray colorToByteArray(GLCOLOR c)
+QByteArray colorToByteArray(GLColor c)
 {
 	QByteArray a;
 	a.resize(4);
@@ -2258,9 +2259,9 @@ QByteArray colorToByteArray(GLCOLOR c)
 	return a;
 }
 
-GLCOLOR byteArrayToColor(const QByteArray& a)
+GLColor byteArrayToColor(const QByteArray& a)
 {
-	GLCOLOR c;
+	GLColor c;
 	if (a.size() == 4)
 	{
 		c.r = a[0];

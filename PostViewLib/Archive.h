@@ -1,14 +1,4 @@
-// Archive.h: interface for the Archive class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_ARCHIVE_H__B95A81B1_BBFB_46E5_B9B3_7675ED8A6029__INCLUDED_)
-#define AFX_ARCHIVE_H__B95A81B1_BBFB_46E5_B9B3_7675ED8A6029__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include <stdio.h>
 #include <string.h>
 #include <stack>
@@ -30,6 +20,8 @@ typedef off_t off_type;
 #endif
 
 using namespace std;
+
+namespace Post {
 
 void inline bswap(short& s)
 {
@@ -198,5 +190,4 @@ protected:
 	void*			m_pdata;	// data pointer
 	unsigned int	m_bufsize;	// size of data buffer
 };
-
-#endif // !defined(AFX_ARCHIVE_H__B95A81B1_BBFB_46E5_B9B3_7675ED8A6029__INCLUDED_)
+}

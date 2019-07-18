@@ -1,6 +1,7 @@
 #pragma once
 #include "PltArchive.h"
 
+namespace Post {
 //-----------------------------------------------------------------------------
 class FEMeshBase;
 class FEModel;
@@ -161,3 +162,4 @@ private:
 
 	char		m_szerr[256];
 };
+}

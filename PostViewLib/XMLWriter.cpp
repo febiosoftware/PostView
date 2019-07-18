@@ -74,7 +74,7 @@ int XMLElement::add_attribute(const char* szn, double g)
 	return m_natt-1;
 }
 
-int XMLElement::add_attribute(const char* szn, GLCOLOR& c)
+int XMLElement::add_attribute(const char* szn, GLColor& c)
 {
 	strcpy(m_attn[m_natt], szn);
 	sprintf(m_attv[m_natt], "#%02X%02X%02X%02X", c.r, c.g, c.b, c.a);

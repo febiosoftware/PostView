@@ -2,6 +2,8 @@
 #include "FENikeExport.h"
 #include <stdio.h>
 
+using namespace Post;
+
 FENikeExport::FENikeExport(void)
 {
 }

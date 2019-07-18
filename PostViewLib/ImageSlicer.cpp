@@ -13,6 +13,7 @@
 #include "ImageModel.h"
 #include <assert.h>
 #include <sstream>
+using namespace Post;
 
 CImageSlicer::CImageSlicer(CImageModel* img) : CGLImageRenderer(img)
 {
@@ -106,7 +107,7 @@ void CImageSlicer::BuildLUT()
 	for (int i = 0; i<256; ++i)
 	{
 		float w = (float)i / 255.f;
-		GLCOLOR c = map.map(w);
+		GLColor c = map.map(w);
 		m_LUTC[0][i] = c.r;
 		m_LUTC[1][i] = c.g;
 		m_LUTC[2][i] = c.b;

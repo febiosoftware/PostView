@@ -7,6 +7,7 @@
 #include "Document.h"
 #include <PostViewLib/FEStrainMap.h>
 using namespace std;
+using namespace Post;
 
 class CStrainMapToolUI : public QWidget
 {

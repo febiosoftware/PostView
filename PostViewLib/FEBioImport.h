@@ -2,6 +2,8 @@
 #include "FEFileReader.h"
 #include "XMLReader.h"
 
+namespace Post {
+
 class FEModel;
 class FEMeshBase;
 
@@ -28,3 +30,4 @@ protected:
 
 	XMLReader	m_xml;
 };
+}

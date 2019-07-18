@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "3DImage.h"
 #include <stdio.h>
+using namespace Post;
 
 //-----------------------------------------------------------------------------
 // find the power of 2 that is closest to n

@@ -3,6 +3,8 @@
 #include "FEModel.h"
 #include <stdio.h>
 
+namespace Post {
+
 class FELSDYNAExport
 {
 public:
@@ -22,3 +24,5 @@ public:
 	bool	m_bsurf;
 	bool	m_bnode;
 };
+
+}

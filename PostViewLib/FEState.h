@@ -2,31 +2,14 @@
 #include "FEMeshData.h"
 #include "FEElement.h"
 #include <vector>
+#include "ValArray.h"
 using namespace std;
 
 //-----------------------------------------------------------------------------
 // forward declaration of the mesh
-class FEModel;
-class FEMeshBase;
-
-//-----------------------------------------------------------------------------
-class ValArray
-{
-public:
-	ValArray(){}
-
-	int itemSize(int n) const { return m_index[n+1] - m_index[n]; }
-
-	// append an item with n values
-	void append(int n);
-
-	float value(int item, int index) const { return m_data[m_index[item] + index]; }
-	float& value(int item, int index) { return m_data[m_index[item] + index]; }
-
-protected:
-	vector<int>		m_index;
-	vector<float>	m_data;
-};
+namespace Post {
+	class FEModel;
+	class FEMeshBase;
 
 //-----------------------------------------------------------------------------
 enum StatusFlags {
@@ -128,3 +111,4 @@ public:
 	FEModel*	m_fem;	//!< model this state belongs to
 	FEMeshBase*	m_mesh;	//!< The mesh this state uses
 };
+}

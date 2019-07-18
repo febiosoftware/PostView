@@ -2,6 +2,7 @@
 #include "DataMap.h"
 #include "FEMesh.h"
 #include <assert.h>
+using namespace Post;
 
 //-----------------------------------------------------------------------------
 // this function calculates the gradient map of the current evaluated

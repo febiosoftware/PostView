@@ -3,6 +3,7 @@
 #include "Document.h"
 #include <PostViewLib/FEModel.h>
 #include "MainWindow.h"
+using namespace Post;
 
 //-----------------------------------------------------------------------------
 CMeasureAreaTool::Props::Props(CMeasureAreaTool* ptool) : m_ptool(ptool)

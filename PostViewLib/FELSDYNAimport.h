@@ -1,18 +1,8 @@
-// FELSDYNAimport.h: interface for the FELSDYNAimport class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_FELSDYNAIMPORT_H__50F241DD_FFA6_42F8_9BD0_7ED2DFB2C68F__INCLUDED_)
-#define AFX_FELSDYNAIMPORT_H__50F241DD_FFA6_42F8_9BD0_7ED2DFB2C68F__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "FEFileReader.h"
-
 #include <list>
-using namespace std;
+
+namespace Post {
 
 class FEMeshBase;
 
@@ -50,7 +40,7 @@ public:
 
 	bool Load(FEModel& fem, const char* szfile);
 
-	int FindNode(int id, list<NODE>::iterator& pn);
+	int FindNode(int id, std::list<NODE>::iterator& pn);
 
 	void read_displacements(bool b) { m_bdispl = b; }
 
@@ -67,9 +57,9 @@ protected:
 	bool BuildMesh(FEModel& fem);
 
 protected:
-	list<ELEMENT_SOLID>		m_solid;
-	list<ELEMENT_SHELL>		m_shell;
-	list<NODE>				m_node;
+	std::list<ELEMENT_SOLID>		m_solid;
+	std::list<ELEMENT_SHELL>		m_shell;
+	std::list<NODE>					m_node;
 
 	FEMeshBase*			m_pm;
 
@@ -80,4 +70,4 @@ protected:
 	char			m_szline[256];
 };
 
-#endif // !defined(AFX_FELSDYNAIMPORT_H__50F241DD_FFA6_42F8_9BD0_7ED2DFB2C68F__INCLUDED_)
+}

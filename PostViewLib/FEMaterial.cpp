@@ -16,10 +16,10 @@ FEMaterial::FEMaterial()
 	shininess = 0.f;
 	transparency = 1.f;
 
-	diffuse = GLCOLOR(200, 200, 200);
-	ambient = GLCOLOR(0,0,0);
-	specular = GLCOLOR(0,0,0);
-	emission = GLCOLOR(0,0,0);
+	diffuse = GLColor(200, 200, 200);
+	ambient = GLColor(0,0,0);
+	specular = GLColor(0,0,0);
+	emission = GLColor(0,0,0);
 }
 
 const char* FEMaterial::GetName() { return m_szname; }

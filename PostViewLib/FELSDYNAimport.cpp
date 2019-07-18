@@ -8,6 +8,8 @@
 #include "FEMeshData_T.h"
 #include "constants.h"
 
+using namespace Post;
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -203,7 +205,7 @@ bool FELSDYNAimport::Read_Nodal_Results()
 	{
 		if (it == m_node.end()) return false;
 
-		nread = sscanf(m_szline, "%*d%lg%", &it->v);
+		nread = sscanf(m_szline, "%*d%lg", &it->v);
 		if (nread != 1) return false;
 
 		++it;

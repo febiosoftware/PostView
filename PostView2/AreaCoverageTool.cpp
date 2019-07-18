@@ -8,6 +8,7 @@
 #include "Document.h"
 #include <PostViewLib/FEAreaCoverage.h>
 using namespace std;
+using namespace Post;
 
 class CAreaCoverageToolUI : public QWidget
 {

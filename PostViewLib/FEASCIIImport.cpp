@@ -4,6 +4,7 @@
 #include "FEMeshData_T.h"
 #include <cctype>
 #include <stdlib.h>
+using namespace Post;
 
 #ifdef LINUX // same for Linux and Mac OS X
 #define stricmp strcasecmp
@@ -436,10 +437,10 @@ bool FEASCIIImport::BuildMesh(FEModel &fem)
 	// create a single material
 	fem.ClearMaterials();
 	FEMaterial m;
-	m.diffuse = GLCOLOR(192,192,192);
-	m.ambient = GLCOLOR(192,192,192);
-	m.specular = GLCOLOR(0,0,0);
-	m.emission = GLCOLOR(0,0,0);
+	m.diffuse = GLColor(192,192,192);
+	m.ambient = GLColor(192,192,192);
+	m.specular = GLColor(0,0,0);
+	m.emission = GLColor(0,0,0);
 	m.shininess = 1.0f;
 	m.transparency = 1.f;
 	m.benable = true;

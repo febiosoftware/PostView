@@ -6,22 +6,24 @@
 #include <PostViewLib/bbox.h>
 #include <PostViewLib/GView.h>
 #include <PostViewLib/FEMesh.h>
-#include "GLModel.h"
+#include <PostGL/GLModel.h>
 
 //-----------------------------------------------------------------------------
 // Forward declarations
 class CMainWindow;
-class CGLPlot;
-class CGLObject;
-class CGLVisual;
 class CPalette;
 class CDocument;
-class CImageModel;
 
-class FEModel;
-class FEState;
-class FEFileReader;
-class FEDataField;
+namespace Post {
+	class FEModel;
+	class FEState;
+	class FEFileReader;
+	class FEDataField;
+	class CImageModel;
+	class CGLPlot;
+	class CGLObject;
+	class CGLVisual;
+}
 
 //-----------------------------------------------------------------------------
 #define MAX_STRING		256
@@ -40,7 +42,7 @@ class FEDataField;
 #define MODE_CYLCE		2
 
 //-----------------------------------------------------------------------------
-typedef std::list<CGLPlot*>	GPlotList;
+typedef std::list<Post::CGLPlot*>	GPlotList;
 
 
 //-----------------------------------------------------------------------------
@@ -97,8 +99,8 @@ private:
 	};
 
 public:
-	ModelData(CGLModel* po);
-	void SetData(CGLModel* po);
+	ModelData(Post::CGLModel* po);
+	void SetData(Post::CGLModel* po);
 
 protected:
 	MODEL						m_mdl;	// CGLModel data
@@ -146,11 +148,11 @@ public:
 	// --- F E - M O D E L ---
 
 	// get the FE model
-	FEModel* GetFEModel() { return m_fem;}
+	Post::FEModel* GetFEModel() { return m_fem;}
 
 	// set the FE model 
 	// TODO: only PlotMix uses this. Maybe I can delete this
-	void SetFEModel(FEModel* pnew);
+	void SetFEModel(Post::FEModel* pnew);
 
 	// update the FE model data
 	void UpdateFEModel(bool breset = false);
@@ -192,7 +194,7 @@ public:
 	// --- I/O - R O U T I N E S ---
 
 	// load a project from file
-	bool LoadFEModel(FEFileReader* preader, const char* szfile, bool bup = false);
+	bool LoadFEModel(Post::FEFileReader* preader, const char* szfile, bool bup = false);
 
 	// export routines
 	bool ExportPlot  (const char* szfile, bool bflag[6], int ncode[6]);
@@ -201,10 +203,10 @@ public:
 	bool ExportDXF   (const char* szfile);
 	bool ExportRAW   (const char* szfile);
 
-	bool ExportDataField(const FEDataField& df, const char* szfile);
-	bool ExportNodeDataField(const FEDataField& df, FILE* fp);
-	bool ExportFaceDataField(const FEDataField& df, FILE* fp);
-	bool ExportElementDataField(const FEDataField& df, FILE* fp);
+	bool ExportDataField(const Post::FEDataField& df, const char* szfile);
+	bool ExportNodeDataField(const Post::FEDataField& df, FILE* fp);
+	bool ExportFaceDataField(const Post::FEDataField& df, FILE* fp);
+	bool ExportElementDataField(const Post::FEDataField& df, FILE* fp);
 
 	void ApplyPalette(const CPalette& pal);
 
@@ -224,12 +226,12 @@ public:
 
 	TIMESETTINGS& GetTimeSettings() { return m_time; }
 
-	FEMeshBase* GetActiveMesh() { return m_pGLModel->GetActiveMesh(); }
+	Post::FEMeshBase* GetActiveMesh() { return m_pGLModel->GetActiveMesh(); }
 
 	// --- V I E W   M A N A G M E N T ---
 
 	// get the current view
-	CGView* GetView() { return &m_view; }
+	Post::CGView* GetView() { return &m_view; }
 
 	// get/set light position
 	vec3f GetLightPosition() { return m_light; }
@@ -257,27 +259,27 @@ public:
 	// --- O B J E C T   M A N A G M E N T ---
 
 	// get the GL model
-	CGLModel* GetGLModel() { return m_pGLModel; }
+	Post::CGLModel* GetGLModel() { return m_pGLModel; }
 
 	// edits plots
-	void AddPlot(CGLPlot* pplot);
+	void AddPlot(Post::CGLPlot* pplot);
 	GPlotList& GetPlotList() { return m_pPlot; }
-	void DeleteObject(CGLObject* po);
+	void DeleteObject(Post::CGLObject* po);
 
 	// edit visuals
-	void AddObject(CGLVisual* po) { m_pObj.push_back(po); }
-	list<CGLVisual*>& GetObjectList() { return m_pObj; }
+	void AddObject(Post::CGLVisual* po) { m_pObj.push_back(po); }
+	list<Post::CGLVisual*>& GetObjectList() { return m_pObj; }
 
 	// ---------------------------------------
 
 	// add a 3D image
-	void AddImageModel(CImageModel* img);
+	void AddImageModel(Post::CImageModel* img);
 
 	// number of image models
 	int ImageModels() const { return (int)m_img.size(); }
 
 	// get image model
-	CImageModel* GetImageModel(int i) { return m_img[i]; }
+	Post::CImageModel* GetImageModel(int i) { return m_img[i]; }
 
 	// Add a data field
 	// NOTE: the ndata relates to the index in DataPanel::on_AddStandard_triggered
@@ -300,21 +302,21 @@ protected:
 	void ClearObjects();
 
 protected:
-	FEModel*		m_fem;	// the FE model
+	Post::FEModel*		m_fem;	// the FE model
 
 	CMainWindow*	m_wnd;	// main window
 
-	CGLModel*			m_pGLModel;	// the GL Model
-	list<CGLVisual*>	m_pObj;		// additional objects
+	Post::CGLModel*			m_pGLModel;	// the GL Model
+	list<Post::CGLVisual*>	m_pObj;		// additional objects
 	GPlotList			m_pPlot;	// list of plots
 
-	std::vector<CImageModel*>	m_img;
+	std::vector<Post::CImageModel*>	m_img;
 
-	FEFileReader*	m_pImp;			// last used file importer
+	Post::FEFileReader*	m_pImp;			// last used file importer
 	char			m_szfile[1024];	// file name of current model
 
 	// the view data
-	CGView			m_view;		// view orientation/position
+	Post::CGView			m_view;		// view orientation/position
 	vec3f			m_light;	// lightposition // TODO: should I move this to the CGView class?
 
 	// timer data

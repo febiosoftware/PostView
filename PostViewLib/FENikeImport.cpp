@@ -4,6 +4,8 @@
 #include "FEModel.h"
 #include "color.h"
 
+using namespace Post;
+
 FENikeImport::FENikeImport(void) : FEFileReader("NIKE3D input")
 {
 	m_pm = 0;

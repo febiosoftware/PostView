@@ -2,6 +2,7 @@
 #include "MeasureVolumeTool.h"
 #include "Document.h"
 #include <PostViewLib/FEModel.h>
+using namespace Post;
 
 //-----------------------------------------------------------------------------
 CMeasureVolumeTool::Props::Props(CMeasureVolumeTool* ptool) : m_ptool(ptool)

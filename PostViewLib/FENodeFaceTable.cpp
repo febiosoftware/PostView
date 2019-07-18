@@ -2,6 +2,8 @@
 #include "FENodeFaceTable.h"
 #include "FEMesh.h"
 
+using namespace Post;
+
 FENodeFaceTable::FENodeFaceTable(FEMeshBase* pm)
 {
 	m_pm = pm;

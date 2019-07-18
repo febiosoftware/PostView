@@ -4,6 +4,8 @@
 #include <set>
 using namespace std;
 
+namespace Post {
+
 class FEModel;
 class FEFace;
 
@@ -53,3 +55,4 @@ private:
 	FEModel*	m_pfem;
 	int			m_nstate;
 };
+}

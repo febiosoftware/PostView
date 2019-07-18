@@ -1,8 +1,8 @@
 #pragma once
 #include "FEFileReader.h"
-
 #include <vector>
-using namespace std;
+
+namespace Post {
 
 class FEState;
 
@@ -23,3 +23,4 @@ protected:
 	FEModel*	m_pfem;
 	FEState*	m_ps;
 };
+}

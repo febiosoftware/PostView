@@ -18,14 +18,15 @@
 #include <PostViewLib/FEModel.h>
 #include <QToolBox>
 #include <QLineEdit>
-#include "GLDataMap.h"
-#include "GLModel.h"
+#include <PostGL/GLDataMap.h>
+#include <PostGL/GLModel.h>
 #include "version.h"
 #include <QValidator>
 #include <QComboBox>
 #include <PostViewLib/LinearRegression.h>
 #include "CColorButton.h"
 #include "convert.h"
+using namespace Post;
 
 OptionsUi::OptionsUi(CGraphWidget* graph, QWidget* parent) : CPlotTool(parent)
 {

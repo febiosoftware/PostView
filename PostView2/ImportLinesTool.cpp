@@ -14,8 +14,9 @@
 #include <QLabel>
 #include <QFileDialog>
 #include <QMessageBox>
-#include "GLLinePlot.h"
+#include <PostGL/GLLinePlot.h>
 #include "MainWindow.h"
+using namespace Post;
 
 class CImportLinesToolUI : public QWidget
 {
