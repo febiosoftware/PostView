@@ -70,10 +70,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)..;$(ZLIBDIR);$(IncludePath)</IncludePath>
+    <IncludePath>$(QT512DIR)\include;$(QT512DIR)\include\QtGui;$(QT512DIR)\include\QtWidgets;$(SolutionDir)..;$(ZLIBDIR);$(FFMPEGDIR)\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)..;$(ZLIBDIR);$(IncludePath)</IncludePath>
+    <IncludePath>$(QT512DIR)\include;$(QT512DIR)\include\QtGui;$(QT512DIR)\include\QtWidgets;$(SolutionDir)..;$(ZLIBDIR);$(FFMPEGDIR)\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -93,7 +93,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_LIB;WIN32;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_LIB;WIN32;_CRT_SECURE_NO_WARNINGS;FFMPEG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -123,7 +123,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_LIB;WIN32;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_LIB;WIN32;_CRT_SECURE_NO_WARNINGS;FFMPEG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
@@ -139,6 +139,7 @@
     <ClInclude Include="..\..\PostViewLib\3DImage.h" />
     <ClInclude Include="..\..\PostViewLib\Animation.h" />
     <ClInclude Include="..\..\PostViewLib\Archive.h" />
+    <ClInclude Include="..\..\PostViewLib\AVIAnimation.h" />
     <ClInclude Include="..\..\PostViewLib\bbox.h" />
     <ClInclude Include="..\..\PostViewLib\color.h" />
     <ClInclude Include="..\..\PostViewLib\ColorMap.h" />
@@ -202,6 +203,7 @@
     <ClInclude Include="..\..\PostViewLib\Image.h" />
     <ClInclude Include="..\..\PostViewLib\ImageModel.h" />
     <ClInclude Include="..\..\PostViewLib\ImageSlicer.h" />
+    <ClInclude Include="..\..\PostViewLib\ImgAnimation.h" />
     <ClInclude Include="..\..\PostViewLib\Interpolator.h" />
     <ClInclude Include="..\..\PostViewLib\Intersect.h" />
     <ClInclude Include="..\..\PostViewLib\LinearRegression.h" />
@@ -209,6 +211,7 @@
     <ClInclude Include="..\..\PostViewLib\MarchingCubes.h" />
     <ClInclude Include="..\..\PostViewLib\math3d.h" />
     <ClInclude Include="..\..\PostViewLib\MathParser.h" />
+    <ClInclude Include="..\..\PostViewLib\MPEGAnimation.h" />
     <ClInclude Include="..\..\PostViewLib\Palette.h" />
     <ClInclude Include="..\..\PostViewLib\penta15.h" />
     <ClInclude Include="..\..\PostViewLib\penta6.h" />
@@ -233,6 +236,7 @@
     <ClCompile Include="..\..\PostViewLib\3DImage.cpp" />
     <ClCompile Include="..\..\PostViewLib\Animation.cpp" />
     <ClCompile Include="..\..\PostViewLib\Archive.cpp" />
+    <ClCompile Include="..\..\PostViewLib\AVIAnimation.cpp" />
     <ClCompile Include="..\..\PostViewLib\bbox.cpp" />
     <ClCompile Include="..\..\PostViewLib\ColorMap.cpp" />
     <ClCompile Include="..\..\PostViewLib\DataFilter.cpp" />
@@ -287,6 +291,7 @@
     <ClCompile Include="..\..\PostViewLib\Image.cpp" />
     <ClCompile Include="..\..\PostViewLib\ImageModel.cpp" />
     <ClCompile Include="..\..\PostViewLib\ImageSlicer.cpp" />
+    <ClCompile Include="..\..\PostViewLib\ImgAnimation.cpp" />
     <ClCompile Include="..\..\PostViewLib\integrate.cpp" />
     <ClCompile Include="..\..\PostViewLib\Interpolator.cpp" />
     <ClCompile Include="..\..\PostViewLib\Intersect.cpp" />
@@ -295,6 +300,7 @@
     <ClCompile Include="..\..\PostViewLib\MarchingCubes.cpp" />
     <ClCompile Include="..\..\PostViewLib\math3d.cpp" />
     <ClCompile Include="..\..\PostViewLib\MathParser.cpp" />
+    <ClCompile Include="..\..\PostViewLib\MPEGAnimation.cpp" />
     <ClCompile Include="..\..\PostViewLib\Palette.cpp" />
     <ClCompile Include="..\..\PostViewLib\PltArchive.cpp" />
     <ClCompile Include="..\..\PostViewLib\PostView.cpp" />

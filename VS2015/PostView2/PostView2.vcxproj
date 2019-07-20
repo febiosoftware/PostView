@@ -165,7 +165,6 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </CustomBuild>
-    <ClInclude Include="..\..\PostView2\AVIAnimation.h" />
     <CustomBuild Include="..\..\PostView2\CColorButton.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QT512DIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
@@ -247,7 +246,6 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </CustomBuild>
     <ClInclude Include="..\..\PostView2\Histogram.h" />
-    <ClInclude Include="..\..\PostView2\ImgAnimation.h" />
     <CustomBuild Include="..\..\PostView2\ImportLinesTool.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QT512DIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
@@ -276,7 +274,6 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </CustomBuild>
-    <ClInclude Include="..\..\PostView2\MPEGAnimation.h" />
     <CustomBuild Include="..\..\PostView2\PlaneTool.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QT512DIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
@@ -368,7 +365,6 @@
     <ClCompile Include="..\..\PostView2\AddImage3DTool.cpp" />
     <ClCompile Include="..\..\PostView2\AddPointTool.cpp" />
     <ClCompile Include="..\..\PostView2\AreaCoverageTool.cpp" />
-    <ClCompile Include="..\..\PostView2\AVIAnimation.cpp" />
     <ClCompile Include="..\..\PostView2\CColorButton.cpp" />
     <ClCompile Include="..\..\PostView2\CDlgImportXPLT.cpp" />
     <ClCompile Include="..\..\PostView2\CIntInput.cpp" />
@@ -397,7 +393,6 @@
     <ClCompile Include="..\..\PostView2\GraphWindow.cpp" />
     <ClCompile Include="..\..\PostView2\Histogram.cpp" />
     <ClCompile Include="..\..\PostView2\ImageViewer.cpp" />
-    <ClCompile Include="..\..\PostView2\ImgAnimation.cpp" />
     <ClCompile Include="..\..\PostView2\ImportLinesTool.cpp" />
     <ClCompile Include="..\..\PostView2\IntegrateWindow.cpp" />
     <ClCompile Include="..\..\PostView2\lut.cpp" />
@@ -441,7 +436,6 @@
     <ClCompile Include="..\..\PostView2\moc_Tool.cpp" />
     <ClCompile Include="..\..\PostView2\moc_ToolsPanel.cpp" />
     <ClCompile Include="..\..\PostView2\ModelViewer.cpp" />
-    <ClCompile Include="..\..\PostView2\MPEGAnimation.cpp" />
     <ClCompile Include="..\..\PostView2\PlaneTool.cpp" />
     <ClCompile Include="..\..\PostView2\PlotMixTool.cpp" />
     <ClCompile Include="..\..\PostView2\PlotWidget.cpp" />

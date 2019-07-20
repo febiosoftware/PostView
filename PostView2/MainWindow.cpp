@@ -50,9 +50,9 @@
 #include "DlgExportVTK.h"
 #include "version.h"
 #include "convert.h"
-#include "ImgAnimation.h"
-#include "AVIAnimation.h"
-#include "MPEGAnimation.h"
+#include <PostViewLib/ImgAnimation.h>
+#include <PostViewLib/AVIAnimation.h>
+#include <PostViewLib/MPEGAnimation.h>
 #include "DocManager.h"
 #include <PostViewLib/ImageModel.h>
 #include <PostViewLib/ImageSlicer.h>

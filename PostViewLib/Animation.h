@@ -1,14 +1,4 @@
-// Animation.h: interface for the CAnimation class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_ANIMATION_H__AF14AE44_13BD_4E97_B6F6_80E8009C9276__INCLUDED_)
-#define AFX_ANIMATION_H__AF14AE44_13BD_4E97_B6F6_80E8009C9276__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 class QImage;
 
 //-----------------------------------------------------------------------------
@@ -26,5 +16,3 @@ public:
 	virtual void Close();
 	virtual int Frames() = 0;
 };
-
-#endif // !defined(AFX_ANIMATION_H__AF14AE44_13BD_4E97_B6F6_80E8009C9276__INCLUDED_)
