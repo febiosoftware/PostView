@@ -238,9 +238,7 @@ CDocument::~CDocument()
 
 void CDocument::ClearPlots()
 {
-	list<CGLPlot*>::iterator it = m_pPlot.begin();
-	for (int i=0; i<(int) m_pPlot.size(); ++i, ++it) delete (*it);
-	m_pPlot.clear();
+	if (m_pGLModel) m_pGLModel->ClearPlots();
 }
 
 void CDocument::ClearObjects()
@@ -364,11 +362,6 @@ void CDocument::UpdateFEModel(bool breset)
 
 	// update the model
 	if (m_pGLModel) m_pGLModel->Update(breset);
-
-	// update the plot list
-	list<CGLPlot*>::iterator it = m_pPlot.begin();
-	for (int i=0; i<(int) m_pPlot.size(); ++i, ++it) 
-		if ((*it)->IsActive()) (*it)->Update(m_pGLModel->currentTimeIndex(), 0.0, breset);
 }
 
 //-----------------------------------------------------------------------------
@@ -410,13 +403,7 @@ void CDocument::UpdateColorMaps()
 	CGLColorMap* map = m_pGLModel->GetColorMap();
 	map->GetColorMap()->UpdateTexture();
 
-	int N = (int)m_pPlot.size();
-	GPlotList::iterator it = m_pPlot.begin();
-	for (int i=0; i<N; ++i, ++it)
-	{
-		CGLPlot* p = *it;
-		p->UpdateTexture();
-	}
+	m_pGLModel->UpdateColorMaps();
 }
 
 //-----------------------------------------------------------------------------
@@ -528,11 +515,6 @@ bool CDocument::LoadFEModel(FEFileReader* pimp, const char* szfile, bool bup)
 	if (bup)
 	{
 		MD.SetData(m_pGLModel);
-
-		// Since the GL model has changed, we need to update all plots
-		// that keep a reference to the model
-		list<CGLPlot*>::iterator it;
-		for (it = m_pPlot.begin(); it != m_pPlot.end(); ++it) (*it)->SetModel(m_pGLModel);
 
 		m_bValid = true;
 		SetCurrentTime(ntime);
@@ -1906,29 +1888,12 @@ int CDocument::GetDocTitle(char* sztitle)
 	return n;
 }
 
-void CDocument::AddPlot(CGLPlot* pplot)
-{ 
-	m_pPlot.push_back(pplot); 
-	pplot->Update(currentTime(), 0.f, true); 
-	UpdateObservers(false);
-}
-
 void CDocument::DeleteObject(CGLObject *po)
 {
 	CGLPlot* pp = dynamic_cast<CGLPlot*>(po);
 	if (pp)
 	{
-		list<CGLPlot*>::iterator it = m_pPlot.begin();
-		for (int i=0; i<(int) m_pPlot.size(); ++i, ++it)
-		{
-			pp = (*it);
-			if (pp == po)
-			{
-				delete pp;
-				m_pPlot.erase(it);
-				break;
-			}
-		}
+		m_pGLModel->DeletePlot(pp);
 	}
 	else if (dynamic_cast<GLCameraTransform*>(po))
 	{

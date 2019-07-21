@@ -215,7 +215,6 @@ protected:
 	void RenderRubberBand();
 	void RenderWidgets();
 	void RenderBox(const BOUNDINGBOX& box);
-	void RenderPlots(Post::CGLContext& rc);
 
 	// calculate a ray based on screen position (x, y)
 	Post::Ray PointToRay(int x, int y);

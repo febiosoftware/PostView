@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "FEMaterial.h"
+using namespace Post;
 
 FEMaterial::FEMaterial()
 { 

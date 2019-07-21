@@ -1,25 +1,9 @@
-// GLVectorPlot.cpp: implementation of the CGLVectorPlot class.
-//
-//////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
-
-#ifdef WIN32
-#include <Windows.h>
-#endif
-
-#ifdef __APPLE__
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#else
-#include <GL/gl.h>
-#include <GL/glu.h>
-#endif
-
 #include "GLVectorPlot.h"
 #include "PostViewLib/ColorMap.h"
 #include "PostViewLib/constants.h"
 #include <PostView2/PropertyList.h>
+#include <PostGL/GLModel.h>
 using namespace Post;
 
 class CVectorPlotProps : public CPropertyList

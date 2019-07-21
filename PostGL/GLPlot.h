@@ -1,15 +1,15 @@
 #pragma once
 #include <PostViewLib/FEModel.h>
-#include "GLMesh.h"
 #include <PostViewLib/ColorMap.h>
 #include <PostViewLib/GLTexture1D.h>
-#include "GLModel.h"
 #include <PostViewLib/GLObject.h>
 #include <PostViewLib/DataMap.h>
 
 class CPropertyList;
 
 namespace Post {
+
+class CGLModel;
 
 class CGLPlot : public CGLVisual
 {

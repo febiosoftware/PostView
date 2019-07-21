@@ -42,10 +42,6 @@ namespace Post {
 #define MODE_CYLCE		2
 
 //-----------------------------------------------------------------------------
-typedef std::list<Post::CGLPlot*>	GPlotList;
-
-
-//-----------------------------------------------------------------------------
 struct TIMESETTINGS
 {
 	int		m_mode;		// play mode
@@ -106,7 +102,7 @@ protected:
 	MODEL						m_mdl;	// CGLModel data
 	COLORMAP					m_cmap;	// CColorMap data
 	DISPLACEMENTMAP				m_dmap;	// DisplacementMap data
-	std::vector<FEMaterial>		m_mat;	// material list
+	std::vector<Post::FEMaterial>		m_mat;	// material list
 	std::vector<std::string>	m_data;	// data field strings
 };
 
@@ -262,8 +258,6 @@ public:
 	Post::CGLModel* GetGLModel() { return m_pGLModel; }
 
 	// edits plots
-	void AddPlot(Post::CGLPlot* pplot);
-	GPlotList& GetPlotList() { return m_pPlot; }
 	void DeleteObject(Post::CGLObject* po);
 
 	// edit visuals
@@ -308,7 +302,6 @@ protected:
 
 	Post::CGLModel*			m_pGLModel;	// the GL Model
 	list<Post::CGLVisual*>	m_pObj;		// additional objects
-	GPlotList			m_pPlot;	// list of plots
 
 	std::vector<Post::CImageModel*>	m_img;
 

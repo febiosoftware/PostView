@@ -1294,7 +1294,7 @@ void CMainWindow::on_actionPlaneCut_triggered()
 	if (doc->IsValid() == false) return;
 
 	CGLPlaneCutPlot* pp = new CGLPlaneCutPlot(doc->GetGLModel());
-	doc->AddPlot(pp);
+	doc->GetGLModel()->AddPlot(pp);
 
 	ui->modelViewer->Update(true);
 	ui->modelViewer->selectObject(pp);
@@ -1309,7 +1309,7 @@ void CMainWindow::on_actionMirrorPlane_triggered()
 	if (doc->IsValid() == false) return;
 
 	CGLMirrorPlane* pp = new CGLMirrorPlane(doc->GetGLModel());
-	doc->AddPlot(pp);
+	doc->GetGLModel()->AddPlot(pp);
 
 	ui->modelViewer->Update(true);
 	ui->modelViewer->selectObject(pp);
@@ -1324,7 +1324,7 @@ void CMainWindow::on_actionVectorPlot_triggered()
 	if (doc->IsValid() == false) return;
 
 	CGLVectorPlot* pp = new CGLVectorPlot(doc->GetGLModel());
-	doc->AddPlot(pp);
+	doc->GetGLModel()->AddPlot(pp);
 	doc->UpdateFEModel();
 	
 	ui->modelViewer->Update(true);
@@ -1341,7 +1341,7 @@ void CMainWindow::on_actionTensorPlot_triggered()
 	if (doc->IsValid() == false) return;
 
 	GLTensorPlot* pp = new GLTensorPlot(doc->GetGLModel());
-	doc->AddPlot(pp);
+	doc->GetGLModel()->AddPlot(pp);
 	doc->UpdateFEModel();
 
 	ui->modelViewer->Update(true);
@@ -1358,7 +1358,7 @@ void CMainWindow::on_actionStreamLinePlot_triggered()
 	if (doc->IsValid() == false) return;
 
 	CGLStreamLinePlot* pp = new CGLStreamLinePlot(doc->GetGLModel());
-	doc->AddPlot(pp);
+	doc->GetGLModel()->AddPlot(pp);
 	doc->UpdateFEModel();
 
 	ui->modelViewer->Update(true);
@@ -1375,7 +1375,7 @@ void CMainWindow::on_actionParticleFlowPlot_triggered()
 	if (doc->IsValid() == false) return;
 
 	CGLParticleFlowPlot* pp = new CGLParticleFlowPlot(doc->GetGLModel());
-	doc->AddPlot(pp);
+	doc->GetGLModel()->AddPlot(pp);
 	doc->UpdateFEModel();
 
 	ui->modelViewer->Update(true);
@@ -1449,7 +1449,7 @@ void CMainWindow::on_actionIsosurfacePlot_triggered()
 	if (doc->IsValid() == false) return;
 
 	CGLIsoSurfacePlot* pp = new CGLIsoSurfacePlot(doc->GetGLModel());
-	doc->AddPlot(pp);
+	doc->GetGLModel()->AddPlot(pp);
 	doc->UpdateFEModel();
 
 	ui->modelViewer->Update(true);
@@ -1466,7 +1466,7 @@ void CMainWindow::on_actionSlicePlot_triggered()
 	if (doc->IsValid() == false) return;
 
 	CGLSlicePlot* pp = new CGLSlicePlot(doc->GetGLModel());
-	doc->AddPlot(pp);
+	doc->GetGLModel()->AddPlot(pp);
 	doc->UpdateFEModel();
 
 	ui->modelViewer->Update(true);

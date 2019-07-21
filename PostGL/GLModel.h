@@ -4,9 +4,13 @@
 #include "GLColorMap.h"
 #include <PostViewLib/FEModel.h>
 #include <PostViewLib/GDecoration.h>
-#include <list>
+#include "GLPlot.h"
+#include <vector>
 
 namespace Post {
+
+//-----------------------------------------------------------------------------
+typedef std::vector<Post::CGLPlot*>	GPlotList;
 
 //-----------------------------------------------------------------------------
 // view conventions
@@ -139,6 +143,8 @@ public:
 public:
 	// call this to render the model
 	void Render(CGLContext& rc);
+
+	void RenderPlots(CGLContext& rc);
 
 public:
 	void RenderNodes(FEModel* ps, CGLContext& rc);
@@ -326,6 +332,18 @@ public: // Selection
 	void SelectAllFaces();
 	void SelectAllElements();
 
+public:
+	// edits plots
+	void AddPlot(Post::CGLPlot* pplot);
+	GPlotList& GetPlotList() { return m_pPlot; }
+	void DeletePlot(Post::CGLPlot* plot);
+	void ClearPlots();
+
+	int Plots() { return (int)m_pPlot.size(); }
+	CGLPlot* Plot(int i) { return m_pPlot[i]; }
+
+	void UpdateColorMaps();
+
 protected:
 	void UpdateInternalSurfaces(bool eval = true);
 	void ClearInternalSurfaces();
@@ -367,6 +385,8 @@ protected:
 	vector<FEEdge*>		m_edgeSelection;
 	vector<FEFace*>		m_faceSelection;
 	vector<FEElement*>	m_elemSelection;
+
+	GPlotList			m_pPlot;	// list of plots
 
 	// TODO: move to document?
 	std::list<GDecoration*>	m_decor;

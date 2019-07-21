@@ -121,7 +121,7 @@ bool CDocManager::SaveSession(const std::string& sfile)
 				}
 
 				// store plots
-				GPlotList& plotList = doc->GetPlotList();
+				GPlotList& plotList = pmdl->GetPlotList();
 				if (plotList.empty() == false)
 				{
 					GPlotList::iterator pi;
@@ -443,7 +443,7 @@ bool CDocManager::OpenSession(const std::string& sfile)
 							xml.NextTag(tag);
 						}
 						while (!tag.isend());
-						doc->AddPlot(pg);
+						pmdl->AddPlot(pg);
 					}
 					else xml.SkipTag(tag);
 				}

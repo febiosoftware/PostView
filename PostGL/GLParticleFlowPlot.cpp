@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GLParticleFlowPlot.h"
 #include <PostView2/PropertyList.h>
+#include "GLModel.h"
 using namespace Post;
 
 class CGLParticleFlowPlotProps : public CPropertyList

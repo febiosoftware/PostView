@@ -96,7 +96,7 @@ void CIntegrateWindow::UpdateSourceOptions()
 	CDocument* pdoc = GetDocument();
 
 	// add all plane cuts to the source options
-	GPlotList& plt = pdoc->GetPlotList();
+	GPlotList& plt = pdoc->GetGLModel()->GetPlotList();
 	GPlotList::iterator it;
 	for (it = plt.begin(); it != plt.end(); ++it)
 	{

@@ -2680,26 +2680,6 @@ void CGLView::RenderModel()
 }
 
 //-----------------------------------------------------------------------------
-// Render the plots
-void CGLView::RenderPlots(CGLContext& rc)
-{
-	CDocument* pdoc = GetDocument();
-	if ((pdoc == nullptr) || (pdoc->IsValid() == false)) return;
-
-	list<CGLPlot*>& PL = pdoc->GetPlotList();
-	list<CGLPlot*>::iterator it = PL.begin();
-	for (int i=0; i<(int) PL.size(); ++i, ++it)
-	{
-		CGLPlot* pl = *it;
-
-		if (pl->AllowClipping()) CGLPlaneCutPlot::EnableClipPlanes();
-		else CGLPlaneCutPlot::DisableClipPlanes();
-
-		if ((*it)->IsActive()) (*it)->Render(rc);
-	}
-}
-
-//-----------------------------------------------------------------------------
 // Render the model (for real)
 void CGLView::RenderDoc()
 {
@@ -2721,18 +2701,10 @@ void CGLView::RenderDoc()
 		rc.m_showMesh = view.m_bmesh;
 		rc.m_showOutline = view.m_boutline;
 		rc.m_springThick = view.m_fspringthick;
-
-		// first we render all the plots
-		RenderPlots(rc);
-
-		// activate all clipping planes
-		CGLPlaneCutPlot::EnableClipPlanes();
+		rc.m_bext = view.m_bext;
 
 		// get the GL model
 		CGLModel* po = pdoc->GetGLModel();
-
-		// set the render interior nodes flag
-		po->RenderInteriorNodes(view.m_bext == false);
 
 		// render the mesh
 		if (po && po->IsActive())

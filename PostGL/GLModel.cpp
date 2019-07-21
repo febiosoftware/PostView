@@ -184,6 +184,11 @@ void CGLModel::Update(bool breset)
 	if (m_pcol && m_pcol->IsActive()) m_pcol->Update(m_nTime, dt, breset);
 
 	GetFEModel()->UpdateDependants();
+
+	// update the plot list
+	GPlotList::iterator it = m_pPlot.begin();
+	for (int i = 0; i<(int)m_pPlot.size(); ++i, ++it)
+		if ((*it)->IsActive()) (*it)->Update(currentTimeIndex(), 0.0, breset);
 }
 
 //-----------------------------------------------------------------------------
@@ -311,6 +316,15 @@ void CGLModel::RemoveDisplacementMap()
 //-----------------------------------------------------------------------------
 void CGLModel::Render(CGLContext& rc)
 {
+	// first we render all the plots
+	RenderPlots(rc);
+
+	// activate all clipping planes
+	CGLPlaneCutPlot::EnableClipPlanes();
+
+	// set the render interior nodes flag
+	RenderInteriorNodes(rc.m_bext == false);
+
 	// get the FE model
 	FEModel* fem = GetFEModel();
 
@@ -372,6 +386,23 @@ void CGLModel::Render(CGLContext& rc)
 
 	// render decorations
 	RenderDecorations();
+}
+
+//-----------------------------------------------------------------------------
+void CGLModel::RenderPlots(CGLContext& rc)
+{
+	GPlotList& PL = m_pPlot;
+	GPlotList::iterator it = PL.begin();
+	for (int i = 0; i<(int)PL.size(); ++i, ++it)
+	{
+		CGLPlot* pl = *it;
+
+		if (pl->AllowClipping()) CGLPlaneCutPlot::EnableClipPlanes();
+		else CGLPlaneCutPlot::DisableClipPlanes();
+
+		if ((*it)->IsActive()) (*it)->Render(rc);
+	}
+
 }
 
 //-----------------------------------------------------------------------------
@@ -3624,4 +3655,43 @@ void CGLModel::ConvertSelection(int oldMode, int newMode)
 	}
 
 	UpdateSelectionLists();
+}
+
+void CGLModel::AddPlot(CGLPlot* pplot)
+{
+	m_pPlot.push_back(pplot);
+	pplot->Update(currentTime(), 0.f, true);
+}
+
+void CGLModel::DeletePlot(Post::CGLPlot* plot)
+{
+	GPlotList::iterator it = m_pPlot.begin();
+	for (int i = 0; i<(int)m_pPlot.size(); ++i, ++it)
+	{
+		CGLPlot* pp = (*it);
+		if (pp == plot)
+		{
+			delete pp;
+			m_pPlot.erase(it);
+			break;
+		}
+	}
+}
+
+void CGLModel::ClearPlots()
+{
+	GPlotList::iterator it = m_pPlot.begin();
+	for (int i = 0; i<(int)m_pPlot.size(); ++i, ++it) delete (*it);
+	m_pPlot.clear();
+}
+
+void CGLModel::UpdateColorMaps()
+{
+	int N = (int)m_pPlot.size();
+	GPlotList::iterator it = m_pPlot.begin();
+	for (int i = 0; i<N; ++i, ++it)
+	{
+		CGLPlot* p = *it;
+		p->UpdateTexture();
+	}
 }

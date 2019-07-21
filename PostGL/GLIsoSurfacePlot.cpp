@@ -7,6 +7,7 @@
 #include <GLWLib/GLWidgetManager.h>
 #include <PostViewLib/constants.h>
 #include <PostView2/PropertyList.h>
+#include "GLModel.h"
 using namespace Post;
 
 extern int LUT[256][15];

@@ -872,7 +872,7 @@ void CModelViewer::Update(bool breset)
 			pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
 			m_obj.push_back(0);
 
-			GPlotList& pl = pdoc->GetPlotList();
+			GPlotList& pl = mdl->GetPlotList();
 			GPlotList::iterator it;
 			for (it = pl.begin(); it != pl.end(); ++it)
 			{

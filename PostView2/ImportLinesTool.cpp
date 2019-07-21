@@ -101,7 +101,7 @@ void CImportLinesTool::OnApply()
 		{
 			// add a line plot for visualizing the line data
 			CGLLinePlot* pgl = new CGLLinePlot(doc->GetGLModel());
-			doc->AddPlot(pgl);
+			doc->GetGLModel()->AddPlot(pgl);
 			pgl->SetName(ui->name->text().toStdString());
 
 			ui->m_ncount++;
@@ -427,7 +427,7 @@ void CImportPointsTool::OnApply()
 
 		// add a line plot
 		CGLPointPlot* pgl = new CGLPointPlot(doc->GetGLModel());
-		doc->AddPlot(pgl);
+		doc->GetGLModel()->AddPlot(pgl);
 		pgl->SetName(name.c_str());
 
 		ui->m_ncount++;

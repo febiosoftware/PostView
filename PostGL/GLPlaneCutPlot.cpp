@@ -4,6 +4,7 @@
 #include <PostView2/PropertyList.h>
 #include <PostView2/ViewSettings.h>
 #include <PostViewLib/GLContext.h>
+#include "GLModel.h"
 using namespace Post;
 
 extern int LUT[256][15];

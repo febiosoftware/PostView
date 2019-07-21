@@ -2,6 +2,7 @@
 #include "GLTensorPlot.h"
 #include <PostView2/PropertyList.h>
 #include <PostViewLib/constants.h>
+#include "GLModel.h"
 #include <stdlib.h>
 using namespace Post;
 

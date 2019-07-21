@@ -18,6 +18,7 @@ public:
 
 	bool		m_showMesh;
 	bool		m_showOutline;
+	bool		m_bext;
 	float		m_springThick;
 };
 }

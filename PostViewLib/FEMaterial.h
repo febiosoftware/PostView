@@ -10,6 +10,8 @@
 #define RENDER_TRANS_CONSTANT	0
 #define RENDER_TRANS_WEIGHTED	1
 
+namespace Post {
+
 //-----------------------------------------------------------------------------
 // Class that describes the visual appearance of a material. 
 class FEMaterial
@@ -50,3 +52,4 @@ public:
 protected:
 	char	m_szname[MAX_NAME];		// name of material
 };
+}

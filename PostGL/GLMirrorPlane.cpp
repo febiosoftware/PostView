@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GLMirrorPlane.h"
 #include <PostView2/PropertyList.h>
+#include "GLModel.h"
 using namespace Post;
 
 class CMirrorPlaneProps : public CPropertyList
