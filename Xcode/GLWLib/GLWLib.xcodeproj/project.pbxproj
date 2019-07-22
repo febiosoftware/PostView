@@ -11,9 +11,6 @@
 		CAA4B23B20ADEA1F002B19A6 /* GLWidget.h in Headers */ = {isa = PBXBuildFile; fileRef = CAA4B23720ADEA1F002B19A6 /* GLWidget.h */; };
 		CAA4B23C20ADEA1F002B19A6 /* GLWidgetManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAA4B23820ADEA1F002B19A6 /* GLWidgetManager.cpp */; };
 		CAA4B23D20ADEA1F002B19A6 /* GLWidgetManager.h in Headers */ = {isa = PBXBuildFile; fileRef = CAA4B23920ADEA1F002B19A6 /* GLWidgetManager.h */; };
-		CAA4B24020ADEAD2002B19A6 /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAA4B23F20ADEAD1002B19A6 /* QtCore.framework */; };
-		CAA4B24220ADEAE1002B19A6 /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAA4B24120ADEAE1002B19A6 /* QtGui.framework */; };
-		CAA4B24420ADEAF4002B19A6 /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAA4B24320ADEAF4002B19A6 /* QtWidgets.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,9 +19,6 @@
 		CAA4B23720ADEA1F002B19A6 /* GLWidget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLWidget.h; sourceTree = "<group>"; };
 		CAA4B23820ADEA1F002B19A6 /* GLWidgetManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLWidgetManager.cpp; sourceTree = "<group>"; };
 		CAA4B23920ADEA1F002B19A6 /* GLWidgetManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLWidgetManager.h; sourceTree = "<group>"; };
-		CAA4B23F20ADEAD1002B19A6 /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = ../../../../../../../usr/local/Cellar/qt/5.10.1/lib/QtCore.framework; sourceTree = "<group>"; };
-		CAA4B24120ADEAE1002B19A6 /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = ../../../../../../../usr/local/Cellar/qt/5.10.1/lib/QtGui.framework; sourceTree = "<group>"; };
-		CAA4B24320ADEAF4002B19A6 /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = ../../../../../../../usr/local/Cellar/qt/5.10.1/lib/QtWidgets.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,9 +26,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CAA4B24420ADEAF4002B19A6 /* QtWidgets.framework in Frameworks */,
-				CAA4B24220ADEAE1002B19A6 /* QtGui.framework in Frameworks */,
-				CAA4B24020ADEAD2002B19A6 /* QtCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,7 +37,6 @@
 			children = (
 				CAA4B23520ADEA1F002B19A6 /* GLWLib */,
 				CAA4B21E20ADE849002B19A6 /* Products */,
-				CAA4B23E20ADEAD1002B19A6 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -68,16 +58,6 @@
 			);
 			name = GLWLib;
 			path = ../../GLWLib;
-			sourceTree = "<group>";
-		};
-		CAA4B23E20ADEAD1002B19A6 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				CAA4B24320ADEAF4002B19A6 /* QtWidgets.framework */,
-				CAA4B24120ADEAE1002B19A6 /* QtGui.framework */,
-				CAA4B23F20ADEAD1002B19A6 /* QtCore.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -132,6 +112,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = CAA4B21420ADE848002B19A6;

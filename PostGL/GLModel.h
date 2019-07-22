@@ -1,9 +1,9 @@
 #pragma once
-#include <PostViewLib/GLObject.h>
+#include "PostViewLib/GLObject.h"
 #include "GLDisplacementMap.h"
 #include "GLColorMap.h"
-#include <PostViewLib/FEModel.h>
-#include <PostViewLib/GDecoration.h>
+#include "PostViewLib/FEModel.h"
+#include "PostViewLib/GDecoration.h"
 #include "GLPlot.h"
 #include <vector>
 

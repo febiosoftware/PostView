@@ -1,6 +1,6 @@
 #pragma once
 #include "GLPlot.h"
-#include <GLWLib/GLWidget.h>
+#include "GLWLib/GLWidget.h"
 #include "PostViewLib/DataMap.h"
 
 namespace Post {

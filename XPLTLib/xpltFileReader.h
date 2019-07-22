@@ -1,6 +1,6 @@
 #pragma once
-#include <PostViewLib/FEFileReader.h>
-#include <PostViewLib/PltArchive.h>
+#include "PostViewLib/FEFileReader.h"
+#include "PostViewLib/PltArchive.h"
 
 enum XPLT_READ_STATE_FLAG { 
 	XPLT_READ_ALL_STATES, 

@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "GLPlaneCutPlot.h"
-#include <PostViewLib/GLContext.h>
-#include <PostView2/PropertyList.h>
-#include <PostView2/ViewSettings.h>
-#include <PostViewLib/GLContext.h>
+#include "PostViewLib/GLContext.h"
+#include "PostView2/PropertyList.h"
+#include "PostView2/ViewSettings.h"
+#include "PostViewLib/GLContext.h"
 #include "GLModel.h"
 using namespace Post;
 

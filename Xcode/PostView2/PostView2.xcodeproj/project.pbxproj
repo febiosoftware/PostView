@@ -7,9 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D51114421ECC973100B8849F /* AVIAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D511143C1ECC973100B8849F /* AVIAnimation.cpp */; };
-		D51114431ECC973100B8849F /* ImgAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D511143E1ECC973100B8849F /* ImgAnimation.cpp */; };
-		D51114441ECC973100B8849F /* MPEGAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D51114401ECC973100B8849F /* MPEGAnimation.cpp */; };
 		D518E6851F8436970028AA8F /* CIntInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D518E6831F8436970028AA8F /* CIntInput.cpp */; };
 		D518E6861F8436970028AA8F /* DlgExportLSDYNA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D518E6841F8436970028AA8F /* DlgExportLSDYNA.cpp */; };
 		D52C6FB01D75DCA300DF804B /* moc_TimeController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D52C6FA91D75DCA300DF804B /* moc_TimeController.cpp */; };
@@ -41,22 +38,19 @@
 		D52F5109218D0B280094F7D1 /* libx265.165.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D52F5108218D0B280094F7D1 /* libx265.165.dylib */; };
 		D53292BB1E453447002798B3 /* DlgExportAscii.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53292B91E453447002798B3 /* DlgExportAscii.cpp */; };
 		D53598C01E901C0500584A4F /* DragBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53598BE1E901C0500584A4F /* DragBox.cpp */; };
-		D53A8DFB2074EC7C00BDDD2D /* GLStreamLinePlot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53A8DFA2074EC7C00BDDD2D /* GLStreamLinePlot.cpp */; };
-		D53B031C207EF04B00E6B5F5 /* GLParticleFlowPlot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53B031B207EF04A00E6B5F5 /* GLParticleFlowPlot.cpp */; };
+		D552470A22E5F34700935C9C /* lut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D552470922E5F34700935C9C /* lut.cpp */; };
+		D552473A22E5F4FF00935C9C /* libXPLTLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D552473922E5F4FF00935C9C /* libXPLTLib.a */; };
+		D55247F322E63A9800935C9C /* libPostGL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D55247F222E63A9800935C9C /* libPostGL.a */; };
 		D55AC5011E61EB6E00BBA0D1 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D55AC5001E61EB6E00BBA0D1 /* OpenGL.framework */; };
 		D55CE8EE21B96C0E0096890D /* MeasureVolumeTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D55CE8ED21B96C0E0096890D /* MeasureVolumeTool.cpp */; };
 		D56731621F9FD85200C87BC1 /* AreaCoverageTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D56731611F9FD85200C87BC1 /* AreaCoverageTool.cpp */; };
 		D56731681F9FF5A700C87BC1 /* moc_AreaCoverageTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D56731671F9FF5A700C87BC1 /* moc_AreaCoverageTool.cpp */; };
-		D571E01120385DE700A7B96D /* GLColorMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D571E00E20385DE700A7B96D /* GLColorMap.cpp */; };
 		D571E01220385DE700A7B96D /* FileThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D571E00F20385DE700A7B96D /* FileThread.cpp */; };
-		D571E01320385DE700A7B96D /* GLDisplacementMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D571E01020385DE700A7B96D /* GLDisplacementMap.cpp */; };
 		D576BB3220CACBD100F09942 /* moc_DlgAddEquation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D576BB3120CACBD100F09942 /* moc_DlgAddEquation.cpp */; };
-		D593D28E20A5E8A50011F0C2 /* GLTensorPlot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D593D28C20A5E8A40011F0C2 /* GLTensorPlot.cpp */; };
 		D5A65E0F1DBFA53F00B44009 /* DlgFileInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */; };
 		D5B805C2223BEF5C00198805 /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5B805BF223BEF5C00198805 /* QtGui.framework */; };
 		D5B805C3223BEF5C00198805 /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5B805C0223BEF5C00198805 /* QtWidgets.framework */; };
 		D5B805C4223BEF5C00198805 /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5B805C1223BEF5C00198805 /* QtCore.framework */; };
-		D5B84E1D22B2EE86006834BF /* GLMirrorPlane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5B84E1C22B2EE86006834BF /* GLMirrorPlane.cpp */; };
 		D5C20C622038851000BFB643 /* moc_FileThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5C20C612038851000BFB643 /* moc_FileThread.cpp */; };
 		D5C53DB71F86D97E0014FA22 /* DlgAddEquation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5C53DB61F86D97E0014FA22 /* DlgAddEquation.cpp */; };
 		D5E08BA320A5E5BE00275FAB /* libGLWLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5E08BA220A5E5BE00275FAB /* libGLWLib.a */; };
@@ -88,16 +82,6 @@
 		D5FF7A501D72756B003D2CBD /* Document.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79CC1D72756B003D2CBD /* Document.cpp */; };
 		D5FF7A511D72756B003D2CBD /* FEKinemat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79CE1D72756B003D2CBD /* FEKinemat.cpp */; };
 		D5FF7A521D72756B003D2CBD /* FileViewer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79D01D72756B003D2CBD /* FileViewer.cpp */; };
-		D5FF7A541D72756B003D2CBD /* GLDataMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79D41D72756B003D2CBD /* GLDataMap.cpp */; };
-		D5FF7A551D72756B003D2CBD /* GLIsoSurfacePlot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79D61D72756B003D2CBD /* GLIsoSurfacePlot.cpp */; };
-		D5FF7A561D72756B003D2CBD /* GLLinePlot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79D81D72756B003D2CBD /* GLLinePlot.cpp */; };
-		D5FF7A571D72756B003D2CBD /* GLMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79DA1D72756B003D2CBD /* GLMesh.cpp */; };
-		D5FF7A581D72756B003D2CBD /* GLModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79DC1D72756B003D2CBD /* GLModel.cpp */; };
-		D5FF7A591D72756B003D2CBD /* GLPlane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79DE1D72756B003D2CBD /* GLPlane.cpp */; };
-		D5FF7A5A1D72756B003D2CBD /* GLPlaneCutPlot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79E01D72756B003D2CBD /* GLPlaneCutPlot.cpp */; };
-		D5FF7A5B1D72756B003D2CBD /* GLPlot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79E21D72756B003D2CBD /* GLPlot.cpp */; };
-		D5FF7A5C1D72756B003D2CBD /* GLSlicePLot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79E41D72756B003D2CBD /* GLSlicePLot.cpp */; };
-		D5FF7A5D1D72756B003D2CBD /* GLVectorPlot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79E61D72756B003D2CBD /* GLVectorPlot.cpp */; };
 		D5FF7A5E1D72756B003D2CBD /* GLView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79E81D72756B003D2CBD /* GLView.cpp */; };
 		D5FF7A611D72756B003D2CBD /* GraphWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79EE1D72756B003D2CBD /* GraphWindow.cpp */; };
 		D5FF7A621D72756B003D2CBD /* ImportLinesTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79F01D72756B003D2CBD /* ImportLinesTool.cpp */; };
@@ -143,7 +127,6 @@
 		D5FF7A8A1D72756B003D2CBD /* PropertyListForm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF7A241D72756B003D2CBD /* PropertyListForm.cpp */; };
 		D5FF7A8B1D72756B003D2CBD /* PropertyListView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF7A261D72756B003D2CBD /* PropertyListView.cpp */; };
 		D5FF7A8C1D72756B003D2CBD /* qrc_postview.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF7A281D72756B003D2CBD /* qrc_postview.cpp */; };
-		D5FF7A8D1D72756B003D2CBD /* render.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF7A291D72756B003D2CBD /* render.cpp */; };
 		D5FF7A8E1D72756B003D2CBD /* session.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF7A2A1D72756B003D2CBD /* session.cpp */; };
 		D5FF7A8F1D72756B003D2CBD /* ShellThicknessTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF7A2B1D72756B003D2CBD /* ShellThicknessTool.cpp */; };
 		D5FF7A901D72756B003D2CBD /* SphereFitTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF7A2D1D72756B003D2CBD /* SphereFitTool.cpp */; };
@@ -177,12 +160,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		D511143C1ECC973100B8849F /* AVIAnimation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AVIAnimation.cpp; sourceTree = "<group>"; };
-		D511143D1ECC973100B8849F /* AVIAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVIAnimation.h; sourceTree = "<group>"; };
-		D511143E1ECC973100B8849F /* ImgAnimation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImgAnimation.cpp; sourceTree = "<group>"; };
-		D511143F1ECC973100B8849F /* ImgAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImgAnimation.h; sourceTree = "<group>"; };
-		D51114401ECC973100B8849F /* MPEGAnimation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MPEGAnimation.cpp; sourceTree = "<group>"; };
-		D51114411ECC973100B8849F /* MPEGAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPEGAnimation.h; sourceTree = "<group>"; };
 		D518E6821F8436970028AA8F /* DlgExportLSDYNA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgExportLSDYNA.h; sourceTree = "<group>"; };
 		D518E6831F8436970028AA8F /* CIntInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CIntInput.cpp; sourceTree = "<group>"; };
 		D518E6841F8436970028AA8F /* DlgExportLSDYNA.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgExportLSDYNA.cpp; sourceTree = "<group>"; };
@@ -215,32 +192,23 @@
 		D53292BA1E453447002798B3 /* DlgExportAscii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgExportAscii.h; sourceTree = "<group>"; };
 		D53598BE1E901C0500584A4F /* DragBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DragBox.cpp; sourceTree = "<group>"; };
 		D53598BF1E901C0500584A4F /* DragBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DragBox.h; sourceTree = "<group>"; };
-		D53A8DF92074EC7B00BDDD2D /* GLStreamLinePlot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLStreamLinePlot.h; sourceTree = "<group>"; };
-		D53A8DFA2074EC7C00BDDD2D /* GLStreamLinePlot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLStreamLinePlot.cpp; sourceTree = "<group>"; };
-		D53B031A207EF04A00E6B5F5 /* GLParticleFlowPlot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLParticleFlowPlot.h; sourceTree = "<group>"; };
-		D53B031B207EF04A00E6B5F5 /* GLParticleFlowPlot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLParticleFlowPlot.cpp; sourceTree = "<group>"; };
+		D552470922E5F34700935C9C /* lut.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lut.cpp; sourceTree = "<group>"; };
+		D552473922E5F4FF00935C9C /* libXPLTLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libXPLTLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D55247F222E63A9800935C9C /* libPostGL.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libPostGL.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D55AC5001E61EB6E00BBA0D1 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		D55CE8EC21B96C0D0096890D /* MeasureVolumeTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeasureVolumeTool.h; sourceTree = "<group>"; };
 		D55CE8ED21B96C0E0096890D /* MeasureVolumeTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MeasureVolumeTool.cpp; sourceTree = "<group>"; };
 		D56731601F9FD85200C87BC1 /* AreaCoverageTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AreaCoverageTool.h; sourceTree = "<group>"; };
 		D56731611F9FD85200C87BC1 /* AreaCoverageTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AreaCoverageTool.cpp; sourceTree = "<group>"; };
 		D56731671F9FF5A700C87BC1 /* moc_AreaCoverageTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_AreaCoverageTool.cpp; sourceTree = "<group>"; };
-		D571E00B20385DE700A7B96D /* GLColorMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLColorMap.h; sourceTree = "<group>"; };
 		D571E00C20385DE700A7B96D /* FileThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileThread.h; sourceTree = "<group>"; };
-		D571E00D20385DE700A7B96D /* GLDisplacementMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLDisplacementMap.h; sourceTree = "<group>"; };
-		D571E00E20385DE700A7B96D /* GLColorMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLColorMap.cpp; sourceTree = "<group>"; };
 		D571E00F20385DE700A7B96D /* FileThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileThread.cpp; sourceTree = "<group>"; };
-		D571E01020385DE700A7B96D /* GLDisplacementMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLDisplacementMap.cpp; sourceTree = "<group>"; };
 		D576BB3120CACBD100F09942 /* moc_DlgAddEquation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_DlgAddEquation.cpp; sourceTree = "<group>"; };
-		D593D28C20A5E8A40011F0C2 /* GLTensorPlot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLTensorPlot.cpp; sourceTree = "<group>"; };
-		D593D28D20A5E8A40011F0C2 /* GLTensorPlot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLTensorPlot.h; sourceTree = "<group>"; };
 		D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgFileInfo.cpp; sourceTree = "<group>"; };
 		D5A65E0E1DBFA53F00B44009 /* DlgFileInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgFileInfo.h; sourceTree = "<group>"; };
 		D5B805BF223BEF5C00198805 /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt/5.12.0/lib/QtGui.framework; sourceTree = "<group>"; };
 		D5B805C0223BEF5C00198805 /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt/5.12.0/lib/QtWidgets.framework; sourceTree = "<group>"; };
 		D5B805C1223BEF5C00198805 /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = ../../../../../../../../../../../usr/local/Cellar/qt/5.12.0/lib/QtCore.framework; sourceTree = "<group>"; };
-		D5B84E1B22B2EE86006834BF /* GLMirrorPlane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLMirrorPlane.h; sourceTree = "<group>"; };
-		D5B84E1C22B2EE86006834BF /* GLMirrorPlane.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLMirrorPlane.cpp; sourceTree = "<group>"; };
 		D5C20C612038851000BFB643 /* moc_FileThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_FileThread.cpp; sourceTree = "<group>"; };
 		D5C53DB51F86D97E0014FA22 /* DlgAddEquation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgAddEquation.h; sourceTree = "<group>"; };
 		D5C53DB61F86D97E0014FA22 /* DlgAddEquation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgAddEquation.cpp; sourceTree = "<group>"; };
@@ -301,26 +269,6 @@
 		D5FF79CF1D72756B003D2CBD /* FEKinemat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FEKinemat.h; sourceTree = "<group>"; };
 		D5FF79D01D72756B003D2CBD /* FileViewer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileViewer.cpp; sourceTree = "<group>"; };
 		D5FF79D11D72756B003D2CBD /* FileViewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileViewer.h; sourceTree = "<group>"; };
-		D5FF79D41D72756B003D2CBD /* GLDataMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLDataMap.cpp; sourceTree = "<group>"; };
-		D5FF79D51D72756B003D2CBD /* GLDataMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLDataMap.h; sourceTree = "<group>"; };
-		D5FF79D61D72756B003D2CBD /* GLIsoSurfacePlot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLIsoSurfacePlot.cpp; sourceTree = "<group>"; };
-		D5FF79D71D72756B003D2CBD /* GLIsoSurfacePlot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLIsoSurfacePlot.h; sourceTree = "<group>"; };
-		D5FF79D81D72756B003D2CBD /* GLLinePlot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLLinePlot.cpp; sourceTree = "<group>"; };
-		D5FF79D91D72756B003D2CBD /* GLLinePlot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLLinePlot.h; sourceTree = "<group>"; };
-		D5FF79DA1D72756B003D2CBD /* GLMesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLMesh.cpp; sourceTree = "<group>"; };
-		D5FF79DB1D72756B003D2CBD /* GLMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLMesh.h; sourceTree = "<group>"; };
-		D5FF79DC1D72756B003D2CBD /* GLModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLModel.cpp; sourceTree = "<group>"; };
-		D5FF79DD1D72756B003D2CBD /* GLModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLModel.h; sourceTree = "<group>"; };
-		D5FF79DE1D72756B003D2CBD /* GLPlane.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLPlane.cpp; sourceTree = "<group>"; };
-		D5FF79DF1D72756B003D2CBD /* GLPlane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLPlane.h; sourceTree = "<group>"; };
-		D5FF79E01D72756B003D2CBD /* GLPlaneCutPlot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLPlaneCutPlot.cpp; sourceTree = "<group>"; };
-		D5FF79E11D72756B003D2CBD /* GLPlaneCutPlot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLPlaneCutPlot.h; sourceTree = "<group>"; };
-		D5FF79E21D72756B003D2CBD /* GLPlot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLPlot.cpp; sourceTree = "<group>"; };
-		D5FF79E31D72756B003D2CBD /* GLPlot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLPlot.h; sourceTree = "<group>"; };
-		D5FF79E41D72756B003D2CBD /* GLSlicePLot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLSlicePLot.cpp; sourceTree = "<group>"; };
-		D5FF79E51D72756B003D2CBD /* GLSlicePLot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLSlicePLot.h; sourceTree = "<group>"; };
-		D5FF79E61D72756B003D2CBD /* GLVectorPlot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLVectorPlot.cpp; sourceTree = "<group>"; };
-		D5FF79E71D72756B003D2CBD /* GLVectorPlot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLVectorPlot.h; sourceTree = "<group>"; };
 		D5FF79E81D72756B003D2CBD /* GLView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLView.cpp; sourceTree = "<group>"; };
 		D5FF79E91D72756B003D2CBD /* GLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLView.h; sourceTree = "<group>"; };
 		D5FF79EE1D72756B003D2CBD /* GraphWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GraphWindow.cpp; sourceTree = "<group>"; };
@@ -382,7 +330,6 @@
 		D5FF7A261D72756B003D2CBD /* PropertyListView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PropertyListView.cpp; sourceTree = "<group>"; };
 		D5FF7A271D72756B003D2CBD /* PropertyListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PropertyListView.h; sourceTree = "<group>"; };
 		D5FF7A281D72756B003D2CBD /* qrc_postview.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = qrc_postview.cpp; sourceTree = "<group>"; };
-		D5FF7A291D72756B003D2CBD /* render.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = render.cpp; sourceTree = "<group>"; };
 		D5FF7A2A1D72756B003D2CBD /* session.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = session.cpp; sourceTree = "<group>"; };
 		D5FF7A2B1D72756B003D2CBD /* ShellThicknessTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShellThicknessTool.cpp; sourceTree = "<group>"; };
 		D5FF7A2C1D72756B003D2CBD /* ShellThicknessTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShellThicknessTool.h; sourceTree = "<group>"; };
@@ -422,6 +369,8 @@
 				D52F50F8218D07710094F7D1 /* libavformat.58.12.100.dylib in Frameworks */,
 				D52F50F9218D07710094F7D1 /* libswscale.5.1.100.dylib in Frameworks */,
 				D52F508E218C9C370094F7D1 /* libiconv.2.dylib in Frameworks */,
+				D55247F322E63A9800935C9C /* libPostGL.a in Frameworks */,
+				D552473A22E5F4FF00935C9C /* libXPLTLib.a in Frameworks */,
 				D52C6FB51D75DCE900DF804B /* libPostViewLib.a in Frameworks */,
 				D5E08BA320A5E5BE00275FAB /* libGLWLib.a in Frameworks */,
 				D5EEDE1422D7E3D200A849BC /* QtCharts.framework in Frameworks */,
@@ -481,8 +430,6 @@
 				D5FF79B11D72756B003D2CBD /* AddPointTool.h */,
 				D56731611F9FD85200C87BC1 /* AreaCoverageTool.cpp */,
 				D56731601F9FD85200C87BC1 /* AreaCoverageTool.h */,
-				D511143C1ECC973100B8849F /* AVIAnimation.cpp */,
-				D511143D1ECC973100B8849F /* AVIAnimation.h */,
 				D5FF79B21D72756B003D2CBD /* CColorButton.cpp */,
 				D5FF79B31D72756B003D2CBD /* CColorButton.h */,
 				D5FF79B41D72756B003D2CBD /* CDlgImportXPLT.cpp */,
@@ -532,38 +479,6 @@
 				D571E00C20385DE700A7B96D /* FileThread.h */,
 				D5FF79D01D72756B003D2CBD /* FileViewer.cpp */,
 				D5FF79D11D72756B003D2CBD /* FileViewer.h */,
-				D571E00E20385DE700A7B96D /* GLColorMap.cpp */,
-				D571E00B20385DE700A7B96D /* GLColorMap.h */,
-				D5FF79D41D72756B003D2CBD /* GLDataMap.cpp */,
-				D5FF79D51D72756B003D2CBD /* GLDataMap.h */,
-				D571E01020385DE700A7B96D /* GLDisplacementMap.cpp */,
-				D571E00D20385DE700A7B96D /* GLDisplacementMap.h */,
-				D5FF79D61D72756B003D2CBD /* GLIsoSurfacePlot.cpp */,
-				D5FF79D71D72756B003D2CBD /* GLIsoSurfacePlot.h */,
-				D5FF79D81D72756B003D2CBD /* GLLinePlot.cpp */,
-				D5FF79D91D72756B003D2CBD /* GLLinePlot.h */,
-				D5FF79DA1D72756B003D2CBD /* GLMesh.cpp */,
-				D5FF79DB1D72756B003D2CBD /* GLMesh.h */,
-				D5B84E1C22B2EE86006834BF /* GLMirrorPlane.cpp */,
-				D5B84E1B22B2EE86006834BF /* GLMirrorPlane.h */,
-				D5FF79DC1D72756B003D2CBD /* GLModel.cpp */,
-				D5FF79DD1D72756B003D2CBD /* GLModel.h */,
-				D53B031B207EF04A00E6B5F5 /* GLParticleFlowPlot.cpp */,
-				D53B031A207EF04A00E6B5F5 /* GLParticleFlowPlot.h */,
-				D5FF79DE1D72756B003D2CBD /* GLPlane.cpp */,
-				D5FF79DF1D72756B003D2CBD /* GLPlane.h */,
-				D5FF79E01D72756B003D2CBD /* GLPlaneCutPlot.cpp */,
-				D5FF79E11D72756B003D2CBD /* GLPlaneCutPlot.h */,
-				D5FF79E21D72756B003D2CBD /* GLPlot.cpp */,
-				D5FF79E31D72756B003D2CBD /* GLPlot.h */,
-				D5FF79E41D72756B003D2CBD /* GLSlicePLot.cpp */,
-				D5FF79E51D72756B003D2CBD /* GLSlicePLot.h */,
-				D53A8DFA2074EC7C00BDDD2D /* GLStreamLinePlot.cpp */,
-				D53A8DF92074EC7B00BDDD2D /* GLStreamLinePlot.h */,
-				D593D28C20A5E8A40011F0C2 /* GLTensorPlot.cpp */,
-				D593D28D20A5E8A40011F0C2 /* GLTensorPlot.h */,
-				D5FF79E61D72756B003D2CBD /* GLVectorPlot.cpp */,
-				D5FF79E71D72756B003D2CBD /* GLVectorPlot.h */,
 				D5FF79E81D72756B003D2CBD /* GLView.cpp */,
 				D5FF79E91D72756B003D2CBD /* GLView.h */,
 				D5FF79EE1D72756B003D2CBD /* GraphWindow.cpp */,
@@ -572,12 +487,11 @@
 				D5EEDE1122D7E37000A849BC /* Histogram.h */,
 				D5EB78DC229704860063769C /* ImageViewer.cpp */,
 				D5EB78DE229704860063769C /* ImageViewer.h */,
-				D511143E1ECC973100B8849F /* ImgAnimation.cpp */,
-				D511143F1ECC973100B8849F /* ImgAnimation.h */,
 				D5FF79F01D72756B003D2CBD /* ImportLinesTool.cpp */,
 				D5FF79F11D72756B003D2CBD /* ImportLinesTool.h */,
 				D5FF79F21D72756B003D2CBD /* IntegrateWindow.cpp */,
 				D5FF79F31D72756B003D2CBD /* IntegrateWindow.h */,
+				D552470922E5F34700935C9C /* lut.cpp */,
 				D5FF79F41D72756B003D2CBD /* MainWindow.cpp */,
 				D5FF79F51D72756B003D2CBD /* MainWindow.h */,
 				D5FF79F61D72756B003D2CBD /* MaterialPanel.cpp */,
@@ -623,8 +537,6 @@
 				D5FF7A141D72756B003D2CBD /* moc_ToolsPanel.cpp */,
 				D5FF7A151D72756B003D2CBD /* ModelViewer.cpp */,
 				D5FF7A161D72756B003D2CBD /* ModelViewer.h */,
-				D51114401ECC973100B8849F /* MPEGAnimation.cpp */,
-				D51114411ECC973100B8849F /* MPEGAnimation.h */,
 				D5FF7A171D72756B003D2CBD /* PlaneTool.cpp */,
 				D5FF7A181D72756B003D2CBD /* PlaneTool.h */,
 				D5FF7A191D72756B003D2CBD /* PlotMixTool.cpp */,
@@ -643,7 +555,6 @@
 				D5FF7A261D72756B003D2CBD /* PropertyListView.cpp */,
 				D5FF7A271D72756B003D2CBD /* PropertyListView.h */,
 				D5FF7A281D72756B003D2CBD /* qrc_postview.cpp */,
-				D5FF7A291D72756B003D2CBD /* render.cpp */,
 				D5FF7A2A1D72756B003D2CBD /* session.cpp */,
 				D5FF7A2B1D72756B003D2CBD /* ShellThicknessTool.cpp */,
 				D5FF7A2C1D72756B003D2CBD /* ShellThicknessTool.h */,
@@ -683,7 +594,10 @@
 		D5FF7AA61D727B52003D2CBD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D5EEDE1322D7E3D200A849BC /* QtCharts.framework */,
+				D55247F222E63A9800935C9C /* libPostGL.a */,
+				D5E08BA220A5E5BE00275FAB /* libGLWLib.a */,
+				D52C6FB41D75DCE900DF804B /* libPostViewLib.a */,
+				D552473922E5F4FF00935C9C /* libXPLTLib.a */,
 				D52F5108218D0B280094F7D1 /* libx265.165.dylib */,
 				D52F50FE218D07EF0094F7D1 /* libmp3lame.0.dylib */,
 				D52F50FA218D07AD0094F7D1 /* libxvidcore.4.dylib */,
@@ -696,6 +610,7 @@
 				D5B805C1223BEF5C00198805 /* QtCore.framework */,
 				D5B805BF223BEF5C00198805 /* QtGui.framework */,
 				D5B805C0223BEF5C00198805 /* QtWidgets.framework */,
+				D5EEDE1322D7E3D200A849BC /* QtCharts.framework */,
 				D52F5085218C996B0094F7D1 /* CoreAudio.framework */,
 				D52F5083218C99350094F7D1 /* VideoToolbox.framework */,
 				D52F5081218C990D0094F7D1 /* CoreVideo.framework */,
@@ -703,8 +618,6 @@
 				D52F507D218C98AC0094F7D1 /* CoreFoundation.framework */,
 				D52F507B218C98730094F7D1 /* AudioToolbox.framework */,
 				D55AC5001E61EB6E00BBA0D1 /* OpenGL.framework */,
-				D5E08BA220A5E5BE00275FAB /* libGLWLib.a */,
-				D52C6FB41D75DCE900DF804B /* libPostViewLib.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -779,33 +692,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D5FF7A5B1D72756B003D2CBD /* GLPlot.cpp in Sources */,
 				D53292BB1E453447002798B3 /* DlgExportAscii.cpp in Sources */,
 				D5FF7A461D72756B003D2CBD /* CommandPanel.cpp in Sources */,
 				D5F8C897226FBD54008597AF /* DocManager.cpp in Sources */,
-				D5FF7A561D72756B003D2CBD /* GLLinePlot.cpp in Sources */,
 				D5FF7A841D72756B003D2CBD /* PlotMixTool.cpp in Sources */,
 				D52F507A218C96E30094F7D1 /* DlgExportVTK.cpp in Sources */,
-				D5FF7A5D1D72756B003D2CBD /* GLVectorPlot.cpp in Sources */,
 				D5FF7A701D72756B003D2CBD /* moc_GraphWindow.cpp in Sources */,
 				D576BB3220CACBD100F09942 /* moc_DlgAddEquation.cpp in Sources */,
-				D5FF7A571D72756B003D2CBD /* GLMesh.cpp in Sources */,
-				D5FF7A541D72756B003D2CBD /* GLDataMap.cpp in Sources */,
-				D5FF7A551D72756B003D2CBD /* GLIsoSurfacePlot.cpp in Sources */,
-				D51114431ECC973100B8849F /* ImgAnimation.cpp in Sources */,
 				D5FF7A7A1D72756B003D2CBD /* moc_PropertyListForm.cpp in Sources */,
 				D5EB78DF229704860063769C /* ImageViewer.cpp in Sources */,
 				D5A65E0F1DBFA53F00B44009 /* DlgFileInfo.cpp in Sources */,
 				D5FF7A941D72756B003D2CBD /* SummaryWindow.cpp in Sources */,
 				D5FAC5C821792BC8005E4684 /* StrainMapTool.cpp in Sources */,
-				D5FF7A5C1D72756B003D2CBD /* GLSlicePLot.cpp in Sources */,
 				D56731621F9FD85200C87BC1 /* AreaCoverageTool.cpp in Sources */,
 				D5FF7A691D72756B003D2CBD /* moc_DataPanel.cpp in Sources */,
 				D5FF7A871D72756B003D2CBD /* PointDistanceTool.cpp in Sources */,
 				D5FF7A731D72756B003D2CBD /* moc_MainWindow.cpp in Sources */,
 				D5FF7A8F1D72756B003D2CBD /* ShellThicknessTool.cpp in Sources */,
 				D5FF7A961D72756B003D2CBD /* ToolsPanel.cpp in Sources */,
-				D5B84E1D22B2EE86006834BF /* GLMirrorPlane.cpp in Sources */,
 				D5FF7A4D1D72756B003D2CBD /* DlgTimeSettings.cpp in Sources */,
 				D5EB78E0229704860063769C /* moc_ImageViewer.cpp in Sources */,
 				D5FF7A5E1D72756B003D2CBD /* GLView.cpp in Sources */,
@@ -820,13 +724,11 @@
 				D5FF7A431D72756B003D2CBD /* AddPointTool.cpp in Sources */,
 				D5C53DB71F86D97E0014FA22 /* DlgAddEquation.cpp in Sources */,
 				D5FF7A921D72756B003D2CBD /* StatsWindow.cpp in Sources */,
-				D5FF7A8D1D72756B003D2CBD /* render.cpp in Sources */,
 				D5FF7A6A1D72756B003D2CBD /* moc_DistanceMapTool.cpp in Sources */,
 				D5FF7A821D72756B003D2CBD /* ModelViewer.cpp in Sources */,
 				D571E01220385DE700A7B96D /* FileThread.cpp in Sources */,
 				D5FF7A6F1D72756B003D2CBD /* moc_GLView.cpp in Sources */,
 				D5FF7A7B1D72756B003D2CBD /* moc_PropertyListView.cpp in Sources */,
-				D53A8DFB2074EC7C00BDDD2D /* GLStreamLinePlot.cpp in Sources */,
 				D52C6FB31D75DCA300DF804B /* TimePanel.cpp in Sources */,
 				D52C6FB11D75DCA300DF804B /* moc_TimePanel.cpp in Sources */,
 				D5FF7A491D72756B003D2CBD /* DistanceMapTool.cpp in Sources */,
@@ -839,15 +741,13 @@
 				D5FF7A861D72756B003D2CBD /* PointCongruencyTool.cpp in Sources */,
 				D518E6861F8436970028AA8F /* DlgExportLSDYNA.cpp in Sources */,
 				D5FF7A4E1D72756B003D2CBD /* DlgViewSettings.cpp in Sources */,
-				D5FF7A581D72756B003D2CBD /* GLModel.cpp in Sources */,
 				D5FF7A501D72756B003D2CBD /* Document.cpp in Sources */,
 				D5FF7A741D72756B003D2CBD /* moc_MaterialPanel.cpp in Sources */,
 				D5FF7A7F1D72756B003D2CBD /* moc_SummaryWindow.cpp in Sources */,
 				D5FF7A681D72756B003D2CBD /* moc_CColorButton.cpp in Sources */,
-				D571E01120385DE700A7B96D /* GLColorMap.cpp in Sources */,
+				D552470A22E5F34700935C9C /* lut.cpp in Sources */,
 				D5FF7A721D72756B003D2CBD /* moc_IntegrateWindow.cpp in Sources */,
 				D56731681F9FF5A700C87BC1 /* moc_AreaCoverageTool.cpp in Sources */,
-				D593D28E20A5E8A50011F0C2 /* GLTensorPlot.cpp in Sources */,
 				D5FF7A4F1D72756B003D2CBD /* DlgWidgetProps.cpp in Sources */,
 				D5FF7A621D72756B003D2CBD /* ImportLinesTool.cpp in Sources */,
 				D5FF7A761D72756B003D2CBD /* moc_PlaneTool.cpp in Sources */,
@@ -856,10 +756,8 @@
 				D5FF7A8C1D72756B003D2CBD /* qrc_postview.cpp in Sources */,
 				D5FF7A801D72756B003D2CBD /* moc_Tool.cpp in Sources */,
 				D5FF7A471D72756B003D2CBD /* DataFieldSelector.cpp in Sources */,
-				D51114441ECC973100B8849F /* MPEGAnimation.cpp in Sources */,
 				D5FF7A671D72756B003D2CBD /* moc_AddImage3DTool.cpp in Sources */,
 				D5FF7A6C1D72756B003D2CBD /* moc_DlgViewSettings.cpp in Sources */,
-				D5FF7A5A1D72756B003D2CBD /* GLPlaneCutPlot.cpp in Sources */,
 				D5FF7A7E1D72756B003D2CBD /* moc_StatsWindow.cpp in Sources */,
 				D53598C01E901C0500584A4F /* DragBox.cpp in Sources */,
 				D5FF7A651D72756B003D2CBD /* MaterialPanel.cpp in Sources */,
@@ -868,7 +766,6 @@
 				D5FF7A631D72756B003D2CBD /* IntegrateWindow.cpp in Sources */,
 				D5FF7A931D72756B003D2CBD /* stdafx.cpp in Sources */,
 				D5EEDE1222D7E37000A849BC /* Histogram.cpp in Sources */,
-				D5FF7A591D72756B003D2CBD /* GLPlane.cpp in Sources */,
 				D5FF7A901D72756B003D2CBD /* SphereFitTool.cpp in Sources */,
 				D5FF7A511D72756B003D2CBD /* FEKinemat.cpp in Sources */,
 				D5F8C898226FBD54008597AF /* ViewSettings.cpp in Sources */,
@@ -881,14 +778,12 @@
 				D5FF7A521D72756B003D2CBD /* FileViewer.cpp in Sources */,
 				D5FF7A641D72756B003D2CBD /* MainWindow.cpp in Sources */,
 				D55CE8EE21B96C0E0096890D /* MeasureVolumeTool.cpp in Sources */,
-				D53B031C207EF04B00E6B5F5 /* GLParticleFlowPlot.cpp in Sources */,
 				D5FF7A451D72756B003D2CBD /* CDlgImportXPLT.cpp in Sources */,
 				D5FAC5D221793358005E4684 /* moc_StrainMapTool.cpp in Sources */,
 				D5FF7A611D72756B003D2CBD /* GraphWindow.cpp in Sources */,
 				D5FF7A711D72756B003D2CBD /* moc_ImportLinesTool.cpp in Sources */,
 				D5FF7A831D72756B003D2CBD /* PlaneTool.cpp in Sources */,
 				D5FF7A811D72756B003D2CBD /* moc_ToolsPanel.cpp in Sources */,
-				D51114421ECC973100B8849F /* AVIAnimation.cpp in Sources */,
 				D5FF7A6B1D72756B003D2CBD /* moc_DlgExportXPLT.cpp in Sources */,
 				D5FF7A411D72756B003D2CBD /* 4PointAngleTool.cpp in Sources */,
 				D5FF7A751D72756B003D2CBD /* moc_ModelViewer.cpp in Sources */,
@@ -896,7 +791,6 @@
 				D5FF7A4B1D72756B003D2CBD /* DlgFind.cpp in Sources */,
 				D5FF7A8A1D72756B003D2CBD /* PropertyListForm.cpp in Sources */,
 				D5C20C622038851000BFB643 /* moc_FileThread.cpp in Sources */,
-				D571E01320385DE700A7B96D /* GLDisplacementMap.cpp in Sources */,
 				D5FF7A4C1D72756B003D2CBD /* DlgSelectRange.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

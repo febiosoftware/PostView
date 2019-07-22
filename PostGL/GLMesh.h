@@ -1,6 +1,6 @@
 #pragma once
-#include <PostViewLib/ColorMap.h>
-#include <PostViewLib/math3d.h>
+#include "PostViewLib/ColorMap.h"
+#include "PostViewLib/math3d.h"
 
 #ifdef __APPLE__
 #include <OpenGL/gl.h>

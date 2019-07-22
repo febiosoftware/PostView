@@ -1,9 +1,9 @@
 #pragma once
-#include <PostViewLib/FEModel.h>
-#include <PostViewLib/ColorMap.h>
-#include <PostViewLib/GLTexture1D.h>
-#include <PostViewLib/GLObject.h>
-#include <PostViewLib/DataMap.h>
+#include "PostViewLib/FEModel.h"
+#include "PostViewLib/ColorMap.h"
+#include "PostViewLib/GLTexture1D.h"
+#include "PostViewLib/GLObject.h"
+#include "PostViewLib/DataMap.h"
 
 class CPropertyList;
 

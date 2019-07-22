@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "GLColorMap.h"
 #include "GLModel.h"
-#include <GLWLib/GLWidgetManager.h>
-#include <PostViewLib/constants.h>
+#include "GLWLib/GLWidgetManager.h"
+#include "PostViewLib/constants.h"
 using namespace Post;
 
 //-----------------------------------------------------------------------------

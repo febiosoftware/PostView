@@ -2,11 +2,11 @@
 #include "GLModel.h"
 #include "GLPlaneCutPlot.h"
 #include "PostViewLib/FEDataManager.h"
-#include <PostViewLib/GLContext.h>
-#include <PostViewLib/constants.h>
-#include <PostViewLib/GLCamera.h>
-#include <PostViewLib/FENodeEdgeList.h>
-#include <GLWLib/GLWidgetManager.h>
+#include "PostViewLib/GLContext.h"
+#include "PostViewLib/constants.h"
+#include "PostViewLib/GLCamera.h"
+#include "PostViewLib/FENodeEdgeList.h"
+#include "GLWLib/GLWidgetManager.h"
 #include <stack>
 using namespace std;
 using namespace Post;

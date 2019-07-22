@@ -10,4 +10,10 @@
    <FileRef
       location = "group:GLWLib/GLWLib.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:XPLTLib/XPLTLib.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:PostGL/PostGL.xcodeproj">
+   </FileRef>
 </Workspace>

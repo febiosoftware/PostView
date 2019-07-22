@@ -1,8 +1,8 @@
 #pragma once
 #include "GLDataMap.h"
-#include <GLWLib/GLWidget.h>
-#include <PostViewLib/GLTexture1D.h>
-#include <PostViewLib/ColorMap.h>
+#include "GLWLib/GLWidget.h"
+#include "PostViewLib/GLTexture1D.h"
+#include "PostViewLib/ColorMap.h"
 
 namespace Post {
 

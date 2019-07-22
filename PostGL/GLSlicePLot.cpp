@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "GLSlicePLot.h"
-#include <GLWLib/GLWidgetManager.h>
+#include "GLWLib/GLWidgetManager.h"
 #include "PostViewLib/constants.h"
-#include <PostView2/PropertyList.h>
+#include "PostView2/PropertyList.h"
 #include "GLModel.h"
 using namespace Post;
 

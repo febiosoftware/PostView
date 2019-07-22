@@ -29,6 +29,16 @@
 		D53B033C207EF07A00E6B5F5 /* FEEdge.h in Headers */ = {isa = PBXBuildFile; fileRef = D53B032C207EF07A00E6B5F5 /* FEEdge.h */; };
 		D5481BD91E2EC3F300BD2BFE /* LinearRegression.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5481BD71E2EC3F300BD2BFE /* LinearRegression.cpp */; };
 		D5481BDA1E2EC3F300BD2BFE /* LinearRegression.h in Headers */ = {isa = PBXBuildFile; fileRef = D5481BD81E2EC3F300BD2BFE /* LinearRegression.h */; };
+		D552470F22E5F36100935C9C /* ValArray.h in Headers */ = {isa = PBXBuildFile; fileRef = D552470B22E5F36000935C9C /* ValArray.h */; };
+		D552471022E5F36100935C9C /* PostView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D552470C22E5F36100935C9C /* PostView.cpp */; };
+		D552471122E5F36100935C9C /* PostView.h in Headers */ = {isa = PBXBuildFile; fileRef = D552470D22E5F36100935C9C /* PostView.h */; };
+		D552471222E5F36100935C9C /* ValArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D552470E22E5F36100935C9C /* ValArray.cpp */; };
+		D552474122E5F71600935C9C /* MPEGAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = D552473B22E5F71500935C9C /* MPEGAnimation.h */; };
+		D552474222E5F71600935C9C /* AVIAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = D552473C22E5F71600935C9C /* AVIAnimation.h */; };
+		D552474322E5F71600935C9C /* AVIAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D552473D22E5F71600935C9C /* AVIAnimation.cpp */; };
+		D552474422E5F71600935C9C /* ImgAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D552473E22E5F71600935C9C /* ImgAnimation.cpp */; };
+		D552474522E5F71600935C9C /* ImgAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = D552473F22E5F71600935C9C /* ImgAnimation.h */; };
+		D552474622E5F71600935C9C /* MPEGAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D552474022E5F71600935C9C /* MPEGAnimation.cpp */; };
 		D56731651F9FD87A00C87BC1 /* FEAreaCoverage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D56731631F9FD87A00C87BC1 /* FEAreaCoverage.cpp */; };
 		D56731661F9FD87A00C87BC1 /* FEAreaCoverage.h in Headers */ = {isa = PBXBuildFile; fileRef = D56731641F9FD87A00C87BC1 /* FEAreaCoverage.h */; };
 		D5842FE11EC2BC95004FC215 /* FENodeEdgeList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5842FDD1EC2BC95004FC215 /* FENodeEdgeList.cpp */; };
@@ -36,10 +46,6 @@
 		D5842FE31EC2BC95004FC215 /* Intersect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5842FDF1EC2BC95004FC215 /* Intersect.cpp */; };
 		D5842FE41EC2BC95004FC215 /* Intersect.h in Headers */ = {isa = PBXBuildFile; fileRef = D5842FE01EC2BC95004FC215 /* Intersect.h */; };
 		D593D28B20A5E88A0011F0C2 /* evaluate.h in Headers */ = {isa = PBXBuildFile; fileRef = D593D28A20A5E88A0011F0C2 /* evaluate.h */; };
-		D5A65E141DBFA55800B44009 /* xpltFileReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E101DBFA55800B44009 /* xpltFileReader.cpp */; };
-		D5A65E151DBFA55800B44009 /* xpltFileReader.h in Headers */ = {isa = PBXBuildFile; fileRef = D5A65E111DBFA55800B44009 /* xpltFileReader.h */; };
-		D5A65E161DBFA55800B44009 /* xpltReader2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E121DBFA55800B44009 /* xpltReader2.cpp */; };
-		D5A65E171DBFA55800B44009 /* xpltReader2.h in Headers */ = {isa = PBXBuildFile; fileRef = D5A65E131DBFA55800B44009 /* xpltReader2.h */; };
 		D5B5F61C229F22F200E721BA /* MarchingCubes.h in Headers */ = {isa = PBXBuildFile; fileRef = D5B5F61A229F22F100E721BA /* MarchingCubes.h */; };
 		D5B5F61D229F22F200E721BA /* MarchingCubes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5B5F61B229F22F200E721BA /* MarchingCubes.cpp */; };
 		D5C53DB11F86D95F0014FA22 /* FEMathData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5C53DAD1F86D9580014FA22 /* FEMathData.cpp */; };
@@ -154,7 +160,6 @@
 		D5F309741CFBB65700F76762 /* Interpolator.h in Headers */ = {isa = PBXBuildFile; fileRef = D5F308FB1CFBB65700F76762 /* Interpolator.h */; };
 		D5F309751CFBB65700F76762 /* lusolver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5F308FC1CFBB65700F76762 /* lusolver.cpp */; };
 		D5F309761CFBB65700F76762 /* lusolver.h in Headers */ = {isa = PBXBuildFile; fileRef = D5F308FD1CFBB65700F76762 /* lusolver.h */; };
-		D5F309771CFBB65700F76762 /* lut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5F308FE1CFBB65700F76762 /* lut.cpp */; };
 		D5F309781CFBB65700F76762 /* math3d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5F308FF1CFBB65700F76762 /* math3d.cpp */; };
 		D5F309791CFBB65700F76762 /* math3d.h in Headers */ = {isa = PBXBuildFile; fileRef = D5F309001CFBB65700F76762 /* math3d.h */; };
 		D5F3097A1CFBB65700F76762 /* PltArchive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5F309011CFBB65700F76762 /* PltArchive.cpp */; };
@@ -172,8 +177,6 @@
 		D5F309861CFBB65700F76762 /* XMLReader.h in Headers */ = {isa = PBXBuildFile; fileRef = D5F3090D1CFBB65700F76762 /* XMLReader.h */; };
 		D5F309871CFBB65700F76762 /* XMLWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5F3090E1CFBB65700F76762 /* XMLWriter.cpp */; };
 		D5F309881CFBB65700F76762 /* XMLWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = D5F3090F1CFBB65700F76762 /* XMLWriter.h */; };
-		D5F309891CFBB65700F76762 /* xpltReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5F309101CFBB65700F76762 /* xpltReader.cpp */; };
-		D5F3098A1CFBB65700F76762 /* xpltReader.h in Headers */ = {isa = PBXBuildFile; fileRef = D5F309111CFBB65700F76762 /* xpltReader.h */; };
 		D5FAC5CD21792BE3005E4684 /* FEStrainMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FAC5C921792BE3005E4684 /* FEStrainMap.cpp */; };
 		D5FAC5CE21792BE3005E4684 /* tools.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FAC5CA21792BE3005E4684 /* tools.cpp */; };
 		D5FAC5CF21792BE3005E4684 /* FEStrainMap.h in Headers */ = {isa = PBXBuildFile; fileRef = D5FAC5CB21792BE3005E4684 /* FEStrainMap.h */; };
@@ -203,6 +206,16 @@
 		D53B032C207EF07A00E6B5F5 /* FEEdge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FEEdge.h; sourceTree = "<group>"; };
 		D5481BD71E2EC3F300BD2BFE /* LinearRegression.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LinearRegression.cpp; sourceTree = "<group>"; };
 		D5481BD81E2EC3F300BD2BFE /* LinearRegression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinearRegression.h; sourceTree = "<group>"; };
+		D552470B22E5F36000935C9C /* ValArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ValArray.h; sourceTree = "<group>"; };
+		D552470C22E5F36100935C9C /* PostView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PostView.cpp; sourceTree = "<group>"; };
+		D552470D22E5F36100935C9C /* PostView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostView.h; sourceTree = "<group>"; };
+		D552470E22E5F36100935C9C /* ValArray.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ValArray.cpp; sourceTree = "<group>"; };
+		D552473B22E5F71500935C9C /* MPEGAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPEGAnimation.h; sourceTree = "<group>"; };
+		D552473C22E5F71600935C9C /* AVIAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVIAnimation.h; sourceTree = "<group>"; };
+		D552473D22E5F71600935C9C /* AVIAnimation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AVIAnimation.cpp; sourceTree = "<group>"; };
+		D552473E22E5F71600935C9C /* ImgAnimation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImgAnimation.cpp; sourceTree = "<group>"; };
+		D552473F22E5F71600935C9C /* ImgAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImgAnimation.h; sourceTree = "<group>"; };
+		D552474022E5F71600935C9C /* MPEGAnimation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MPEGAnimation.cpp; sourceTree = "<group>"; };
 		D56731631F9FD87A00C87BC1 /* FEAreaCoverage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FEAreaCoverage.cpp; sourceTree = "<group>"; };
 		D56731641F9FD87A00C87BC1 /* FEAreaCoverage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FEAreaCoverage.h; sourceTree = "<group>"; };
 		D5842FDD1EC2BC95004FC215 /* FENodeEdgeList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FENodeEdgeList.cpp; sourceTree = "<group>"; };
@@ -210,10 +223,6 @@
 		D5842FDF1EC2BC95004FC215 /* Intersect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Intersect.cpp; sourceTree = "<group>"; };
 		D5842FE01EC2BC95004FC215 /* Intersect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Intersect.h; sourceTree = "<group>"; };
 		D593D28A20A5E88A0011F0C2 /* evaluate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = evaluate.h; sourceTree = "<group>"; };
-		D5A65E101DBFA55800B44009 /* xpltFileReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xpltFileReader.cpp; sourceTree = "<group>"; };
-		D5A65E111DBFA55800B44009 /* xpltFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xpltFileReader.h; sourceTree = "<group>"; };
-		D5A65E121DBFA55800B44009 /* xpltReader2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xpltReader2.cpp; sourceTree = "<group>"; };
-		D5A65E131DBFA55800B44009 /* xpltReader2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xpltReader2.h; sourceTree = "<group>"; };
 		D5B5F61A229F22F100E721BA /* MarchingCubes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MarchingCubes.h; sourceTree = "<group>"; };
 		D5B5F61B229F22F200E721BA /* MarchingCubes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MarchingCubes.cpp; sourceTree = "<group>"; };
 		D5C53DAD1F86D9580014FA22 /* FEMathData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FEMathData.cpp; sourceTree = "<group>"; };
@@ -329,7 +338,6 @@
 		D5F308FB1CFBB65700F76762 /* Interpolator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Interpolator.h; sourceTree = "<group>"; };
 		D5F308FC1CFBB65700F76762 /* lusolver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lusolver.cpp; sourceTree = "<group>"; };
 		D5F308FD1CFBB65700F76762 /* lusolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lusolver.h; sourceTree = "<group>"; };
-		D5F308FE1CFBB65700F76762 /* lut.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lut.cpp; sourceTree = "<group>"; };
 		D5F308FF1CFBB65700F76762 /* math3d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = math3d.cpp; sourceTree = "<group>"; };
 		D5F309001CFBB65700F76762 /* math3d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = math3d.h; sourceTree = "<group>"; };
 		D5F309011CFBB65700F76762 /* PltArchive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PltArchive.cpp; sourceTree = "<group>"; };
@@ -347,8 +355,6 @@
 		D5F3090D1CFBB65700F76762 /* XMLReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLReader.h; sourceTree = "<group>"; };
 		D5F3090E1CFBB65700F76762 /* XMLWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XMLWriter.cpp; sourceTree = "<group>"; };
 		D5F3090F1CFBB65700F76762 /* XMLWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLWriter.h; sourceTree = "<group>"; };
-		D5F309101CFBB65700F76762 /* xpltReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xpltReader.cpp; sourceTree = "<group>"; };
-		D5F309111CFBB65700F76762 /* xpltReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xpltReader.h; sourceTree = "<group>"; };
 		D5FAC5C921792BE3005E4684 /* FEStrainMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FEStrainMap.cpp; sourceTree = "<group>"; };
 		D5FAC5CA21792BE3005E4684 /* tools.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tools.cpp; sourceTree = "<group>"; };
 		D5FAC5CB21792BE3005E4684 /* FEStrainMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FEStrainMap.h; sourceTree = "<group>"; };
@@ -391,6 +397,8 @@
 				D5F3089C1CFBB65700F76762 /* Animation.h */,
 				D5F3089D1CFBB65700F76762 /* Archive.cpp */,
 				D5F3089E1CFBB65700F76762 /* Archive.h */,
+				D552473D22E5F71600935C9C /* AVIAnimation.cpp */,
+				D552473C22E5F71600935C9C /* AVIAnimation.h */,
 				D5F308A11CFBB65700F76762 /* bbox.cpp */,
 				D5F308A21CFBB65700F76762 /* bbox.h */,
 				D5F308A31CFBB65700F76762 /* color.h */,
@@ -508,6 +516,8 @@
 				D5EB78E4229704A80063769C /* ImageModel.h */,
 				D5D410231DAD891F007BBA0D /* ImageSlicer.cpp */,
 				D5D410241DAD891F007BBA0D /* ImageSlicer.h */,
+				D552473E22E5F71600935C9C /* ImgAnimation.cpp */,
+				D552473F22E5F71600935C9C /* ImgAnimation.h */,
 				D5F308F91CFBB65700F76762 /* integrate.cpp */,
 				D5F308FA1CFBB65700F76762 /* Interpolator.cpp */,
 				D5F308FB1CFBB65700F76762 /* Interpolator.h */,
@@ -517,19 +527,22 @@
 				D5481BD81E2EC3F300BD2BFE /* LinearRegression.h */,
 				D5F308FC1CFBB65700F76762 /* lusolver.cpp */,
 				D5F308FD1CFBB65700F76762 /* lusolver.h */,
-				D5F308FE1CFBB65700F76762 /* lut.cpp */,
 				D5B5F61B229F22F200E721BA /* MarchingCubes.cpp */,
 				D5B5F61A229F22F100E721BA /* MarchingCubes.h */,
 				D5F308FF1CFBB65700F76762 /* math3d.cpp */,
 				D5F309001CFBB65700F76762 /* math3d.h */,
 				D5C53DB01F86D9590014FA22 /* MathParser.cpp */,
 				D5C53DAE1F86D9580014FA22 /* MathParser.h */,
+				D552474022E5F71600935C9C /* MPEGAnimation.cpp */,
+				D552473B22E5F71500935C9C /* MPEGAnimation.h */,
 				D5D410251DAD891F007BBA0D /* Palette.cpp */,
 				D5D410261DAD891F007BBA0D /* Palette.h */,
 				D53B0324207EF07A00E6B5F5 /* penta6.h */,
 				D53B0325207EF07A00E6B5F5 /* penta15.h */,
 				D5F309011CFBB65700F76762 /* PltArchive.cpp */,
 				D5F309021CFBB65700F76762 /* PltArchive.h */,
+				D552470C22E5F36100935C9C /* PostView.cpp */,
+				D552470D22E5F36100935C9C /* PostView.h */,
 				D53B0321207EF07900E6B5F5 /* pyra5.h */,
 				D5F309031CFBB65700F76762 /* SphereFit.cpp */,
 				D5F309041CFBB65700F76762 /* SphereFit.h */,
@@ -542,6 +555,8 @@
 				D5FAC5CC21792BE3005E4684 /* tools.h */,
 				D5F309061CFBB65700F76762 /* U3DFile.cpp */,
 				D5F309071CFBB65700F76762 /* U3DFile.h */,
+				D552470E22E5F36100935C9C /* ValArray.cpp */,
+				D552470B22E5F36000935C9C /* ValArray.h */,
 				D5F309081CFBB65700F76762 /* VolRender.cpp */,
 				D5F309091CFBB65700F76762 /* VolRender.h */,
 				D5F3090A1CFBB65700F76762 /* VRMLExporter.cpp */,
@@ -550,12 +565,6 @@
 				D5F3090D1CFBB65700F76762 /* XMLReader.h */,
 				D5F3090E1CFBB65700F76762 /* XMLWriter.cpp */,
 				D5F3090F1CFBB65700F76762 /* XMLWriter.h */,
-				D5A65E101DBFA55800B44009 /* xpltFileReader.cpp */,
-				D5A65E111DBFA55800B44009 /* xpltFileReader.h */,
-				D5F309101CFBB65700F76762 /* xpltReader.cpp */,
-				D5F309111CFBB65700F76762 /* xpltReader.h */,
-				D5A65E121DBFA55800B44009 /* xpltReader2.cpp */,
-				D5A65E131DBFA55800B44009 /* xpltReader2.h */,
 			);
 			name = PostViewLib;
 			path = ../../PostViewLib;
@@ -570,20 +579,20 @@
 			files = (
 				D53B032F207EF07A00E6B5F5 /* tet4.h in Headers */,
 				D5F3091C1CFBB65700F76762 /* color.h in Headers */,
-				D5A65E151DBFA55800B44009 /* xpltFileReader.h in Headers */,
 				D5C53DB21F86D95F0014FA22 /* MathParser.h in Headers */,
 				D5F309511CFBB65700F76762 /* FENodeFaceList.h in Headers */,
 				D5F309631CFBB65700F76762 /* FEVTKImport.h in Headers */,
 				D5F309401CFBB65700F76762 /* FELSDYNAPlot.h in Headers */,
 				D5F3091E1CFBB65700F76762 /* ColorMap.h in Headers */,
 				D5F3093A1CFBB65700F76762 /* FEGroup.h in Headers */,
+				D552471122E5F36100935C9C /* PostView.h in Headers */,
 				D53B033B207EF07A00E6B5F5 /* hex20.h in Headers */,
 				D5F309381CFBB65700F76762 /* FEFileReader.h in Headers */,
-				D5F3098A1CFBB65700F76762 /* xpltReader.h in Headers */,
 				D5F309691CFBB65700F76762 /* GLObject.h in Headers */,
 				D5F309651CFBB65700F76762 /* GDecoration.h in Headers */,
 				D5F309361CFBB65700F76762 /* FEFileExport.h in Headers */,
 				D5F3095B1CFBB65700F76762 /* FEState.h in Headers */,
+				D552470F22E5F36100935C9C /* ValArray.h in Headers */,
 				D5F3092A1CFBB65700F76762 /* FEBioPlotExport.h in Headers */,
 				D5EB78E6229704A80063769C /* GLContext.h in Headers */,
 				D5F309711CFBB65700F76762 /* Image.h in Headers */,
@@ -592,6 +601,7 @@
 				D5F309551CFBB65700F76762 /* FEPlotMix.h in Headers */,
 				D5FAC5CF21792BE3005E4684 /* FEStrainMap.h in Headers */,
 				D5F309671CFBB65700F76762 /* GLCamera.h in Headers */,
+				D552474522E5F71600935C9C /* ImgAnimation.h in Headers */,
 				D5F3096F1CFBB65700F76762 /* GView.h in Headers */,
 				D5F309461CFBB65700F76762 /* FEMeshData.h in Headers */,
 				D5F3094D1CFBB65700F76762 /* FENikeImport.h in Headers */,
@@ -604,6 +614,7 @@
 				D5F309231CFBB65700F76762 /* DataMap.h in Headers */,
 				D593D28B20A5E88A0011F0C2 /* evaluate.h in Headers */,
 				D5F3097D1CFBB65700F76762 /* SphereFit.h in Headers */,
+				D552474122E5F71600935C9C /* MPEGAnimation.h in Headers */,
 				D5F309881CFBB65700F76762 /* XMLWriter.h in Headers */,
 				D53B032E207EF07A00E6B5F5 /* FEItem.h in Headers */,
 				D5F3096D1CFBB65700F76762 /* GMeshImport.h in Headers */,
@@ -623,7 +634,6 @@
 				D5F309131CFBB65700F76762 /* 3DImage.h in Headers */,
 				D5F309321CFBB65700F76762 /* FEElement.h in Headers */,
 				D53B0336207EF07A00E6B5F5 /* tet15.h in Headers */,
-				D5A65E171DBFA55800B44009 /* xpltReader2.h in Headers */,
 				D53B033A207EF07A00E6B5F5 /* FENode.h in Headers */,
 				D5F309151CFBB65700F76762 /* Animation.h in Headers */,
 				D53B0335207EF07A00E6B5F5 /* penta15.h in Headers */,
@@ -632,6 +642,7 @@
 				D5F309301CFBB65700F76762 /* FEDistanceMap.h in Headers */,
 				D5F309591CFBB65700F76762 /* FERAWImageReader.h in Headers */,
 				D53B033C207EF07A00E6B5F5 /* FEEdge.h in Headers */,
+				D552474222E5F71600935C9C /* AVIAnimation.h in Headers */,
 				D5F309791CFBB65700F76762 /* math3d.h in Headers */,
 				D53292BF1E453471002798B3 /* FEAsciiExport.h in Headers */,
 				D5842FE41EC2BC95004FC215 /* Intersect.h in Headers */,
@@ -724,11 +735,10 @@
 				D5F309781CFBB65700F76762 /* math3d.cpp in Sources */,
 				D5B5F61D229F22F200E721BA /* MarchingCubes.cpp in Sources */,
 				D5F309641CFBB65700F76762 /* GDecoration.cpp in Sources */,
-				D5F309891CFBB65700F76762 /* xpltReader.cpp in Sources */,
 				D5F3094C1CFBB65700F76762 /* FENikeImport.cpp in Sources */,
 				D5F309601CFBB65700F76762 /* FEVTKExport.cpp in Sources */,
-				D5F309771CFBB65700F76762 /* lut.cpp in Sources */,
 				D53292BE1E453471002798B3 /* FEAsciiExport.cpp in Sources */,
+				D552474422E5F71600935C9C /* ImgAnimation.cpp in Sources */,
 				D5F3093B1CFBB65700F76762 /* FELSDYNAExport.cpp in Sources */,
 				D5F3095C1CFBB65700F76762 /* FESTLimport.cpp in Sources */,
 				D5F309411CFBB65700F76762 /* FEMaterial.cpp in Sources */,
@@ -739,7 +749,7 @@
 				D5EB78E8229704A80063769C /* GLContext.cpp in Sources */,
 				D5F3093D1CFBB65700F76762 /* FELSDYNAimport.cpp in Sources */,
 				D5F309251CFBB65700F76762 /* FEASCIIImport.cpp in Sources */,
-				D5A65E161DBFA55800B44009 /* xpltReader2.cpp in Sources */,
+				D552471022E5F36100935C9C /* PostView.cpp in Sources */,
 				D5F309291CFBB65700F76762 /* FEBioPlotExport.cpp in Sources */,
 				D5F309431CFBB65700F76762 /* FEMesh.cpp in Sources */,
 				D5F309311CFBB65700F76762 /* FEElement.cpp in Sources */,
@@ -749,7 +759,6 @@
 				D56731651F9FD87A00C87BC1 /* FEAreaCoverage.cpp in Sources */,
 				D5F3094E1CFBB65700F76762 /* FENodeElemList.cpp in Sources */,
 				D5F309681CFBB65700F76762 /* GLObject.cpp in Sources */,
-				D5A65E141DBFA55800B44009 /* xpltFileReader.cpp in Sources */,
 				D5F309351CFBB65700F76762 /* FEFileExport.cpp in Sources */,
 				D5D410291DAD891F007BBA0D /* Palette.cpp in Sources */,
 				D5842FE11EC2BC95004FC215 /* FENodeEdgeList.cpp in Sources */,
@@ -772,6 +781,7 @@
 				D5C53DB41F86D95F0014FA22 /* MathParser.cpp in Sources */,
 				D5F309871CFBB65700F76762 /* XMLWriter.cpp in Sources */,
 				D5F3092D1CFBB65700F76762 /* FEDataManager.cpp in Sources */,
+				D552474622E5F71600935C9C /* MPEGAnimation.cpp in Sources */,
 				D5F3095A1CFBB65700F76762 /* FEState.cpp in Sources */,
 				D5F3092B1CFBB65700F76762 /* FECurvatureMap.cpp in Sources */,
 				D5F309371CFBB65700F76762 /* FEFileReader.cpp in Sources */,
@@ -783,6 +793,7 @@
 				D5EB78EA229704A80063769C /* ImageModel.cpp in Sources */,
 				D5F3097C1CFBB65700F76762 /* SphereFit.cpp in Sources */,
 				D5F309701CFBB65700F76762 /* Image.cpp in Sources */,
+				D552471222E5F36100935C9C /* ValArray.cpp in Sources */,
 				D5F3095E1CFBB65700F76762 /* FEU3DImport.cpp in Sources */,
 				D5F309451CFBB65700F76762 /* FEMeshData.cpp in Sources */,
 				D5F309391CFBB65700F76762 /* FEGroup.cpp in Sources */,
@@ -791,6 +802,7 @@
 				D5F3096C1CFBB65700F76762 /* GMeshImport.cpp in Sources */,
 				D5F309851CFBB65700F76762 /* XMLReader.cpp in Sources */,
 				D5F309161CFBB65700F76762 /* Archive.cpp in Sources */,
+				D552474322E5F71600935C9C /* AVIAnimation.cpp in Sources */,
 				D5F309271CFBB65700F76762 /* FEBioImport.cpp in Sources */,
 				D5F309731CFBB65700F76762 /* Interpolator.cpp in Sources */,
 				D50F4D6F203DA9DD0088F756 /* FEDataField.cpp in Sources */,
@@ -849,6 +861,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
+					"-DFFMPEG",
 					"-DNDEBUG",
 				);
 				SDKROOT = macosx;
@@ -859,9 +872,28 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/qt/5.12.0/lib,
+					/usr/local/opt/qt/Frameworks,
+				);
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_ENABLE_CPP_RTTI = YES;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/opt/qt/include/QtCore,
+					/usr/local/opt/qt/include/QtGui,
+					/usr/local/opt/qt/include/QtWidgets,
+					/usr/local/opt/ffmpeg/include,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/ffmpeg/4.0.2_1/lib,
+					/usr/local/Cellar/x265/2.9/lib,
+					/usr/local/Cellar/lame/3.100/lib,
+					/usr/local/Cellar/xvid/1.3.5/lib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/../..";
 			};
 			name = "Release-Dave";
 		};
@@ -916,6 +948,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
+					"-DFFMPEG",
 					"-DNDEBUG",
 				);
 				SDKROOT = macosx;
@@ -966,6 +999,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
+					"-DFFMPEG",
 					"-DNDEBUG",
 				);
 				SDKROOT = macosx;
@@ -976,9 +1010,28 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/qt/5.12.0/lib,
+					/usr/local/opt/qt/Frameworks,
+				);
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_ENABLE_CPP_RTTI = YES;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/opt/qt/include/QtCore,
+					/usr/local/opt/qt/include/QtGui,
+					/usr/local/opt/qt/include/QtWidgets,
+					/usr/local/opt/ffmpeg/include,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/ffmpeg/4.0.2_1/lib,
+					/usr/local/Cellar/x265/2.9/lib,
+					/usr/local/Cellar/lame/3.100/lib,
+					/usr/local/Cellar/xvid/1.3.5/lib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/../..";
 			};
 			name = Debug;
 		};
@@ -986,9 +1039,28 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/qt/5.12.0/lib,
+					/usr/local/opt/qt/Frameworks,
+				);
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_ENABLE_CPP_RTTI = YES;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/opt/qt/include/QtCore,
+					/usr/local/opt/qt/include/QtGui,
+					/usr/local/opt/qt/include/QtWidgets,
+					/usr/local/opt/ffmpeg/include,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/ffmpeg/4.0.2_1/lib,
+					/usr/local/Cellar/x265/2.9/lib,
+					/usr/local/Cellar/lame/3.100/lib,
+					/usr/local/Cellar/xvid/1.3.5/lib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/../..";
 			};
 			name = Release;
 		};

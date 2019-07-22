@@ -1,5 +1,5 @@
 #pragma once
-#include <PostViewLib/color.h>
+#include "PostViewLib/color.h"
 
 // projection modes
 #define RENDER_ORTHO	0

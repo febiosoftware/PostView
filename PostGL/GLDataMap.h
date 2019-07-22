@@ -1,5 +1,5 @@
 #pragma once
-#include <PostViewLib/GLObject.h>
+#include "PostViewLib/GLObject.h"
 
 namespace Post {
 

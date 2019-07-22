@@ -2,7 +2,7 @@
 #include "xpltFileReader.h"
 #include "xpltReader.h"
 #include "xpltReader2.h"
-#include <PostViewLib/FEModel.h>
+#include "PostViewLib/FEModel.h"
 
 xpltParser::xpltParser(xpltFileReader* xplt) : m_xplt(xplt), m_ar(xplt->GetArchive())
 {
