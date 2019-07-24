@@ -18,7 +18,7 @@ public:
 
 	void Create();
 
-	void Update();
+	void Update() override;
 
 	void Render(CGLContext& rc) override;
 
