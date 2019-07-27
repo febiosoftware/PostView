@@ -1,4 +1,7 @@
 #include "stdafx.h"
+#ifdef WIN32
+#include <Windows.h>
+#endif
 #include "AVIAnimation.h"
 #include <QImage>
 #ifdef WIN32
