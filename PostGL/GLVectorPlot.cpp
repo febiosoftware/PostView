@@ -2,7 +2,7 @@
 #include "GLVectorPlot.h"
 #include "PostViewLib/ColorMap.h"
 #include "PostViewLib/constants.h"
-#include "PostView2/PropertyList.h"
+#include <PostViewLib/PropertyList.h>
 #include <PostGL/GLModel.h>
 using namespace Post;
 
@@ -116,7 +116,7 @@ CPropertyList* CGLVectorPlot::propertyList()
 	return new CVectorPlotProps(this);
 }
 
-inline double frand() { return (double) rand() / (double) RAND_MAX; }
+static double frand() { return (double) rand() / (double) RAND_MAX; }
 
 void CGLVectorPlot::Render(CGLContext& rc)
 {

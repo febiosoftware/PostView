@@ -14,7 +14,7 @@
 
 #include "GLWidget.h"
 #include <assert.h>
-#include "PostView2/convert.h"
+#include <PostViewLib/convert.h>
 using namespace Post;
 
 //-----------------------------------------------------------------------------

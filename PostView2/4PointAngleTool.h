@@ -8,7 +8,7 @@ class C4PointAngleDecoration;
 // This tool measures the angle between four consecutively selected nodes
 class C4PointAngleTool : public CBasicTool
 {
-	class Props : public CPropertyList
+	class Props : public Post::CPropertyList
 	{
 	public:
 		Props(C4PointAngleTool* ptool);
@@ -23,7 +23,7 @@ public:
 	C4PointAngleTool(CMainWindow* wnd);
 
 	// get the property list
-	CPropertyList* getPropertyList();
+	Post::CPropertyList* getPropertyList();
 
 	// activate the tool
 	void activate();

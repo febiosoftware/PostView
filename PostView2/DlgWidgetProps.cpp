@@ -16,7 +16,7 @@
 #include <GLWLib/GLWidget.h>
 #include "CIntInput.h"
 #include "CColorButton.h"
-#include "convert.h"
+#include <PostViewLib/convert.h>
 #include "MainWindow.h"
 
 class CFontWidget : public QGroupBox

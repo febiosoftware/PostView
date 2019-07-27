@@ -1,10 +1,11 @@
 #include "PropertyListForm.h"
-#include "PropertyList.h"
+#include <PostViewLib/PropertyList.h>
 #include <QFormLayout>
 #include <QSpinBox>
 #include <QComboBox>
 #include <QLineEdit>
 #include "DataFieldSelector.h"
+using namespace Post;
 
 CPropertyListForm::CPropertyListForm(QWidget* parent) : QWidget(parent)
 {

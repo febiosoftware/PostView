@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "GLTensorPlot.h"
-#include "PostView2/PropertyList.h"
+#include <PostViewLib/PropertyList.h>
 #include "PostViewLib/constants.h"
 #include "GLModel.h"
 #include <stdlib.h>
@@ -292,7 +292,7 @@ void GLTensorPlot::Update(int ntime, float dt, bool breset)
 	m_val = m_map.State(ntime);
 }
 
-inline double frand() { return (double)rand() / (double)RAND_MAX; }
+static double frand() { return (double)rand() / (double)RAND_MAX; }
 
 void GLTensorPlot::Render(CGLContext& rc)
 {

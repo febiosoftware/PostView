@@ -8,7 +8,7 @@ class CDocument;
 //-----------------------------------------------------------------------------
 class CTransformTool : public CBasicTool
 {
-	class Props : public CPropertyList
+	class Props : public Post::CPropertyList
 	{
 	public:
 		Props(CTransformTool* ptool);
@@ -23,7 +23,7 @@ public:
 	CTransformTool(CMainWindow* wnd);
 
 	// get the property list
-	CPropertyList*	getPropertyList();
+	Post::CPropertyList*	getPropertyList();
 
 	// Apply button
 	void OnApply();

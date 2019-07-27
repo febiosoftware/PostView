@@ -6,7 +6,7 @@ class CPointDistanceDecoration;
 
 class CPointDistanceTool : public CBasicTool
 {
-	class Props : public CPropertyList
+	class Props : public Post::CPropertyList
 	{
 	public:
 		Props(CPointDistanceTool* ptool);
@@ -19,7 +19,7 @@ class CPointDistanceTool : public CBasicTool
 public:
 	CPointDistanceTool(CMainWindow* wnd);
 
-	CPropertyList* getPropertyList();
+	Post::CPropertyList* getPropertyList();
 
 	void activate();
 

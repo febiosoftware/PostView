@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "GLStreamLinePlot.h"
-#include "PostView2/PropertyList.h"
+#include <PostViewLib/PropertyList.h>
 #include "GLWLib/GLWidgetManager.h"
 #include "GLModel.h"
 using namespace Post;

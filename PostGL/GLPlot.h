@@ -5,10 +5,9 @@
 #include "PostViewLib/GLObject.h"
 #include "PostViewLib/DataMap.h"
 
-class CPropertyList;
-
 namespace Post {
 
+class CPropertyList;
 class CGLModel;
 
 class CGLPlot : public CGLVisual

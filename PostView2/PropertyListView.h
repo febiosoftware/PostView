@@ -3,7 +3,7 @@
 #include <vector>
 #include <QtCore/QVariant>
 #include <QPushButton>
-#include "PropertyList.h"
+#include <PostViewLib/PropertyList.h>
 #include "CIntInput.h"
 #include "CColorButton.h"
 
@@ -27,7 +27,7 @@ class CPropertyListView : public QWidget
 public:
 	CPropertyListView(QWidget* parent = 0);
 
-	void Update(CPropertyList* plist);
+	void Update(Post::CPropertyList* plist);
 
 	void resizeEvent(QResizeEvent* ev) override;
 

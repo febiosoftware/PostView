@@ -144,6 +144,7 @@
     <ClInclude Include="..\..\PostViewLib\color.h" />
     <ClInclude Include="..\..\PostViewLib\ColorMap.h" />
     <ClInclude Include="..\..\PostViewLib\constants.h" />
+    <ClInclude Include="..\..\PostViewLib\convert.h" />
     <ClInclude Include="..\..\PostViewLib\DataFilter.h" />
     <ClInclude Include="..\..\PostViewLib\DataMap.h" />
     <ClInclude Include="..\..\PostViewLib\evaluate.h" />
@@ -217,6 +218,7 @@
     <ClInclude Include="..\..\PostViewLib\penta6.h" />
     <ClInclude Include="..\..\PostViewLib\PltArchive.h" />
     <ClInclude Include="..\..\PostViewLib\PostView.h" />
+    <ClInclude Include="..\..\PostViewLib\PropertyList.h" />
     <ClInclude Include="..\..\PostViewLib\pyra5.h" />
     <ClInclude Include="..\..\PostViewLib\SphereFit.h" />
     <ClInclude Include="..\..\PostViewLib\stdafx.h" />
@@ -304,6 +306,7 @@
     <ClCompile Include="..\..\PostViewLib\Palette.cpp" />
     <ClCompile Include="..\..\PostViewLib\PltArchive.cpp" />
     <ClCompile Include="..\..\PostViewLib\PostView.cpp" />
+    <ClCompile Include="..\..\PostViewLib\PropertyList.cpp" />
     <ClCompile Include="..\..\PostViewLib\SphereFit.cpp" />
     <ClCompile Include="..\..\PostViewLib\tools.cpp" />
     <ClCompile Include="..\..\PostViewLib\U3DFile.cpp" />

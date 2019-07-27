@@ -2,6 +2,8 @@
 #include <QtCore/QVariant>
 #include "convert.h"
 
+namespace Post {
+
 //-----------------------------------------------------------------------------
 class CProperty
 {
@@ -94,3 +96,4 @@ private:
 private:
 	std::vector<CProperty>	m_list;
 };
+}

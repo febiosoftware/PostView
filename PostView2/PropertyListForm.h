@@ -2,7 +2,10 @@
 #include <QWidget>
 
 class QFormLayout;
-class CPropertyList;
+
+namespace Post {
+	class CPropertyList;
+}
 
 //-----------------------------------------------------------------------------
 class CPropertyListForm : public QWidget
@@ -13,7 +16,7 @@ public:
 	CPropertyListForm(QWidget* parent = 0);
 
 	// set the property list
-	void setPropertyList(CPropertyList* pl);
+	void setPropertyList(Post::CPropertyList* pl);
 
 	// update data
 	void updateData();
@@ -22,7 +25,7 @@ private slots:
 	void onDataChanged();
 
 private:
-	QFormLayout*	ui;
-	CPropertyList*	m_list;
-	QList<QWidget*>	m_widget;
+	QFormLayout*			ui;
+	Post::CPropertyList*	m_list;
+	QList<QWidget*>			m_widget;
 };

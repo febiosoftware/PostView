@@ -1,4 +1,6 @@
+#include "stdafx.h"
 #include "PropertyList.h"
+using namespace Post;
 
 CProperty& CProperty::operator = (const CProperty& p)
 {

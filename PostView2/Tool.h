@@ -1,5 +1,5 @@
 #pragma once
-#include "PropertyList.h"
+#include <PostViewLib/PropertyList.h>
 #include <QWidget>
 
 class CDocument;
@@ -81,7 +81,7 @@ public:
 	QWidget* createUi();
 
 	// return the property list
-	virtual CPropertyList* getPropertyList() = 0;
+	virtual Post::CPropertyList* getPropertyList() = 0;
 
 	// method called when user presses Apply button (optional)
 	virtual void OnApply() {}
@@ -93,7 +93,7 @@ private slots:
 	void on_button_clicked();
 
 private:
-	CPropertyList*		m_list;
-	CPropertyListForm*	m_form;
-	unsigned int		m_flags;
+	Post::CPropertyList*	m_list;
+	CPropertyListForm*		m_form;
+	unsigned int			m_flags;
 };

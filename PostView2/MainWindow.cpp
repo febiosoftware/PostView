@@ -49,7 +49,7 @@
 #include "DlgExportAscii.h"
 #include "DlgExportVTK.h"
 #include "version.h"
-#include "convert.h"
+#include <PostViewLib/convert.h>
 #include <PostViewLib/ImgAnimation.h>
 #include <PostViewLib/AVIAnimation.h>
 #include <PostViewLib/MPEGAnimation.h>

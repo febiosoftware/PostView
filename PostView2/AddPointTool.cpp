@@ -2,6 +2,7 @@
 #include "AddPointTool.h"
 #include "Document.h"
 #include <PostGL/GLModel.h>
+using namespace Post;
 
 //-----------------------------------------------------------------------------
 CAddPointTool::Props::Props(CAddPointTool* ptool) : m_ptool(ptool)

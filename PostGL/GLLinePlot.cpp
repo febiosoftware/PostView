@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "GLLinePlot.h"
 #include "PostView2/Document.h"
-#include "PostView2/PropertyList.h"
+#include <PostViewLib/PropertyList.h>
 using namespace Post;
 
 class CLineProps : public CPropertyList

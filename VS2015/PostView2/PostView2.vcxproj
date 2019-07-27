@@ -172,7 +172,6 @@
     </CustomBuild>
     <ClInclude Include="..\..\PostView2\CIntInput.h" />
     <ClInclude Include="..\..\PostView2\CommandPanel.h" />
-    <ClInclude Include="..\..\PostView2\convert.h" />
     <CustomBuild Include="..\..\PostView2\DataFieldSelector.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QT512DIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
@@ -295,7 +294,6 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </CustomBuild>
     <ClInclude Include="..\..\PostView2\PointDistanceTool.h" />
-    <ClInclude Include="..\..\PostView2\PropertyList.h" />
     <CustomBuild Include="..\..\PostView2\PropertyListForm.h">
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
@@ -442,7 +440,6 @@
     <ClCompile Include="..\..\PostView2\PointCongruencyTool.cpp" />
     <ClCompile Include="..\..\PostView2\PointDistanceTool.cpp" />
     <ClCompile Include="..\..\PostView2\PostView2.cpp" />
-    <ClCompile Include="..\..\PostView2\PropertyList.cpp" />
     <ClCompile Include="..\..\PostView2\PropertyListForm.cpp" />
     <ClCompile Include="..\..\PostView2\PropertyListView.cpp" />
     <ClCompile Include="..\..\PostView2\qrc_postview.cpp" />
