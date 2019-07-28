@@ -7,7 +7,6 @@
 
 namespace Post {
 
-class CPropertyList;
 class CGLModel;
 
 class CGLPlot : public CGLVisual
@@ -22,8 +21,6 @@ protected:
 public:
 	CGLPlot(CGLModel* po = 0);
 	virtual ~CGLPlot();
-
-	virtual CPropertyList* propertyList() { return 0; }
 
 	virtual void UpdateTexture() {}
 };

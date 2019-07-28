@@ -5,6 +5,7 @@ namespace Post {
 
 class CGLContext;
 class CGLModel;
+class CPropertyList;
 
 //-----------------------------------------------------------------------------
 // This class is the base class for anything that affects what's get rendered
@@ -30,6 +31,8 @@ public:
 
 	CGLModel* GetModel() { return m_pModel; }
 	void SetModel(CGLModel* pm) { m_pModel = pm; }
+
+	virtual CPropertyList* propertyList() { return 0; }
 
 protected:
 	std::string		m_name;

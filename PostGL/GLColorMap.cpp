@@ -3,7 +3,82 @@
 #include "GLModel.h"
 #include "GLWLib/GLWidgetManager.h"
 #include "PostViewLib/constants.h"
+#include <PostViewLib/PropertyList.h>
 using namespace Post;
+
+//-----------------------------------------------------------------------------
+class CGLColorMapProps : public CPropertyList
+{
+public:
+	CGLColorMapProps(CGLColorMap* map) : m_map(map)
+	{
+		QStringList cols;
+
+		for (int i = 0; i<ColorMapManager::ColorMaps(); ++i)
+		{
+			string name = ColorMapManager::GetColorMapName(i);
+			cols << name.c_str();
+		}
+
+		addProperty("Data field", CProperty::DataScalar);
+		addProperty("Gradient smoothing", CProperty::Bool);
+		addProperty("Color map", CProperty::Enum)->setEnumValues(cols);
+		addProperty("Nodal Values", CProperty::Bool);
+		addProperty("Range type", CProperty::Enum)->setEnumValues(QStringList() << "dynamic" << "static" << "user");
+		addProperty("Range divisions", CProperty::Int)->setIntRange(1, 100);
+		addProperty("Show Legend", CProperty::Bool);
+		addProperty("Legend orientation", CProperty::Enum)->setEnumValues(QStringList() << "Horizontal" << "Vertical");
+		addProperty("User max", CProperty::Float);
+		addProperty("User min", CProperty::Float);
+	}
+
+	QVariant GetPropertyValue(int i)
+	{
+		if (m_map)
+		{
+			float rng[2];
+			m_map->GetRange(rng);
+			switch (i)
+			{
+			case 0: return m_map->GetEvalField(); break;
+			case 1: return m_map->GetColorSmooth(); break;
+			case 2: return m_map->GetColorMap()->GetColorMap();
+			case 3: return m_map->m_bDispNodeVals; break;
+			case 4: return m_map->GetRangeType(); break;
+			case 5: return m_map->GetColorMap()->GetDivisions(); break;
+			case 6: return m_map->ShowLegend(); break;
+			case 7: return m_map->m_pbar->Orientation(); break;
+			case 8: return rng[1]; break;
+			case 9: return rng[0]; break;
+			}
+		}
+		return QVariant();
+	}
+
+	void SetPropertyValue(int i, const QVariant& v)
+	{
+		if (m_map == 0) return;
+		float rng[2];
+		m_map->GetRange(rng);
+
+		switch (i)
+		{
+		case 0: m_map->SetEvalField(v.toInt()); break;
+		case 1: m_map->SetColorSmooth(v.toBool()); break;
+		case 2: m_map->GetColorMap()->SetColorMap(v.toInt()); break;
+		case 3: m_map->m_bDispNodeVals = v.toBool(); break;
+		case 4: m_map->SetRangeType(v.toInt()); break;
+		case 5: m_map->GetColorMap()->SetDivisions(v.toInt()); break;
+		case 6: m_map->ShowLegend(v.toBool()); break;
+		case 7: m_map->m_pbar->SetOrientation(v.toInt()); break;
+		case 8: rng[1] = v.toFloat(); m_map->SetRange(rng); break;
+		case 9: rng[0] = v.toFloat(); m_map->SetRange(rng); break;
+		}
+	}
+
+private:
+	CGLColorMap*	m_map;
+};
 
 //-----------------------------------------------------------------------------
 // CGLColorMap
@@ -58,6 +133,12 @@ bool CGLColorMap::GetColorSmooth()
 void CGLColorMap::SetColorSmooth(bool b)
 {
 	m_Col.SetSmooth(b);
+}
+
+//-----------------------------------------------------------------------------
+CPropertyList* CGLColorMap::propertyList()
+{
+	return new CGLColorMapProps(this);
 }
 
 //-----------------------------------------------------------------------------

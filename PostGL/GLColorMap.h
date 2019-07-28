@@ -57,6 +57,8 @@ public:
 
 	void Activate(bool b) { CGLObject::Activate(b); ShowLegend(b); }
 
+	CPropertyList* propertyList();
+
 private:
 	void UpdateState(int ntime, bool breset);
 
