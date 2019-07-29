@@ -2,7 +2,7 @@
 #include "GLIsoSurfacePlot.h"
 #include "GLWLib/GLWidgetManager.h"
 #include "PostViewLib/constants.h"
-#include <PostViewLib/PropertyList.h>
+#include "PostViewLib/PropertyList.h"
 #include "GLModel.h"
 using namespace Post;
 

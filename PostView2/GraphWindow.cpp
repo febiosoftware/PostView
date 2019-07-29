@@ -25,7 +25,7 @@
 #include <QComboBox>
 #include <PostViewLib/LinearRegression.h>
 #include "CColorButton.h"
-#include <PostViewLib/convert.h>
+#include "PostViewLib/convert.h"
 using namespace Post;
 
 OptionsUi::OptionsUi(CGraphWidget* graph, QWidget* parent) : CPlotTool(parent)

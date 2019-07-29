@@ -118,7 +118,6 @@
 		D5FF7A861D72756B003D2CBD /* PointCongruencyTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF7A1D1D72756B003D2CBD /* PointCongruencyTool.cpp */; };
 		D5FF7A871D72756B003D2CBD /* PointDistanceTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF7A1F1D72756B003D2CBD /* PointDistanceTool.cpp */; };
 		D5FF7A881D72756B003D2CBD /* PostView2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF7A211D72756B003D2CBD /* PostView2.cpp */; };
-		D5FF7A891D72756B003D2CBD /* PropertyList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF7A221D72756B003D2CBD /* PropertyList.cpp */; };
 		D5FF7A8A1D72756B003D2CBD /* PropertyListForm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF7A241D72756B003D2CBD /* PropertyListForm.cpp */; };
 		D5FF7A8B1D72756B003D2CBD /* PropertyListView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF7A261D72756B003D2CBD /* PropertyListView.cpp */; };
 		D5FF7A8C1D72756B003D2CBD /* qrc_postview.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF7A281D72756B003D2CBD /* qrc_postview.cpp */; };
@@ -233,7 +232,6 @@
 		D5FF79B51D72756B003D2CBD /* CIntInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CIntInput.h; sourceTree = "<group>"; };
 		D5FF79B61D72756B003D2CBD /* CommandPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommandPanel.cpp; sourceTree = "<group>"; };
 		D5FF79B71D72756B003D2CBD /* CommandPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandPanel.h; sourceTree = "<group>"; };
-		D5FF79B81D72756B003D2CBD /* convert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = convert.h; sourceTree = "<group>"; };
 		D5FF79B91D72756B003D2CBD /* DataFieldSelector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DataFieldSelector.cpp; sourceTree = "<group>"; };
 		D5FF79BA1D72756B003D2CBD /* DataFieldSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataFieldSelector.h; sourceTree = "<group>"; };
 		D5FF79BB1D72756B003D2CBD /* DataPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DataPanel.cpp; sourceTree = "<group>"; };
@@ -313,8 +311,6 @@
 		D5FF7A1F1D72756B003D2CBD /* PointDistanceTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PointDistanceTool.cpp; sourceTree = "<group>"; };
 		D5FF7A201D72756B003D2CBD /* PointDistanceTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointDistanceTool.h; sourceTree = "<group>"; };
 		D5FF7A211D72756B003D2CBD /* PostView2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PostView2.cpp; sourceTree = "<group>"; };
-		D5FF7A221D72756B003D2CBD /* PropertyList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PropertyList.cpp; sourceTree = "<group>"; };
-		D5FF7A231D72756B003D2CBD /* PropertyList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PropertyList.h; sourceTree = "<group>"; };
 		D5FF7A241D72756B003D2CBD /* PropertyListForm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PropertyListForm.cpp; sourceTree = "<group>"; };
 		D5FF7A251D72756B003D2CBD /* PropertyListForm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PropertyListForm.h; sourceTree = "<group>"; };
 		D5FF7A261D72756B003D2CBD /* PropertyListView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PropertyListView.cpp; sourceTree = "<group>"; };
@@ -427,7 +423,6 @@
 				D5FF79B51D72756B003D2CBD /* CIntInput.h */,
 				D5FF79B61D72756B003D2CBD /* CommandPanel.cpp */,
 				D5FF79B71D72756B003D2CBD /* CommandPanel.h */,
-				D5FF79B81D72756B003D2CBD /* convert.h */,
 				D5FF79B91D72756B003D2CBD /* DataFieldSelector.cpp */,
 				D5FF79BA1D72756B003D2CBD /* DataFieldSelector.h */,
 				D5FF79BB1D72756B003D2CBD /* DataPanel.cpp */,
@@ -538,8 +533,6 @@
 				D5FF7A1F1D72756B003D2CBD /* PointDistanceTool.cpp */,
 				D5FF7A201D72756B003D2CBD /* PointDistanceTool.h */,
 				D5FF7A211D72756B003D2CBD /* PostView2.cpp */,
-				D5FF7A221D72756B003D2CBD /* PropertyList.cpp */,
-				D5FF7A231D72756B003D2CBD /* PropertyList.h */,
 				D5FF7A241D72756B003D2CBD /* PropertyListForm.cpp */,
 				D5FF7A251D72756B003D2CBD /* PropertyListForm.h */,
 				D5FF7A261D72756B003D2CBD /* PropertyListView.cpp */,
@@ -760,7 +753,6 @@
 				D5F8C898226FBD54008597AF /* ViewSettings.cpp in Sources */,
 				D5FF7A6E1D72756B003D2CBD /* moc_FileViewer.cpp in Sources */,
 				D5FF7A7C1D72756B003D2CBD /* moc_SphereFitTool.cpp in Sources */,
-				D5FF7A891D72756B003D2CBD /* PropertyList.cpp in Sources */,
 				D5FF7A8B1D72756B003D2CBD /* PropertyListView.cpp in Sources */,
 				D5FF7A661D72756B003D2CBD /* MeasureAreaTool.cpp in Sources */,
 				D5FF7A791D72756B003D2CBD /* moc_PointCongruencyTool.cpp in Sources */,

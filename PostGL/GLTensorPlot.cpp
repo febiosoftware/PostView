@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "GLTensorPlot.h"
-#include <PostViewLib/PropertyList.h>
+#include "PostViewLib/PropertyList.h"
 #include "PostViewLib/constants.h"
 #include "GLModel.h"
 #include <stdlib.h>

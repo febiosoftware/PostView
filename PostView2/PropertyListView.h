@@ -3,7 +3,7 @@
 #include <vector>
 #include <QtCore/QVariant>
 #include <QPushButton>
-#include <PostViewLib/PropertyList.h>
+#include "PostViewLib/PropertyList.h"
 #include "CIntInput.h"
 #include "CColorButton.h"
 

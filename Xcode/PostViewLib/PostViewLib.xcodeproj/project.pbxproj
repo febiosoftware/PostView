@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		D50F4D6F203DA9DD0088F756 /* FEDataField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D50F4D6D203DA9DC0088F756 /* FEDataField.cpp */; };
 		D50F4D70203DA9DD0088F756 /* FEDataField.h in Headers */ = {isa = PBXBuildFile; fileRef = D50F4D6E203DA9DC0088F756 /* FEDataField.h */; };
+		D52D1CB022EF6550002BE793 /* PropertyList.h in Headers */ = {isa = PBXBuildFile; fileRef = D52D1CAD22EF6550002BE793 /* PropertyList.h */; };
+		D52D1CB122EF6550002BE793 /* convert.h in Headers */ = {isa = PBXBuildFile; fileRef = D52D1CAE22EF6550002BE793 /* convert.h */; };
+		D52D1CB222EF6550002BE793 /* PropertyList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D52D1CAF22EF6550002BE793 /* PropertyList.cpp */; };
 		D53292BE1E453471002798B3 /* FEAsciiExport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53292BC1E453471002798B3 /* FEAsciiExport.cpp */; };
 		D53292BF1E453471002798B3 /* FEAsciiExport.h in Headers */ = {isa = PBXBuildFile; fileRef = D53292BD1E453471002798B3 /* FEAsciiExport.h */; };
 		D53B032D207EF07A00E6B5F5 /* hex8.h in Headers */ = {isa = PBXBuildFile; fileRef = D53B031D207EF07800E6B5F5 /* hex8.h */; };
@@ -186,6 +189,9 @@
 /* Begin PBXFileReference section */
 		D50F4D6D203DA9DC0088F756 /* FEDataField.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FEDataField.cpp; sourceTree = "<group>"; };
 		D50F4D6E203DA9DC0088F756 /* FEDataField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FEDataField.h; sourceTree = "<group>"; };
+		D52D1CAD22EF6550002BE793 /* PropertyList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PropertyList.h; sourceTree = "<group>"; };
+		D52D1CAE22EF6550002BE793 /* convert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = convert.h; sourceTree = "<group>"; };
+		D52D1CAF22EF6550002BE793 /* PropertyList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PropertyList.cpp; sourceTree = "<group>"; };
 		D53292BC1E453471002798B3 /* FEAsciiExport.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FEAsciiExport.cpp; sourceTree = "<group>"; };
 		D53292BD1E453471002798B3 /* FEAsciiExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FEAsciiExport.h; sourceTree = "<group>"; };
 		D53B031D207EF07800E6B5F5 /* hex8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hex8.h; sourceTree = "<group>"; };
@@ -405,6 +411,7 @@
 				D5F308A41CFBB65700F76762 /* ColorMap.cpp */,
 				D5F308A51CFBB65700F76762 /* ColorMap.h */,
 				D5F308A61CFBB65700F76762 /* constants.h */,
+				D52D1CAE22EF6550002BE793 /* convert.h */,
 				D5F308A71CFBB65700F76762 /* DataFilter.cpp */,
 				D5F308A81CFBB65700F76762 /* DataFilter.h */,
 				D5F308A91CFBB65700F76762 /* DataMap.cpp */,
@@ -543,6 +550,8 @@
 				D5F309021CFBB65700F76762 /* PltArchive.h */,
 				D552470C22E5F36100935C9C /* PostView.cpp */,
 				D552470D22E5F36100935C9C /* PostView.h */,
+				D52D1CAF22EF6550002BE793 /* PropertyList.cpp */,
+				D52D1CAD22EF6550002BE793 /* PropertyList.h */,
 				D53B0321207EF07900E6B5F5 /* pyra5.h */,
 				D5F309031CFBB65700F76762 /* SphereFit.cpp */,
 				D5F309041CFBB65700F76762 /* SphereFit.h */,
@@ -582,6 +591,7 @@
 				D5C53DB21F86D95F0014FA22 /* MathParser.h in Headers */,
 				D5F309511CFBB65700F76762 /* FENodeFaceList.h in Headers */,
 				D5F309631CFBB65700F76762 /* FEVTKImport.h in Headers */,
+				D52D1CB022EF6550002BE793 /* PropertyList.h in Headers */,
 				D5F309401CFBB65700F76762 /* FELSDYNAPlot.h in Headers */,
 				D5F3091E1CFBB65700F76762 /* ColorMap.h in Headers */,
 				D5F3093A1CFBB65700F76762 /* FEGroup.h in Headers */,
@@ -667,6 +677,7 @@
 				D5FAC5D021792BE3005E4684 /* tools.h in Headers */,
 				D5F309261CFBB65700F76762 /* FEASCIIImport.h in Headers */,
 				D5C53DB31F86D95F0014FA22 /* FEMathData.h in Headers */,
+				D52D1CB122EF6550002BE793 /* convert.h in Headers */,
 				D5842FE21EC2BC95004FC215 /* FENodeEdgeList.h in Headers */,
 				D5F309821CFBB65700F76762 /* VolRender.h in Headers */,
 				D5D410281DAD891F007BBA0D /* ImageSlicer.h in Headers */,
@@ -734,6 +745,7 @@
 			files = (
 				D5F309781CFBB65700F76762 /* math3d.cpp in Sources */,
 				D5B5F61D229F22F200E721BA /* MarchingCubes.cpp in Sources */,
+				D52D1CB222EF6550002BE793 /* PropertyList.cpp in Sources */,
 				D5F309641CFBB65700F76762 /* GDecoration.cpp in Sources */,
 				D5F3094C1CFBB65700F76762 /* FENikeImport.cpp in Sources */,
 				D5F309601CFBB65700F76762 /* FEVTKExport.cpp in Sources */,

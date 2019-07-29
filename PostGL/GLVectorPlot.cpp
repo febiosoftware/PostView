@@ -2,7 +2,7 @@
 #include "GLVectorPlot.h"
 #include "PostViewLib/ColorMap.h"
 #include "PostViewLib/constants.h"
-#include <PostViewLib/PropertyList.h>
+#include "PostViewLib/PropertyList.h"
 #include <PostGL/GLModel.h>
 using namespace Post;
 

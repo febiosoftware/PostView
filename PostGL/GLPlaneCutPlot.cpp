@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "GLPlaneCutPlot.h"
 #include "PostViewLib/GLContext.h"
-#include <PostViewLib/PropertyList.h>
+#include "PostViewLib/PropertyList.h"
 #include "PostView2/ViewSettings.h"
 #include "PostViewLib/GLContext.h"
 #include "GLModel.h"

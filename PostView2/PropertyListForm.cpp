@@ -1,5 +1,5 @@
 #include "PropertyListForm.h"
-#include <PostViewLib/PropertyList.h>
+#include "PostViewLib/PropertyList.h"
 #include <QFormLayout>
 #include <QSpinBox>
 #include <QComboBox>

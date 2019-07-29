@@ -3,7 +3,7 @@
 #include "GLModel.h"
 #include "GLWLib/GLWidgetManager.h"
 #include "PostViewLib/constants.h"
-#include <PostViewLib/PropertyList.h>
+#include "PostViewLib/PropertyList.h"
 using namespace Post;
 
 //-----------------------------------------------------------------------------

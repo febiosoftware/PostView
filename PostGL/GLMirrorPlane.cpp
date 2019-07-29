@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "GLMirrorPlane.h"
-#include <PostViewLib/PropertyList.h>
+#include "PostViewLib/PropertyList.h"
 #include "GLModel.h"
 using namespace Post;
 
