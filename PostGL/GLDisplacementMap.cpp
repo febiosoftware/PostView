@@ -1,7 +1,46 @@
 #include "stdafx.h"
 #include "GLDisplacementMap.h"
 #include "GLModel.h"
+#include <PostViewLib/PropertyList.h>
 using namespace Post;
+
+//-----------------------------------------------------------------------------
+class CGLDisplacementMapProps : public CPropertyList
+{
+public:
+	CGLDisplacementMapProps(CGLDisplacementMap* map) : m_map(map)
+	{
+		addProperty("Data field", CProperty::DataVec3);
+		addProperty("Scale factor", CProperty::Float);
+	}
+
+	QVariant GetPropertyValue(int i)
+	{
+		if (m_map)
+		{
+			if (i == 0)
+			{
+				FEModel* pfem = m_map->GetModel()->GetFEModel();
+				return pfem->GetDisplacementField();
+			}
+			if (i == 1) return m_map->m_scl;
+		}
+		return QVariant();
+	}
+
+	void SetPropertyValue(int i, const QVariant& v)
+	{
+		if (i == 0)
+		{
+			FEModel* pfem = m_map->GetModel()->GetFEModel();
+			pfem->SetDisplacementField(v.toInt());
+		}
+		if (i == 1) m_map->m_scl = v.toFloat();
+	}
+
+private:
+	CGLDisplacementMap*	m_map;
+};
 
 //-----------------------------------------------------------------------------
 
@@ -27,6 +66,12 @@ void CGLDisplacementMap::Activate(bool b)
 		for (int i = 0; i<pm->Nodes(); ++i) pm->Node(i).m_rt = pm->Node(i).m_r0;
 		pm->UpdateNormals(po->RenderSmooth());
 	}
+}
+
+//-----------------------------------------------------------------------------
+CPropertyList* CGLDisplacementMap::propertyList()
+{
+	return new CGLDisplacementMapProps(this);
 }
 
 //-----------------------------------------------------------------------------

@@ -19,6 +19,8 @@ public:
 	float GetScale() { return m_scl; }
 	void SetScale(float f) { m_scl = f; }
 
+	CPropertyList* propertyList();
+
 public:
 	float				m_scl;		//!< displacement scale factor
 	std::vector<int>	m_ntag;

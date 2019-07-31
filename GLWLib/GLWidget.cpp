@@ -740,6 +740,7 @@ void GLTriad::draw(QPainter* painter)
 	glLightfv(GL_LIGHT0, GL_AMBIENT, ones);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, ones);
 
+	glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission);
