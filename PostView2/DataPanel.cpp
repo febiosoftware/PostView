@@ -613,7 +613,7 @@ void CDataPanel::on_AddStandard_triggered()
 	if (ok)
 	{
 		int nitem = items.indexOf(item);
-		if (GetActiveDocument()->AddStandardDataField(nitem, true) == false)
+		if (AddStandardDataField(*GetActiveDocument()->GetGLModel(), nitem, true) == false)
 		{
 			QMessageBox::critical(this, "Add Data Field", "Failed adding data");
 		}
@@ -639,9 +639,9 @@ void CDataPanel::on_AddFromFile_triggered()
 		bool bret = false;
 		switch (dlg.m_nclass)
 		{
-		case 0: bret = doc->AddNodeDataFromFile(dlg.m_file.c_str(), dlg.m_name.c_str(), dlg.m_ntype); break;
-		case 1: bret = doc->AddFaceDataFromFile(dlg.m_file.c_str(), dlg.m_name.c_str(), dlg.m_ntype); break;
-		case 2: bret = doc->AddElemDataFromFile(dlg.m_file.c_str(), dlg.m_name.c_str(), dlg.m_ntype); break;
+		case 0: bret = AddNodeDataFromFile(*doc->GetGLModel(), dlg.m_file.c_str(), dlg.m_name.c_str(), dlg.m_ntype); break;
+		case 1: bret = AddFaceDataFromFile(*doc->GetGLModel(), dlg.m_file.c_str(), dlg.m_name.c_str(), dlg.m_ntype); break;
+		case 2: bret = AddElemDataFromFile(*doc->GetGLModel(), dlg.m_file.c_str(), dlg.m_name.c_str(), dlg.m_ntype); break;
 		default:
 			assert(false);
 		}
@@ -880,7 +880,7 @@ void CDataPanel::on_ExportButton_clicked()
 			if (file.isEmpty() == false)
 			{
 				std::string sfile = file.toStdString();
-				if (doc.ExportDataField(*pdf, sfile.c_str()) == false)
+				if (ExportDataField(*doc.GetGLModel(), *pdf, sfile.c_str()) == false)
 				{
 					QMessageBox::critical(this, "Export Data", "Export Failed!");
 				}

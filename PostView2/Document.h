@@ -199,11 +199,6 @@ public:
 	bool ExportDXF   (const char* szfile);
 	bool ExportRAW   (const char* szfile);
 
-	bool ExportDataField(const Post::FEDataField& df, const char* szfile);
-	bool ExportNodeDataField(const Post::FEDataField& df, FILE* fp);
-	bool ExportFaceDataField(const Post::FEDataField& df, FILE* fp);
-	bool ExportElementDataField(const Post::FEDataField& df, FILE* fp);
-
 	void ApplyPalette(const CPalette& pal);
 
 	// get the current file name
@@ -274,15 +269,6 @@ public:
 
 	// get image model
 	Post::CImageModel* GetImageModel(int i) { return m_img[i]; }
-
-	// Add a data field
-	// NOTE: the ndata relates to the index in DataPanel::on_AddStandard_triggered
-	// TODO: Find a better mechanism
-	bool AddStandardDataField(int ndata, bool bselection_only);
-
-	bool AddNodeDataFromFile(const char* szfile, const char* szname, int ntype);
-	bool AddFaceDataFromFile(const char* szfile, const char* szname, int ntype);
-	bool AddElemDataFromFile(const char* szfile, const char* szname, int ntype);
 
 	CMainWindow* GetWindow() { return m_wnd; }
 

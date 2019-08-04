@@ -8,6 +8,7 @@
 namespace Post {
 
 class FEModel;
+class CGLModel;
 
 //-----------------------------------------------------------------------------
 // data field flags
@@ -132,4 +133,15 @@ public:
 
 	FEMeshData* CreateData(FEState* pstate) override;
 };
+
+//-------------------------------------------------------------------------------
+bool ExportDataField(CGLModel& glm, const FEDataField& df, const char* szfile);
+bool ExportNodeDataField(CGLModel& glm, const FEDataField& df, FILE* fp);
+bool ExportFaceDataField(CGLModel& glm, const FEDataField& df, FILE* fp);
+bool ExportElementDataField(CGLModel& glm, const FEDataField& df, FILE* fp);
+
+bool AddStandardDataField(CGLModel& glm, int ndata, bool bselection_only);
+bool AddNodeDataFromFile(CGLModel& glm, const char* szfile, const char* szname, int ntype);
+bool AddFaceDataFromFile(CGLModel& glm, const char* szfile, const char* szname, int ntype);
+bool AddElemDataFromFile(CGLModel& glm, const char* szfile, const char* szname, int ntype);
 }
