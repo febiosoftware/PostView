@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "GLDisplacementMap.h"
 #include "GLModel.h"
-#include <PostViewLib/PropertyList.h>
+#include "PostViewLib/PropertyList.h"
 using namespace Post;
 
 //-----------------------------------------------------------------------------

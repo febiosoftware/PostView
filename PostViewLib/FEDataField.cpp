@@ -2,7 +2,7 @@
 #include "FEDataField.h"
 #include "FEMeshData_T.h"
 #include "constants.h"
-#include <PostGL/GLModel.h>
+#include "PostGL/GLModel.h"
 using namespace Post;
 
 FEDataField::FEDataField(const std::string& name, Data_Type ntype, Data_Format nfmt, Data_Class ncls, unsigned int flag)
