@@ -285,7 +285,7 @@ int CImportLinesTool::ReadAng2Format(const char* szfile)
 		vector<float> d(nd, 0.f);
 		for (int i=0; i<segs; ++i)
 		{
-			if (fread(&d[0], sizeof(float), nd, fp) != 8) { fclose(fp); return 2; }
+			if (fread(&d[0], sizeof(float), nd, fp) != nd) { fclose(fp); return 2; }
 
 			// store the raw coordinates
 			float* c = &d[0];
