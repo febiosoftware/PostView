@@ -1,14 +1,4 @@
-// XMLWriter.h: interface for the XMLWriter class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_XMLWRITER_H__ED6A9ABF_A8AD_48B2_8A15_98024DFDBA5E__INCLUDED_)
-#define AFX_XMLWRITER_H__ED6A9ABF_A8AD_48B2_8A15_98024DFDBA5E__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "math3d.h"
 #include "ColorMap.h"
 #include <stdio.h>
@@ -16,6 +6,8 @@
 
 #define MAX_TAGS	32
 #define MAX_ATTR	32
+
+namespace Post {
 
 class XMLWriter;
 
@@ -122,5 +114,4 @@ protected:
 	char	m_sztab[256];
 };
 
-
-#endif // !defined(AFX_XMLWRITER_H__ED6A9ABF_A8AD_48B2_8A15_98024DFDBA5E__INCLUDED_)
+}

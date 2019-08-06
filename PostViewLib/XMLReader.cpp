@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "XMLReader.h"
 #include <assert.h>
+using namespace Post;
 
 #ifdef _DEBUG
 #undef THIS_FILE

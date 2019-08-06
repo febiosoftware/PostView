@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "XMLWriter.h"
 #include <string.h>
+using namespace Post;
 
 void XMLElement::value(int* pi, int n)
 {
