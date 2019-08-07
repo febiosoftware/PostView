@@ -482,28 +482,7 @@ void CGLView::initializeGL()
 void CGLView::resizeGL(int w, int h)
 {
 	QOpenGLWidget::resizeGL(w, h);
-
-	// resize widgets
-	for (int i=0; i<m_Widget->Widgets(); ++i)
-	{
-		GLWidget* pw = (*m_Widget)[i];
-
-		int x0 = pw->x();
-		if (x0 < 0) x0 = 0;
-
-		int y0 = pw->y();
-		if (y0 < 0) y0 = 0;
-		
-		int x1 = x0 + pw->w();
-		if (x1 >= w) { x1 = w-1; x0 = x1 - pw->w(); }
-		if (x0 < 0) x0 = 0;
-
-		int y1 = y0 + pw->h();
-		if (y1 >= h) { y1 = h-1; y0 = y1 - pw->h(); }
-		if (y0 < 0) y0 = 0;
-
-		pw->resize(x0, y0, x1-x0, y1-y0);
-	}
+	m_Widget->CheckWidgetBounds();
 }
 
 void CGLView::setupProjectionMatrix()

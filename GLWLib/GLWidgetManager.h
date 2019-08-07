@@ -32,6 +32,9 @@ public:
 
 	void SetActiveLayer(int l);
 
+	// Make sure widget are within bounds. (Call when parent QOpenGLWidget changes size)
+	void CheckWidgetBounds();
+
 protected:
 	void SnapWidget(GLWidget* pw);
 

@@ -32,6 +32,41 @@ void CGLWidgetManager::SetActiveLayer(int l)
 {
 	m_layer = l;
 }
+// Make sure widget are within bounds. (Call when parent QOpenGLWidget changes size)
+void CGLWidgetManager::CheckWidgetBounds()
+{
+	// make sure we have a view
+	if (m_pview == nullptr) return;
+
+	// get the view's dimensions
+	int w = m_pview->width();
+	int h = m_pview->height();
+
+	// resize widgets
+	for (int i = 0; i<Widgets(); ++i)
+	{
+		GLWidget* pw = m_Widget[i];
+
+		// snap the widget if any of its align flags are set
+		if (pw->GetSnap()) SnapWidget(pw);
+
+		int x0 = pw->x();
+		if (x0 < 0) x0 = 0;
+
+		int y0 = pw->y();
+		if (y0 < 0) y0 = 0;
+
+		int x1 = x0 + pw->w();
+		if (x1 >= w) { x1 = w - 1; x0 = x1 - pw->w(); }
+		if (x0 < 0) x0 = 0;
+
+		int y1 = y0 + pw->h();
+		if (y1 >= h) { y1 = h - 1; y0 = y1 - pw->h(); }
+		if (y0 < 0) y0 = 0;
+
+		pw->resize(x0, y0, x1 - x0, y1 - y0);
+	}
+}
 
 void CGLWidgetManager::AddWidget(GLWidget* pw)
 {
