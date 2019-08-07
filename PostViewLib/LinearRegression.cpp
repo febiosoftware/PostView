@@ -159,7 +159,7 @@ bool NonlinearRegression(const vector<pair<double, double> >& data, vector<doubl
 		if (niter == 0) norm0 = norm;
 		else
 		{
-			double rel = fabs(norm - norm0)/norm0;
+			double rel = norm/norm0;
 			if (rel < relTol) break;
 		}
 
