@@ -229,9 +229,9 @@ public:
 
 	void resize(int x, int y, int W, int H) override;
 
-	bool is_inside(int x, int y);
+	bool is_inside(int x, int y) override;
 
-	void draw(QPainter* painter);
+	void draw(QPainter* painter) override;
 
 	void SetState(STATE state) { m_state = state; }
 	int GetState() { return m_state; }

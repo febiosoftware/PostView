@@ -8,7 +8,7 @@ class CGLMirrorPlane : public CGLPlot
 public:
 	CGLMirrorPlane(CGLModel* fem);
 
-	CPropertyList* propertyList();
+	CPropertyList* propertyList() override;
 
 	// render the object to the 3D view
 	void Render(CGLContext& rc) override;

@@ -20,10 +20,10 @@ public:
     CMPEGAnimation();
     
 public:
-    int Create(const char* szfile, int cx, int cy, float fps = 10.f);
+    int Create(const char* szfile, int cx, int cy, float fps = 10.f) override;
     int Write(QImage& im) override;
-    void Close();
-    bool IsValid() { return (file != NULL); }
+    void Close() override;
+    bool IsValid() override { return (file != NULL); }
 	int Frames() override { return m_nframe; };
 
 protected:

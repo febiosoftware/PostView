@@ -8,10 +8,10 @@ protected:
 	CImgAnimation();
 
 public:
-	int Create(const char* szfile, int cx, int cy, float fps = 10.f);
-	int Write(QImage& im);
-	void Close();
-	bool IsValid();
+	int Create(const char* szfile, int cx, int cy, float fps = 10.f) override;
+	int Write(QImage& im) override;
+	void Close() override;
+	bool IsValid() override;
 	int Frames() override { return m_ncnt; }
 
 	virtual bool SaveFrame(QImage& im, const char* szfile) = 0;
