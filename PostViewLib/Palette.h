@@ -4,6 +4,8 @@
 #include <string>
 using namespace std;
 
+namespace Post {
+
 class CPalette
 {
 public:
@@ -58,3 +60,4 @@ private:
 	CPaletteManager(const CPaletteManager&){}
 	static CPaletteManager*	m_this;
 };
+}

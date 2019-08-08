@@ -11,7 +11,6 @@
 //-----------------------------------------------------------------------------
 // Forward declarations
 class CMainWindow;
-class CPalette;
 class CDocument;
 
 namespace Post {
@@ -23,6 +22,7 @@ namespace Post {
 	class CGLPlot;
 	class CGLObject;
 	class CGLVisual;
+	class CPalette;
 }
 
 //-----------------------------------------------------------------------------
@@ -199,7 +199,7 @@ public:
 	bool ExportDXF   (const char* szfile);
 	bool ExportRAW   (const char* szfile);
 
-	void ApplyPalette(const CPalette& pal);
+	void ApplyPalette(const Post::CPalette& pal);
 
 	// get the current file name
 	const char* GetFile() { return m_szfile; }
