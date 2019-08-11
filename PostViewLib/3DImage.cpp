@@ -350,6 +350,22 @@ void C3DImage::Zero()
 	for (int i=0; i<n; i++) m_pb[i] = 0;
 }
 
+void C3DImage::FlipZ()
+{
+	int nsize = m_cx*m_cy;
+	byte* buf = new byte[nsize];
+	for (int i = 0; i < m_cz / 2; ++i)
+	{
+		byte* slice0 = m_pb + i*nsize;
+		byte* slice1 = m_pb + (m_cz - i - 1)*nsize;
+		memcpy(buf, slice0, nsize);
+		memcpy(slice0, slice1, nsize);
+		memcpy(slice1, buf, nsize);
+	}
+	delete buf;
+}
+
+
 //=============================================================================
 // C3DGradientMap
 //=============================================================================

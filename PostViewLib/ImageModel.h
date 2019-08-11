@@ -30,6 +30,8 @@ public:
 
 	BOUNDINGBOX& GetBoundingBox() { return m_box; }
 
+	void SetBoundingBox(BOUNDINGBOX b) { m_box = b; }
+
 	bool ShowBox() const;
 
 	void ShowBox(bool b);

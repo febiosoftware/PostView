@@ -56,6 +56,8 @@ public:
 
 	void Zero();
 
+	void FlipZ();
+
 protected:
 	byte*	m_pb;	// image data
 	int		m_cx;

@@ -64,6 +64,8 @@ public:
 
 	void Update() override;
 
+	CPropertyList* propertyList() override;
+
 private:
 	void AddSurfaceTris(byte val[4], vec3f r[4], const vec3f& faceNormal);
 
