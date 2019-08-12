@@ -1,24 +1,26 @@
-PSTDIR = $(dir $(CURDIR))
-lnx64: PLAT = lnx64
-osx: PLAT = osx
-osxclean: PLAT = osx
-lnx64g: PLAT = lnx64g
-lnx32: PLAT = lnx32
-lnx64clean: PLAT = lnx64
-lnx64gclean: PLAT = lnx64g
-lnx32clean: PLAT = lnx32
+postView: XPLT GLWLib PostGL PostViewLib
+	cd ../PostView2; /home/sci/mherron/Resources/Qt/5.12.0/gcc_64/bin/qmake PostView2.pro;
+	$(MAKE) -C ../PostView2/;
 
-export PLAT
-export PSTDIR
+XPLT:
+	cd ../XPLTLib;	$(MAKE) -C ../XPLTLib/;
+	
+GLWLib:
+	cd ../GLWLib; /home/sci/mherron/Resources/Qt/5.12.0/gcc_64/bin/qmake glwlib.pro;
+	$(MAKE) -C ../GLWLib/;
 
-lnx64 lnx32 lnx64g osx:
-	( cd $(PLAT)/PostViewLib;	$(MAKE) -f ../../Makelibs.mk )
-	( cd $(PLAT)/PostView2;		$(MAKE) -f ../../postview.mk )
+PostGL:
+	cd ../PostGL; /home/sci/mherron/Resources/Qt/5.12.0/gcc_64/bin/qmake PostGL.pro;
+	$(MAKE) -C ../PostGL/;
 
-lnx64clean lnx64gclean lnx32clean osxclean:
+PostViewLib:
+	cd ../PostViewLib; /home/sci/mherron/Resources/Qt/5.12.0/gcc_64/bin/qmake PostView2Lib.pro;
+	$(MAKE) -C ../PostViewLib/;
 
-	( cd $(PLAT)/PostViewLib;	$(MAKE) -f ../../Makelibs.mk clean )
-	( cd $(PLAT)/PostView2;		$(MAKE) -f ../../postview.mk clean )
+clean:
+	cd ../XPLTLib; $(MAKE) -f ../XPLTLib/Makefile clean ;
 
-.PHONY: lnx64 lnx32 lnx64g osx
-
+	cd ../GLWLib/; $(MAKE) distclean
+	cd ../PostGL/; $(MAKE) distclean
+	cd ../PostViewLib/; $(MAKE) distclean
+	cd ../PostView2/; $(MAKE) distclean

@@ -79,10 +79,10 @@ int parse_csv(char* sz, int* d, int n)
 
 void XMLAtt::value(bool& v)
 {
-#ifdef __APPLE__ 
-	if (strcasecmp(m_szval, "true") == 0) v = true;
-#else
+#ifdef WIND32
 	if (stricmp(m_szval, "true") == 0) v = true;
+#else
+	if (strcasecmp(m_szval, "true") == 0) v = true;
 #endif
 	else v = false;
 }

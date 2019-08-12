@@ -6,7 +6,7 @@
 #include <PostViewLib/ImageModel.h>
 #include <PostViewLib/3DImage.h>
 #include <QGraphicsScene>
-#include <QPixMap>
+#include <QPixmap>
 #include <QGraphicsPixmapItem>
 #include <QLabel>
 #include <QComboBox>

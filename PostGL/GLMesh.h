@@ -4,6 +4,8 @@
 
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
+#elif LINUX
+
 #else
 #include <Windows.h>
 #include <GL/gl.h>
