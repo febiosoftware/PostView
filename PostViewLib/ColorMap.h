@@ -21,17 +21,18 @@ public:
 
 	void operator = (const CColorMap& map);
 
-	void jet   ();
-	void gray  ();
-	void autumn();
-	void winter();
-	void spring();
-	void summer();
-	void red   ();
-	void green ();
-	void blue  ();
-	void rbb   ();
-	void fire  ();
+	void jet    ();
+	void gray   ();
+	void autumn ();
+	void winter ();
+	void spring ();
+	void summer ();
+	void red    ();
+	void green  ();
+	void hotcold();
+	void blue   ();
+	void rbb    ();
+	void fire   ();
 
 	GLColor map(float fval) const;
 
@@ -95,6 +96,7 @@ public:
 		FIRE,
 		GRAY,
 		GREEN,
+		HOTCOLD,
 		JET,
 		RBB,
 		RED,

@@ -118,6 +118,17 @@ void CColorMap::green()
 	m_pos[4] = 1.00f; m_col[4] = GLColor(0, 255, 0);
 }
 
+void CColorMap::hotcold()
+{
+	m_ncol = 5;
+
+	m_pos[0] = 0.00f; m_col[0] = GLColor(64, 83, 187);
+	m_pos[1] = 0.25f; m_col[1] = GLColor(133, 188, 255);
+	m_pos[2] = 0.50f; m_col[2] = GLColor(241, 241, 241);
+	m_pos[3] = 0.75f; m_col[3] = GLColor(253, 165, 123);
+	m_pos[4] = 1.00f; m_col[4] = GLColor(184, 19, 40);
+}
+
 void CColorMap::blue()
 {
 	m_ncol = 5;
@@ -355,17 +366,18 @@ void ColorMapManager::Initialize()
 	if (m_map.empty() == false) return;
 
 	CColorMap map;
-	map.autumn(); AddColormap("Autumn", map);
-	map.blue  (); AddColormap("Blue"  , map);
-	map.fire  (); AddColormap("Fire"  , map);
-	map.gray  (); AddColormap("Gray"  , map);
-	map.green (); AddColormap("Green" , map);
-	map.jet   (); AddColormap("Jet"   , map);
-	map.rbb   (); AddColormap("RBB"   , map);
-	map.red   (); AddColormap("Red"   , map);
-	map.spring(); AddColormap("Spring", map);
-	map.summer(); AddColormap("Summer", map);
-	map.winter(); AddColormap("Winter", map);
+	map.autumn (); AddColormap("Autumn", map);
+	map.blue   (); AddColormap("Blue"  , map);
+	map.fire   (); AddColormap("Fire"  , map);
+	map.gray   (); AddColormap("Gray"  , map);
+	map.green  (); AddColormap("Green" , map);
+	map.hotcold(); AddColormap("Hot-Cold", map);
+	map.jet    (); AddColormap("Jet"   , map);
+	map.rbb    (); AddColormap("RBB"   , map);
+	map.red    (); AddColormap("Red"   , map);
+	map.spring (); AddColormap("Spring", map);
+	map.summer (); AddColormap("Summer", map);
+	map.winter (); AddColormap("Winter", map);
 }
 
 string ColorMapManager::GetColorMapName(int n)
