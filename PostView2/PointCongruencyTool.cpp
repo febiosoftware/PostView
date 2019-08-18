@@ -8,7 +8,7 @@
 #include <QLineEdit>
 #include "Document.h"
 #include <PostLib/FEModel.h>
-#include <PostLib/SphereFit.h>
+#include <MeshTools/SphereFit.h>
 #include "PropertyListView.h"
 #include <PostLib/FEPointCongruency.h>
 using namespace Post;

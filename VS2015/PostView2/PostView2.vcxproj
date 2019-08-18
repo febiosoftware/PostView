@@ -83,7 +83,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(QT512DIR)\include;$(QT512DIR)\include\QtGui;$(QT512DIR)\include\QtWidgets;$(QT512DIR)\include\QtCharts;$(FEBioStudioDir);$(ZLIBDIR);$(GLEWDIR)\include\GL;$(FFMPEGDIR)\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)x64\Release;$(QT512DIR)\lib;$(GLEWDIR)\lib\Release\x64;$(FFMPEGDIR)\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(QT512DIR)\lib;$(GLEWDIR)\lib\Release\x64;$(FFMPEGDIR)\lib;$(FEBioStudioDir)\VS2015\x64\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -147,7 +147,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Qt5Core.lib;Qt5Gui.lib;Qt5Widgets.lib;Qt5Charts.lib;postviewlib.lib;glwlib.lib;postgl.lib;xpltlib.lib;glew32.lib;opengl32.lib;glu32.lib;$(ZLIBDIR)\contrib\vstudio\vc14\Release\zlibstatic.lib;vfw32.lib;avcodec.lib;avutil.lib;swscale.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qt5Core.lib;Qt5Gui.lib;Qt5Widgets.lib;Qt5Charts.lib;fscore.lib;postlib.lib;glwlib.lib;postgl.lib;xpltlib.lib;meshtools.lib;glew32.lib;opengl32.lib;glu32.lib;$(ZLIBDIR)\contrib\vstudio\vc14\Release\zlibstatic.lib;vfw32.lib;avcodec.lib;avutil.lib;swscale.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>

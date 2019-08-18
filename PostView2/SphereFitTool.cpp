@@ -8,7 +8,7 @@
 #include <QLineEdit>
 #include "Document.h"
 #include <PostLib/FEModel.h>
-#include <PostLib/SphereFit.h>
+#include <MeshTools/SphereFit.h>
 using namespace Post;
 
 class CSphereFitToolUI : public QWidget
@@ -81,16 +81,20 @@ void CSphereFitTool::OnFit()
 			}
 		}
 
-		vector<vec3f> y;
+		vector<vec3d> y;
 		for (int i=0; i<N; ++i)
 		{
-			if (mesh.Node(i).m_ntag == 1) y.push_back(mesh.Node(i).m_rt);
+			if (mesh.Node(i).m_ntag == 1)
+			{
+				vec3f r = mesh.Node(i).m_rt;
+				y.push_back(vec3d(r.x, r.y, r.z));
+			}
 		}
 
 		// find the best fit sphere
 		SphereFit fit;
 		fit.Fit(y, 50);
-		vec3f sc = fit.m_rc;
+		vec3d sc = fit.m_rc;
 		double R = fit.m_R;
 
 		// calculate the objective function
