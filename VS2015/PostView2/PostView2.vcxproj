@@ -74,7 +74,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(QT512DIR)\include;$(QT512DIR)\include\QtGui;$(QT512DIR)\include\QtWidgets;$(SolutionDir)..;$(ZLIBDIR)\contrib\vstudio\vc14\;$(ZLIBDIR);$(GLEWDIR)\include\GL;$(FFMPEGDIR)\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(QT512DIR)\include;$(QT512DIR)\include\QtGui;$(QT512DIR)\include\QtWidgets;$(FEBioStudioDir);$(ZLIBDIR)\contrib\vstudio\vc14\;$(ZLIBDIR);$(GLEWDIR)\include\GL;$(FFMPEGDIR)\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)x64\Debug;$(QT512DIR)\lib;$(GLEWDIR)\lib\Release\x64;$(FFMPEGDIR)\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -82,7 +82,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(QT512DIR)\include;$(QT512DIR)\include\QtGui;$(QT512DIR)\include\QtWidgets;$(QT512DIR)\include\QtCharts;$(SolutionDir)..;$(ZLIBDIR);$(GLEWDIR)\include\GL;$(FFMPEGDIR)\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(QT512DIR)\include;$(QT512DIR)\include\QtGui;$(QT512DIR)\include\QtWidgets;$(QT512DIR)\include\QtCharts;$(FEBioStudioDir);$(ZLIBDIR);$(GLEWDIR)\include\GL;$(FFMPEGDIR)\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)x64\Release;$(QT512DIR)\lib;$(GLEWDIR)\lib\Release\x64;$(FFMPEGDIR)\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

@@ -14,9 +14,9 @@
 #include "Tool.h"
 #include "MainWindow.h"
 #include "Document.h"
-#include <PostViewLib/FEMesh.h>
-#include <PostViewLib/FEModel.h>
-#include <PostViewLib/GDecoration.h>
+#include <PostLib/FEMesh.h>
+#include <PostLib/FEModel.h>
+#include <PostLib/GDecoration.h>
 #include <PostGL/GLModel.h>
 #include "PointDistanceTool.h"
 #include "3PointAngleTool.h"

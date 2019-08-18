@@ -1,6 +1,6 @@
 #pragma once
 #include <QWidget>
-#include <PostViewLib/FEModel.h>
+#include <PostLib/FEModel.h>
 
 namespace Post {
 	class CImageModel;

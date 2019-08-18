@@ -15,7 +15,7 @@
 #include <QDoubleSpinBox>
 #include <QSpinBox>
 #include "DataFieldSelector.h"
-#include <PostViewLib/FEModel.h>
+#include <PostLib/FEModel.h>
 #include "DragBox.h"
 using namespace Post;
 

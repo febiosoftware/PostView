@@ -5,7 +5,7 @@
 #include <QBoxLayout>
 #include <vector>
 #include "Document.h"
-#include <PostViewLib/FEStrainMap.h>
+#include <PostLib/FEStrainMap.h>
 using namespace std;
 using namespace Post;
 

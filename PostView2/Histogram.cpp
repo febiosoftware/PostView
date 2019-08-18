@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Histogram.h"
-#include <PostViewLib/ImageModel.h>
-#include <PostViewLib/3DImage.h>
+#include <PostLib/ImageModel.h>
+#include <PostLib/3DImage.h>
 #include <QtCharts/QLineSeries>
 using namespace Post;
 

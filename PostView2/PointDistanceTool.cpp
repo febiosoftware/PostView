@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "PointDistanceTool.h"
-#include <PostViewLib/GDecoration.h>
+#include <PostLib/GDecoration.h>
 #include "Document.h"
 #include <PostGL/GLModel.h>
 using namespace Post;

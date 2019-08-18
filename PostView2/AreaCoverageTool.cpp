@@ -6,7 +6,7 @@
 #include <QLabel>
 #include <vector>
 #include "Document.h"
-#include <PostViewLib/FEAreaCoverage.h>
+#include <PostLib/FEAreaCoverage.h>
 using namespace std;
 using namespace Post;
 

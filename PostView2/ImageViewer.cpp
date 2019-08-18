@@ -3,14 +3,14 @@
 #include <QGraphicsView>
 #include <QBoxLayout>
 #include <QSlider>
-#include <PostViewLib/ImageModel.h>
-#include <PostViewLib/3DImage.h>
+#include <PostLib/ImageModel.h>
+#include <PostLib/3DImage.h>
 #include <QGraphicsScene>
 #include <QPixmap>
 #include <QGraphicsPixmapItem>
 #include <QLabel>
 #include <QComboBox>
-#include <PostViewLib/FEModel.h>
+#include <PostLib/FEModel.h>
 #include <PostGL/GLModel.h>
 using namespace Post;
 

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "MeasureAreaTool.h"
 #include "Document.h"
-#include <PostViewLib/FEModel.h>
+#include <PostLib/FEModel.h>
 #include "MainWindow.h"
 using namespace Post;
 

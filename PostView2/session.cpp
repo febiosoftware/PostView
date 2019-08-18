@@ -1,22 +1,22 @@
 #include "stdafx.h"
 #include "DocManager.h"
 #include "Document.h"
-#include "PostViewLib/XMLWriter.h"
-#include "PostViewLib/XMLReader.h"
-#include "PostViewLib/FEBioImport.h"
-#include "PostViewLib/FELSDYNAPlot.h"
+#include "PostLib/XMLWriter.h"
+#include "PostLib/XMLReader.h"
+#include "PostLib/FEBioImport.h"
+#include "PostLib/FELSDYNAPlot.h"
 #include "XPLTLib/xpltFileReader.h"
-#include "PostViewLib/FELSDYNAimport.h"
-#include "PostViewLib/GMeshImport.h"
-#include "PostViewLib/FENikeImport.h"
-#include "PostViewLib/FESTLimport.h"
-#include "PostViewLib/FEASCIIImport.h"
-#include "PostViewLib/FEVTKImport.h"
-#include "PostViewLib/FEU3DImport.h"
+#include "PostLib/FELSDYNAimport.h"
+#include "PostLib/GMeshImport.h"
+#include "PostLib/FENikeImport.h"
+#include "PostLib/FESTLimport.h"
+#include "PostLib/FEASCIIImport.h"
+#include "PostLib/FEVTKImport.h"
+#include "PostLib/FEU3DImport.h"
 #include <PostGL/GLModel.h>
 #include <PostGL/GLPlaneCutPlot.h>
-#include <PostViewLib/ImageModel.h>
-#include <PostViewLib/3DImage.h>
+#include <PostLib/ImageModel.h>
+#include <PostLib/3DImage.h>
 using namespace Post;
 
 //-----------------------------------------------------------------------------

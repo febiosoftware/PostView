@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "MeasureVolumeTool.h"
 #include "Document.h"
-#include <PostViewLib/FEModel.h>
+#include <PostLib/FEModel.h>
 using namespace Post;
 
 //-----------------------------------------------------------------------------

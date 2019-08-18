@@ -11,10 +11,10 @@
 #include <QBitmap>
 #include <PostGL/GLModel.h>
 #include <PostGL/GLPlaneCutPlot.h>
-#include <PostViewLib/GLContext.h>
-#include <PostViewLib/VolRender.h>
-#include <PostViewLib/ImageSlicer.h>
-#include <PostViewLib/ImageModel.h>
+#include <PostLib/GLContext.h>
+#include <PostLib/VolRender.h>
+#include <PostLib/ImageSlicer.h>
+#include <PostLib/ImageModel.h>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QtCore/QTimer>

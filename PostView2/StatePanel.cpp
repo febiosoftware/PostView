@@ -1,7 +1,7 @@
 #include "StatePanel.h"
 #include "MainWindow.h"
 #include "Document.h"
-#include <PostViewLib/FEModel.h>
+#include <PostLib/FEModel.h>
 #include <QBoxLayout>
 #include <QTableWidget>
 #include <QLabel>

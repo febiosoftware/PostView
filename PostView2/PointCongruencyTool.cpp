@@ -7,10 +7,10 @@
 #include <QFormLayout>
 #include <QLineEdit>
 #include "Document.h"
-#include <PostViewLib/FEModel.h>
-#include <PostViewLib/SphereFit.h>
+#include <PostLib/FEModel.h>
+#include <PostLib/SphereFit.h>
 #include "PropertyListView.h"
-#include <PostViewLib/FEPointCongruency.h>
+#include <PostLib/FEPointCongruency.h>
 using namespace Post;
 
 class CPointCongruencyToolUI : public QWidget

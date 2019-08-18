@@ -9,7 +9,7 @@
 #include "MainWindow.h"
 #include "Document.h"
 #include "PropertyListView.h"
-#include <PostViewLib/FEModel.h>
+#include <PostLib/FEModel.h>
 using namespace Post;
 
 class MaterialProps : public CPropertyList

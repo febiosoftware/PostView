@@ -7,8 +7,8 @@
 #include <QFormLayout>
 #include <QLineEdit>
 #include "Document.h"
-#include <PostViewLib/FEModel.h>
-#include <PostViewLib/SphereFit.h>
+#include <PostLib/FEModel.h>
+#include <PostLib/SphereFit.h>
 using namespace Post;
 
 class CSphereFitToolUI : public QWidget

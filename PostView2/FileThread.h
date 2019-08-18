@@ -1,6 +1,6 @@
 #pragma once
 #include <QtCore/QThread>
-#include <PostViewLib/FEFileReader.h>
+#include <PostLib/FEFileReader.h>
 
 class CMainWindow;
 class CDocument;

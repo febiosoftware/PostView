@@ -7,7 +7,7 @@
 #include <QMessageBox>
 #include <QLabel>
 #include <QLineEdit>
-#include <PostViewLib/FEPlotMix.h>
+#include <PostLib/FEPlotMix.h>
 #include "Document.h"
 #include "CIntInput.h"
 #include "FEKinemat.h"

@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "FEKinemat.h"
 #include "Document.h"
-#include "PostViewLib/FELSDYNAimport.h"
-#include "PostViewLib/FEMeshData_T.h"
+#include "PostLib/FELSDYNAimport.h"
+#include "PostLib/FEMeshData_T.h"
 using namespace Post;
 
 //-----------------------------------------------------------------------------

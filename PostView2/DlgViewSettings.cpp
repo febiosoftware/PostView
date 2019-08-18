@@ -11,9 +11,9 @@
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QLabel>
-#include "PostViewLib/PropertyList.h"
+#include "PostLib/PropertyList.h"
 #include "PropertyListView.h"
-#include <PostViewLib/Palette.h>
+#include <PostLib/Palette.h>
 #include <QSpinBox>
 #include <QInputDialog>
 #include "MainWindow.h"

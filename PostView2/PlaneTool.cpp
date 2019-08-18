@@ -7,7 +7,7 @@
 #include <QPushButton>
 #include "Document.h"
 #include <PostGL/GLModel.h>
-#include <PostViewLib/FEMesh.h>
+#include <PostLib/FEMesh.h>
 using namespace Post;
 
 //-----------------------------------------------------------------------------

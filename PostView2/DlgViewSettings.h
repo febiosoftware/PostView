@@ -1,6 +1,6 @@
 #pragma once
 #include <QDialog>
-#include "PostViewLib/ColorMap.h"
+#include "PostLib/ColorMap.h"
 
 class CMainWindow;
 class QAbstractButton;

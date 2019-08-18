@@ -2,10 +2,10 @@
 #include <vector>
 #include <list>
 #include <string>
-#include "PostViewLib/FEMaterial.h"
-#include "PostViewLib/bbox.h"
-#include "PostViewLib/GView.h"
-#include "PostViewLib/FEMesh.h"
+#include "PostLib/FEMaterial.h"
+#include "PostLib/bbox.h"
+#include "PostLib/GView.h"
+#include "PostLib/FEMesh.h"
 #include <PostGL/GLModel.h>
 
 //-----------------------------------------------------------------------------

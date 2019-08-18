@@ -1,17 +1,17 @@
 #include "stdafx.h"
 #include "Document.h"
 #include "MainWindow.h"
-#include <PostViewLib/FEModel.h>
-#include <PostViewLib/FEFileReader.h>
-#include <PostViewLib/3DImage.h>
-#include <PostViewLib/GLImageRenderer.h>
-#include <PostViewLib/FEMeshData_T.h>
+#include <PostLib/FEModel.h>
+#include <PostLib/FEFileReader.h>
+#include <PostLib/3DImage.h>
+#include <PostLib/GLImageRenderer.h>
+#include <PostLib/FEMeshData_T.h>
 #include <PostGL/GLPlot.h>
 #include <PostGL/GLModel.h>
-#include <PostViewLib/constants.h>
-#include <PostViewLib/Palette.h>
-#include <PostViewLib/FEAsciiExport.h>
-#include <PostViewLib/ImageModel.h>
+#include <PostLib/constants.h>
+#include <PostLib/Palette.h>
+#include <PostLib/FEAsciiExport.h>
+#include <PostLib/ImageModel.h>
 using namespace Post;
 
 #ifdef WIN32

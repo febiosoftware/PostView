@@ -13,7 +13,7 @@
 #include "Document.h"
 #include "PropertyListView.h"
 #include <PostGL/GLModel.h>
-#include <PostViewLib/FEModel.h>
+#include <PostLib/FEModel.h>
 #include <PostGL/GLPlot.h>
 #include <PostGL/GLPlaneCutPlot.h>
 #include <PostGL/GLVectorPlot.h>
@@ -23,12 +23,12 @@
 #include <PostGL/GLStreamLinePlot.h>
 #include <PostGL/GLParticleFlowPlot.h>
 #include <PostGL/GLTensorPlot.h>
-#include <PostViewLib/3DImage.h>
-#include <PostViewLib/VolRender.h>
-#include <PostViewLib/ImageSlicer.h>
-#include <PostViewLib/ImageModel.h>
-#include <PostViewLib/GLImageRenderer.h>
-#include <PostViewLib/MarchingCubes.h>
+#include <PostLib/3DImage.h>
+#include <PostLib/VolRender.h>
+#include <PostLib/ImageSlicer.h>
+#include <PostLib/ImageModel.h>
+#include <PostLib/GLImageRenderer.h>
+#include <PostLib/MarchingCubes.h>
 #include <PostGL/GLMirrorPlane.h>
 #include "ImageViewer.h"
 #include "Histogram.h"

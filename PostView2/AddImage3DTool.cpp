@@ -9,9 +9,9 @@
 #include <QMessageBox>
 #include "CIntInput.h"
 #include "Document.h"
-#include <PostViewLib/3DImage.h>
+#include <PostLib/3DImage.h>
 #include "MainWindow.h"
-#include <PostViewLib/ImageModel.h>
+#include <PostLib/ImageModel.h>
 using namespace Post;
 
 class CAddImage3DToolUI : public QWidget

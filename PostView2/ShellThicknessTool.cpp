@@ -1,7 +1,7 @@
 #include "StatePanel.h"
 #include "ShellThicknessTool.h"
 #include "Document.h"
-#include <PostViewLib/FEModel.h>
+#include <PostLib/FEModel.h>
 using namespace Post;
 
 //-----------------------------------------------------------------------------

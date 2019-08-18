@@ -1,5 +1,5 @@
 #pragma once
-#include "PostViewLib/PropertyList.h"
+#include "PostLib/PropertyList.h"
 #include <QWidget>
 
 class CDocument;

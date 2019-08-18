@@ -1,9 +1,9 @@
 #pragma once
 #include <QOpenGLWidget>
-#include <PostViewLib/math3d.h>
-#include <PostViewLib/Animation.h>
-#include <PostViewLib/FEElement.h>
-#include <PostViewLib/Intersect.h>
+#include <PostLib/math3d.h>
+#include <PostLib/Animation.h>
+#include <PostLib/FEElement.h>
+#include <PostLib/Intersect.h>
 #include <GLWLib/GLWidgetManager.h>
 #include <QNativeGestureEvent>
 #include "ViewSettings.h"
