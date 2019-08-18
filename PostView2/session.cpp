@@ -17,29 +17,28 @@
 #include <PostGL/GLPlaneCutPlot.h>
 #include <PostLib/ImageModel.h>
 #include <PostLib/3DImage.h>
-using namespace Post;
 
 //-----------------------------------------------------------------------------
 // choose a file importer based on extension
-FEFileReader* GetFileReader(const char* szfile)
+Post::FEFileReader* GetFileReader(const char* szfile)
 {
-	FEFileReader* pimp = 0;
+	Post::FEFileReader* pimp = 0;
 
 	// get the extension
 	const char* szext = strrchr(szfile, '.');
 
-	if      (szext && (strcmp(szext, ".feb" ) == 0)) pimp = new FEBioImport;
-	else if (szext && (strcmp(szext, ".plt" ) == 0)) pimp = new FELSDYNAPlotImport;
+	if      (szext && (strcmp(szext, ".feb" ) == 0)) pimp = new Post::FEBioImport;
+	else if (szext && (strcmp(szext, ".plt" ) == 0)) pimp = new Post::FELSDYNAPlotImport;
 	else if (szext && (strcmp(szext, ".xplt") == 0)) pimp = new xpltFileReader;
-	else if (szext && (strcmp(szext, ".k"   ) == 0)) pimp = new FELSDYNAimport;
-	else if (szext && (strcmp(szext, ".msh" ) == 0)) pimp = new GMeshImport;
-	else if (szext && (strcmp(szext, ".gmsh") == 0)) pimp = new GMeshImport;
-	else if (szext && (strcmp(szext, ".n"   ) == 0)) pimp = new FENikeImport;
-	else if (szext && (strcmp(szext, ".stl" ) == 0)) pimp = new FESTLimport;
-	else if (szext && (strcmp(szext, ".txt" ) == 0)) pimp = new FEASCIIImport;
-	else if (szext && (strcmp(szext, ".vtk" ) == 0)) pimp = new FEVTKimport;
-	else if (szext && (strcmp(szext, ".u3d" ) == 0)) pimp = new FEU3DImport;
-	else if (szext == 0                            ) pimp = new FELSDYNAPlotImport;
+	else if (szext && (strcmp(szext, ".k"   ) == 0)) pimp = new Post::FELSDYNAimport;
+	else if (szext && (strcmp(szext, ".msh" ) == 0)) pimp = new Post::GMeshImport;
+	else if (szext && (strcmp(szext, ".gmsh") == 0)) pimp = new Post::GMeshImport;
+	else if (szext && (strcmp(szext, ".n"   ) == 0)) pimp = new Post::FENikeImport;
+	else if (szext && (strcmp(szext, ".stl" ) == 0)) pimp = new Post::FESTLimport;
+	else if (szext && (strcmp(szext, ".txt" ) == 0)) pimp = new Post::FEASCIIImport;
+	else if (szext && (strcmp(szext, ".vtk" ) == 0)) pimp = new Post::FEVTKimport;
+	else if (szext && (strcmp(szext, ".u3d" ) == 0)) pimp = new Post::FEU3DImport;
+	else if (szext == 0                            ) pimp = new Post::FELSDYNAPlotImport;
 	else assert(false);
 
 	return pimp;
@@ -49,7 +48,7 @@ FEFileReader* GetFileReader(const char* szfile)
 // Save the current session
 bool CDocManager::SaveSession(const std::string& sfile)
 {
-	XMLWriter xml;
+	Post::XMLWriter xml;
 	if (xml.open(sfile.c_str()) == false) return false;
 	xml.add_branch("postview_spec");
 	{
@@ -57,7 +56,7 @@ bool CDocManager::SaveSession(const std::string& sfile)
 		{
 			CDocument* doc = GetDocument(i);
 
-			XMLElement e;
+			Post::XMLElement e;
 			e.name("Model");
 
 			// only store the filename
@@ -65,8 +64,8 @@ bool CDocManager::SaveSession(const std::string& sfile)
 			e.add_attribute("file", sz);
 
 			// store model data
-			CGLModel* pmdl = doc->GetGLModel();
-			FEModel* pfem = pmdl->GetFEModel();
+			Post::CGLModel* pmdl = doc->GetGLModel();
+			Post::FEModel* pfem = pmdl->GetFEModel();
 			xml.add_branch(e);
 			{
 				int ntime = doc->currentTime();
@@ -84,7 +83,7 @@ bool CDocManager::SaveSession(const std::string& sfile)
 				xml.add_leaf("render_mode", pmdl->GetRenderMode());
 
 				// Displacement Map properties
-				CGLDisplacementMap* pd = pmdl->GetDisplacementMap();
+				Post::CGLDisplacementMap* pd = pmdl->GetDisplacementMap();
 				if (pd)
 				{
 					xml.add_branch("Displacement");
@@ -97,10 +96,10 @@ bool CDocManager::SaveSession(const std::string& sfile)
 				}
 
 				// Color Map properties
-				CGLColorMap* pc = pmdl->GetColorMap();
+				Post::CGLColorMap* pc = pmdl->GetColorMap();
 				if (pc)
 				{
-					CColorTexture* pmap = pc->GetColorMap();
+					Post::CColorTexture* pmap = pc->GetColorMap();
 					xml.add_branch("ColorMap");
 					{
 						xml.add_leaf("enable", pc->IsActive());
@@ -121,17 +120,17 @@ bool CDocManager::SaveSession(const std::string& sfile)
 				}
 
 				// store plots
-				GPlotList& plotList = pmdl->GetPlotList();
+				Post::GPlotList& plotList = pmdl->GetPlotList();
 				if (plotList.empty() == false)
 				{
-					GPlotList::iterator pi;
+					Post::GPlotList::iterator pi;
 					for (pi = plotList.begin(); pi != plotList.end(); ++pi)
 					{
-						CGLPlot* p = *pi;
-						if (dynamic_cast<CGLPlaneCutPlot*>(p))
+						Post::CGLPlot* p = *pi;
+						if (dynamic_cast<Post::CGLPlaneCutPlot*>(p))
 						{
-							CGLPlaneCutPlot* pcut = dynamic_cast<CGLPlaneCutPlot*>(p);
-							XMLElement el("plot");
+							Post::CGLPlaneCutPlot* pcut = dynamic_cast<Post::CGLPlaneCutPlot*>(p);
+							Post::XMLElement el("plot");
 							el.add_attribute("type", "planecut");
 							xml.add_branch(el);
 							{
@@ -152,14 +151,14 @@ bool CDocManager::SaveSession(const std::string& sfile)
 				// image models
 				for (int j = 0; j < doc->ImageModels(); ++j)
 				{
-					CImageModel* img = doc->GetImageModel(j);
+					Post::CImageModel* img = doc->GetImageModel(j);
 
-					XMLElement e("ImageStack");
+					Post::XMLElement e("ImageStack");
 					e.add_attribute("id", j + 1);
 					e.add_attribute("name", img->GetName());
 					xml.add_branch(e);
 					{
-						C3DImage* im = img->Get3DImage();
+						Post::C3DImage* im = img->Get3DImage();
 						int dim[3] = { im->Width(), im->Height(), im->Depth() };
 						BOUNDINGBOX bb = img->GetBoundingBox();
 						float b[6] = { bb.x0, bb.y0, bb.z0, bb.x1, bb.y1, bb.z1};
@@ -172,10 +171,10 @@ bool CDocManager::SaveSession(const std::string& sfile)
 				}
 
 				// View properties
-				CGView* pv = doc->GetView();
+				Post::CGView* pv = doc->GetView();
 				if (pv)
 				{
-					CGLCamera& cam = pv->GetCamera();
+					Post::CGLCamera& cam = pv->GetCamera();
 					quat4f q = cam.GetOrientation();
 					float w = q.GetAngle();
 					vec3f v = q.GetVector()*w;
@@ -199,11 +198,11 @@ bool CDocManager::SaveSession(const std::string& sfile)
 						int N = pv->CameraKeys();
 						for (int i=0; i<N; ++i)
 						{
-							GLCameraTransform& key = pv->GetKey(i);
+							Post::GLCameraTransform& key = pv->GetKey(i);
 							q = key.rot;
 							w = q.GetAngle();
 							v = q.GetVector()*w;
-							XMLElement Key;
+							Post::XMLElement Key;
 							Key.name("Key");
 							string keyName = key.GetName();
 							Key.add_attribute("name", keyName.c_str());
@@ -229,7 +228,7 @@ bool CDocManager::SaveSession(const std::string& sfile)
 				int nmat = pfem->Materials();
 				for (int i=0; i<nmat; ++i)
 				{
-					FEMaterial& m = *pfem->GetMaterial(i);
+					Post::FEMaterial& m = *pfem->GetMaterial(i);
 					e.name("Material");
 					e.add_attribute("id", i+1);
 					e.add_attribute("name", m.GetName());
@@ -319,11 +318,11 @@ bool CDocManager::OpenSession(const std::string& sfile)
 {
 	FILE* fp = fopen(sfile.c_str(), "rt");
 	if (fp == 0) return false;
-	XMLReader xml;
+	Post::XMLReader xml;
 	xml.Attach(fp);
 
 	// try to open the file
-	XMLTag tag;
+	Post::XMLTag tag;
 	if (xml.FindTag("postview_spec", tag) == false) { fclose(fp); return false; }
 
 	// get the path of the file
@@ -337,7 +336,7 @@ bool CDocManager::OpenSession(const std::string& sfile)
 		if (tag == "Model")
 		{
 			const char* szfile = tag.AttributeValue("file");
-			FEFileReader* pimp = GetFileReader(szfile);
+			Post::FEFileReader* pimp = GetFileReader(szfile);
 			if (pimp == 0) { fclose(fp); return false; }
 
 			// see if there is a path defined
@@ -358,8 +357,8 @@ bool CDocManager::OpenSession(const std::string& sfile)
 
 			int ntime = doc->currentTime();
 
-			CGLModel* pmdl = doc->GetGLModel();
-			FEModel* pfem = pmdl->GetFEModel();
+			Post::CGLModel* pmdl = doc->GetGLModel();
+			Post::FEModel* pfem = pmdl->GetFEModel();
 
 			float f;
 			double g;
@@ -381,7 +380,7 @@ bool CDocManager::OpenSession(const std::string& sfile)
 				else if (tag == "state") tag.value(ntime);
 				else if (tag == "Displacement")
 				{
-					CGLDisplacementMap* pd = pmdl->GetDisplacementMap();
+					Post::CGLDisplacementMap* pd = pmdl->GetDisplacementMap();
 					assert(pd);
 					if (pd)
 					{
@@ -398,8 +397,8 @@ bool CDocManager::OpenSession(const std::string& sfile)
 				}
 				else if (tag == "ColorMap")
 				{
-					CGLColorMap* pc = pmdl->GetColorMap();
-					CColorTexture* pmap = pc->GetColorMap();
+					Post::CGLColorMap* pc = pmdl->GetColorMap();
+					Post::CColorTexture* pmap = pc->GetColorMap();
 					assert(pc);
 					if (pc)
 					{
@@ -427,7 +426,7 @@ bool CDocManager::OpenSession(const std::string& sfile)
 					const char* sztype = tag.AttributeValue("type");
 					if (strcmp(sztype, "planecut") == 0)
 					{
-						CGLPlaneCutPlot* pg = new CGLPlaneCutPlot(pmdl);
+						Post::CGLPlaneCutPlot* pg = new Post::CGLPlaneCutPlot(pmdl);
 						xml.NextTag(tag);
 						do
 						{
@@ -451,7 +450,7 @@ bool CDocManager::OpenSession(const std::string& sfile)
 				{
 					const char* szname = tag.AttributeValue("name", true);
 					if (szname == 0) szname = "image";
-					CImageModel* img = new CImageModel(doc->GetGLModel());
+					Post::CImageModel* img = new Post::CImageModel(doc->GetGLModel());
 					img->SetName(szname);
 
 					char szfile[1024] = { 0 };
@@ -470,7 +469,7 @@ bool CDocManager::OpenSession(const std::string& sfile)
 
 					make_file_path(szfilename, szfile, szpath);
 
-					C3DImage* im = new C3DImage;
+					Post::C3DImage* im = new Post::C3DImage;
 					im->Create(dim[0], dim[1], dim[2]);
 					if (im->LoadFromFile(szfilename, 8) == false)
 					{
@@ -487,7 +486,7 @@ bool CDocManager::OpenSession(const std::string& sfile)
 				}
 				else if (tag == "View")
 				{
-					CGView* pv = doc->GetView();
+					Post::CGView* pv = doc->GetView();
 					assert(pv);
 					if (pv)
 					{
@@ -509,7 +508,7 @@ bool CDocManager::OpenSession(const std::string& sfile)
                             else if (tag == "convention") tag.value(nconv);
 							else if (tag == "Key")
 							{
-								GLCameraTransform key;
+								Post::GLCameraTransform key;
 								vec3f vk;
 								const char* szname = tag.AttributeValue("name");
 								key.SetName(szname);
@@ -539,7 +538,7 @@ bool CDocManager::OpenSession(const std::string& sfile)
 						while (!tag.isend());
 
 						quat4f q = quat4f(v.Length(), v);
-						CGLCamera& cam = pv->GetCamera();
+						Post::CGLCamera& cam = pv->GetCamera();
 						cam.SetTargetDistance(f);
 						cam.SetTarget(r);
 						cam.SetOrientation(q);
@@ -555,7 +554,7 @@ bool CDocManager::OpenSession(const std::string& sfile)
 					int nid = atoi(tag.AttributeValue("id"))-1;
 					if ((nid >= 0) && (nid < nmat))
 					{
-						FEMaterial& m = *pfem->GetMaterial(nid);
+						Post::FEMaterial& m = *pfem->GetMaterial(nid);
 						m.SetName(tag.AttributeValue("name"));
 
 						xml.NextTag(tag);

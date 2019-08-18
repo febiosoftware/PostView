@@ -60,7 +60,6 @@
 #include <PostLib/MarchingCubes.h>
 #include <string>
 #include <QStyleFactory>
-using namespace Post;
 
 // create a dark style theme (work in progress)
 void darkStyle()
@@ -95,7 +94,7 @@ CMainWindow::CMainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::CMai
 
 	// initialize color maps
 	// (This must be done before we read the settings!)
-	ColorMapManager::Initialize();
+	Post::ColorMapManager::Initialize();
 
 	// read settings from last session
 	readSettings();
@@ -196,8 +195,8 @@ void CMainWindow::UpdateStatusMessage()
 	CDocument* doc = GetActiveDocument();
 	if (doc && doc->IsValid())
 	{
-		CGLModel& mdl = *doc->GetGLModel();
-		FEMeshBase* mesh = doc->GetActiveMesh();
+		Post::CGLModel& mdl = *doc->GetGLModel();
+		Post::FEMeshBase* mesh = doc->GetActiveMesh();
 		if (mesh)
 		{
 			int selectionMode = mdl.GetSelectionMode();
@@ -206,7 +205,7 @@ void CMainWindow::UpdateStatusMessage()
 			char sz[128] = {0};
 			switch (selectionMode)
 			{
-			case SELECT_NODES:
+			case Post::SELECT_NODES:
 				{
 					// count nodal selection
 					int nn = -1, i;
@@ -221,7 +220,7 @@ void CMainWindow::UpdateStatusMessage()
 
 					if (N == 1)
 					{
-						FENode& n = mesh->Node(nn);
+						Post::FENode& n = mesh->Node(nn);
 						vec3f r = n.m_rt;
 						float f = mdl.currentState()->m_NODE[nn].m_val;
 						sprintf(sz, "1 node selected: Id = %d, val = %g, pos = (%g, %g, %g)", nn + 1, f, r.x, r.y, r.z);
@@ -232,7 +231,7 @@ void CMainWindow::UpdateStatusMessage()
 					}
 				}
 				break;
-			case SELECT_EDGES:
+			case Post::SELECT_EDGES:
 				{
 					// count edge selection
 					int nn = -1, i;
@@ -247,7 +246,7 @@ void CMainWindow::UpdateStatusMessage()
 
 					if (N == 1)
 					{
-						FEEdge& n = mesh->Edge(nn);
+						Post::FEEdge& n = mesh->Edge(nn);
 						float f = mdl.currentState()->m_EDGE[nn].m_val;
 						sprintf(sz, "1 edge selected");
 					}
@@ -257,7 +256,7 @@ void CMainWindow::UpdateStatusMessage()
 					}
 				}
 				break;
-			case SELECT_FACES:
+			case Post::SELECT_FACES:
 				{
 					// count selection
 					int nn = -1, i;
@@ -280,7 +279,7 @@ void CMainWindow::UpdateStatusMessage()
 					}
 				}
 				break;
-			case SELECT_ELEMS:
+			case Post::SELECT_ELEMS:
 				{
 					int ne = -1, i;
 					for (i = 0; i<mesh->Elements(); ++i)
@@ -370,11 +369,11 @@ void CMainWindow::CheckUi()
 {
 	// check the color map state
 	CDocument* doc = GetActiveDocument();
-	CGLModel* po = (doc ? doc->GetGLModel() : nullptr);
+	Post::CGLModel* po = (doc ? doc->GetGLModel() : nullptr);
 	if (po)
 	{
 		bool bcheck = ui->actionColorMap->isChecked();
-		CGLColorMap* col = po->GetColorMap();
+		Post::CGLColorMap* col = po->GetColorMap();
 		if (col)
 		{
 			if (bcheck != col->IsActive()) ui->actionColorMap->setChecked(col->IsActive());
@@ -447,7 +446,7 @@ void CMainWindow::OpenFile(const QString& fileName, int nfilter)
 	std::string sfile = fileName.toStdString();
 
 	// create a file reader
-	FEFileReader* reader = 0;
+	Post::FEFileReader* reader = 0;
 
 	// If filter not specified, use extension
 	if (nfilter == -1)
@@ -495,16 +494,16 @@ void CMainWindow::OpenFile(const QString& fileName, int nfilter)
 			else return;
 		}
 		break;
-	case  1: reader = new FEBioImport; break;
-	case  2: reader = new FELSDYNAPlotImport; break;
-	case  3: reader = new FELSDYNAimport; break;
-	case  4: reader = new GMeshImport; break;
-	case  5: reader = new FENikeImport; break;
-	case  6: reader = new FEASCIIImport; break;
-	case  7: reader = new FESTLimport; break;
-	case  8: reader = new FERAWImageReader; break;
-	case  9: reader = new FEVTKimport; break;
-	case 10: reader = new FEU3DImport; break;
+	case  1: reader = new Post::FEBioImport; break;
+	case  2: reader = new Post::FELSDYNAPlotImport; break;
+	case  3: reader = new Post::FELSDYNAimport; break;
+	case  4: reader = new Post::GMeshImport; break;
+	case  5: reader = new Post::FENikeImport; break;
+	case  6: reader = new Post::FEASCIIImport; break;
+	case  7: reader = new Post::FESTLimport; break;
+	case  8: reader = new Post::FERAWImageReader; break;
+	case  9: reader = new Post::FEVTKimport; break;
+	case 10: reader = new Post::FEU3DImport; break;
 	default:
 		QMessageBox::critical(this, "PostView2", "Don't know how to read this file");
 		return;
@@ -545,7 +544,7 @@ void CMainWindow::onCancelFileRead()
 {
 	if (m_fileThread)
 	{
-		FEFileReader* fileReader = m_fileThread->GetFileReader();
+		Post::FEFileReader* fileReader = m_fileThread->GetFileReader();
 		if (fileReader)
 		{
 			fileReader->Cancel();
@@ -619,7 +618,7 @@ bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 	CDocument* doc = GetActiveDocument();
 	if ((doc == nullptr) || (doc->IsValid() == false)) return true;
 
-	FEModel& fem = *doc->GetFEModel();
+	Post::FEModel& fem = *doc->GetFEModel();
 
 	bool bret = false;
 	QString error("(unknown)");
@@ -630,7 +629,7 @@ bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 			CDlgExportXPLT dlg(this);
 			if (dlg.exec() == QDialog::Accepted)
 			{
-				FEBioPlotExport ex;
+				Post::FEBioPlotExport ex;
 				ex.SetCompression(dlg.m_bcompress);
 				bret = ex.Save(fem, szfilename);
 				error = ex.GetErrorMessage();
@@ -639,7 +638,7 @@ bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 		break;
 	case 1:
 		{
-			FEFEBioExport fr;
+			Post::FEFEBioExport fr;
 			bret = fr.Save(fem, szfilename);
 		}
 		break;
@@ -658,7 +657,7 @@ bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 				}
 
 				// export the data
-				FEASCIIExport out;
+				Post::FEASCIIExport out;
 				out.m_bcoords = dlg.m_bcoords;
 				out.m_bedata = dlg.m_bedata;
 				out.m_belem = dlg.m_belem;
@@ -673,7 +672,7 @@ bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 		break;
 	case 3:
 		{
-			VRMLExporter exporter;
+			Post::VRMLExporter exporter;
 			bret = exporter.Save(&fem, szfilename);
 		}
 		break;
@@ -682,7 +681,7 @@ bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 			CDlgExportLSDYNA dlg(this);
 			if (dlg.exec())
 			{
-				FELSDYNAExport w;
+				Post::FELSDYNAExport w;
 				w.m_bsel = dlg.m_bsel;
 				w.m_bsurf = dlg.m_bsurf;
 				w.m_bnode = dlg.m_bnode;
@@ -697,7 +696,7 @@ bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 		break;
 	case 6:
 		{
-			FENikeExport fr;
+			Post::FENikeExport fr;
 			bret = fr.Save(fem, szfilename);
 		}
 		break;
@@ -706,7 +705,7 @@ bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 			CDlgExportVTK dlg(this);
 			if (dlg.exec())
 			{
-				FEVTKExport w;
+				Post::FEVTKExport w;
 				w.ExportAllStates(dlg.m_ops[0]);
 				bret = w.Save(fem, szfilename);
 				error = "Failed writing VTK file";
@@ -718,7 +717,7 @@ bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 			CDlgExportLSDYNAPlot dlg(&fem, this);
 			if (dlg.exec())
 			{
-				FELSDYNAPlotExport ls;
+				Post::FELSDYNAPlotExport ls;
 				bret = ls.Save(fem, szfilename, dlg.m_flag, dlg.m_code);
 				error = "Failed writing LSDYNA database file";
 			}
@@ -795,14 +794,14 @@ void CMainWindow::on_actionUpdate_triggered()
 		int N = doc->GetFEModel()->GetStates();
 		if (N > 1) ui->playToolBar->setEnabled(true);
 
-		FEModel* fem = doc->GetFEModel();
+		Post::FEModel* fem = doc->GetFEModel();
 		int nfield = doc->GetEvalField();
 
 		// we need to update the model viewer before we rebuild the selection menu
 		ui->modelViewer->Update(true);
 
 		// now, we can rebuild the 
-		ui->selectData->BuildMenu(doc->GetFEModel(), DATA_SCALAR);
+		ui->selectData->BuildMenu(doc->GetFEModel(), Post::DATA_SCALAR);
 		ui->selectData->setCurrentValue(nfield);
 		ui->actionColorMap->setDisabled(false);
 
@@ -820,10 +819,10 @@ void CMainWindow::on_actionFileInfo_triggered()
 	CDlgFileInfo dlg;
 	CDocument* doc = GetActiveDocument();
 
-	FEModel* fem = (doc ? doc->GetFEModel() : nullptr);
+	Post::FEModel* fem = (doc ? doc->GetFEModel() : nullptr);
 	if (fem)
 	{
-		MetaData& md = fem->GetMetaData();
+		Post::MetaData& md = fem->GetMetaData();
 		dlg.setSoftware(QString::fromStdString(md.software));
 		dlg.exec();
 	}
@@ -966,14 +965,14 @@ void CMainWindow::on_selectNodes_triggered()
 	CDocument* doc = GetActiveDocument();
 	if ((doc == nullptr) || (doc->IsValid() == false)) return;
 
-	CGLModel* model = doc->GetGLModel(); assert(model);
+	Post::CGLModel* model = doc->GetGLModel(); assert(model);
 	if (model == 0) return;
 	
 	int oldMode = model->GetSelectionMode();
 
-	model->ConvertSelection(oldMode, SELECT_NODES);
+	model->ConvertSelection(oldMode, Post::SELECT_NODES);
 
-	model->SetSelectionMode(SELECT_NODES);
+	model->SetSelectionMode(Post::SELECT_NODES);
 
 	RedrawGL();
 }
@@ -983,10 +982,10 @@ void CMainWindow::on_selectEdges_triggered()
 	CDocument* doc = GetActiveDocument();
 	if ((doc == nullptr) || (doc->IsValid() == false)) return;
 
-	CGLModel* model = doc->GetGLModel(); assert(model);
+	Post::CGLModel* model = doc->GetGLModel(); assert(model);
 	if (model == 0) return;
 
-	model->SetSelectionMode(SELECT_EDGES);
+	model->SetSelectionMode(Post::SELECT_EDGES);
 	RedrawGL();
 }
 
@@ -995,10 +994,10 @@ void CMainWindow::on_selectFaces_triggered()
 	CDocument* doc = GetActiveDocument();
 	if ((doc == nullptr) || (doc->IsValid() == false)) return;
 
-	CGLModel* model = doc->GetGLModel(); assert(model);
+	Post::CGLModel* model = doc->GetGLModel(); assert(model);
 	if (model == 0) return;
 
-	model->SetSelectionMode(SELECT_FACES);
+	model->SetSelectionMode(Post::SELECT_FACES);
 	RedrawGL();
 }
 
@@ -1007,10 +1006,10 @@ void CMainWindow::on_selectElems_triggered()
 	CDocument* doc = GetActiveDocument();
 	if ((doc == nullptr) || (doc->IsValid() == false)) return;
 
-	CGLModel* model = doc->GetGLModel(); assert(model);
+	Post::CGLModel* model = doc->GetGLModel(); assert(model);
 	if (model == 0) return;
 
-	model->SetSelectionMode(SELECT_ELEMS);
+	model->SetSelectionMode(Post::SELECT_ELEMS);
 	RedrawGL();
 }
 
@@ -1019,10 +1018,10 @@ void CMainWindow::on_actionSelectRect_triggered()
 	CDocument* doc = GetActiveDocument();
 	if ((doc == nullptr) || (doc->IsValid() == false)) return;
 
-	CGLModel* model = doc->GetGLModel(); assert(model);
+	Post::CGLModel* model = doc->GetGLModel(); assert(model);
 	if (model == 0) return;
 
-	model->SetSelectionStyle(SELECT_RECT);
+	model->SetSelectionStyle(Post::SELECT_RECT);
 }
 
 void CMainWindow::on_actionSelectCircle_triggered()
@@ -1030,10 +1029,10 @@ void CMainWindow::on_actionSelectCircle_triggered()
 	CDocument* doc = GetActiveDocument();
 	if ((doc == nullptr) || (doc->IsValid() == false)) return;
 
-	CGLModel* model = doc->GetGLModel(); assert(model);
+	Post::CGLModel* model = doc->GetGLModel(); assert(model);
 	if (model == 0) return;
 
-	model->SetSelectionStyle(SELECT_CIRCLE);
+	model->SetSelectionStyle(Post::SELECT_CIRCLE);
 }
 
 void CMainWindow::on_actionSelectFree_triggered()
@@ -1041,10 +1040,10 @@ void CMainWindow::on_actionSelectFree_triggered()
 	CDocument* doc = GetActiveDocument();
 	if ((doc == nullptr) || (doc->IsValid() == false)) return;
 
-	CGLModel* model = doc->GetGLModel(); assert(model);
+	Post::CGLModel* model = doc->GetGLModel(); assert(model);
 	if (model == 0) return;
 
-	model->SetSelectionStyle(SELECT_FREE);
+	model->SetSelectionStyle(Post::SELECT_FREE);
 }
 
 void CMainWindow::on_actionZoomSelected_triggered()
@@ -1067,14 +1066,14 @@ void CMainWindow::on_actionHideSelected_triggered()
 	CDocument* doc = GetActiveDocument();
 	if ((doc == nullptr) || (doc->IsValid() == false)) return;
 
-	CGLModel& mdl = *doc->GetGLModel();
+	Post::CGLModel& mdl = *doc->GetGLModel();
 
 	switch (mdl.GetSelectionMode())
 	{
-	case SELECT_NODES: mdl.HideSelectedNodes(); break;
-	case SELECT_EDGES: mdl.HideSelectedEdges(); break;
-	case SELECT_FACES: mdl.HideSelectedFaces(); break;
-	case SELECT_ELEMS: mdl.HideSelectedElements(); break;
+	case Post::SELECT_NODES: mdl.HideSelectedNodes(); break;
+	case Post::SELECT_EDGES: mdl.HideSelectedEdges(); break;
+	case Post::SELECT_FACES: mdl.HideSelectedFaces(); break;
+	case Post::SELECT_ELEMS: mdl.HideSelectedElements(); break;
 	}
 
 	UpdateStatusMessage();
@@ -1087,7 +1086,7 @@ void CMainWindow::on_actionHideUnselected_triggered()
 	CDocument* doc = GetActiveDocument();
 	if (doc == nullptr) return;
 
-	CGLModel& mdl = *doc->GetGLModel();
+	Post::CGLModel& mdl = *doc->GetGLModel();
 
 	mdl.HideUnselectedElements();
 
@@ -1100,15 +1099,15 @@ void CMainWindow::on_actionInvertSelection_triggered()
 	CDocument* doc = GetActiveDocument();
 	if (doc == nullptr) return;
 
-	CGLModel& mdl = *doc->GetGLModel();
+	Post::CGLModel& mdl = *doc->GetGLModel();
 
 	int mode = mdl.GetSelectionMode();
 	switch (mode)
 	{
-	case SELECT_NODES: mdl.InvertSelectedNodes(); break;
-	case SELECT_EDGES: mdl.InvertSelectedEdges(); break;
-	case SELECT_FACES: mdl.InvertSelectedFaces(); break;
-	case SELECT_ELEMS: mdl.InvertSelectedElements(); break;
+	case Post::SELECT_NODES: mdl.InvertSelectedNodes(); break;
+	case Post::SELECT_EDGES: mdl.InvertSelectedEdges(); break;
+	case Post::SELECT_FACES: mdl.InvertSelectedFaces(); break;
+	case Post::SELECT_ELEMS: mdl.InvertSelectedElements(); break;
 	}
 
 	UpdateStatusMessage();
@@ -1121,7 +1120,7 @@ void CMainWindow::on_actionUnhideAll_triggered()
 	CDocument* doc = GetActiveDocument();
 	if (doc == nullptr) return;
 	if (doc->IsValid() == false) return;
-	CGLModel& mdl = *doc->GetGLModel();
+	Post::CGLModel& mdl = *doc->GetGLModel();
 	mdl.UnhideAll();
 	doc->UpdateFEModel();
 	RedrawGL();
@@ -1131,15 +1130,15 @@ void CMainWindow::on_actionSelectAll_triggered()
 {
 	CDocument* doc = GetActiveDocument();
 	if (doc == nullptr) return;
-	CGLModel* m = doc->GetGLModel();
+	Post::CGLModel* m = doc->GetGLModel();
 
 	int mode = m->GetSelectionMode();
 	switch (mode)
 	{
-	case SELECT_NODES: m->SelectAllNodes(); break;
-	case SELECT_EDGES: m->SelectAllEdges(); break;
-	case SELECT_FACES: m->SelectAllFaces(); break;
-	case SELECT_ELEMS: m->SelectAllElements(); break;
+	case Post::SELECT_NODES: m->SelectAllNodes(); break;
+	case Post::SELECT_EDGES: m->SelectAllEdges(); break;
+	case Post::SELECT_FACES: m->SelectAllFaces(); break;
+	case Post::SELECT_ELEMS: m->SelectAllElements(); break;
 	}
 
 	UpdateStatusMessage();
@@ -1153,10 +1152,10 @@ void CMainWindow::on_actionSelectRange_triggered()
 	if (doc == nullptr) return;
 	if (!doc->IsValid()) return;
 
-	CGLModel* model = doc->GetGLModel(); assert(model);
+	Post::CGLModel* model = doc->GetGLModel(); assert(model);
 	if (model == 0) return;
 
-	CGLColorMap* pcol = doc->GetGLModel()->GetColorMap();
+	Post::CGLColorMap* pcol = doc->GetGLModel()->GetColorMap();
 	if (pcol == 0) return;
 
 	float d[2];
@@ -1170,13 +1169,13 @@ void CMainWindow::on_actionSelectRange_triggered()
 	{
 		switch (model->GetSelectionMode())
 		{
-		case SELECT_NODES: doc->SelectNodesInRange(dlg.m_min, dlg.m_max, dlg.m_brange); break;
-		case SELECT_EDGES: doc->SelectEdgesInRange(dlg.m_min, dlg.m_max, dlg.m_brange); break;
-		case SELECT_FACES: doc->SelectFacesInRange(dlg.m_min, dlg.m_max, dlg.m_brange); break;
-		case SELECT_ELEMS: doc->SelectElemsInRange(dlg.m_min, dlg.m_max, dlg.m_brange); break;
+		case Post::SELECT_NODES: doc->SelectNodesInRange(dlg.m_min, dlg.m_max, dlg.m_brange); break;
+		case Post::SELECT_EDGES: doc->SelectEdgesInRange(dlg.m_min, dlg.m_max, dlg.m_brange); break;
+		case Post::SELECT_FACES: doc->SelectFacesInRange(dlg.m_min, dlg.m_max, dlg.m_brange); break;
+		case Post::SELECT_ELEMS: doc->SelectElemsInRange(dlg.m_min, dlg.m_max, dlg.m_brange); break;
 		}
 		
-		CGLModel& mdl = *doc->GetGLModel();
+		Post::CGLModel& mdl = *doc->GetGLModel();
 		mdl.UpdateSelectionLists();
 		UpdateStatusMessage();
 		doc->UpdateFEModel();
@@ -1190,7 +1189,7 @@ void CMainWindow::on_actionClearSelection_triggered()
 	if (doc == nullptr) return;
 	if (doc->IsValid())
 	{
-		CGLModel& mdl = *doc->GetGLModel();
+		Post::CGLModel& mdl = *doc->GetGLModel();
 		mdl.ClearSelection(); 
 		UpdateStatusMessage();
 		doc->UpdateFEModel();
@@ -1204,33 +1203,33 @@ void CMainWindow::on_actionFind_triggered()
 	if (doc == nullptr) return;
 	if (doc->IsValid() == false) return;
 
-	CGLModel* model = doc->GetGLModel(); assert(model);
+	Post::CGLModel* model = doc->GetGLModel(); assert(model);
 	if (model == 0) return;
 
 	int nview = model->GetSelectionMode();
 	int nsel = 0;
-	if (nview == SELECT_NODES) nsel = 0;
-	if (nview == SELECT_EDGES) nsel = 1;
-	if (nview == SELECT_FACES) nsel = 2;
-	if (nview == SELECT_ELEMS) nsel = 3;
+	if (nview == Post::SELECT_NODES) nsel = 0;
+	if (nview == Post::SELECT_EDGES) nsel = 1;
+	if (nview == Post::SELECT_FACES) nsel = 2;
+	if (nview == Post::SELECT_ELEMS) nsel = 3;
 
 	CDlgFind dlg(this, nsel);
 
 	if (dlg.exec())
 	{
-		CGLModel* pm = doc->GetGLModel();
+		Post::CGLModel* pm = doc->GetGLModel();
 
-		if (dlg.m_bsel[0]) nview = SELECT_NODES;
-		if (dlg.m_bsel[1]) nview = SELECT_EDGES;
-		if (dlg.m_bsel[2]) nview = SELECT_FACES;
-		if (dlg.m_bsel[3]) nview = SELECT_ELEMS;
+		if (dlg.m_bsel[0]) nview = Post::SELECT_NODES;
+		if (dlg.m_bsel[1]) nview = Post::SELECT_EDGES;
+		if (dlg.m_bsel[2]) nview = Post::SELECT_FACES;
+		if (dlg.m_bsel[3]) nview = Post::SELECT_ELEMS;
 
 		switch (nview)
 		{
-		case SELECT_NODES: on_selectNodes_triggered(); pm->SelectNodes   (dlg.m_item, dlg.m_bclear); break;
-		case SELECT_EDGES: on_selectEdges_triggered(); pm->SelectEdges   (dlg.m_item, dlg.m_bclear); break;
-		case SELECT_FACES: on_selectFaces_triggered(); pm->SelectFaces   (dlg.m_item, dlg.m_bclear); break;
-		case SELECT_ELEMS: on_selectElems_triggered(); pm->SelectElements(dlg.m_item, dlg.m_bclear); break;
+		case Post::SELECT_NODES: on_selectNodes_triggered(); pm->SelectNodes   (dlg.m_item, dlg.m_bclear); break;
+		case Post::SELECT_EDGES: on_selectEdges_triggered(); pm->SelectEdges   (dlg.m_item, dlg.m_bclear); break;
+		case Post::SELECT_FACES: on_selectFaces_triggered(); pm->SelectFaces   (dlg.m_item, dlg.m_bclear); break;
+		case Post::SELECT_ELEMS: on_selectElems_triggered(); pm->SelectElements(dlg.m_item, dlg.m_bclear); break;
 		}
 
 		doc->GetGLModel()->UpdateSelectionLists();
@@ -1293,7 +1292,7 @@ void CMainWindow::on_actionPlaneCut_triggered()
 	if (doc == nullptr) return;
 	if (doc->IsValid() == false) return;
 
-	CGLPlaneCutPlot* pp = new CGLPlaneCutPlot(doc->GetGLModel());
+	Post::CGLPlaneCutPlot* pp = new Post::CGLPlaneCutPlot(doc->GetGLModel());
 	doc->GetGLModel()->AddPlot(pp);
 
 	ui->modelViewer->Update(true);
@@ -1308,7 +1307,7 @@ void CMainWindow::on_actionMirrorPlane_triggered()
 	if (doc == nullptr) return;
 	if (doc->IsValid() == false) return;
 
-	CGLMirrorPlane* pp = new CGLMirrorPlane(doc->GetGLModel());
+	Post::CGLMirrorPlane* pp = new Post::CGLMirrorPlane(doc->GetGLModel());
 	doc->GetGLModel()->AddPlot(pp);
 
 	ui->modelViewer->Update(true);
@@ -1323,7 +1322,7 @@ void CMainWindow::on_actionVectorPlot_triggered()
 	if (doc == nullptr) return;
 	if (doc->IsValid() == false) return;
 
-	CGLVectorPlot* pp = new CGLVectorPlot(doc->GetGLModel());
+	Post::CGLVectorPlot* pp = new Post::CGLVectorPlot(doc->GetGLModel());
 	doc->GetGLModel()->AddPlot(pp);
 	doc->UpdateFEModel();
 	
@@ -1340,7 +1339,7 @@ void CMainWindow::on_actionTensorPlot_triggered()
 	if (doc == nullptr) return;
 	if (doc->IsValid() == false) return;
 
-	GLTensorPlot* pp = new GLTensorPlot(doc->GetGLModel());
+	Post::GLTensorPlot* pp = new Post::GLTensorPlot(doc->GetGLModel());
 	doc->GetGLModel()->AddPlot(pp);
 	doc->UpdateFEModel();
 
@@ -1357,7 +1356,7 @@ void CMainWindow::on_actionStreamLinePlot_triggered()
 	if (doc == nullptr) return;
 	if (doc->IsValid() == false) return;
 
-	CGLStreamLinePlot* pp = new CGLStreamLinePlot(doc->GetGLModel());
+	Post::CGLStreamLinePlot* pp = new Post::CGLStreamLinePlot(doc->GetGLModel());
 	doc->GetGLModel()->AddPlot(pp);
 	doc->UpdateFEModel();
 
@@ -1374,7 +1373,7 @@ void CMainWindow::on_actionParticleFlowPlot_triggered()
 	if (doc == nullptr) return;
 	if (doc->IsValid() == false) return;
 
-	CGLParticleFlowPlot* pp = new CGLParticleFlowPlot(doc->GetGLModel());
+	Post::CGLParticleFlowPlot* pp = new Post::CGLParticleFlowPlot(doc->GetGLModel());
 	doc->GetGLModel()->AddPlot(pp);
 	doc->UpdateFEModel();
 
@@ -1387,15 +1386,15 @@ void CMainWindow::on_actionParticleFlowPlot_triggered()
 
 void CMainWindow::on_actionImageSlicer_triggered()
 {
-	CGLObject* po = ui->modelViewer->selectedObject();
-	CImageModel* img = dynamic_cast<CImageModel*>(po);
+	Post::CGLObject* po = ui->modelViewer->selectedObject();
+	Post::CImageModel* img = dynamic_cast<Post::CImageModel*>(po);
 	if (img == nullptr)
 	{
 		QMessageBox::critical(this, "PostView", "Please select an image data set first.");
 	}
 	else
 	{
-		CImageSlicer* slicer = new CImageSlicer(img);
+		Post::CImageSlicer* slicer = new Post::CImageSlicer(img);
 		slicer->Create();
 		img->AddImageRenderer(slicer);
 		ui->modelViewer->Update(true);
@@ -1406,15 +1405,15 @@ void CMainWindow::on_actionImageSlicer_triggered()
 
 void CMainWindow::on_actionVolumeRender_triggered()
 {
-	CGLObject* po = ui->modelViewer->selectedObject();
-	CImageModel* img = dynamic_cast<CImageModel*>(po);
+	Post::CGLObject* po = ui->modelViewer->selectedObject();
+	Post::CImageModel* img = dynamic_cast<Post::CImageModel*>(po);
 	if (img == nullptr)
 	{
 		QMessageBox::critical(this, "PostView", "Please select an image data set first.");
 	}
 	else
 	{
-		CVolRender* vr = new CVolRender(img);
+		Post::CVolRender* vr = new Post::CVolRender(img);
 		vr->Create();
 		img->AddImageRenderer(vr);
 		ui->modelViewer->Update(true);
@@ -1425,15 +1424,15 @@ void CMainWindow::on_actionVolumeRender_triggered()
 
 void CMainWindow::on_actionMarchingCubes_triggered()
 {
-	CGLObject* po = ui->modelViewer->selectedObject();
-	CImageModel* img = dynamic_cast<CImageModel*>(po);
+	Post::CGLObject* po = ui->modelViewer->selectedObject();
+	Post::CImageModel* img = dynamic_cast<Post::CImageModel*>(po);
 	if (img == nullptr)
 	{
 		QMessageBox::critical(this, "PostView", "Please select an image data set first.");
 	}
 	else
 	{
-		CMarchingCubes* mc = new CMarchingCubes(img);
+		Post::CMarchingCubes* mc = new Post::CMarchingCubes(img);
 		mc->Create();
 		img->AddImageRenderer(mc);
 		ui->modelViewer->Update(true);
@@ -1448,7 +1447,7 @@ void CMainWindow::on_actionIsosurfacePlot_triggered()
 	if (doc == nullptr) return;
 	if (doc->IsValid() == false) return;
 
-	CGLIsoSurfacePlot* pp = new CGLIsoSurfacePlot(doc->GetGLModel());
+	Post::CGLIsoSurfacePlot* pp = new Post::CGLIsoSurfacePlot(doc->GetGLModel());
 	doc->GetGLModel()->AddPlot(pp);
 	doc->UpdateFEModel();
 
@@ -1465,7 +1464,7 @@ void CMainWindow::on_actionSlicePlot_triggered()
 	if (doc == nullptr) return;
 	if (doc->IsValid() == false) return;
 
-	CGLSlicePlot* pp = new CGLSlicePlot(doc->GetGLModel());
+	Post::CGLSlicePlot* pp = new Post::CGLSlicePlot(doc->GetGLModel());
 	doc->GetGLModel()->AddPlot(pp);
 	doc->UpdateFEModel();
 
@@ -1482,7 +1481,7 @@ void CMainWindow::on_actionDisplacementMap_triggered()
 	if (doc == nullptr) return;
 	if (doc->IsValid() == false) return;
 
-	CGLModel* pm = doc->GetGLModel();
+	Post::CGLModel* pm = doc->GetGLModel();
 	if (pm->GetDisplacementMap() == 0)
 	{
 		if (pm->AddDisplacementMap() == false)
@@ -1550,7 +1549,7 @@ void CMainWindow::on_actionColorMap_toggled(bool bchecked)
 {
 	CDocument* doc = GetActiveDocument();
 	if (doc == nullptr) return;
-	CGLModel* po = doc->GetGLModel();
+	Post::CGLModel* po = doc->GetGLModel();
 	po->GetColorMap()->Activate(bchecked);
 	UpdateModelViewer(false);
 	doc->UpdateFEModel();
@@ -1574,7 +1573,7 @@ void CMainWindow::on_selectData_currentValueChanged(int index)
 		int nfield = ui->selectData->currentValue();
 		CDocument* doc = GetActiveDocument();
 		if (doc == nullptr) return;
-		CGLModel* pm = doc->GetGLModel();
+		Post::CGLModel* pm = doc->GetGLModel();
 		pm->GetColorMap()->SetEvalField(nfield);
 
 		// turn on the colormap
@@ -1869,10 +1868,10 @@ void CMainWindow::on_actionViewSmooth_toggled(bool bchecked)
 	CDocument* doc = GetActiveDocument();
 	if (doc == nullptr) return;
 
-	CGLModel* po = doc->GetGLModel();
+	Post::CGLModel* po = doc->GetGLModel();
 	if (po)
 	{
-		CGLColorMap* pcm = po->GetColorMap();
+		Post::CGLColorMap* pcm = po->GetColorMap();
 		if (pcm)
 		{
 			pcm->SetColorSmooth(bchecked);
@@ -1939,11 +1938,11 @@ void CMainWindow::on_actionViewVPSave_triggered()
 	CDocument* doc = GetActiveDocument();
 	if (doc == nullptr) return;
 
-	CGLCamera& cam = ui->glview->GetCamera();
-	GLCameraTransform t;
+	Post::CGLCamera& cam = ui->glview->GetCamera();
+	Post::GLCameraTransform t;
 	cam.GetTransform(t);
 
-	CGView& view = *doc->GetView();
+	Post::CGView& view = *doc->GetView();
 	static int n = 0; n++;
 	char szname[64]={0};
 	sprintf(szname, "key%02d", n);
@@ -1957,7 +1956,7 @@ void CMainWindow::on_actionViewVPPrev_triggered()
 	CDocument* doc = GetActiveDocument();
 	if (doc == nullptr) return;
 
-	CGView& view = *doc->GetView();
+	Post::CGView& view = *doc->GetView();
 	if (view.CameraKeys() > 0)
 	{
 		view.PrevKey();
@@ -1970,7 +1969,7 @@ void CMainWindow::on_actionViewVPNext_triggered()
 	CDocument* doc = GetActiveDocument();
 	if (doc == nullptr) return;
 
-	CGView& view = *doc->GetView();
+	Post::CGView& view = *doc->GetView();
 	if (view.CameraKeys() > 0)
 	{
 		view.NextKey();
@@ -1984,16 +1983,16 @@ void CMainWindow::on_actionSyncViews_triggered()
 	CDocument* doc = GetActiveDocument();
 	if (doc == nullptr) return;
 
-	CGView& view = *doc->GetView();
-	CGLCamera& cam = view.GetCamera();
-	GLCameraTransform transform;
+	Post::CGView& view = *doc->GetView();
+	Post::CGLCamera& cam = view.GetCamera();
+	Post::GLCameraTransform transform;
 	cam.GetTransform(transform);
 	for (int i = 0; i < m_DocManager->Documents(); ++i)
 	{
 		CDocument* doci = m_DocManager->GetDocument(i);
 		if (doci != doc)
 		{
-			CGLCamera& cami = doci->GetView()->GetCamera();
+			Post::CGLCamera& cami = doci->GetView()->GetCamera();
 
 			// copy the transforms
 			cami.SetTransform(transform);
@@ -2007,12 +2006,12 @@ void CMainWindow::UpdateMainToolbar(bool breset)
 	CDocument* doc = GetActiveDocument();
 	if ((doc == nullptr) || (doc->IsValid() == false)) return;
 
-	FEModel* pfem = doc->GetFEModel();
-	ui->selectData->BuildMenu(pfem, DATA_SCALAR);
+	Post::FEModel* pfem = doc->GetFEModel();
+	ui->selectData->BuildMenu(pfem, Post::DATA_SCALAR);
 
 	if (breset == false)
 	{
-		CGLColorMap* map = doc->GetGLModel()->GetColorMap();
+		Post::CGLColorMap* map = doc->GetGLModel()->GetColorMap();
 		if (map)
 		{
 			int nfield = map->GetEvalField();
@@ -2026,14 +2025,14 @@ void CMainWindow::UpdateMainToolbar(bool breset)
 
 	UpdatePlayToolbar(true);
 
-	CGLModel* m = doc->GetGLModel();
+	Post::CGLModel* m = doc->GetGLModel();
 	if (m)
 	{
 		int mode = m->GetSelectionMode();
-		if (mode == SELECT_NODES) ui->selectNodes->setChecked(true);
-		if (mode == SELECT_EDGES) ui->selectEdges->setChecked(true);
-		if (mode == SELECT_FACES) ui->selectFaces->setChecked(true);
-		if (mode == SELECT_ELEMS) ui->selectElems->setChecked(true);
+		if (mode == Post::SELECT_NODES) ui->selectNodes->setChecked(true);
+		if (mode == Post::SELECT_EDGES) ui->selectEdges->setChecked(true);
+		if (mode == Post::SELECT_FACES) ui->selectFaces->setChecked(true);
+		if (mode == Post::SELECT_ELEMS) ui->selectElems->setChecked(true);
 	}
 
 	const VIEWSETTINGS& settings = GetViewSettings();
@@ -2049,7 +2048,7 @@ void CMainWindow::UpdatePlayToolbar(bool breset)
 	CDocument* doc = GetActiveDocument();
 	if (doc == nullptr) return;
 
-	CGLModel* mdl = doc->GetGLModel();
+	Post::CGLModel* mdl = doc->GetGLModel();
 	if (mdl == 0) ui->playToolBar->setDisabled(true);
 	else
 	{
@@ -2057,7 +2056,7 @@ void CMainWindow::UpdatePlayToolbar(bool breset)
 
 		if (breset)
 		{
-			FEModel* fem = mdl->GetFEModel();
+			Post::FEModel* fem = mdl->GetFEModel();
 			int states = fem->GetStates();
 			QString suff = QString("/%1").arg(states);
 			ui->pspin->setSuffix(suff);
@@ -2136,7 +2135,7 @@ void CMainWindow::MakeDocActive(CDocument* doc)
 		// set the window title
 		SetWindowTitle(QString(doc->GetFile()));
 
-		CGLModel* m = doc->GetGLModel();
+		Post::CGLModel* m = doc->GetGLModel();
 		if (m)
 		{
 			int layer = m->m_layer;
@@ -2151,7 +2150,7 @@ void CMainWindow::MakeDocActive(CDocument* doc)
 		UpdateMainToolbar(false);
 
 		// This is already done in UpdateMainToolbar so I can probably remove this
-		FEModel* fem = doc->GetFEModel();
+		Post::FEModel* fem = doc->GetFEModel();
 		if (fem && fem->GetStates() > 0)
 		{
 			ui->playToolBar->setEnabled(true);
@@ -2308,7 +2307,7 @@ void CMainWindow::writeSettings()
 	settings.setValue("m_flinethick"      , view.m_flinethick);
 	settings.setValue("m_fspringthick"    , view.m_fspringthick);
 	settings.setValue("m_fpointsize"      , view.m_fpointsize);
-	settings.setValue("colorMaps"         , ColorMapManager::UserColorMaps());
+	settings.setValue("colorMaps"         , Post::ColorMapManager::UserColorMaps());
 	settings.endGroup();
 
 	settings.beginGroup("FolderSettings");
@@ -2316,17 +2315,17 @@ void CMainWindow::writeSettings()
 	settings.endGroup();
 
 	// store the user color maps
-	int maps = ColorMapManager::ColorMaps();
-	if (maps > ColorMapManager::USER)
+	int maps = Post::ColorMapManager::ColorMaps();
+	if (maps > Post::ColorMapManager::USER)
 	{
 		settings.beginWriteArray("colorMaps");
 		{
-			for (int i=ColorMapManager::USER; i < maps; ++i)
+			for (int i= Post::ColorMapManager::USER; i < maps; ++i)
 			{
-				CColorMap& map = ColorMapManager::GetColorMap(i);
-				settings.setArrayIndex(i - ColorMapManager::USER);
+				Post::CColorMap& map = Post::ColorMapManager::GetColorMap(i);
+				settings.setArrayIndex(i - Post::ColorMapManager::USER);
 
-				string name = ColorMapManager::GetColorMapName(i);
+				string name = Post::ColorMapManager::GetColorMapName(i);
 				settings.setValue("name", QString(name.c_str()));
 
 				// save colors
@@ -2409,7 +2408,7 @@ void CMainWindow::readSettings()
 			QString name = settings.value("name").toString();
 			string sname = name.toStdString();
 
-			CColorMap map;
+			Post::CColorMap map;
 
 			// read colors
 			int colors = settings.beginReadArray("colors");
@@ -2427,7 +2426,7 @@ void CMainWindow::readSettings()
 			}
 			settings.endArray();
 
-			ColorMapManager::AddColormap(sname, map);
+			Post::ColorMapManager::AddColormap(sname, map);
 		}
 	}
 	settings.endArray();
