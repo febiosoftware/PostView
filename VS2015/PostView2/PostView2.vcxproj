@@ -111,7 +111,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;Qt5Chartsd.lib;fscore.lib;postlib.lib;xpltlib.lib;postgl.lib;meshtools.lib;mathlib.lib;glwlib.lib;glew32.lib;opengl32.lib;glu32.lib;$(ZLIBDIR)\contrib\vstudio\vc14\Debug\zlibstaticd.lib;vfw32.lib;avcodec.lib;avutil.lib;swscale.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;Qt5Chartsd.lib;fscore.lib;postlib.lib;xpltlib.lib;postgl.lib;meshtools.lib;mathlib.lib;meshlib.lib;femlib.lib;glwlib.lib;glew32.lib;opengl32.lib;glu32.lib;$(ZLIBDIR)\contrib\vstudio\vc14\Debug\zlibstaticd.lib;vfw32.lib;avcodec.lib;avutil.lib;swscale.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -147,7 +147,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Qt5Core.lib;Qt5Gui.lib;Qt5Widgets.lib;Qt5Charts.lib;fscore.lib;postlib.lib;glwlib.lib;postgl.lib;xpltlib.lib;meshtools.lib;glew32.lib;opengl32.lib;glu32.lib;$(ZLIBDIR)\contrib\vstudio\vc14\Release\zlibstatic.lib;vfw32.lib;avcodec.lib;avutil.lib;swscale.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qt5Core.lib;Qt5Gui.lib;Qt5Widgets.lib;Qt5Charts.lib;fscore.lib;postlib.lib;glwlib.lib;postgl.lib;xpltlib.lib;meshtools.lib;mathlib.lib;glew32.lib;opengl32.lib;glu32.lib;$(ZLIBDIR)\contrib\vstudio\vc14\Release\zlibstatic.lib;vfw32.lib;avcodec.lib;avutil.lib;swscale.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
@@ -255,6 +255,8 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </CustomBuild>
+    <ClInclude Include="..\..\PostView2\ObjectProps.h" />
+    <ClInclude Include="..\..\PostView2\PropertyList.h" />
     <ClInclude Include="..\..\PostView2\ViewSettings.h" />
     <CustomBuild Include="..\..\PostView2\MainWindow.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QT512DIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
@@ -434,12 +436,14 @@
     <ClCompile Include="..\..\PostView2\moc_Tool.cpp" />
     <ClCompile Include="..\..\PostView2\moc_ToolsPanel.cpp" />
     <ClCompile Include="..\..\PostView2\ModelViewer.cpp" />
+    <ClCompile Include="..\..\PostView2\ObjectProps.cpp" />
     <ClCompile Include="..\..\PostView2\PlaneTool.cpp" />
     <ClCompile Include="..\..\PostView2\PlotMixTool.cpp" />
     <ClCompile Include="..\..\PostView2\PlotWidget.cpp" />
     <ClCompile Include="..\..\PostView2\PointCongruencyTool.cpp" />
     <ClCompile Include="..\..\PostView2\PointDistanceTool.cpp" />
     <ClCompile Include="..\..\PostView2\PostView2.cpp" />
+    <ClCompile Include="..\..\PostView2\PropertyList.cpp" />
     <ClCompile Include="..\..\PostView2\PropertyListForm.cpp" />
     <ClCompile Include="..\..\PostView2\PropertyListView.cpp" />
     <ClCompile Include="..\..\PostView2\qrc_postview.cpp" />

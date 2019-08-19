@@ -6,7 +6,7 @@ class CDocument;
 //-----------------------------------------------------------------------------
 class CMeasureVolumeTool : public CBasicTool
 {
-	class Props : public Post::CPropertyList
+	class Props : public CPropertyList
 	{
 	public:
 		Props(CMeasureVolumeTool* ptool);
@@ -21,7 +21,7 @@ public:
 	CMeasureVolumeTool(CMainWindow* wnd);
 
 	// get the property list
-	Post::CPropertyList*	getPropertyList();
+	CPropertyList*	getPropertyList();
 
 	// Apply button
 	void OnApply();

@@ -8,7 +8,7 @@ class C3PointAngleDecoration;
 // This tool measures the angle between three consecutively selected nodes
 class C3PointAngleTool : public CBasicTool
 {
-	class Props : public Post::CPropertyList
+	class Props : public CPropertyList
 	{
 	public:
 		Props(C3PointAngleTool* ptool);
@@ -23,7 +23,7 @@ public:
 	C3PointAngleTool(CMainWindow* wnd);
 
 	// get the property list
-	Post::CPropertyList*	getPropertyList();
+	CPropertyList*	getPropertyList();
 
 	// activate the tool
 	void activate();

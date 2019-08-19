@@ -7,7 +7,7 @@ class CDocument;
 //-----------------------------------------------------------------------------
 class CShellThicknessTool : public CBasicTool
 {
-	class Props : public Post::CPropertyList
+	class Props : public CPropertyList
 	{
 	public:
 		Props(CShellThicknessTool* ptool);
@@ -22,7 +22,7 @@ public:
 	CShellThicknessTool(CMainWindow* wnd);
 
 	// get the property list
-	Post::CPropertyList*	getPropertyList();
+	CPropertyList*	getPropertyList();
 
 	// Apply button
 	void OnApply();

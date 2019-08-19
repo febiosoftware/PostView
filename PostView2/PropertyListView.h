@@ -3,16 +3,38 @@
 #include <vector>
 #include <QtCore/QVariant>
 #include <QPushButton>
-#include "PostLib/PropertyList.h"
+#include <QComboBox>
+#include "PropertyList.h"
 #include "CIntInput.h"
 #include "CColorButton.h"
 
 //-----------------------------------------------------------------------------
 class QTableWidget;
 class QLabel;
+class CPropertyList;
 
 #include <QPainter>
 #include <QColorDialog>
+
+//-----------------------------------------------------------------------------
+class CEditVariableProperty : public QComboBox
+{
+	Q_OBJECT
+
+public:
+	CEditVariableProperty(QWidget* parent = nullptr);
+
+	void setProperty(CProperty* p, QVariant data);
+
+public slots:
+	void onCurrentIndexChanged(int index);
+
+signals:
+	void typeChanged();
+
+private:
+	CProperty*	m_prop;
+};
 
 //-----------------------------------------------------------------------------
 
@@ -27,12 +49,14 @@ class CPropertyListView : public QWidget
 public:
 	CPropertyListView(QWidget* parent = 0);
 
-	void Update(Post::CPropertyList* plist);
+	void Update(CPropertyList* plist);
 
-	void resizeEvent(QResizeEvent* ev) override;
+	void FitGeometry();
+
+	CPropertyList* GetPropertyList();
 
 signals:
-	void dataChanged(int);
+	void dataChanged();
 
 private slots:
 	void on_modelProps_clicked(const QModelIndex& index);

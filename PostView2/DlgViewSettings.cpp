@@ -11,7 +11,7 @@
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QLabel>
-#include "PostLib/PropertyList.h"
+#include "PropertyList.h"
 #include "PropertyListView.h"
 #include <PostLib/Palette.h>
 #include <QSpinBox>
@@ -142,7 +142,7 @@ public:
 		addProperty("Ambient intensity", CProperty::Float)->setFloatRange(0.0, 1.0);
 		addProperty("Render shadows"   , CProperty::Bool );
 		addProperty("Shadow intensity" , CProperty::Float)->setFloatRange(0.0, 1.0);
-		addProperty("Light direction"  , CProperty::Vec3);
+//		addProperty("Light direction"  , CProperty::Vec3);
 
 		m_blight = true;
 		m_diffuse = 0.7f;

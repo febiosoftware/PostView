@@ -14,10 +14,71 @@
 #include <QtCore/QStringListModel>
 #include <QDoubleSpinBox>
 #include <QSpinBox>
+#include <FSCore/ParamBlock.h>
 #include "DataFieldSelector.h"
-#include <PostLib/FEModel.h>
+#include <PostLib/FEMeshData.h>
+#include <PostLib/ColorMap.h>
 #include "DragBox.h"
-using namespace Post;
+
+//-----------------------------------------------------------------------------
+CEditVariableProperty::CEditVariableProperty(QWidget* parent) : QComboBox(parent)
+{
+	addItem("<constant>");
+	addItem("<math>");
+//	addItem("<map>");
+	setEditable(true);
+	setInsertPolicy(QComboBox::NoInsert);
+	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+	m_prop = nullptr;
+
+	QObject::connect(this, SIGNAL(currentIndexChanged(int)), this, SLOT(onCurrentIndexChanged(int)));
+}
+
+void CEditVariableProperty::setProperty(CProperty* p, QVariant data)
+{
+	m_prop = p;
+	if (p == nullptr) return;
+
+	blockSignals(true);
+	if (p->type == CProperty::Float)
+	{
+		setCurrentIndex(0);
+		setEditText(QString("%1").arg(data.toDouble()));
+	}
+	else if (p->type == CProperty::MathString)
+	{
+		setCurrentIndex(1);
+		setEditText(data.toString());
+	}
+	else if (p->type == CProperty::String)
+	{
+		setCurrentIndex(2);
+		setEditText(data.toString());
+	}
+	else
+	{
+		assert(false);
+	}
+	blockSignals(false);
+}
+
+void CEditVariableProperty::onCurrentIndexChanged(int index)
+{
+	if (index == 0) m_prop->type = CProperty::Float;
+	else m_prop->type = CProperty::MathString;
+
+	if (m_prop->param)
+	{
+		Param* p = m_prop->param;
+		if (index == 0) p->SetParamType(Param_FLOAT);
+		if (index == 1) p->SetParamType(Param_MATH);
+	}
+
+	setEditText("0");
+
+	emit typeChanged();
+}
 
 //-----------------------------------------------------------------------------
 class CPropertyListModel : public QAbstractTableModel
@@ -57,7 +118,7 @@ public:
 	{
 		if ((m_list==0)||(!index.isValid())) return QVariant();
 
-//		if (role == Qt::TextColorRole) return QColor(Qt::black);
+//		if (role == Qt::TextColorRole) return QColor(Qt::color0);
 
 		const CProperty& prop = m_list->Property(index.row());
 
@@ -69,11 +130,7 @@ public:
 		if (index.column() == 0)
 		{
 			if ((role == Qt::DisplayRole)||(role==Qt::EditRole)) return prop.name;
-/*			if (role == Qt::BackgroundColorRole)
-			{
-				return (prop.isModified() ? QColor(255, 255,0) : QColor(255, 255, 255));
-			}
-*/		}
+		}
 		else if (index.column() == 1)
 		{
 			QVariant v = m_list->GetPropertyValue(index.row());
@@ -88,12 +145,22 @@ public:
 					}
 				}
 			}
+			if (prop.type == CProperty::ColorMap)
+			{
+				if (role == Qt::DisplayRole)
+				{
+					int n = v.toInt();
+					std::string mapName = Post::ColorMapManager::GetColorMapName(n);
+					return QString::fromStdString(mapName);
+				}
+				else if (role == Qt::EditRole) return v;
+			}
 			if (prop.type == CProperty::DataScalar)
 			{
 				if (role == Qt::DisplayRole)
 				{
-					FEModel& fem = *FEModel::GetInstance();
-					std::string s = fem.GetDataManager()->getDataString(v.toInt(), DATA_SCALAR);
+					Post::FEModel& fem = *Post::FEModel::GetInstance();
+					std::string s = fem.GetDataManager()->getDataString(v.toInt(), Post::DATA_SCALAR);
 					if (s.empty()) s = "(please select)";
 					return QVariant(s.c_str());
 				}
@@ -103,8 +170,8 @@ public:
 			{
 				if (role == Qt::DisplayRole)
 				{
-					FEModel& fem = *FEModel::GetInstance();
-					std::string s = fem.GetDataManager()->getDataString(v.toInt(), DATA_VECTOR);
+					Post::FEModel& fem = *Post::FEModel::GetInstance();
+					std::string s = fem.GetDataManager()->getDataString(v.toInt(), Post::DATA_VECTOR);
 					if (s.empty()) s = "(please select)";
 					return QVariant(s.c_str());
 				}
@@ -114,14 +181,14 @@ public:
 			{
 				if (role == Qt::DisplayRole)
 				{
-					FEModel& fem = *FEModel::GetInstance();
-					std::string s = fem.GetDataManager()->getDataString(v.toInt(), DATA_TENSOR2);
+					Post::FEModel& fem = *Post::FEModel::GetInstance();
+					std::string s = fem.GetDataManager()->getDataString(v.toInt(), Post::DATA_TENSOR2);
 					if (s.empty()) s = "(please select)";
 					return QVariant(s.c_str());
 				}
 				else if (role == Qt::EditRole) return v;
 			}
-			if (role == Qt::EditRole) 
+			if (role == Qt::EditRole)
 			{
 				if ((prop.type == CProperty::Enum)&&(prop.values.isEmpty()==false))
 				{
@@ -144,7 +211,8 @@ public:
 				else if ((prop.type == CProperty::Enum)&&(prop.values.isEmpty()==false))
 				{
 					int n = v.value<int>();
-					return prop.values.at(n);
+					if (n >= 0) return prop.values.at(n);
+					else return "(none)";
 				}
 				return v;
 			}
@@ -162,7 +230,7 @@ public:
 				return QAbstractTableModel::flags(index) | Qt::ItemIsEditable;
 		}
 		return 0;
-//		return QAbstractTableModel::flags(index);
+		//		return QAbstractTableModel::flags(index);
 	}
 
 	bool setData(const QModelIndex& index, const QVariant& value, int role)
@@ -229,7 +297,25 @@ public:
 		const CPropertyListModel* model = dynamic_cast<const CPropertyListModel*>(index.model());
 		if ((model == 0)||(index.column()==0)) return QStyledItemDelegate::createEditor(parent, option, index);
 
-		QVariant data = index.data(Qt::EditRole);		
+		int nrow = index.row();
+		CPropertyList* propList = m_view->GetPropertyList();
+		CProperty* prop = nullptr;
+		if (propList)
+		{
+			if ((nrow >= 0) && (nrow < propList->Properties()))
+			{
+				prop = &propList->Property(nrow);
+			}
+		}
+
+		QVariant data = index.data(Qt::EditRole);
+		if (prop && (prop->flags & CProperty::Variable))
+		{
+			CEditVariableProperty* box = new CEditVariableProperty(parent);
+			box->setProperty(prop, data);
+			return box;
+		}
+
 		if (data.type() == QVariant::Bool)
 		{
 			QComboBox* box = new QComboBox(parent);
@@ -284,11 +370,18 @@ public:
 		else if (data.type() == QVariant::Int)
 		{
 			const CProperty& prop = model->getPropertyList().Property(index.row());
-			if (prop.type == CProperty::DataScalar)
+			if (prop.type == CProperty::ColorMap)
+			{
+				CColorMapSelector* pc = new CColorMapSelector(parent);
+				pc->setCurrentIndex(data.toInt());
+				m_view->connect(pc, SIGNAL(currentIndexChanged(int)), m_view, SLOT(onDataChanged()));
+				return pc;
+			}
+			else if (prop.type == CProperty::DataScalar)
 			{
 				CDataFieldSelector* pc = new CDataFieldSelector(parent);
-				FEModel& fem = *FEModel::GetInstance();
-				pc->BuildMenu(FEModel::GetInstance(), DATA_SCALAR);
+				Post::FEModel& fem = *Post::FEModel::GetInstance();
+				pc->BuildMenu(Post::FEModel::GetInstance(), Post::DATA_SCALAR);
 				int nfield = data.toInt();
 				pc->setCurrentValue(nfield);
 				m_view->connect(pc, SIGNAL(currentValueChanged(int)), m_view, SLOT(onDataChanged()));
@@ -297,8 +390,8 @@ public:
 			else if (prop.type == CProperty::DataVec3)
 			{
 				CDataFieldSelector* pc = new CDataFieldSelector(parent);
-				FEModel& fem = *FEModel::GetInstance();
-				pc->BuildMenu(FEModel::GetInstance(), DATA_VECTOR);
+				Post::FEModel& fem = *Post::FEModel::GetInstance();
+				pc->BuildMenu(Post::FEModel::GetInstance(), Post::DATA_VECTOR);
 				int nfield = data.toInt();
 				pc->setCurrentValue(nfield);
 				m_view->connect(pc, SIGNAL(currentValueChanged(int)), m_view, SLOT(onDataChanged()));
@@ -307,8 +400,8 @@ public:
 			else if (prop.type == CProperty::DataMat3)
 			{
 				CDataFieldSelector* pc = new CDataFieldSelector(parent);
-				FEModel& fem = *FEModel::GetInstance();
-				pc->BuildMenu(FEModel::GetInstance(), DATA_TENSOR2);
+				Post::FEModel& fem = *Post::FEModel::GetInstance();
+				pc->BuildMenu(Post::FEModel::GetInstance(), Post::DATA_TENSOR2);
 				int nfield = data.toInt();
 				pc->setCurrentValue(nfield);
 				m_view->connect(pc, SIGNAL(currentValueChanged(int)), m_view, SLOT(onDataChanged()));
@@ -336,13 +429,6 @@ public:
 				}
 			}
 		}
-		else if (data.type() == QVariant::String)
-		{
-			QLineEdit* pe = new QLineEdit(parent);
-			pe->setText(data.toString());
-			m_view->connect(pe, SIGNAL(editingFinished()), m_view, SLOT(onDataChanged()));
-			return pe;
-		}
 		return QStyledItemDelegate::createEditor(parent, option, index);
 	}
 
@@ -351,13 +437,15 @@ public:
 		if (!index.isValid()) return;
 
 		CDataFieldSelector* sel = dynamic_cast<CDataFieldSelector*>(editor);
-		if (sel) { 
+		if (sel) {
 			int nfield = sel->currentValue();
-			model->setData(index, nfield, Qt::EditRole); return; 
+			model->setData(index, nfield, Qt::EditRole); return;
 		}
 
+		CEditVariableProperty* edit = dynamic_cast<CEditVariableProperty*>(editor);
+
 		QComboBox* box = qobject_cast<QComboBox*>(editor);
-		if (box) { model->setData(index, box->currentIndex(), Qt::EditRole); return; }
+		if (box && (edit == nullptr)) { model->setData(index, box->currentIndex(), Qt::EditRole); return; }
 
 		CColorButton* col = qobject_cast<CColorButton*>(editor);
 		if (col) { model->setData(index, col->color(), Qt::EditRole); return; }
@@ -383,7 +471,7 @@ public:
 
 		m_prop = new QTableView;
 		m_prop->setObjectName(QStringLiteral("modelProps"));
-		m_prop->setSelectionBehavior(QAbstractItemView::SelectItems);
+		m_prop->setSelectionBehavior(QAbstractItemView::SelectRows);
 		m_prop->setSelectionMode(QAbstractItemView::SingleSelection);
 		m_prop->horizontalHeader()->setStretchLastSection(true);
 		m_prop->horizontalHeader()->setResizeContentsPrecision(1000);
@@ -392,7 +480,7 @@ public:
 //		m_prop->verticalHeader()->setDefaultSectionSize(24);
 		m_prop->verticalHeader()->hide();
 		m_prop->setEditTriggers(QAbstractItemView::AllEditTriggers);
-//		m_prop->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+		parent->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
 		m_delegate = new CPropertyListDelegate(parent);
 		m_prop->setItemDelegate(m_delegate);
@@ -415,17 +503,11 @@ public:
 CPropertyListView::CPropertyListView(QWidget* parent) : QWidget(parent), ui(new Ui::CPropertyListView)
 {
 	ui->setupUi(this);
-	ui->m_list = 0;
 }
 
-//-----------------------------------------------------------------------------
-void CPropertyListView::resizeEvent(QResizeEvent* ev)
+CPropertyList* CPropertyListView::GetPropertyList()
 {
-	QWidget::resizeEvent(ev);
-	if (ui->m_list && ui->m_list->Properties() > 0)
-	{
-		ui->m_prop->setColumnWidth(0, ui->m_prop->width() / 2);
-	}
+	return ui->m_list;
 }
 
 //-----------------------------------------------------------------------------
@@ -440,15 +522,21 @@ void CPropertyListView::Update(CPropertyList* plist)
 		for (int i=0; i<plist->Properties(); ++i)
 		{
 			const CProperty& p = plist->Property(i);
-			if ((p.type == CProperty::Color))// || (p.type == CProperty::Enum) || (p.type == CProperty::Bool))
+			if (p.type == CProperty::Color)
 			{
 				ui->m_prop->openPersistentEditor(ui->m_data->index(i, 1));
 			}
 		}
 	}
 
-//	ui->m_prop->resizeColumnToContents(0);
-	ui->m_prop->setColumnWidth(0, ui->m_prop->width()/2);
+	FitGeometry();
+	updateGeometry();
+}
+
+//-----------------------------------------------------------------------------
+void CPropertyListView::FitGeometry()
+{
+	ui->m_prop->setColumnWidth(0, ui->m_prop->width() / 2);
 }
 
 //-----------------------------------------------------------------------------
@@ -476,6 +564,13 @@ void CPropertyListView::onDataChanged()
 		QModelIndex index = ui->m_prop->currentIndex();
 		ui->m_delegate->setModelData(pw, ui->m_data, index);
 
-		emit dataChanged(index.row());
+		// If the list was modified, we need to rebuild the view
+		if (ui->m_list->IsModified())
+		{
+			Update(ui->m_list);
+			ui->m_list->SetModified(false);
+		}
+
+		emit dataChanged();
 	}
 }

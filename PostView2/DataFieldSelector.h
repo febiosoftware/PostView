@@ -1,6 +1,7 @@
 #pragma once
 #include <QPushButton>
 #include <QMenu>
+#include <QComboBox>
 #include <PostLib/FEMeshData.h>
 #include <PostLib/FEModel.h>
 
@@ -49,7 +50,7 @@ public:
 
 public:
 	// inherited from FEModelDependant
-	void Update(Post::FEModel* pfem);
+	void Update(Post::FEModel* pfem) override;
 
 private:
 	Post::FEModel*			m_fem;
@@ -100,4 +101,10 @@ public:
 	CDataFieldSelector(QWidget* parent = nullptr);
 
 	void BuildMenu(Post::FEModel* fem, Post::Data_Tensor_Type ntype, bool btvec = false);
+};
+
+class CColorMapSelector : public QComboBox
+{
+public:
+	CColorMapSelector(QWidget* parent = nullptr);
 };

@@ -1,6 +1,7 @@
 #include "DataFieldSelector.h"
 #include <PostLib/FEModel.h>
 #include <PostLib/constants.h>
+#include <PostLib/ColorMap.h>
 #include <QPainter>
 using namespace Post;
 
@@ -60,7 +61,7 @@ CModelDataSelector::~CModelDataSelector()
 
 void CModelDataSelector::Update(FEModel* pfem)
 {
-	// TODO: update the menu
+	if (pfem == nullptr) m_fem = nullptr;
 }
 
 void CModelDataSelector::BuildMenu(QMenu* menu)
@@ -273,4 +274,17 @@ CDataFieldSelector::CDataFieldSelector(QWidget* parent) : CDataSelectorButton(pa
 void CDataFieldSelector::BuildMenu(FEModel* fem, Data_Tensor_Type ntype, bool btvec)
 {
 	SetDataSelector(new CModelDataSelector(fem, ntype, btvec));
+}
+
+//=============================================================================
+CColorMapSelector::CColorMapSelector(QWidget* parent) : QComboBox(parent)
+{
+	QStringList cols;
+	for (int i = 0; i<ColorMapManager::ColorMaps(); ++i)
+	{
+		string name = ColorMapManager::GetColorMapName(i);
+		cols << name.c_str();
+	}
+
+	addItems(cols);
 }

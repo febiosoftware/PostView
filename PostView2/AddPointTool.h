@@ -10,7 +10,7 @@ class GPointDecoration;
 // This tool measures the angle between three consecutively selected nodes
 class CAddPointTool : public CBasicTool
 {
-	class Props : public Post::CPropertyList
+	class Props : public CPropertyList
 	{
 	public:
 		Props(CAddPointTool* ptool);
@@ -25,7 +25,7 @@ public:
 	CAddPointTool(CMainWindow* wnd);
 
 	// get the property list
-	Post::CPropertyList*	getPropertyList();
+	CPropertyList*	getPropertyList();
 
 	// activate the tool
 	void activate();

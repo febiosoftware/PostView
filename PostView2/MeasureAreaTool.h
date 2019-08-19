@@ -14,7 +14,7 @@ namespace Post {
 // This tool measures the angle between three consecutively selected nodes
 class CMeasureAreaTool : public CBasicTool
 {
-	class Props : public Post::CPropertyList
+	class Props : public CPropertyList
 	{
 	public:
 		Props(CMeasureAreaTool* ptool);
@@ -29,7 +29,7 @@ public:
 	CMeasureAreaTool(CMainWindow* wnd);
 
 	// get the property list
-	Post::CPropertyList*	getPropertyList();
+	CPropertyList*	getPropertyList();
 
 	// Apply button
 	void OnApply();
