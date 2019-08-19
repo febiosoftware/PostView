@@ -1,7 +1,7 @@
 #pragma once
 #include <QLineEdit>
 #include <QValidator>
-#include <PostLib/math3d.h>
+#include <MathLib/math3d.h>
 
 //-----------------------------------------------------------------------------
 class CIntInput : public QLineEdit

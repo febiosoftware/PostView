@@ -264,11 +264,11 @@ public:
 	QVariant GetPropertyValue(int i)
 	{
 		CGLCamera& cam = m_view.GetCamera();
-		quat4f q = cam.GetOrientation();
+		quatd q = cam.GetOrientation();
 		float w = q.GetAngle()*180.f/PI;
-		vec3f v = q.GetVector()*w;
+		vec3d v = q.GetVector()*w;
 
-		vec3f r = cam.GetPosition();
+		vec3d r = cam.GetPosition();
 		float d = cam.GetTargetDistance();
 
 		switch (i)
@@ -288,11 +288,11 @@ public:
 	void SetPropertyValue(int i, const QVariant& val)
 	{
 		CGLCamera& cam = m_view.GetCamera();
-		quat4f q = cam.GetOrientation();
+		quatd q = cam.GetOrientation();
 		float w = q.GetAngle()*180.f/PI;
-		vec3f v = q.GetVector()*w;
+		vec3d v = q.GetVector()*w;
 
-		vec3f r = cam.GetPosition();
+		vec3d r = cam.GetPosition();
 		float d = cam.GetTargetDistance();
 
 		switch (i)
@@ -307,7 +307,7 @@ public:
 		}
 
 		w = PI*v.Length()/180.f; v.Normalize();
-		q = quat4f(w, v);
+		q = quatd(w, v);
 		cam.SetOrientation(q);
 
 		cam.SetTarget(r);
@@ -337,11 +337,11 @@ public:
 
 	QVariant GetPropertyValue(int i)
 	{
-		quat4f q = m_cam.rot;
+		quatd q = m_cam.rot;
 		float w = q.GetAngle()*180.f/PI;
-		vec3f v = q.GetVector()*w;
+		vec3d v = q.GetVector()*w;
 
-		vec3f r = m_cam.pos;
+		vec3d r = m_cam.pos;
 		float d = m_cam.trg.z;
 
 		switch (i)
@@ -360,11 +360,11 @@ public:
 
 	void SetPropertyValue(int i, const QVariant& val)
 	{
-		quat4f q = m_cam.rot;
+		quatd q = m_cam.rot;
 		float w = q.GetAngle()*180.f/PI;
-		vec3f v = q.GetVector()*w;
+		vec3d v = q.GetVector()*w;
 
-		vec3f r = m_cam.pos;
+		vec3d r = m_cam.pos;
 		float d = m_cam.trg.z;
 
 		switch (i)
@@ -379,7 +379,7 @@ public:
 		}
 
 		w = PI*v.Length()/180.f; v.Normalize();
-		q = quat4f(w, v);
+		q = quatd(w, v);
 		m_cam.rot = q;
 
 		m_cam.pos = r;

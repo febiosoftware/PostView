@@ -767,13 +767,13 @@ void CGLView::mouseMoveEvent(QMouseEvent* ev)
 			if (balt)
 			{
 				// rotate in-plane
-				quat4f qz = quat4f((y - m_yp)*0.01f, vec3f(0, 0, 1));
+				quatd qz = quatd((y - m_yp)*0.01f, vec3f(0, 0, 1));
 				pcam->Orbit(qz);
 			}
 			else
 			{
-				quat4f qx = quat4f((y - m_yp)*0.01f, vec3f(1, 0, 0));
-				quat4f qy = quat4f((x - m_xp)*0.01f, vec3f(0, 1, 0));
+				quatd qx = quatd((y - m_yp)*0.01f, vec3f(1, 0, 0));
+				quatd qy = quatd((x - m_xp)*0.01f, vec3f(0, 1, 0));
 				pcam->Orbit(qx);
 				pcam->Orbit(qy);
 			}
@@ -834,7 +834,7 @@ bool CGLView::gestureEvent(QNativeGestureEvent* ev)
     }
     else if (ev->gestureType() == Qt::RotateNativeGesture) {
         // rotate in-plane
-        quat4f qz = quat4f(-2*ev->value()*0.01745329, vec3f(0, 0, 1));
+        quatd qz = quatd(-2*ev->value()*0.01745329, vec3f(0, 0, 1));
         cam.Orbit(qz);
     }
     repaint();
@@ -2605,9 +2605,9 @@ void CGLView::RenderModel()
 
 		float inf = box.Radius()*100.f;
 
-		vec3f lpv = pdoc->GetLightPosition();
+		vec3d lpv = pdoc->GetLightPosition();
 
-		quat4f q = GetCamera().GetOrientation();
+		quatd q = GetCamera().GetOrientation();
 		q.Inverse().RotateVector(lpv);
 
 		lp[0] = lpv.x;
@@ -2929,7 +2929,7 @@ void CGLView::OnZoomRect(Fl_Widget* pw, void* pd)
 
 void CGLView::SetView(View_Mode n)
 {
-	quat4f q;
+	quatd q;
     int c = GetViewConvention();
     switch (c)
     {
@@ -2937,12 +2937,12 @@ void CGLView::SetView(View_Mode n)
         {
             switch (n)
             {
-                case VIEW_FRONT : q = quat4f(-90*DEG2RAD, vec3f(1,0,0)); break;
-                case VIEW_BACK  : q = quat4f(180*DEG2RAD, vec3f(0,1,0)); q *= quat4f(-90*DEG2RAD, vec3f(1,0,0)); break;
-                case VIEW_RIGHT : q = quat4f(-90*DEG2RAD, vec3f(1,0,0)); q *= quat4f( 90*DEG2RAD, vec3f(0,0,1)); break;
-                case VIEW_LEFT  : q = quat4f(-90*DEG2RAD, vec3f(0,1,0)); q *= quat4f(-90*DEG2RAD, vec3f(1,0,0)); break;
-                case VIEW_TOP   : q = quat4f(0, vec3f(1,0,0)); break;
-                case VIEW_BOTTOM: q = quat4f(180*DEG2RAD, vec3f(1,0,0)); break;
+                case VIEW_FRONT : q = quatd(-90*DEG2RAD, vec3f(1,0,0)); break;
+                case VIEW_BACK  : q = quatd(180*DEG2RAD, vec3f(0,1,0)); q *= quatd(-90*DEG2RAD, vec3f(1,0,0)); break;
+                case VIEW_RIGHT : q = quatd(-90*DEG2RAD, vec3f(1,0,0)); q *= quatd( 90*DEG2RAD, vec3f(0,0,1)); break;
+                case VIEW_LEFT  : q = quatd(-90*DEG2RAD, vec3f(0,1,0)); q *= quatd(-90*DEG2RAD, vec3f(1,0,0)); break;
+                case VIEW_TOP   : q = quatd(0, vec3f(1,0,0)); break;
+                case VIEW_BOTTOM: q = quatd(180*DEG2RAD, vec3f(1,0,0)); break;
                 default:
                     assert(false);
             }
@@ -2952,12 +2952,12 @@ void CGLView::SetView(View_Mode n)
         {
             switch (n)
             {
-                case VIEW_FRONT : q = quat4f(0, vec3f(1,0,0)); break;
-                case VIEW_BACK  : q = quat4f(180*DEG2RAD, vec3f(0,1,0)); break;
-                case VIEW_LEFT  : q = quat4f(-90*DEG2RAD, vec3f(0,1,0)); break;
-                case VIEW_RIGHT : q = quat4f( 90*DEG2RAD, vec3f(0,1,0)); break;
-                case VIEW_TOP   : q = quat4f(-90*DEG2RAD, vec3f(1,0,0)); break;
-                case VIEW_BOTTOM: q = quat4f( 90*DEG2RAD, vec3f(1,0,0)); break;
+                case VIEW_FRONT : q = quatd(0, vec3f(1,0,0)); break;
+                case VIEW_BACK  : q = quatd(180*DEG2RAD, vec3f(0,1,0)); break;
+                case VIEW_LEFT  : q = quatd(-90*DEG2RAD, vec3f(0,1,0)); break;
+                case VIEW_RIGHT : q = quatd( 90*DEG2RAD, vec3f(0,1,0)); break;
+                case VIEW_TOP   : q = quatd(-90*DEG2RAD, vec3f(1,0,0)); break;
+                case VIEW_BOTTOM: q = quatd( 90*DEG2RAD, vec3f(1,0,0)); break;
                 default:
                     assert(false);
             }
@@ -2967,12 +2967,12 @@ void CGLView::SetView(View_Mode n)
         {
             switch (n)
             {
-                case VIEW_FRONT : q = quat4f(0, vec3f(1,0,0)); break;
-                case VIEW_BACK  : q = quat4f(180*DEG2RAD, vec3f(0,1,0)); break;
-                case VIEW_LEFT  : q = quat4f( 90*DEG2RAD, vec3f(0,1,0)); break;
-                case VIEW_RIGHT : q = quat4f(-90*DEG2RAD, vec3f(0,1,0)); break;
-                case VIEW_TOP   : q = quat4f( 90*DEG2RAD, vec3f(1,0,0)); break;
-                case VIEW_BOTTOM: q = quat4f(-90*DEG2RAD, vec3f(1,0,0)); break;
+                case VIEW_FRONT : q = quatd(0, vec3f(1,0,0)); break;
+                case VIEW_BACK  : q = quatd(180*DEG2RAD, vec3f(0,1,0)); break;
+                case VIEW_LEFT  : q = quatd( 90*DEG2RAD, vec3f(0,1,0)); break;
+                case VIEW_RIGHT : q = quatd(-90*DEG2RAD, vec3f(0,1,0)); break;
+                case VIEW_TOP   : q = quatd( 90*DEG2RAD, vec3f(1,0,0)); break;
+                case VIEW_BOTTOM: q = quatd(-90*DEG2RAD, vec3f(1,0,0)); break;
                 default:
                     assert(false);
             }

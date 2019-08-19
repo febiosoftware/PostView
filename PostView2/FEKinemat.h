@@ -1,6 +1,6 @@
 #pragma once
 #include <list>
-#include <PostLib/math3d.h>
+#include <MathLib/math3d.h>
 
 class CDocument;
 

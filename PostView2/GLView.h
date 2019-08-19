@@ -1,6 +1,6 @@
 #pragma once
 #include <QOpenGLWidget>
-#include <PostLib/math3d.h>
+#include <MathLib/math3d.h>
 #include <PostLib/Animation.h>
 #include <PostLib/FEElement.h>
 #include <PostLib/Intersect.h>

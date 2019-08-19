@@ -175,10 +175,10 @@ bool CDocManager::SaveSession(const std::string& sfile)
 				if (pv)
 				{
 					Post::CGLCamera& cam = pv->GetCamera();
-					quat4f q = cam.GetOrientation();
+					quatd q = cam.GetOrientation();
 					float w = q.GetAngle();
-					vec3f v = q.GetVector()*w;
-					vec3f r = cam.GetPosition();
+					vec3d v = q.GetVector()*w;
+					vec3d r = cam.GetPosition();
 					float d = cam.GetTargetDistance();
 //					int nproj = GetViewSettings().m_nproj;
 //					int nconv = GetViewSettings().m_nconv;
@@ -529,7 +529,7 @@ bool CDocManager::OpenSession(const std::string& sfile)
 								}
 								while (!tag.isend());
 								float w = vk.Length();
-								if (w != 0.f) key.rot = quat4f(w, vk); else key.rot = quat4f(0.f, vec3f(1.f, 0.f, 0.f));
+								if (w != 0.f) key.rot = quatd(w, vk); else key.rot = quatd(0.f, vec3f(1.f, 0.f, 0.f));
 								pv->AddCameraKey(key);
 							}
 							else xml.SkipTag(tag);
@@ -537,7 +537,7 @@ bool CDocManager::OpenSession(const std::string& sfile)
 						}
 						while (!tag.isend());
 
-						quat4f q = quat4f(v.Length(), v);
+						quatd q = quatd(v.Length(), v);
 						Post::CGLCamera& cam = pv->GetCamera();
 						cam.SetTargetDistance(f);
 						cam.SetTarget(r);
