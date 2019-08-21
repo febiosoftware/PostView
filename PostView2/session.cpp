@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "DocManager.h"
 #include "Document.h"
-#include "PostLib/XMLWriter.h"
-#include "PostLib/XMLReader.h"
+#include "XML/XMLWriter.h"
+#include "XML/XMLReader.h"
 #include "PostLib/FEBioImport.h"
 #include "PostLib/FELSDYNAPlot.h"
 #include "XPLTLib/xpltFileReader.h"
@@ -48,7 +48,7 @@ Post::FEFileReader* GetFileReader(const char* szfile)
 // Save the current session
 bool CDocManager::SaveSession(const std::string& sfile)
 {
-	Post::XMLWriter xml;
+	XMLWriter xml;
 	if (xml.open(sfile.c_str()) == false) return false;
 	xml.add_branch("postview_spec");
 	{
@@ -56,7 +56,7 @@ bool CDocManager::SaveSession(const std::string& sfile)
 		{
 			CDocument* doc = GetDocument(i);
 
-			Post::XMLElement e;
+			XMLElement e;
 			e.name("Model");
 
 			// only store the filename
@@ -130,7 +130,7 @@ bool CDocManager::SaveSession(const std::string& sfile)
 						if (dynamic_cast<Post::CGLPlaneCutPlot*>(p))
 						{
 							Post::CGLPlaneCutPlot* pcut = dynamic_cast<Post::CGLPlaneCutPlot*>(p);
-							Post::XMLElement el("plot");
+							XMLElement el("plot");
 							el.add_attribute("type", "planecut");
 							xml.add_branch(el);
 							{
@@ -153,7 +153,7 @@ bool CDocManager::SaveSession(const std::string& sfile)
 				{
 					Post::CImageModel* img = doc->GetImageModel(j);
 
-					Post::XMLElement e("ImageStack");
+					XMLElement e("ImageStack");
 					e.add_attribute("id", j + 1);
 					e.add_attribute("name", img->GetName());
 					xml.add_branch(e);
@@ -202,7 +202,7 @@ bool CDocManager::SaveSession(const std::string& sfile)
 							q = key.rot;
 							w = q.GetAngle();
 							v = q.GetVector()*w;
-							Post::XMLElement Key;
+							XMLElement Key;
 							Key.name("Key");
 							string keyName = key.GetName();
 							Key.add_attribute("name", keyName.c_str());
@@ -318,11 +318,11 @@ bool CDocManager::OpenSession(const std::string& sfile)
 {
 	FILE* fp = fopen(sfile.c_str(), "rt");
 	if (fp == 0) return false;
-	Post::XMLReader xml;
+	XMLReader xml;
 	xml.Attach(fp);
 
 	// try to open the file
-	Post::XMLTag tag;
+	XMLTag tag;
 	if (xml.FindTag("postview_spec", tag) == false) { fclose(fp); return false; }
 
 	// get the path of the file

@@ -245,7 +245,15 @@ QWidget* CPropertyListForm::createPropertyEditor(CProperty& pi, QVariant v)
 			return pick;
 		}
 		break;
-*/	case CProperty::Action:
+*/	case CProperty::Color:
+		{
+			CColorButton* col = new CColorButton;
+			col->setColor(v.value<QColor>());
+			connect(col, SIGNAL(colorChanged(QColor)), this, SLOT(onDataChanged()));
+			return col;
+		}
+		break;
+	case CProperty::Action:
 		{
 			QPushButton* b = new QPushButton(pi.info);
 			connect(b, SIGNAL(clicked(bool)), this, SLOT(onDataChanged()));
