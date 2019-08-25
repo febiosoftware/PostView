@@ -97,10 +97,9 @@ void CIntegrateWindow::UpdateSourceOptions()
 
 	// add all plane cuts to the source options
 	GPlotList& plt = pdoc->GetGLModel()->GetPlotList();
-	GPlotList::iterator it;
-	for (it = plt.begin(); it != plt.end(); ++it)
+	for (int i=0; i<plt.Size(); ++i)
 	{
-		CGLPlaneCutPlot* pp = dynamic_cast<CGLPlaneCutPlot*>(*it);
+		CGLPlaneCutPlot* pp = dynamic_cast<CGLPlaneCutPlot*>(plt[i]);
 		if (pp) 
 		{
 			string name = pp->GetName();
@@ -193,11 +192,11 @@ double CIntegrateWindow::IntegrateFaces(FEMeshBase& mesh, FEState* ps)
 			int nn = f.Nodes();
 
 			// get the nodal values
-			for (int j=0; j<nn; ++j) v[j] = ps->m_NODE[f.node[j]].m_val;
+			for (int j=0; j<nn; ++j) v[j] = ps->m_NODE[f.n[j]].m_val;
 			if (nn==3) v[3] = v[2];
 
 			// get the nodal coordinates
-			for (int j=0; j<nn; ++j) r[j] = ps->m_NODE[f.node[j]].m_rt;
+			for (int j=0; j<nn; ++j) r[j] = ps->m_NODE[f.n[j]].m_rt;
 			if (nn==3) r[3] = r[2];
 
 			// add to integral
@@ -217,7 +216,7 @@ double CIntegrateWindow::IntegrateElems(FEMeshBase& mesh, FEState* ps)
 	vec3f r[8];
 	for (int i=0; i<mesh.Elements(); ++i)
 	{
-		FEElement& e = mesh.Element(i);
+		FEElement_& e = mesh.Element(i);
 		if (e.IsSelected() && (e.IsSolid()) && (ps->m_ELEM[i].m_state & StatusFlags::ACTIVE))
 		{
 			int nn = e.Nodes();

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Histogram.h"
 #include <PostLib/ImageModel.h>
-#include <PostLib/3DImage.h>
+#include <ImageLib/3DImage.h>
 #include <QtCharts/QLineSeries>
 using namespace Post;
 
@@ -24,7 +24,7 @@ void CHistogramViewer::SetImageModel(CImageModel* img)
 {
 	if (img == nullptr) return;
 
-	C3DImage* im = img->Get3DImage();
+	C3DImage* im = img->GetImageSource()->Get3DImage();
 
 	vector<double> h(256, 0.0);
 	for (int k = 0; k < im->Depth(); ++k)

@@ -213,7 +213,7 @@ CSummaryWindow::RANGE CSummaryWindow::EvalElemRange(FEModel& fem, int nstate, bo
 	int NE = mesh.Elements();
 	for (int i=0; i<NE; i++)
 	{
-		FEElement& e = mesh.Element(i);
+		FEElement_& e = mesh.Element(i);
 		int ne = e.Nodes();
 
 		if ((bsel == false) || (e.IsSelected()))

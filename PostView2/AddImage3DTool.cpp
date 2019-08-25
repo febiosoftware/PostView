@@ -9,7 +9,7 @@
 #include <QMessageBox>
 #include "CIntInput.h"
 #include "Document.h"
-#include <PostLib/3DImage.h>
+#include <ImageLib/3DImage.h>
 #include "MainWindow.h"
 #include <PostLib/ImageModel.h>
 using namespace Post;
@@ -116,22 +116,7 @@ void CAddImage3DTool::OnApply()
 			return;
 		}
 
-		FEModel& fem = *doc->GetFEModel();
-		C3DImage* pimg = new C3DImage;
-		if (pimg->Create(nx, ny, nz) == false)
-		{
-			QMessageBox::critical(0, "Add 3D Image tool", "Failed creating image data.");
-			delete pimg;
-			return;
-		}
-
 		std::string sfile = ui->pfile->text().toStdString();
-		if (pimg->LoadFromFile(sfile.c_str(), 8) == false)
-		{
-			QMessageBox::critical(0, "Add 3D Image tool", "Failed loading image data.");
-			delete pimg;
-			return;
-		}
 
 		const char* ch = sfile.c_str();
 		const char* fileTitle = strrchr(ch, '\\');
@@ -143,12 +128,16 @@ void CAddImage3DTool::OnApply()
 		}
 		else fileTitle++;
 
-		BOUNDINGBOX box(xmin, ymin, zmin, xmax, ymax, zmax);
+		BOX box(xmin, ymin, zmin, xmax, ymax, zmax);
 		CImageModel* img = new CImageModel(doc->GetGLModel());
-		img->Set3DImage(pimg, box);
-		img->SetName(fileTitle);
-		img->SetFileName(sfile);
+		if (img->LoadImageData(sfile, nx, ny, nz, box) == false)
+		{
+			QMessageBox::critical(0, "Add 3D Image tool", "Failed creating image data.");
+			delete img;
+			return;
+		}
 
+		img->SetName(fileTitle);
 		doc->AddImageModel(img);
 		m_wnd->UpdateUi(true);
 	}

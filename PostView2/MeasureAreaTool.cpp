@@ -115,7 +115,7 @@ double CMeasureAreaTool::getValue(FEState* state, const std::vector<FEFace*>& se
 		if ((m_bfilter == false) || ((v >= m_minFilter) && (v <= m_maxFilter)))
 		{
 			rt.resize(f.Nodes());
-			for (int j = 0; j < f.Nodes(); ++j) rt[j] = state->m_NODE[f.node[j]].m_rt;
+			for (int j = 0; j < f.Nodes(); ++j) rt[j] = state->m_NODE[f.n[j]].m_rt;
 			area += mesh.FaceArea(rt, f.Nodes());
 			++nsel;
 		}

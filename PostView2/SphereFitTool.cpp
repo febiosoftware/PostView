@@ -77,7 +77,7 @@ void CSphereFitTool::OnFit()
 			if ((bsel == false) || (f.IsSelected()))
 			{
 				int nf = f.Nodes();
-				for (int j=0; j<nf; ++j) mesh.Node(f.node[j]).m_ntag = 1;
+				for (int j=0; j<nf; ++j) mesh.Node(f.n[j]).m_ntag = 1;
 			}
 		}
 

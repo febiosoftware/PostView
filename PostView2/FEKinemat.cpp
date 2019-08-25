@@ -155,7 +155,7 @@ bool FEKinemat::BuildStates()
 			for (int i=0; i<NN; ++i) mesh.Node(i).m_ntag = 0;
 			for (int i=0; i<NE; ++i)
 			{
-				FEElement& e = mesh.Element(i);
+				FEElement_& e = mesh.Element(i);
 				if (e.m_MatID == n)
 				{
 					int ne = e.Nodes();

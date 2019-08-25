@@ -58,7 +58,7 @@ void CStatsWindow::Update(bool breset, bool bfit)
 	{
 		for (i=0; i<pm->Elements(); ++i)
 		{
-			FEElement& elem = pm->Element(i);
+			FEElement_& elem = pm->Element(i);
 			if (elem.IsEnabled())
 			{
 				v = ps->m_ELEM[i].m_val;
@@ -91,7 +91,7 @@ void CStatsWindow::Update(bool breset, bool bfit)
 	{
 		for (i=0; i<pm->Elements(); ++i)
 		{
-			FEElement& elem = pm->Element(i);
+			FEElement_& elem = pm->Element(i);
 			if (elem.IsEnabled())
 			{
 				v = ps->m_ELEM[i].m_val;

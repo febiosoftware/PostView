@@ -167,7 +167,7 @@ void C4PointAngleTool::update(bool breset)
 		{
 			FEMeshBase& mesh = *doc->GetActiveMesh();
 			const vector<FENode*> selectedNodes = doc->GetGLModel()->GetNodeSelection();
-			int N = selectedNodes.size();
+			int N = (int)selectedNodes.size();
 			int nsel = 0;
 			for (int i = 0; i<N; ++i)
 			{

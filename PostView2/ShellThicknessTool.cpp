@@ -53,7 +53,7 @@ void CShellThicknessTool::OnApply()
 			FEState& state = *fem.GetState(n);
 			for (int i=0; i<mesh.Elements(); ++i)
 			{
-				FEElement& elem = mesh.Element(i);
+				FEElement_& elem = mesh.Element(i);
 				if (elem.IsSelected() && elem.IsShell())
 				{
 					int ne = elem.Nodes();

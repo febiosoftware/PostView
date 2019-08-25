@@ -2,7 +2,7 @@
 #include <QOpenGLWidget>
 #include <MathLib/math3d.h>
 #include <PostLib/Animation.h>
-#include <PostLib/FEElement.h>
+#include <MeshLib/FEElement.h>
 #include <PostLib/Intersect.h>
 #include <GLWLib/GLWidgetManager.h>
 #include <QNativeGestureEvent>
@@ -12,11 +12,11 @@
 // forward declarations
 class CMainWindow;
 class CDocument;
+class CGLContext;
 
 namespace Post {
 	class FEMeshBase;
 	class CGLModel;
-	class CGLContext;
 }
 
 //-----------------------------------------------------------------------------
@@ -122,9 +122,7 @@ private:
 	int m_y0, m_y1;
 };
 
-namespace Post {
-	class CGLCamera;
-}
+class CGLCamera;
 
 class CGLView : public QOpenGLWidget
 {
@@ -134,7 +132,7 @@ public:
 	CGLView(CMainWindow* pwnd, QWidget* parent = 0);
 	~CGLView();
 
-	Post::CGLCamera& GetCamera();
+	CGLCamera& GetCamera();
 
 	QImage CaptureScreen();
 
@@ -214,7 +212,7 @@ protected:
 	void RenderBkGround(GLColor c1, GLColor c2, int style);
 	void RenderRubberBand();
 	void RenderWidgets();
-	void RenderBox(const BOUNDINGBOX& box);
+	void RenderBox(const BOX& box);
 
 	// calculate a ray based on screen position (x, y)
 	Post::Ray PointToRay(int x, int y);

@@ -16,7 +16,7 @@
 #include <PostGL/GLModel.h>
 #include <PostGL/GLPlaneCutPlot.h>
 #include <PostLib/ImageModel.h>
-#include <PostLib/3DImage.h>
+#include <ImageLib/3DImage.h>
 
 //-----------------------------------------------------------------------------
 // choose a file importer based on extension
@@ -121,12 +121,11 @@ bool CDocManager::SaveSession(const std::string& sfile)
 
 				// store plots
 				Post::GPlotList& plotList = pmdl->GetPlotList();
-				if (plotList.empty() == false)
+				if (plotList.IsEmpty() == false)
 				{
-					Post::GPlotList::iterator pi;
-					for (pi = plotList.begin(); pi != plotList.end(); ++pi)
+					for (int n =0; n<plotList.Size(); ++n)
 					{
-						Post::CGLPlot* p = *pi;
+						Post::CGLPlot* p = plotList[n];
 						if (dynamic_cast<Post::CGLPlaneCutPlot*>(p))
 						{
 							Post::CGLPlaneCutPlot* pcut = dynamic_cast<Post::CGLPlaneCutPlot*>(p);
@@ -158,11 +157,11 @@ bool CDocManager::SaveSession(const std::string& sfile)
 					e.add_attribute("name", img->GetName());
 					xml.add_branch(e);
 					{
-						Post::C3DImage* im = img->Get3DImage();
+						C3DImage* im = img->GetImageSource()->Get3DImage();
 						int dim[3] = { im->Width(), im->Height(), im->Depth() };
-						BOUNDINGBOX bb = img->GetBoundingBox();
-						float b[6] = { bb.x0, bb.y0, bb.z0, bb.x1, bb.y1, bb.z1};
-                        string fname = img->GetFileName();
+						BOX bb = img->GetBoundingBox();
+						double b[6] = { bb.x0, bb.y0, bb.z0, bb.x1, bb.y1, bb.z1};
+                        string fname = img->GetImageSource()->GetFileName();
 						xml.add_leaf("file", fname);
 						xml.add_leaf("size", dim, 3);
 						xml.add_leaf("box", b, 6);
@@ -174,7 +173,7 @@ bool CDocManager::SaveSession(const std::string& sfile)
 				Post::CGView* pv = doc->GetView();
 				if (pv)
 				{
-					Post::CGLCamera& cam = pv->GetCamera();
+					CGLCamera& cam = pv->GetCamera();
 					quatd q = cam.GetOrientation();
 					float w = q.GetAngle();
 					vec3d v = q.GetVector()*w;
@@ -198,7 +197,7 @@ bool CDocManager::SaveSession(const std::string& sfile)
 						int N = pv->CameraKeys();
 						for (int i=0; i<N; ++i)
 						{
-							Post::GLCameraTransform& key = pv->GetKey(i);
+							GLCameraTransform& key = pv->GetKey(i);
 							q = key.rot;
 							w = q.GetAngle();
 							v = q.GetVector()*w;
@@ -469,19 +468,15 @@ bool CDocManager::OpenSession(const std::string& sfile)
 
 					make_file_path(szfilename, szfile, szpath);
 
-					Post::C3DImage* im = new Post::C3DImage;
-					im->Create(dim[0], dim[1], dim[2]);
-					if (im->LoadFromFile(szfilename, 8) == false)
+					BOX box(b[0], b[1], b[2], b[3], b[4], b[5]);
+
+					if (img->LoadImageData(szfilename, dim[0], dim[1], dim[2], box) == false)
 					{
-						delete im;
 						delete img;
 						fclose(fp);
 						return false;
 					}
 
-					BOUNDINGBOX box(b[0], b[1], b[2], b[3], b[4], b[5]);
-
-					img->Set3DImage(im, box);
 					doc->AddImageModel(img);
 				}
 				else if (tag == "View")
@@ -508,7 +503,7 @@ bool CDocManager::OpenSession(const std::string& sfile)
                             else if (tag == "convention") tag.value(nconv);
 							else if (tag == "Key")
 							{
-								Post::GLCameraTransform key;
+								GLCameraTransform key;
 								vec3f vk;
 								const char* szname = tag.AttributeValue("name");
 								key.SetName(szname);
@@ -538,11 +533,11 @@ bool CDocManager::OpenSession(const std::string& sfile)
 						while (!tag.isend());
 
 						quatd q = quatd(v.Length(), v);
-						Post::CGLCamera& cam = pv->GetCamera();
+						CGLCamera& cam = pv->GetCamera();
 						cam.SetTargetDistance(f);
 						cam.SetTarget(r);
 						cam.SetOrientation(q);
-						cam.UpdatePosition(true);
+						cam.Update(true);
 						
 //						GetViewSettings().m_nproj = nproj;
 //                        GetViewSettings().m_nconv = nconv;

@@ -3,7 +3,7 @@
 #include <list>
 #include <string>
 #include "PostLib/FEMaterial.h"
-#include "PostLib/bbox.h"
+#include <FSCore/box.h>
 #include "PostLib/GView.h"
 #include "PostLib/FEMesh.h"
 #include <PostGL/GLModel.h>
@@ -160,14 +160,14 @@ public:
 	int GetTimeSteps();
 
 	// get the model's bounding box
-	BOUNDINGBOX GetBoundingBox();
+	BOX GetBoundingBox();
 
 	// get the selection bounding box
-	BOUNDINGBOX GetSelectionBox();
+	BOX GetSelectionBox();
 
 	// get the extents bounding box
 	// (i.e. only visible parts contribute)
-	BOUNDINGBOX GetExtentsBox();
+	BOX GetExtentsBox();
 
 	// --- T I M E   M A N A G M E N T ---
 

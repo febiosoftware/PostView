@@ -23,7 +23,7 @@
 #include <PostGL/GLStreamLinePlot.h>
 #include <PostGL/GLParticleFlowPlot.h>
 #include <PostGL/GLTensorPlot.h>
-#include <PostLib/3DImage.h>
+#include <ImageLib/3DImage.h>
 #include <PostLib/VolRender.h>
 #include <PostLib/ImageSlicer.h>
 #include <PostLib/ImageModel.h>
@@ -147,7 +147,7 @@ public:
 
 	QVariant GetPropertyValue(int i)
 	{
-		Post::CGLCamera& cam = m_view.GetCamera();
+		CGLCamera& cam = m_view.GetCamera();
 		quatd q = cam.GetOrientation();
 		float w = q.GetAngle()*180.f/PI;
 		vec3d v = q.GetVector()*w;
@@ -171,7 +171,7 @@ public:
 
 	void SetPropertyValue(int i, const QVariant& val)
 	{
-		Post::CGLCamera& cam = m_view.GetCamera();
+		CGLCamera& cam = m_view.GetCamera();
 		quatd q = cam.GetOrientation();
 		float w = q.GetAngle()*180.f/PI;
 		vec3d v = q.GetVector()*w;
@@ -197,7 +197,7 @@ public:
 		cam.SetTarget(r);
 		cam.SetTargetDistance(d);
 
-		cam.UpdatePosition(true);
+		cam.Update(true);
 	}
 
 private:
@@ -208,7 +208,7 @@ private:
 class CCameraTransformProps : public CPropertyList
 {
 public:
-	CCameraTransformProps(Post::GLCameraTransform& cam) : m_cam(cam)
+	CCameraTransformProps(GLCameraTransform& cam) : m_cam(cam)
 	{
 		addProperty("X-angle", CProperty::Float);
 		addProperty("Y-angle", CProperty::Float);
@@ -271,7 +271,7 @@ public:
 	}
 
 private:
-	Post::GLCameraTransform&	m_cam;
+	GLCameraTransform&	m_cam;
 };
 
 //-----------------------------------------------------------------------------
@@ -293,7 +293,7 @@ public:
 
 	QVariant GetPropertyValue(int i)
 	{
-		BOUNDINGBOX box = m_img->GetBoundingBox();
+		BOX box = m_img->GetBoundingBox();
 		switch (i)
 		{
 		case 0: return m_img->ShowBox(); break;
@@ -309,7 +309,7 @@ public:
 
 	void SetPropertyValue(int i, const QVariant& val)
 	{
-		BOUNDINGBOX& box = m_img->GetBoundingBox();
+		BOX box = m_img->GetBoundingBox();
 		switch (i)
 		{
 		case 0: m_img->ShowBox(val.toBool()); break;
@@ -583,10 +583,9 @@ void CModelViewer::Update(bool breset)
 			m_obj.push_back(0);
 
 			Post::GPlotList& pl = mdl->GetPlotList();
-			Post::GPlotList::iterator it;
-			for (it = pl.begin(); it != pl.end(); ++it)
+			for (int n=0; n<pl.Size(); ++n)
 			{
-				Post::CGLPlot& plot = *(*it);
+				Post::CGLPlot& plot = *pl[n];
 				CModelTreeItem* pi1 = new CModelTreeItem(&plot, ui->m_tree);
 
 				if      (dynamic_cast<Post::CGLPlaneCutPlot    *>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/cut.png")));
@@ -672,7 +671,7 @@ void CModelViewer::Update(bool breset)
 
 			for (int i=0; i<view.CameraKeys(); ++i)
 			{
-				Post::GLCameraTransform& key = view.GetKey(i);
+				GLCameraTransform& key = view.GetKey(i);
 				pi2 = new CModelTreeItem(&key, pi1);
 
 				string name = key.GetName();
@@ -742,7 +741,7 @@ void CModelViewer::on_modelTree_currentItemChanged(QTreeWidgetItem* current, QTr
 void CModelViewer::on_modelTree_itemDoubleClicked(QTreeWidgetItem* item, int column)
 {
 	int n = item->data(0, Qt::UserRole).toInt();
-	Post::GLCameraTransform* pkey = dynamic_cast<Post::GLCameraTransform*>(m_obj[n]);
+	GLCameraTransform* pkey = dynamic_cast<GLCameraTransform*>(m_obj[n]);
 	if (pkey)
 	{
 		Post::CGView* view = GetActiveDocument()->GetView();

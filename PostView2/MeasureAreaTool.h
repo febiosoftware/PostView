@@ -4,10 +4,10 @@
 
 //-----------------------------------------------------------------------------
 class CDocument;
+class FEFace;
 
 namespace Post {
 	class FEState;
-	class FEFace;
 }
 
 //-----------------------------------------------------------------------------
@@ -38,7 +38,7 @@ public:
 	void update(bool breset) override;
 
 private:
-	double getValue(Post::FEState* state, const std::vector<Post::FEFace*>& selection);
+	double getValue(Post::FEState* state, const std::vector<FEFace*>& selection);
 
 private:
 	int		m_nsel;		// selected faces

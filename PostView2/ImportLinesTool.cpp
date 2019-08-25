@@ -172,12 +172,12 @@ struct FRAG
 vec3f GetCoordinatesFromFrag(FEModel& fem, int nstate, FRAG& a)
 {
 	FEMeshBase& mesh = *fem.GetFEMesh(0);
-	vec3f x[FEGenericElement::MAX_NODES];
+	vec3f x[FEElement::MAX_NODES];
 
 	vec3f r0 = a.r0;
 	if (a.iel >= 0)
 	{
-		FEElement& el = mesh.Element(a.iel);
+		FEElement_& el = mesh.Element(a.iel);
 		for (int i=0; i<el.Nodes(); ++i) x[i] = fem.NodePosition(el.m_node[i], nstate);
 		r0 = el.eval(x, a.r[0], a.r[1], a.r[2]);
 	}

@@ -3,7 +3,7 @@
 #include "MainWindow.h"
 #include <PostLib/FEModel.h>
 #include <PostLib/FEFileReader.h>
-#include <PostLib/3DImage.h>
+#include <ImageLib/3DImage.h>
 #include <PostLib/GLImageRenderer.h>
 #include <PostLib/FEMeshData_T.h>
 #include <PostGL/GLPlot.h>
@@ -12,6 +12,7 @@
 #include <PostLib/Palette.h>
 #include <PostLib/FEAsciiExport.h>
 #include <PostLib/ImageModel.h>
+#include <MeshLib/FEElementLibrary.h>
 using namespace Post;
 
 #ifdef WIN32
@@ -368,7 +369,7 @@ void CDocument::UpdateFEModel(bool breset)
 void CDocument::ResetView()
 {
 	// get the boundingbox
-	BOUNDINGBOX box = GetBoundingBox();
+	BOX box = GetBoundingBox();
 
 	// reset the camera
 	CGLCamera& cam = m_view.GetCamera();
@@ -384,14 +385,11 @@ void CDocument::ResetView()
 //-----------------------------------------------------------------------------
 void CDocument::ZoomExtents(bool bhit)
 {
-	BOUNDINGBOX box = GetExtentsBox();
-	if (box.IsValid())
-	{
-		CGLCamera& cam = m_view.GetCamera();
-		cam.SetTarget(box.Center());
-		cam.SetTargetDistance(3.f*box.Radius());
-		if (bhit) cam.UpdatePosition(bhit);
-	}
+	BOX box = GetExtentsBox();
+	CGLCamera& cam = m_view.GetCamera();
+	cam.SetTarget(box.Center());
+	cam.SetTargetDistance(3.f*box.Radius());
+	if (bhit) cam.Update(bhit);
 }
 
 //-----------------------------------------------------------------------------
@@ -528,14 +526,14 @@ bool CDocument::LoadFEModel(FEFileReader* pimp, const char* szfile, bool bup)
 		m_bValid = true;
 
 		// get the boundingbox
-		BOUNDINGBOX box = GetBoundingBox();
+		BOX box = GetBoundingBox();
 
 		// reset the camera
 		CGLCamera& cam = m_view.GetCamera();
 		cam.Reset();
 		cam.SetTargetDistance(box.Radius()*3);
 		cam.SetTarget(box.Center());
-		cam.UpdatePosition(true);
+		cam.Update(true);
 
 		// set the current time
 		// this will also update the scene
@@ -613,7 +611,7 @@ void CDocument::SetFEModel(FEModel* pnew)
 	m_bValid = true;
 
 	// get the boundingbox
-	BOUNDINGBOX box = GetBoundingBox();
+	BOX box = GetBoundingBox();
 
 	// reset the camera
 	CGLCamera& cam = m_view.GetCamera();
@@ -789,20 +787,20 @@ bool CDocument::ExportPlot(const char* szfile, bool bflag[6], int ncode[6])
 }
 
 //-----------------------------------------------------------------------------
-BOUNDINGBOX CDocument::GetBoundingBox()
+BOX CDocument::GetBoundingBox()
 {
 	if (IsValid()) return m_fem->GetBoundingBox();
 	else
 	{
-		BOUNDINGBOX b;
+		BOX b;
 		return b;
 	}
 }
 
 //-----------------------------------------------------------------------------
-BOUNDINGBOX CDocument::GetExtentsBox()
+BOX CDocument::GetExtentsBox()
 {
-	BOUNDINGBOX box;
+	BOX box;
 	if (IsValid() == false)
 	{
 		box.x0 = box.y0 = box.z0 = -1.f;
@@ -814,7 +812,7 @@ BOUNDINGBOX CDocument::GetExtentsBox()
 	int NE = mesh.Elements(), nvis = 0;
 	for (int i=0; i<NE; ++i)
 	{
-		FEElement& el = mesh.Element(i);
+		FEElement_& el = mesh.Element(i);
 		if (el.IsVisible())
 		{
 			int ne = el.Nodes();
@@ -823,7 +821,7 @@ BOUNDINGBOX CDocument::GetExtentsBox()
 		}
 	}
 
-	if (box.IsValid())
+//	if (box.IsValid())
 	{
 		if ((box.Width() < 1e-5) || (box.Height() < 1e-4) || (box.Depth() < 1e-4))
 		{
@@ -837,9 +835,9 @@ BOUNDINGBOX CDocument::GetExtentsBox()
 
 //-----------------------------------------------------------------------------
 // Get the box around the selection
-BOUNDINGBOX CDocument::GetSelectionBox()
+BOX CDocument::GetSelectionBox()
 {
-	BOUNDINGBOX box;
+	BOX box;
 
 	if (IsValid() == false)
 	{
@@ -849,10 +847,10 @@ BOUNDINGBOX CDocument::GetSelectionBox()
 	}
 
 	FEMeshBase& mesh = *GetActiveMesh();
-	const vector<FEElement*> selElems = GetGLModel()->GetElementSelection();
+	const vector<FEElement_*> selElems = GetGLModel()->GetElementSelection();
 	for (int i=0; i<(int)selElems.size(); ++i)
 	{
-		FEElement& el = *selElems[i];
+		FEElement_& el = *selElems[i];
 		int nel = el.Nodes();
 		for (int j=0; j<nel; ++j) box += mesh.Node(el.m_node[j]).m_rt;
 	}
@@ -862,7 +860,7 @@ BOUNDINGBOX CDocument::GetSelectionBox()
 	{
 		FEFace& face = *selFaces[i];
 		int nel = face.Nodes();
-		for (int j=0; j<nel; ++j) box += mesh.Node(face.node[j]).m_rt;
+		for (int j=0; j<nel; ++j) box += mesh.Node(face.n[j]).m_rt;
 	}
 
 	const vector<FEEdge*> selEdges = GetGLModel()->GetEdgeSelection();
@@ -870,7 +868,7 @@ BOUNDINGBOX CDocument::GetSelectionBox()
 	{
 		FEEdge& edge = *selEdges[i];
 		int nel = edge.Nodes();
-		for (int j=0; j<nel; ++j) box += mesh.Node(edge.node[j]).m_rt;
+		for (int j=0; j<nel; ++j) box += mesh.Node(edge.n[j]).m_rt;
 	}
 
 	const vector<FENode*> selNodes = GetGLModel()->GetNodeSelection();
@@ -880,7 +878,7 @@ BOUNDINGBOX CDocument::GetSelectionBox()
 		box += node.m_rt;
 	}
 
-	if (box.IsValid())
+//	if (box.IsValid())
 	{
 		if ((box.Width() < 1e-5) || (box.Height() < 1e-4) || (box.Depth() < 1e-4))
 		{
@@ -971,7 +969,7 @@ void CDocument::SelectElemsInRange(float fmin, float fmax, bool bsel)
 	FEState* ps = m_pGLModel->currentState();
 	for (int i=0; i<N; ++i)
 	{
-		FEElement& el = pm->Element(i);
+		FEElement_& el = pm->Element(i);
 		if (el.IsEnabled() && el.IsVisible() && ((bsel == false) || (el.IsSelected())))
 		{
 			float v = ps->m_ELEM[i].m_val;
@@ -1107,7 +1105,7 @@ void CDocument::DeleteObject(CGLObject *po)
 	CGLPlot* pp = dynamic_cast<CGLPlot*>(po);
 	if (pp)
 	{
-		m_pGLModel->DeletePlot(pp);
+		delete pp;
 	}
 	else if (dynamic_cast<GLCameraTransform*>(po))
 	{

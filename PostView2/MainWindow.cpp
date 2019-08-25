@@ -246,7 +246,7 @@ void CMainWindow::UpdateStatusMessage()
 
 					if (N == 1)
 					{
-						Post::FEEdge& n = mesh->Edge(nn);
+						FEEdge& n = mesh->Edge(nn);
 						float f = mdl.currentState()->m_EDGE[nn].m_val;
 						sprintf(sz, "1 edge selected");
 					}
@@ -1938,8 +1938,8 @@ void CMainWindow::on_actionViewVPSave_triggered()
 	CDocument* doc = GetActiveDocument();
 	if (doc == nullptr) return;
 
-	Post::CGLCamera& cam = ui->glview->GetCamera();
-	Post::GLCameraTransform t;
+	CGLCamera& cam = ui->glview->GetCamera();
+	GLCameraTransform t;
 	cam.GetTransform(t);
 
 	Post::CGView& view = *doc->GetView();
@@ -1984,19 +1984,19 @@ void CMainWindow::on_actionSyncViews_triggered()
 	if (doc == nullptr) return;
 
 	Post::CGView& view = *doc->GetView();
-	Post::CGLCamera& cam = view.GetCamera();
-	Post::GLCameraTransform transform;
+	CGLCamera& cam = view.GetCamera();
+	GLCameraTransform transform;
 	cam.GetTransform(transform);
 	for (int i = 0; i < m_DocManager->Documents(); ++i)
 	{
 		CDocument* doci = m_DocManager->GetDocument(i);
 		if (doci != doc)
 		{
-			Post::CGLCamera& cami = doci->GetView()->GetCamera();
+			CGLCamera& cami = doci->GetView()->GetCamera();
 
 			// copy the transforms
 			cami.SetTransform(transform);
-			cami.UpdatePosition(true);
+			cami.Update(true);
 		}
 	}
 }
@@ -2161,7 +2161,7 @@ void CMainWindow::MakeDocActive(CDocument* doc)
 		}
 
 		// redraw
-		ui->glview->GetCamera().UpdatePosition(true);
+		ui->glview->GetCamera().Update(true);
 		RedrawGL();
 	}
 	else

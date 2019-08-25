@@ -4,7 +4,7 @@
 #include <QBoxLayout>
 #include <QSlider>
 #include <PostLib/ImageModel.h>
-#include <PostLib/3DImage.h>
+#include <ImageLib/3DImage.h>
 #include <QGraphicsScene>
 #include <QPixmap>
 #include <QGraphicsPixmapItem>
@@ -81,7 +81,7 @@ void CImageViewer::SetImageModel(CImageModel* img)
 	ui->m_img = img;
 	if (img)
 	{
-		C3DImage& im3d = *ui->m_img->Get3DImage();
+		C3DImage& im3d = *ui->m_img->GetImageSource()->Get3DImage();
 
 		int n = im3d.Depth();
 		ui->m_slider->setRange(0, n-1);
@@ -124,7 +124,7 @@ void CImageViewer::Update()
 	ui->m_gs->clear();
 	if (ui->m_img == nullptr) return;
 
-	C3DImage& im3d = *ui->m_img->Get3DImage();
+	C3DImage& im3d = *ui->m_img->GetImageSource()->Get3DImage();
 	int NX = im3d.Width();
 	int NY = im3d.Height();
 
@@ -163,11 +163,11 @@ void CImageViewer::UpdatePath()
 
 		FEMeshBase& mesh = *mdl.GetActiveMesh();
 
-		C3DImage& im3d = *ui->m_img->Get3DImage();
+		C3DImage& im3d = *ui->m_img->GetImageSource()->Get3DImage();
 		int NX = im3d.Width();
 		int NY = im3d.Height();
 
-		BOUNDINGBOX& b = ui->m_img->GetBoundingBox();
+		BOX b = ui->m_img->GetBoundingBox();
 		int slice = ui->m_slider->value();
 		int NZ = im3d.Depth();
 		if (NZ == 1) NZ = 2;
@@ -185,7 +185,7 @@ void CImageViewer::UpdatePath()
 			int nup = 0;
 			for (int j = 0; j < nf; ++j)
 			{
-				r[j] = mesh.Node(face.node[j]).m_rt;
+				r[j] = mesh.Node(face.n[j]).m_rt;
 				if (r[j].z >= h) nup++;
 			}
 
