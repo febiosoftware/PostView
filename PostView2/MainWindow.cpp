@@ -16,7 +16,7 @@
 #include <PostLib/FENikeExport.h>
 #include <PostLib/FEVTKExport.h>
 #include <PostLib/FELSDYNAPlot.h>
-#include <PostLib/FEBioPlotExport.h>
+#include <XPLTLib/xpltFileExport.h>
 #include <PostLib/FEBioImport.h>
 #include <PostLib/FEU3DImport.h>
 #include <PostLib/FELSDYNAimport.h>
@@ -49,7 +49,7 @@
 #include "DlgExportAscii.h"
 #include "DlgExportVTK.h"
 #include "version.h"
-#include "PostLib/convert.h"
+#include <GLWLib/convert.h>
 #include <PostLib/ImgAnimation.h>
 #include <PostLib/AVIAnimation.h>
 #include <PostLib/MPEGAnimation.h>
@@ -629,7 +629,7 @@ bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 			CDlgExportXPLT dlg(this);
 			if (dlg.exec() == QDialog::Accepted)
 			{
-				Post::FEBioPlotExport ex;
+				Post::xpltFileExport ex;
 				ex.SetCompression(dlg.m_bcompress);
 				bret = ex.Save(fem, szfilename);
 				error = ex.GetErrorMessage();
