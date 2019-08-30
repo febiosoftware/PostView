@@ -1427,7 +1427,8 @@ void CGLView::PanView(vec3f r)
 		r.y *= (float)(sz*sy);
 	}
 
-	pcam->Truck(vec3d(r));
+    vec3d r3d(r);
+	pcam->Truck(r3d);
 }
 
 Ray CGLView::PointToRay(int x, int y)

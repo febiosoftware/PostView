@@ -5,15 +5,39 @@
       location = "group:PostView2/PostView2.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:PostViewLib/PostViewLib.xcodeproj">
+      location = "group:../../FEBioStudio/Xcode/FSCore/FSCore.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:GLWLib/GLWLib.xcodeproj">
+      location = "group:../../FEBioStudio/Xcode/GeomLib/GeomLib.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:XPLTLib/XPLTLib.xcodeproj">
+      location = "group:../../FEBioStudio/Xcode/GLLib/GLLib.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:PostGL/PostGL.xcodeproj">
+      location = "group:../../FEBioStudio/Xcode/GLWLib/GLWLib.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../FEBioStudio/Xcode/ImageLib/ImageLib.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../FEBioStudio/Xcode/MathLib/MathLib.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../FEBioStudio/Xcode/MeshLib/MeshLib.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../FEBioStudio/Xcode/MeshTools/MeshTools.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../FEBioStudio/Xcode/PostGL/PostGL.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../FEBioStudio/Xcode/PostLib/PostLib.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../FEBioStudio/Xcode/XML/XML.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../../FEBioStudio/Xcode/XPLTLib/XPLTLib.xcodeproj">
    </FileRef>
 </Workspace>
