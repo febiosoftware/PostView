@@ -118,7 +118,7 @@ void CIntegrateWindow::IntegrateSelection(CLineChartData& data)
 	// get the document
 	CDocument* pdoc = GetDocument();
 	FEModel& fem = *pdoc->GetFEModel();
-	FEMeshBase& mesh = *fem.GetFEMesh(0);
+	Post::FEMeshBase& mesh = *fem.GetFEMesh(0);
 	CGLModel* po = pdoc->GetGLModel();
 
 	data.clear();
@@ -154,7 +154,7 @@ void CIntegrateWindow::IntegrateSelection(CLineChartData& data)
 }
 
 //-----------------------------------------------------------------------------
-double CIntegrateWindow::IntegrateNodes(FEMeshBase& mesh, FEState* ps)
+double CIntegrateWindow::IntegrateNodes(Post::FEMeshBase& mesh, FEState* ps)
 {
 	double res = 0.0;
 	int N = mesh.Nodes();
@@ -170,7 +170,7 @@ double CIntegrateWindow::IntegrateNodes(FEMeshBase& mesh, FEState* ps)
 }
 
 //-----------------------------------------------------------------------------
-double CIntegrateWindow::IntegrateEdges(FEMeshBase& mesh, FEState* ps)
+double CIntegrateWindow::IntegrateEdges(Post::FEMeshBase& mesh, FEState* ps)
 {
 	assert(false);
 	return 0.0;
@@ -179,7 +179,7 @@ double CIntegrateWindow::IntegrateEdges(FEMeshBase& mesh, FEState* ps)
 //-----------------------------------------------------------------------------
 // This function calculates the integral over a surface. Note that if the surface
 // is triangular, then we calculate the integral from a degenerate quad.
-double CIntegrateWindow::IntegrateFaces(FEMeshBase& mesh, FEState* ps)
+double CIntegrateWindow::IntegrateFaces(Post::FEMeshBase& mesh, FEState* ps)
 {
 	double res = 0.0;
 	float v[4];
@@ -200,7 +200,7 @@ double CIntegrateWindow::IntegrateFaces(FEMeshBase& mesh, FEState* ps)
 			if (nn==3) r[3] = r[2];
 
 			// add to integral
-			res += mesh.IntegrateQuad(r, v);
+			res += IntegrateQuad(r, v);
 		}
 	}
 	return res;
@@ -209,14 +209,14 @@ double CIntegrateWindow::IntegrateFaces(FEMeshBase& mesh, FEState* ps)
 //-----------------------------------------------------------------------------
 // This function calculates the integral over a volume. Note that if the volume
 // is not hexahedral, then we calculate the integral from a degenerate hex.
-double CIntegrateWindow::IntegrateElems(FEMeshBase& mesh, FEState* ps)
+double CIntegrateWindow::IntegrateElems(Post::FEMeshBase& mesh, FEState* ps)
 {
 	double res = 0.0;
 	float v[8];
 	vec3f r[8];
 	for (int i=0; i<mesh.Elements(); ++i)
 	{
-		FEElement_& e = mesh.Element(i);
+		FEElement_& e = mesh.ElementRef(i);
 		if (e.IsSelected() && (e.IsSolid()) && (ps->m_ELEM[i].m_state & StatusFlags::ACTIVE))
 		{
 			int nn = e.Nodes();
@@ -250,7 +250,7 @@ double CIntegrateWindow::IntegrateElems(FEMeshBase& mesh, FEState* ps)
 			}
 			
 			// add to integral
-			res += mesh.IntegrateHex(r, v);
+			res += IntegrateHex(r, v);
 		}
 	}
 	return res;

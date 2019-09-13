@@ -54,7 +54,7 @@ void CMeasureVolumeTool::OnApply()
 	{
 		FEModel& fem = *doc->GetFEModel();
 		int ntime = fem.currentTime();
-		FEMeshBase& mesh = *fem.GetFEMesh(0);
+		Post::FEMeshBase& mesh = *fem.GetFEMesh(0);
 		const vector<FEFace*> selectedFaces = doc->GetGLModel()->GetFaceSelection();
 		int N = (int)selectedFaces.size();
 		for (int i = 0; i<N; ++i)
@@ -62,9 +62,9 @@ void CMeasureVolumeTool::OnApply()
 			FEFace& f = *selectedFaces[i];
 
 			// get the average position, area and normal
-			vec3f r = mesh.FaceCenter(f);
-			float area = mesh.FaceArea(f);
-			vec3f N = f.m_fn;
+			vec3d r = mesh.FaceCenter(f);
+			double area = mesh.FaceArea(f);
+			vec3d N = f.m_fn;
 
 			switch (m_nformula)
 			{

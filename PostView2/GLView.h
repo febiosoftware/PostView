@@ -3,7 +3,7 @@
 #include <MathLib/math3d.h>
 #include <PostLib/Animation.h>
 #include <MeshLib/FEElement.h>
-#include <PostLib/Intersect.h>
+#include <MeshLib/Intersect.h>
 #include <GLWLib/GLWidgetManager.h>
 #include <QNativeGestureEvent>
 #include "ViewSettings.h"
@@ -45,7 +45,7 @@ struct GLTAG
 {
 	char	sztag[32];	// name of tag
 	float	wx, wy;		// window coordinates for tag
-	vec3f	r;			// world coordinates of tag
+	vec3d	r;			// world coordinates of tag
 	bool	bvis;		// is the tag visible or not
 	int		ntag;		// tag value
 };
@@ -186,8 +186,8 @@ public:
 	ANIMATION_MODE AnimationMode() const;
 	bool HasRecording() const;
 
-	bool FindFaceIntersection(const Post::Ray& ray, const Post::FEMeshBase& mesh, Post::Intersection& q);
-	bool FindElementIntersection(const Post::Ray& ray, const Post::FEMeshBase& mesh, Post::Intersection& q);
+	bool FindFaceIntersection(const Ray& ray, const Post::FEMeshBase& mesh, Intersection& q);
+	bool FindElementIntersection(const Ray& ray, const Post::FEMeshBase& mesh, Intersection& q);
 
 protected:
 	void initializeGL();
@@ -215,7 +215,7 @@ protected:
 	void RenderBox(const BOX& box);
 
 	// calculate a ray based on screen position (x, y)
-	Post::Ray PointToRay(int x, int y);
+	Ray PointToRay(int x, int y);
 
 	// Render the model
 	void RenderModel();

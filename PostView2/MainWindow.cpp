@@ -220,10 +220,10 @@ void CMainWindow::UpdateStatusMessage()
 
 					if (N == 1)
 					{
-						Post::FENode& n = mesh->Node(nn);
-						vec3f r = n.m_rt;
+						FENode& n = mesh->Node(nn);
+						vec3d r = n.r;
 						float f = mdl.currentState()->m_NODE[nn].m_val;
-						sprintf(sz, "1 node selected: Id = %d, val = %g, pos = (%g, %g, %g)", nn + 1, f, r.x, r.y, r.z);
+						sprintf(sz, "1 node selected: Id = %d, val = %g, pos = (%lg, %lg, %lg)", nn + 1, f, r.x, r.y, r.z);
 					}
 					else if (N > 1)
 					{
@@ -284,7 +284,7 @@ void CMainWindow::UpdateStatusMessage()
 					int ne = -1, i;
 					for (i = 0; i<mesh->Elements(); ++i)
 					{
-						if (mesh->Element(i).IsSelected())
+						if (mesh->ElementRef(i).IsSelected())
 						{
 							N++;
 							ne = i;

@@ -57,7 +57,7 @@ void CTransformTool::OnApply()
 		for (int i=0; i<(int)selNodes.size(); ++i)
 		{
 			FENode& node = *selNodes[i];
-			node.m_r0 += m_dr;
+			node.r += m_dr;
 		}
 		doc->UpdateFEModel(true);
 	}

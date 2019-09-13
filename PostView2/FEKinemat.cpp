@@ -6,14 +6,14 @@
 using namespace Post;
 
 //-----------------------------------------------------------------------------
-vec3f FEKinemat::KINE::apply(const vec3f& r)
+vec3d FEKinemat::KINE::apply(const vec3d& r)
 {
-	float q[3] = {r.x, r.y, r.z};
-	float d[3];
+	double q[3] = {r.x, r.y, r.z};
+	double d[3];
 	d[0] = m[0]*q[0] + m[1]*q[1] + m[ 2]*q[2] + m[ 3];
 	d[1] = m[4]*q[0] + m[5]*q[1] + m[ 6]*q[2] + m[ 7];
 	d[2] = m[8]*q[0] + m[9]*q[1] + m[10]*q[2] + m[11];
-	return vec3f(d[0], d[1], d[2]);
+	return vec3d(d[0], d[1], d[2]);
 }
 
 //-----------------------------------------------------------------------------
@@ -96,7 +96,7 @@ bool FEKinemat::ReadKine(const char* szfile)
 bool FEKinemat::BuildStates()
 {
 	FEModel& fem = *m_pDoc->GetFEModel();
-	FEMeshBase& mesh = *fem.GetFEMesh(0);
+	Post::FEMeshBase& mesh = *fem.GetFEMesh(0);
 	int NMAT = fem.Materials();
 	int NN = mesh.Nodes();
 	int NE = mesh.Elements();
@@ -117,8 +117,8 @@ bool FEKinemat::BuildStates()
 	if (ND == -1) return false;
 
 	// get the initial coordinates
-	vector<vec3f> r0(NN);
-	for (int i=0; i<NN; ++i) r0[i] = mesh.Node(i).m_r0;
+	vector<vec3d> r0(NN);
+	for (int i=0; i<NN; ++i) r0[i] = fem.NodePosition(i, 0);
 
 	int NS = (int)m_State.size();
 	if (m_n0 >= NS) return false;
@@ -155,7 +155,7 @@ bool FEKinemat::BuildStates()
 			for (int i=0; i<NN; ++i) mesh.Node(i).m_ntag = 0;
 			for (int i=0; i<NE; ++i)
 			{
-				FEElement_& e = mesh.Element(i);
+				FEElement_& e = mesh.ElementRef(i);
 				if (e.m_MatID == n)
 				{
 					int ne = e.Nodes();
@@ -168,13 +168,13 @@ bool FEKinemat::BuildStates()
 				FENode& nd = mesh.Node(i);
 				if (nd.m_ntag == 1)
 				{
-					const vec3f& r0_i = r0[i];
+					const vec3d& r0_i = r0[i];
 					if (t == 0.f)
 					{
-						 nd.m_r0 = nd.m_rt = kine.apply(r0_i);
+						 nd.r = kine.apply(r0_i);
 						 d[i] = vec3f(0.f, 0.f, 0.f);
 					}
-					else d[i] = kine.apply(r0_i) - nd.m_r0;
+					else d[i] = to_vec3f(kine.apply(r0_i) - nd.r);
 				}
 			}
 		}

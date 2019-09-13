@@ -161,7 +161,7 @@ void CImageViewer::UpdatePath()
 		CGLModel& mdl = *ui->m_img->GetModel();
 		FEModel& fem = *mdl.GetFEModel();
 
-		FEMeshBase& mesh = *mdl.GetActiveMesh();
+		Post::FEMeshBase& mesh = *mdl.GetActiveMesh();
 
 		C3DImage& im3d = *ui->m_img->GetImageSource()->Get3DImage();
 		int NX = im3d.Width();
@@ -177,7 +177,7 @@ void CImageViewer::UpdatePath()
 
 		QPainterPath path;
 
-		vec3f r[4];
+		vec3d r[4];
 		for (int i = 0; i < mesh.Faces(); ++i)
 		{
 			FEFace& face = mesh.Face(i);
@@ -185,7 +185,7 @@ void CImageViewer::UpdatePath()
 			int nup = 0;
 			for (int j = 0; j < nf; ++j)
 			{
-				r[j] = mesh.Node(face.n[j]).m_rt;
+				r[j] = mesh.Node(face.n[j]).r;
 				if (r[j].z >= h) nup++;
 			}
 
@@ -196,8 +196,8 @@ void CImageViewer::UpdatePath()
 				int np = 0;
 				for (int j = 0; j < nf; ++j)
 				{
-					vec3f& a = r[j];
-					vec3f& b = r[(j + 1) % nf];
+					vec3d& a = r[j];
+					vec3d& b = r[(j + 1) % nf];
 
 					if ((a.z - h)*(b.z - h) < 0)
 					{

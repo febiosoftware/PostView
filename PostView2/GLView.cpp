@@ -83,7 +83,7 @@ public:
 		view->GetViewport(m_vp);
 	}
 
-	vec3f Apply(const vec3f& r)
+	vec3d Apply(const vec3d& r)
 	{
 		// get the homogeneous coordinates
 		q[0] = r.x; q[1] = r.y; q[2] = r.z; q[3] = 1.0;
@@ -99,10 +99,10 @@ public:
 
 		int W = m_vp[2];
 		int H = m_vp[3];
-		float xd = W*((d.x + 1.f)*0.5f);
-		float yd = H - H*((d.y + 1.f)*0.5f);
+		double xd = W*((d.x + 1.0)*0.5);
+		double yd = H - H*((d.y + 1.0)*0.5);
 
-		return vec3f(xd, yd, d.z);
+		return vec3d(xd, yd, d.z);
 	}
 
 private:
@@ -1227,7 +1227,7 @@ void CGLView::RenderTags()
 	m_ffar  = 100*radius;
 
 	// get the mesh
-	FEMeshBase& mesh = *pdoc->GetActiveMesh();
+	Post::FEMeshBase& mesh = *pdoc->GetActiveMesh();
 
 	// create the tag array.
 	// We add a tag for each selected item
@@ -1303,7 +1303,7 @@ void CGLView::RenderTags()
 			FENode& node = mesh.Node(i);
 			if (node.IsSelected())
 			{
-				tag.r = node.m_rt;
+				tag.r = node.r;
 				tag.bvis = false;
 				tag.ntag = (node.m_bext?0:1);
 				sprintf(tag.sztag, "N%d", node.GetID());
@@ -1320,7 +1320,7 @@ void CGLView::RenderTags()
 			FENode& node = mesh.Node(i);
 			if (node.m_ntag == 1)
 			{
-				tag.r = node.m_rt;
+				tag.r = node.r;
 				tag.bvis = false;
 				tag.ntag = (node.m_bext ? 0 : 1);
 				sprintf(tag.sztag, "N%d", node.GetID());
@@ -1341,7 +1341,7 @@ void CGLView::RenderTags()
 	WorldToScreen transform(this);
 	for (int i = 0; i<nsel; i++)
 	{
-		vec3f p = transform.Apply(vtag[i].r);
+		vec3d p = transform.Apply(vtag[i].r);
 		vtag[i].wx = p.x;
 		vtag[i].wy = m_viewport[3] - p.y;
 		vtag[i].bvis = true;
@@ -1557,34 +1557,34 @@ void CGLView::ZoomRect(MyPoint p0, MyPoint p1)
 }
 
 //-----------------------------------------------------------------------------
-bool FaceInsideClipRegion(const FEFace& face, const FEMeshBase& mesh)
+bool FaceInsideClipRegion(const FEFace& face, const Post::FEMeshBase& mesh)
 {
 	int nf = face.Nodes();
 	for (int i = 0; i<nf; ++i)
 	{
-		vec3f ri = mesh.Node(face.n[i]).m_rt;
+		vec3d ri = mesh.Node(face.n[i]).r;
 		if (CGLPlaneCutPlot::IsInsideClipRegion(ri)) return true;
 	}
 	return false;
 }
 
 //-----------------------------------------------------------------------------
-bool ElementInsideClipRegion(const FEElement_& elem, const FEMeshBase& mesh)
+bool ElementInsideClipRegion(const FEElement_& elem, const Post::FEMeshBase& mesh)
 {
 	int ne = elem.Nodes();
 	for (int i = 0; i<ne; ++i)
 	{
-		vec3f ri = mesh.Node(elem.m_node[i]).m_rt;
+		vec3d ri = mesh.Node(elem.m_node[i]).r;
 		if (CGLPlaneCutPlot::IsInsideClipRegion(ri)) return true;
 	}
 	return false;
 }
 
 //-----------------------------------------------------------------------------
-bool CGLView::FindFaceIntersection(const Ray& ray, const FEMeshBase& mesh, Intersection& q)
+bool CGLView::FindFaceIntersection(const Ray& ray, const Post::FEMeshBase& mesh, Intersection& q)
 {
 	int faces = mesh.Faces();
-	vec3f rmin;
+	vec3d rmin;
 	double gmin = 1e99;
 	bool b = false;
 
@@ -1633,7 +1633,7 @@ void CGLView::SelectFaces(int x0, int y0, int mode)
 
 	// get the active mesh
 	CGLModel& mdl = *pdoc->GetGLModel();
-	FEMeshBase* pm = pdoc->GetActiveMesh();
+	Post::FEMeshBase* pm = pdoc->GetActiveMesh();
 
 	// convert the point to a ray
 	Ray ray = PointToRay(x0 * m_dpr, y0 * m_dpr);
@@ -1671,9 +1671,9 @@ void CGLView::SelectFaces(int x0, int y0, int mode)
 }
 
 //-----------------------------------------------------------------------------
-bool regionFaceIntersect(WorldToScreen& transform, const SelectRegion& region, FEFace& face, FEMeshBase* pm, double dpr)
+bool regionFaceIntersect(WorldToScreen& transform, const SelectRegion& region, FEFace& face, Post::FEMeshBase* pm, double dpr)
 {
-	vec3f r[4], p[4];
+	vec3d r[4], p[4];
 	bool binside = false;
 	switch (face.m_type)
 	{
@@ -1681,9 +1681,9 @@ bool regionFaceIntersect(WorldToScreen& transform, const SelectRegion& region, F
 	case FE_FACE_TRI6:
 	case FE_FACE_TRI7:
 	case FE_FACE_TRI10:
-		r[0] = pm->Node(face.n[0]).m_rt;
-		r[1] = pm->Node(face.n[1]).m_rt;
-		r[2] = pm->Node(face.n[2]).m_rt;
+		r[0] = pm->Node(face.n[0]).r;
+		r[1] = pm->Node(face.n[1]).r;
+		r[2] = pm->Node(face.n[2]).r;
 
 		p[0] = transform.Apply(r[0]) / dpr;
 		p[1] = transform.Apply(r[1]) / dpr;
@@ -1698,10 +1698,10 @@ bool regionFaceIntersect(WorldToScreen& transform, const SelectRegion& region, F
 	case FE_FACE_QUAD4:
 	case FE_FACE_QUAD8:
 	case FE_FACE_QUAD9:
-		r[0] = pm->Node(face.n[0]).m_rt;
-		r[1] = pm->Node(face.n[1]).m_rt;
-		r[2] = pm->Node(face.n[2]).m_rt;
-		r[3] = pm->Node(face.n[3]).m_rt;
+		r[0] = pm->Node(face.n[0]).r;
+		r[1] = pm->Node(face.n[1]).r;
+		r[2] = pm->Node(face.n[2]).r;
+		r[3] = pm->Node(face.n[3]).r;
 
 		p[0] = transform.Apply(r[0]) / dpr;
 		p[1] = transform.Apply(r[1]) / dpr;
@@ -1728,7 +1728,7 @@ void CGLView::RegionSelectElements(const SelectRegion& region, int mode)
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
-	FEMeshBase* pm = pdoc->GetActiveMesh();
+	Post::FEMeshBase* pm = pdoc->GetActiveMesh();
 
 	makeCurrent();
 	WorldToScreen transform(this);
@@ -1737,12 +1737,12 @@ void CGLView::RegionSelectElements(const SelectRegion& region, int mode)
 	{
 		TagBackfacingElements(*pm);
 	}
-	else pm->SetElementTags(0);
+	else pm->TagAllElements(0);
 
 	int NE = pm->Elements();
 	for (int i = 0; i<NE; ++i)
 	{
-		FEElement_& el = pm->Element(i);
+		FEElement_& el = pm->ElementRef(i);
 
 		if (el.IsVisible() && (el.m_ntag == 0) && ((view.m_bext == false) || el.IsExterior()))
 		{
@@ -1751,8 +1751,8 @@ void CGLView::RegionSelectElements(const SelectRegion& region, int mode)
 
 			for (int i = 0; i<ne; ++i)
 			{
-				vec3f r = pm->Node(el.m_node[i]).m_rt;
-				vec3f p = transform.Apply(r);
+				vec3d r = pm->Node(el.m_node[i]).r;
+				vec3d p = transform.Apply(r);
 				if (region.IsInside((int)p.x / m_dpr, (int)p.y / m_dpr))
 				{
 					binside = true;
@@ -1783,7 +1783,7 @@ void CGLView::RegionSelectFaces(const SelectRegion& region, int mode)
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
-	FEMeshBase* pm = pdoc->GetActiveMesh();
+	Post::FEMeshBase* pm = pdoc->GetActiveMesh();
 
 	makeCurrent();
 	WorldToScreen transform(this);
@@ -1792,7 +1792,7 @@ void CGLView::RegionSelectFaces(const SelectRegion& region, int mode)
 	{
 		TagBackfacingFaces(*pm);
 	}
-	else pm->SetFaceTags(0);
+	else pm->TagAllFaces(0);
 
 	int NF = pm->Faces();
 	for (int i = 0; i<NF; ++i)
@@ -1823,14 +1823,14 @@ void CGLView::RegionSelectNodes(const SelectRegion& region, int mode)
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
-	FEMeshBase* pm = pdoc->GetActiveMesh();
+	Post::FEMeshBase* pm = pdoc->GetActiveMesh();
 	int NN = pm->Nodes();
 
 	makeCurrent();
 	WorldToScreen transform(this);
 
 	// tag the nodes that are eligable for selection
-	pm->SetNodeTags(0);
+	pm->TagAllNodes(0);
 	if (view.m_bignoreBackfacingItems)
 	{
 		TagBackfacingNodes(*pm);
@@ -1847,9 +1847,9 @@ void CGLView::RegionSelectNodes(const SelectRegion& region, int mode)
 		FENode& node = pm->Node(i);
 		if (node.IsVisible() && (node.m_ntag == 0))
 		{
-			vec3f p = transform.Apply(node.m_rt);
+			vec3d p = transform.Apply(node.r);
 
-			if (region.IsInside((int) p.x / m_dpr, (int) p.y / m_dpr) && CGLPlaneCutPlot::IsInsideClipRegion(node.m_rt))
+			if (region.IsInside((int) p.x / m_dpr, (int) p.y / m_dpr) && CGLPlaneCutPlot::IsInsideClipRegion(node.r))
 			{
 				if (mode == SELECT_ADD) node.Select(); else node.Unselect();
 			}
@@ -1872,7 +1872,7 @@ void CGLView::RegionSelectEdges(const SelectRegion& region, int mode)
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
-	FEMeshBase* pm = pdoc->GetActiveMesh();
+	Post::FEMeshBase* pm = pdoc->GetActiveMesh();
 
 	makeCurrent();
 	WorldToScreen transform(this);
@@ -1881,7 +1881,7 @@ void CGLView::RegionSelectEdges(const SelectRegion& region, int mode)
 	{
 		TagBackfacingEdges(*pm);
 	}
-	else  pm->SetEdgeTags(0);
+	else  pm->TagAllEdges(0);
 
 	int NE = pm->Edges();
 	for (int i = 0; i<NE; ++i)
@@ -1890,11 +1890,11 @@ void CGLView::RegionSelectEdges(const SelectRegion& region, int mode)
 
 		if (edge.IsVisible() && (edge.m_ntag == 0))
 		{
-			vec3f r0 = pm->Node(edge.n[0]).m_rt;
-			vec3f r1 = pm->Node(edge.n[1]).m_rt;
+			vec3d r0 = pm->Node(edge.n[0]).r;
+			vec3d r1 = pm->Node(edge.n[1]).r;
 
-			vec3f p0 = transform.Apply(r0);
-			vec3f p1 = transform.Apply(r1);
+			vec3d p0 = transform.Apply(r0);
+			vec3d p1 = transform.Apply(r1);
 
 			int x0 = (int) p0.x / m_dpr;
 			int y0 = (int) p0.y / m_dpr;
@@ -1915,12 +1915,12 @@ void CGLView::RegionSelectEdges(const SelectRegion& region, int mode)
 }
 
 //-----------------------------------------------------------------------------
-bool CGLView::FindElementIntersection(const Ray& ray, const FEMeshBase& mesh, Intersection& q)
+bool CGLView::FindElementIntersection(const Ray& ray, const Post::FEMeshBase& mesh, Intersection& q)
 {
-	vec3f rn[10];
+	vec3d rn[10];
 
 	int elems = mesh.Elements();
-	vec3f r, rmin;
+	vec3d r, rmin;
 	double gmin = 1e99;
 	bool b = false;
 
@@ -1929,7 +1929,7 @@ bool CGLView::FindElementIntersection(const Ray& ray, const FEMeshBase& mesh, In
 	Intersection tmp;
 	for (int i = 0; i<elems; ++i)
 	{
-		const FEElement_& elem = mesh.Element(i);
+		const FEElement_& elem = mesh.ElementRef(i);
 		if (elem.IsVisible())
 		{
 			// solid elements
@@ -1944,10 +1944,10 @@ bool CGLView::FindElementIntersection(const Ray& ray, const FEMeshBase& mesh, In
 				case FE_FACE_QUAD8:
 				case FE_FACE_QUAD9:
 				{
-					rn[0] = mesh.Node(face.n[0]).m_rt;
-					rn[1] = mesh.Node(face.n[1]).m_rt;
-					rn[2] = mesh.Node(face.n[2]).m_rt;
-					rn[3] = mesh.Node(face.n[3]).m_rt;
+					rn[0] = mesh.Node(face.n[0]).r;
+					rn[1] = mesh.Node(face.n[1]).r;
+					rn[2] = mesh.Node(face.n[2]).r;
+					rn[3] = mesh.Node(face.n[3]).r;
 
 					Quad quad = { rn[0], rn[1], rn[2], rn[3] };
 					bfound = FastIntersectQuad(ray, quad, tmp);
@@ -1958,9 +1958,9 @@ bool CGLView::FindElementIntersection(const Ray& ray, const FEMeshBase& mesh, In
 				case FE_FACE_TRI7:
 				case FE_FACE_TRI10:
 				{
-					rn[0] = mesh.Node(face.n[0]).m_rt;
-					rn[1] = mesh.Node(face.n[1]).m_rt;
-					rn[2] = mesh.Node(face.n[2]).m_rt;
+					rn[0] = mesh.Node(face.n[0]).r;
+					rn[1] = mesh.Node(face.n[1]).r;
+					rn[2] = mesh.Node(face.n[2]).r;
 
 					Triangle tri = { rn[0], rn[1], rn[2] };
 					bfound = IntersectTriangle(ray, tri, tmp);
@@ -1998,19 +1998,19 @@ bool CGLView::FindElementIntersection(const Ray& ray, const FEMeshBase& mesh, In
 				bool bfound = false;
 				if (elem.Nodes() == 4)
 				{
-					rn[0] = mesh.Node(elem.m_node[0]).m_rt;
-					rn[1] = mesh.Node(elem.m_node[1]).m_rt;
-					rn[2] = mesh.Node(elem.m_node[2]).m_rt;
-					rn[3] = mesh.Node(elem.m_node[3]).m_rt;
+					rn[0] = mesh.Node(elem.m_node[0]).r;
+					rn[1] = mesh.Node(elem.m_node[1]).r;
+					rn[2] = mesh.Node(elem.m_node[2]).r;
+					rn[3] = mesh.Node(elem.m_node[3]).r;
 
 					Quad quad = { rn[0], rn[1], rn[2], rn[3] };
 					bfound = IntersectQuad(ray, quad, tmp);
 				}
 				else
 				{
-					rn[0] = mesh.Node(elem.m_node[0]).m_rt;
-					rn[1] = mesh.Node(elem.m_node[1]).m_rt;
-					rn[2] = mesh.Node(elem.m_node[2]).m_rt;
+					rn[0] = mesh.Node(elem.m_node[0]).r;
+					rn[1] = mesh.Node(elem.m_node[1]).r;
+					rn[2] = mesh.Node(elem.m_node[2]).r;
 
 					Triangle tri = { rn[0], rn[1], rn[2] };
 					bfound = IntersectTriangle(ray, tri, tmp);
@@ -2051,7 +2051,7 @@ void CGLView::SelectElements(int x0, int y0, int mode)
 
 	// get the active mesh
 	CGLModel& mdl = *pdoc->GetGLModel();
-	FEMeshBase* pm = pdoc->GetActiveMesh();
+	Post::FEMeshBase* pm = pdoc->GetActiveMesh();
 
 	// convert the point to a ray
 	Ray ray = PointToRay(x0 * m_dpr, y0 * m_dpr);
@@ -2066,7 +2066,7 @@ void CGLView::SelectElements(int x0, int y0, int mode)
 	if (mode == 0)
 	{
 		int elems = pm->Elements();
-		for (int i = 0; i<elems; i++) pm->Element(i).Unselect();
+		for (int i = 0; i<elems; i++) pm->ElementRef(i).Unselect();
 
 		mode = SELECT_ADD;
 	}
@@ -2074,7 +2074,7 @@ void CGLView::SelectElements(int x0, int y0, int mode)
 	// parse the selection buffer
 	if (q.m_index >= 0)
 	{
-		FEElement_& el = pm->Element(q.m_index);
+		FEElement_& el = pm->ElementRef(q.m_index);
 		if (mode == SELECT_ADD)
 		{
 			if (view.m_bconn == false) el.Select();
@@ -2096,17 +2096,17 @@ void CGLView::SelectElements(int x0, int y0, int mode)
 }
 
 //-----------------------------------------------------------------------------
-bool IsBackfacing(const vec3f r[3])
+bool IsBackfacing(const vec3d r[3])
 {
 	bool b = ((r[1].x - r[0].x)*(r[2].y - r[0].y) - (r[1].y - r[0].y)*(r[2].x - r[0].x)) >= 0.f;
 	return b;
 }
 
-void CGLView::TagBackfacingFaces(FEMeshBase& mesh)
+void CGLView::TagBackfacingFaces(Post::FEMeshBase& mesh)
 {
 	WorldToScreen transform(this);
 
-	vec3f r[4], p1[3], p2[3];
+	vec3d r[4], p1[3], p2[3];
 	int NF = mesh.Faces();
 	for (int i=0; i<NF; ++i)
 	{
@@ -2119,9 +2119,9 @@ void CGLView::TagBackfacingFaces(FEMeshBase& mesh)
 		case FE_FACE_TRI7:
 		case FE_FACE_TRI10:
 			{
-				r[0] = mesh.Node(f.n[0]).m_rt;
-				r[1] = mesh.Node(f.n[1]).m_rt;
-				r[2] = mesh.Node(f.n[2]).m_rt;
+				r[0] = mesh.Node(f.n[0]).r;
+				r[1] = mesh.Node(f.n[1]).r;
+				r[2] = mesh.Node(f.n[2]).r;
 
 				p1[0] = transform.Apply(r[0]);
 				p1[1] = transform.Apply(r[1]);
@@ -2135,10 +2135,10 @@ void CGLView::TagBackfacingFaces(FEMeshBase& mesh)
 		case FE_FACE_QUAD8:
 		case FE_FACE_QUAD9:
 			{
-				r[0] = mesh.Node(f.n[0]).m_rt;
-				r[1] = mesh.Node(f.n[1]).m_rt;
-				r[2] = mesh.Node(f.n[2]).m_rt;
-				r[3] = mesh.Node(f.n[3]).m_rt;
+				r[0] = mesh.Node(f.n[0]).r;
+				r[1] = mesh.Node(f.n[1]).r;
+				r[2] = mesh.Node(f.n[2]).r;
+				r[3] = mesh.Node(f.n[3]).r;
 
 				p1[0] = transform.Apply(r[0]);
 				p1[1] = transform.Apply(r[1]);
@@ -2157,14 +2157,14 @@ void CGLView::TagBackfacingFaces(FEMeshBase& mesh)
 }
 
 //-----------------------------------------------------------------------------
-void CGLView::TagBackfacingElements(FEMeshBase& mesh)
+void CGLView::TagBackfacingElements(Post::FEMeshBase& mesh)
 {
 	WorldToScreen transform(this);
-	vec3f r[4], p1[3], p2[3];
+	vec3d r[4], p1[3], p2[3];
 	int NE = mesh.Elements();
 	for (int i=0; i<NE; ++i)
 	{
-		FEElement_& el = mesh.Element(i);
+		FEElement_& el = mesh.ElementRef(i);
 		el.m_ntag = 0;
 
 		// make sure the element is visible
@@ -2182,9 +2182,9 @@ void CGLView::TagBackfacingElements(FEMeshBase& mesh)
 				case FE_TRI3:
 				case FE_TRI6:
 				{
-					r[0] = mesh.Node(el.m_node[0]).m_rt;
-					r[1] = mesh.Node(el.m_node[1]).m_rt;
-					r[2] = mesh.Node(el.m_node[2]).m_rt;
+					r[0] = mesh.Node(el.m_node[0]).r;
+					r[1] = mesh.Node(el.m_node[1]).r;
+					r[2] = mesh.Node(el.m_node[2]).r;
 
 					p1[0] = transform.Apply(r[0]);
 					p1[1] = transform.Apply(r[1]);
@@ -2197,10 +2197,10 @@ void CGLView::TagBackfacingElements(FEMeshBase& mesh)
 				case FE_QUAD8:
 				case FE_QUAD9:
 				{
-					r[0] = mesh.Node(el.m_node[0]).m_rt;
-					r[1] = mesh.Node(el.m_node[1]).m_rt;
-					r[2] = mesh.Node(el.m_node[2]).m_rt;
-					r[3] = mesh.Node(el.m_node[3]).m_rt;
+					r[0] = mesh.Node(el.m_node[0]).r;
+					r[1] = mesh.Node(el.m_node[1]).r;
+					r[2] = mesh.Node(el.m_node[2]).r;
+					r[3] = mesh.Node(el.m_node[3]).r;
 
 					p1[0] = transform.Apply(r[0]);
 					p1[1] = transform.Apply(r[1]);
@@ -2233,9 +2233,9 @@ void CGLView::TagBackfacingElements(FEMeshBase& mesh)
 						case FE_FACE_TRI7:
 						case FE_FACE_TRI10:
 						{
-							r[0] = mesh.Node(f.n[0]).m_rt;
-							r[1] = mesh.Node(f.n[1]).m_rt;
-							r[2] = mesh.Node(f.n[2]).m_rt;
+							r[0] = mesh.Node(f.n[0]).r;
+							r[1] = mesh.Node(f.n[1]).r;
+							r[2] = mesh.Node(f.n[2]).r;
 
 							p1[0] = transform.Apply(r[0]);
 							p1[1] = transform.Apply(r[1]);
@@ -2248,10 +2248,10 @@ void CGLView::TagBackfacingElements(FEMeshBase& mesh)
 						case FE_FACE_QUAD8:
 						case FE_FACE_QUAD9:
 						{
-							r[0] = mesh.Node(f.n[0]).m_rt;
-							r[1] = mesh.Node(f.n[1]).m_rt;
-							r[2] = mesh.Node(f.n[2]).m_rt;
-							r[3] = mesh.Node(f.n[3]).m_rt;
+							r[0] = mesh.Node(f.n[0]).r;
+							r[1] = mesh.Node(f.n[1]).r;
+							r[2] = mesh.Node(f.n[2]).r;
+							r[3] = mesh.Node(f.n[3]).r;
 
 							p1[0] = transform.Apply(r[0]);
 							p1[1] = transform.Apply(r[1]);
@@ -2279,7 +2279,7 @@ void CGLView::TagBackfacingElements(FEMeshBase& mesh)
 }
 
 //-----------------------------------------------------------------------------
-void CGLView::TagBackfacingNodes(FEMeshBase& mesh)
+void CGLView::TagBackfacingNodes(Post::FEMeshBase& mesh)
 {
 	// first tag all surface nodes
 	int NF = mesh.Faces();
@@ -2306,7 +2306,7 @@ void CGLView::TagBackfacingNodes(FEMeshBase& mesh)
 }
 
 //-----------------------------------------------------------------------------
-void CGLView::TagBackfacingEdges(FEMeshBase& mesh)
+void CGLView::TagBackfacingEdges(Post::FEMeshBase& mesh)
 {
 	int NE = mesh.Edges();
 	for (int i = 0; i<NE; ++i) mesh.Edge(i).m_ntag = 1;
@@ -2334,14 +2334,14 @@ void CGLView::SelectNodes(int x0, int y0, int mode)
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
-	FEMeshBase* pm = pdoc->GetActiveMesh();
+	Post::FEMeshBase* pm = pdoc->GetActiveMesh();
 	int NN = pm->Nodes();
 
 	makeCurrent();
 	WorldToScreen transform(this);
 
 	// tag the nodes that are eligable for selection
-	pm->SetNodeTags(0);
+	pm->TagAllNodes(0);
 	if (view.m_bignoreBackfacingItems)
 	{
 		TagBackfacingNodes(*pm);
@@ -2360,9 +2360,9 @@ void CGLView::SelectNodes(int x0, int y0, int mode)
 		FENode& node = pm->Node(i);
 		if (node.IsVisible() && (node.m_ntag == 0))
 		{
-			vec3f p = transform.Apply(node.m_rt);
+			vec3d p = transform.Apply(node.r);
 
-			if (box.IsInside((int)p.x / m_dpr, (int)p.y / m_dpr) && CGLPlaneCutPlot::IsInsideClipRegion(node.m_rt))
+			if (box.IsInside((int)p.x / m_dpr, (int)p.y / m_dpr) && CGLPlaneCutPlot::IsInsideClipRegion(node.r))
 			{
 				if ((nindex == -1) || (p.z < zmin))
 				{
@@ -2414,7 +2414,7 @@ void CGLView::SelectEdges(int x0, int y0, int mode)
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
-	FEMeshBase* pm = pdoc->GetActiveMesh();
+	Post::FEMeshBase* pm = pdoc->GetActiveMesh();
 
 	int X = x0*m_dpr;
 	int Y = y0*m_dpr;
@@ -2431,11 +2431,11 @@ void CGLView::SelectEdges(int x0, int y0, int mode)
 	for (int i = 0; i<NE; ++i)
 	{
 		FEEdge& edge = pm->Edge(i);
-		vec3f r0 = pm->Node(edge.n[0]).m_rt;
-		vec3f r1 = pm->Node(edge.n[1]).m_rt;
+		vec3d r0 = pm->Node(edge.n[0]).r;
+		vec3d r1 = pm->Node(edge.n[1]).r;
 
-		vec3f p0 = transform.Apply(r0);
-		vec3f p1 = transform.Apply(r1);
+		vec3d p0 = transform.Apply(r0);
+		vec3d p1 = transform.Apply(r1);
 
 		if (intersectsRect(QPoint((int)p0.x, (int)p0.y), QPoint((int)p1.x, (int)p1.y), rt) &&
 			(CGLPlaneCutPlot::IsInsideClipRegion(r0) || CGLPlaneCutPlot::IsInsideClipRegion(r1)))
@@ -2762,25 +2762,25 @@ void CGLView::RenderTrack()
 	CDocument* pdoc = GetDocument();
 	if ((pdoc == nullptr) || (pdoc->IsValid() == false)) return;
 
-	FEMeshBase* pm = pdoc->GetActiveMesh();
+	Post::FEMeshBase* pm = pdoc->GetActiveMesh();
 	int* nt = m_ntrack;
 
 	glPushAttrib(GL_ENABLE_BIT);
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_LIGHTING);
 
-	vec3f a = pm->Node(nt[0]).m_rt;
-	vec3f b = pm->Node(nt[1]).m_rt;
-	vec3f c = pm->Node(nt[2]).m_rt;
+	vec3d a = pm->Node(nt[0]).r;
+	vec3d b = pm->Node(nt[1]).r;
+	vec3d c = pm->Node(nt[2]).r;
 
-	vec3f e1 = (b - a);
-	vec3f e3 = e1^(c - a);
-	vec3f e2 = e3^e1;
+	vec3d e1 = (b - a);
+	vec3d e3 = e1^(c - a);
+	vec3d e2 = e3^e1;
 	e1.Normalize();
 	e2.Normalize();
 	e3.Normalize();
 
-	vec3f A, B, C;
+	vec3d A, B, C;
 	A = a + e1;
 	B = a + e2;
 	C = a + e3;
@@ -2797,9 +2797,9 @@ void CGLView::RenderTrack()
 	glPopAttrib();
 }
 
-inline vec3f mult_matrix(GLfloat m[4][4], vec3f r)
+inline vec3d mult_matrix(GLfloat m[4][4], vec3d r)
 {
-	vec3f a;
+	vec3d a;
 	a.x = m[0][0]*r.x + m[0][1]*r.y + m[0][2]*r.z;
 	a.y = m[1][0]*r.x + m[1][1]*r.y + m[1][2]*r.z;
 	a.z = m[2][0]*r.x + m[2][1]*r.y + m[2][2]*r.z;
@@ -2826,38 +2826,40 @@ void CGLView::PositionCamera()
 	// see if we need to track anything
 	if (pdoc->IsValid() && m_btrack)
 	{
-		FEMeshBase* pm = pdoc->GetActiveMesh();
+		Post::FEMeshBase* pm = pdoc->GetActiveMesh();
 		int NN = pm->Nodes();
 		int* nt = m_ntrack;
 		if ((nt[0] >= NN) || (nt[1] >= NN) || (nt[2] >= NN)) { m_btrack = false; return; }
 
-		vec3f a = pm->Node(nt[0]).m_r0;
-		vec3f b = pm->Node(nt[1]).m_r0;
-		vec3f c = pm->Node(nt[2]).m_r0;
+		FEModel& fem = *pdoc->GetFEModel();
 
-		vec3f r0 = a;
+		vec3d a = fem.NodePosition(nt[0], 0);
+		vec3d b = fem.NodePosition(nt[1], 0);
+		vec3d c = fem.NodePosition(nt[2], 0);
 
-		vec3f E1 = (b - a);
-		vec3f E3 = E1^(c - a);
-		vec3f E2 = E3^E1;
+		vec3d r0 = a;
+
+		vec3d E1 = (b - a);
+		vec3d E3 = E1^(c - a);
+		vec3d E2 = E3^E1;
 		E1.Normalize();
 		E2.Normalize();
 		E3.Normalize();
 
-		a = pm->Node(nt[0]).m_rt;
-		b = pm->Node(nt[1]).m_rt;
-		c = pm->Node(nt[2]).m_rt;
+		a = pm->Node(nt[0]).r;
+		b = pm->Node(nt[1]).r;
+		c = pm->Node(nt[2]).r;
 
-		vec3f r1 = a;
+		vec3d r1 = a;
 
-		vec3f e1 = (b - a);
-		vec3f e3 = e1^(c - a);
-		vec3f e2 = e3^e1;
+		vec3d e1 = (b - a);
+		vec3d e3 = e1^(c - a);
+		vec3d e2 = e3^e1;
 		e1.Normalize();
 		e2.Normalize();
 		e3.Normalize();
 
-		vec3f dr = r0 - r1;
+		vec3d dr = r0 - r1;
 		glTranslatef(dr.x, dr.y, dr.z);
 
 		glTranslatef(r1.x, r1.y, r1.z);
@@ -2883,7 +2885,7 @@ void CGLView::PositionCamera()
 		glMultMatrixf(&m[0][0]);
 		glMultMatrixf(&Qi[0][0]);
 
-		vec3f rq = mult_matrix(Q, r1);
+		vec3d rq = mult_matrix(Q, r1);
 		rq = mult_matrix(m, rq);
 		rq = mult_matrix(Qi, rq);
 
@@ -3129,7 +3131,7 @@ void CGLView::TrackSelection(bool b)
 		CGLModel* model = pdoc->GetGLModel(); assert(model);
 
 		int nmode = model->GetSelectionMode();
-		FEMeshBase* pm = pdoc->GetActiveMesh();
+		Post::FEMeshBase* pm = pdoc->GetActiveMesh();
 		if (nmode == SELECT_ELEMS)
 		{
 			const vector<FEElement_*> selElems = pdoc->GetGLModel()->GetElementSelection();

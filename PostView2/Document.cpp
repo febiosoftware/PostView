@@ -129,7 +129,7 @@ void ModelData::SetData(CGLModel* po)
 		for (int i=0; i<N; ++i) *ps->GetMaterial(i) = m_mat[i];
 
 		// update the mesh state
-		FEMeshBase* pmesh = po->GetActiveMesh();
+		Post::FEMeshBase* pmesh = po->GetActiveMesh();
 		for (int i=0; i<N; ++i)
 		{
 			FEMaterial* pm = ps->GetMaterial(i);
@@ -808,15 +808,15 @@ BOX CDocument::GetExtentsBox()
 		return box;
 	}
 
-	FEMeshBase& mesh = *GetActiveMesh();
+	Post::FEMeshBase& mesh = *GetActiveMesh();
 	int NE = mesh.Elements(), nvis = 0;
 	for (int i=0; i<NE; ++i)
 	{
-		FEElement_& el = mesh.Element(i);
+		FEElement_& el = mesh.ElementRef(i);
 		if (el.IsVisible())
 		{
 			int ne = el.Nodes();
-			for (int j=0; j<ne; ++j) box += mesh.Node(el.m_node[j]).m_rt;
+			for (int j=0; j<ne; ++j) box += mesh.Node(el.m_node[j]).r;
 			nvis++;
 		}
 	}
@@ -846,13 +846,13 @@ BOX CDocument::GetSelectionBox()
 		return box;
 	}
 
-	FEMeshBase& mesh = *GetActiveMesh();
+	Post::FEMeshBase& mesh = *GetActiveMesh();
 	const vector<FEElement_*> selElems = GetGLModel()->GetElementSelection();
 	for (int i=0; i<(int)selElems.size(); ++i)
 	{
 		FEElement_& el = *selElems[i];
 		int nel = el.Nodes();
-		for (int j=0; j<nel; ++j) box += mesh.Node(el.m_node[j]).m_rt;
+		for (int j=0; j<nel; ++j) box += mesh.Node(el.m_node[j]).r;
 	}
 
 	const vector<FEFace*> selFaces = GetGLModel()->GetFaceSelection();
@@ -860,7 +860,7 @@ BOX CDocument::GetSelectionBox()
 	{
 		FEFace& face = *selFaces[i];
 		int nel = face.Nodes();
-		for (int j=0; j<nel; ++j) box += mesh.Node(face.n[j]).m_rt;
+		for (int j=0; j<nel; ++j) box += mesh.Node(face.n[j]).r;
 	}
 
 	const vector<FEEdge*> selEdges = GetGLModel()->GetEdgeSelection();
@@ -868,14 +868,14 @@ BOX CDocument::GetSelectionBox()
 	{
 		FEEdge& edge = *selEdges[i];
 		int nel = edge.Nodes();
-		for (int j=0; j<nel; ++j) box += mesh.Node(edge.n[j]).m_rt;
+		for (int j=0; j<nel; ++j) box += mesh.Node(edge.n[j]).r;
 	}
 
 	const vector<FENode*> selNodes = GetGLModel()->GetNodeSelection();
 	for (int i=0; i<(int)selNodes.size(); ++i)
 	{
 		FENode& node = *selNodes[i];
-		box += node.m_rt;
+		box += node.r;
 	}
 
 //	if (box.IsValid())
@@ -964,12 +964,12 @@ bool CDocument::ExportBYU(const char* szfile)
 //-----------------------------------------------------------------------------
 void CDocument::SelectElemsInRange(float fmin, float fmax, bool bsel)
 {
-	FEMeshBase* pm = GetActiveMesh();
+	Post::FEMeshBase* pm = GetActiveMesh();
 	int N = pm->Elements();
 	FEState* ps = m_pGLModel->currentState();
 	for (int i=0; i<N; ++i)
 	{
-		FEElement_& el = pm->Element(i);
+		FEElement_& el = pm->ElementRef(i);
 		if (el.IsEnabled() && el.IsVisible() && ((bsel == false) || (el.IsSelected())))
 		{
 			float v = ps->m_ELEM[i].m_val;
@@ -983,7 +983,7 @@ void CDocument::SelectElemsInRange(float fmin, float fmax, bool bsel)
 //-----------------------------------------------------------------------------
 void CDocument::SelectNodesInRange(float fmin, float fmax, bool bsel)
 {
-	FEMeshBase* pm = GetActiveMesh();
+	Post::FEMeshBase* pm = GetActiveMesh();
 	int N = pm->Nodes();
 	FEState* ps = m_pGLModel->currentState();
 	for (int i=0; i<N; ++i)
@@ -1002,7 +1002,7 @@ void CDocument::SelectNodesInRange(float fmin, float fmax, bool bsel)
 //-----------------------------------------------------------------------------
 void CDocument::SelectEdgesInRange(float fmin, float fmax, bool bsel)
 {
-	FEMeshBase* pm = GetActiveMesh();
+	Post::FEMeshBase* pm = GetActiveMesh();
 	int N = pm->Edges();
 	FEState* ps = m_pGLModel->currentState();
 	for (int i=0; i<N; ++i)
@@ -1021,7 +1021,7 @@ void CDocument::SelectEdgesInRange(float fmin, float fmax, bool bsel)
 //-----------------------------------------------------------------------------
 void CDocument::SelectFacesInRange(float fmin, float fmax, bool bsel)
 {
-	FEMeshBase* pm = GetActiveMesh();
+	Post::FEMeshBase* pm = GetActiveMesh();
 	FEState* ps = m_pGLModel->currentState();
 	int N = pm->Faces();
 	for (int i=0; i<N; ++i)

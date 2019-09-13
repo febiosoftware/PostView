@@ -45,7 +45,7 @@ void CShellThicknessTool::OnApply()
 	if (doc && doc->IsValid())
 	{
 		FEModel& fem = *doc->GetFEModel();
-		FEMeshBase& mesh = *fem.GetFEMesh(0);
+		Post::FEMeshBase& mesh = *fem.GetFEMesh(0);
 
 		int NS = fem.GetStates();
 		for (int n=0; n<NS; ++n)
@@ -53,7 +53,7 @@ void CShellThicknessTool::OnApply()
 			FEState& state = *fem.GetState(n);
 			for (int i=0; i<mesh.Elements(); ++i)
 			{
-				FEElement_& elem = mesh.Element(i);
+				FEElement_& elem = mesh.ElementRef(i);
 				if (elem.IsSelected() && elem.IsShell())
 				{
 					int ne = elem.Nodes();

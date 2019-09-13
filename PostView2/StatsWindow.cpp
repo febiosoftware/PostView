@@ -32,7 +32,7 @@ void CStatsWindow::Update(bool breset, bool bfit)
 	CDocument* doc = GetDocument();
 	if (doc->IsValid() == false) return;
 
-	FEMeshBase* pm = doc->GetFEModel()->GetFEMesh(0);
+	Post::FEMeshBase* pm = doc->GetFEModel()->GetFEMesh(0);
 	int N, i, n;
 
 	bool belemfield = IS_ELEM_FIELD(doc->GetEvalField());
@@ -40,7 +40,7 @@ void CStatsWindow::Update(bool breset, bool bfit)
 	N = 0;
 	if (belemfield)
 	{
-		for (i=0; i<pm->Elements(); ++i) if (pm->Element(i).IsEnabled()) ++N;
+		for (i=0; i<pm->Elements(); ++i) if (pm->ElementRef(i).IsEnabled()) ++N;
 	}
 	else
 	{
@@ -58,7 +58,7 @@ void CStatsWindow::Update(bool breset, bool bfit)
 	{
 		for (i=0; i<pm->Elements(); ++i)
 		{
-			FEElement_& elem = pm->Element(i);
+			FEElement_& elem = pm->ElementRef(i);
 			if (elem.IsEnabled())
 			{
 				v = ps->m_ELEM[i].m_val;
@@ -91,7 +91,7 @@ void CStatsWindow::Update(bool breset, bool bfit)
 	{
 		for (i=0; i<pm->Elements(); ++i)
 		{
-			FEElement_& elem = pm->Element(i);
+			FEElement_& elem = pm->ElementRef(i);
 			if (elem.IsEnabled())
 			{
 				v = ps->m_ELEM[i].m_val;

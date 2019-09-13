@@ -164,19 +164,19 @@ void CPlaneTool::UpdateNormal()
 	if ((node[0] > 0) && (node[1] > 0) && (node[2] > 0))
 	{
 		CDocument* doc = GetActiveDocument();
-		FEMeshBase* pm = doc->GetActiveMesh();
+		Post::FEMeshBase* pm = doc->GetActiveMesh();
 
 		FENode& n1 = pm->Node(node[0]-1);
 		FENode& n2 = pm->Node(node[1]-1);
 		FENode& n3 = pm->Node(node[2]-1);
 
-		vec3f r1 = n1.m_rt;
-		vec3f r2 = n2.m_rt;
-		vec3f r3 = n3.m_rt;
+		vec3d r1 = n1.r;
+		vec3d r2 = n2.r;
+		vec3d r3 = n3.r;
 
-		vec3f rc = (r1 + r2 + r3)/3.f;
+		vec3d rc = (r1 + r2 + r3)/3.0;
 
-		vec3f e[3];
+		vec3d e[3];
 		e[0] = r1 - r2;
 		e[1] = r3 - r2;
 		e[2] = e[0] ^ e[1]; 
@@ -192,7 +192,7 @@ void CPlaneTool::UpdateNormal()
 
 		if (m_dec) 
 		{
-			m_dec->setPosition(n1.m_rt, n2.m_rt, n3.m_rt);
+			m_dec->setPosition(to_vec3f(n1.r), to_vec3f(n2.r), to_vec3f(n3.r));
 			m_dec->setVisible(true);
 		}
 	}
@@ -228,7 +228,7 @@ void CPlaneTool::update(bool breset)
 	{
 		CDocument* doc = GetActiveDocument();
 		int* node = ui->m_node;
-		FEMeshBase& mesh = *doc->GetActiveMesh();
+		Post::FEMeshBase& mesh = *doc->GetActiveMesh();
 		const vector<FENode*> selectedNodes = doc->GetGLModel()->GetNodeSelection();
 		int N = (int)selectedNodes.size();
 		int nsel = 0;

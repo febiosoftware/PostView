@@ -11,9 +11,9 @@ class FEKinemat
 protected:
 	struct KINE
 	{
-		float m[16];
+		double m[16];
 
-		vec3f apply(const vec3f& r);
+		vec3d apply(const vec3d& r);
 	};
 
 	class STATE
