@@ -77,9 +77,8 @@ bool CDocManager::SaveSession(const std::string& sfile)
 				xml.add_leaf("selection_color", pmdl->m_sel_col);
 				xml.add_leaf("smooth_angle", pmdl->GetSmoothingAngle());
 				xml.add_leaf("elem_div", pmdl->GetSubDivisions());
-				xml.add_leaf("shell2hex", pmdl->m_bShell2Hex);
-				xml.add_leaf("shellref", pmdl->m_nshellref);
-				xml.add_leaf("smooth", pmdl->m_bsmooth);
+				xml.add_leaf("shell2hex", pmdl->ShowShell2Solid());
+				xml.add_leaf("shellref", pmdl->ShellReferenceSurface());
 				xml.add_leaf("render_mode", pmdl->GetRenderMode());
 
 				// Displacement Map properties
@@ -373,8 +372,7 @@ bool CDocManager::OpenSession(const std::string& sfile)
 				else if (tag == "selection_color") tag.value(pmdl->m_sel_col);
 				else if (tag == "smooth_angle") { tag.value(g); pmdl->SetSmoothingAngle(g); }
 				else if (tag == "elem_div"    ) { tag.value(n); pmdl->SetSubDivisions(n); }
-				else if (tag == "shell2hex"   ) tag.value(pmdl->m_bShell2Hex);
-				else if (tag == "smooth"      ) tag.value(pmdl->m_bsmooth); 
+				else if (tag == "shell2hex"   ) { tag.value(b); pmdl->ShowShell2Solid(b); }
 				else if (tag == "render_mode" ) { tag.value(n); pmdl->SetRenderMode(n); }
 				else if (tag == "state") tag.value(ntime);
 				else if (tag == "Displacement")

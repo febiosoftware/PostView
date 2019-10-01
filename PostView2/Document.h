@@ -64,7 +64,6 @@ private:
 	struct MODEL
 	{
 		bool	m_bnorm;	// calculate normals or not
-		bool	m_bsmooth;	// render smooth or not
 		bool	m_boutline;	// render as outline
 		bool	m_bghost;	// render ghost
 		bool	m_bShell2Hex; // render shells as hexes

@@ -1305,7 +1305,7 @@ void CGLView::RenderTags()
 			{
 				tag.r = node.r;
 				tag.bvis = false;
-				tag.ntag = (node.m_bext?0:1);
+				tag.ntag = (node.IsExterior()?0:1);
 				sprintf(tag.sztag, "N%d", node.GetID());
 				vtag.push_back(tag);
 			}
@@ -1322,7 +1322,7 @@ void CGLView::RenderTags()
 			{
 				tag.r = node.r;
 				tag.bvis = false;
-				tag.ntag = (node.m_bext ? 0 : 1);
+				tag.ntag = (node.IsExterior() ? 0 : 1);
 				sprintf(tag.sztag, "N%d", node.GetID());
 				vtag.push_back(tag);
 			}
@@ -1838,7 +1838,7 @@ void CGLView::RegionSelectNodes(const SelectRegion& region, int mode)
 	if (view.m_bext)
 	{
 		for (int i=0; i<pm->Nodes(); ++i) 
-			if (pm->Node(i).m_bext == false) pm->Node(i).m_ntag = 1;
+			if (pm->Node(i).IsExterior() == false) pm->Node(i).m_ntag = 1;
 	}
 	
 	// select all nodes inside the region
@@ -2349,7 +2349,7 @@ void CGLView::SelectNodes(int x0, int y0, int mode)
 	if (view.m_bext)
 	{
 		for (int i = 0; i<pm->Nodes(); ++i)
-			if (pm->Node(i).m_bext == false) pm->Node(i).m_ntag = 1;
+			if (pm->Node(i).IsExterior() == false) pm->Node(i).m_ntag = 1;
 	}
 
 	// select all nodes inside the region

@@ -46,10 +46,9 @@ ModelData::ModelData(CGLModel *po)
 
 	// set model props
 	m_mdl.m_bnorm      = po->m_bnorm;
-	m_mdl.m_bsmooth    = po->m_bsmooth;
 	m_mdl.m_bghost     = po->m_bghost;
-	m_mdl.m_bShell2Hex = po->m_bShell2Hex;
-	m_mdl.m_nshellref  = po->m_nshellref;
+	m_mdl.m_bShell2Hex = po->ShowShell2Solid();
+	m_mdl.m_nshellref  = po->ShellReferenceSurface();
 	m_mdl.m_nDivs      = po->m_nDivs;
 	m_mdl.m_nrender    = po->m_nrender;
 	m_mdl.m_smooth     = po->GetSmoothingAngle();
@@ -91,10 +90,9 @@ void ModelData::SetData(CGLModel* po)
 {
 	// set model data
 	po->m_bnorm      = m_mdl.m_bnorm;
-	po->m_bsmooth    = m_mdl.m_bsmooth;
 	po->m_bghost     = m_mdl.m_bghost;
-	po->m_bShell2Hex = m_mdl.m_bShell2Hex;
-	po->m_nshellref  = m_mdl.m_nshellref;
+	po->ShowShell2Solid(m_mdl.m_bShell2Hex);
+	po->ShellReferenceSurface(m_mdl.m_nshellref);
 	po->m_nDivs      = m_mdl.m_nDivs;
 	po->m_nrender    = m_mdl.m_nrender;
 	po->SetSmoothingAngle(m_mdl.m_smooth);

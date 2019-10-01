@@ -46,7 +46,6 @@ public:
 		addProperty("Outline color"            , CProperty::Color);
 		addProperty("Node color"               , CProperty::Color);
 		addProperty("Selection color"          , CProperty::Color);
-		addProperty("Render smooth"            , CProperty::Bool);
 		addProperty("Shells as hexes"          , CProperty::Bool);
 		addProperty("Shell reference surface"  , CProperty::Enum, "set the shell reference surface")->setEnumValues(QStringList() << "Mid surface" << "bottom surface" << "top surface");
 		addProperty("Smoothing angle"          , CProperty::Float);
@@ -63,10 +62,9 @@ public:
 		case 3: v = toQColor(m_fem->m_line_col); break;
 		case 4: v = toQColor(m_fem->m_node_col); break;
 		case 5: v = toQColor(m_fem->m_sel_col); break;
-		case 6: v = m_fem->m_bsmooth; break;
-		case 7: v = m_fem->m_bShell2Hex; break;
-		case 8: v = m_fem->m_nshellref; break;
-		case 9: v = m_fem->GetSmoothingAngle(); break;
+		case 6: v = m_fem->ShowShell2Solid(); break;
+		case 7: v = m_fem->ShellReferenceSurface(); break;
+		case 8: v = m_fem->GetSmoothingAngle(); break;
 		}
 		return v;
 	}
@@ -81,12 +79,9 @@ public:
 		case 3: m_fem->m_line_col = toGLColor(v.value<QColor>());
 		case 4: m_fem->m_node_col = toGLColor(v.value<QColor>());
 		case 5: m_fem->m_sel_col  = toGLColor(v.value<QColor>());
-		case 6: m_fem->m_bsmooth  = v.toBool(); break;
-		case 7: m_fem->m_bShell2Hex = v.toBool(); break;
-		case 8: m_fem->m_nshellref = v.toInt(); break;
-		case 9: 
-			m_fem->SetSmoothingAngle(v.toDouble()); 
-			break;
+		case 6: m_fem->ShowShell2Solid(v.toBool()); break;
+		case 7: m_fem->ShellReferenceSurface(v.toInt()); break;
+		case 8: m_fem->SetSmoothingAngle(v.toDouble());  break;
 		}
 	}
 	
