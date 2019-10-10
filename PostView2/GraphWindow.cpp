@@ -967,7 +967,7 @@ void CModelGraphWindow::Update(bool breset, bool bfit)
 	CGLModel* po = doc->GetGLModel();
 	FEModel& fem = *doc->GetFEModel();
 
-	Post::FEMeshBase& mesh = *doc->GetFEModel()->GetFEMesh(0);
+	Post::FEPostMesh& mesh = *doc->GetFEModel()->GetFEMesh(0);
 
 	// get the title
 	if (nplotType == LINE_PLOT)
@@ -1021,7 +1021,7 @@ void CModelGraphWindow::addSelectedNodes()
 {
 	CDocument* pdoc = GetDocument();
 	FEModel& fem = *pdoc->GetFEModel();
-	Post::FEMeshBase& mesh = *fem.GetFEMesh(0);
+	Post::FEPostMesh& mesh = *fem.GetFEMesh(0);
 
 	int nsteps = m_lastState - m_firstState + 1;
 	vector<float> xdata(nsteps);
@@ -1148,7 +1148,7 @@ void CModelGraphWindow::addSelectedEdges()
 {
 	CDocument* pdoc = GetDocument();
 	FEModel& fem = *pdoc->GetFEModel();
-	Post::FEMeshBase& mesh = *fem.GetFEMesh(0);
+	Post::FEPostMesh& mesh = *fem.GetFEMesh(0);
 
 	int nsteps = m_lastState - m_firstState + 1;
 	vector<float> xdata(nsteps);
@@ -1190,7 +1190,7 @@ void CModelGraphWindow::addSelectedFaces()
 {
 	CDocument* pdoc = GetDocument();
 	FEModel& fem = *pdoc->GetFEModel();
-	Post::FEMeshBase& mesh = *fem.GetFEMesh(0);
+	Post::FEPostMesh& mesh = *fem.GetFEMesh(0);
 
 	int nsteps = m_lastState - m_firstState + 1;
 	vector<float> xdata(nsteps);
@@ -1232,7 +1232,7 @@ void CModelGraphWindow::addSelectedElems()
 {
 	CDocument* pdoc = GetDocument();
 	FEModel& fem = *pdoc->GetFEModel();
-	Post::FEMeshBase& mesh = *fem.GetFEMesh(0);
+	Post::FEPostMesh& mesh = *fem.GetFEMesh(0);
 
 	int nsteps = m_lastState - m_firstState + 1;
 	vector<float> xdata(nsteps);

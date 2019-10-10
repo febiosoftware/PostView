@@ -196,7 +196,7 @@ void CMainWindow::UpdateStatusMessage()
 	if (doc && doc->IsValid())
 	{
 		Post::CGLModel& mdl = *doc->GetGLModel();
-		Post::FEMeshBase* mesh = doc->GetActiveMesh();
+		Post::FEPostMesh* mesh = doc->GetActiveMesh();
 		if (mesh)
 		{
 			int selectionMode = mdl.GetSelectionMode();

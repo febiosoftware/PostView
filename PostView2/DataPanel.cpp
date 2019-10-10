@@ -827,7 +827,7 @@ void CDataPanel::on_FilterButton_clicked()
 				case 3:
 					{
 						// create new vector field for storing the gradient
-						newData = new FEDataField_T<FENodeData<vec3f  > >(sname.c_str(), EXPORT_DATA);
+						newData = new FEDataField_T<Post::FENodeData<vec3f  > >(sname.c_str(), EXPORT_DATA);
 						fem.AddDataField(newData);
 
 						// now, calculate gradient from scalar field

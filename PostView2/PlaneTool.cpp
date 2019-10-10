@@ -164,7 +164,7 @@ void CPlaneTool::UpdateNormal()
 	if ((node[0] > 0) && (node[1] > 0) && (node[2] > 0))
 	{
 		CDocument* doc = GetActiveDocument();
-		Post::FEMeshBase* pm = doc->GetActiveMesh();
+		Post::FEPostMesh* pm = doc->GetActiveMesh();
 
 		FENode& n1 = pm->Node(node[0]-1);
 		FENode& n2 = pm->Node(node[1]-1);
@@ -228,7 +228,7 @@ void CPlaneTool::update(bool breset)
 	{
 		CDocument* doc = GetActiveDocument();
 		int* node = ui->m_node;
-		Post::FEMeshBase& mesh = *doc->GetActiveMesh();
+		Post::FEPostMesh& mesh = *doc->GetActiveMesh();
 		const vector<FENode*> selectedNodes = doc->GetGLModel()->GetNodeSelection();
 		int N = (int)selectedNodes.size();
 		int nsel = 0;

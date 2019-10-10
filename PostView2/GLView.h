@@ -15,7 +15,7 @@ class CDocument;
 class CGLContext;
 
 namespace Post {
-	class FEMeshBase;
+	class FEPostMesh;
 	class CGLModel;
 }
 
@@ -66,7 +66,7 @@ inline bool operator == (const MyPoint& p1, const MyPoint& p2)
 // helper structur for picking nodes
 struct GLNODE_PICK
 {
-	Post::FEMeshBase*	m_pm;
+	Post::FEPostMesh*	m_pm;
 	int		m_node;
 };
 
@@ -186,8 +186,8 @@ public:
 	ANIMATION_MODE AnimationMode() const;
 	bool HasRecording() const;
 
-	bool FindFaceIntersection(const Ray& ray, const Post::FEMeshBase& mesh, Intersection& q);
-	bool FindElementIntersection(const Ray& ray, const Post::FEMeshBase& mesh, Intersection& q);
+	bool FindFaceIntersection(const Ray& ray, const Post::FEPostMesh& mesh, Intersection& q);
+	bool FindElementIntersection(const Ray& ray, const Post::FEPostMesh& mesh, Intersection& q);
 
 protected:
 	void initializeGL();
@@ -235,10 +235,10 @@ protected:
 	void RegionSelectNodes   (const SelectRegion& region, int mode);
 	void RegionSelectEdges   (const SelectRegion& region, int mode);
 
-	void TagBackfacingElements(Post::FEMeshBase& mesh);
-	void TagBackfacingFaces(Post::FEMeshBase& mesh);
-	void TagBackfacingNodes(Post::FEMeshBase& mesh);
-	void TagBackfacingEdges(Post::FEMeshBase& mesh);
+	void TagBackfacingElements(Post::FEPostMesh& mesh);
+	void TagBackfacingFaces(Post::FEPostMesh& mesh);
+	void TagBackfacingNodes(Post::FEPostMesh& mesh);
+	void TagBackfacingEdges(Post::FEPostMesh& mesh);
 
 	void AddRegionPoint(int x, int y);
 

@@ -76,7 +76,7 @@ void CMeasureAreaTool::OnApply()
 		const vector<FEFace*> selectedFaces = doc->GetGLModel()->GetFaceSelection();
 		m_nsel = (int)selectedFaces.size();
 
-		Post::FEMeshBase* currentMesh = ps->GetFEMesh();
+		Post::FEPostMesh* currentMesh = ps->GetFEMesh();
 
 		if (m_allSteps)
 		{
@@ -104,7 +104,7 @@ double CMeasureAreaTool::getValue(FEState* state, const std::vector<FEFace*>& se
 {
 	double area = 0.0;
 	int nsel = 0;
-	Post::FEMeshBase& mesh = *state->GetFEMesh();
+	Post::FEPostMesh& mesh = *state->GetFEMesh();
 	int N = (int)selectedFaces.size();
 	vector<vec3d> rt;
 	for (int i = 0; i<N; ++i)

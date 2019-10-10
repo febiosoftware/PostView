@@ -129,7 +129,7 @@ void CPointDistanceTool::updateLength()
 	if (doc && doc->IsValid())
 	{
 		FEModel& fem = *doc->GetFEModel();
-		Post::FEMeshBase& mesh = *doc->GetActiveMesh();
+		Post::FEPostMesh& mesh = *doc->GetActiveMesh();
 		int ntime = doc->currentTime();
 		int NN = mesh.Nodes();
 		if ((m_node1 > 0)&&(m_node2 > 0)&&(m_node1 <= NN)&&(m_node2 <= NN))
@@ -157,7 +157,7 @@ void CPointDistanceTool::update(bool reset)
 		CDocument* doc = GetActiveDocument();
 		if (doc && doc->IsValid())
 		{
-			Post::FEMeshBase& mesh = *doc->GetActiveMesh();
+			Post::FEPostMesh& mesh = *doc->GetActiveMesh();
 			const vector<FENode*> selectedNodes = doc->GetGLModel()->GetNodeSelection();
 			int N = (int) selectedNodes.size();
 			for (int i = 0; i<N; ++i)

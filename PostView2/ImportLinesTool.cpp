@@ -171,7 +171,7 @@ struct FRAG
 
 vec3f GetCoordinatesFromFrag(FEModel& fem, int nstate, FRAG& a)
 {
-	Post::FEMeshBase& mesh = *fem.GetFEMesh(0);
+	Post::FEPostMesh& mesh = *fem.GetFEMesh(0);
 	vec3f x[FEElement::MAX_NODES];
 
 	vec3f r0 = a.r0;
@@ -198,7 +198,7 @@ int CImportLinesTool::ReadAng2Format(const char* szfile)
 	if (fp == 0) return 0;
 
 	FEModel& fem = *doc->GetFEModel();
-	Post::FEMeshBase& mesh = *fem.GetFEMesh(0);
+	Post::FEPostMesh& mesh = *fem.GetFEMesh(0);
 
 	// read the magic number
 	unsigned int magic = 0;

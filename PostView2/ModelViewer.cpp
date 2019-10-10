@@ -95,7 +95,7 @@ class CMeshProps : public CPropertyList
 public:
 	CMeshProps(Post::FEModel* fem) : m_fem(fem)
 	{
-		Post::FEMeshBase& mesh = *fem->GetFEMesh(0);
+		Post::FEPostMesh& mesh = *fem->GetFEMesh(0);
 		addProperty("Nodes"         , CProperty::Int, "Number of nodes"         )->setFlags(CProperty::Visible);
 		addProperty("Faces"         , CProperty::Int, "Number of faces"         )->setFlags(CProperty::Visible);
 		addProperty("Solid Elements", CProperty::Int, "Number of solid elements")->setFlags(CProperty::Visible);
@@ -107,7 +107,7 @@ public:
 		QVariant v;
 		if (m_fem)
 		{
-			Post::FEMeshBase& mesh = *m_fem->GetFEMesh(0);
+			Post::FEPostMesh& mesh = *m_fem->GetFEMesh(0);
 			switch (i)
 			{
 			case 0: v = mesh.Nodes(); break;

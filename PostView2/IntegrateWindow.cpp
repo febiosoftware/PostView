@@ -118,7 +118,7 @@ void CIntegrateWindow::IntegrateSelection(CLineChartData& data)
 	// get the document
 	CDocument* pdoc = GetDocument();
 	FEModel& fem = *pdoc->GetFEModel();
-	Post::FEMeshBase& mesh = *fem.GetFEMesh(0);
+	Post::FEPostMesh& mesh = *fem.GetFEMesh(0);
 	CGLModel* po = pdoc->GetGLModel();
 
 	data.clear();
@@ -154,7 +154,7 @@ void CIntegrateWindow::IntegrateSelection(CLineChartData& data)
 }
 
 //-----------------------------------------------------------------------------
-double CIntegrateWindow::IntegrateNodes(Post::FEMeshBase& mesh, FEState* ps)
+double CIntegrateWindow::IntegrateNodes(Post::FEPostMesh& mesh, FEState* ps)
 {
 	double res = 0.0;
 	int N = mesh.Nodes();
@@ -170,7 +170,7 @@ double CIntegrateWindow::IntegrateNodes(Post::FEMeshBase& mesh, FEState* ps)
 }
 
 //-----------------------------------------------------------------------------
-double CIntegrateWindow::IntegrateEdges(Post::FEMeshBase& mesh, FEState* ps)
+double CIntegrateWindow::IntegrateEdges(Post::FEPostMesh& mesh, FEState* ps)
 {
 	assert(false);
 	return 0.0;
@@ -179,7 +179,7 @@ double CIntegrateWindow::IntegrateEdges(Post::FEMeshBase& mesh, FEState* ps)
 //-----------------------------------------------------------------------------
 // This function calculates the integral over a surface. Note that if the surface
 // is triangular, then we calculate the integral from a degenerate quad.
-double CIntegrateWindow::IntegrateFaces(Post::FEMeshBase& mesh, FEState* ps)
+double CIntegrateWindow::IntegrateFaces(Post::FEPostMesh& mesh, FEState* ps)
 {
 	double res = 0.0;
 	float v[4];
@@ -209,7 +209,7 @@ double CIntegrateWindow::IntegrateFaces(Post::FEMeshBase& mesh, FEState* ps)
 //-----------------------------------------------------------------------------
 // This function calculates the integral over a volume. Note that if the volume
 // is not hexahedral, then we calculate the integral from a degenerate hex.
-double CIntegrateWindow::IntegrateElems(Post::FEMeshBase& mesh, FEState* ps)
+double CIntegrateWindow::IntegrateElems(Post::FEPostMesh& mesh, FEState* ps)
 {
 	double res = 0.0;
 	float v[8];

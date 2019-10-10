@@ -161,7 +161,7 @@ void CImageViewer::UpdatePath()
 		CGLModel& mdl = *ui->m_img->GetModel();
 		FEModel& fem = *mdl.GetFEModel();
 
-		Post::FEMeshBase& mesh = *mdl.GetActiveMesh();
+		Post::FEPostMesh& mesh = *mdl.GetActiveMesh();
 
 		C3DImage& im3d = *ui->m_img->GetImageSource()->Get3DImage();
 		int NX = im3d.Width();

@@ -122,7 +122,7 @@ void C3PointAngleTool::update(bool breset)
 		CDocument* doc = GetActiveDocument();
 		if (doc && doc->IsValid())
 		{
-			Post::FEMeshBase& mesh = *doc->GetActiveMesh();
+			Post::FEPostMesh& mesh = *doc->GetActiveMesh();
 			const vector<FENode*> selectedNodes = doc->GetGLModel()->GetNodeSelection();
 			int N = (int) selectedNodes.size();
 			int nsel = 0;
@@ -163,7 +163,7 @@ void C3PointAngleTool::UpdateAngle()
 	if (doc && doc->IsValid())
 	{
 		FEModel& fem = *doc->GetFEModel();
-		Post::FEMeshBase& mesh = *doc->GetActiveMesh();
+		Post::FEPostMesh& mesh = *doc->GetActiveMesh();
 		int ntime = doc->currentTime();
 		int NN = mesh.Nodes();
 		if ((m_node[0] >   0)&&(m_node[1] >   0)&&(m_node[2] >   0)&&

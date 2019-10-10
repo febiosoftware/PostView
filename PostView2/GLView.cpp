@@ -1227,7 +1227,7 @@ void CGLView::RenderTags()
 	m_ffar  = 100*radius;
 
 	// get the mesh
-	Post::FEMeshBase& mesh = *pdoc->GetActiveMesh();
+	Post::FEPostMesh& mesh = *pdoc->GetActiveMesh();
 
 	// create the tag array.
 	// We add a tag for each selected item
@@ -1557,7 +1557,7 @@ void CGLView::ZoomRect(MyPoint p0, MyPoint p1)
 }
 
 //-----------------------------------------------------------------------------
-bool FaceInsideClipRegion(const FEFace& face, const Post::FEMeshBase& mesh)
+bool FaceInsideClipRegion(const FEFace& face, const Post::FEPostMesh& mesh)
 {
 	int nf = face.Nodes();
 	for (int i = 0; i<nf; ++i)
@@ -1569,7 +1569,7 @@ bool FaceInsideClipRegion(const FEFace& face, const Post::FEMeshBase& mesh)
 }
 
 //-----------------------------------------------------------------------------
-bool ElementInsideClipRegion(const FEElement_& elem, const Post::FEMeshBase& mesh)
+bool ElementInsideClipRegion(const FEElement_& elem, const Post::FEPostMesh& mesh)
 {
 	int ne = elem.Nodes();
 	for (int i = 0; i<ne; ++i)
@@ -1581,7 +1581,7 @@ bool ElementInsideClipRegion(const FEElement_& elem, const Post::FEMeshBase& mes
 }
 
 //-----------------------------------------------------------------------------
-bool CGLView::FindFaceIntersection(const Ray& ray, const Post::FEMeshBase& mesh, Intersection& q)
+bool CGLView::FindFaceIntersection(const Ray& ray, const Post::FEPostMesh& mesh, Intersection& q)
 {
 	int faces = mesh.Faces();
 	vec3d rmin;
@@ -1633,7 +1633,7 @@ void CGLView::SelectFaces(int x0, int y0, int mode)
 
 	// get the active mesh
 	CGLModel& mdl = *pdoc->GetGLModel();
-	Post::FEMeshBase* pm = pdoc->GetActiveMesh();
+	Post::FEPostMesh* pm = pdoc->GetActiveMesh();
 
 	// convert the point to a ray
 	Ray ray = PointToRay(x0 * m_dpr, y0 * m_dpr);
@@ -1671,7 +1671,7 @@ void CGLView::SelectFaces(int x0, int y0, int mode)
 }
 
 //-----------------------------------------------------------------------------
-bool regionFaceIntersect(WorldToScreen& transform, const SelectRegion& region, FEFace& face, Post::FEMeshBase* pm, double dpr)
+bool regionFaceIntersect(WorldToScreen& transform, const SelectRegion& region, FEFace& face, Post::FEPostMesh* pm, double dpr)
 {
 	vec3d r[4], p[4];
 	bool binside = false;
@@ -1728,7 +1728,7 @@ void CGLView::RegionSelectElements(const SelectRegion& region, int mode)
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
-	Post::FEMeshBase* pm = pdoc->GetActiveMesh();
+	Post::FEPostMesh* pm = pdoc->GetActiveMesh();
 
 	makeCurrent();
 	WorldToScreen transform(this);
@@ -1783,7 +1783,7 @@ void CGLView::RegionSelectFaces(const SelectRegion& region, int mode)
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
-	Post::FEMeshBase* pm = pdoc->GetActiveMesh();
+	Post::FEPostMesh* pm = pdoc->GetActiveMesh();
 
 	makeCurrent();
 	WorldToScreen transform(this);
@@ -1823,7 +1823,7 @@ void CGLView::RegionSelectNodes(const SelectRegion& region, int mode)
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
-	Post::FEMeshBase* pm = pdoc->GetActiveMesh();
+	Post::FEPostMesh* pm = pdoc->GetActiveMesh();
 	int NN = pm->Nodes();
 
 	makeCurrent();
@@ -1872,7 +1872,7 @@ void CGLView::RegionSelectEdges(const SelectRegion& region, int mode)
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
-	Post::FEMeshBase* pm = pdoc->GetActiveMesh();
+	Post::FEPostMesh* pm = pdoc->GetActiveMesh();
 
 	makeCurrent();
 	WorldToScreen transform(this);
@@ -1915,7 +1915,7 @@ void CGLView::RegionSelectEdges(const SelectRegion& region, int mode)
 }
 
 //-----------------------------------------------------------------------------
-bool CGLView::FindElementIntersection(const Ray& ray, const Post::FEMeshBase& mesh, Intersection& q)
+bool CGLView::FindElementIntersection(const Ray& ray, const Post::FEPostMesh& mesh, Intersection& q)
 {
 	vec3d rn[10];
 
@@ -2051,7 +2051,7 @@ void CGLView::SelectElements(int x0, int y0, int mode)
 
 	// get the active mesh
 	CGLModel& mdl = *pdoc->GetGLModel();
-	Post::FEMeshBase* pm = pdoc->GetActiveMesh();
+	Post::FEPostMesh* pm = pdoc->GetActiveMesh();
 
 	// convert the point to a ray
 	Ray ray = PointToRay(x0 * m_dpr, y0 * m_dpr);
@@ -2102,7 +2102,7 @@ bool IsBackfacing(const vec3d r[3])
 	return b;
 }
 
-void CGLView::TagBackfacingFaces(Post::FEMeshBase& mesh)
+void CGLView::TagBackfacingFaces(Post::FEPostMesh& mesh)
 {
 	WorldToScreen transform(this);
 
@@ -2157,7 +2157,7 @@ void CGLView::TagBackfacingFaces(Post::FEMeshBase& mesh)
 }
 
 //-----------------------------------------------------------------------------
-void CGLView::TagBackfacingElements(Post::FEMeshBase& mesh)
+void CGLView::TagBackfacingElements(Post::FEPostMesh& mesh)
 {
 	WorldToScreen transform(this);
 	vec3d r[4], p1[3], p2[3];
@@ -2279,7 +2279,7 @@ void CGLView::TagBackfacingElements(Post::FEMeshBase& mesh)
 }
 
 //-----------------------------------------------------------------------------
-void CGLView::TagBackfacingNodes(Post::FEMeshBase& mesh)
+void CGLView::TagBackfacingNodes(Post::FEPostMesh& mesh)
 {
 	// first tag all surface nodes
 	int NF = mesh.Faces();
@@ -2306,7 +2306,7 @@ void CGLView::TagBackfacingNodes(Post::FEMeshBase& mesh)
 }
 
 //-----------------------------------------------------------------------------
-void CGLView::TagBackfacingEdges(Post::FEMeshBase& mesh)
+void CGLView::TagBackfacingEdges(Post::FEPostMesh& mesh)
 {
 	int NE = mesh.Edges();
 	for (int i = 0; i<NE; ++i) mesh.Edge(i).m_ntag = 1;
@@ -2334,7 +2334,7 @@ void CGLView::SelectNodes(int x0, int y0, int mode)
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
-	Post::FEMeshBase* pm = pdoc->GetActiveMesh();
+	Post::FEPostMesh* pm = pdoc->GetActiveMesh();
 	int NN = pm->Nodes();
 
 	makeCurrent();
@@ -2414,7 +2414,7 @@ void CGLView::SelectEdges(int x0, int y0, int mode)
 
 	CGLModel& mdl = *pdoc->GetGLModel();
 	FEModel* ps = pdoc->GetFEModel();
-	Post::FEMeshBase* pm = pdoc->GetActiveMesh();
+	Post::FEPostMesh* pm = pdoc->GetActiveMesh();
 
 	int X = x0*m_dpr;
 	int Y = y0*m_dpr;
@@ -2762,7 +2762,7 @@ void CGLView::RenderTrack()
 	CDocument* pdoc = GetDocument();
 	if ((pdoc == nullptr) || (pdoc->IsValid() == false)) return;
 
-	Post::FEMeshBase* pm = pdoc->GetActiveMesh();
+	Post::FEPostMesh* pm = pdoc->GetActiveMesh();
 	int* nt = m_ntrack;
 
 	glPushAttrib(GL_ENABLE_BIT);
@@ -2826,7 +2826,7 @@ void CGLView::PositionCamera()
 	// see if we need to track anything
 	if (pdoc->IsValid() && m_btrack)
 	{
-		Post::FEMeshBase* pm = pdoc->GetActiveMesh();
+		Post::FEPostMesh* pm = pdoc->GetActiveMesh();
 		int NN = pm->Nodes();
 		int* nt = m_ntrack;
 		if ((nt[0] >= NN) || (nt[1] >= NN) || (nt[2] >= NN)) { m_btrack = false; return; }
@@ -3131,7 +3131,7 @@ void CGLView::TrackSelection(bool b)
 		CGLModel* model = pdoc->GetGLModel(); assert(model);
 
 		int nmode = model->GetSelectionMode();
-		Post::FEMeshBase* pm = pdoc->GetActiveMesh();
+		Post::FEPostMesh* pm = pdoc->GetActiveMesh();
 		if (nmode == SELECT_ELEMS)
 		{
 			const vector<FEElement_*> selElems = pdoc->GetGLModel()->GetElementSelection();

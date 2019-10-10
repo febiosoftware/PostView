@@ -54,7 +54,7 @@ void CMeasureVolumeTool::OnApply()
 	{
 		FEModel& fem = *doc->GetFEModel();
 		int ntime = fem.currentTime();
-		Post::FEMeshBase& mesh = *fem.GetFEMesh(0);
+		Post::FEPostMesh& mesh = *fem.GetFEMesh(0);
 		const vector<FEFace*> selectedFaces = doc->GetGLModel()->GetFaceSelection();
 		int N = (int)selectedFaces.size();
 		for (int i = 0; i<N; ++i)

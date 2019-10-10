@@ -82,7 +82,7 @@ void CPointCongruencyTool::OnApply()
 	{
 		int node = ui->node->value() - 1;
 		FEModel& fem = *doc->GetFEModel();
-		Post::FEMeshBase& mesh = *fem.GetFEMesh(0);
+		Post::FEPostMesh& mesh = *fem.GetFEMesh(0);
 		if ((node >= 0)&&(node<mesh.Nodes()))
 		{
 			FEPointCongruency tool;

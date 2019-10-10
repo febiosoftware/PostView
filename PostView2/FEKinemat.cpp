@@ -96,7 +96,7 @@ bool FEKinemat::ReadKine(const char* szfile)
 bool FEKinemat::BuildStates()
 {
 	FEModel& fem = *m_pDoc->GetFEModel();
-	Post::FEMeshBase& mesh = *fem.GetFEMesh(0);
+	Post::FEPostMesh& mesh = *fem.GetFEMesh(0);
 	int NMAT = fem.Materials();
 	int NN = mesh.Nodes();
 	int NE = mesh.Elements();
@@ -143,7 +143,7 @@ bool FEKinemat::BuildStates()
 		}
 
 		// get the displacement field
-		FENodeData<vec3f>& d = dynamic_cast<FENodeData<vec3f>&>(ps->m_Data[ND]);
+		Post::FENodeData<vec3f>& d = dynamic_cast<Post::FENodeData<vec3f>&>(ps->m_Data[ND]);
 
 		for (int i=0; i<NN; ++i) d[i] = vec3f(0.f, 0.f, 0.f);
 

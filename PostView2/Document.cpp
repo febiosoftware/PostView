@@ -127,7 +127,7 @@ void ModelData::SetData(CGLModel* po)
 		for (int i=0; i<N; ++i) *ps->GetMaterial(i) = m_mat[i];
 
 		// update the mesh state
-		Post::FEMeshBase* pmesh = po->GetActiveMesh();
+		Post::FEPostMesh* pmesh = po->GetActiveMesh();
 		for (int i=0; i<N; ++i)
 		{
 			FEMaterial* pm = ps->GetMaterial(i);
@@ -806,7 +806,7 @@ BOX CDocument::GetExtentsBox()
 		return box;
 	}
 
-	Post::FEMeshBase& mesh = *GetActiveMesh();
+	Post::FEPostMesh& mesh = *GetActiveMesh();
 	int NE = mesh.Elements(), nvis = 0;
 	for (int i=0; i<NE; ++i)
 	{
@@ -844,7 +844,7 @@ BOX CDocument::GetSelectionBox()
 		return box;
 	}
 
-	Post::FEMeshBase& mesh = *GetActiveMesh();
+	Post::FEPostMesh& mesh = *GetActiveMesh();
 	const vector<FEElement_*> selElems = GetGLModel()->GetElementSelection();
 	for (int i=0; i<(int)selElems.size(); ++i)
 	{
@@ -962,7 +962,7 @@ bool CDocument::ExportBYU(const char* szfile)
 //-----------------------------------------------------------------------------
 void CDocument::SelectElemsInRange(float fmin, float fmax, bool bsel)
 {
-	Post::FEMeshBase* pm = GetActiveMesh();
+	Post::FEPostMesh* pm = GetActiveMesh();
 	int N = pm->Elements();
 	FEState* ps = m_pGLModel->currentState();
 	for (int i=0; i<N; ++i)
@@ -981,7 +981,7 @@ void CDocument::SelectElemsInRange(float fmin, float fmax, bool bsel)
 //-----------------------------------------------------------------------------
 void CDocument::SelectNodesInRange(float fmin, float fmax, bool bsel)
 {
-	Post::FEMeshBase* pm = GetActiveMesh();
+	Post::FEPostMesh* pm = GetActiveMesh();
 	int N = pm->Nodes();
 	FEState* ps = m_pGLModel->currentState();
 	for (int i=0; i<N; ++i)
@@ -1000,7 +1000,7 @@ void CDocument::SelectNodesInRange(float fmin, float fmax, bool bsel)
 //-----------------------------------------------------------------------------
 void CDocument::SelectEdgesInRange(float fmin, float fmax, bool bsel)
 {
-	Post::FEMeshBase* pm = GetActiveMesh();
+	Post::FEPostMesh* pm = GetActiveMesh();
 	int N = pm->Edges();
 	FEState* ps = m_pGLModel->currentState();
 	for (int i=0; i<N; ++i)
@@ -1019,7 +1019,7 @@ void CDocument::SelectEdgesInRange(float fmin, float fmax, bool bsel)
 //-----------------------------------------------------------------------------
 void CDocument::SelectFacesInRange(float fmin, float fmax, bool bsel)
 {
-	Post::FEMeshBase* pm = GetActiveMesh();
+	Post::FEPostMesh* pm = GetActiveMesh();
 	FEState* ps = m_pGLModel->currentState();
 	int N = pm->Faces();
 	for (int i=0; i<N; ++i)

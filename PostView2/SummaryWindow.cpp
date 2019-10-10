@@ -40,7 +40,7 @@ void CSummaryWindow::Update(bool breset, bool bfit)
 
 	CGLModel* po = doc->GetGLModel();
 	FEModel* pfem = doc->GetFEModel();
-	Post::FEMeshBase* pfe = po->GetActiveMesh();
+	Post::FEPostMesh* pfe = po->GetActiveMesh();
 	int nodes = pfe->Nodes();
 
 	// get the selection mode
@@ -143,7 +143,7 @@ CSummaryWindow::RANGE CSummaryWindow::EvalNodeRange(FEModel& fem, int nstate, bo
 	RANGE rng = {-1e20f, 1e20f, 0.f};
 
 	FEState& state = *fem.GetState(nstate);
-	Post::FEMeshBase& mesh = *state.GetFEMesh();
+	Post::FEPostMesh& mesh = *state.GetFEMesh();
 
 	float sum = 0;
 	
@@ -174,7 +174,7 @@ CSummaryWindow::RANGE CSummaryWindow::EvalEdgeRange(FEModel& fem, int nstate, bo
 	RANGE rng = {-1e20f, 1e20f, 0.f};
 
 	FEState& state = *fem.GetState(nstate);
-	Post::FEMeshBase& mesh = *state.GetFEMesh();
+	Post::FEPostMesh& mesh = *state.GetFEMesh();
 
 	float sum = 0;
 	
@@ -205,7 +205,7 @@ CSummaryWindow::RANGE CSummaryWindow::EvalElemRange(FEModel& fem, int nstate, bo
 	RANGE rng = {-1e20f, 1e20f, 0.f};
 
 	FEState& state = *fem.GetState(nstate);
-	Post::FEMeshBase& mesh = *state.GetFEMesh();
+	Post::FEPostMesh& mesh = *state.GetFEMesh();
 
 	ValArray& elemData = state.m_ElemData;
 
@@ -247,7 +247,7 @@ CSummaryWindow::RANGE CSummaryWindow::EvalFaceRange(FEModel& fem, int nstate, bo
 	RANGE rng = {-1e20f, 1e20f, 0.f};
 
 	FEState& state = *fem.GetState(nstate);
-	Post::FEMeshBase& mesh = *state.GetFEMesh();
+	Post::FEPostMesh& mesh = *state.GetFEMesh();
 
 	float sum = 0.f;
 	int NF = mesh.Faces();
