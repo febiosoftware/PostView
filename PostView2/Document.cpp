@@ -839,8 +839,7 @@ BOX CDocument::GetSelectionBox()
 
 	if (IsValid() == false)
 	{
-		box.x0 = box.y0 = box.z0 = -1.f;
-		box.x1 = box.y1 = box.z1 =  1.f;
+		box = BOX(-1, -1, -1, 1, 1, 1);
 		return box;
 	}
 

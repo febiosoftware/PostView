@@ -293,7 +293,7 @@ public:
 		selectFaces->setWhatsThis("<font color=\"black\">Turn on face selection mode");
 		selectElems->setWhatsThis("<font color=\"black\">Turn on element selection mode");
 		
-		QAction* actionZoomSelected = addAction("Zoom selected", "actionZoomSelected", ":/icons/zoom_selected.png"); actionZoomSelected->setShortcut(Qt::Key_S);
+		QAction* actionZoomSelected = addAction("Zoom selected", "actionZoomSelected", ":/icons/zoom_selected.png"); actionZoomSelected->setShortcut(Qt::Key_F);
 		QAction* actionZoomExtents  = addAction("Zoom extents" , "actionZoomExtents" , ":/icons/zoom_extents.png");
 
 		actionZoomSelected->setWhatsThis("<font color=\"black\">Click this to zoom in on the current selection.\nIf nothing selected this will zoom to the entire model");
