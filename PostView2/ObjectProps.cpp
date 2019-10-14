@@ -140,7 +140,7 @@ QVariant CObjectProps::GetPropertyValue(Param& p)
 	break;
 	case Param_VEC3D:
 	{
-		vec3d r = p.GetVecValue();
+		vec3d r = p.GetVec3dValue();
 		QString t = Vec3dToString(r);
 		return t;
 	}
@@ -184,7 +184,7 @@ void CObjectProps::SetPropertyValue(Param& p, const QVariant& v)
 	{
 		QString t = v.toString();
 		vec3d r = StringToVec3d(t);
-		p.SetVecValue(r);
+		p.SetVec3dValue(r);
 	}
 	break;
 	case Param_COLOR:
