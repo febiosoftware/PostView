@@ -16,7 +16,7 @@
 #include <PostGL/GLModel.h>
 using namespace Post;
 
-CSummaryWindow::CSummaryWindow(CMainWindow* wnd) : CGraphWindow(wnd)
+CSummaryWindow::CSummaryWindow(CMainWindow* wnd) : CGraphWindow(wnd, 0)
 {
 	CDocument* doc = GetDocument();
 	QString title = "PostView2: Summary";

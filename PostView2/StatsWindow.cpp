@@ -17,7 +17,7 @@
 #include <PostGL/GLPlaneCutPlot.h>
 using namespace Post;
 
-CStatsWindow::CStatsWindow(CMainWindow* wnd) : CGraphWindow(wnd)
+CStatsWindow::CStatsWindow(CMainWindow* wnd) : CGraphWindow(wnd, 0)
 {
 	QString title = "PostView2: Statistics";
 	CDocument* doc = GetDocument();

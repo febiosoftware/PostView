@@ -17,7 +17,7 @@
 #include <PostGL/GLPlaneCutPlot.h>
 using namespace Post;
 
-CIntegrateWindow::CIntegrateWindow(CMainWindow* wnd) : CGraphWindow(wnd)
+CIntegrateWindow::CIntegrateWindow(CMainWindow* wnd) : CGraphWindow(wnd, 0)
 {
 	CDocument* doc = GetDocument();
 	QString title = "PostView2: Integrate";
