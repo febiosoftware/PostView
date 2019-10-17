@@ -137,7 +137,7 @@ bool CDocManager::SaveSession(const std::string& sfile)
 								xml.add_leaf("cut_hidden", pcut->m_bcut_hidden);
 
 								double a[4];
-								pcut->GetPlaneEqn(a);
+								pcut->GetNormalizedEquations(a);
 								xml.add_leaf("plane", a, 4);
 							}
 							xml.close_branch();
@@ -434,7 +434,7 @@ bool CDocManager::OpenSession(const std::string& sfile)
 							{
 								double a[4];
 								tag.value(a, 4);
-								pg->SetPlaneEqn(a);
+//								pg->SetPlaneEqn(a);
 							}
 							xml.NextTag(tag);
 						}
