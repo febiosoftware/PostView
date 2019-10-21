@@ -2677,13 +2677,12 @@ void CGLView::RenderDoc()
 		glDisable(GL_CULL_FACE);
 
 		// setup the rendering context
-		CGLContext rc;
-		rc.m_cam = &GetCamera();
-		rc.m_q = cam.GetOrientation();
-		rc.m_showMesh = view.m_bmesh;
-		rc.m_showOutline = view.m_boutline;
-		rc.m_springThick = view.m_fspringthick;
-		rc.m_bext = view.m_bext;
+		m_rc.m_cam = &GetCamera();
+		m_rc.m_q = cam.GetOrientation();
+		m_rc.m_showMesh = view.m_bmesh;
+		m_rc.m_showOutline = view.m_boutline;
+		m_rc.m_springThick = view.m_fspringthick;
+		m_rc.m_bext = view.m_bext;
 
 		// get the GL model
 		CGLModel* po = pdoc->GetGLModel();
@@ -2692,7 +2691,7 @@ void CGLView::RenderDoc()
 		if (po && po->IsActive())
 		{
 			// render the GL model
-			po->Render(rc);
+			po->Render(m_rc);
 
 			VIEWSETTINGS& ops = GetViewSettings();
 			BOX box = pdoc->GetBoundingBox();
@@ -2708,7 +2707,7 @@ void CGLView::RenderDoc()
 		list<CGLVisual*>::iterator ot = OL.begin();
 		for (int i=0; i<(int) OL.size(); ++i, ++ot)
 		{
-			if ((*ot)->IsActive()) (*ot)->Render(rc);
+			if ((*ot)->IsActive()) (*ot)->Render(m_rc);
 		}
 
 		// render the volume image data if present
@@ -2727,7 +2726,7 @@ void CGLView::RenderDoc()
 					{
 						if (pir->AllowClipping()) CGLPlaneCutPlot::EnableClipPlanes();
 						else CGLPlaneCutPlot::DisableClipPlanes();
-						pir->Render(rc);
+						pir->Render(m_rc);
 					}
 				}
 			}
@@ -2833,63 +2832,44 @@ void CGLView::PositionCamera()
 
 		FEModel& fem = *pdoc->GetFEModel();
 
-		vec3d a = fem.NodePosition(nt[0], 0);
-		vec3d b = fem.NodePosition(nt[1], 0);
-		vec3d c = fem.NodePosition(nt[2], 0);
-
-		vec3d r0 = a;
-
-		vec3d E1 = (b - a);
-		vec3d E3 = E1^(c - a);
-		vec3d E2 = E3^E1;
-		E1.Normalize();
-		E2.Normalize();
-		E3.Normalize();
-
-		a = pm->Node(nt[0]).r;
-		b = pm->Node(nt[1]).r;
-		c = pm->Node(nt[2]).r;
-
-		vec3d r1 = a;
+		vec3d a = pm->Node(nt[0]).r;
+		vec3d b = pm->Node(nt[1]).r;
+		vec3d c = pm->Node(nt[2]).r;
 
 		vec3d e1 = (b - a);
-		vec3d e3 = e1^(c - a);
+		vec3d e3 = e1 ^ (c - a);
 		vec3d e2 = e3^e1;
 		e1.Normalize();
 		e2.Normalize();
 		e3.Normalize();
 
-		vec3d dr = r0 - r1;
-		glTranslatef(dr.x, dr.y, dr.z);
+		vec3d r0 = GetCamera().GetPosition();
+		vec3d r1 = a;
 
-		glTranslatef(r1.x, r1.y, r1.z);
+		// undo camera translation
+		glTranslatef(r0.x, r0.y, r0.z);
 
 		// setup the rotation Matrix
-		GLfloat m[4][4] = {0}, Q[4][4] = {0}, Qi[4][4] = {0};
+		// NOTE: This would rotate to the element's coordinate system,
+		// but this may change the orientation a lot so it was turned off.
+		/*		GLfloat m[4][4] = { 0 };
 		m[3][3] = 1.f;
-		Q[3][3] = 1.f;
-		Qi[3][3] = 1.f;
-
-		Q[0][0] = E1.x; Q[0][1] = E1.y; Q[0][2] = E1.z;
-		Q[1][0] = E2.x; Q[1][1] = E2.y; Q[1][2] = E2.z;
-		Q[2][0] = E3.x; Q[2][1] = E3.y; Q[2][2] = E3.z;
-
-		Qi[0][0] = E1.x; Qi[1][0] = E1.y; Qi[2][0] = E1.z;
-		Qi[0][1] = E2.x; Qi[1][1] = E2.y; Qi[2][1] = E2.z;
-		Qi[0][2] = E3.x; Qi[1][2] = E3.y; Qi[2][2] = E3.z;
-
-		m[0][0] = E1*e1; m[0][1] = E1*e2; m[0][2] = E1*e3;
-		m[1][0] = E2*e1; m[1][1] = E2*e2; m[1][2] = E2*e3;
-		m[2][0] = E3*e1; m[2][1] = E3*e2; m[2][2] = E3*e3;
-		glMultMatrixf(&Q[0][0]);
+		m[0][0] = e1.x; m[0][1] = e2.x; m[0][2] = e3.x;
+		m[1][0] = e1.y; m[1][1] = e2.y; m[1][2] = e3.y;
+		m[2][0] = e1.z; m[2][1] = e2.z; m[2][2] = e3.z;
 		glMultMatrixf(&m[0][0]);
-		glMultMatrixf(&Qi[0][0]);
-
-		vec3d rq = mult_matrix(Q, r1);
-		rq = mult_matrix(m, rq);
-		rq = mult_matrix(Qi, rq);
-
+		*/
+		// center camera on track point
 		glTranslatef(-r1.x, -r1.y, -r1.z);
+
+		m_rc.m_btrack = true;
+		m_rc.m_track_pos = r1;
+
+		// This would make the plane cut relative to the element coordinate system
+		//		m_rc.m_track_rot = quatd(vec3d(1, 0, 0), e1);
+
+		// Use this if you don't want to orient planecut in element coordinate system
+		m_rc.m_track_rot = quatd(0, vec3d(0, 0, 1));
 	}
 }
 

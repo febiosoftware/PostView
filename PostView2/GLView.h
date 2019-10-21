@@ -6,6 +6,7 @@
 #include <MeshLib/Intersect.h>
 #include <GLWLib/GLWidgetManager.h>
 #include <QNativeGestureEvent>
+#include <GLLib/GLContext.h>
 #include "ViewSettings.h"
 
 //-----------------------------------------------------------------------------
@@ -316,6 +317,9 @@ private:
 
 	ANIMATION_MODE	m_nanim;	// the animation mode
 	CAnimation*		m_panim;	// animation object
+
+public:
+	CGLContext	m_rc;
 
 private:
 	static int	m_viewport[4];		//!< store viewport coordinates
