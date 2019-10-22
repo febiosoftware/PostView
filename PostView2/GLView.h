@@ -269,6 +269,8 @@ public:
 protected:
 	void setupProjectionMatrix();
 
+	void SetTrackingData(int n[3]);
+
 protected:
 	int OnPush   (int nevent);
 	int OnKeyDown(int nevent);
@@ -293,6 +295,7 @@ private:
 	// tracking
 	bool	m_btrack;
 	int		m_ntrack[3];
+	mat3d	m_rot0;
 
 	// the GL widgets
 	bool			m_bShowWidgets;
