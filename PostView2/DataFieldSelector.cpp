@@ -155,7 +155,7 @@ void CDataSelectorButton::UpdateMenu()
 	if (m_src) m_src->BuildMenu(m_menu);
 
 	// try to set the old field
-	if (noldField != m_currentValue) setCurrentValue(noldField);
+//	if (noldField != m_currentValue) setCurrentValue(noldField);
 }
 
 int CDataSelectorButton::currentValue() const
