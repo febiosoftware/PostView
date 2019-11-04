@@ -222,7 +222,7 @@ void CMainWindow::UpdateStatusMessage()
 					{
 						FENode& n = mesh->Node(nn);
 						vec3d r = n.r;
-						float f = mdl.currentState()->m_NODE[nn].m_val;
+						float f = mdl.GetActiveState()->m_NODE[nn].m_val;
 						sprintf(sz, "1 node selected: Id = %d, val = %g, pos = (%lg, %lg, %lg)", nn + 1, f, r.x, r.y, r.z);
 					}
 					else if (N > 1)
@@ -247,7 +247,7 @@ void CMainWindow::UpdateStatusMessage()
 					if (N == 1)
 					{
 						FEEdge& n = mesh->Edge(nn);
-						float f = mdl.currentState()->m_EDGE[nn].m_val;
+						float f = mdl.GetActiveState()->m_EDGE[nn].m_val;
 						sprintf(sz, "1 edge selected");
 					}
 					else if (N > 1)
@@ -2052,7 +2052,7 @@ void CMainWindow::UpdatePlayToolbar(bool breset)
 	if (mdl == 0) ui->playToolBar->setDisabled(true);
 	else
 	{
-		int ntime = mdl->currentTimeIndex() + 1;
+		int ntime = mdl->CurrentTimeIndex() + 1;
 
 		if (breset)
 		{

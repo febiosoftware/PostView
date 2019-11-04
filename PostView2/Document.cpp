@@ -336,21 +336,21 @@ std::string CDocument::GetFieldString()
 int CDocument::currentTime() 
 { 
 	if (m_pGLModel)
-		return m_pGLModel->currentTimeIndex(); 
+		return m_pGLModel->CurrentTimeIndex(); 
 	else return -1;
 }
 
 //-----------------------------------------------------------------------------
 float CDocument::GetTimeValue()
 { 
-	if (m_pGLModel) return m_pGLModel->currentTime(); 
+	if (m_pGLModel) return m_pGLModel->CurrentTime(); 
 	else return 0.f;
 }
 
 //-----------------------------------------------------------------------------
 float CDocument::GetTimeValue(int n)
 {
-	if (m_pGLModel) return m_pGLModel->GetTimeValue(n);
+	if (m_pGLModel) return m_pGLModel->GetFEModel()->GetTimeValue(n);
 	else return 0.f;
 }
 
@@ -468,7 +468,7 @@ bool CDocument::LoadFEModel(FEFileReader* pimp, const char* szfile, bool bup)
 	ModelData MD(m_pGLModel);
 
 	// get the current time index
-	int ntime = (m_pGLModel ? m_pGLModel->currentTimeIndex() : 0);
+	int ntime = (m_pGLModel ? m_pGLModel->CurrentTimeIndex() : 0);
 
 	// remove the old object
 	delete m_pGLModel; m_pGLModel = 0;
@@ -556,7 +556,7 @@ void CDocument::SetCurrentTime(int ntime)
 {
 	if (m_bValid && m_pGLModel)
 	{
-		m_pGLModel->setCurrentTimeIndex(ntime);
+		m_pGLModel->SetCurrentTimeIndex(ntime);
 		UpdateFEModel();
 	}
 }
@@ -963,7 +963,7 @@ void CDocument::SelectElemsInRange(float fmin, float fmax, bool bsel)
 {
 	Post::FEPostMesh* pm = GetActiveMesh();
 	int N = pm->Elements();
-	FEState* ps = m_pGLModel->currentState();
+	FEState* ps = m_pGLModel->GetActiveState();
 	for (int i=0; i<N; ++i)
 	{
 		FEElement_& el = pm->ElementRef(i);
@@ -982,7 +982,7 @@ void CDocument::SelectNodesInRange(float fmin, float fmax, bool bsel)
 {
 	Post::FEPostMesh* pm = GetActiveMesh();
 	int N = pm->Nodes();
-	FEState* ps = m_pGLModel->currentState();
+	FEState* ps = m_pGLModel->GetActiveState();
 	for (int i=0; i<N; ++i)
 	{
 		FENode& node = pm->Node(i);
@@ -1001,7 +1001,7 @@ void CDocument::SelectEdgesInRange(float fmin, float fmax, bool bsel)
 {
 	Post::FEPostMesh* pm = GetActiveMesh();
 	int N = pm->Edges();
-	FEState* ps = m_pGLModel->currentState();
+	FEState* ps = m_pGLModel->GetActiveState();
 	for (int i=0; i<N; ++i)
 	{
 		FEEdge& edge = pm->Edge(i);
@@ -1019,7 +1019,7 @@ void CDocument::SelectEdgesInRange(float fmin, float fmax, bool bsel)
 void CDocument::SelectFacesInRange(float fmin, float fmax, bool bsel)
 {
 	Post::FEPostMesh* pm = GetActiveMesh();
-	FEState* ps = m_pGLModel->currentState();
+	FEState* ps = m_pGLModel->GetActiveState();
 	int N = pm->Faces();
 	for (int i=0; i<N; ++i)
 	{

@@ -71,7 +71,7 @@ void CMeasureAreaTool::OnApply()
 	{
 		CGLModel& m = *doc->GetGLModel();
 		FEModel& fem = *doc->GetFEModel();
-		int index = m.currentTimeIndex();
+		int index = m.CurrentTimeIndex();
 		FEState* ps = fem.GetState(index);
 		const vector<FEFace*> selectedFaces = doc->GetGLModel()->GetFaceSelection();
 		m_nsel = (int)selectedFaces.size();
