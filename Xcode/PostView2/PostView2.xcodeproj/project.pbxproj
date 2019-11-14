@@ -34,12 +34,6 @@
 		D571E01220385DE700A7B96D /* FileThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D571E00F20385DE700A7B96D /* FileThread.cpp */; };
 		D576BB3220CACBD100F09942 /* moc_DlgAddEquation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D576BB3120CACBD100F09942 /* moc_DlgAddEquation.cpp */; };
 		D5A65E0F1DBFA53F00B44009 /* DlgFileInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */; };
-		D5BB99ED237B544900416F37 /* libavformat.58.20.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5BB99E8237B544600416F37 /* libavformat.58.20.100.dylib */; };
-		D5BB99EE237B544900416F37 /* libavcodec.58.35.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5BB99E9237B544600416F37 /* libavcodec.58.35.100.dylib */; };
-		D5BB99EF237B544900416F37 /* libswresample.3.3.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5BB99EA237B544700416F37 /* libswresample.3.3.100.dylib */; };
-		D5BB99F0237B544900416F37 /* libswscale.5.3.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5BB99EB237B544700416F37 /* libswscale.5.3.100.dylib */; };
-		D5BB99F1237B544900416F37 /* libavutil.56.22.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5BB99EC237B544800416F37 /* libavutil.56.22.100.dylib */; };
-		D5BB99F3237B546C00416F37 /* libx265.176.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5BB99F2237B546C00416F37 /* libx265.176.dylib */; };
 		D5BF174C2374CFEC0005C8B4 /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5BF17482374CFEB0005C8B4 /* QtWidgets.framework */; };
 		D5BF174D2374CFEC0005C8B4 /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5BF17492374CFEB0005C8B4 /* QtCore.framework */; };
 		D5BF174E2374CFEC0005C8B4 /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5BF174A2374CFEB0005C8B4 /* QtGui.framework */; };
@@ -60,6 +54,12 @@
 		D5C042842319A6D600175195 /* PropertyList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5C042822319A6D600175195 /* PropertyList.cpp */; };
 		D5C20C622038851000BFB643 /* moc_FileThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5C20C612038851000BFB643 /* moc_FileThread.cpp */; };
 		D5C53DB71F86D97E0014FA22 /* DlgAddEquation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5C53DB61F86D97E0014FA22 /* DlgAddEquation.cpp */; };
+		D5D8A306237E0B3000F060F3 /* libx265.179.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5D8A305237E0B2F00F060F3 /* libx265.179.dylib */; };
+		D5D8A30C237E0B5900F060F3 /* libavutil.56.31.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5D8A307237E0B5800F060F3 /* libavutil.56.31.100.dylib */; };
+		D5D8A30D237E0B5900F060F3 /* libavformat.58.29.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5D8A308237E0B5800F060F3 /* libavformat.58.29.100.dylib */; };
+		D5D8A30E237E0B5900F060F3 /* libavcodec.58.54.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5D8A309237E0B5800F060F3 /* libavcodec.58.54.100.dylib */; };
+		D5D8A30F237E0B5900F060F3 /* libswscale.5.5.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5D8A30A237E0B5800F060F3 /* libswscale.5.5.100.dylib */; };
+		D5D8A310237E0B5900F060F3 /* libswresample.3.5.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5D8A30B237E0B5900F060F3 /* libswresample.3.5.100.dylib */; };
 		D5E08BA320A5E5BE00275FAB /* libGLWLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5E08BA220A5E5BE00275FAB /* libGLWLib.a */; };
 		D5E0E6A71E72390D006FE591 /* moc_DataFieldSelector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5E0E6A61E72390D006FE591 /* moc_DataFieldSelector.cpp */; };
 		D5EB78DF229704860063769C /* ImageViewer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5EB78DC229704860063769C /* ImageViewer.cpp */; };
@@ -199,12 +199,6 @@
 		D576BB3120CACBD100F09942 /* moc_DlgAddEquation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_DlgAddEquation.cpp; sourceTree = "<group>"; };
 		D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgFileInfo.cpp; sourceTree = "<group>"; };
 		D5A65E0E1DBFA53F00B44009 /* DlgFileInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgFileInfo.h; sourceTree = "<group>"; };
-		D5BB99E8237B544600416F37 /* libavformat.58.20.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavformat.58.20.100.dylib; path = ../../../../../../../usr/local/Cellar/ffmpeg/4.1.4_1/lib/libavformat.58.20.100.dylib; sourceTree = "<group>"; };
-		D5BB99E9237B544600416F37 /* libavcodec.58.35.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavcodec.58.35.100.dylib; path = ../../../../../../../usr/local/Cellar/ffmpeg/4.1.4_1/lib/libavcodec.58.35.100.dylib; sourceTree = "<group>"; };
-		D5BB99EA237B544700416F37 /* libswresample.3.3.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libswresample.3.3.100.dylib; path = ../../../../../../../usr/local/Cellar/ffmpeg/4.1.4_1/lib/libswresample.3.3.100.dylib; sourceTree = "<group>"; };
-		D5BB99EB237B544700416F37 /* libswscale.5.3.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libswscale.5.3.100.dylib; path = ../../../../../../../usr/local/Cellar/ffmpeg/4.1.4_1/lib/libswscale.5.3.100.dylib; sourceTree = "<group>"; };
-		D5BB99EC237B544800416F37 /* libavutil.56.22.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavutil.56.22.100.dylib; path = ../../../../../../../usr/local/Cellar/ffmpeg/4.1.4_1/lib/libavutil.56.22.100.dylib; sourceTree = "<group>"; };
-		D5BB99F2237B546C00416F37 /* libx265.176.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libx265.176.dylib; path = ../../../../../../../usr/local/Cellar/x265/3.1.2/lib/libx265.176.dylib; sourceTree = "<group>"; };
 		D5BF17482374CFEB0005C8B4 /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = ../../../../../../../../../../usr/local/Cellar/qt/5.13.2/lib/QtWidgets.framework; sourceTree = "<group>"; };
 		D5BF17492374CFEB0005C8B4 /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = ../../../../../../../../../../usr/local/Cellar/qt/5.13.2/lib/QtCore.framework; sourceTree = "<group>"; };
 		D5BF174A2374CFEB0005C8B4 /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = ../../../../../../../../../../usr/local/Cellar/qt/5.13.2/lib/QtGui.framework; sourceTree = "<group>"; };
@@ -226,6 +220,12 @@
 		D5C20C612038851000BFB643 /* moc_FileThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_FileThread.cpp; sourceTree = "<group>"; };
 		D5C53DB51F86D97E0014FA22 /* DlgAddEquation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgAddEquation.h; sourceTree = "<group>"; };
 		D5C53DB61F86D97E0014FA22 /* DlgAddEquation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgAddEquation.cpp; sourceTree = "<group>"; };
+		D5D8A305237E0B2F00F060F3 /* libx265.179.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libx265.179.dylib; path = ../../../../../../../usr/local/Cellar/x265/3.2.1/lib/libx265.179.dylib; sourceTree = "<group>"; };
+		D5D8A307237E0B5800F060F3 /* libavutil.56.31.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavutil.56.31.100.dylib; path = ../../../../../../../usr/local/Cellar/ffmpeg/4.2.1_2/lib/libavutil.56.31.100.dylib; sourceTree = "<group>"; };
+		D5D8A308237E0B5800F060F3 /* libavformat.58.29.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavformat.58.29.100.dylib; path = ../../../../../../../usr/local/Cellar/ffmpeg/4.2.1_2/lib/libavformat.58.29.100.dylib; sourceTree = "<group>"; };
+		D5D8A309237E0B5800F060F3 /* libavcodec.58.54.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavcodec.58.54.100.dylib; path = ../../../../../../../usr/local/Cellar/ffmpeg/4.2.1_2/lib/libavcodec.58.54.100.dylib; sourceTree = "<group>"; };
+		D5D8A30A237E0B5800F060F3 /* libswscale.5.5.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libswscale.5.5.100.dylib; path = ../../../../../../../usr/local/Cellar/ffmpeg/4.2.1_2/lib/libswscale.5.5.100.dylib; sourceTree = "<group>"; };
+		D5D8A30B237E0B5900F060F3 /* libswresample.3.5.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libswresample.3.5.100.dylib; path = ../../../../../../../usr/local/Cellar/ffmpeg/4.2.1_2/lib/libswresample.3.5.100.dylib; sourceTree = "<group>"; };
 		D5E08BA220A5E5BE00275FAB /* libGLWLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libGLWLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5E0E6A61E72390D006FE591 /* moc_DataFieldSelector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_DataFieldSelector.cpp; sourceTree = "<group>"; };
 		D5EB78DC229704860063769C /* ImageViewer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImageViewer.cpp; sourceTree = "<group>"; };
@@ -370,12 +370,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D5BB99F3237B546C00416F37 /* libx265.176.dylib in Frameworks */,
-				D5BB99ED237B544900416F37 /* libavformat.58.20.100.dylib in Frameworks */,
-				D5BB99EE237B544900416F37 /* libavcodec.58.35.100.dylib in Frameworks */,
-				D5BB99EF237B544900416F37 /* libswresample.3.3.100.dylib in Frameworks */,
-				D5BB99F0237B544900416F37 /* libswscale.5.3.100.dylib in Frameworks */,
-				D5BB99F1237B544900416F37 /* libavutil.56.22.100.dylib in Frameworks */,
+				D5D8A30C237E0B5900F060F3 /* libavutil.56.31.100.dylib in Frameworks */,
+				D5D8A30D237E0B5900F060F3 /* libavformat.58.29.100.dylib in Frameworks */,
+				D5D8A30E237E0B5900F060F3 /* libavcodec.58.54.100.dylib in Frameworks */,
+				D5D8A30F237E0B5900F060F3 /* libswscale.5.5.100.dylib in Frameworks */,
+				D5D8A310237E0B5900F060F3 /* libswresample.3.5.100.dylib in Frameworks */,
+				D5D8A306237E0B3000F060F3 /* libx265.179.dylib in Frameworks */,
 				D5BF174C2374CFEC0005C8B4 /* QtWidgets.framework in Frameworks */,
 				D5BF174D2374CFEC0005C8B4 /* QtCore.framework in Frameworks */,
 				D5BF174E2374CFEC0005C8B4 /* QtGui.framework in Frameworks */,
@@ -614,12 +614,12 @@
 		D5FF7AA61D727B52003D2CBD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D5BB99F2237B546C00416F37 /* libx265.176.dylib */,
-				D5BB99E9237B544600416F37 /* libavcodec.58.35.100.dylib */,
-				D5BB99E8237B544600416F37 /* libavformat.58.20.100.dylib */,
-				D5BB99EC237B544800416F37 /* libavutil.56.22.100.dylib */,
-				D5BB99EA237B544700416F37 /* libswresample.3.3.100.dylib */,
-				D5BB99EB237B544700416F37 /* libswscale.5.3.100.dylib */,
+				D5D8A309237E0B5800F060F3 /* libavcodec.58.54.100.dylib */,
+				D5D8A308237E0B5800F060F3 /* libavformat.58.29.100.dylib */,
+				D5D8A307237E0B5800F060F3 /* libavutil.56.31.100.dylib */,
+				D5D8A30B237E0B5900F060F3 /* libswresample.3.5.100.dylib */,
+				D5D8A30A237E0B5800F060F3 /* libswscale.5.5.100.dylib */,
+				D5D8A305237E0B2F00F060F3 /* libx265.179.dylib */,
 				D5BF174B2374CFEC0005C8B4 /* QtCharts.framework */,
 				D5BF17492374CFEB0005C8B4 /* QtCore.framework */,
 				D5BF174A2374CFEB0005C8B4 /* QtGui.framework */,
