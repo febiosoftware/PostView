@@ -428,6 +428,7 @@ public:
 		pselect->addItem("Arithmetic");
 		pselect->addItem("Gradient");
 		pselect->addItem("Component");
+		pselect->addItem("Fraction anisotropy");
 
 		QLabel* label;
 		label = new QLabel("Filter:");
@@ -464,6 +465,9 @@ public:
 		// gradient page (doesn't need options)
 		QWidget* gradPage = new QLabel("");
 
+		// fractional anisotropy (doesn't need options)
+		QWidget* faPage = new QLabel("");
+
 		// array component
 		QWidget* compPage = new QWidget;
 		pform = new QFormLayout;
@@ -482,7 +486,8 @@ public:
 		stack->addWidget(mathPage  );
 		stack->addWidget(gradPage  );
 		stack->addWidget(compPage);
-		
+		stack->addWidget(faPage);
+
 		pvl->addWidget(stack);
 
 		QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
@@ -842,6 +847,15 @@ void CDataPanel::on_FilterButton_clicked()
 						{
 							QMessageBox::critical(this, "Data Filter", "Failed to extract component.");
 						}
+					}
+					break;
+				case 5:
+					{
+						newData = new Post::FEDataField_T<Post::FEElementData<float, Post::DATA_ITEM> >(sname.c_str(), Post::EXPORT_DATA);
+						fem.AddDataField(newData);
+
+						// calculate fractional anisotropy
+						bret = DataFractionalAnsisotropy(fem, newData->GetFieldID(), nfield);
 					}
 					break;
 				default:
