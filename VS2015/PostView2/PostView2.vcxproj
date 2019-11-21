@@ -154,11 +154,6 @@
   <ItemGroup>
     <ClInclude Include="..\..\PostView2\3PointAngleTool.h" />
     <ClInclude Include="..\..\PostView2\4PointAngleTool.h" />
-    <CustomBuild Include="..\..\PostView2\AddImage3DTool.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QT512DIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
-    </CustomBuild>
     <ClInclude Include="..\..\PostView2\AddPointTool.h" />
     <CustomBuild Include="..\..\PostView2\AreaCoverageTool.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QT512DIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
@@ -202,6 +197,7 @@
     </CustomBuild>
     <ClInclude Include="..\..\PostView2\DlgFileInfo.h" />
     <ClInclude Include="..\..\PostView2\DlgFind.h" />
+    <ClInclude Include="..\..\PostView2\DlgImportRAW.h" />
     <ClInclude Include="..\..\PostView2\DlgImportXPLT.h" />
     <ClInclude Include="..\..\PostView2\DlgSelectRange.h" />
     <ClInclude Include="..\..\PostView2\DlgTimeSettings.h" />
@@ -244,7 +240,11 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
     </CustomBuild>
-    <ClInclude Include="..\..\PostView2\Histogram.h" />
+    <CustomBuild Include="..\..\PostView2\Histogram.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QT512DIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)moc_%(Filename).cpp</Outputs>
+    </CustomBuild>
     <CustomBuild Include="..\..\PostView2\ImportLinesTool.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QT512DIR)\bin\moc.exe "%(FullPath)" -o "%(RootDir)%(Directory)moc_%(Filename).cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compiling %(Filename)%(Extension) using MOC</Message>
@@ -362,7 +362,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\PostView2\3PointAngleTool.cpp" />
     <ClCompile Include="..\..\PostView2\4PointAngleTool.cpp" />
-    <ClCompile Include="..\..\PostView2\AddImage3DTool.cpp" />
     <ClCompile Include="..\..\PostView2\AddPointTool.cpp" />
     <ClCompile Include="..\..\PostView2\AreaCoverageTool.cpp" />
     <ClCompile Include="..\..\PostView2\CColorButton.cpp" />
@@ -379,6 +378,7 @@
     <ClCompile Include="..\..\PostView2\DlgExportXPLT.cpp" />
     <ClCompile Include="..\..\PostView2\DlgFileInfo.cpp" />
     <ClCompile Include="..\..\PostView2\DlgFind.cpp" />
+    <ClCompile Include="..\..\PostView2\DlgImportRAW.cpp" />
     <ClCompile Include="..\..\PostView2\DlgSelectRange.cpp" />
     <ClCompile Include="..\..\PostView2\DlgTimeSettings.cpp" />
     <ClCompile Include="..\..\PostView2\DlgViewSettings.cpp" />
@@ -400,7 +400,6 @@
     <ClCompile Include="..\..\PostView2\MaterialPanel.cpp" />
     <ClCompile Include="..\..\PostView2\MeasureAreaTool.cpp" />
     <ClCompile Include="..\..\PostView2\MeasureVolumeTool.cpp" />
-    <ClCompile Include="..\..\PostView2\moc_AddImage3DTool.cpp" />
     <ClCompile Include="..\..\PostView2\moc_AreaCoverageTool.cpp" />
     <ClCompile Include="..\..\PostView2\moc_CColorButton.cpp" />
     <ClCompile Include="..\..\PostView2\moc_DataFieldSelector.cpp" />
@@ -414,6 +413,7 @@
     <ClCompile Include="..\..\PostView2\moc_FileViewer.cpp" />
     <ClCompile Include="..\..\PostView2\moc_GLView.cpp" />
     <ClCompile Include="..\..\PostView2\moc_GraphWindow.cpp" />
+    <ClCompile Include="..\..\PostView2\moc_Histogram.cpp" />
     <ClCompile Include="..\..\PostView2\moc_ImageViewer.cpp" />
     <ClCompile Include="..\..\PostView2\moc_ImportLinesTool.cpp" />
     <ClCompile Include="..\..\PostView2\moc_IntegrateWindow.cpp" />

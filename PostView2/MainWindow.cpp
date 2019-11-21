@@ -48,6 +48,7 @@
 #include "DlgFileInfo.h"
 #include "DlgExportAscii.h"
 #include "DlgExportVTK.h"
+#include "DlgImportRAW.h"
 #include "version.h"
 #include <GLWLib/convert.h>
 #include <PostLib/ImgAnimation.h>
@@ -501,7 +502,32 @@ void CMainWindow::OpenFile(const QString& fileName, int nfilter)
 	case  5: reader = new Post::FENikeImport; break;
 	case  6: reader = new Post::FEASCIIImport; break;
 	case  7: reader = new Post::FESTLimport; break;
-	case  8: reader = new Post::FERAWImageReader; break;
+	case  8: 
+		{
+			CDlgImportRAW dlg(this);
+			if (dlg.exec())
+			{
+				CDocument* doc = GetActiveDocument();
+				if (doc == nullptr)
+				{
+					doc = new CDocument(this);
+					doc->SetFile(sfile);
+				}
+
+				int dim[3] = { dlg.m_nx, dlg.m_ny, dlg.m_nz };
+				BOX range(dlg.m_min[0], dlg.m_min[1], dlg.m_min[2], dlg.m_max[0], dlg.m_max[1], dlg.m_max[2]);
+				if (doc->LoadRAWImage(sfile, dim, range) == false)
+				{
+					QMessageBox::critical(this, "PostView2", "Failed to load image data.");
+					delete doc;
+				}
+
+				AddDocument(doc);
+				return;
+			}
+			else return;
+		}
+		break;
 	case  9: reader = new Post::FEVTKimport; break;
 	case 10: reader = new Post::FEU3DImport; break;
 	default:
@@ -574,7 +600,7 @@ void CMainWindow::AddDocument(CDocument* doc)
 
 void CMainWindow::AddDocumentTab(CDocument* doc)
 {
-	ui->addTab(QString::fromStdString(doc->GetFileName()), doc->GetFile());
+	ui->addTab(QString::fromStdString(doc->GetFileName()), QString::fromStdString(doc->GetFile()));
 }
 
 void CMainWindow::finishedReadingFile(bool success, const QString& errorString)
@@ -606,7 +632,7 @@ void CMainWindow::finishedReadingFile(bool success, const QString& errorString)
 	ui->modelViewer->parentWidget()->raise();
 
 	// add file to recent list
-	ui->addToRecentFiles(doc->GetFile());
+	ui->addToRecentFiles(QString::fromStdString(doc->GetFile()));
 }
 
 bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
@@ -785,7 +811,7 @@ void CMainWindow::on_actionUpdate_triggered()
 	CDocument* doc = GetActiveDocument();
 	if (doc == nullptr) return;
 
-	if (doc->LoadFEModel(0, doc->GetFile(), true) == false)
+	if (doc->LoadFEModel(0, doc->GetFile().c_str(), true) == false)
 	{
 		QMessageBox::critical(this, tr("PostView2"), "Failed updating the model");
 	}
@@ -2006,29 +2032,29 @@ void CMainWindow::UpdateMainToolbar(bool breset)
 	CDocument* doc = GetActiveDocument();
 	if ((doc == nullptr) || (doc->IsValid() == false)) return;
 
+	Post::CGLModel* mdl = doc->GetGLModel();
 	Post::FEModel* pfem = doc->GetFEModel();
 	ui->selectData->BuildMenu(pfem, Post::DATA_SCALAR);
 
 	if (breset == false)
 	{
-		Post::CGLColorMap* map = doc->GetGLModel()->GetColorMap();
+		Post::CGLColorMap* map = (mdl ? mdl->GetColorMap() : nullptr);
 		if (map)
 		{
 			int nfield = map->GetEvalField();
 			SetCurrentDataField(nfield);
-		}
 
-		ui->checkColormap(map->IsActive());
-		ui->actionViewSmooth->setChecked(map->GetColorSmooth());
+			ui->checkColormap(map->IsActive());
+			ui->actionViewSmooth->setChecked(map->GetColorSmooth());
+		}
 	}
 	else ui->actionViewSmooth->setChecked(true);
 
 	UpdatePlayToolbar(true);
 
-	Post::CGLModel* m = doc->GetGLModel();
-	if (m)
+	if (mdl)
 	{
-		int mode = m->GetSelectionMode();
+		int mode = mdl->GetSelectionMode();
 		if (mode == Post::SELECT_NODES) ui->selectNodes->setChecked(true);
 		if (mode == Post::SELECT_EDGES) ui->selectEdges->setChecked(true);
 		if (mode == Post::SELECT_FACES) ui->selectFaces->setChecked(true);
@@ -2049,7 +2075,8 @@ void CMainWindow::UpdatePlayToolbar(bool breset)
 	if (doc == nullptr) return;
 
 	Post::CGLModel* mdl = doc->GetGLModel();
-	if (mdl == 0) ui->playToolBar->setDisabled(true);
+	Post::FEModel* fem = (mdl ? mdl->GetFEModel() : nullptr);
+	if ((mdl == 0) || (fem == nullptr)) ui->playToolBar->setDisabled(true);
 	else
 	{
 		int ntime = mdl->CurrentTimeIndex() + 1;
@@ -2133,7 +2160,7 @@ void CMainWindow::MakeDocActive(CDocument* doc)
 	if (doc)
 	{
 		// set the window title
-		SetWindowTitle(QString(doc->GetFile()));
+		SetWindowTitle(QString::fromStdString(doc->GetFile()));
 
 		Post::CGLModel* m = doc->GetGLModel();
 		if (m)

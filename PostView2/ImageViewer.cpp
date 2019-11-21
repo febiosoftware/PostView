@@ -75,7 +75,9 @@ void CImageViewer::SetImageModel(CImageModel* img)
 {
 	if (ui->m_img)
 	{
-		ui->m_img->GetModel()->GetFEModel()->RemoveDependant(this);
+		CGLModel* mdl = ui->m_img->GetModel();
+		FEModel* fem = (mdl ? mdl->GetFEModel() : nullptr);
+		if (fem) fem->RemoveDependant(this);
 	}
 
 	ui->m_img = img;
@@ -92,8 +94,9 @@ void CImageViewer::SetImageModel(CImageModel* img)
 		ui->m_slider->setSingleStep(1);
 		ui->m_slider->setPageStep(m);
 
-		FEModel* fem = img->GetModel()->GetFEModel();
-		fem->AddDependant(this);
+		CGLModel* mdl = img->GetModel();
+		FEModel* fem = (mdl ? mdl->GetFEModel() : nullptr);
+		if (fem) fem->AddDependant(this);
 	}
 	Update();
 }
@@ -158,10 +161,11 @@ void CImageViewer::UpdatePath()
 
 	if (ui->m_overlay->currentIndex() == 1)
 	{
-		CGLModel& mdl = *ui->m_img->GetModel();
-		FEModel& fem = *mdl.GetFEModel();
+		CGLModel* mdl = ui->m_img->GetModel();
+		if (mdl == nullptr) return;
 
-		Post::FEPostMesh& mesh = *mdl.GetActiveMesh();
+		Post::FEPostMesh* mesh = mdl->GetActiveMesh();
+		if (mesh == nullptr) return;
 
 		C3DImage& im3d = *ui->m_img->GetImageSource()->Get3DImage();
 		int NX = im3d.Width();
@@ -178,14 +182,14 @@ void CImageViewer::UpdatePath()
 		QPainterPath path;
 
 		vec3d r[4];
-		for (int i = 0; i < mesh.Faces(); ++i)
+		for (int i = 0; i < mesh->Faces(); ++i)
 		{
-			FEFace& face = mesh.Face(i);
+			FEFace& face = mesh->Face(i);
 			int nf = face.Nodes();
 			int nup = 0;
 			for (int j = 0; j < nf; ++j)
 			{
-				r[j] = mesh.Node(face.n[j]).r;
+				r[j] = mesh->Node(face.n[j]).r;
 				if (r[j].z >= h) nup++;
 			}
 

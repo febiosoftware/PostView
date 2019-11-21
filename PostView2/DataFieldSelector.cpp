@@ -51,7 +51,7 @@ CModelDataSelector::CModelDataSelector(FEModel* fem, Data_Tensor_Type ntype, boo
 	m_fem = fem;
 	m_class = ntype;
 	m_bvec = btvec;
-	m_fem->AddDependant(this);
+	if (m_fem) m_fem->AddDependant(this);
 }
 
 CModelDataSelector::~CModelDataSelector()

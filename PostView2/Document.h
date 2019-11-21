@@ -201,7 +201,9 @@ public:
 	void ApplyPalette(const Post::CPalette& pal);
 
 	// get the current file name
-	const char* GetFile() { return m_szfile; }
+	const std::string& GetFile() const;
+
+	void SetFile(const std::string& fileName);
 
 	std::string GetFileName();
 	int GetFilePath(char* szpath);
@@ -260,6 +262,9 @@ public:
 
 	// ---------------------------------------
 
+	// load RAW image from file
+	bool LoadRAWImage(const std::string& fileName, int dim[3], BOX range);
+
 	// add a 3D image
 	void AddImageModel(Post::CImageModel* img);
 
@@ -291,7 +296,7 @@ protected:
 	std::vector<Post::CImageModel*>	m_img;
 
 	Post::FEFileReader*	m_pImp;			// last used file importer
-	char			m_szfile[1024];	// file name of current model
+	std::string			m_fileName;		// file name of current model
 
 	// the view data
 	Post::CGView			m_view;		// view orientation/position

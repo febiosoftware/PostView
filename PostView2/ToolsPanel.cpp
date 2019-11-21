@@ -30,7 +30,6 @@
 #include "ImportLinesTool.h"
 #include "DistanceMapTool.h"
 #include "PlaneTool.h"
-#include "AddImage3DTool.h"
 #include "PlotMixTool.h"
 #include "AreaCoverageTool.h"
 #include "StrainMapTool.h"
@@ -141,7 +140,6 @@ void CToolsPanel::initTools()
 	tools.push_back(new CDistanceMapTool    (m_wnd));
 	tools.push_back(new CCurvatureMapTool   (m_wnd));
 	tools.push_back(new CPointCongruencyTool(m_wnd));
-	tools.push_back(new CAddImage3DTool     (m_wnd));
 	tools.push_back(new CSphereFitTool      (m_wnd));
 	tools.push_back(new CTransformTool      (m_wnd));
 	tools.push_back(new CShellThicknessTool (m_wnd));

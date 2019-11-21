@@ -208,8 +208,6 @@ CDocument::CDocument(CMainWindow* pwnd) : m_wnd(pwnd)
 {
 	m_bValid = false;
 
-	m_szfile[0] = 0;
-
 	m_fem = 0;
 	m_pGLModel = 0;
 	m_pImp = 0;
@@ -326,8 +324,14 @@ std::string CDocument::GetFieldString()
 { 
 	if (IsValid())
 	{
-		int nfield = GetGLModel()->GetColorMap()->GetEvalField();
-		return GetFEModel()->GetDataManager()->getDataString(nfield, DATA_SCALAR);
+		CGLModel* mdl = GetGLModel();
+		FEModel* fem = (mdl ? mdl->GetFEModel() : nullptr);
+		if (fem && mdl)
+		{
+			int nfield = mdl->GetColorMap()->GetEvalField();
+			return fem->GetDataManager()->getDataString(nfield, DATA_SCALAR);
+		}
+		else return "";
 	}
 	else return "";
 }
@@ -542,7 +546,7 @@ bool CDocument::LoadFEModel(FEFileReader* pimp, const char* szfile, bool bup)
 	UpdateFEModel(true);
 
 	// store a copy of the imorpted file
-	strcpy(m_szfile, szfile);
+	m_fileName = szfile;
 
 	// inform the observers
 	UpdateObservers(true);
@@ -623,7 +627,7 @@ void CDocument::SetFEModel(FEModel* pnew)
 
 	// make sure we can't update this file
 	m_pImp = 0;
-	m_szfile[0] = '\0';
+	m_fileName.clear();
 
 	UpdateObservers(true);
 }
@@ -787,12 +791,10 @@ bool CDocument::ExportPlot(const char* szfile, bool bflag[6], int ncode[6])
 //-----------------------------------------------------------------------------
 BOX CDocument::GetBoundingBox()
 {
-	if (IsValid()) return m_fem->GetBoundingBox();
-	else
-	{
-		BOX b;
-		return b;
-	}
+	BOX b;
+	if (m_fem) b = m_fem->GetBoundingBox();
+	if (m_img.empty() == false) b += m_img[0]->GetBoundingBox();
+	return b;
 }
 
 //-----------------------------------------------------------------------------
@@ -806,16 +808,25 @@ BOX CDocument::GetExtentsBox()
 		return box;
 	}
 
-	Post::FEPostMesh& mesh = *GetActiveMesh();
-	int NE = mesh.Elements(), nvis = 0;
-	for (int i=0; i<NE; ++i)
+	CGLModel* mdl = GetGLModel();
+	if (mdl == nullptr)
 	{
-		FEElement_& el = mesh.ElementRef(i);
-		if (el.IsVisible())
+		if (m_img.empty() == false) box = m_img[0]->GetBoundingBox();
+		else box = BOX(-1, -1, -1, 1, 1, 1);
+	}
+	else
+	{
+		Post::FEPostMesh& mesh = *GetActiveMesh();
+		int NE = mesh.Elements(), nvis = 0;
+		for (int i = 0; i < NE; ++i)
 		{
-			int ne = el.Nodes();
-			for (int j=0; j<ne; ++j) box += mesh.Node(el.m_node[j]).r;
-			nvis++;
+			FEElement_& el = mesh.ElementRef(i);
+			if (el.IsVisible())
+			{
+				int ne = el.Nodes();
+				for (int j = 0; j < ne; ++j) box += mesh.Node(el.m_node[j]).r;
+				nvis++;
+			}
 		}
 	}
 
@@ -843,36 +854,45 @@ BOX CDocument::GetSelectionBox()
 		return box;
 	}
 
-	Post::FEPostMesh& mesh = *GetActiveMesh();
-	const vector<FEElement_*> selElems = GetGLModel()->GetElementSelection();
-	for (int i=0; i<(int)selElems.size(); ++i)
+	CGLModel* mdl = GetGLModel();
+	if (mdl == nullptr)
 	{
-		FEElement_& el = *selElems[i];
-		int nel = el.Nodes();
-		for (int j=0; j<nel; ++j) box += mesh.Node(el.m_node[j]).r;
+		if (m_img.empty() == false) box = m_img[0]->GetBoundingBox();
+		else box = BOX(-1, -1, -1, 1, 1, 1);
 	}
-
-	const vector<FEFace*> selFaces = GetGLModel()->GetFaceSelection();
-	for (int i=0; i<(int)selFaces.size(); ++i)
+	else
 	{
-		FEFace& face = *selFaces[i];
-		int nel = face.Nodes();
-		for (int j=0; j<nel; ++j) box += mesh.Node(face.n[j]).r;
-	}
+		Post::FEPostMesh& mesh = *GetActiveMesh();
+		const vector<FEElement_*> selElems = GetGLModel()->GetElementSelection();
+		for (int i = 0; i < (int)selElems.size(); ++i)
+		{
+			FEElement_& el = *selElems[i];
+			int nel = el.Nodes();
+			for (int j = 0; j < nel; ++j) box += mesh.Node(el.m_node[j]).r;
+		}
 
-	const vector<FEEdge*> selEdges = GetGLModel()->GetEdgeSelection();
-	for (int i=0; i<(int)selEdges.size(); ++i)
-	{
-		FEEdge& edge = *selEdges[i];
-		int nel = edge.Nodes();
-		for (int j=0; j<nel; ++j) box += mesh.Node(edge.n[j]).r;
-	}
+		const vector<FEFace*> selFaces = GetGLModel()->GetFaceSelection();
+		for (int i = 0; i < (int)selFaces.size(); ++i)
+		{
+			FEFace& face = *selFaces[i];
+			int nel = face.Nodes();
+			for (int j = 0; j < nel; ++j) box += mesh.Node(face.n[j]).r;
+		}
 
-	const vector<FENode*> selNodes = GetGLModel()->GetNodeSelection();
-	for (int i=0; i<(int)selNodes.size(); ++i)
-	{
-		FENode& node = *selNodes[i];
-		box += node.r;
+		const vector<FEEdge*> selEdges = GetGLModel()->GetEdgeSelection();
+		for (int i = 0; i < (int)selEdges.size(); ++i)
+		{
+			FEEdge& edge = *selEdges[i];
+			int nel = edge.Nodes();
+			for (int j = 0; j < nel; ++j) box += mesh.Node(edge.n[j]).r;
+		}
+
+		const vector<FENode*> selNodes = GetGLModel()->GetNodeSelection();
+		for (int i = 0; i < (int)selNodes.size(); ++i)
+		{
+			FENode& node = *selNodes[i];
+			box += node.r;
+		}
 	}
 
 //	if (box.IsValid())
@@ -1041,13 +1061,26 @@ void CDocument::UpdateViews()
 }
 
 //-----------------------------------------------------------------------------
+const std::string& CDocument::GetFile() const
+{ 
+	return m_fileName; 
+}
+
+//-----------------------------------------------------------------------------
+void CDocument::SetFile(const std::string& fileName)
+{
+	m_fileName = fileName;
+}
+
+//-----------------------------------------------------------------------------
 std::string CDocument::GetFileName()
 {
-	char* ch = strrchr(m_szfile, '\\');
+	const char* szfile = m_fileName.c_str();
+	const char* ch = strrchr(szfile, '\\');
 	if (ch == 0) 
 	{
-		ch = strrchr(m_szfile, '/'); 
-		if (ch == 0) ch = m_szfile; else ch++;
+		ch = strrchr(szfile, '/'); 
+		if (ch == 0) ch = szfile; else ch++;
 	} else ch++;
 
 	return ch;
@@ -1055,19 +1088,20 @@ std::string CDocument::GetFileName()
 
 int CDocument::GetFilePath(char *szpath)
 {
-	char* ch = strrchr(m_szfile, '\\');
+	const char* szfile = m_fileName.c_str();
+	const char* ch = strrchr(szfile, '\\');
 	if (ch == 0) 
 	{
-		ch = strrchr(m_szfile, '/'); 
-		if (ch == 0) ch = m_szfile; else ++ch;
+		ch = strrchr(szfile, '/'); 
+		if (ch == 0) ch = szfile; else ++ch;
 	}
 	else ++ch;
 
-	int n = (int) (ch - m_szfile);
+	int n = (int) (ch - szfile);
 
 	if (szpath) 
 	{
-		if (n) strncpy(szpath, m_szfile, n);
+		if (n) strncpy(szpath, szfile, n);
 		szpath[n] = 0;
 	}
 
@@ -1076,15 +1110,16 @@ int CDocument::GetFilePath(char *szpath)
 
 int CDocument::GetDocTitle(char* sztitle)
 {
-	char* ch = strrchr(m_szfile, '\\');
+	const char* szfile = m_fileName.c_str();
+	const char* ch = strrchr(szfile, '\\');
 	if (ch == 0) 
 	{
-		ch = strrchr(m_szfile, '/'); 
-		if (ch == 0) ch = m_szfile; else ch++;
+		ch = strrchr(szfile, '/'); 
+		if (ch == 0) ch = szfile; else ch++;
 	} else ch++;
 
 	int n;
-	char* ce = strrchr(m_szfile, '.');
+	const char* ce = strrchr(szfile, '.');
 	if ((ce == 0) || (ce < ch)) n = (int)strlen(ch);
 	else n = (int)(ce-ch);
 
@@ -1157,6 +1192,34 @@ void CDocument::DeleteObject(CGLObject *po)
 void CDocument::AddImageModel(CImageModel* img)
 {
 	m_img.push_back(img);
+}
+
+//------------------------------------------------------------------------------------------
+// load RAW image from file
+bool CDocument::LoadRAWImage(const std::string& fileName, int dim[3], BOX range)
+{
+	const char* ch = fileName.c_str();
+	const char* fileTitle = strrchr(ch, '\\');
+	if (fileTitle == nullptr)
+	{
+		fileTitle = strrchr(ch, '/');
+		if (fileTitle == nullptr) fileTitle = ch;
+		else fileTitle++;
+	}
+	else fileTitle++;
+
+	CImageModel* img = new CImageModel(GetGLModel());
+	if (img->LoadImageData(fileName, dim[0], dim[1], dim[2], range) == false)
+	{
+		delete img;
+		return false;
+	}
+	img->SetName(fileTitle);
+	AddImageModel(img);
+
+	m_bValid = true;
+
+	return true;
 }
 
 //------------------------------------------------------------------------------------------

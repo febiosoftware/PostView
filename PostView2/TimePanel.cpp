@@ -15,27 +15,32 @@ void CTimePanel::Update(bool reset)
 	CDocument* doc = m_wnd->GetActiveDocument();
 	if (doc && doc->IsValid())
 	{
-		if (reset)
+		FEModel* fem = doc->GetFEModel();
+		if (fem)
 		{
-			ui->timer->clearData();
-			FEModel& fem = *doc->GetFEModel();
-			vector<double> data(fem.GetStates());
-			int nstates = fem.GetStates();
-			for (int i=0; i<nstates; ++i) data[i] = fem.GetState(i)->m_time;
+			if (reset)
+			{
+				ui->timer->clearData();
+				FEModel& fem = *doc->GetFEModel();
+				vector<double> data(fem.GetStates());
+				int nstates = fem.GetStates();
+				for (int i = 0; i < nstates; ++i) data[i] = fem.GetState(i)->m_time;
 
-			ui->timer->setTimePoints(data);
+				ui->timer->setTimePoints(data);
 
-			TIMESETTINGS& time = doc->GetTimeSettings();
-			time.m_start = 0;
-			time.m_end = nstates - 1;
-			ui->timer->setRange(time.m_start, time.m_end);
+				TIMESETTINGS& time = doc->GetTimeSettings();
+				time.m_start = 0;
+				time.m_end = nstates - 1;
+				ui->timer->setRange(time.m_start, time.m_end);
+			}
+
+			int ntime = doc->currentTime();
+			ui->timer->setSelection(ntime);
+
+			double ftime = doc->GetTimeValue();
+			ui->timer->setCurrentTime(ftime);
 		}
-
-		int ntime = doc->currentTime();
-		ui->timer->setSelection(ntime);
-
-		double ftime = doc->GetTimeValue();
-		ui->timer->setCurrentTime(ftime);
+		else ui->timer->clearData();
 	}
 	else ui->timer->clearData();
 }

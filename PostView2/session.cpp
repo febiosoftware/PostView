@@ -60,7 +60,7 @@ bool CDocManager::SaveSession(const std::string& sfile)
 			e.name("Model");
 
 			// only store the filename
-			const char* sz = doc->GetFile();
+			const char* sz = doc->GetFile().c_str();
 			e.add_attribute("file", sz);
 
 			// store model data

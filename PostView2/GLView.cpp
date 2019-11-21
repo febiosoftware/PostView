@@ -1215,6 +1215,7 @@ void CGLView::RenderTags()
 	if (pdoc == nullptr) return;
 	BOX box = pdoc->GetBoundingBox();
 	CGLModel* model = pdoc->GetGLModel();
+	if (model == nullptr) return;
 
 	VIEWSETTINGS& view = GetViewSettings();
 
@@ -1227,7 +1228,9 @@ void CGLView::RenderTags()
 	m_ffar  = 100*radius;
 
 	// get the mesh
-	Post::FEPostMesh& mesh = *pdoc->GetActiveMesh();
+	Post::FEPostMesh* postMesh = pdoc->GetActiveMesh();
+	if (postMesh == nullptr) return;
+	Post::FEPostMesh& mesh = *postMesh;
 
 	// create the tag array.
 	// We add a tag for each selected item

@@ -346,7 +346,8 @@ public:
 
 	CImageViewer*	m_imgView;
 
-	CHistogramViewer* m_histo;
+	QWidget*			m_histo;
+	CHistogramViewer* m_histoView;
 
 	QTabWidget*	m_tab;
 
@@ -412,7 +413,17 @@ public:
 		m_imgView = new CImageViewer;
 //		m_tab->addTab(m_imgView, "Image Viewer");
 
-		m_histo = new CHistogramViewer;
+		m_histo = new QWidget;
+		QVBoxLayout* histoLayout = new QVBoxLayout;
+
+		m_histoView = new CHistogramViewer;
+
+		QCheckBox* logButton = new QCheckBox("Logarithmic");
+
+		histoLayout->addWidget(m_histoView);
+		histoLayout->addWidget(logButton);
+
+		m_histo->setLayout(histoLayout);
 
 		m_imgView->hide();
 		m_histo->hide();
@@ -424,6 +435,8 @@ public:
 		psplitter->addWidget(w);
 
 		QMetaObject::connectSlotsByName(parent);
+
+		QObject::connect(logButton, SIGNAL(clicked(bool)), m_histoView, SLOT(SetLogMode(bool)));
 	}
 
 	Post::CGLObject* currentObject()
@@ -444,7 +457,7 @@ public:
 			m_tab->addTab(m_histo, "Histogram");
 		}
 		m_imgView->SetImageModel(img);
-		m_histo->SetImageModel(img);
+		m_histoView->SetImageModel(img);
 	}
 
 	void HideImageViewer()
@@ -455,7 +468,7 @@ public:
 			m_tab->removeTab(1);
 		}
 		m_imgView->SetImageModel(nullptr);
-		m_histo->SetImageModel(nullptr);
+		m_histoView->SetImageModel(nullptr);
 	}
 };
 
@@ -540,65 +553,75 @@ void CModelViewer::Update(bool breset)
 			Post::FEModel* fem = pdoc->GetFEModel();
 			Post::CGLModel* mdl = pdoc->GetGLModel();
 
-			CModelTreeItem* pi1 = new CModelTreeItem(0, ui->m_tree);
-			pi1->setText(0, QString::fromStdString(fem->GetName()));
-			pi1->setIcon(0, QIcon(QString(":/icons/postview_small.png")));
-			ui->m_list.push_back(new CModelProps(mdl));
-			pi1->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
-			m_obj.push_back(0);
-			pi1->setExpanded(true);
-
-			// add the mesh
-			CModelTreeItem* pi2 = new CModelTreeItem(0, pi1);
-			pi2->setText(0, "Mesh");
-			pi2->setIcon(0, QIcon(QString(":/icons/mesh.png")));
-			ui->m_list.push_back(new CMeshProps(fem));
-			pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
-			m_obj.push_back(0);
-		
-			Post::CGLDisplacementMap* map = mdl->GetDisplacementMap();
-			if (map)
+			CModelTreeItem* pi1 = nullptr;
+			if (mdl)
 			{
-				pi2 = new CModelTreeItem(map, pi1);
-				pi2->setText(0, QString::fromStdString(map->GetName()));
-//				pi2->setTextColor(0, map && map->IsActive() ? Qt::black : Qt::gray);
-				pi2->setIcon(0, QIcon(QString(":/icons/distort.png")));
-				ui->m_list.push_back(new CObjectProps(map));
-				pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
-				m_obj.push_back(map);
-			}
+				pi1 = new CModelTreeItem(0, ui->m_tree);
+				pi1->setText(0, QString::fromStdString(pdoc->GetFileName()));
+				pi1->setIcon(0, QIcon(QString(":/icons/postview_small.png")));
+				ui->m_list.push_back(new CModelProps(mdl));
+				pi1->setData(0, Qt::UserRole, (int)(ui->m_list.size() - 1));
+				m_obj.push_back(0);
+				pi1->setExpanded(true);
 
-			Post::CGLColorMap* col = mdl->GetColorMap();
-			pi2 = new CModelTreeItem(col, pi1);
-			pi2->setText(0, QString::fromStdString(col->GetName()));
-//			pi2->setTextColor(0, col->IsActive() ? Qt::black : Qt::gray);
-			pi2->setIcon(0, QIcon(QString(":/icons/colormap.png")));
-			ui->m_list.push_back(new CObjectProps(col));
-			pi2->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
-			m_obj.push_back(0);
+				// add the mesh
+				if (fem)
+				{
+					CModelTreeItem* pi2 = new CModelTreeItem(0, pi1);
+					pi2->setText(0, "Mesh");
+					pi2->setIcon(0, QIcon(QString(":/icons/mesh.png")));
+					ui->m_list.push_back(new CMeshProps(fem));
+					pi2->setData(0, Qt::UserRole, (int)(ui->m_list.size() - 1));
+					m_obj.push_back(0);
+				}
 
-			Post::GPlotList& pl = mdl->GetPlotList();
-			for (int n=0; n<pl.Size(); ++n)
-			{
-				Post::CGLPlot& plot = *pl[n];
-				CModelTreeItem* pi1 = new CModelTreeItem(&plot, ui->m_tree);
+				Post::CGLDisplacementMap* map = mdl->GetDisplacementMap();
+				if (map)
+				{
+					CModelTreeItem* pi2 = new CModelTreeItem(map, pi1);
+					pi2->setText(0, QString::fromStdString(map->GetName()));
+					//				pi2->setTextColor(0, map && map->IsActive() ? Qt::black : Qt::gray);
+					pi2->setIcon(0, QIcon(QString(":/icons/distort.png")));
+					ui->m_list.push_back(new CObjectProps(map));
+					pi2->setData(0, Qt::UserRole, (int)(ui->m_list.size() - 1));
+					m_obj.push_back(map);
+				}
 
-				if      (dynamic_cast<Post::CGLPlaneCutPlot    *>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/cut.png")));
-				else if (dynamic_cast<Post::CGLVectorPlot      *>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/vectors.png")));
-				else if (dynamic_cast<Post::CGLSlicePlot       *>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/slice.png")));
-				else if (dynamic_cast<Post::CGLIsoSurfacePlot  *>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/isosurface.png")));
-				else if (dynamic_cast<Post::CGLStreamLinePlot  *>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/streamlines.png")));
-				else if (dynamic_cast<Post::CGLParticleFlowPlot*>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/particle.png")));
-				else if (dynamic_cast<Post::GLTensorPlot*       >(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/tensor.png")));
-				else if (dynamic_cast<Post::CGLMirrorPlane*	  >(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/mirror.png")));
+				Post::CGLColorMap* col = mdl->GetColorMap();
+				if (col)
+				{
+					CModelTreeItem* pi2 = new CModelTreeItem(col, pi1);
+					pi2->setText(0, QString::fromStdString(col->GetName()));
+					//			pi2->setTextColor(0, col->IsActive() ? Qt::black : Qt::gray);
+					pi2->setIcon(0, QIcon(QString(":/icons/colormap.png")));
+					ui->m_list.push_back(new CObjectProps(col));
+					pi2->setData(0, Qt::UserRole, (int)(ui->m_list.size() - 1));
+					m_obj.push_back(0);
+				}
 
-				string name = plot.GetName();
+				Post::GPlotList& pl = mdl->GetPlotList();
+				for (int n = 0; n < pl.Size(); ++n)
+				{
+					Post::CGLPlot& plot = *pl[n];
+					CModelTreeItem* pi1 = new CModelTreeItem(&plot, ui->m_tree);
 
-				pi1->setText(0, name.c_str());
-//				pi1->setTextColor(0, plot.IsActive() ? Qt::black : Qt::gray);
-				ui->m_list.push_back(new CObjectProps(&plot));
-				pi1->setData(0, Qt::UserRole, (int) (ui->m_list.size()-1));
-				m_obj.push_back(&plot);
+					if (dynamic_cast<Post::CGLPlaneCutPlot    *>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/cut.png")));
+					else if (dynamic_cast<Post::CGLVectorPlot      *>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/vectors.png")));
+					else if (dynamic_cast<Post::CGLSlicePlot       *>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/slice.png")));
+					else if (dynamic_cast<Post::CGLIsoSurfacePlot  *>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/isosurface.png")));
+					else if (dynamic_cast<Post::CGLStreamLinePlot  *>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/streamlines.png")));
+					else if (dynamic_cast<Post::CGLParticleFlowPlot*>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/particle.png")));
+					else if (dynamic_cast<Post::GLTensorPlot*>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/tensor.png")));
+					else if (dynamic_cast<Post::CGLMirrorPlane*>(&plot)) pi1->setIcon(0, QIcon(QString(":/icons/mirror.png")));
+
+					string name = plot.GetName();
+
+					pi1->setText(0, name.c_str());
+					//				pi1->setTextColor(0, plot.IsActive() ? Qt::black : Qt::gray);
+					ui->m_list.push_back(new CObjectProps(&plot));
+					pi1->setData(0, Qt::UserRole, (int)(ui->m_list.size() - 1));
+					m_obj.push_back(&plot);
+				}
 			}
 
 			for (int i = 0; i < pdoc->ImageModels(); ++i)
@@ -667,7 +690,7 @@ void CModelViewer::Update(bool breset)
 			for (int i=0; i<view.CameraKeys(); ++i)
 			{
 				GLCameraTransform& key = view.GetKey(i);
-				pi2 = new CModelTreeItem(&key, pi1);
+				CModelTreeItem* pi2 = new CModelTreeItem(&key, pi1);
 
 				string name = key.GetName();
 				pi2->setText(0, name.c_str());
