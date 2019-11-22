@@ -2,6 +2,48 @@
 = PostView Release Notes                                               =
 ========================================================================
 
+Version 2.5.0 - 11/22/2019
+=========================
+
+- PostView can now open multiple model files. Each model will be shown in its own tab, above the Graphics View.
+
+- A new menu item "Sync all views" was added to the View menu that allows the user to orient all open models the same way. 
+
+- Drag and drop functionality was added that allows users to drag a file from their file browser and drop it on the PostView window to open the file.
+
+- Better support for loading 3D image data. Loading image data can now be done from the File\Open menu. (Choose .raw filter). (The Add 3D Image tool was removed.)
+
+- For 3D images, an image viewer and histogram tool are now available in the Properties panel. 
+
+- Improvements were made to the Volume Renderer and Image Slicer. Both also have to option to select a different color map.
+
+- An image isosurface tool was added that renders the isosurface of a 3D image. 
+
+- A new "hot-cold" color map was added. 
+
+- A mirror plane feature was added that allows users to mirror the geometry along one of the coordinate axis. 
+
+- Vector plots will now show vectors of element data fields at the element's center. 
+
+- The interior surfaces (i.e. surfaces that define the interface between two separate domains) are now rendered and are selectable. 
+
+- A "Recent session files" menu item was added to the File menu. 
+
+- The option to save to LSDYNA database was restored. 
+
+- Names of toolbars now show when right-clicking menu area. 
+
+- Some issues were fixed in the VTK export.
+
+- The measure area tool was expanded to include a min-max filter.
+
+- mesh lines can now be seen through transparent materials.
+
+- Support for tet5 element was added. 
+
+- A bug was fixed in the nonlinear regression algorithm. 
+
+
 Version 2.4.3 - 5/29/2019
 =========================
 
