@@ -55,6 +55,7 @@
 		D5C20C622038851000BFB643 /* moc_FileThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5C20C612038851000BFB643 /* moc_FileThread.cpp */; };
 		D5C53DB71F86D97E0014FA22 /* DlgAddEquation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5C53DB61F86D97E0014FA22 /* DlgAddEquation.cpp */; };
 		D5D22046238C7E65003B1EE6 /* DlgImportRAW.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5D22045238C7E65003B1EE6 /* DlgImportRAW.cpp */; };
+		D5D22048238C9073003B1EE6 /* moc_Histogram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5D22047238C9073003B1EE6 /* moc_Histogram.cpp */; };
 		D5D8A306237E0B3000F060F3 /* libx265.179.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5D8A305237E0B2F00F060F3 /* libx265.179.dylib */; };
 		D5D8A30C237E0B5900F060F3 /* libavutil.56.31.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5D8A307237E0B5800F060F3 /* libavutil.56.31.100.dylib */; };
 		D5D8A30D237E0B5900F060F3 /* libavformat.58.29.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5D8A308237E0B5800F060F3 /* libavformat.58.29.100.dylib */; };
@@ -221,6 +222,7 @@
 		D5C53DB61F86D97E0014FA22 /* DlgAddEquation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgAddEquation.cpp; sourceTree = "<group>"; };
 		D5D22044238C7E65003B1EE6 /* DlgImportRAW.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgImportRAW.h; sourceTree = "<group>"; };
 		D5D22045238C7E65003B1EE6 /* DlgImportRAW.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgImportRAW.cpp; sourceTree = "<group>"; };
+		D5D22047238C9073003B1EE6 /* moc_Histogram.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_Histogram.cpp; sourceTree = "<group>"; };
 		D5D8A305237E0B2F00F060F3 /* libx265.179.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libx265.179.dylib; path = ../../../../../../../usr/local/Cellar/x265/3.2.1/lib/libx265.179.dylib; sourceTree = "<group>"; };
 		D5D8A307237E0B5800F060F3 /* libavutil.56.31.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavutil.56.31.100.dylib; path = ../../../../../../../usr/local/Cellar/ffmpeg/4.2.1_2/lib/libavutil.56.31.100.dylib; sourceTree = "<group>"; };
 		D5D8A308237E0B5800F060F3 /* libavformat.58.29.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavformat.58.29.100.dylib; path = ../../../../../../../usr/local/Cellar/ffmpeg/4.2.1_2/lib/libavformat.58.29.100.dylib; sourceTree = "<group>"; };
@@ -529,6 +531,7 @@
 				D5FF7A011D72756B003D2CBD /* moc_FileViewer.cpp */,
 				D5FF7A021D72756B003D2CBD /* moc_GLView.cpp */,
 				D5FF7A031D72756B003D2CBD /* moc_GraphWindow.cpp */,
+				D5D22047238C9073003B1EE6 /* moc_Histogram.cpp */,
 				D5EB78DD229704860063769C /* moc_ImageViewer.cpp */,
 				D5FF7A041D72756B003D2CBD /* moc_ImportLinesTool.cpp */,
 				D5FF7A051D72756B003D2CBD /* moc_IntegrateWindow.cpp */,
@@ -717,6 +720,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5D22048238C9073003B1EE6 /* moc_Histogram.cpp in Sources */,
 				D53292BB1E453447002798B3 /* DlgExportAscii.cpp in Sources */,
 				D5FF7A461D72756B003D2CBD /* CommandPanel.cpp in Sources */,
 				D5F8C897226FBD54008597AF /* DocManager.cpp in Sources */,
