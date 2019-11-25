@@ -31,8 +31,8 @@
 #include <PostLib/MarchingCubes.h>
 #include <PostGL/GLMirrorPlane.h>
 #include "ObjectProps.h"
-#include "ImageViewer.h"
-#include "Histogram.h"
+#include <CUILib/ImageViewer.h>
+#include <CUILib/HistogramViewer.h>
 
 //-----------------------------------------------------------------------------
 class CModelProps : public CPropertyList
@@ -346,8 +346,7 @@ public:
 
 	CImageViewer*	m_imgView;
 
-	QWidget*			m_histo;
-	CHistogramViewer* m_histoView;
+	CHistogramViewer* m_histo;
 
 	QTabWidget*	m_tab;
 
@@ -413,17 +412,7 @@ public:
 		m_imgView = new CImageViewer;
 //		m_tab->addTab(m_imgView, "Image Viewer");
 
-		m_histo = new QWidget;
-		QVBoxLayout* histoLayout = new QVBoxLayout;
-
-		m_histoView = new CHistogramViewer;
-
-		QCheckBox* logButton = new QCheckBox("Logarithmic");
-
-		histoLayout->addWidget(m_histoView);
-		histoLayout->addWidget(logButton);
-
-		m_histo->setLayout(histoLayout);
+		m_histo = new CHistogramViewer;
 
 		m_imgView->hide();
 		m_histo->hide();
@@ -435,8 +424,6 @@ public:
 		psplitter->addWidget(w);
 
 		QMetaObject::connectSlotsByName(parent);
-
-		QObject::connect(logButton, SIGNAL(clicked(bool)), m_histoView, SLOT(SetLogMode(bool)));
 	}
 
 	Post::CGLObject* currentObject()
@@ -457,7 +444,7 @@ public:
 			m_tab->addTab(m_histo, "Histogram");
 		}
 		m_imgView->SetImageModel(img);
-		m_histoView->SetImageModel(img);
+		m_histo->SetImageModel(img);
 	}
 
 	void HideImageViewer()
@@ -468,7 +455,7 @@ public:
 			m_tab->removeTab(1);
 		}
 		m_imgView->SetImageModel(nullptr);
-		m_histoView->SetImageModel(nullptr);
+		m_histo->SetImageModel(nullptr);
 	}
 };
 
