@@ -54,6 +54,7 @@
 		D5C042842319A6D600175195 /* PropertyList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5C042822319A6D600175195 /* PropertyList.cpp */; };
 		D5C20C622038851000BFB643 /* moc_FileThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5C20C612038851000BFB643 /* moc_FileThread.cpp */; };
 		D5C53DB71F86D97E0014FA22 /* DlgAddEquation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5C53DB61F86D97E0014FA22 /* DlgAddEquation.cpp */; };
+		D5D22046238C7E65003B1EE6 /* DlgImportRAW.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5D22045238C7E65003B1EE6 /* DlgImportRAW.cpp */; };
 		D5D8A306237E0B3000F060F3 /* libx265.179.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5D8A305237E0B2F00F060F3 /* libx265.179.dylib */; };
 		D5D8A30C237E0B5900F060F3 /* libavutil.56.31.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5D8A307237E0B5800F060F3 /* libavutil.56.31.100.dylib */; };
 		D5D8A30D237E0B5900F060F3 /* libavformat.58.29.100.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D5D8A308237E0B5800F060F3 /* libavformat.58.29.100.dylib */; };
@@ -71,7 +72,6 @@
 		D5FAC5D221793358005E4684 /* moc_StrainMapTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FAC5D121793357005E4684 /* moc_StrainMapTool.cpp */; };
 		D5FF7A401D72756B003D2CBD /* 3PointAngleTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79AA1D72756B003D2CBD /* 3PointAngleTool.cpp */; };
 		D5FF7A411D72756B003D2CBD /* 4PointAngleTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79AC1D72756B003D2CBD /* 4PointAngleTool.cpp */; };
-		D5FF7A421D72756B003D2CBD /* AddImage3DTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79AE1D72756B003D2CBD /* AddImage3DTool.cpp */; };
 		D5FF7A431D72756B003D2CBD /* AddPointTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79B01D72756B003D2CBD /* AddPointTool.cpp */; };
 		D5FF7A441D72756B003D2CBD /* CColorButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79B21D72756B003D2CBD /* CColorButton.cpp */; };
 		D5FF7A451D72756B003D2CBD /* CDlgImportXPLT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79B41D72756B003D2CBD /* CDlgImportXPLT.cpp */; };
@@ -95,7 +95,6 @@
 		D5FF7A641D72756B003D2CBD /* MainWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79F41D72756B003D2CBD /* MainWindow.cpp */; };
 		D5FF7A651D72756B003D2CBD /* MaterialPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79F61D72756B003D2CBD /* MaterialPanel.cpp */; };
 		D5FF7A661D72756B003D2CBD /* MeasureAreaTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79F81D72756B003D2CBD /* MeasureAreaTool.cpp */; };
-		D5FF7A671D72756B003D2CBD /* moc_AddImage3DTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79FA1D72756B003D2CBD /* moc_AddImage3DTool.cpp */; };
 		D5FF7A681D72756B003D2CBD /* moc_CColorButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79FB1D72756B003D2CBD /* moc_CColorButton.cpp */; };
 		D5FF7A691D72756B003D2CBD /* moc_DataPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79FC1D72756B003D2CBD /* moc_DataPanel.cpp */; };
 		D5FF7A6A1D72756B003D2CBD /* moc_DistanceMapTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79FD1D72756B003D2CBD /* moc_DistanceMapTool.cpp */; };
@@ -220,6 +219,8 @@
 		D5C20C612038851000BFB643 /* moc_FileThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_FileThread.cpp; sourceTree = "<group>"; };
 		D5C53DB51F86D97E0014FA22 /* DlgAddEquation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgAddEquation.h; sourceTree = "<group>"; };
 		D5C53DB61F86D97E0014FA22 /* DlgAddEquation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgAddEquation.cpp; sourceTree = "<group>"; };
+		D5D22044238C7E65003B1EE6 /* DlgImportRAW.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgImportRAW.h; sourceTree = "<group>"; };
+		D5D22045238C7E65003B1EE6 /* DlgImportRAW.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgImportRAW.cpp; sourceTree = "<group>"; };
 		D5D8A305237E0B2F00F060F3 /* libx265.179.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libx265.179.dylib; path = ../../../../../../../usr/local/Cellar/x265/3.2.1/lib/libx265.179.dylib; sourceTree = "<group>"; };
 		D5D8A307237E0B5800F060F3 /* libavutil.56.31.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavutil.56.31.100.dylib; path = ../../../../../../../usr/local/Cellar/ffmpeg/4.2.1_2/lib/libavutil.56.31.100.dylib; sourceTree = "<group>"; };
 		D5D8A308237E0B5800F060F3 /* libavformat.58.29.100.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavformat.58.29.100.dylib; path = ../../../../../../../usr/local/Cellar/ffmpeg/4.2.1_2/lib/libavformat.58.29.100.dylib; sourceTree = "<group>"; };
@@ -246,8 +247,6 @@
 		D5FF79AB1D72756B003D2CBD /* 3PointAngleTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = 3PointAngleTool.h; sourceTree = "<group>"; };
 		D5FF79AC1D72756B003D2CBD /* 4PointAngleTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = 4PointAngleTool.cpp; sourceTree = "<group>"; };
 		D5FF79AD1D72756B003D2CBD /* 4PointAngleTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = 4PointAngleTool.h; sourceTree = "<group>"; };
-		D5FF79AE1D72756B003D2CBD /* AddImage3DTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AddImage3DTool.cpp; sourceTree = "<group>"; };
-		D5FF79AF1D72756B003D2CBD /* AddImage3DTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddImage3DTool.h; sourceTree = "<group>"; };
 		D5FF79B01D72756B003D2CBD /* AddPointTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AddPointTool.cpp; sourceTree = "<group>"; };
 		D5FF79B11D72756B003D2CBD /* AddPointTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddPointTool.h; sourceTree = "<group>"; };
 		D5FF79B21D72756B003D2CBD /* CColorButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CColorButton.cpp; sourceTree = "<group>"; };
@@ -295,7 +294,6 @@
 		D5FF79F71D72756B003D2CBD /* MaterialPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MaterialPanel.h; sourceTree = "<group>"; };
 		D5FF79F81D72756B003D2CBD /* MeasureAreaTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MeasureAreaTool.cpp; sourceTree = "<group>"; };
 		D5FF79F91D72756B003D2CBD /* MeasureAreaTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeasureAreaTool.h; sourceTree = "<group>"; };
-		D5FF79FA1D72756B003D2CBD /* moc_AddImage3DTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_AddImage3DTool.cpp; sourceTree = "<group>"; };
 		D5FF79FB1D72756B003D2CBD /* moc_CColorButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_CColorButton.cpp; sourceTree = "<group>"; };
 		D5FF79FC1D72756B003D2CBD /* moc_DataPanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_DataPanel.cpp; sourceTree = "<group>"; };
 		D5FF79FD1D72756B003D2CBD /* moc_DistanceMapTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_DistanceMapTool.cpp; sourceTree = "<group>"; };
@@ -443,8 +441,6 @@
 				D5FF79AB1D72756B003D2CBD /* 3PointAngleTool.h */,
 				D5FF79AC1D72756B003D2CBD /* 4PointAngleTool.cpp */,
 				D5FF79AD1D72756B003D2CBD /* 4PointAngleTool.h */,
-				D5FF79AE1D72756B003D2CBD /* AddImage3DTool.cpp */,
-				D5FF79AF1D72756B003D2CBD /* AddImage3DTool.h */,
 				D5FF79B01D72756B003D2CBD /* AddPointTool.cpp */,
 				D5FF79B11D72756B003D2CBD /* AddPointTool.h */,
 				D56731611F9FD85200C87BC1 /* AreaCoverageTool.cpp */,
@@ -476,6 +472,8 @@
 				D5A65E0E1DBFA53F00B44009 /* DlgFileInfo.h */,
 				D5FF79C11D72756B003D2CBD /* DlgFind.cpp */,
 				D5FF79C21D72756B003D2CBD /* DlgFind.h */,
+				D5D22045238C7E65003B1EE6 /* DlgImportRAW.cpp */,
+				D5D22044238C7E65003B1EE6 /* DlgImportRAW.h */,
 				D5FF79C31D72756B003D2CBD /* DlgImportXPLT.h */,
 				D5FF79C41D72756B003D2CBD /* DlgSelectRange.cpp */,
 				D5FF79C51D72756B003D2CBD /* DlgSelectRange.h */,
@@ -518,7 +516,6 @@
 				D5FF79F91D72756B003D2CBD /* MeasureAreaTool.h */,
 				D55CE8ED21B96C0E0096890D /* MeasureVolumeTool.cpp */,
 				D55CE8EC21B96C0D0096890D /* MeasureVolumeTool.h */,
-				D5FF79FA1D72756B003D2CBD /* moc_AddImage3DTool.cpp */,
 				D56731671F9FF5A700C87BC1 /* moc_AreaCoverageTool.cpp */,
 				D5FF79FB1D72756B003D2CBD /* moc_CColorButton.cpp */,
 				D5E0E6A61E72390D006FE591 /* moc_DataFieldSelector.cpp */,
@@ -733,6 +730,7 @@
 				D5FF7A941D72756B003D2CBD /* SummaryWindow.cpp in Sources */,
 				D5C042832319A6D600175195 /* ObjectProps.cpp in Sources */,
 				D5FAC5C821792BC8005E4684 /* StrainMapTool.cpp in Sources */,
+				D5D22046238C7E65003B1EE6 /* DlgImportRAW.cpp in Sources */,
 				D56731621F9FD85200C87BC1 /* AreaCoverageTool.cpp in Sources */,
 				D5FF7A691D72756B003D2CBD /* moc_DataPanel.cpp in Sources */,
 				D5FF7A871D72756B003D2CBD /* PointDistanceTool.cpp in Sources */,
@@ -748,7 +746,6 @@
 				D5FF7A6D1D72756B003D2CBD /* moc_DlgWidgetProps.cpp in Sources */,
 				D5FF7A7D1D72756B003D2CBD /* moc_StatePanel.cpp in Sources */,
 				D5E0E6A71E72390D006FE591 /* moc_DataFieldSelector.cpp in Sources */,
-				D5FF7A421D72756B003D2CBD /* AddImage3DTool.cpp in Sources */,
 				D5FF7A911D72756B003D2CBD /* StatePanel.cpp in Sources */,
 				D5FF7A431D72756B003D2CBD /* AddPointTool.cpp in Sources */,
 				D5C53DB71F86D97E0014FA22 /* DlgAddEquation.cpp in Sources */,
@@ -786,7 +783,6 @@
 				D5FF7A8C1D72756B003D2CBD /* qrc_postview.cpp in Sources */,
 				D5FF7A801D72756B003D2CBD /* moc_Tool.cpp in Sources */,
 				D5FF7A471D72756B003D2CBD /* DataFieldSelector.cpp in Sources */,
-				D5FF7A671D72756B003D2CBD /* moc_AddImage3DTool.cpp in Sources */,
 				D5FF7A6C1D72756B003D2CBD /* moc_DlgViewSettings.cpp in Sources */,
 				D5FF7A7E1D72756B003D2CBD /* moc_StatsWindow.cpp in Sources */,
 				D53598C01E901C0500584A4F /* DragBox.cpp in Sources */,
