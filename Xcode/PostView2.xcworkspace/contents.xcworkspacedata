@@ -5,6 +5,9 @@
       location = "group:PostView2/PostView2.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:../../FEBioStudio/Xcode/CUILib/CUILib.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:../../FEBioStudio/Xcode/FSCore/FSCore.xcodeproj">
    </FileRef>
    <FileRef
