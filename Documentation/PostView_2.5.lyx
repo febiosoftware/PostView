@@ -113,9 +113,8 @@ eqs-within-sections
 \end_inset
 
 
-\end_layout
+\series bold
 
-\begin_layout Title
 \begin_inset ERT
 status open
 
@@ -130,6 +129,8 @@ status open
 
 \end_inset
 
+
+\series default
 USER MANUAL Version 2.5
 \end_layout
 
@@ -138,29 +139,7 @@ Last Updated: November 20, 2019
 \end_layout
 
 \begin_layout Standard
-\begin_inset Newpage newpage
-\end_inset
-
-
-\end_layout
-
-\begin_layout Paragraph*
-Contributors
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-
-\backslash
-
-\end_layout
-
-\end_inset
-
-
+Contributors:
 \end_layout
 
 \begin_layout Itemize
@@ -7223,7 +7202,7 @@ status open
 \begin_inset Graphics
 	filename Figures/image_renderers.png
 	lyxscale 50
-	scale 50
+	width 6in
 
 \end_inset
 
