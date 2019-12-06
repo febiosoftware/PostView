@@ -13,7 +13,7 @@
 // VERSION INFORMATION
 #define VERSION			2
 #define SUBVERSION		5
-#define SUBSUBVERSION	0
+#define SUBSUBVERSION	1
 
 #ifdef SVN
 #include "svnrev.h"
