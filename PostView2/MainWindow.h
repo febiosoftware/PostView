@@ -238,6 +238,8 @@ public slots:
 
 	void onTimer();
 
+	void onAppLoadFile(const QString& fileName);
+
 private:
 	void closeEvent(QCloseEvent* ev);
 	void StopAnimation();

@@ -3,7 +3,9 @@
 #endif
 #include "stdafx.h"
 #include <QApplication>
+#include <QMessageBox>
 #include "MainWindow.h"
+#include "PostViewApp.h"
 
 #ifdef __APPLE__
 #include <QFileOpenEvent>
@@ -34,8 +36,16 @@ public:
 int main(int argc, char* argv[])
 {
 #ifndef __APPLE__
+
+#ifdef WIN32
+	PostViewApplication app(argc, argv);
+	app.setWindowIcon(QIcon(":/icons/postview.png"));
+
+	if (app.IsPrimary() == false) return 0;
+#else
 	QApplication app(argc, argv);
 	app.setWindowIcon(QIcon(":/icons/postview.png"));
+#endif
 
 	// initialize glew
 #ifdef WIN32
@@ -43,6 +53,11 @@ int main(int argc, char* argv[])
 #endif
 	// create the main window
 	CMainWindow wnd;
+	
+#ifdef WIN32
+	QObject::connect(&app, SIGNAL(loadFile(const QString&)), &wnd, SLOT(onAppLoadFile(const QString&)));
+#endif
+	
 	wnd.show();
 
 	if (argc==2)

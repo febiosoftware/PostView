@@ -2642,3 +2642,8 @@ void CMainWindow::ShowData(const std::vector<double>& data, const QString& label
 	graph->raise();
 	graph->activateWindow();
 }
+
+void CMainWindow::onAppLoadFile(const QString& fileName)
+{
+	OpenFile(fileName, -1);
+}
