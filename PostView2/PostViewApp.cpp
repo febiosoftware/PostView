@@ -5,56 +5,80 @@
 
 // implementation in part based on https://github.com/itay-grudev/SingleApplication
 
-PostViewApplication::PostViewApplication(int& argc, char* argv[]) : QApplication(argc, argv), m_sharedMem("PostViewAppData")
+PostViewApplication::PostViewApplication(int& argc, char* argv[]) : QApplication(argc, argv)
 {
 	m_socket = nullptr;
+	m_localServer = nullptr;
 	m_isPrimary = true;
 
-	if (m_sharedMem.create(256))
+	// create a shared memory object
+	m_sharedMem = new QSharedMemory("PostViewAppData");
+
+	// try to create the shared memory segment. 
+	// If this fails, an instance of PostView is already running.
+	if (m_sharedMem->create(256))
 	{
-		m_localServer.listen("PostViewLocalServer");
-		QObject::connect(&m_localServer, SIGNAL(newConnection()), this, SLOT(onNewConnection()));
+		// This is the first instance of PostView, so start a local server
+		// that will listen to connections.
+		m_localServer = new QLocalServer();
+		m_localServer->listen("PostViewLocalServer");
+		QObject::connect(m_localServer, SIGNAL(newConnection()), this, SLOT(onNewConnection()));
 	}
 	else
 	{
+		// we don't need the shared memory object, so delete it
+		delete m_sharedMem;
+		m_sharedMem = nullptr;
+
+		// Set flag that this is NOT the primary application
 		m_isPrimary = false;
 
 #ifdef _DEBUG
 		QMessageBox::critical(nullptr, "PostView2", "An instance of PostView is already running");
 #endif
-
-		if (argc == 2)
-		{
-			QLocalSocket* socket = new QLocalSocket();
-			socket->connectToServer("PostViewLocalServer");
-
-			if (socket->waitForConnected())
-			{
-#ifdef _DEBUG
-				QMessageBox::information(nullptr, "PostView", "Connected to PostView server!");
-#endif
-				QByteArray data(argv[1]);
-
-				socket->write(data);
-				bool dataWritten = socket->waitForBytesWritten();
-				socket->flush();
-			}
-
-			socket->deleteLater();
-		}
 	}
+}
+
+void PostViewApplication::SendToPrimary(int& args, char* argv[])
+{
+	// create a local socket and connect it to the server (which is running on the primary app).
+	QLocalSocket* socket = new QLocalSocket();
+	socket->connectToServer("PostViewLocalServer");
+
+	if (socket->waitForConnected())
+	{
+#ifdef _DEBUG
+		QMessageBox::information(nullptr, "PostView", "Connected to PostView server!");
+#endif
+		// convert the file name to a byte array
+		QByteArray data(argv[1]);
+
+		// send the file name
+		socket->write(data);
+		bool dataWritten = socket->waitForBytesWritten();
+		socket->flush();
+	}
+
+	socket->deleteLater();
 }
 
 PostViewApplication::~PostViewApplication()
 {
-	if (m_sharedMem.isAttached())
+	// Delete the shared memory object. 
+	// This will detach the process from the shared memory segment. 
+	if (m_sharedMem)
 	{
-		m_sharedMem.detach();
+		delete m_sharedMem;
+		m_sharedMem = nullptr;
 	}
 
-	if (m_localServer.isListening())
+	// close the server
+	if (m_localServer)
 	{
-		m_localServer.close();
+		if (m_localServer->isListening())
+			m_localServer->close();
+
+		delete m_localServer; m_localServer = nullptr;
 	}
 }
 
@@ -65,10 +89,12 @@ bool PostViewApplication::IsPrimary()
 
 void PostViewApplication::onNewConnection()
 {
-//	QMessageBox::information(0, "PostView", "A new connection was detected.");
+	assert(m_localServer);
 
-	m_socket = m_localServer.nextPendingConnection();
+	// get the socket that is connecting. 
+	m_socket = m_localServer->nextPendingConnection();
 
+	// connect the socket's readyRead signal to a slot that will read the data from the socket.
 	QObject::connect(m_socket, SIGNAL(readyRead()), this, SLOT(onReadReady()));
 }
 
@@ -85,5 +111,6 @@ void PostViewApplication::onReadReady()
 
 	fprintf(stderr, "\nPostView message: %s\n", ss.c_str());
 
+	// emit request to load the file
 	emit loadFile(s);
 }

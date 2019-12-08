@@ -41,7 +41,15 @@ int main(int argc, char* argv[])
 	PostViewApplication app(argc, argv);
 	app.setWindowIcon(QIcon(":/icons/postview.png"));
 
-	if (app.IsPrimary() == false) return 0;
+	// If we are not the primary application
+	// and a file name is specified, we send the file name
+	// to the primary app and end this one
+	if ((app.IsPrimary() == false) && (argc >= 2))
+	{
+		app.SendToPrimary(argc, argv);
+		return 0;
+	}
+
 #else
 	QApplication app(argc, argv);
 	app.setWindowIcon(QIcon(":/icons/postview.png"));
