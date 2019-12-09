@@ -1,1 +1,1 @@
-../PostGL/PostGL.pro
+../../FEBioStudio/PostGL/PostGL.pro

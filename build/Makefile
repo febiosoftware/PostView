@@ -1,26 +1,46 @@
-postView: XPLT GLWLib PostGL PostViewLib
-	cd ../PostView2; /home/sci/mherron/Resources/Qt/5.12.0/gcc_64/bin/qmake PostView2.pro;
+FEBIOSTUDIODIR = ../../FEBioStudio
+
+LIBS = XPLTLib ImageLib FSCore GeomLib MeshLib XML MathLib
+
+postView: $(LIBS) GLWLib PostGL PostLib CUILib MeshTools GLLib
+	cd ../PostView2; qmake PostView2.pro;
 	$(MAKE) -C ../PostView2/;
 
-XPLT:
-	cd ../XPLTLib;	$(MAKE) -C ../XPLTLib/;
+$(LIBS):
+	cd $(FEBIOSTUDIODIR)/$@;	$(MAKE) -f ../build/makeLibs.mk
 	
+GLLib:
+	cd $(FEBIOSTUDIODIR)/GLLib; qmake GLLib.pro;
+	$(MAKE) -C $(FEBIOSTUDIODIR)/GLLib/;
+
 GLWLib:
-	cd ../GLWLib; /home/sci/mherron/Resources/Qt/5.12.0/gcc_64/bin/qmake glwlib.pro;
-	$(MAKE) -C ../GLWLib/;
+	cd $(FEBIOSTUDIODIR)/GLWLib; qmake GLWLib.pro;
+	$(MAKE) -C $(FEBIOSTUDIODIR)/GLWLib/;
 
 PostGL:
-	cd ../PostGL; /home/sci/mherron/Resources/Qt/5.12.0/gcc_64/bin/qmake PostGL.pro;
-	$(MAKE) -C ../PostGL/;
+	cd $(FEBIOSTUDIODIR)/PostGL; qmake PostGL.pro;
+	$(MAKE) -C $(FEBIOSTUDIODIR)/PostGL/;
 
-PostViewLib:
-	cd ../PostViewLib; /home/sci/mherron/Resources/Qt/5.12.0/gcc_64/bin/qmake PostView2Lib.pro;
-	$(MAKE) -C ../PostViewLib/;
+PostLib:
+	cd $(FEBIOSTUDIODIR)/PostLib; qmake PostLib.pro;
+	$(MAKE) -C $(FEBIOSTUDIODIR)/PostLib/;
+
+CUILib:
+	cd $(FEBIOSTUDIODIR)/CUILib; qmake CUILib.pro;
+	$(MAKE) -C $(FEBIOSTUDIODIR)/CUILib/;
+
+MeshTools:
+	cd $(FEBIOSTUDIODIR)/MeshTools; qmake MeshTools.pro;
+	$(MAKE) -C $(FEBIOSTUDIODIR)/MeshTools/;
 
 clean:
-	cd ../XPLTLib; $(MAKE) -f ../XPLTLib/Makefile clean ;
-
-	cd ../GLWLib/; $(MAKE) distclean
-	cd ../PostGL/; $(MAKE) distclean
-	cd ../PostViewLib/; $(MAKE) distclean
+	for lib in $(LIBS) ; do \
+		cd $(FEBIOSTUDIODIR)/$$lib; $(MAKE) -f ../build/makeLibs.mk clean ;\
+	done
 	cd ../PostView2/; $(MAKE) distclean
+	cd $(FEBIOSTUDIODIR)/GLWLib/; $(MAKE) distclean
+	cd $(FEBIOSTUDIODIR)/MeshTools/; $(MAKE) distclean
+	cd $(FEBIOSTUDIODIR)/PostGL/; $(MAKE) distclean
+	cd $(FEBIOSTUDIODIR)/PostLib/; $(MAKE) distclean
+	cd $(FEBIOSTUDIODIR)/CUILib/; $(MAKE) distclean
+
