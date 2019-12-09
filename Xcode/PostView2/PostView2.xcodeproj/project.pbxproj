@@ -24,6 +24,9 @@
 		D52F50FF218D07EF0094F7D1 /* libmp3lame.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D52F50FE218D07EF0094F7D1 /* libmp3lame.0.dylib */; };
 		D53292BB1E453447002798B3 /* DlgExportAscii.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53292B91E453447002798B3 /* DlgExportAscii.cpp */; };
 		D53598C01E901C0500584A4F /* DragBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53598BE1E901C0500584A4F /* DragBox.cpp */; };
+		D54A8C68239ECA3500B6219A /* moc_PostViewApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D54A8C66239ECA3500B6219A /* moc_PostViewApp.cpp */; };
+		D54A8C69239ECA3500B6219A /* PostViewApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D54A8C67239ECA3500B6219A /* PostViewApp.cpp */; };
+		D54A8C6B239ECE6B00B6219A /* QtNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D54A8C6A239ECE6B00B6219A /* QtNetwork.framework */; };
 		D552470A22E5F34700935C9C /* lut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D552470922E5F34700935C9C /* lut.cpp */; };
 		D552473A22E5F4FF00935C9C /* libXPLTLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D552473922E5F4FF00935C9C /* libXPLTLib.a */; };
 		D55247F322E63A9800935C9C /* libPostGL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D55247F222E63A9800935C9C /* libPostGL.a */; };
@@ -182,6 +185,10 @@
 		D53292BA1E453447002798B3 /* DlgExportAscii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgExportAscii.h; sourceTree = "<group>"; };
 		D53598BE1E901C0500584A4F /* DragBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DragBox.cpp; sourceTree = "<group>"; };
 		D53598BF1E901C0500584A4F /* DragBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DragBox.h; sourceTree = "<group>"; };
+		D54A8C65239ECA3500B6219A /* PostViewApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostViewApp.h; sourceTree = "<group>"; };
+		D54A8C66239ECA3500B6219A /* moc_PostViewApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_PostViewApp.cpp; sourceTree = "<group>"; };
+		D54A8C67239ECA3500B6219A /* PostViewApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PostViewApp.cpp; sourceTree = "<group>"; };
+		D54A8C6A239ECE6B00B6219A /* QtNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtNetwork.framework; path = ../../../../../../../../../../usr/local/Cellar/qt/5.13.2/lib/QtNetwork.framework; sourceTree = "<group>"; };
 		D552470922E5F34700935C9C /* lut.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lut.cpp; sourceTree = "<group>"; };
 		D552473922E5F4FF00935C9C /* libXPLTLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libXPLTLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D55247F222E63A9800935C9C /* libPostGL.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libPostGL.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -368,6 +375,7 @@
 				D5D8A30F237E0B5900F060F3 /* libswscale.5.5.100.dylib in Frameworks */,
 				D5D8A310237E0B5900F060F3 /* libswresample.3.5.100.dylib in Frameworks */,
 				D5D8A306237E0B3000F060F3 /* libx265.179.dylib in Frameworks */,
+				D54A8C6B239ECE6B00B6219A /* QtNetwork.framework in Frameworks */,
 				D5BF174C2374CFEC0005C8B4 /* QtWidgets.framework in Frameworks */,
 				D5BF174D2374CFEC0005C8B4 /* QtCore.framework in Frameworks */,
 				D5BF174E2374CFEC0005C8B4 /* QtGui.framework in Frameworks */,
@@ -529,6 +537,7 @@
 				D5FF7A0A1D72756B003D2CBD /* moc_PlotMixTool.cpp */,
 				D5FF7A0B1D72756B003D2CBD /* moc_PlotWidget.cpp */,
 				D5FF7A0C1D72756B003D2CBD /* moc_PointCongruencyTool.cpp */,
+				D54A8C66239ECA3500B6219A /* moc_PostViewApp.cpp */,
 				D5FF7A0D1D72756B003D2CBD /* moc_PropertyListForm.cpp */,
 				D5FF7A0E1D72756B003D2CBD /* moc_PropertyListView.cpp */,
 				D5FF7A0F1D72756B003D2CBD /* moc_SphereFitTool.cpp */,
@@ -555,6 +564,8 @@
 				D5FF7A1F1D72756B003D2CBD /* PointDistanceTool.cpp */,
 				D5FF7A201D72756B003D2CBD /* PointDistanceTool.h */,
 				D5FF7A211D72756B003D2CBD /* PostView2.cpp */,
+				D54A8C67239ECA3500B6219A /* PostViewApp.cpp */,
+				D54A8C65239ECA3500B6219A /* PostViewApp.h */,
 				D5C042822319A6D600175195 /* PropertyList.cpp */,
 				D5C042812319A6D600175195 /* PropertyList.h */,
 				D5FF7A241D72756B003D2CBD /* PropertyListForm.cpp */,
@@ -601,6 +612,7 @@
 		D5FF7AA61D727B52003D2CBD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D54A8C6A239ECE6B00B6219A /* QtNetwork.framework */,
 				D5B8DD50238DB6C90063E6D8 /* libCUILib.a */,
 				D5D8A309237E0B5800F060F3 /* libavcodec.58.54.100.dylib */,
 				D5D8A308237E0B5800F060F3 /* libavformat.58.29.100.dylib */,
@@ -721,6 +733,7 @@
 				D5C042832319A6D600175195 /* ObjectProps.cpp in Sources */,
 				D5FAC5C821792BC8005E4684 /* StrainMapTool.cpp in Sources */,
 				D5D22046238C7E65003B1EE6 /* DlgImportRAW.cpp in Sources */,
+				D54A8C69239ECA3500B6219A /* PostViewApp.cpp in Sources */,
 				D56731621F9FD85200C87BC1 /* AreaCoverageTool.cpp in Sources */,
 				D5FF7A691D72756B003D2CBD /* moc_DataPanel.cpp in Sources */,
 				D5FF7A871D72756B003D2CBD /* PointDistanceTool.cpp in Sources */,
@@ -760,6 +773,7 @@
 				D5FF7A741D72756B003D2CBD /* moc_MaterialPanel.cpp in Sources */,
 				D5FF7A7F1D72756B003D2CBD /* moc_SummaryWindow.cpp in Sources */,
 				D5C042842319A6D600175195 /* PropertyList.cpp in Sources */,
+				D54A8C68239ECA3500B6219A /* moc_PostViewApp.cpp in Sources */,
 				D5FF7A681D72756B003D2CBD /* moc_CColorButton.cpp in Sources */,
 				D552470A22E5F34700935C9C /* lut.cpp in Sources */,
 				D5FF7A721D72756B003D2CBD /* moc_IntegrateWindow.cpp in Sources */,
