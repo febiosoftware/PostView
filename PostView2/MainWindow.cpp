@@ -37,6 +37,7 @@
 #include <PostGL/GLTensorPlot.h>
 #include <PostGL/GLStreamLinePlot.h>
 #include <PostGL/GLParticleFlowPlot.h>
+#include <PostGL/GLVolumeFlowPlot.h>
 #include "DlgViewSettings.h"
 #include "DlgExportXPLT.h"
 #include "DlgExportLSDYNA.h"
@@ -1409,6 +1410,24 @@ void CMainWindow::on_actionParticleFlowPlot_triggered()
 
 	RedrawGL();
 }
+
+void CMainWindow::on_actionVolumeFlowPlot_triggered()
+{
+	CDocument* doc = GetActiveDocument();
+	if (doc == nullptr) return;
+	if (doc->IsValid() == false) return;
+
+	Post::GLVolumeFlowPlot* pp = new Post::GLVolumeFlowPlot(doc->GetGLModel());
+	doc->GetGLModel()->AddPlot(pp);
+	doc->UpdateFEModel();
+
+	ui->modelViewer->Update(true);
+	ui->modelViewer->selectObject(pp);
+	ui->modelViewer->parentWidget()->raise();
+
+	RedrawGL();
+}
+
 
 void CMainWindow::on_actionImageSlicer_triggered()
 {

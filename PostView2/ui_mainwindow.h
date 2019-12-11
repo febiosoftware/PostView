@@ -345,6 +345,7 @@ public:
 		QAction* actionDisplacementMap = addAction("Displacement map" , "actionDisplacementMap", ":/icons/distort.png");
 		QAction* actionStreamLinePlot  = addAction("Stream lines plot", "actionStreamLinePlot" , ":/icons/streamlines.png");
 		QAction* actionParticleFlowPlot= addAction("Particle flow plot", "actionParticleFlowPlot" , ":/icons/particle.png");
+		QAction* actionVolumeFlowPlot  = addAction("Volume flow plot" , "actionVolumeFlowPlot"    , ":/icons/flow.png");
 		QAction* actionImageSlicer     = addAction("Image slicer"     , "actionImageSlicer"       , ":/icons/imageslice.png");
 		QAction* actionVolumeRender    = addAction("Volume render"    , "actionVolumeRender"      , ":/icons/volrender.png");
 		QAction* actionMarchingCubes   = addAction("Image isosurface" , "actionMarchingCubes"     , ":/icons/marching_cubes.png");
@@ -485,6 +486,7 @@ public:
 		menuPost->addAction(actionDisplacementMap);
 		menuPost->addAction(actionStreamLinePlot);
 		menuPost->addAction(actionParticleFlowPlot);
+		menuPost->addAction(actionVolumeFlowPlot);
 		menuPost->addSeparator();
 		menuPost->addAction(actionImageSlicer);
 		menuPost->addAction(actionVolumeRender);
