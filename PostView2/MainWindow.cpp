@@ -445,6 +445,22 @@ void CMainWindow::OpenFile(const QString& fileName, int nfilter)
 	// Stop the timer if it's running
 	if (ui->m_isAnimating) ui->m_isAnimating = false;
 
+	// see if the file is already open
+	int docs = m_DocManager->Documents();
+	for (int i = 0; i < docs; ++i)
+	{
+		CDocument* doc = m_DocManager->GetDocument(i);
+		std::string sfile = doc->GetFile();
+		QString fileName_i = QString::fromStdString(sfile);
+		if (fileName == fileName_i)
+		{
+			ui->tab->setCurrentIndex(i);
+			on_actionUpdate_triggered();
+			QApplication::alert(this);
+			return;
+		}
+	}
+
 	std::string sfile = fileName.toStdString();
 
 	// create a file reader
@@ -634,6 +650,8 @@ void CMainWindow::finishedReadingFile(bool success, const QString& errorString)
 
 	// add file to recent list
 	ui->addToRecentFiles(QString::fromStdString(doc->GetFile()));
+
+	QApplication::alert(this);
 }
 
 bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
