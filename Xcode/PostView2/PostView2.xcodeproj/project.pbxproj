@@ -20,7 +20,6 @@
 		D52F5082218C990D0094F7D1 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D52F5081218C990D0094F7D1 /* CoreVideo.framework */; };
 		D52F5084218C99360094F7D1 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D52F5083218C99350094F7D1 /* VideoToolbox.framework */; };
 		D52F508E218C9C370094F7D1 /* libiconv.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D52F508D218C9C370094F7D1 /* libiconv.2.dylib */; };
-		D52F50FB218D07AD0094F7D1 /* libxvidcore.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D52F50FA218D07AD0094F7D1 /* libxvidcore.4.dylib */; };
 		D52F50FF218D07EF0094F7D1 /* libmp3lame.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D52F50FE218D07EF0094F7D1 /* libmp3lame.0.dylib */; };
 		D53292BB1E453447002798B3 /* DlgExportAscii.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53292B91E453447002798B3 /* DlgExportAscii.cpp */; };
 		D53598C01E901C0500584A4F /* DragBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53598BE1E901C0500584A4F /* DragBox.cpp */; };
@@ -33,6 +32,8 @@
 		D56731681F9FF5A700C87BC1 /* moc_AreaCoverageTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D56731671F9FF5A700C87BC1 /* moc_AreaCoverageTool.cpp */; };
 		D571E01220385DE700A7B96D /* FileThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D571E00F20385DE700A7B96D /* FileThread.cpp */; };
 		D576BB3220CACBD100F09942 /* moc_DlgAddEquation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D576BB3120CACBD100F09942 /* moc_DlgAddEquation.cpp */; };
+		D58C2DAF23A878E2004C7499 /* libxvidcore.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D58C2DAE23A878E1004C7499 /* libxvidcore.4.dylib */; };
+		D58C2DB023A878E2004C7499 /* libxvidcore.4.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = D58C2DAE23A878E1004C7499 /* libxvidcore.4.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		D5A65E0F1DBFA53F00B44009 /* DlgFileInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */; };
 		D5B8DD51238DB6C90063E6D8 /* libCUILib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5B8DD50238DB6C90063E6D8 /* libCUILib.a */; };
 		D5BF174C2374CFEC0005C8B4 /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5BF17482374CFEB0005C8B4 /* QtWidgets.framework */; };
@@ -41,7 +42,6 @@
 		D5BF174F2374CFEC0005C8B4 /* QtCharts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5BF174B2374CFEC0005C8B4 /* QtCharts.framework */; };
 		D5C0425A23199BFC00175195 /* libPostLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5C0425923199BFC00175195 /* libPostLib.a */; };
 		D5C0426B2319A24700175195 /* libmp3lame.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = D52F50FE218D07EF0094F7D1 /* libmp3lame.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		D5C0426C2319A24700175195 /* libxvidcore.4.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = D52F50FA218D07AD0094F7D1 /* libxvidcore.4.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		D5C0426E2319A2A600175195 /* libMeshLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5C0426D2319A2A600175195 /* libMeshLib.a */; };
 		D5C042702319A2FD00175195 /* libMathLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5C0426F2319A2FD00175195 /* libMathLib.a */; };
 		D5C042722319A2FD00175195 /* libXML.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5C042712319A2FD00175195 /* libXML.a */; };
@@ -152,8 +152,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				D58C2DB023A878E2004C7499 /* libxvidcore.4.dylib in CopyFiles */,
 				D5C0426B2319A24700175195 /* libmp3lame.0.dylib in CopyFiles */,
-				D5C0426C2319A24700175195 /* libxvidcore.4.dylib in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -179,7 +179,6 @@
 		D52F5083218C99350094F7D1 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		D52F5085218C996B0094F7D1 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		D52F508D218C9C370094F7D1 /* libiconv.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.2.dylib; path = ../../../../../../../../../../../usr/lib/libiconv.2.dylib; sourceTree = "<group>"; };
-		D52F50FA218D07AD0094F7D1 /* libxvidcore.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxvidcore.4.dylib; path = ../../../../../../../../../../../usr/local/Cellar/xvid/1.3.5/lib/libxvidcore.4.dylib; sourceTree = "<group>"; };
 		D52F50FE218D07EF0094F7D1 /* libmp3lame.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libmp3lame.0.dylib; path = ../../../../../../../../../../../usr/local/Cellar/lame/3.100/lib/libmp3lame.0.dylib; sourceTree = "<group>"; };
 		D53292B91E453447002798B3 /* DlgExportAscii.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgExportAscii.cpp; sourceTree = "<group>"; };
 		D53292BA1E453447002798B3 /* DlgExportAscii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgExportAscii.h; sourceTree = "<group>"; };
@@ -197,6 +196,7 @@
 		D571E00C20385DE700A7B96D /* FileThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileThread.h; sourceTree = "<group>"; };
 		D571E00F20385DE700A7B96D /* FileThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileThread.cpp; sourceTree = "<group>"; };
 		D576BB3120CACBD100F09942 /* moc_DlgAddEquation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_DlgAddEquation.cpp; sourceTree = "<group>"; };
+		D58C2DAE23A878E1004C7499 /* libxvidcore.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxvidcore.4.dylib; path = ../../../../../../../../../../usr/local/Cellar/xvid/1.3.6/lib/libxvidcore.4.dylib; sourceTree = "<group>"; };
 		D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgFileInfo.cpp; sourceTree = "<group>"; };
 		D5A65E0E1DBFA53F00B44009 /* DlgFileInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgFileInfo.h; sourceTree = "<group>"; };
 		D5B8DD50238DB6C90063E6D8 /* libCUILib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libCUILib.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -371,6 +371,7 @@
 			files = (
 				D5D8A30C237E0B5900F060F3 /* libavutil.56.31.100.dylib in Frameworks */,
 				D5D8A30D237E0B5900F060F3 /* libavformat.58.29.100.dylib in Frameworks */,
+				D58C2DAF23A878E2004C7499 /* libxvidcore.4.dylib in Frameworks */,
 				D5D8A30E237E0B5900F060F3 /* libavcodec.58.54.100.dylib in Frameworks */,
 				D5D8A30F237E0B5900F060F3 /* libswscale.5.5.100.dylib in Frameworks */,
 				D5D8A310237E0B5900F060F3 /* libswresample.3.5.100.dylib in Frameworks */,
@@ -382,7 +383,6 @@
 				D5BF174F2374CFEC0005C8B4 /* QtCharts.framework in Frameworks */,
 				D5C0427E2319A5B300175195 /* libz.1.dylib in Frameworks */,
 				D52F50FF218D07EF0094F7D1 /* libmp3lame.0.dylib in Frameworks */,
-				D52F50FB218D07AD0094F7D1 /* libxvidcore.4.dylib in Frameworks */,
 				D52F508E218C9C370094F7D1 /* libiconv.2.dylib in Frameworks */,
 				D5B8DD51238DB6C90063E6D8 /* libCUILib.a in Frameworks */,
 				D5C042782319A50500175195 /* libFSCore.a in Frameworks */,
@@ -612,6 +612,7 @@
 		D5FF7AA61D727B52003D2CBD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D58C2DAE23A878E1004C7499 /* libxvidcore.4.dylib */,
 				D5C5B7A3239F0C1A00D29EE0 /* QtNetwork.framework */,
 				D5B8DD50238DB6C90063E6D8 /* libCUILib.a */,
 				D5D8A309237E0B5800F060F3 /* libavcodec.58.54.100.dylib */,
@@ -626,7 +627,6 @@
 				D5BF17482374CFEB0005C8B4 /* QtWidgets.framework */,
 				D5C0427D2319A5B300175195 /* libz.1.dylib */,
 				D52F50FE218D07EF0094F7D1 /* libmp3lame.0.dylib */,
-				D52F50FA218D07AD0094F7D1 /* libxvidcore.4.dylib */,
 				D52F508D218C9C370094F7D1 /* libiconv.2.dylib */,
 				D5C042772319A50500175195 /* libFSCore.a */,
 				D5C042792319A50500175195 /* libGeomLib.a */,
@@ -964,6 +964,7 @@
 					/usr/local/opt/lame/lib,
 					/usr/local/opt/ffmpeg/lib,
 					/usr/local/opt/x265/lib,
+					/usr/local/Cellar/xvid/1.3.6/lib,
 				);
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_BUNDLE_IDENTIFIER = FEB.PostView2;
@@ -999,6 +1000,7 @@
 					/usr/local/opt/xvid/lib,
 					/usr/local/opt/lame/lib,
 					/usr/local/opt/x265/lib,
+					/usr/local/Cellar/xvid/1.3.6/lib,
 				);
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_BUNDLE_IDENTIFIER = FEB.PostView2;
