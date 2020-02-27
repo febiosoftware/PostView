@@ -7,6 +7,7 @@
 #include <QFormLayout>
 #include <QLineEdit>
 #include "Document.h"
+#include "MainWindow.h"
 #include <PostLib/FEModel.h>
 #include <MeshTools/SphereFit.h>
 #include "PropertyListView.h"
@@ -179,5 +180,9 @@ void CCurvatureMapTool::OnApply()
 		FECongruencyMap& map = ui->m_map;
 		map.Apply(*doc->GetFEModel());
 		updateUi();
+
+		// this tool adds a data field to the model
+		// so we need to update the main toolbar
+		m_wnd->UpdateMainToolbar();
 	}
 }
