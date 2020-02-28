@@ -488,17 +488,23 @@ void CGLView::resizeGL(int w, int h)
 
 void CGLView::setupProjectionMatrix()
 {
+	CGLCamera& cam = GetCamera();
+
 	// get the scene's bounding box
 	CDocument* doc = GetDocument();
 	if (doc == nullptr) return;
 	BOX box = doc->GetBoundingBox();
 
 	// set up the projection Matrix
-	double radius = box.Radius();
+	double R = box.Radius();
 	vec3d rc = box.Center();
 
-	m_fnear = 0.01*radius;
-	m_ffar  = 100*radius;
+	vec3d p = cam.GlobalPosition();
+	vec3d c = box.Center();
+	double L = (c - p).Length();
+
+	m_ffar = (L + R) * 2;
+	m_fnear = 0.01f*m_ffar;
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -508,9 +514,9 @@ void CGLView::setupProjectionMatrix()
 	VIEWSETTINGS& view = GetViewSettings();
 	if (view.m_nproj == RENDER_ORTHO)
 	{
-		double z = GetCamera().GetTargetDistance();
-		double dx = z*tan(0.5*m_fov*PI/180.0)*m_ar;
-		double dy = z*tan(0.5*m_fov*PI/180.0);
+		GLdouble f = 0.2*cam.GetTargetDistance();
+		double dx = f*m_ar;
+		double dy = f;
 		glOrtho(-dx, dx, -dy, dy, m_fnear, m_ffar);
 	}
 	else
