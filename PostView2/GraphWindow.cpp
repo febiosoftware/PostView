@@ -850,7 +850,7 @@ void CGraphWindow::on_options_optionsChanged()
 	bool autoRng = ui->ops->autoRangeUpdate();
 	ui->plot->setAutoRangeUpdate(autoRng);
 
-	Update(true);
+	Update(false);
 }
 
 //=============================================================================
