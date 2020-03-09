@@ -44,9 +44,9 @@ public:
 		double ffar = view->GetFarPlane();
 		if (projectionMode == RENDER_ORTHO)
 		{
-			double z = view->GetCamera().GetTargetDistance();
-			double dx = z*tan(0.5*fov*PI / 180.0)*ar;
-			double dy = z*tan(0.5*fov*PI / 180.0);
+			GLdouble f = 0.2*view->GetCamera().GetTargetDistance();
+			double dx = f*ar;
+			double dy = f;
 			glOrtho(-dx, dx, -dy, dy, fnear, ffar);
 		}
 		else
@@ -1227,12 +1227,6 @@ void CGLView::RenderTags()
 
 	int mode = model->GetSelectionMode();
 
-	double radius = box.Radius();
-	vec3d rc = box.Center();
-
-	m_fnear = 0.01*radius;
-	m_ffar  = 100*radius;
-
 	// get the mesh
 	Post::FEPostMesh* postMesh = pdoc->GetActiveMesh();
 	if (postMesh == nullptr) return;
@@ -1453,9 +1447,9 @@ Ray CGLView::PointToRay(int x, int y)
 	// set up the projection Matrix
 	if (view.m_nproj == RENDER_ORTHO)
 	{
-		double z = GetCamera().GetTargetDistance();
-		double dx = z*tan(0.5*m_fov*PI / 180.0)*m_ar;
-		double dy = z*tan(0.5*m_fov*PI / 180.0);
+		GLdouble f = 0.2*GetCamera().GetTargetDistance();
+		double dx = f*m_ar;
+		double dy = f;
 		glOrtho(-dx, dx, -dy, dy, m_fnear, m_ffar);
 	}
 	else
