@@ -404,7 +404,7 @@ void CTimeController::paintEvent(QPaintEvent* ev)
 		int x = x0 + (int)((t - m_min) / (m_max - m_min) * W);
 
 		QString txt = QString::number(t);
-		int w = FM.width(txt);
+		int w = FM.horizontalAdvance(txt);
 		painter.drawText(x - w / 2, Y0 + 5 + FM.height(), txt);
 
 		t += m_inc;
