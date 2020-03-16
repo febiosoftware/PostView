@@ -1,18 +1,19 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'PlaneTool.h'
 **
-** Created by: The Qt Meta Object Compiler version 67 (Qt 5.12.5)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.14.1)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
+#include <memory>
 #include "PlaneTool.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'PlaneTool.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
-#error "This file was generated using the moc from 5.12.5. It"
+#error "This file was generated using the moc from 5.14.1. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -89,7 +90,7 @@ void CPlaneTool::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
 }
 
 QT_INIT_METAOBJECT const QMetaObject CPlaneTool::staticMetaObject = { {
-    &CAbstractTool::staticMetaObject,
+    QMetaObject::SuperData::link<CAbstractTool::staticMetaObject>(),
     qt_meta_stringdata_CPlaneTool.data,
     qt_meta_data_CPlaneTool,
     qt_static_metacall,
