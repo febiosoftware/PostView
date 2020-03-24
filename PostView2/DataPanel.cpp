@@ -617,8 +617,9 @@ void CDataPanel::on_AddStandard_triggered()
 	QString item = QInputDialog::getItem(this, "Select new data field", "data:", items, 0, false, &ok);
 	if (ok)
 	{
-		int nitem = items.indexOf(item);
-		if (AddStandardDataField(*GetActiveDocument()->GetGLModel(), nitem, true) == false)
+//		int nitem = items.indexOf(item);
+		std::string itemString = item.toStdString();
+		if (AddStandardDataField(*GetActiveDocument()->GetGLModel(), itemString, true) == false)
 		{
 			QMessageBox::critical(this, "Add Data Field", "Failed adding data");
 		}
