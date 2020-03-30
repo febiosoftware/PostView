@@ -44,7 +44,7 @@ public:
 		double ffar = view->GetFarPlane();
 		if (projectionMode == RENDER_ORTHO)
 		{
-			GLdouble f = 0.2*view->GetCamera().GetTargetDistance();
+			GLdouble f = 0.35*view->GetCamera().GetTargetDistance();
 			double dx = f*ar;
 			double dy = f;
 			glOrtho(-dx, dx, -dy, dy, fnear, ffar);
@@ -514,7 +514,7 @@ void CGLView::setupProjectionMatrix()
 	VIEWSETTINGS& view = GetViewSettings();
 	if (view.m_nproj == RENDER_ORTHO)
 	{
-		GLdouble f = 0.2*cam.GetTargetDistance();
+		GLdouble f = 0.35*cam.GetTargetDistance();
 		double dx = f*m_ar;
 		double dy = f;
 		glOrtho(-dx, dx, -dy, dy, m_fnear, m_ffar);
@@ -2933,22 +2933,28 @@ void CGLView::OnZoomSelect()
 	if (pdoc && pdoc->IsValid())
 	{
 		BOX box = pdoc->GetSelectionBox();
-
-		if (box.Radius() < 1e-8f)
+		if (box.IsValid() == false)
 		{
-			float L = 1.f;
-			BOX bb = pdoc->GetBoundingBox();
-			float R = bb.GetMaxExtent();
-			if (R < 1e-8f) L = 1.f; else L = 0.05f*R;
-
-			box.InflateTo(L, L, L);
+			OnZoomExtents();
 		}
+		else
+		{
+			if (box.Radius() < 1e-8f)
+			{
+				float L = 1.f;
+				BOX bb = pdoc->GetBoundingBox();
+				float R = bb.GetMaxExtent();
+				if (R < 1e-8f) L = 1.f; else L = 0.05f*R;
 
-		CGLCamera* pcam = &GetCamera();
-		pcam->SetTarget(box.Center());
-		pcam->SetTargetDistance(3.f*box.Radius());
+				box.InflateTo(L, L, L);
+			}
 
-		repaint();
+			CGLCamera* pcam = &GetCamera();
+			pcam->SetTarget(box.Center());
+			pcam->SetTargetDistance(3.f*box.Radius());
+
+			repaint();
+		}
 	}
 }
 
