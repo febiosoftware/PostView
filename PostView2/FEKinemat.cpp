@@ -169,12 +169,7 @@ bool FEKinemat::BuildStates()
 				if (nd.m_ntag == 1)
 				{
 					const vec3d& r0_i = r0[i];
-					if (t == 0.f)
-					{
-						 nd.r = kine.apply(r0_i);
-						 d[i] = vec3f(0.f, 0.f, 0.f);
-					}
-					else d[i] = to_vec3f(kine.apply(r0_i) - nd.r);
+					d[i] = to_vec3f(kine.apply(r0_i) - r0_i);
 				}
 			}
 		}
