@@ -10,7 +10,8 @@
 #include <PostLib/FEPlotMix.h>
 #include "Document.h"
 #include "CIntInput.h"
-#include "FEKinemat.h"
+#include <PostLib/FEKinemat.h>
+#include <PostLib/FELSDYNAimport.h>
 #include "MainWindow.h"
 using namespace Post;
 
@@ -220,15 +221,25 @@ void CKinematTool::OnApply()
 	// create a new document
 	CDocument* doc = m_wnd->NewDocument("Kinemat");
 
-	FEKinemat kine(doc);
+	FEKinemat kine;
 	kine.SetRange(n0, n1, ni);
 
 	string modelFile = ui->modelFile->text().toStdString();
 	string kineFile = ui->kineFile->text().toStdString();
 
-	if (kine.Apply(modelFile.c_str(), kineFile.c_str()) == false)
+	// load the file
+	FELSDYNAimport* preader = new FELSDYNAimport;
+	preader->read_displacements(true);
+	if (doc->LoadFEModel(preader, modelFile.c_str()) == false)
 	{
-		QMessageBox::critical(0, "Kinemat", "Failed applying Kinemat tool");
+		QMessageBox::critical(m_wnd, "PostView2", "Failed to load model file");
+		return;
+	}
+
+	// apply the kinemat tool to the model
+	if (kine.Apply(doc->GetGLModel(), kineFile.c_str()) == false)
+	{
+		QMessageBox::critical(m_wnd, "Kinemat", "Failed applying Kinemat tool");
 	}
 
 	doc->ZoomExtents();
