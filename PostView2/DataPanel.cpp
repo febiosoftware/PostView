@@ -673,37 +673,57 @@ void CDataPanel::on_AddEquation_triggered()
 
 		int type = dlg.GetDataType();
 
-		if (type == 0)
+		switch (type)
 		{
-			QString eq = dlg.GetEquation();
+		case 0:
+		{
+			QString eq = dlg.GetScalarEquation();
 			if (eq.isEmpty()) eq = "";
 			if (name.isEmpty()) name = eq;
 			if (name.isEmpty()) name = "(empty)";
 
 			// create new math data field
-			FEMathDataField* pd = new FEMathDataField(name.toStdString());
+			Post::FEMathDataField* pd = new Post::FEMathDataField(name.toStdString());
 			pd->SetEquationString(eq.toStdString());
 
 			// add it to the model
-			FEModel& fem = *doc.GetFEModel();
+			Post::FEModel& fem = *doc.GetFEModel();
 			fem.AddDataField(pd);
 		}
-		else
+		break;
+		case 1:
 		{
 			if (name.isEmpty()) name = "(empty)";
 
-			QString x = dlg.GetEquation(0);
-			QString y = dlg.GetEquation(1);
-			QString z = dlg.GetEquation(2);
+			QStringList s = dlg.GetVectorEquations();
+
+			QString x = s.at(0);
+			QString y = s.at(1);
+			QString z = s.at(2);
 
 			// create new math data field
-			FEMathVec3DataField* pd = new FEMathVec3DataField(name.toStdString());
+			Post::FEMathVec3DataField* pd = new Post::FEMathVec3DataField(name.toStdString());
 			pd->SetEquationStrings(x.toStdString(), y.toStdString(), z.toStdString());
 
 			// add it to the model
-			FEModel& fem = *doc.GetFEModel();
+			Post::FEModel& fem = *doc.GetFEModel();
 			fem.AddDataField(pd);
 		}
+		break;
+		case 2:
+		{
+			if (name.isEmpty()) name = "(empty)";
+			QStringList s = dlg.GetMatrixEquations();
+
+			// create new math data field
+			Post::FEMathMat3DataField* pd = new Post::FEMathMat3DataField(name.toStdString());
+			for (int i = 0; i<9; ++i) pd->SetEquationString(i, s.at(i).toStdString());
+
+			// add it to the model
+			Post::FEModel& fem = *doc.GetFEModel();
+			fem.AddDataField(pd);
+		}
+		};
 		
 		// update the data list
 		m_wnd->UpdateMainToolbar(true);

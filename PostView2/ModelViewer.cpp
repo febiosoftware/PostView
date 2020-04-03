@@ -760,6 +760,13 @@ void CModelViewer::on_nameEdit_editingFinished()
 	QString name = ui->name->text();
 	QTreeWidgetItem* item = ui->m_tree->currentItem();
 	if (item) item->setText(0, name);
+
+	Post::CGLObject* po = selectedObject();
+	if (po)
+	{
+		po->ChangeName(name.toStdString());
+		m_wnd->RedrawGL();
+	}
 }
 
 void CModelViewer::on_deleteButton_clicked()
