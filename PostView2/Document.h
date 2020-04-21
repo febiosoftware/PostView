@@ -5,7 +5,7 @@
 #include "PostLib/FEMaterial.h"
 #include <FSCore/box.h>
 #include "PostLib/GView.h"
-#include "PostLib/FEMesh.h"
+#include <PostLib/FEPostMesh.h>
 #include <PostGL/GLModel.h>
 
 //-----------------------------------------------------------------------------
@@ -14,7 +14,7 @@ class CMainWindow;
 class CDocument;
 
 namespace Post {
-	class FEModel;
+	class FEPostModel;
 	class FEState;
 	class FEFileReader;
 	class FEDataField;
@@ -143,11 +143,11 @@ public:
 	// --- F E - M O D E L ---
 
 	// get the FE model
-	Post::FEModel* GetFEModel() { return m_fem;}
+	Post::FEPostModel* GetFEModel() { return m_fem;}
 
 	// set the FE model 
 	// TODO: only PlotMix uses this. Maybe I can delete this
-	void SetFEModel(Post::FEModel* pnew);
+	void SetFEModel(Post::FEPostModel* pnew);
 
 	// update the FE model data
 	void UpdateFEModel(bool breset = false);
@@ -286,7 +286,7 @@ protected:
 	void ClearObjects();
 
 protected:
-	Post::FEModel*		m_fem;	// the FE model
+	Post::FEPostModel*		m_fem;	// the FE model
 
 	CMainWindow*	m_wnd;	// main window
 

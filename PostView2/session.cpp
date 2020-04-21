@@ -65,7 +65,7 @@ bool CDocManager::SaveSession(const std::string& sfile)
 
 			// store model data
 			Post::CGLModel* pmdl = doc->GetGLModel();
-			Post::FEModel* pfem = pmdl->GetFEModel();
+			Post::FEPostModel* pfem = pmdl->GetFEModel();
 			xml.add_branch(e);
 			{
 				int ntime = doc->currentTime();
@@ -356,7 +356,7 @@ bool CDocManager::OpenSession(const std::string& sfile)
 			int ntime = doc->currentTime();
 
 			Post::CGLModel* pmdl = doc->GetGLModel();
-			Post::FEModel* pfem = pmdl->GetFEModel();
+			Post::FEPostModel* pfem = pmdl->GetFEModel();
 
 			float f;
 			double g;

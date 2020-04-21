@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Document.h"
 #include "MainWindow.h"
-#include <PostLib/FEModel.h>
+#include <PostLib/FEPostModel.h>
 #include <PostLib/FEFileReader.h>
 #include <ImageLib/3DImage.h>
 #include <PostLib/GLImageRenderer.h>
@@ -71,7 +71,7 @@ ModelData::ModelData(CGLModel *po)
 	}
 
 	// displacement map
-	FEModel* ps = po->GetFEModel();
+	FEPostModel* ps = po->GetFEModel();
 	m_dmap.m_nfield = ps->GetDisplacementField();
 
 	// materials 
@@ -115,7 +115,7 @@ void ModelData::SetData(CGLModel* po)
 	}
 
 	// displacement map
-	FEModel* ps = po->GetFEModel();
+	FEPostModel* ps = po->GetFEModel();
 	ps->SetDisplacementField(m_dmap.m_nfield);
 
 	// materials
@@ -325,7 +325,7 @@ std::string CDocument::GetFieldString()
 	if (IsValid())
 	{
 		CGLModel* mdl = GetGLModel();
-		FEModel* fem = (mdl ? mdl->GetFEModel() : nullptr);
+		FEPostModel* fem = (mdl ? mdl->GetFEModel() : nullptr);
 		if (fem && mdl)
 		{
 			int nfield = mdl->GetColorMap()->GetEvalField();
@@ -482,7 +482,7 @@ bool CDocument::LoadFEModel(FEFileReader* pimp, const char* szfile, bool bup)
 	delete m_fem;
 
 	// create a new model
-	m_fem = new FEModel;
+	m_fem = new FEPostModel;
 	m_fem->SetName(sztitle);
 
 	// set the file name as title
@@ -586,7 +586,7 @@ void CDocument::GetTimeRange(double& t0, double& t1)
 }
 
 //-----------------------------------------------------------------------------
-void CDocument::SetFEModel(FEModel* pnew)
+void CDocument::SetFEModel(FEPostModel* pnew)
 {
 	// remove the old GL object
 	delete m_pGLModel; m_pGLModel = 0;
@@ -597,7 +597,7 @@ void CDocument::SetFEModel(FEModel* pnew)
 
 	// set the new scene
 	m_fem = pnew;
-	FEModel::SetInstance(m_fem);
+	FEPostModel::SetInstance(m_fem);
 
 	// create a new model
 	m_pGLModel = new CGLModel(m_fem);

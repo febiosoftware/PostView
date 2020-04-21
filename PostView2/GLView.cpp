@@ -1730,7 +1730,7 @@ void CGLView::RegionSelectElements(const SelectRegion& region, int mode)
 	VIEWSETTINGS& view = GetViewSettings();
 
 	CGLModel& mdl = *pdoc->GetGLModel();
-	FEModel* ps = pdoc->GetFEModel();
+	FEPostModel* ps = pdoc->GetFEModel();
 	Post::FEPostMesh* pm = pdoc->GetActiveMesh();
 
 	makeCurrent();
@@ -1785,7 +1785,7 @@ void CGLView::RegionSelectFaces(const SelectRegion& region, int mode)
 	VIEWSETTINGS& view = GetViewSettings();
 
 	CGLModel& mdl = *pdoc->GetGLModel();
-	FEModel* ps = pdoc->GetFEModel();
+	FEPostModel* ps = pdoc->GetFEModel();
 	Post::FEPostMesh* pm = pdoc->GetActiveMesh();
 
 	makeCurrent();
@@ -1825,7 +1825,7 @@ void CGLView::RegionSelectNodes(const SelectRegion& region, int mode)
 	VIEWSETTINGS& view = GetViewSettings();
 
 	CGLModel& mdl = *pdoc->GetGLModel();
-	FEModel* ps = pdoc->GetFEModel();
+	FEPostModel* ps = pdoc->GetFEModel();
 	Post::FEPostMesh* pm = pdoc->GetActiveMesh();
 	int NN = pm->Nodes();
 
@@ -1874,7 +1874,7 @@ void CGLView::RegionSelectEdges(const SelectRegion& region, int mode)
 	VIEWSETTINGS& view = GetViewSettings();
 
 	CGLModel& mdl = *pdoc->GetGLModel();
-	FEModel* ps = pdoc->GetFEModel();
+	FEPostModel* ps = pdoc->GetFEModel();
 	Post::FEPostMesh* pm = pdoc->GetActiveMesh();
 
 	makeCurrent();
@@ -2336,7 +2336,7 @@ void CGLView::SelectNodes(int x0, int y0, int mode)
 	VIEWSETTINGS& view = GetViewSettings();
 
 	CGLModel& mdl = *pdoc->GetGLModel();
-	FEModel* ps = pdoc->GetFEModel();
+	FEPostModel* ps = pdoc->GetFEModel();
 	Post::FEPostMesh* pm = pdoc->GetActiveMesh();
 	int NN = pm->Nodes();
 
@@ -2416,7 +2416,7 @@ void CGLView::SelectEdges(int x0, int y0, int mode)
 	VIEWSETTINGS& view = GetViewSettings();
 
 	CGLModel& mdl = *pdoc->GetGLModel();
-	FEModel* ps = pdoc->GetFEModel();
+	FEPostModel* ps = pdoc->GetFEModel();
 	Post::FEPostMesh* pm = pdoc->GetActiveMesh();
 
 	int X = x0*m_dpr;
@@ -2585,7 +2585,7 @@ void CGLView::RenderModel()
 
 	VIEWSETTINGS& view = GetViewSettings();
 
-	FEModel* ps = pdoc->GetFEModel();
+	FEPostModel* ps = pdoc->GetFEModel();
 
 	BOX box = pdoc->GetBoundingBox();
 
@@ -2833,7 +2833,7 @@ void CGLView::PositionCamera()
 		int* nt = m_ntrack;
 		if ((nt[0] >= NN) || (nt[1] >= NN) || (nt[2] >= NN)) { m_btrack = false; return; }
 
-		FEModel& fem = *pdoc->GetFEModel();
+		FEPostModel& fem = *pdoc->GetFEModel();
 
 		vec3d a = pm->Node(nt[0]).r;
 		vec3d b = pm->Node(nt[1]).r;
@@ -2897,7 +2897,7 @@ void CGLView::SetTrackingData(int n[3])
 	int* nt = m_ntrack;
 	if ((nt[0] >= NN) || (nt[1] >= NN) || (nt[2] >= NN)) { assert(false); return; }
 
-	Post::FEModel& fem = *pdoc->GetFEModel();
+	Post::FEPostModel& fem = *pdoc->GetFEModel();
 	vec3d a = pm->Node(nt[0]).r;
 	vec3d b = pm->Node(nt[1]).r;
 	vec3d c = pm->Node(nt[2]).r;

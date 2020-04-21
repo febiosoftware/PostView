@@ -39,7 +39,7 @@ void CSummaryWindow::Update(bool breset, bool bfit)
 	}
 
 	CGLModel* po = doc->GetGLModel();
-	FEModel* pfem = doc->GetFEModel();
+	FEPostModel* pfem = doc->GetFEModel();
 	Post::FEPostMesh* pfe = po->GetActiveMesh();
 	int nodes = pfe->Nodes();
 
@@ -138,7 +138,7 @@ void CSummaryWindow::Update(bool breset, bool bfit)
 
 //-----------------------------------------------------------------------------
 // Evaluate the range of unpacked nodal data values
-CSummaryWindow::RANGE CSummaryWindow::EvalNodeRange(FEModel& fem, int nstate, bool bsel)
+CSummaryWindow::RANGE CSummaryWindow::EvalNodeRange(FEPostModel& fem, int nstate, bool bsel)
 {
 	RANGE rng = {-1e20f, 1e20f, 0.f};
 
@@ -169,7 +169,7 @@ CSummaryWindow::RANGE CSummaryWindow::EvalNodeRange(FEModel& fem, int nstate, bo
 
 //-----------------------------------------------------------------------------
 // Evaluate the range of unpacked nodal data values
-CSummaryWindow::RANGE CSummaryWindow::EvalEdgeRange(FEModel& fem, int nstate, bool bsel)
+CSummaryWindow::RANGE CSummaryWindow::EvalEdgeRange(FEPostModel& fem, int nstate, bool bsel)
 {
 	RANGE rng = {-1e20f, 1e20f, 0.f};
 
@@ -200,7 +200,7 @@ CSummaryWindow::RANGE CSummaryWindow::EvalEdgeRange(FEModel& fem, int nstate, bo
 
 //-----------------------------------------------------------------------------
 // Evaluate the range of unpacked element data values
-CSummaryWindow::RANGE CSummaryWindow::EvalElemRange(FEModel& fem, int nstate, bool bsel, bool bvol)
+CSummaryWindow::RANGE CSummaryWindow::EvalElemRange(FEPostModel& fem, int nstate, bool bsel, bool bvol)
 {
 	RANGE rng = {-1e20f, 1e20f, 0.f};
 
@@ -242,7 +242,7 @@ CSummaryWindow::RANGE CSummaryWindow::EvalElemRange(FEModel& fem, int nstate, bo
 
 //-----------------------------------------------------------------------------
 // Evaluate the range of unpacked face data values
-CSummaryWindow::RANGE CSummaryWindow::EvalFaceRange(FEModel& fem, int nstate, bool bsel, bool bvol)
+CSummaryWindow::RANGE CSummaryWindow::EvalFaceRange(FEPostModel& fem, int nstate, bool bsel, bool bvol)
 {
 	RANGE rng = {-1e20f, 1e20f, 0.f};
 

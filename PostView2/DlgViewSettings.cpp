@@ -849,7 +849,7 @@ void CDlgViewSettings::on_create_clicked()
 		return;
 	}
 
-	FEModel& fem = *doc.GetFEModel();
+	FEPostModel& fem = *doc.GetFEModel();
 	int NMAT = fem.Materials();
 	if (NMAT == 0)
 	{

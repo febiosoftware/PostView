@@ -128,7 +128,7 @@ void CPointDistanceTool::updateLength()
 	CDocument* doc = GetActiveDocument();
 	if (doc && doc->IsValid())
 	{
-		FEModel& fem = *doc->GetFEModel();
+		FEPostModel& fem = *doc->GetFEModel();
 		Post::FEPostMesh& mesh = *doc->GetActiveMesh();
 		int ntime = doc->currentTime();
 		int NN = mesh.Nodes();

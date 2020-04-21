@@ -7,7 +7,7 @@
 #include <QFormLayout>
 #include <QLineEdit>
 #include "Document.h"
-#include <PostLib/FEModel.h>
+#include <PostLib/FEPostModel.h>
 #include <MeshTools/SphereFit.h>
 using namespace Post;
 
@@ -66,7 +66,7 @@ void CSphereFitTool::OnFit()
 	{
 		bool bsel = ui->pc->isChecked();
 
-		FEModel& fem = *doc->GetFEModel();
+		FEPostModel& fem = *doc->GetFEModel();
 		Post::FEPostMesh& mesh = *fem.GetFEMesh(0);
 		int N = mesh.Nodes();
 		int F = mesh.Faces();

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "TransformTool.h"
 #include "Document.h"
-#include <PostLib/FEModel.h>
+#include <PostLib/FEPostModel.h>
 using namespace Post;
 
 //-----------------------------------------------------------------------------

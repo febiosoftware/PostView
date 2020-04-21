@@ -117,7 +117,7 @@ void CIntegrateWindow::IntegrateSelection(CLineChartData& data)
 {
 	// get the document
 	CDocument* pdoc = GetDocument();
-	FEModel& fem = *pdoc->GetFEModel();
+	FEPostModel& fem = *pdoc->GetFEModel();
 	Post::FEPostMesh& mesh = *fem.GetFEMesh(0);
 	CGLModel* po = pdoc->GetGLModel();
 
@@ -158,7 +158,7 @@ void CIntegrateWindow::IntegratePlaneCut(CGLPlaneCutPlot* pp, CLineChartData& da
 {
 	// get the document
 	CDocument* pdoc = GetDocument();
-	FEModel& fem = *pdoc->GetFEModel();
+	FEPostModel& fem = *pdoc->GetFEModel();
 	CGLModel* po = pdoc->GetGLModel();
 
 	data.clear();

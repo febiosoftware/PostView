@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "MeasureVolumeTool.h"
 #include "Document.h"
-#include <PostLib/FEModel.h>
+#include <PostLib/FEPostModel.h>
 using namespace Post;
 
 //-----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ void CMeasureVolumeTool::OnApply()
 	CDocument* doc = GetActiveDocument();
 	if (doc && doc->IsValid())
 	{
-		FEModel& fem = *doc->GetFEModel();
+		FEPostModel& fem = *doc->GetFEModel();
 		int ntime = fem.CurrentTime();
 		Post::FEPostMesh& mesh = *fem.GetFEMesh(0);
 		const vector<FEFace*> selectedFaces = doc->GetGLModel()->GetFaceSelection();

@@ -1,7 +1,7 @@
 #include "StatePanel.h"
 #include "ShellThicknessTool.h"
 #include "Document.h"
-#include <PostLib/FEModel.h>
+#include <PostLib/FEPostModel.h>
 using namespace Post;
 
 //-----------------------------------------------------------------------------
@@ -44,7 +44,7 @@ void CShellThicknessTool::OnApply()
 	CDocument* doc = GetActiveDocument();
 	if (doc && doc->IsValid())
 	{
-		FEModel& fem = *doc->GetFEModel();
+		FEPostModel& fem = *doc->GetFEModel();
 		Post::FEPostMesh& mesh = *fem.GetFEMesh(0);
 
 		int NS = fem.GetStates();

@@ -15,13 +15,13 @@ void CTimePanel::Update(bool reset)
 	CDocument* doc = m_wnd->GetActiveDocument();
 	if (doc && doc->IsValid())
 	{
-		FEModel* fem = doc->GetFEModel();
+		FEPostModel* fem = doc->GetFEModel();
 		if (fem)
 		{
 			if (reset)
 			{
 				ui->timer->clearData();
-				FEModel& fem = *doc->GetFEModel();
+				FEPostModel& fem = *doc->GetFEModel();
 				vector<double> data(fem.GetStates());
 				int nstates = fem.GetStates();
 				for (int i = 0; i < nstates; ++i) data[i] = fem.GetState(i)->m_time;

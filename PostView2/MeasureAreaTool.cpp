@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "MeasureAreaTool.h"
 #include "Document.h"
-#include <PostLib/FEModel.h>
+#include <PostLib/FEPostModel.h>
 #include "MainWindow.h"
 using namespace Post;
 
@@ -70,7 +70,7 @@ void CMeasureAreaTool::OnApply()
 	if (doc && doc->IsValid())
 	{
 		CGLModel& m = *doc->GetGLModel();
-		FEModel& fem = *doc->GetFEModel();
+		FEPostModel& fem = *doc->GetFEModel();
 		int index = m.CurrentTimeIndex();
 		FEState* ps = fem.GetState(index);
 		const vector<FEFace*> selectedFaces = doc->GetGLModel()->GetFaceSelection();

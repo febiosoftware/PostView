@@ -159,7 +159,7 @@ public:
 			{
 				if (role == Qt::DisplayRole)
 				{
-					Post::FEModel& fem = *Post::FEModel::GetInstance();
+					Post::FEPostModel& fem = *Post::FEPostModel::GetInstance();
 					std::string s = fem.GetDataManager()->getDataString(v.toInt(), Post::DATA_SCALAR);
 					if (s.empty()) s = "(please select)";
 					return QVariant(s.c_str());
@@ -170,7 +170,7 @@ public:
 			{
 				if (role == Qt::DisplayRole)
 				{
-					Post::FEModel& fem = *Post::FEModel::GetInstance();
+					Post::FEPostModel& fem = *Post::FEPostModel::GetInstance();
 					std::string s = fem.GetDataManager()->getDataString(v.toInt(), Post::DATA_VECTOR);
 					if (s.empty()) s = "(please select)";
 					return QVariant(s.c_str());
@@ -181,7 +181,7 @@ public:
 			{
 				if (role == Qt::DisplayRole)
 				{
-					Post::FEModel& fem = *Post::FEModel::GetInstance();
+					Post::FEPostModel& fem = *Post::FEPostModel::GetInstance();
 					std::string s = fem.GetDataManager()->getDataString(v.toInt(), Post::DATA_TENSOR2);
 					if (s.empty()) s = "(please select)";
 					return QVariant(s.c_str());
@@ -380,8 +380,8 @@ public:
 			else if (prop.type == CProperty::DataScalar)
 			{
 				CDataFieldSelector* pc = new CDataFieldSelector(parent);
-				Post::FEModel& fem = *Post::FEModel::GetInstance();
-				pc->BuildMenu(Post::FEModel::GetInstance(), Post::DATA_SCALAR);
+				Post::FEPostModel& fem = *Post::FEPostModel::GetInstance();
+				pc->BuildMenu(Post::FEPostModel::GetInstance(), Post::DATA_SCALAR);
 				int nfield = data.toInt();
 				pc->setCurrentValue(nfield);
 				m_view->connect(pc, SIGNAL(currentValueChanged(int)), m_view, SLOT(onDataChanged()));
@@ -390,8 +390,8 @@ public:
 			else if (prop.type == CProperty::DataVec3)
 			{
 				CDataFieldSelector* pc = new CDataFieldSelector(parent);
-				Post::FEModel& fem = *Post::FEModel::GetInstance();
-				pc->BuildMenu(Post::FEModel::GetInstance(), Post::DATA_VECTOR);
+				Post::FEPostModel& fem = *Post::FEPostModel::GetInstance();
+				pc->BuildMenu(Post::FEPostModel::GetInstance(), Post::DATA_VECTOR);
 				int nfield = data.toInt();
 				pc->setCurrentValue(nfield);
 				m_view->connect(pc, SIGNAL(currentValueChanged(int)), m_view, SLOT(onDataChanged()));
@@ -400,8 +400,8 @@ public:
 			else if (prop.type == CProperty::DataMat3)
 			{
 				CDataFieldSelector* pc = new CDataFieldSelector(parent);
-				Post::FEModel& fem = *Post::FEModel::GetInstance();
-				pc->BuildMenu(Post::FEModel::GetInstance(), Post::DATA_TENSOR2);
+				Post::FEPostModel& fem = *Post::FEPostModel::GetInstance();
+				pc->BuildMenu(Post::FEPostModel::GetInstance(), Post::DATA_TENSOR2);
 				int nfield = data.toInt();
 				pc->setCurrentValue(nfield);
 				m_view->connect(pc, SIGNAL(currentValueChanged(int)), m_view, SLOT(onDataChanged()));

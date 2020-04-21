@@ -9,7 +9,7 @@
 #include "MainWindow.h"
 #include "Document.h"
 #include "PropertyListView.h"
-#include <PostLib/FEModel.h>
+#include <PostLib/FEPostModel.h>
 using namespace Post;
 
 class MaterialProps : public CPropertyList
@@ -185,7 +185,7 @@ void CMaterialPanel::Update(bool breset)
 	CDocument* pdoc = GetActiveDocument();
 	if (pdoc == nullptr) return;
 
-	FEModel* fem = pdoc->GetFEModel();
+	FEPostModel* fem = pdoc->GetFEModel();
 	if (fem)
 	{
 		int nmat = fem->Materials();
@@ -209,7 +209,7 @@ void CMaterialPanel::Update(bool breset)
 void CMaterialPanel::UpdateStates()
 {
 	CDocument* pdoc = GetActiveDocument();
-	FEModel* fem = pdoc->GetFEModel();
+	FEPostModel* fem = pdoc->GetFEModel();
 	if (fem == 0) return;
 
 	int nmat = fem->Materials();
@@ -240,7 +240,7 @@ void CMaterialPanel::on_materialList_currentRowChanged(int nrow)
 	CDocument* doc = GetActiveDocument();
 	if (doc && doc->IsValid())
 	{
-		FEModel& fem = *doc->GetFEModel();
+		FEPostModel& fem = *doc->GetFEModel();
 		if ((nrow >= 0) && (nrow < fem.Materials()))
 		{
 			FEMaterial* pmat = fem.GetMaterial(nrow);
@@ -264,7 +264,7 @@ void CMaterialPanel::on_showButton_toggled(bool b)
 	if (doc.IsValid() == false) return;
 
 	CGLModel& mdl = *doc.GetGLModel();
-	FEModel& fem = *doc.GetFEModel();
+	FEPostModel& fem = *doc.GetFEModel();
 	Post::FEPostMesh& mesh = *fem.GetFEMesh(0);
 
 	QItemSelectionModel* pselect = ui->m_list->selectionModel();
@@ -300,7 +300,7 @@ void CMaterialPanel::on_enableButton_toggled(bool b)
 	if (doc.IsValid() == false) return;
 
 	CGLModel& mdl = *doc.GetGLModel();
-	FEModel& fem = *doc.GetFEModel();
+	FEPostModel& fem = *doc.GetFEModel();
 	Post::FEPostMesh& mesh = *fem.GetFEMesh(0);
 
 	QItemSelectionModel* pselect = ui->m_list->selectionModel();
@@ -331,7 +331,7 @@ void CMaterialPanel::on_editName_editingFinished()
 	{
 		int nmat = n.row();
 
-		FEModel& fem = *doc.GetFEModel();
+		FEPostModel& fem = *doc.GetFEModel();
 		FEMaterial& mat = *fem.GetMaterial(nmat);
 
 		QListWidgetItem* item = ui->m_list->item(nmat);
@@ -352,7 +352,7 @@ void CMaterialPanel::on_props_dataChanged(int nprop)
 	// Get the model
 	CDocument& doc = *GetActiveDocument();
 	CGLModel& mdl = *doc.GetGLModel();
-	FEModel& fem = *doc.GetFEModel();
+	FEPostModel& fem = *doc.GetFEModel();
 
 	// get the current material
 	QModelIndex currentIndex = ui->m_list->currentIndex();

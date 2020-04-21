@@ -13,7 +13,7 @@
 #include "Document.h"
 #include "PropertyListView.h"
 #include <PostGL/GLModel.h>
-#include <PostLib/FEModel.h>
+#include <PostLib/FEPostModel.h>
 #include <PostGL/GLPlot.h>
 #include <PostGL/GLPlaneCutPlot.h>
 #include <PostGL/GLVectorPlot.h>
@@ -93,7 +93,7 @@ private:
 class CMeshProps : public CPropertyList
 {
 public:
-	CMeshProps(Post::FEModel* fem) : m_fem(fem)
+	CMeshProps(Post::FEPostModel* fem) : m_fem(fem)
 	{
 		Post::FEPostMesh& mesh = *fem->GetFEMesh(0);
 		addProperty("Nodes"         , CProperty::Int, "Number of nodes"         )->setFlags(CProperty::Visible);
@@ -122,7 +122,7 @@ public:
 	void SetPropertyValue(int i, const QVariant& v) { }
 
 private:
-	Post::FEModel*	m_fem;
+	Post::FEPostModel*	m_fem;
 };
 
 //-----------------------------------------------------------------------------
@@ -537,7 +537,7 @@ void CModelViewer::Update(bool breset)
 		ui->m_tree->clear();
 		if (pdoc && pdoc->IsValid())
 		{
-			Post::FEModel* fem = pdoc->GetFEModel();
+			Post::FEPostModel* fem = pdoc->GetFEModel();
 			Post::CGLModel* mdl = pdoc->GetGLModel();
 
 			CModelTreeItem* pi1 = nullptr;

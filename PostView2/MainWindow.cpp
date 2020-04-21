@@ -663,7 +663,7 @@ bool CMainWindow::SaveFile(const QString& fileName, int nfilter)
 	CDocument* doc = GetActiveDocument();
 	if ((doc == nullptr) || (doc->IsValid() == false)) return true;
 
-	Post::FEModel& fem = *doc->GetFEModel();
+	Post::FEPostModel& fem = *doc->GetFEModel();
 
 	bool bret = false;
 	QString error("(unknown)");
@@ -839,7 +839,7 @@ void CMainWindow::on_actionUpdate_triggered()
 		int N = doc->GetFEModel()->GetStates();
 		if (N > 1) ui->playToolBar->setEnabled(true);
 
-		Post::FEModel* fem = doc->GetFEModel();
+		Post::FEPostModel* fem = doc->GetFEModel();
 		int nfield = doc->GetEvalField();
 
 		// we need to update the model viewer before we rebuild the selection menu
@@ -864,7 +864,7 @@ void CMainWindow::on_actionFileInfo_triggered()
 	CDlgFileInfo dlg;
 	CDocument* doc = GetActiveDocument();
 
-	Post::FEModel* fem = (doc ? doc->GetFEModel() : nullptr);
+	Post::FEPostModel* fem = (doc ? doc->GetFEModel() : nullptr);
 	if (fem)
 	{
 		Post::MetaData& md = fem->GetMetaData();
@@ -2070,7 +2070,7 @@ void CMainWindow::UpdateMainToolbar(bool breset)
 	if ((doc == nullptr) || (doc->IsValid() == false)) return;
 
 	Post::CGLModel* mdl = doc->GetGLModel();
-	Post::FEModel* pfem = doc->GetFEModel();
+	Post::FEPostModel* pfem = doc->GetFEModel();
 	ui->selectData->BuildMenu(pfem, Post::DATA_SCALAR);
 
 	if (breset == false)
@@ -2112,7 +2112,7 @@ void CMainWindow::UpdatePlayToolbar(bool breset)
 	if (doc == nullptr) return;
 
 	Post::CGLModel* mdl = doc->GetGLModel();
-	Post::FEModel* fem = (mdl ? mdl->GetFEModel() : nullptr);
+	Post::FEPostModel* fem = (mdl ? mdl->GetFEModel() : nullptr);
 	if ((mdl == 0) || (fem == nullptr)) ui->playToolBar->setDisabled(true);
 	else
 	{
@@ -2120,7 +2120,7 @@ void CMainWindow::UpdatePlayToolbar(bool breset)
 
 		if (breset)
 		{
-			Post::FEModel* fem = mdl->GetFEModel();
+			Post::FEPostModel* fem = mdl->GetFEModel();
 			int states = fem->GetStates();
 			QString suff = QString("/%1").arg(states);
 			ui->pspin->setSuffix(suff);
@@ -2214,7 +2214,7 @@ void CMainWindow::MakeDocActive(CDocument* doc)
 		UpdateMainToolbar(false);
 
 		// This is already done in UpdateMainToolbar so I can probably remove this
-		Post::FEModel* fem = doc->GetFEModel();
+		Post::FEPostModel* fem = doc->GetFEModel();
 		if (fem && fem->GetStates() > 0)
 		{
 			ui->playToolBar->setEnabled(true);

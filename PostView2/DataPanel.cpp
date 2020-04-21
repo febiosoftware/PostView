@@ -17,7 +17,7 @@
 #include <QSplitter>
 #include "MainWindow.h"
 #include "Document.h"
-#include <PostLib/FEModel.h>
+#include <PostLib/FEPostModel.h>
 #include <PostGL/GLModel.h>
 #include <QtCore/QAbstractTableModel>
 #include <PostLib/DataFilter.h>
@@ -155,7 +155,7 @@ class CDataModel : public QAbstractTableModel
 public:
 	CDataModel(QWidget* pw) : QAbstractTableModel(pw), m_fem(0) {}
 
-	void SetFEModel(FEModel* pfem)
+	void SetFEModel(FEPostModel* pfem)
 	{
 		beginResetModel();
 		m_fem = pfem;
@@ -231,7 +231,7 @@ public:
 	}
 
 public:
-	FEModel*	m_fem;
+	FEPostModel*	m_fem;
 };
 
 class Ui::CDataPanel
@@ -687,7 +687,7 @@ void CDataPanel::on_AddEquation_triggered()
 			pd->SetEquationString(eq.toStdString());
 
 			// add it to the model
-			Post::FEModel& fem = *doc.GetFEModel();
+			Post::FEPostModel& fem = *doc.GetFEModel();
 			fem.AddDataField(pd);
 		}
 		break;
@@ -706,7 +706,7 @@ void CDataPanel::on_AddEquation_triggered()
 			pd->SetEquationStrings(x.toStdString(), y.toStdString(), z.toStdString());
 
 			// add it to the model
-			Post::FEModel& fem = *doc.GetFEModel();
+			Post::FEPostModel& fem = *doc.GetFEModel();
 			fem.AddDataField(pd);
 		}
 		break;
@@ -720,7 +720,7 @@ void CDataPanel::on_AddEquation_triggered()
 			for (int i = 0; i<9; ++i) pd->SetEquationString(i, s.at(i).toStdString());
 
 			// add it to the model
-			Post::FEModel& fem = *doc.GetFEModel();
+			Post::FEPostModel& fem = *doc.GetFEModel();
 			fem.AddDataField(pd);
 		}
 		};
@@ -739,7 +739,7 @@ void CDataPanel::on_CopyButton_clicked()
 	{
 		int nsel = selRow.at(0).row();
 		CDocument& doc = *m_wnd->GetActiveDocument();
-		FEModel& fem = *doc.GetFEModel();
+		FEPostModel& fem = *doc.GetFEModel();
 		FEDataManager& dm = *fem.GetDataManager();
 		FEDataField* pdf = *dm.DataField(nsel);
 		if (pdf)
@@ -765,7 +765,7 @@ void CDataPanel::on_DeleteButton_clicked()
 	{
 		int nsel = selRow.at(0).row();
 		CDocument& doc = *GetActiveDocument();
-		FEModel& fem = *doc.GetFEModel();
+		FEPostModel& fem = *doc.GetFEModel();
 		FEDataManager& dm = *fem.GetDataManager();
 		FEDataField* pdf = *dm.DataField(nsel);
 		if (pdf)
@@ -789,7 +789,7 @@ void CDataPanel::on_FilterButton_clicked()
 	{
 		int nsel = selRow.at(0).row();
 		CDocument& doc = *GetActiveDocument();
-		FEModel& fem = *doc.GetFEModel();
+		FEPostModel& fem = *doc.GetFEModel();
 		FEDataManager& dm = *fem.GetDataManager();
 		FEDataField* pdf = *dm.DataField(nsel);
 		if (pdf)
@@ -904,7 +904,7 @@ void CDataPanel::on_ExportButton_clicked()
 	{
 		int nsel = selRow.at(0).row();
 		CDocument& doc = *GetActiveDocument();
-		FEModel& fem = *doc.GetFEModel();
+		FEPostModel& fem = *doc.GetFEModel();
 		FEDataManager& dm = *fem.GetDataManager();
 		FEDataField* pdf = *dm.DataField(nsel);
 		if (pdf)
@@ -925,7 +925,7 @@ void CDataPanel::on_ExportButton_clicked()
 
 void CDataPanel::on_dataList_clicked(const QModelIndex& index)
 {
-	FEModel* fem = ui->data->m_fem;
+	FEPostModel* fem = ui->data->m_fem;
 	FEDataManager& dm = *fem->GetDataManager();
 	int n = index.row();
 
