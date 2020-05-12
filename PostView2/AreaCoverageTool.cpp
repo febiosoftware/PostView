@@ -20,7 +20,7 @@ public:
 	FEAreaCoverage	m_tool;
 
 public:
-	CAreaCoverageToolUI(CAreaCoverageTool* tool)
+	CAreaCoverageToolUI(CAreaCoverageTool* tool) : m_tool(nullptr)
 	{
 		name = new QLineEdit; name->setPlaceholderText("Enter name here");
 		p1 = new QPushButton("Assign to surface 1");
@@ -90,7 +90,7 @@ void CAreaCoverageTool::OnApply()
 	CDocument* doc = GetActiveDocument();
 	if (doc && doc->IsValid())
 	{
-		FEAreaCoverage& tool = ui->m_tool;
+/*		FEAreaCoverage& tool = ui->m_tool;
 
 		tool.SetDataFieldName("");
 		QString name = ui->name->text();
@@ -98,7 +98,8 @@ void CAreaCoverageTool::OnApply()
 		{
 			tool.SetDataFieldName(name.toStdString());
 		}
-		tool.Apply(*doc->GetFEModel());
+		tool.Apply(doc->GetFEModel());
 		updateUi();
+*/
 	}
 }

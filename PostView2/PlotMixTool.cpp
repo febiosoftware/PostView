@@ -228,7 +228,7 @@ void CKinematTool::OnApply()
 	string kineFile = ui->kineFile->text().toStdString();
 
 	// load the file
-	FELSDYNAimport* preader = new FELSDYNAimport;
+	FELSDYNAimport* preader = new FELSDYNAimport(nullptr);
 	preader->read_displacements(true);
 	if (doc->LoadFEModel(preader, modelFile.c_str()) == false)
 	{

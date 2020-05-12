@@ -489,7 +489,8 @@ bool CDocument::LoadFEModel(FEFileReader* pimp, const char* szfile, bool bup)
 	m_fem->SetTitle(sztitle);
 
 	// load the scene
-	if (m_pImp->Load(*m_fem, szfile) == false)
+	m_pImp->SetPostModel(m_fem);
+	if (m_pImp->Load(szfile) == false)
 	{
 		delete m_fem;
 		m_fem = 0;

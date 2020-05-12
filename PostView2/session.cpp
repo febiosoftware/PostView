@@ -27,18 +27,18 @@ Post::FEFileReader* GetFileReader(const char* szfile)
 	// get the extension
 	const char* szext = strrchr(szfile, '.');
 
-	if      (szext && (strcmp(szext, ".feb" ) == 0)) pimp = new Post::FEBioImport;
-	else if (szext && (strcmp(szext, ".plt" ) == 0)) pimp = new Post::FELSDYNAPlotImport;
-	else if (szext && (strcmp(szext, ".xplt") == 0)) pimp = new xpltFileReader;
-	else if (szext && (strcmp(szext, ".k"   ) == 0)) pimp = new Post::FELSDYNAimport;
-	else if (szext && (strcmp(szext, ".msh" ) == 0)) pimp = new Post::GMeshImport;
-	else if (szext && (strcmp(szext, ".gmsh") == 0)) pimp = new Post::GMeshImport;
-	else if (szext && (strcmp(szext, ".n"   ) == 0)) pimp = new Post::FENikeImport;
-	else if (szext && (strcmp(szext, ".stl" ) == 0)) pimp = new Post::FESTLimport;
-	else if (szext && (strcmp(szext, ".txt" ) == 0)) pimp = new Post::FEASCIIImport;
-	else if (szext && (strcmp(szext, ".vtk" ) == 0)) pimp = new Post::FEVTKimport;
-	else if (szext && (strcmp(szext, ".u3d" ) == 0)) pimp = new Post::FEU3DImport;
-	else if (szext == 0                            ) pimp = new Post::FELSDYNAPlotImport;
+	if      (szext && (strcmp(szext, ".feb" ) == 0)) pimp = new Post::FEBioImport(nullptr);
+	else if (szext && (strcmp(szext, ".plt" ) == 0)) pimp = new Post::FELSDYNAPlotImport(nullptr);
+	else if (szext && (strcmp(szext, ".xplt") == 0)) pimp = new xpltFileReader(nullptr);
+	else if (szext && (strcmp(szext, ".k"   ) == 0)) pimp = new Post::FELSDYNAimport(nullptr);
+	else if (szext && (strcmp(szext, ".msh" ) == 0)) pimp = new Post::GMeshImport(nullptr);
+	else if (szext && (strcmp(szext, ".gmsh") == 0)) pimp = new Post::GMeshImport(nullptr);
+	else if (szext && (strcmp(szext, ".n"   ) == 0)) pimp = new Post::FENikeImport(nullptr);
+	else if (szext && (strcmp(szext, ".stl" ) == 0)) pimp = new Post::FESTLimport(nullptr);
+	else if (szext && (strcmp(szext, ".txt" ) == 0)) pimp = new Post::FEASCIIImport(nullptr);
+	else if (szext && (strcmp(szext, ".vtk" ) == 0)) pimp = new Post::FEVTKimport(nullptr);
+	else if (szext && (strcmp(szext, ".u3d" ) == 0)) pimp = new Post::FEU3DImport(nullptr);
+	else if (szext == 0                            ) pimp = new Post::FELSDYNAPlotImport(nullptr);
 	else assert(false);
 
 	return pimp;
@@ -169,7 +169,7 @@ bool CDocManager::SaveSession(const std::string& sfile)
 				}
 
 				// View properties
-				Post::CGView* pv = doc->GetView();
+				CGView* pv = doc->GetView();
 				if (pv)
 				{
 					CGLCamera& cam = pv->GetCamera();
@@ -479,7 +479,7 @@ bool CDocManager::OpenSession(const std::string& sfile)
 				}
 				else if (tag == "View")
 				{
-					Post::CGView* pv = doc->GetView();
+					CGView* pv = doc->GetView();
 					assert(pv);
 					if (pv)
 					{

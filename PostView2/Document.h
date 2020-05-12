@@ -4,7 +4,7 @@
 #include <string>
 #include "PostLib/FEMaterial.h"
 #include <FSCore/box.h>
-#include "PostLib/GView.h"
+#include <GLLib/GView.h>
 #include <PostLib/FEPostMesh.h>
 #include <PostGL/GLModel.h>
 
@@ -223,7 +223,7 @@ public:
 	// --- V I E W   M A N A G M E N T ---
 
 	// get the current view
-	Post::CGView* GetView() { return &m_view; }
+	CGView* GetView() { return &m_view; }
 
 	// get/set light position
 	vec3f GetLightPosition() { return m_light; }
@@ -299,7 +299,7 @@ protected:
 	std::string			m_fileName;		// file name of current model
 
 	// the view data
-	Post::CGView			m_view;		// view orientation/position
+	CGView			m_view;		// view orientation/position
 	vec3f			m_light;	// lightposition // TODO: should I move this to the CGView class?
 
 	// timer data

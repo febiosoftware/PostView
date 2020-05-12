@@ -129,7 +129,7 @@ private:
 class CViewProps : public CPropertyList
 {
 public:
-	CViewProps(Post::CGView& view) : m_view(view)
+	CViewProps(CGView& view) : m_view(view)
 	{
 		addProperty("X-angle", CProperty::Float);
 		addProperty("Y-angle", CProperty::Float);
@@ -196,7 +196,7 @@ public:
 	}
 
 private:
-	Post::CGView&	m_view;
+	CGView&	m_view;
 };
 
 //-----------------------------------------------------------------------------
@@ -325,15 +325,15 @@ private:
 class CModelTreeItem : public QTreeWidgetItem
 {
 public:
-	CModelTreeItem(Post::CGLObject* po, QTreeWidget* tree) : QTreeWidgetItem(tree), m_po(po) {}
-	CModelTreeItem(Post::CGLObject* po, QTreeWidgetItem* item) : QTreeWidgetItem(item), m_po(po) {}
+	CModelTreeItem(FSObject* po, QTreeWidget* tree) : QTreeWidgetItem(tree), m_po(po) {}
+	CModelTreeItem(FSObject* po, QTreeWidgetItem* item) : QTreeWidgetItem(item), m_po(po) {}
 
-	Post::CGLObject* Object() { return m_po; }
+	FSObject* Object() { return m_po; }
 
 	void SetObject(Post::CGLObject* po) { m_po = po; }
 
 private:
-	Post::CGLObject* m_po;
+	FSObject* m_po;
 };
 
 //-----------------------------------------------------------------------------
@@ -432,7 +432,7 @@ public:
 		CModelTreeItem* item = dynamic_cast<CModelTreeItem*>(current);
 		if (item == 0) return 0;
 
-		Post::CGLObject* po = item->Object();
+		Post::CGLObject* po = dynamic_cast<Post::CGLObject*>(item->Object());
 		return po;
 	}
 
@@ -492,7 +492,7 @@ Post::CGLObject* CModelViewer::selectedObject()
 {
 	CModelTreeItem* item = dynamic_cast<CModelTreeItem*>(ui->m_tree->currentItem());
 	if (item == nullptr) return nullptr;
-	return item->Object();
+	return dynamic_cast<Post::CGLObject*>(item->Object());
 }
 
 void CModelViewer::UpdateView()
@@ -665,7 +665,7 @@ void CModelViewer::Update(bool breset)
 				}
 			}
 	
-			Post::CGView& view = *pdoc->GetView();
+			CGView& view = *pdoc->GetView();
 			pi1 = new CModelTreeItem(&view, ui->m_tree);
 			pi1->setText(0, "View");
 			pi1->setIcon(0, QIcon(QString(":/icons/view.png")));
@@ -705,7 +705,7 @@ void CModelViewer::on_modelTree_currentItemChanged(QTreeWidgetItem* current, QTr
 		CModelTreeItem* item = dynamic_cast<CModelTreeItem*>(current);
 		if (item)
 		{
-			Post::CGLObject* po = item->Object();
+			Post::CGLObject* po = dynamic_cast<Post::CGLObject*>(item->Object());
 			if (po)
 			{
 				ui->enabled->setEnabled(true);
@@ -749,7 +749,7 @@ void CModelViewer::on_modelTree_itemDoubleClicked(QTreeWidgetItem* item, int col
 	GLCameraTransform* pkey = dynamic_cast<GLCameraTransform*>(m_obj[n]);
 	if (pkey)
 	{
-		Post::CGView* view = GetActiveDocument()->GetView();
+		CGView* view = GetActiveDocument()->GetView();
 		view->SetCurrentKey(pkey);
 		m_wnd->RedrawGL();
 	}
@@ -801,7 +801,7 @@ void CModelViewer::on_enabled_stateChanged(int nstate)
 	CModelTreeItem* item = dynamic_cast<CModelTreeItem*>(current);
 	if (item == 0) return;
 
-	Post::CGLObject* po = item->Object();
+	Post::CGLObject* po = dynamic_cast<Post::CGLObject*>(item->Object());
 	if (po == 0) return;
 
 	if (nstate == Qt::Unchecked)

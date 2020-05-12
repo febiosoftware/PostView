@@ -497,10 +497,10 @@ void CMainWindow::OpenFile(const QString& fileName, int nfilter)
 
 	switch (nfilter)
 	{
-	case -1: reader = new xpltFileReader; break;
+	case -1: reader = new xpltFileReader(nullptr); break;
 	case 0: 
 		{
-			xpltFileReader* xplt = new xpltFileReader;
+			xpltFileReader* xplt = new xpltFileReader(nullptr);
 			reader = xplt;
 
 			CDlgImportXPLT dlg(this);
@@ -512,13 +512,13 @@ void CMainWindow::OpenFile(const QString& fileName, int nfilter)
 			else return;
 		}
 		break;
-	case  1: reader = new Post::FEBioImport; break;
-	case  2: reader = new Post::FELSDYNAPlotImport; break;
-	case  3: reader = new Post::FELSDYNAimport; break;
-	case  4: reader = new Post::GMeshImport; break;
-	case  5: reader = new Post::FENikeImport; break;
-	case  6: reader = new Post::FEASCIIImport; break;
-	case  7: reader = new Post::FESTLimport; break;
+	case  1: reader = new Post::FEBioImport(nullptr); break;
+	case  2: reader = new Post::FELSDYNAPlotImport(nullptr); break;
+	case  3: reader = new Post::FELSDYNAimport(nullptr); break;
+	case  4: reader = new Post::GMeshImport(nullptr); break;
+	case  5: reader = new Post::FENikeImport(nullptr); break;
+	case  6: reader = new Post::FEASCIIImport(nullptr); break;
+	case  7: reader = new Post::FESTLimport(nullptr); break;
 	case  8: 
 		{
 			CDlgImportRAW dlg(this);
@@ -545,8 +545,8 @@ void CMainWindow::OpenFile(const QString& fileName, int nfilter)
 			else return;
 		}
 		break;
-	case  9: reader = new Post::FEVTKimport; break;
-	case 10: reader = new Post::FEU3DImport; break;
+	case  9: reader = new Post::FEVTKimport(nullptr); break;
+	case 10: reader = new Post::FEU3DImport(nullptr); break;
 	default:
 		QMessageBox::critical(this, "PostView2", "Don't know how to read this file");
 		return;
@@ -2005,7 +2005,7 @@ void CMainWindow::on_actionViewVPSave_triggered()
 	GLCameraTransform t;
 	cam.GetTransform(t);
 
-	Post::CGView& view = *doc->GetView();
+	CGView& view = *doc->GetView();
 	static int n = 0; n++;
 	char szname[64]={0};
 	sprintf(szname, "key%02d", n);
@@ -2019,7 +2019,7 @@ void CMainWindow::on_actionViewVPPrev_triggered()
 	CDocument* doc = GetActiveDocument();
 	if (doc == nullptr) return;
 
-	Post::CGView& view = *doc->GetView();
+	CGView& view = *doc->GetView();
 	if (view.CameraKeys() > 0)
 	{
 		view.PrevKey();
@@ -2032,7 +2032,7 @@ void CMainWindow::on_actionViewVPNext_triggered()
 	CDocument* doc = GetActiveDocument();
 	if (doc == nullptr) return;
 
-	Post::CGView& view = *doc->GetView();
+	CGView& view = *doc->GetView();
 	if (view.CameraKeys() > 0)
 	{
 		view.NextKey();
@@ -2046,7 +2046,7 @@ void CMainWindow::on_actionSyncViews_triggered()
 	CDocument* doc = GetActiveDocument();
 	if (doc == nullptr) return;
 
-	Post::CGView& view = *doc->GetView();
+	CGView& view = *doc->GetView();
 	CGLCamera& cam = view.GetCamera();
 	GLCameraTransform transform;
 	cam.GetTransform(transform);

@@ -29,7 +29,7 @@ public:
 	FEDistanceMap	m_map;
 
 public:
-	CDistanceMapToolUI(CDistanceMapTool* ptool)
+	CDistanceMapToolUI(CDistanceMapTool* ptool) : m_map(nullptr)
 	{
 		QPushButton* apply;
 		QVBoxLayout* pv = new QVBoxLayout;
@@ -98,7 +98,7 @@ void CDistanceMapTool::OnApply()
 		bool bcheck = ui->check->isChecked();
 		FEDistanceMap& map = ui->m_map;
 		map.m_bsigned = bcheck;
-		map.Apply(*doc->GetFEModel());
+		map.Apply(doc->GetFEModel());
 		doc->UpdateObservers(true);
 		updateUi();
 	}

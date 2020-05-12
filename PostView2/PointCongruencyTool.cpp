@@ -87,7 +87,7 @@ void CPointCongruencyTool::OnApply()
 		{
 			FEPointCongruency tool;
 			tool.SetLevels(1);
-			FEPointCongruency::CONGRUENCY_DATA d = tool.Congruency(&fem, node, fem.CurrentTime());
+			FEPointCongruency::CONGRUENCY_DATA d = tool.Congruency(&mesh, node);
 
 			ui->face->setValue(d.nface + 1);
 			ui->H1->setValue(d.H1);
