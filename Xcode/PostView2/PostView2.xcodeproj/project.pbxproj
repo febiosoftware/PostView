@@ -34,6 +34,7 @@
 		D576BB3220CACBD100F09942 /* moc_DlgAddEquation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D576BB3120CACBD100F09942 /* moc_DlgAddEquation.cpp */; };
 		D58C2DAF23A878E2004C7499 /* libxvidcore.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D58C2DAE23A878E1004C7499 /* libxvidcore.4.dylib */; };
 		D58C2DB023A878E2004C7499 /* libxvidcore.4.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = D58C2DAE23A878E1004C7499 /* libxvidcore.4.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		D5939063246B308100122209 /* libMeshIO.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5939062246B308100122209 /* libMeshIO.a */; };
 		D5A65E0F1DBFA53F00B44009 /* DlgFileInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */; };
 		D5B8DD51238DB6C90063E6D8 /* libCUILib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5B8DD50238DB6C90063E6D8 /* libCUILib.a */; };
 		D5BF174C2374CFEC0005C8B4 /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5BF17482374CFEB0005C8B4 /* QtWidgets.framework */; };
@@ -87,7 +88,6 @@
 		D5FF7A4E1D72756B003D2CBD /* DlgViewSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79C81D72756B003D2CBD /* DlgViewSettings.cpp */; };
 		D5FF7A4F1D72756B003D2CBD /* DlgWidgetProps.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79CA1D72756B003D2CBD /* DlgWidgetProps.cpp */; };
 		D5FF7A501D72756B003D2CBD /* Document.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79CC1D72756B003D2CBD /* Document.cpp */; };
-		D5FF7A511D72756B003D2CBD /* FEKinemat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79CE1D72756B003D2CBD /* FEKinemat.cpp */; };
 		D5FF7A521D72756B003D2CBD /* FileViewer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79D01D72756B003D2CBD /* FileViewer.cpp */; };
 		D5FF7A5E1D72756B003D2CBD /* GLView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79E81D72756B003D2CBD /* GLView.cpp */; };
 		D5FF7A611D72756B003D2CBD /* GraphWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5FF79EE1D72756B003D2CBD /* GraphWindow.cpp */; };
@@ -197,6 +197,7 @@
 		D571E00F20385DE700A7B96D /* FileThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileThread.cpp; sourceTree = "<group>"; };
 		D576BB3120CACBD100F09942 /* moc_DlgAddEquation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = moc_DlgAddEquation.cpp; sourceTree = "<group>"; };
 		D58C2DAE23A878E1004C7499 /* libxvidcore.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxvidcore.4.dylib; path = ../../../../../../../../../../usr/local/Cellar/xvid/1.3.6/lib/libxvidcore.4.dylib; sourceTree = "<group>"; };
+		D5939062246B308100122209 /* libMeshIO.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libMeshIO.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5A65E0D1DBFA53F00B44009 /* DlgFileInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgFileInfo.cpp; sourceTree = "<group>"; };
 		D5A65E0E1DBFA53F00B44009 /* DlgFileInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgFileInfo.h; sourceTree = "<group>"; };
 		D5B8DD50238DB6C90063E6D8 /* libCUILib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libCUILib.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -277,8 +278,6 @@
 		D5FF79CB1D72756B003D2CBD /* DlgWidgetProps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgWidgetProps.h; sourceTree = "<group>"; };
 		D5FF79CC1D72756B003D2CBD /* Document.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Document.cpp; sourceTree = "<group>"; };
 		D5FF79CD1D72756B003D2CBD /* Document.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Document.h; sourceTree = "<group>"; };
-		D5FF79CE1D72756B003D2CBD /* FEKinemat.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FEKinemat.cpp; sourceTree = "<group>"; };
-		D5FF79CF1D72756B003D2CBD /* FEKinemat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FEKinemat.h; sourceTree = "<group>"; };
 		D5FF79D01D72756B003D2CBD /* FileViewer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileViewer.cpp; sourceTree = "<group>"; };
 		D5FF79D11D72756B003D2CBD /* FileViewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileViewer.h; sourceTree = "<group>"; };
 		D5FF79E81D72756B003D2CBD /* GLView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLView.cpp; sourceTree = "<group>"; };
@@ -391,6 +390,7 @@
 				D5E08BA320A5E5BE00275FAB /* libGLWLib.a in Frameworks */,
 				D5C0427C2319A50500175195 /* libImageLib.a in Frameworks */,
 				D5C042702319A2FD00175195 /* libMathLib.a in Frameworks */,
+				D5939063246B308100122209 /* libMeshIO.a in Frameworks */,
 				D5C0426E2319A2A600175195 /* libMeshLib.a in Frameworks */,
 				D5C042742319A33800175195 /* libMeshTools.a in Frameworks */,
 				D55247F322E63A9800935C9C /* libPostGL.a in Frameworks */,
@@ -492,8 +492,6 @@
 				D5FF79CD1D72756B003D2CBD /* Document.h */,
 				D53598BE1E901C0500584A4F /* DragBox.cpp */,
 				D53598BF1E901C0500584A4F /* DragBox.h */,
-				D5FF79CE1D72756B003D2CBD /* FEKinemat.cpp */,
-				D5FF79CF1D72756B003D2CBD /* FEKinemat.h */,
 				D571E00F20385DE700A7B96D /* FileThread.cpp */,
 				D571E00C20385DE700A7B96D /* FileThread.h */,
 				D5FF79D01D72756B003D2CBD /* FileViewer.cpp */,
@@ -612,6 +610,7 @@
 		D5FF7AA61D727B52003D2CBD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D5939062246B308100122209 /* libMeshIO.a */,
 				D58C2DAE23A878E1004C7499 /* libxvidcore.4.dylib */,
 				D5C5B7A3239F0C1A00D29EE0 /* QtNetwork.framework */,
 				D5B8DD50238DB6C90063E6D8 /* libCUILib.a */,
@@ -795,7 +794,6 @@
 				D5FF7A631D72756B003D2CBD /* IntegrateWindow.cpp in Sources */,
 				D5FF7A931D72756B003D2CBD /* stdafx.cpp in Sources */,
 				D5FF7A901D72756B003D2CBD /* SphereFitTool.cpp in Sources */,
-				D5FF7A511D72756B003D2CBD /* FEKinemat.cpp in Sources */,
 				D5F8C898226FBD54008597AF /* ViewSettings.cpp in Sources */,
 				D5FF7A6E1D72756B003D2CBD /* moc_FileViewer.cpp in Sources */,
 				D5FF7A7C1D72756B003D2CBD /* moc_SphereFitTool.cpp in Sources */,
@@ -945,7 +943,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/usr/local/opt/qt/Frameworks,
-					/usr/local/Cellar/qt/5.13.2/lib,
+					/usr/local/opt/qt/lib,
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../../FEBioStudio",
@@ -984,7 +982,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/usr/local/opt/qt/Frameworks,
-					/usr/local/Cellar/qt/5.13.2/lib,
+					/usr/local/opt/qt/lib,
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../../../FEBioStudio",
