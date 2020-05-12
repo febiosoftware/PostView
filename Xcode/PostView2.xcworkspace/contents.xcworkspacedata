@@ -26,6 +26,9 @@
       location = "group:../../FEBioStudio/Xcode/MathLib/MathLib.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:../../FEBioStudio/Xcode/MeshIO/MeshIO.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:../../FEBioStudio/Xcode/MeshLib/MeshLib.xcodeproj">
    </FileRef>
    <FileRef
