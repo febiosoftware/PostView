@@ -88,7 +88,7 @@ public:
 	void UpdateTools(bool reset = false);
 
 	// set the data field on the toolbar
-	void SetCurrentDataField(int nfield);
+	void SetCurrentDataField(int nfield, bool blockSignal = false);
 
 	// set a message on the status bar
 	void SetStatusMessage(const QString& message);

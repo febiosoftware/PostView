@@ -1619,9 +1619,11 @@ void CMainWindow::on_actionColorMap_toggled(bool bchecked)
 	RedrawGL();
 }
 
-void CMainWindow::SetCurrentDataField(int nfield)
+void CMainWindow::SetCurrentDataField(int nfield, bool blockSignal)
 {
+	if (blockSignal) ui->selectData->blockSignals(true);
 	ui->selectData->setCurrentValue(nfield);
+	if (blockSignal) ui->selectData->blockSignals(false);
 }
 
 void CMainWindow::on_selectData_currentValueChanged(int index)
@@ -2079,7 +2081,7 @@ void CMainWindow::UpdateMainToolbar(bool breset)
 		if (map)
 		{
 			int nfield = map->GetEvalField();
-			SetCurrentDataField(nfield);
+			SetCurrentDataField(nfield, true);
 
 			ui->checkColormap(map->IsActive());
 			ui->actionViewSmooth->setChecked(map->GetColorSmooth());
