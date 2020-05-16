@@ -475,7 +475,7 @@ bool CDocument::LoadFEModel(FEFileReader* pimp, const char* szfile, bool bup)
 	int ntime = (m_pGLModel ? m_pGLModel->CurrentTimeIndex() : 0);
 
 	// remove the old object
-	delete m_pGLModel; m_pGLModel = 0;
+	if (m_pGLModel) m_pGLModel->SetFEModel(nullptr);
 
 	// remove the old scene
 	m_bValid = false;
@@ -502,7 +502,8 @@ bool CDocument::LoadFEModel(FEFileReader* pimp, const char* szfile, bool bup)
 	ApplyPalette(pal);
 
 	// create a new model
-	m_pGLModel = new CGLModel(m_fem);
+	if (m_pGLModel == nullptr) m_pGLModel = new CGLModel(m_fem);
+	else m_pGLModel->SetFEModel(m_fem);
 
 	// go back to the original working directory
 	if (szwdir) chdir(szwdir);
