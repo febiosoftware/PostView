@@ -23,6 +23,7 @@
 		D52F50FF218D07EF0094F7D1 /* libmp3lame.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D52F50FE218D07EF0094F7D1 /* libmp3lame.0.dylib */; };
 		D53292BB1E453447002798B3 /* DlgExportAscii.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53292B91E453447002798B3 /* DlgExportAscii.cpp */; };
 		D53598C01E901C0500584A4F /* DragBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D53598BE1E901C0500584A4F /* DragBox.cpp */; };
+		D550436B24705DA6007DCB29 /* GLViewTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D550436A24705DA6007DCB29 /* GLViewTransform.cpp */; };
 		D552470A22E5F34700935C9C /* lut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D552470922E5F34700935C9C /* lut.cpp */; };
 		D552473A22E5F4FF00935C9C /* libXPLTLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D552473922E5F4FF00935C9C /* libXPLTLib.a */; };
 		D55247F322E63A9800935C9C /* libPostGL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D55247F222E63A9800935C9C /* libPostGL.a */; };
@@ -184,6 +185,8 @@
 		D53292BA1E453447002798B3 /* DlgExportAscii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgExportAscii.h; sourceTree = "<group>"; };
 		D53598BE1E901C0500584A4F /* DragBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DragBox.cpp; sourceTree = "<group>"; };
 		D53598BF1E901C0500584A4F /* DragBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DragBox.h; sourceTree = "<group>"; };
+		D550436924705DA5007DCB29 /* GLViewTransform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLViewTransform.h; sourceTree = "<group>"; };
+		D550436A24705DA6007DCB29 /* GLViewTransform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLViewTransform.cpp; sourceTree = "<group>"; };
 		D552470922E5F34700935C9C /* lut.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lut.cpp; sourceTree = "<group>"; };
 		D552473922E5F4FF00935C9C /* libXPLTLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libXPLTLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D55247F222E63A9800935C9C /* libPostGL.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libPostGL.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -498,6 +501,8 @@
 				D5FF79D11D72756B003D2CBD /* FileViewer.h */,
 				D5FF79E81D72756B003D2CBD /* GLView.cpp */,
 				D5FF79E91D72756B003D2CBD /* GLView.h */,
+				D550436A24705DA6007DCB29 /* GLViewTransform.cpp */,
+				D550436924705DA5007DCB29 /* GLViewTransform.h */,
 				D5FF79EE1D72756B003D2CBD /* GraphWindow.cpp */,
 				D5FF79EF1D72756B003D2CBD /* GraphWindow.h */,
 				D5FF79F01D72756B003D2CBD /* ImportLinesTool.cpp */,
@@ -805,6 +810,7 @@
 				D55CE8EE21B96C0E0096890D /* MeasureVolumeTool.cpp in Sources */,
 				D5FF7A451D72756B003D2CBD /* CDlgImportXPLT.cpp in Sources */,
 				D5FAC5D221793358005E4684 /* moc_StrainMapTool.cpp in Sources */,
+				D550436B24705DA6007DCB29 /* GLViewTransform.cpp in Sources */,
 				D5FF7A611D72756B003D2CBD /* GraphWindow.cpp in Sources */,
 				D5FF7A711D72756B003D2CBD /* moc_ImportLinesTool.cpp in Sources */,
 				D5FF7A831D72756B003D2CBD /* PlaneTool.cpp in Sources */,
