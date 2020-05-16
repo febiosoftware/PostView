@@ -266,8 +266,9 @@ public:
         return QPoint(m_dpr*x, m_viewport[3] - m_dpr*y);
     }
 
-protected:
 	void setupProjectionMatrix();
+
+protected:
 
 	void SetTrackingData(int n[3]);
 

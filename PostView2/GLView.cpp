@@ -22,6 +22,7 @@
 #include <QMessageBox>
 #include <GLLib/GLContext.h>
 #include "version.h"
+#include "GLViewTransform.h"
 using namespace Post;
 
 class WorldToScreen
@@ -1639,7 +1640,9 @@ void CGLView::SelectFaces(int x0, int y0, int mode)
 	Post::FEPostMesh* pm = pdoc->GetActiveMesh();
 
 	// convert the point to a ray
-	Ray ray = PointToRay(x0 * m_dpr, y0 * m_dpr);
+	makeCurrent();
+	GLViewTransform transform(this);
+	Ray ray = transform.PointToRay(x0, y0);
 
 	// find the intersection
 	Intersection q;
@@ -2057,7 +2060,9 @@ void CGLView::SelectElements(int x0, int y0, int mode)
 	Post::FEPostMesh* pm = pdoc->GetActiveMesh();
 
 	// convert the point to a ray
-	Ray ray = PointToRay(x0 * m_dpr, y0 * m_dpr);
+	makeCurrent();
+	GLViewTransform transform(this);
+	Ray ray = transform.PointToRay(x0, y0);
 
 	// find the intersection
 	Intersection q;
