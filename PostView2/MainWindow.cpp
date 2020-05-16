@@ -845,13 +845,11 @@ void CMainWindow::on_actionUpdate_triggered()
 		// we need to update the model viewer before we rebuild the selection menu
 		ui->modelViewer->Update(true);
 
-		// now, we can rebuild the 
-		ui->selectData->BuildMenu(doc->GetFEModel(), Post::DATA_SCALAR);
+		// update the UI
+		UpdateMainToolbar();
 		ui->selectData->setCurrentValue(nfield);
 		ui->actionColorMap->setDisabled(false);
 
-		// update the UI
-		UpdateMainToolbar();
 		UpdatePlayToolbar(true);
 		UpdateCommandPanels(true);
 		ui->glview->UpdateCamera(true);
