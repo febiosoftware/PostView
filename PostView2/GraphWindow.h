@@ -183,6 +183,8 @@ public:
 	// get the plot widget
 	CPlotWidget* GetPlotWidget();
 
+	void AddToolBarWidget(QWidget* w);
+
 public:
 	int GetTimeTrackOption();
 	void GetUserTimeRange(int& userMin, int& userMax);

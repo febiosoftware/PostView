@@ -30,6 +30,10 @@ private:
 	RANGE EvalFaceRange(Post::FEPostModel& fem, int ntime, bool bsel, bool bvol);
 	RANGE EvalElemRange(Post::FEPostModel& fem, int ntime, bool bsel, bool bvol);
 
+private slots:
+	void onSelectionOnlyChanged(int n);
+
 private:
 	int		m_ncurrentData;
+	bool	m_bselectionOnly;
 };

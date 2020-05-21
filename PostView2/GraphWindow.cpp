@@ -590,6 +590,12 @@ CPlotWidget* CGraphWindow::GetPlotWidget()
 }
 
 //-----------------------------------------------------------------------------
+void CGraphWindow::AddToolBarWidget(QWidget* w)
+{
+	ui->toolBar->addWidget(w);
+}
+
+//-----------------------------------------------------------------------------
 int CGraphWindow::GetTimeTrackOption()
 {
 	return m_nTrackTime;
