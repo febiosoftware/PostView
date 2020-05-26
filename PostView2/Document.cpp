@@ -184,6 +184,8 @@ void ModelData::SetData(CGLModel* po)
 			if (pdf) ps->AddDataField(pdf);
 		}
 	}
+
+	po->UpdateMeshState();
 }
 
 //=============================================================================
