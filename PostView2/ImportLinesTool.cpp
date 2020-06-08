@@ -15,6 +15,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <PostGL/GLLinePlot.h>
+#include <MeshLib/FEFindElement.h>
 #include "MainWindow.h"
 using namespace Post;
 
