@@ -16,22 +16,21 @@ QMAKE_LFLAGS_RELEASE += -O1
 QMAKE_RPATHDIR += $ORIGIN/../lib
 #MOC_DIR = .
 INCLUDEPATH += ../
-INCLUDEPATH += /home/sci/mherron/Projects/FEBioStudio/
-INCLUDEPATH += /home/sci/mherron/Resources/glew-2.0.0/include/GL
+INCLUDEPATH += /home/mherron/Projects/FEBioStudio/
+#INCLUDEPATH += /home/mherron/Resources/glew-2.0.0/include/GL
 INCLUDEPATH += /usr/include/ffmpeg
 QT += gui widgets charts
 
-LIBS += -L/home/sci/mherron/Resources/Qt/5.13.2/gcc_64/lib
-LIBS += /home/sci/mherron/Resources/glew-2.0.0/lib/libGLEW.a
-LIBS += -L/home/sci/mherron/Resources/tetgen1.5.0 -ltet
-LIBS += -L/home/sci/mherron/Projects/FEBioStudio/build/lib
+#LIBS += /home/sci/mherron/Resources/glew-2.0.0/lib/libGLEW.a
+LIBS += -L/home/mherron/Resources/tetgen1.5.1/build -ltet
+LIBS += -L/home/mherron/Projects/FEBioStudio/build/lib
 LIBS += -Wl,--start-group 
 LIBS += -lglwlib -lpostgl -lxpltlib -lpostlib -lcuilib -limagelib -lfscore -lmeshtools -lgeomlib -lmeshlib -lxml -lgllib -lmathlib
 LIBS += -Wl,--end-group
 LIBS += -L/usr/lib64 -lGLU -lGL
 LIBS += -lavformat -lavcodec -lavresample -lavutil -lswresample -lswscale
 LIBS += -lz -lm
-LIBS += -lpng16 -licui18n -licuuc -licudata -lpcre16
+#LIBS += -lpng16 -licui18n -licuuc -licudata -lpcre16 -lglew2
 
 RESOURCES = ../postview.qrc
 

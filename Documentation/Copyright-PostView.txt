@@ -1,4 +1,44 @@
-/*This file is part of the PostView source code and is licensed under the MIT license
+1. PostView AUTHORS
+================
+The following people are considered AUTHORS of the PostView software. 
+
+- Steve Maas
+- Gerard A. Ateshian
+- Jeffrey A. Weiss
+
+The following people have also contributed to the PostView software.
+
+- David R. Rawlins
+- Benjamin J. Ellis
+- Alex A. Veress
+- Sam Evans
+- Shawn Reese
+- Aaron Swedberg 
+- Jocelyn Todd
+- Lowell Edgar
+- Jay J. Shim
+- Marsh Paulson
+- Klevis Aliaj
+- Brandon Zimmerman
+- Jay C. Hou
+
+
+3. Copyright HOLDERS
+===================
+The following lists the Copyright HOLDERS: 
+
+- University of Utah
+- The Trustees of Columbia University in the City of New York
+- The AUTHORS as defined above
+
+
+4. PostView license
+=================
+
+The following text shall appear in all source code files that are part of the PostView software. 
+
+-->
+This file is part of the PostView source code and is licensed under the MIT license
 listed below.
 
 See Copyright-PostView.txt for details.
@@ -22,24 +62,5 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.*/
-
-#pragma once
-#include <QMainWindow>
-#include "Document.h"
-#include "GraphWindow.h"
-
-class CMainWindow;
-
-class CStatsWindow : public CGraphWindow
-{
-	Q_OBJECT
-
-public:
-	CStatsWindow(CMainWindow* wnd);
-
-	void Update(bool breset = true, bool bfit = false) override;
-
-private:
-	void UpdateSelection(bool breset);
-};
+SOFTWARE.
+-->
