@@ -2177,6 +2177,26 @@ void CMainWindow::on_tab_currentChanged(int i)
 
 void CMainWindow::on_tab_tabCloseRequested(int i)
 {
+	// close any graph windows that use this document
+	QList<::CGraphWindow*>::iterator it;
+	for (it = ui->graphList.begin(); it != ui->graphList.end();)
+	{
+		CGraphWindow* w = *it;
+		CModelGraphWindow* mgw = dynamic_cast<CModelGraphWindow*>(w);
+		if (mgw)
+		{
+			CDocument* pd = mgw->GetDocument();
+			if (pd == m_activeDoc)
+			{
+				RemoveGraph(w);
+				delete w;
+				it = ui->graphList.begin();
+			}
+			else it++;
+		}
+		else it++;
+	}
+
 	m_activeDoc = nullptr;
 	m_DocManager->RemoveDocument(i);
 	ui->RemoveTab(i);
