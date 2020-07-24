@@ -2177,6 +2177,8 @@ void CMainWindow::on_tab_currentChanged(int i)
 
 void CMainWindow::on_tab_tabCloseRequested(int i)
 {
+	CDocument* doc_i = m_DocManager->GetDocument(i);
+
 	// close any graph windows that use this document
 	QList<::CGraphWindow*>::iterator it;
 	for (it = ui->graphList.begin(); it != ui->graphList.end();)
@@ -2186,7 +2188,7 @@ void CMainWindow::on_tab_tabCloseRequested(int i)
 		if (mgw)
 		{
 			CDocument* pd = mgw->GetDocument();
-			if (pd == m_activeDoc)
+			if (pd == doc_i)
 			{
 				RemoveGraph(w);
 				delete w;
