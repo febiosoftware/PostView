@@ -268,7 +268,7 @@ public slots:
 	void onAppLoadFile(const QString& fileName);
 
 private:
-	void closeEvent(QCloseEvent* ev);
+	void closeEvent(QCloseEvent* ev) override;
 	void StopAnimation();
 
 	void AddDocument(CDocument* doc);
@@ -276,7 +276,7 @@ private:
 
 	void MakeDocActive(CDocument* doc);
 
-	void keyPressEvent(QKeyEvent* ev);
+	void keyPressEvent(QKeyEvent* ev) override;
 
 private:
 	void writeSettings();

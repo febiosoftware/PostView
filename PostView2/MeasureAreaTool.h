@@ -55,10 +55,10 @@ public:
 	CMeasureAreaTool(CMainWindow* wnd);
 
 	// get the property list
-	CPropertyList*	getPropertyList();
+	CPropertyList*	getPropertyList() override;
 
 	// Apply button
-	void OnApply();
+	void OnApply() override;
 
 	// update
 	void update(bool breset) override;
