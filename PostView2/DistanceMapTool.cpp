@@ -52,11 +52,16 @@ public:
 	QCheckBox*	check;
 	QPushButton* p1;
 	QPushButton* p2;
-	FEDistanceMap	m_map;
+
+	vector<int>	m_sel1;
+	vector<int>	m_sel2;
+
+	FEDistanceMap*	m_map;
 
 public:
-	CDistanceMapToolUI(CDistanceMapTool* ptool) : m_map(nullptr)
+	CDistanceMapToolUI(CDistanceMapTool* ptool)
 	{
+		m_map = nullptr;
 		QPushButton* apply;
 		QVBoxLayout* pv = new QVBoxLayout;
 		{
@@ -97,7 +102,7 @@ void CDistanceMapTool::OnAssign1()
 	{
 		vector<int> sel;
 		doc->GetGLModel()->GetSelectionList(sel, SELECT_FACES);
-		ui->m_map.SetSelection1(sel);
+		ui->m_sel1 = sel;
 		int n = (int)sel.size();
 		ui->p1->setText(QString("Assign to surface 1 (%1 faces)").arg(n));
 	}
@@ -110,7 +115,7 @@ void CDistanceMapTool::OnAssign2()
 	{
 		vector<int> sel;
 		doc->GetGLModel()->GetSelectionList(sel, SELECT_FACES);
-		ui->m_map.SetSelection2(sel);
+		ui->m_sel2 = sel;
 		int n = (int)sel.size();
 		ui->p2->setText(QString("Assign to surface 2 (%1 faces)").arg(n));
 	}
@@ -122,14 +127,21 @@ void CDistanceMapTool::OnApply()
 	if (doc && doc->IsValid())
 	{
 		bool bcheck = ui->check->isChecked();
-		FEDistanceMap& map = ui->m_map;
-		map.m_bsigned = bcheck;
-		map.Apply(doc->GetFEModel());
+		FEDistanceMap* map = ui->m_map;
+		if (map == nullptr)
+		{
+			Post::FEPostModel* fem = doc->GetFEModel();
+			map = new FEDistanceMap(fem);
+			fem->AddDataField(map);
+		}
+		map->m_bsigned = bcheck;
+		map->SetSelection1(ui->m_sel1);
+		map->SetSelection2(ui->m_sel2);
+		map->Apply();
 		doc->UpdateObservers(true);
 		updateUi();
 	}
 }
-
 
 class CCurvatureMapToolUI : public QWidget
 {
